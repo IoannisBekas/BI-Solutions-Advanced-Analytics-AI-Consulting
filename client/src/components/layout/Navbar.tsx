@@ -46,7 +46,7 @@ export function Navbar() {
             />
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
-              <span className="text-xs text-gray-500 font-medium">Analytics & AI</span>
+              <span className="text-xs text-gray-500 font-medium">Advanced Analytics & AI Consulting</span>
             </div>
           </a>
         </Link>
@@ -84,7 +84,6 @@ export function Navbar() {
           {isMobileMenuOpen ? <X /> : <Menu />}
         </button>
       </div>
-
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
