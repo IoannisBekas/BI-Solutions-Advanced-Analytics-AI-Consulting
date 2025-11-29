@@ -55,11 +55,7 @@ export default function Services() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {servicesList.map((service, index) => (
               <ScrollReveal key={index} delay={index * 0.05} className="w-full">
-                <div className="flex gap-6">
-                  <div className="w-24 h-24 rounded-2xl bg-white shadow-sm p-4 flex-shrink-0">
-                    <img src={service.icon} alt={service.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1">
+                <div className="flex-1">
                     <h2 className="text-xl font-bold mb-4">{service.title}</h2>
                     <ul className="space-y-2">
                       {service.items.map((item, i) => (
@@ -69,7 +65,6 @@ export default function Services() {
                         </li>
                       ))}
                     </ul>
-                  </div>
                 </div>
               </ScrollReveal>
             ))}
