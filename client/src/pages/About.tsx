@@ -12,8 +12,9 @@ interface Section {
 
 export default function About() {
   const [activeSection, setActiveSection] = useState("introduction");
-  const sectionRefsMap = useRef<{ [key: string]: HTMLElement | null }>({});
-  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // Map section id -> DOM element
+  const sectionRefsMap = useRef<Map<string, HTMLElement>>(new Map());
 
   const sections: Section[] = [
     { id: "introduction", label: "Introduction" },
@@ -23,66 +24,64 @@ export default function About() {
     { id: "contact", label: "Get in Touch" },
   ];
 
-  const navSections = sections; // All sections shown in nav
+  const navSections = sections;
 
-  // Initialize IntersectionObserver
+  // Scrollspy with IntersectionObserver
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px 0px -80% 0px", // Top 20% of viewport triggers active state
-      threshold: 0,
-    };
+    // Delay observer setup to ensure all refs are registered
+    const setupTimer = setTimeout(() => {
+      const observerOptions: IntersectionObserverInit = {
+        root: null,
+        rootMargin: "-50% 0px -50% 0px", // Fire when section is in center of viewport
+        threshold: 0,
+      };
 
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      // Find the section that is most visible in the viewport
-      let activeEntry: IntersectionObserverEntry | null = null;
-      let maxRatio = 0;
+      const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+        let activeEntry: IntersectionObserverEntry | null = null;
+        let maxRatio = 0;
 
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
-          maxRatio = entry.intersectionRatio;
-          activeEntry = entry;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            activeEntry = entry;
+          }
+        });
+
+        if (activeEntry && maxRatio > 0) {
+          const target = activeEntry.target as HTMLElement;
+          setActiveSection(target.id);
         }
+      };
+
+      const observer = new IntersectionObserver(
+        handleIntersection,
+        observerOptions,
+      );
+
+      // Observe all registered sections
+      sectionRefsMap.current.forEach((el) => {
+        observer.observe(el);
       });
+    }, 100);
 
-      // If a section is intersecting, set it as active
-      if (activeEntry) {
-        setActiveSection(activeEntry.target.id);
-      }
-    };
-
-    observerRef.current = new IntersectionObserver(
-      handleIntersection,
-      observerOptions
-    );
-
-    // Observe all sections
-    sections.forEach((section) => {
-      const element = sectionRefsMap.current[section.id];
-      if (element && observerRef.current) {
-        observerRef.current.observe(element);
-      }
-    });
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
+    return () => clearTimeout(setupTimer);
   }, []);
 
-  // Handle navigation click
+  // Smooth scrolling to section; rely on CSS scroll-margin-top (scroll-mt-24)
   const handleNavClick = (sectionId: string) => {
-    const element = sectionRefsMap.current[sectionId];
+    const element = sectionRefsMap.current.get(sectionId);
     if (element) {
-      const navbarHeight = 100; // Approximate navbar height
-      const offset = element.getBoundingClientRect().top + window.scrollY - navbarHeight;
-      window.scrollTo({
-        top: offset,
+      element.scrollIntoView({
         behavior: "smooth",
+        block: "start",
       });
-      setActiveSection(sectionId);
     }
+  };
+
+  // Helper to register refs in the map
+  const registerSectionRef = (id: string) => (el: HTMLElement | null) => {
+    if (!el) return;
+    sectionRefsMap.current.set(id, el);
   };
 
   return (
@@ -100,8 +99,9 @@ export default function About() {
                     return (
                       <button
                         key={section.id}
+                        type="button"
                         onClick={() => handleNavClick(section.id)}
-                        className={`text-left py-2 px-4 border-l-2 transition-all duration-300 ${
+                        className={`text-left py-2 px-4 border-l-2 text-sm transition-all duration-300 ${
                           isActive
                             ? "border-black text-black font-bold"
                             : "border-gray-300 text-gray-500 hover:text-gray-700"
@@ -119,9 +119,7 @@ export default function About() {
             <div className="flex-1 min-w-0">
               {/* Introduction Section */}
               <section
-                ref={(el) => {
-                  if (el) sectionRefsMap.current["introduction"] = el;
-                }}
+                ref={registerSectionRef("introduction")}
                 id="introduction"
                 className="mb-20 scroll-mt-24"
               >
@@ -137,7 +135,7 @@ export default function About() {
                       <img
                         src={founderPhoto}
                         alt="Ioannis Bekas"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                         loading="lazy"
                       />
                     </div>
@@ -152,13 +150,16 @@ export default function About() {
                       <div className="space-y-6">
                         <div>
                           <h4 className="text-base font-semibold text-black mb-1">
-                            M.Sc. in Operational Research, Analytics & Decision Making
+                            M.Sc. in Operational Research, Analytics & Decision
+                            Making
                           </h4>
                           <p className="text-sm text-gray-600">
-                            Technical University of Crete & Hellenic Army Academy
+                            Technical University of Crete & Hellenic Army
+                            Academy
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
-                            GPA: 9.3/10 · Thesis: "Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis"
+                            GPA: 9.3/10 · Thesis: "Artificial Intelligence
+                            Touchpoints with Multi-Criteria Decision Analysis"
                           </p>
                         </div>
                         <div>
@@ -169,7 +170,8 @@ export default function About() {
                             University of Athens
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
-                            Exchange – Financial Mathematics, Stockholm University
+                            Exchange – Financial Mathematics, Stockholm
+                            University
                           </p>
                         </div>
                         <div>
@@ -178,24 +180,44 @@ export default function About() {
                           </h4>
                           <ul className="space-y-1 text-xs text-gray-700">
                             <li className="flex gap-3">
-                              <span className="text-black font-bold flex-shrink-0">•</span>
-                              <span>Data Science Professional Certificate – HarvardX</span>
+                              <span className="text-black font-bold flex-shrink-0">
+                                •
+                              </span>
+                              <span>
+                                Data Science Professional Certificate – HarvardX
+                              </span>
                             </li>
                             <li className="flex gap-3">
-                              <span className="text-black font-bold flex-shrink-0">•</span>
-                              <span>Google Data Analytics Professional Certificate</span>
+                              <span className="text-black font-bold flex-shrink-0">
+                                •
+                              </span>
+                              <span>
+                                Google Data Analytics Professional Certificate
+                              </span>
                             </li>
                             <li className="flex gap-3">
-                              <span className="text-black font-bold flex-shrink-0">•</span>
-                              <span>Financial Engineering and Risk Management – Columbia</span>
+                              <span className="text-black font-bold flex-shrink-0">
+                                •
+                              </span>
+                              <span>
+                                Financial Engineering and Risk Management –
+                                Columbia
+                              </span>
                             </li>
                             <li className="flex gap-3">
-                              <span className="text-black font-bold flex-shrink-0">•</span>
+                              <span className="text-black font-bold flex-shrink-0">
+                                •
+                              </span>
                               <span>Financial Markets – Yale</span>
                             </li>
                             <li className="flex gap-3">
-                              <span className="text-black font-bold flex-shrink-0">•</span>
-                              <span>Python and Statistics for Financial Analysis – HKUST</span>
+                              <span className="text-black font-bold flex-shrink-0">
+                                •
+                              </span>
+                              <span>
+                                Python and Statistics for Financial Analysis –
+                                HKUST
+                              </span>
                             </li>
                           </ul>
                         </div>
@@ -205,15 +227,17 @@ export default function About() {
                 </div>
 
                 <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
-                  A data science and analytics specialist with experience across the United Nations, international agencies, and global enterprises. Expertise includes strategic analytics, machine learning, decision intelligence, CRM optimization, and data product development.
+                  A data science and analytics specialist with experience across
+                  the United Nations, international agencies, and global
+                  enterprises. Expertise includes strategic analytics, machine
+                  learning, decision intelligence, CRM optimization, and data
+                  product development.
                 </p>
               </section>
 
               {/* United Nations Section */}
               <section
-                ref={(el) => {
-                  if (el) sectionRefsMap.current["un"] = el;
-                }}
+                ref={registerSectionRef("un")}
                 id="un"
                 className="mb-20 scroll-mt-24"
               >
@@ -234,27 +258,42 @@ export default function About() {
                   </div>
                   <ul className="space-y-3 text-gray-700">
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Built and deployed machine learning models for resource allocation and impact forecasting across 40+ countries.
+                        Built and deployed machine learning models for resource
+                        allocation and impact forecasting across 40+ countries.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Designed data pipelines and dashboards using Python, SQL, and Power BI for real-time monitoring of environmental programs.
+                        Designed data pipelines and dashboards using Python,
+                        SQL, and Power BI for real-time monitoring of
+                        environmental programs.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Conducted advanced statistical analysis supporting policy decisions on waste management, circular economy, and sustainability.
+                        Conducted advanced statistical analysis supporting
+                        policy decisions on waste management, circular economy,
+                        and sustainability.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Led CRM optimization initiatives improving stakeholder engagement and data-driven decision-making across the organization.
+                        Led CRM optimization initiatives improving stakeholder
+                        engagement and data-driven decision-making across the
+                        organization.
                       </span>
                     </li>
                   </ul>
@@ -263,9 +302,7 @@ export default function About() {
 
               {/* IAEA Section */}
               <section
-                ref={(el) => {
-                  if (el) sectionRefsMap.current["iaea"] = el;
-                }}
+                ref={registerSectionRef("iaea")}
                 id="iaea"
                 className="mb-20 scroll-mt-24"
               >
@@ -278,7 +315,8 @@ export default function About() {
                       Analyst & Data Specialist
                     </h4>
                     <p className="text-gray-600 mb-1">
-                      International Atomic Energy Agency (IAEA) - Office of Internal Oversight Services
+                      International Atomic Energy Agency (IAEA) - Office of
+                      Internal Oversight Services
                     </p>
                     <p className="text-sm text-gray-400">
                       Feb 2020 – Dec 2020 | Vienna, Austria
@@ -286,21 +324,32 @@ export default function About() {
                   </div>
                   <ul className="space-y-3 text-gray-700">
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Developed analytical frameworks for audit risk assessment and compliance monitoring across global IAEA operations.
+                        Developed analytical frameworks for audit risk
+                        assessment and compliance monitoring across global IAEA
+                        operations.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Created statistical models and visualizations for organizational performance evaluation and resource optimization.
+                        Created statistical models and visualizations for
+                        organizational performance evaluation and resource
+                        optimization.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Automated data extraction and reporting processes, reducing manual work by 70% and improving accuracy.
+                        Automated data extraction and reporting processes,
+                        reducing manual work by 70% and improving accuracy.
                       </span>
                     </li>
                   </ul>
@@ -309,9 +358,7 @@ export default function About() {
 
               {/* Cultural Diplomacy Section */}
               <section
-                ref={(el) => {
-                  if (el) sectionRefsMap.current["cultural"] = el;
-                }}
+                ref={registerSectionRef("cultural")}
                 id="cultural"
                 className="mb-20 scroll-mt-24"
               >
@@ -332,21 +379,31 @@ export default function About() {
                   </div>
                   <ul className="space-y-3 text-gray-700">
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Designed data collection systems and applied econometric modeling for financial and survey datasets.
+                        Designed data collection systems and applied econometric
+                        modeling for financial and survey datasets.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Delivered predictive analysis for business forecasts and international project evaluation.
+                        Delivered predictive analysis for business forecasts and
+                        international project evaluation.
                       </span>
                     </li>
                     <li className="flex gap-4">
-                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span className="text-black font-bold flex-shrink-0">
+                        •
+                      </span>
                       <span>
-                        Created statistical reports and visualizations supporting diplomacy strategy and stakeholder engagement.
+                        Created statistical reports and visualizations
+                        supporting diplomacy strategy and stakeholder
+                        engagement.
                       </span>
                     </li>
                   </ul>
@@ -355,9 +412,7 @@ export default function About() {
 
               {/* Get in Touch Section */}
               <section
-                ref={(el) => {
-                  if (el) sectionRefsMap.current["contact"] = el;
-                }}
+                ref={registerSectionRef("contact")}
                 id="contact"
                 className="mb-20 scroll-mt-24"
               >
@@ -422,7 +477,7 @@ export default function About() {
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
-                    allowFullScreen={true}
+                    allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Google Maps Profile Location"
