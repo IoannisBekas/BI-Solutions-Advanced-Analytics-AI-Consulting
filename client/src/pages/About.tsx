@@ -46,44 +46,33 @@ export default function About() {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "0px 0px 0px 0px",
-      threshold: [0.3, 0.5, 0.7],
+      rootMargin: "-150px 0px -150px 0px",
+      threshold: 0,
     };
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       // Only update if not manually scrolling
       if (!isScrollingRef.current) {
-        // Find the section with the highest intersection ratio (most visible)
-        let mostVisibleEntry = null;
-        let highestRatio = 0;
-
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > highestRatio) {
-            highestRatio = entry.intersectionRatio;
-            mostVisibleEntry = entry;
-          }
-        });
-
-        // If no section is intersecting, find the one closest to viewport
-        if (!mostVisibleEntry) {
-          let closestEntry = entries[0];
-          let closestDistance = Math.abs(
-            entries[0].boundingClientRect.top
+        // Filter intersecting entries
+        const intersectingEntries = entries.filter((entry) => entry.isIntersecting);
+        
+        if (intersectingEntries.length > 0) {
+          // If multiple sections are intersecting, pick the one with highest intersection ratio
+          const mostVisibleEntry = intersectingEntries.reduce((prev, current) => 
+            current.intersectionRatio > prev.intersectionRatio ? current : prev
           );
-
-          entries.forEach((entry) => {
-            const distance = Math.abs(entry.boundingClientRect.top);
-            if (distance < closestDistance) {
-              closestDistance = distance;
-              closestEntry = entry;
-            }
-          });
-
-          mostVisibleEntry = closestEntry;
-        }
-
-        if (mostVisibleEntry) {
           setActiveSection(mostVisibleEntry.target.id);
+        } else {
+          // If no section is intersecting, find the one closest to top of viewport
+          const closestEntry = entries.reduce((closest, current) => {
+            const currentDistance = Math.abs(current.boundingClientRect.top);
+            const closestDistance = Math.abs(closest.boundingClientRect.top);
+            return currentDistance < closestDistance ? current : closest;
+          });
+          
+          if (closestEntry) {
+            setActiveSection(closestEntry.target.id);
+          }
         }
       }
     };
