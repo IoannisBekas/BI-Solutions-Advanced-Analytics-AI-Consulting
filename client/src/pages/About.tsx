@@ -25,6 +25,9 @@ export default function About() {
 
   const sectionOrder = ["introduction", "un", "iaea", "cultural", "education", "contact"];
   const currentSectionIndex = sectionOrder.indexOf(activeSection);
+  
+  // Filter out education from navigation display
+  const navSections = sections.filter(section => section.id !== "education");
 
   useEffect(() => {
     const observerOptions = {
@@ -66,13 +69,13 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             {/* Sticky Sidebar with Progress */}
-            <aside className="lg:col-span-1 h-fit">
-              <div className="sticky top-0 pt-20">
+            <aside className="lg:col-span-1">
+              <div className="sticky top-20 pt-0">
                 {/* Progress Circles */}
                 <div className="flex flex-col items-center gap-12">
-                  {sections.map((section, idx) => {
+                  {navSections.map((section, idx) => {
                     const isActive = activeSection === section.id;
-                    const isLast = idx === sections.length - 1;
+                    const isLast = idx === navSections.length - 1;
                     return (
                       <div key={section.id} className="flex flex-col items-center w-full">
                         <button
@@ -123,7 +126,7 @@ export default function About() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                   {/* Left: Profile Image */}
                   <div className="flex flex-col">
-                    <div className="w-full h-48 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+                    <div className="w-full h-40 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
                       <img
                         src={founderPhoto}
                         alt="Ioannis Bekas"
