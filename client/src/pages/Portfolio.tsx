@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { DeviceMockup } from "@/components/DeviceMockup";
 import portfolio1 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_1.png";
 import portfolio2 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_2.png";
 import portfolio3 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_3.png";
@@ -26,6 +27,24 @@ export default function Portfolio() {
             </p>
           </ScrollReveal>
 
+          {/* Device Mockup Section */}
+          <div className="mb-24 pb-12 border-b border-gray-200">
+            <ScrollReveal>
+              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">Dashboard Showcases</h2>
+              <p className="text-lg text-gray-600 mb-12">
+                View our data analytics dashboards across different devices
+              </p>
+            </ScrollReveal>
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12 shadow-md">
+              <DeviceMockup 
+                desktopImage="/dashboard-water.png"
+                tabletImage="/dashboard-hr.png"
+                mobileImage="/dashboard-audit.png"
+              />
+            </div>
+          </div>
+
+          {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
               <ScrollReveal 
