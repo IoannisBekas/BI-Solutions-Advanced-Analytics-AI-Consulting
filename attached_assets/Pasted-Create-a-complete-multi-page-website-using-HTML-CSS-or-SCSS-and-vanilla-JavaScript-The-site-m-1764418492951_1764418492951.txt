@@ -1,0 +1,55 @@
+Create a complete multi-page website using HTML, CSS (or SCSS), and vanilla JavaScript. 
+The site must be fully responsive, lightweight, and similar in motion/visual style to cactusweb.gr.
+
+Requirements:
+
+1. Animations & Motion
+   - Use a lightweight scroll-animation library (AOS.js or equivalent) or custom IntersectionObserver logic.
+   - Apply fade-in, slide-in, and staggered reveal animations to sections, images, cards, and text blocks.
+   - Add smooth scrolling for internal navigation.
+   - Add hover animations for cards, images, and buttons (scale, opacity shift, or shadow).
+   - Include animated transitions for hero text and call-to-action buttons.
+
+2. Scroll-Based Effects
+   - Trigger animations once when elements enter the viewport.
+   - Implement parallax-style motion for hero sections or background images.
+   - Add a shrinking and fixed header that transforms when the user scrolls down.
+
+3. Site Structure
+   - Create the following pages: Home, Services, Portfolio, Blog, Contact.
+   - Include a responsive navigation bar with dropdowns for nested service categories.
+   - Home page must include:
+       • Hero section with animated headline and description.
+       • Services grid with animated cards.
+   - Portfolio page: grid with hover effects and sample items.
+   - Blog page: list at least 3 example posts with title, date, excerpt, and “Read more”.
+   - Contact page: simple form and contact details.
+
+4. Responsiveness
+   - Ensure optimal layout for desktop, tablet, and mobile.
+   - Implement an animated mobile menu (slide-in / slide-out).
+
+5. Style
+   - Use a clean, modern, minimal design emphasizing whitespace.
+   - Define a consistent color palette and typography hierarchy.
+   - Maintain a professional aesthetic similar to cactusweb.gr but not an imitation.
+
+6. Interactive AI Component
+   - Add three selector buttons labeled:
+       • "Λογιστής"
+       • "Δικηγόρος"
+       • "Σύμβουλος Επιχειρήσεων"
+   - When a user selects one of these roles, highlight the active selection.
+   - Below the buttons, include a text box where the user writes a question.
+   - Add a “Submit” button.
+   - On submit:
+       • Send the selected role + the user’s question to a Gemini API endpoint.
+       • The AI must answer using Greek law and real data relevant to the chosen role.
+       • Display the result in a formatted response container under the form.
+
+7. Optional Enhancements
+   - Add light/dark mode toggle.
+   - Include a small JavaScript utility for custom parallax or subtle motion effects without heavy frameworks.
+
+Goal:
+Deliver a complete website with layout, animations, motion behavior, and interaction quality inspired by cactusweb.gr, including a functional AI-powered Q&A component driven by Gemini and focused on Greek law and professional roles.
