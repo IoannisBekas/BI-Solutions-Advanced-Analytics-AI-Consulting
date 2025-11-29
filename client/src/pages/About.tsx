@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
-import { Mail, Linkedin } from "lucide-react";
+import { Mail, Linkedin, MapPin } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import founderPhoto from "@assets/founder-photo.jpg";
@@ -476,6 +476,36 @@ export default function About() {
                       </a>
                     </div>
                   </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Google Profile</p>
+                      <a
+                        href="https://maps.app.goo.gl/P9Efh14GKgrXAo5B8"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-lg font-semibold hover:text-gray-600 transition-colors"
+                      >
+                        View on Google Maps with Reviews
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 rounded-2xl overflow-hidden shadow-lg h-96">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3150.8860798628827!2d23.72693!3d37.97394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1999999999999%3A0x1111111111111111!2sAthens!5e0!3m2!1sen!2sgr!4v1234567890"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Google Maps Profile Location"
+                  />
                 </div>
 
                 <Button className="rounded-full h-12 px-8 bg-black hover:bg-gray-800 transition-all">
