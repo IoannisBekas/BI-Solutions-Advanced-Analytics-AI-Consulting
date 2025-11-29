@@ -15,9 +15,11 @@ export function Footer() {
           <div className="md:col-span-5 space-y-6">
             <Link href="/">
               <a className="flex items-center gap-3 block mb-4">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-black font-heading font-bold text-sm">3T</span>
-                </div>
+                <img 
+                  src="/bi-solutions-logo.png" 
+                  alt="BI Solutions" 
+                  className="w-10 h-10 invert"
+                />
                 <div>
                   <div className="text-xl font-bold font-heading tracking-tight">BI Solutions</div>
                   <div className="text-xs text-gray-400">Analytics & AI</div>

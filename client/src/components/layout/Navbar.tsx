@@ -4,7 +4,6 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import biLogo from "@assets/BI-Solutions-logo.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,9 +39,11 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/">
           <a className="flex items-center gap-3 group">
-            <div className="w-8 h-8 bg-black rounded-full group-hover:scale-110 transition-transform duration-300 overflow-hidden flex items-center justify-center">
-              <span className="text-white font-heading font-bold text-sm">3T</span>
-            </div>
+            <img 
+              src="/bi-solutions-logo.png" 
+              alt="BI Solutions" 
+              className="w-10 h-10 group-hover:scale-110 transition-transform duration-300"
+            />
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
               <span className="text-xs text-gray-500 font-medium">Analytics & AI</span>
