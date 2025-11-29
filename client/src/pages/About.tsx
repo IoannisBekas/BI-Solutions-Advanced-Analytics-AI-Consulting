@@ -1,188 +1,139 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { motion } from "framer-motion";
 import { Mail, Linkedin, MapPin } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import founderPhoto from "@assets/founder-photo.jpg";
 
-const focusStyles = `
-  .focused-section {
-    opacity: 1;
-    transition: opacity 300ms ease-in-out;
-  }
-  .faded-section {
-    opacity: 0.3;
-    transition: opacity 300ms ease-in-out;
-  }
-`;
-
-interface SectionRef {
+interface Section {
   id: string;
-  ref: React.RefObject<HTMLDivElement | null>;
   label: string;
 }
 
 export default function About() {
   const [activeSection, setActiveSection] = useState("introduction");
-  const isScrollingRef = useRef(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
-  const sections: SectionRef[] = [
-    { id: "introduction", ref: useRef<HTMLDivElement>(null), label: "Introduction" },
-    { id: "un", ref: useRef<HTMLDivElement>(null), label: "United Nations" },
-    { id: "iaea", ref: useRef<HTMLDivElement>(null), label: "IAEA Experience" },
-    { id: "cultural", ref: useRef<HTMLDivElement>(null), label: "Cultural Diplomacy" },
-    { id: "education", ref: useRef<HTMLDivElement>(null), label: "Education" },
-    { id: "contact", ref: useRef<HTMLDivElement>(null), label: "Get in Touch" },
+  const sectionRefsMap = useRef<{ [key: string]: HTMLElement | null }>({});
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const sections: Section[] = [
+    { id: "introduction", label: "Introduction" },
+    { id: "un", label: "United Nations" },
+    { id: "iaea", label: "IAEA Experience" },
+    { id: "cultural", label: "Cultural Diplomacy" },
+    { id: "contact", label: "Get in Touch" },
   ];
 
-  const sectionOrder = ["introduction", "un", "iaea", "cultural", "education", "contact"];
-  const currentSectionIndex = sectionOrder.indexOf(activeSection);
-  
-  // Filter out education from navigation display
-  const navSections = sections.filter(section => section.id !== "education");
+  const navSections = sections; // All sections shown in nav
 
+  // Initialize IntersectionObserver
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-150px 0px -150px 0px",
+      rootMargin: "0px 0px -80% 0px", // Top 20% of viewport triggers active state
       threshold: 0,
     };
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      // Only update if not manually scrolling
-      if (!isScrollingRef.current) {
-        // Filter intersecting entries
-        const intersectingEntries = entries.filter((entry) => entry.isIntersecting);
-        
-        if (intersectingEntries.length > 0) {
-          // If multiple sections are intersecting, pick the one with highest intersection ratio
-          const mostVisibleEntry = intersectingEntries.reduce((prev, current) => 
-            current.intersectionRatio > prev.intersectionRatio ? current : prev
-          );
-          setActiveSection(mostVisibleEntry.target.id);
-        } else {
-          // If no section is intersecting, find the one closest to top of viewport
-          const closestEntry = entries.reduce((closest, current) => {
-            const currentDistance = Math.abs(current.boundingClientRect.top);
-            const closestDistance = Math.abs(closest.boundingClientRect.top);
-            return currentDistance < closestDistance ? current : closest;
-          });
-          
-          if (closestEntry) {
-            setActiveSection(closestEntry.target.id);
-          }
+      // Find the section that is most visible in the viewport
+      let activeEntry: IntersectionObserverEntry | null = null;
+      let maxRatio = 0;
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio;
+          activeEntry = entry;
         }
+      });
+
+      // If a section is intersecting, set it as active
+      if (activeEntry) {
+        setActiveSection(activeEntry.target.id);
       }
     };
 
-    const observer = new IntersectionObserver(handleIntersection, observerOptions);
+    observerRef.current = new IntersectionObserver(
+      handleIntersection,
+      observerOptions
+    );
 
+    // Observe all sections
     sections.forEach((section) => {
-      if (section.ref.current) {
-        observer.observe(section.ref.current);
+      const element = sectionRefsMap.current[section.id];
+      if (element && observerRef.current) {
+        observerRef.current.observe(element);
       }
     });
 
-    return () => observer.disconnect();
-  }, [sections]);
-
-  const scrollToSection = (id: string) => {
-    const section = sections.find((s) => s.id === id);
-    if (section?.ref.current) {
-      // Immediately mark as scrolling with ref (no state delay)
-      isScrollingRef.current = true;
-      setActiveSection(id);
-      
-      // Clear any existing timeout
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
       }
-      
-      const element = section.ref.current;
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      const navbarHeight = 80; // navbar is pt-20 (80px)
-      const offsetPosition = elementPosition - navbarHeight;
-      
+    };
+  }, []);
+
+  // Handle navigation click
+  const handleNavClick = (sectionId: string) => {
+    const element = sectionRefsMap.current[sectionId];
+    if (element) {
+      const navbarHeight = 100; // Approximate navbar height
+      const offset = element.getBoundingClientRect().top + window.scrollY - navbarHeight;
       window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
+        top: offset,
+        behavior: "smooth",
       });
-      
-      // Re-enable observer detection after scroll completes
-      scrollTimeoutRef.current = setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 1200);
+      setActiveSection(sectionId);
     }
   };
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
-      <style>{focusStyles}</style>
       <Navbar />
       <main className="pt-20 pb-20">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-            {/* Sticky Sidebar with Progress */}
-            <aside className="lg:col-span-1">
-              <div className="sticky top-1/2 transform -translate-y-1/2 pt-0">
-                {/* Progress Circles */}
-                <div className="flex flex-col items-center gap-12">
-                  {navSections.map((section, idx) => {
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="flex gap-8 md:gap-16">
+            {/* Left Sidebar - Sticky Navigation */}
+            <aside className="hidden md:block w-48 flex-shrink-0">
+              <div className="sticky top-24">
+                <nav className="flex flex-col gap-6">
+                  {navSections.map((section) => {
                     const isActive = activeSection === section.id;
-                    const isLast = idx === navSections.length - 1;
                     return (
-                      <div key={section.id} className="flex flex-col items-center w-full">
-                        <button
-                          onClick={() => scrollToSection(section.id)}
-                          className="flex items-center gap-3 w-full cursor-pointer hover:opacity-70 transition-opacity"
-                          type="button"
-                        >
-                          <div className="flex flex-col items-center">
-                            <div
-                              className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                                isActive
-                                  ? "border-black bg-black ring-2 ring-black ring-offset-2"
-                                  : "border-gray-300 bg-white"
-                              }`}
-                            />
-                            {!isLast && (
-                              <div className="w-0.5 h-12 bg-gray-300" />
-                            )}
-                          </div>
-                          <span
-                            className={`text-sm font-medium transition-colors duration-300 ${
-                              isActive ? "text-black font-bold" : "text-gray-400"
-                            }`}
-                          >
-                            {section.label}
-                          </span>
-                        </button>
-                      </div>
+                      <button
+                        key={section.id}
+                        onClick={() => handleNavClick(section.id)}
+                        className={`text-left py-2 px-4 border-l-2 transition-all duration-300 ${
+                          isActive
+                            ? "border-black text-black font-bold"
+                            : "border-gray-300 text-gray-500 hover:text-gray-700"
+                        }`}
+                      >
+                        {section.label}
+                      </button>
                     );
                   })}
-                </div>
+                </nav>
               </div>
             </aside>
 
-            {/* Main Content */}
-            <div className="lg:col-span-3 space-y-20">
-              {/* Introduction */}
+            {/* Right Content Column */}
+            <div className="flex-1 min-w-0">
+              {/* Introduction Section */}
               <section
-                ref={sections[0].ref}
+                ref={(el) => {
+                  if (el) sectionRefsMap.current["introduction"] = el;
+                }}
                 id="introduction"
-                className={`space-y-8 ${activeSection === "introduction" ? "focused-section" : "faded-section"}`}
+                className="mb-20 scroll-mt-24"
               >
-                <h2 className="text-4xl md:text-5xl font-bold font-heading">
+                <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
                   Ioannis Bekas
                 </h2>
 
-                {/* Profile & Education Header Block */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
-                  {/* Left: Profile Image */}
-                  <div className="flex flex-col">
-                    <div className="w-full max-w-sm h-96 md:h-full md:min-h-96 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+                {/* Profile & Education */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-8">
+                  {/* Profile Image */}
+                  <div className="w-full">
+                    <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
                       <img
                         src={founderPhoto}
                         alt="Ioannis Bekas"
@@ -192,67 +143,62 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Right: Education Section */}
-                  <div
-                    ref={sections[4].ref}
-                    id="education"
-                    className="space-y-6 pt-0"
-                  >
+                  {/* Education */}
+                  <div className="space-y-6">
                     <div>
-                      <h3 className="text-2xl font-bold font-heading mb-2">
+                      <h3 className="text-2xl font-bold font-heading mb-6">
                         Education
                       </h3>
-                    </div>
-                    <div className="space-y-6">
-                      <div>
-                        <h4 className="text-base font-semibold text-black mb-1">
-                          M.Sc. in Operational Research, Analytics & Decision Making
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          Technical University of Crete & Hellenic Army Academy
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          GPA: 9.3/10 · Thesis: "Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis"
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className="text-base font-semibold text-black mb-1">
-                          B.Sc. in Mathematics & Minor in Economics
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          University of Athens
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Exchange – Financial Mathematics, Stockholm University
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className="text-base font-semibold text-black mb-2">
-                          Certifications
-                        </h4>
-                        <p className="text-xs text-gray-600 mb-2">Full list on LinkedIn</p>
-                        <ul className="space-y-1 text-xs text-gray-700">
-                          <li className="flex gap-3">
-                            <span className="text-black font-bold flex-shrink-0">•</span>
-                            <span>Data Science Professional Certificate – HarvardX</span>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-black font-bold flex-shrink-0">•</span>
-                            <span>Google Data Analytics Professional Certificate</span>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-black font-bold flex-shrink-0">•</span>
-                            <span>Financial Engineering and Risk Management – Columbia</span>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-black font-bold flex-shrink-0">•</span>
-                            <span>Financial Markets – Yale</span>
-                          </li>
-                          <li className="flex gap-3">
-                            <span className="text-black font-bold flex-shrink-0">•</span>
-                            <span>Python and Statistics for Financial Analysis – HKUST</span>
-                          </li>
-                        </ul>
+                      <div className="space-y-6">
+                        <div>
+                          <h4 className="text-base font-semibold text-black mb-1">
+                            M.Sc. in Operational Research, Analytics & Decision Making
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            Technical University of Crete & Hellenic Army Academy
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            GPA: 9.3/10 · Thesis: "Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis"
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="text-base font-semibold text-black mb-1">
+                            B.Sc. in Mathematics & Minor in Economics
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            University of Athens
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Exchange – Financial Mathematics, Stockholm University
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="text-base font-semibold text-black mb-2">
+                            Certifications
+                          </h4>
+                          <ul className="space-y-1 text-xs text-gray-700">
+                            <li className="flex gap-3">
+                              <span className="text-black font-bold flex-shrink-0">•</span>
+                              <span>Data Science Professional Certificate – HarvardX</span>
+                            </li>
+                            <li className="flex gap-3">
+                              <span className="text-black font-bold flex-shrink-0">•</span>
+                              <span>Google Data Analytics Professional Certificate</span>
+                            </li>
+                            <li className="flex gap-3">
+                              <span className="text-black font-bold flex-shrink-0">•</span>
+                              <span>Financial Engineering and Risk Management – Columbia</span>
+                            </li>
+                            <li className="flex gap-3">
+                              <span className="text-black font-bold flex-shrink-0">•</span>
+                              <span>Financial Markets – Yale</span>
+                            </li>
+                            <li className="flex gap-3">
+                              <span className="text-black font-bold flex-shrink-0">•</span>
+                              <span>Python and Statistics for Financial Analysis – HKUST</span>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -263,190 +209,165 @@ export default function About() {
                 </p>
               </section>
 
-              {/* United Nations Experience */}
+              {/* United Nations Section */}
               <section
-                ref={sections[1].ref}
+                ref={(el) => {
+                  if (el) sectionRefsMap.current["un"] = el;
+                }}
                 id="un"
-                className={`space-y-6 ${activeSection === "un" ? "focused-section" : "faded-section"}`}
+                className="mb-20 scroll-mt-24"
               >
-                <div>
-                  <h3 className="text-2xl font-bold font-heading mb-2">
-                    United Nations
-                  </h3>
-                  <p className="text-gray-600">
-                    Senior Data Scientist – Data Management & Visualization
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Nov 2023 – July 2025 | Geneva, Switzerland
-                  </p>
+                <h3 className="text-3xl font-bold font-heading mb-6">
+                  United Nations
+                </h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="text-xl font-semibold text-black mb-2">
+                      Data Scientist & Decision Intelligence Specialist
+                    </h4>
+                    <p className="text-gray-600 mb-1">
+                      UNEP - United Nations Environment Programme (DTIE)
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Jan 2021 – Present | Paris, France
+                    </p>
+                  </div>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Built and deployed machine learning models for resource allocation and impact forecasting across 40+ countries.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Designed data pipelines and dashboards using Python, SQL, and Power BI for real-time monitoring of environmental programs.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Conducted advanced statistical analysis supporting policy decisions on waste management, circular economy, and sustainability.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Led CRM optimization initiatives improving stakeholder engagement and data-driven decision-making across the organization.
+                      </span>
+                    </li>
+                  </ul>
                 </div>
-                <ul className="space-y-4 text-gray-700">
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Performed deep qualitative and quantitative assessments on global investment and service-capability ecosystems, identifying unmet needs, high-value opportunities, and improvement pathways used in strategic program design.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Consolidated insights from over 12 global data and research sources to build executive dashboards that shaped product and service-experience planning across regions.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Developed an investment-optimization and prioritization framework—structured like a financial ROI model—to support leadership in selecting high-impact service and product initiatives.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Crafted narrative-driven presentations distilling complex technical findings into clear business implications, influencing senior stakeholders during budget allocation and long-term planning cycles.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Designed KPI frameworks and refined SOPs that strengthened operational consistency, data quality, and analytical reliability across departments.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Executed full-cycle research programs, including sentiment analysis, survey analytics, and behavioral segmentation, translating customer expectations into actionable service enhancements.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Built real-time customer-experience monitoring dashboards in Power BI to track satisfaction, identify friction points, and support continuous product and service improvement.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Produced executive-level reports synthesizing customer insights, competitive intelligence, and market trends into strategic recommendations aligned with long-term product roadmaps.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Streamlined cross-functional processes by redesigning SOPs and introducing continuous-improvement practices, reducing operational complexity and improving service delivery.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Led cross-department collaboration to align insight-driven recommendations with organizational goals, ensuring unified decision-making across stakeholders.
-                    </span>
-                  </li>
-                </ul>
               </section>
 
-              {/* IAEA Experience */}
+              {/* IAEA Section */}
               <section
-                ref={sections[2].ref}
+                ref={(el) => {
+                  if (el) sectionRefsMap.current["iaea"] = el;
+                }}
                 id="iaea"
-                className={`space-y-6 ${activeSection === "iaea" ? "focused-section" : "faded-section"}`}
+                className="mb-20 scroll-mt-24"
               >
-                <div>
-                  <h3 className="text-2xl font-bold font-heading mb-2">
-                    IAEA (International Atomic Energy Agency)
-                  </h3>
-                  <p className="text-gray-600">
-                    Information Systems Analyst (Internship)
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Jul 2020 – Jun 2021 | Vienna, Austria
-                  </p>
+                <h3 className="text-3xl font-bold font-heading mb-6">
+                  IAEA Experience
+                </h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="text-xl font-semibold text-black mb-2">
+                      Analyst & Data Specialist
+                    </h4>
+                    <p className="text-gray-600 mb-1">
+                      International Atomic Energy Agency (IAEA) - Office of Internal Oversight Services
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Feb 2020 – Dec 2020 | Vienna, Austria
+                    </p>
+                  </div>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Developed analytical frameworks for audit risk assessment and compliance monitoring across global IAEA operations.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Created statistical models and visualizations for organizational performance evaluation and resource optimization.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Automated data extraction and reporting processes, reducing manual work by 70% and improving accuracy.
+                      </span>
+                    </li>
+                  </ul>
                 </div>
-                <ul className="space-y-4 text-gray-700">
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Created predictive HR dashboards in Power BI/SAP BO, modeling workforce trends from HRIS and ERP data.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Conducted statistical modeling and anomaly detection for HR policy evaluation, including impact analysis of interventions.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Built microservices pipelines for MTHR analytics with automated experiment tracking.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Trained IAEA staff on applied statistics and data visualization best practices.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Contributed to data governance frameworks, ensuring robust and reproducible data transformations.
-                    </span>
-                  </li>
-                </ul>
               </section>
 
-              {/* Cultural Diplomacy */}
+              {/* Cultural Diplomacy Section */}
               <section
-                ref={sections[3].ref}
+                ref={(el) => {
+                  if (el) sectionRefsMap.current["cultural"] = el;
+                }}
                 id="cultural"
-                className={`space-y-6 ${activeSection === "cultural" ? "focused-section" : "faded-section"}`}
+                className="mb-20 scroll-mt-24"
               >
-                <div>
-                  <h3 className="text-2xl font-bold font-heading mb-2">
-                    Hellenic Institute of Cultural Diplomacy
-                  </h3>
-                  <p className="text-gray-600">
-                    Statistician and Data Analyst
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Jul 2019 – Jun 2020 | Athens, Greece
-                  </p>
+                <h3 className="text-3xl font-bold font-heading mb-6">
+                  Cultural Diplomacy
+                </h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="text-xl font-semibold text-black mb-2">
+                      Statistician and Data Analyst
+                    </h4>
+                    <p className="text-gray-600 mb-1">
+                      Hellenic Institute of Cultural Diplomacy
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Jul 2019 – Jun 2020 | Athens, Greece
+                    </p>
+                  </div>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Designed data collection systems and applied econometric modeling for financial and survey datasets.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Delivered predictive analysis for business forecasts and international project evaluation.
+                      </span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-black font-bold flex-shrink-0">•</span>
+                      <span>
+                        Created statistical reports and visualizations supporting diplomacy strategy and stakeholder engagement.
+                      </span>
+                    </li>
+                  </ul>
                 </div>
-                <ul className="space-y-4 text-gray-700">
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Designed data collection systems and applied econometric modeling for financial and survey datasets.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Delivered predictive analysis for business forecasts and international project evaluation.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Created statistical reports and visualizations supporting diplomacy strategy and stakeholder engagement.
-                    </span>
-                  </li>
-                </ul>
               </section>
 
-              {/* Get in Touch */}
+              {/* Get in Touch Section */}
               <section
-                ref={sections[5].ref}
+                ref={(el) => {
+                  if (el) sectionRefsMap.current["contact"] = el;
+                }}
                 id="contact"
-                className={`space-y-8 ${activeSection === "contact" ? "focused-section" : "faded-section"}`}
+                className="mb-20 scroll-mt-24"
               >
                 <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
                   Get in Touch
                 </h2>
 
-                <div className="space-y-4">
+                <div className="space-y-6 mb-8">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center flex-shrink-0">
                       <Mail className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -461,7 +382,7 @@ export default function About() {
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center flex-shrink-0">
                       <Linkedin className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -478,7 +399,7 @@ export default function About() {
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center flex-shrink-0">
                       <MapPin className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -489,13 +410,13 @@ export default function About() {
                         rel="noopener noreferrer"
                         className="text-lg font-semibold hover:text-gray-600 transition-colors"
                       >
-                        View on Google Maps with Reviews
+                        View on Google Maps
                       </a>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-8 rounded-2xl overflow-hidden shadow-lg h-96">
+                <div className="mt-12 rounded-2xl overflow-hidden shadow-lg h-96 w-full mb-8">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3150.8860798628827!2d23.72693!3d37.97394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1999999999999%3A0x1111111111111111!2sAthens!5e0!3m2!1sen!2sgr!4v1234567890"
                     width="100%"
