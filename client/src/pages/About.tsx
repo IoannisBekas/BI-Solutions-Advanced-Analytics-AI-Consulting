@@ -101,11 +101,11 @@ export default function About() {
               Ioannis Bekas
             </h2>
 
-            {/* Profile & Education Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-              {/* Profile Image */}
-              <div className="w-full">
-                <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gray-200 shadow-lg">
+            {/* Education Section */}
+            <div className="space-y-8 mb-12">
+              {/* Centered Profile Image */}
+              <div className="flex justify-center mb-8">
+                <div className="w-64 aspect-square rounded-2xl overflow-hidden bg-gray-200 shadow-lg">
                   <img
                     src={founderPhoto}
                     alt="Ioannis Bekas"
@@ -115,7 +115,7 @@ export default function About() {
                 </div>
               </div>
 
-              {/* Education */}
+              {/* Education Content */}
               <div className="space-y-8">
                 <h3 className="text-3xl font-bold font-heading">Education</h3>
                 
