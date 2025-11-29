@@ -58,7 +58,20 @@ export default function About() {
   const scrollToSection = (id: string) => {
     const section = sections.find((s) => s.id === id);
     if (section?.ref.current) {
-      section.ref.current.scrollIntoView({ behavior: "smooth" });
+      const element = section.ref.current;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const navbarHeight = 80; // navbar is pt-20 (80px)
+      const offsetPosition = elementPosition - navbarHeight;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+      
+      // Manually trigger active section after scroll
+      setTimeout(() => {
+        setActiveSection(id);
+      }, 300);
     }
   };
 
