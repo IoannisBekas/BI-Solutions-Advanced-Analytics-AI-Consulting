@@ -14,7 +14,9 @@ interface SectionRef {
 
 export default function About() {
   const [activeSection, setActiveSection] = useState("introduction");
-  const [isScrolling, setIsScrolling] = useState(false);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   const sections: SectionRef[] = [
     { id: "introduction", ref: useRef<HTMLDivElement>(null), label: "Introduction" },
     { id: "un", ref: useRef<HTMLDivElement>(null), label: "United Nations" },
@@ -39,7 +41,7 @@ export default function About() {
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       // Only update if not manually scrolling
-      if (!isScrolling) {
+      if (!isScrollingRef.current) {
         const intersectingEntry = entries.find((entry) => entry.isIntersecting);
         if (intersectingEntry) {
           setActiveSection(intersectingEntry.target.id);
@@ -56,13 +58,19 @@ export default function About() {
     });
 
     return () => observer.disconnect();
-  }, [sections, isScrolling]);
+  }, [sections]);
 
   const scrollToSection = (id: string) => {
     const section = sections.find((s) => s.id === id);
     if (section?.ref.current) {
-      setIsScrolling(true);
+      // Immediately mark as scrolling with ref (no state delay)
+      isScrollingRef.current = true;
       setActiveSection(id);
+      
+      // Clear any existing timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
       
       const element = section.ref.current;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
@@ -75,9 +83,9 @@ export default function About() {
       });
       
       // Re-enable observer detection after scroll completes
-      setTimeout(() => {
-        setIsScrolling(false);
-      }, 1000);
+      scrollTimeoutRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 1200);
     }
   };
 
