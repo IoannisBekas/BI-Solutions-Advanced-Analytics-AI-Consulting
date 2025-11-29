@@ -118,14 +118,87 @@ export default function About() {
                 <h2 className="text-4xl md:text-5xl font-bold font-heading">
                   Ioannis Bekas
                 </h2>
-                <div className="w-full sm:max-w-sm h-48 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-                  <img
-                    src={founderPhoto}
-                    alt="Ioannis Bekas"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+
+                {/* Profile & Education Header Block */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                  {/* Left: Profile Image */}
+                  <div className="flex flex-col">
+                    <div className="w-full h-48 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+                      <img
+                        src={founderPhoto}
+                        alt="Ioannis Bekas"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right: Education Section */}
+                  <div
+                    ref={sections[4].ref}
+                    id="education"
+                    className="space-y-6"
+                  >
+                    <div>
+                      <h3 className="text-2xl font-bold font-heading mb-2">
+                        Education
+                      </h3>
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-base font-semibold text-black mb-1">
+                          M.Sc. in Operational Research, Analytics & Decision Making
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Technical University of Crete & Hellenic Army Academy
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          GPA: 9.3/10 · Thesis: "Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis"
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-base font-semibold text-black mb-1">
+                          B.Sc. in Mathematics & Minor in Economics
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          University of Athens
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Exchange – Financial Mathematics, Stockholm University
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-base font-semibold text-black mb-2">
+                          Certifications
+                        </h4>
+                        <p className="text-xs text-gray-600 mb-2">Full list on LinkedIn</p>
+                        <ul className="space-y-1 text-xs text-gray-700">
+                          <li className="flex gap-3">
+                            <span className="text-black font-bold flex-shrink-0">•</span>
+                            <span>Data Science Professional Certificate – HarvardX</span>
+                          </li>
+                          <li className="flex gap-3">
+                            <span className="text-black font-bold flex-shrink-0">•</span>
+                            <span>Google Data Analytics Professional Certificate</span>
+                          </li>
+                          <li className="flex gap-3">
+                            <span className="text-black font-bold flex-shrink-0">•</span>
+                            <span>Financial Engineering and Risk Management – Columbia</span>
+                          </li>
+                          <li className="flex gap-3">
+                            <span className="text-black font-bold flex-shrink-0">•</span>
+                            <span>Financial Markets – Yale</span>
+                          </li>
+                          <li className="flex gap-3">
+                            <span className="text-black font-bold flex-shrink-0">•</span>
+                            <span>Python and Statistics for Financial Analysis – HKUST</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
                   A data science and analytics specialist with experience across the United Nations, international agencies, and global enterprises. Expertise includes strategic analytics, machine learning, decision intelligence, CRM optimization, and data product development.
                 </p>
@@ -300,71 +373,6 @@ export default function About() {
                     </span>
                   </li>
                 </ul>
-              </section>
-
-              {/* Education */}
-              <section
-                ref={sections[4].ref}
-                id="education"
-                className="space-y-6"
-              >
-                <div>
-                  <h3 className="text-2xl font-bold font-heading mb-2">
-                    Education
-                  </h3>
-                </div>
-                <div className="space-y-8">
-                  <div>
-                    <h4 className="text-lg font-semibold text-black mb-1">
-                      M.Sc. in Operational Research, Analytics & Decision Making
-                    </h4>
-                    <p className="text-gray-600">
-                      Technical University of Crete & Hellenic Army Academy
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      GPA: 9.3/10 · Thesis: "Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis"
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-black mb-1">
-                      B.Sc. in Mathematics & Minor in Economics
-                    </h4>
-                    <p className="text-gray-600">
-                      University of Athens
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Exchange – Financial Mathematics, Stockholm University
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-black mb-3">
-                      Certifications
-                    </h4>
-                    <p className="text-sm text-gray-600 mb-3">Full list available on LinkedIn</p>
-                    <ul className="space-y-2 text-gray-700">
-                      <li className="flex gap-4">
-                        <span className="text-black font-bold flex-shrink-0">•</span>
-                        <span>Data Science Professional Certificate – HarvardX</span>
-                      </li>
-                      <li className="flex gap-4">
-                        <span className="text-black font-bold flex-shrink-0">•</span>
-                        <span>Google Data Analytics Professional Certificate</span>
-                      </li>
-                      <li className="flex gap-4">
-                        <span className="text-black font-bold flex-shrink-0">•</span>
-                        <span>Financial Engineering and Risk Management – Columbia</span>
-                      </li>
-                      <li className="flex gap-4">
-                        <span className="text-black font-bold flex-shrink-0">•</span>
-                        <span>Financial Markets – Yale</span>
-                      </li>
-                      <li className="flex gap-4">
-                        <span className="text-black font-bold flex-shrink-0">•</span>
-                        <span>Python and Statistics for Financial Analysis – HKUST</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </section>
 
               {/* Get in Touch */}

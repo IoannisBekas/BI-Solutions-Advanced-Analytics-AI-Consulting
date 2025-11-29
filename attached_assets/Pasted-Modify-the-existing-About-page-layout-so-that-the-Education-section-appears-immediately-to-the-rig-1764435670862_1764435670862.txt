@@ -1,0 +1,45 @@
+Modify the existing About page layout so that the “Education” section appears immediately to the right of the profile picture, in a 2-column block at the top of the content.
+
+Requirements:
+
+1. Profile Header Layout
+   - Create a top content block under the page title “Ioannis Bekas” that contains:
+       LEFT SIDE: the profile image (fixed size, rounded corners)
+       RIGHT SIDE: the “Education” section
+   - Use a two-column layout (CSS grid or flexbox) only for this header area.
+   - The Education subsection should include its heading and bullet-points or timeline items.
+   - Ensure the image and Education block align vertically and maintain equal top padding.
+
+2. Sticky Navigation
+   - Keep the existing left sticky navigation exactly as it is.
+   - The new Education block beside the image should NOT break the scroll-sync.
+   - The Education section must still correspond to its item in the left navigation.
+   - When the user scrolls past the image and Education block, the Education item should activate as usual.
+
+3. Section Ordering
+   - Keep the global section order:
+       Introduction
+       United Nations
+       IAEA Experience
+       Cultural Diplomacy
+       Education
+       Get in Touch
+   - Only VISUALLY reposition Education next to the image, without changing its logical position in the page structure.
+   - After the header block, the Education section should not appear again lower in the page.
+
+4. Responsive Behavior
+   - On desktop: image left, Education right.
+   - On tablets: stack Education under the image with proper spacing.
+   - On mobile: image first, education second (full-width).
+
+5. Styling
+   - Maintain existing typography, spacing, and animations.
+   - Education block should match the style of other sections.
+   - Do not distort or stretch the profile image.
+
+6. Output Format
+   - Return ONLY the updated HTML, CSS, and JS required for the new image-plus-education header.
+   - Do NOT regenerate unrelated parts of the page.
+
+Goal:
+Place the Education section to the right of the profile picture in the header area, while preserving the sticky navigation, scroll-synced highlighting, responsive layout, and professional visual design.
