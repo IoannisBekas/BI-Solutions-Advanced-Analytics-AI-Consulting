@@ -21,7 +21,6 @@ export function Hero() {
         />
         <div className="absolute inset-0 bg-white/30" />
       </motion.div>
-
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full pt-20">
         <div className="max-w-4xl">
@@ -30,9 +29,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="inline-block py-1 px-3 rounded-full bg-black/5 text-sm font-semibold tracking-wide mb-6">
-              ADVANCED ANALYTICS & AI
-            </span>
+            <span className="inline-block py-1 px-3 rounded-full bg-black/5 text-sm font-semibold tracking-wide mb-6">Advanced Analytics & AI Consulting</span>
           </motion.div>
           
           <motion.h1
@@ -70,7 +67,6 @@ export function Hero() {
           </motion.div>
         </div>
       </div>
-
       {/* Scroll Indicator */}
       <motion.div 
         initial={{ opacity: 0 }}
