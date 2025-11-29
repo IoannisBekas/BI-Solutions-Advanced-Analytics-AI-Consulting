@@ -1,0 +1,72 @@
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import accountingIcon from "@assets/generated_images/abstract_3d_icon_for_accounting_services.png";
+import legalIcon from "@assets/generated_images/abstract_3d_icon_for_legal_services.png";
+import consultingIcon from "@assets/generated_images/abstract_3d_icon_for_business_consulting.png";
+
+const services = [
+  {
+    title: "Accounting & Finance",
+    description: "Comprehensive financial planning, tax optimization, and bookkeeping services for modern businesses.",
+    icon: accountingIcon,
+    delay: 0.1
+  },
+  {
+    title: "Legal Counsel",
+    description: "Expert legal advice specializing in corporate law, intellectual property, and digital compliance.",
+    icon: legalIcon,
+    delay: 0.2
+  },
+  {
+    title: "Business Consulting",
+    description: "Strategic guidance to accelerate growth, streamline operations, and maximize market potential.",
+    icon: consultingIcon,
+    delay: 0.3
+  }
+];
+
+export function ServicesSection() {
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <ScrollReveal width="100%">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading leading-tight">
+              We provide solutions <br/> for your growth.
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <Button variant="outline" className="rounded-full px-6 group">
+              View all services <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </ScrollReveal>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <ScrollReveal key={index} delay={service.delay} className="h-full">
+              <Card className="h-full p-8 border-gray-100 shadow-none hover:shadow-xl hover:border-gray-200 transition-all duration-500 group bg-gray-50/50 hover:bg-white">
+                <div className="mb-8 relative">
+                  <div className="w-20 h-20 rounded-2xl bg-white p-2 shadow-sm group-hover:scale-110 transition-transform duration-500">
+                    <img src={service.icon} alt={service.title} className="w-full h-full object-cover rounded-xl" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold font-heading mb-4 group-hover:text-blue-600 transition-colors">
+                  {service.title}
+                </h3>
+                <p className="text-gray-500 leading-relaxed mb-8">
+                  {service.description}
+                </p>
+                <div className="flex items-center text-sm font-semibold text-gray-900 group-hover:translate-x-2 transition-transform duration-300 cursor-pointer">
+                  Learn more <div className="w-8 h-[1px] bg-black ml-4 group-hover:w-12 transition-all" />
+                </div>
+              </Card>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
