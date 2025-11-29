@@ -66,32 +66,33 @@ export default function About() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Navbar />
-      <main className="flex pt-20">
-        {/* Left Sidebar - Sticky Navigation */}
-        <aside className="hidden lg:block w-56 flex-shrink-0 px-8">
-          <div className="sticky top-32">
-            <nav className="space-y-1">
-              {sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left px-4 py-3 text-sm font-medium border-l-2 transition-all duration-300 ${
-                    activeSection === section.id
-                      ? "border-black text-black font-bold bg-gray-50"
-                      : "border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300"
-                  }`}
-                >
-                  {section.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-        </aside>
+      <main className="flex justify-center pt-20 px-4">
+        <div className="flex gap-16 w-full max-w-7xl">
+          {/* Left Sidebar - Sticky Navigation */}
+          <aside className="hidden lg:block w-56 flex-shrink-0">
+            <div className="sticky top-32">
+              <nav className="space-y-1">
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => scrollToSection(section.id)}
+                    className={`w-full text-left px-4 py-3 text-sm font-medium border-l-2 transition-all duration-300 ${
+                      activeSection === section.id
+                        ? "border-black text-black font-bold bg-gray-50"
+                        : "border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300"
+                    }`}
+                  >
+                    {section.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </aside>
 
-        {/* Right Content Area */}
-        <div className="flex-1 px-4 md:px-8 pb-20 max-w-4xl">
-          {/* Introduction Section */}
-          <section
+          {/* Right Content Area */}
+          <div className="flex-1 pb-20 md:max-w-3xl">
+            {/* Introduction Section */}
+            <section
             ref={sections[0].ref}
             id="introduction"
             className="mb-24 scroll-mt-20"
@@ -372,6 +373,7 @@ export default function About() {
               Book a Consultation
             </Button>
           </section>
+        </div>
         </div>
       </main>
       <Footer />
