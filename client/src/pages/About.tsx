@@ -66,50 +66,37 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             {/* Sticky Sidebar with Progress */}
             <aside className="lg:col-span-1">
-              <div className="sticky top-32 space-y-8">
+              <div className="sticky top-32">
                 {/* Progress Circles */}
-                <div className="flex flex-col items-center gap-2 mb-8">
+                <div className="flex flex-col items-center gap-2">
                   {sections.map((section, idx) => {
-                    const isCompleted = idx <= currentSectionIndex;
                     const isActive = activeSection === section.id;
                     return (
                       <motion.div
                         key={section.id}
-                        className="flex items-center gap-3 w-full"
+                        className="flex items-center gap-3 w-full cursor-pointer"
+                        onClick={() => scrollToSection(section.id)}
                       >
                         <div className="flex flex-col items-center">
                           <motion.div
                             className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                              isCompleted
-                                ? "border-black bg-black"
+                              isActive
+                                ? "border-black bg-black scale-125 ring-2 ring-black ring-offset-2"
                                 : "border-gray-300 bg-white"
-                            } ${isActive ? "scale-125 ring-2 ring-black ring-offset-2" : ""}`}
+                            }`}
                             animate={{
                               scale: isActive ? 1.25 : 1,
                             }}
-                          >
-                            {isCompleted && (
-                              <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                className="w-1.5 h-1.5 bg-white rounded-full"
-                              />
-                            )}
-                          </motion.div>
+                          />
                           {idx < sections.length - 1 && (
                             <motion.div
-                              className={`w-0.5 h-6 transition-colors duration-300 ${
-                                isCompleted ? "bg-black" : "bg-gray-300"
-                              }`}
-                              initial={{ scaleY: 0 }}
-                              animate={{ scaleY: isCompleted ? 1 : 0 }}
-                              style={{ originY: 0 }}
+                              className="w-0.5 h-6 bg-gray-300"
                             />
                           )}
                         </div>
                         <span
-                          className={`text-xs font-medium transition-colors duration-300 ${
-                            isActive ? "text-black font-bold" : isCompleted ? "text-gray-600" : "text-gray-400"
+                          className={`text-sm font-medium transition-colors duration-300 ${
+                            isActive ? "text-black font-bold" : "text-gray-400"
                           }`}
                         >
                           {section.label}
@@ -117,27 +104,6 @@ export default function About() {
                       </motion.div>
                     );
                   })}
-                </div>
-
-                {/* Navigation Buttons */}
-                <div className="space-y-2 border-t pt-6">
-                  <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">
-                    Navigate
-                  </h3>
-                  {sections.map((section) => (
-                    <motion.button
-                      key={section.id}
-                      onClick={() => scrollToSection(section.id)}
-                      className={`w-full text-left px-4 py-2 rounded-lg transition-all duration-300 text-sm ${
-                        activeSection === section.id
-                          ? "bg-black text-white font-semibold"
-                          : "text-gray-600 hover:text-black hover:bg-gray-50"
-                      }`}
-                      whileHover={{ x: 4 }}
-                    >
-                      {section.label}
-                    </motion.button>
-                  ))}
                 </div>
               </div>
             </aside>
@@ -157,7 +123,7 @@ export default function About() {
                 <h2 className="text-4xl md:text-5xl font-bold font-heading">
                   Ioannis Bekas
                 </h2>
-                <div className="aspect-square md:aspect-auto md:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-8 shadow-lg">
+                <div className="aspect-square md:aspect-auto md:h-48 rounded-2xl overflow-hidden bg-gray-100 mb-8 shadow-lg">
                   <img
                     src={founderPhoto}
                     alt="Ioannis Bekas"
@@ -366,7 +332,7 @@ export default function About() {
                   <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
                     Get in Touch
                   </h2>
-                  <div className="aspect-square md:aspect-auto md:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-12 shadow-lg">
+                  <div className="aspect-square md:aspect-auto md:h-48 rounded-2xl overflow-hidden bg-gray-100 mb-12 shadow-lg">
                     <img
                       src={founderPhoto}
                       alt="Ioannis Bekas"
