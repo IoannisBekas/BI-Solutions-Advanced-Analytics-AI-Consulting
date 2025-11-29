@@ -66,42 +66,44 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             {/* Sticky Sidebar with Progress */}
             <aside className="lg:col-span-1">
-              <div className="sticky top-32">
+              <div className="sticky top-32 h-screen flex flex-col">
                 {/* Progress Circles */}
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center justify-between flex-1">
                   {sections.map((section, idx) => {
                     const isActive = activeSection === section.id;
+                    const isLast = idx === sections.length - 1;
                     return (
-                      <motion.div
-                        key={section.id}
-                        className="flex items-center gap-3 w-full cursor-pointer"
-                        onClick={() => scrollToSection(section.id)}
-                      >
-                        <div className="flex flex-col items-center">
-                          <motion.div
-                            className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                              isActive
-                                ? "border-black bg-black scale-125 ring-2 ring-black ring-offset-2"
-                                : "border-gray-300 bg-white"
-                            }`}
-                            animate={{
-                              scale: isActive ? 1.25 : 1,
-                            }}
-                          />
-                          {idx < sections.length - 1 && (
-                            <motion.div
-                              className="w-0.5 h-6 bg-gray-300"
-                            />
-                          )}
-                        </div>
-                        <span
-                          className={`text-sm font-medium transition-colors duration-300 ${
-                            isActive ? "text-black font-bold" : "text-gray-400"
-                          }`}
+                      <div key={section.id} className="flex flex-col items-center w-full">
+                        <motion.div
+                          className="flex items-center gap-3 w-full cursor-pointer"
+                          onClick={() => scrollToSection(section.id)}
                         >
-                          {section.label}
-                        </span>
-                      </motion.div>
+                          <div className="flex flex-col items-center">
+                            <motion.div
+                              className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                                isActive
+                                  ? "border-black bg-black scale-125 ring-2 ring-black ring-offset-2"
+                                  : "border-gray-300 bg-white"
+                              }`}
+                              animate={{
+                                scale: isActive ? 1.25 : 1,
+                              }}
+                            />
+                            {!isLast && (
+                              <motion.div
+                                className="w-0.5 flex-1 min-h-16 bg-gray-300"
+                              />
+                            )}
+                          </div>
+                          <span
+                            className={`text-sm font-medium transition-colors duration-300 ${
+                              isActive ? "text-black font-bold" : "text-gray-400"
+                            }`}
+                          >
+                            {section.label}
+                          </span>
+                        </motion.div>
+                      </div>
                     );
                   })}
                 </div>
