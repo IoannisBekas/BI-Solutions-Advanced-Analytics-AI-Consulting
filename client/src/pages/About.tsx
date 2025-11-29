@@ -328,18 +328,9 @@ export default function About() {
                 viewport={{ once: false }}
                 className="space-y-8"
               >
-                <div>
-                  <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
-                    Get in Touch
-                  </h2>
-                  <div className="aspect-square md:aspect-auto md:h-48 rounded-2xl overflow-hidden bg-gray-100 mb-12 shadow-lg">
-                    <img
-                      src={founderPhoto}
-                      alt="Ioannis Bekas"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
+                <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
+                  Get in Touch
+                </h2>
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
