@@ -70,7 +70,7 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             {/* Sticky Sidebar with Progress */}
             <aside className="lg:col-span-1">
-              <div className="sticky top-20 pt-0">
+              <div className="sticky top-1/2 transform -translate-y-1/2 pt-0">
                 {/* Progress Circles */}
                 <div className="flex flex-col items-center gap-12">
                   {navSections.map((section, idx) => {
