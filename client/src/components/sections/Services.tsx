@@ -38,9 +38,10 @@ export function ServicesSection() {
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.2}>
-            <Button variant="outline" className="rounded-full px-6 group">
-              View all services <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <a href="/services" className="flex items-center gap-2 text-sm font-semibold text-black group hover:gap-3 transition-all">
+              View all services
+              <div className="w-8 h-[1px] bg-black group-hover:w-12 transition-all" />
+            </a>
           </ScrollReveal>
         </div>
 
@@ -48,11 +49,6 @@ export function ServicesSection() {
           {services.map((service, index) => (
             <ScrollReveal key={index} delay={service.delay} className="h-full">
               <Card className="h-full p-8 border-gray-100 shadow-none hover:shadow-xl hover:border-gray-200 transition-all duration-500 group bg-gray-50/50 hover:bg-white">
-                <div className="mb-8 relative">
-                  <div className="w-20 h-20 rounded-2xl bg-white p-2 shadow-sm group-hover:scale-110 transition-transform duration-500">
-                    <img src={service.icon} alt={service.title} className="w-full h-full object-cover rounded-xl" />
-                  </div>
-                </div>
                 <h3 className="text-2xl font-bold font-heading mb-4 group-hover:text-blue-600 transition-colors">
                   {service.title}
                 </h3>
