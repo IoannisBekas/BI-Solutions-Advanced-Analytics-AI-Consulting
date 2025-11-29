@@ -1,0 +1,58 @@
+I have a two-column layout that is NOT working correctly.
+Please REBUILD the page from scratch using HTML, CSS (or SCSS), and vanilla JavaScript with the following very strict requirements:
+
+1. Layout
+   - Left column: vertical navigation with 4–6 items (e.g. "Introduction", "Experience", "Projects", "Education").
+   - Right column: long scrollable content with sections for each nav item.
+   - The left column must use `position: sticky; top: 100px;` (or similar) so it stays in view while the right column scrolls.
+   - The page must NOT have layout jumps or overlapping elements while scrolling.
+
+2. Scroll-sync (Scrollspy)
+   - Each section in the right column must have a unique `id` (e.g. `#intro`, `#experience`, etc.).
+   - Each nav item on the left must be an `<a href="#section-id">`.
+   - Implement Scrollspy using `IntersectionObserver` (do not use a framework):
+       - Observe every section element.
+       - When a section is at least 50% visible, add an `.active` class to the matching nav link and remove `.active` from all others.
+       - The `.active` class must change style (e.g. bold text + left border) so it is clearly visible.
+   - The active state must update smoothly and accurately while scrolling up and down; it must never be “stuck” on the wrong item.
+
+3. Sticky behavior details
+   - The sticky left nav must:
+       - Stay aligned with the scroll position.
+       - Not move outside the viewport when the user scrolls the right content.
+       - Respect the header height if there is a top header (use proper top offset or padding).
+   - Test with long content so I can scroll several screens and confirm the nav stays in sync.
+
+4. Image / picture quality
+   - At the top of the right column include a profile image (e.g. a headshot placeholder).
+   - The image container must have a fixed aspect ratio (e.g. 16:9 or square).
+   - Use CSS to ensure the image:
+       - Does NOT stretch or distort.
+       - Is centered and cropped nicely.
+       - Use: `img { width: 100%; height: 100%; object-fit: cover; object-position: center; }`
+   - The image must scale responsively on smaller screens while preserving aspect ratio.
+
+5. Responsiveness
+   - Desktop: two-column layout (left nav ~25–30%, right content ~70–75%).
+   - Tablet: columns can stack or shrink but the sticky behavior must still work.
+   - Mobile: the left nav becomes a horizontal bar at the top or collapsible menu; Scrollspy must still correctly highlight the active section.
+
+6. Animations (optional but desirable)
+   - Use simple fade-in or slide-in animations on sections when they appear, either with CSS transitions or a lightweight library like AOS.
+   - Animations must NOT interfere with Scrollspy or sticky behavior.
+
+7. Code expectations
+   - Provide complete `index.html`, `styles.css` (or `.scss`), and `script.js`.
+   - In `script.js` implement and clearly comment:
+       - The IntersectionObserver setup.
+       - The logic that maps `section.id` to nav links.
+   - The final result must have:
+       - Correct sticky nav behavior.
+       - Accurate scroll-synced active state.
+       - A clean, properly cropped profile image.
+
+Goal:
+Deliver a polished, bug-free page where:
+- the left navigation stays sticky,
+- the active item always matches the visible section while scrolling,
+- and the profile image looks clean, centered, and not distorted at any viewport size.
