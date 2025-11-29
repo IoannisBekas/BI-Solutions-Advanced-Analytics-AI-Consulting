@@ -17,11 +17,13 @@ export default function About() {
   const sections: SectionRef[] = [
     { id: "introduction", ref: useRef<HTMLDivElement>(null), label: "Introduction" },
     { id: "un", ref: useRef<HTMLDivElement>(null), label: "United Nations" },
-    { id: "bi", ref: useRef<HTMLDivElement>(null), label: "BI Solutions" },
     { id: "iaea", ref: useRef<HTMLDivElement>(null), label: "IAEA Experience" },
     { id: "cultural", ref: useRef<HTMLDivElement>(null), label: "Cultural Diplomacy" },
     { id: "contact", ref: useRef<HTMLDivElement>(null), label: "Photo & Contact" },
   ];
+
+  const sectionOrder = ["introduction", "un", "iaea", "cultural", "contact"];
+  const currentSectionIndex = sectionOrder.indexOf(activeSection);
 
   useEffect(() => {
     const observerOptions = {
@@ -62,26 +64,81 @@ export default function About() {
       <main className="pt-20 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-            {/* Sticky Sidebar */}
+            {/* Sticky Sidebar with Progress */}
             <aside className="lg:col-span-1">
-              <div className="sticky top-32 space-y-2">
-                <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-6">
-                  About the Founder
-                </h3>
-                {sections.map((section) => (
-                  <motion.button
-                    key={section.id}
-                    onClick={() => scrollToSection(section.id)}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
-                      activeSection === section.id
-                        ? "bg-black text-white font-semibold"
-                        : "text-gray-600 hover:text-black hover:bg-gray-50"
-                    }`}
-                    whileHover={{ x: 4 }}
-                  >
-                    {section.label}
-                  </motion.button>
-                ))}
+              <div className="sticky top-32 space-y-8">
+                {/* Progress Circles */}
+                <div className="flex flex-col items-center gap-2 mb-8">
+                  {sections.map((section, idx) => {
+                    const isCompleted = idx <= currentSectionIndex;
+                    const isActive = activeSection === section.id;
+                    return (
+                      <motion.div
+                        key={section.id}
+                        className="flex items-center gap-3 w-full"
+                      >
+                        <div className="flex flex-col items-center">
+                          <motion.div
+                            className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                              isCompleted
+                                ? "border-black bg-black"
+                                : "border-gray-300 bg-white"
+                            } ${isActive ? "scale-125 ring-2 ring-black ring-offset-2" : ""}`}
+                            animate={{
+                              scale: isActive ? 1.25 : 1,
+                            }}
+                          >
+                            {isCompleted && (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="w-1.5 h-1.5 bg-white rounded-full"
+                              />
+                            )}
+                          </motion.div>
+                          {idx < sections.length - 1 && (
+                            <motion.div
+                              className={`w-0.5 h-6 transition-colors duration-300 ${
+                                isCompleted ? "bg-black" : "bg-gray-300"
+                              }`}
+                              initial={{ scaleY: 0 }}
+                              animate={{ scaleY: isCompleted ? 1 : 0 }}
+                              style={{ originY: 0 }}
+                            />
+                          )}
+                        </div>
+                        <span
+                          className={`text-xs font-medium transition-colors duration-300 ${
+                            isActive ? "text-black font-bold" : isCompleted ? "text-gray-600" : "text-gray-400"
+                          }`}
+                        >
+                          {section.label}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="space-y-2 border-t pt-6">
+                  <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">
+                    Navigate
+                  </h3>
+                  {sections.map((section) => (
+                    <motion.button
+                      key={section.id}
+                      onClick={() => scrollToSection(section.id)}
+                      className={`w-full text-left px-4 py-2 rounded-lg transition-all duration-300 text-sm ${
+                        activeSection === section.id
+                          ? "bg-black text-white font-semibold"
+                          : "text-gray-600 hover:text-black hover:bg-gray-50"
+                      }`}
+                      whileHover={{ x: 4 }}
+                    >
+                      {section.label}
+                    </motion.button>
+                  ))}
+                </div>
               </div>
             </aside>
 
@@ -197,76 +254,9 @@ export default function About() {
                 </ul>
               </motion.section>
 
-              {/* BI Solutions */}
-              <motion.section
-                ref={sections[2].ref}
-                id="bi"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: false }}
-                className="space-y-6"
-              >
-                <div>
-                  <h3 className="text-2xl font-bold font-heading mb-2">
-                    BI Solutions
-                  </h3>
-                  <p className="text-gray-600">
-                    Founder & Principal Consultant
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Aug 2021 – Dec 2023 | 2 years 4 months
-                  </p>
-                </div>
-                <ul className="space-y-4 text-gray-700">
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Advised executives at global enterprises (Fujitsu, LG, Nespresso, Collins Aerospace, Coca Cola, PepsiCo, LogicIn and others) on adopting data science, CRM analytics, and advanced visualization practices, enabling leadership teams to run measurable, data-driven marketing and sales initiatives.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Scoped and delivered data solutions with directors and senior managers by mapping business objectives (e.g., market expansion, customer retention) directly to technical architectures and analytical workflows.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Built and maintained enterprise-grade ETL pipelines in Python/SQL and dbt, standardizing CRM and e-commerce data across regions to give leadership teams a single source of truth.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Designed and deployed machine learning solutions (classification models, recommendation engines, graph analytics in Neo4j) that improved customer segmentation, targeting accuracy, and campaign ROI.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Embedded predictive and prescriptive models into decision-making processes, helping executives shift from reactive reporting to proactive, scenario-based planning.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Productionized ML pipelines in Databricks Feature Store with full CI/CD automation (Docker, GitHub Actions), ensuring scalability, compliance, and operational resilience.
-                    </span>
-                  </li>
-                  <li className="flex gap-4">
-                    <span className="text-black font-bold flex-shrink-0">•</span>
-                    <span>
-                      Created tailored executive dashboards in Power BI and Tableau, providing board-level visibility into customer behavior, marketing effectiveness, and revenue growth drivers.
-                    </span>
-                  </li>
-                </ul>
-              </motion.section>
-
               {/* IAEA Experience */}
               <motion.section
-                ref={sections[3].ref}
+                ref={sections[2].ref}
                 id="iaea"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -321,7 +311,7 @@ export default function About() {
 
               {/* Cultural Diplomacy */}
               <motion.section
-                ref={sections[4].ref}
+                ref={sections[3].ref}
                 id="cultural"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -364,7 +354,7 @@ export default function About() {
 
               {/* Photo & Contact */}
               <motion.section
-                ref={sections[5].ref}
+                ref={sections[4].ref}
                 id="contact"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
