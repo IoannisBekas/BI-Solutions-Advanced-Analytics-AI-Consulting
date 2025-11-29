@@ -1,7 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { ServicesSection } from "@/components/sections/Services";
-import { AIAdvisor } from "@/components/sections/AIAdvisor";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import portfolio1 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_1.png";
@@ -53,8 +52,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <AIAdvisor />
       </main>
       <Footer />
     </div>
