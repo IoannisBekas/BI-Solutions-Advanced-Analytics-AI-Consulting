@@ -154,10 +154,6 @@ export default function About() {
                 </div>
               </div>
             </div>
-
-            <p className="text-lg text-gray-700 leading-relaxed max-w-3xl">
-              A data science and analytics specialist with experience across the United Nations, international agencies, and global enterprises. Expertise includes strategic analytics, machine learning, decision intelligence, CRM optimization, and data product development.
-            </p>
           </section>
 
           {/* United Nations Section */}
