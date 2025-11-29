@@ -6,6 +6,17 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import founderPhoto from "@assets/founder-photo.jpg";
 
+const focusStyles = `
+  .focused-section {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+  }
+  .faded-section {
+    opacity: 0.3;
+    transition: opacity 300ms ease-in-out;
+  }
+`;
+
 interface SectionRef {
   id: string;
   ref: React.RefObject<HTMLDivElement | null>;
@@ -91,6 +102,7 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
+      <style>{focusStyles}</style>
       <Navbar />
       <main className="pt-20 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -143,7 +155,7 @@ export default function About() {
               <section
                 ref={sections[0].ref}
                 id="introduction"
-                className="space-y-8"
+                className={`space-y-8 ${activeSection === "introduction" ? "focused-section" : "faded-section"}`}
               >
                 <h2 className="text-4xl md:text-5xl font-bold font-heading">
                   Ioannis Bekas
@@ -238,7 +250,7 @@ export default function About() {
               <section
                 ref={sections[1].ref}
                 id="un"
-                className="space-y-6"
+                className={`space-y-6 ${activeSection === "un" ? "focused-section" : "faded-section"}`}
               >
                 <div>
                   <h3 className="text-2xl font-bold font-heading mb-2">
@@ -319,7 +331,7 @@ export default function About() {
               <section
                 ref={sections[2].ref}
                 id="iaea"
-                className="space-y-6"
+                className={`space-y-6 ${activeSection === "iaea" ? "focused-section" : "faded-section"}`}
               >
                 <div>
                   <h3 className="text-2xl font-bold font-heading mb-2">
@@ -370,7 +382,7 @@ export default function About() {
               <section
                 ref={sections[3].ref}
                 id="cultural"
-                className="space-y-6"
+                className={`space-y-6 ${activeSection === "cultural" ? "focused-section" : "faded-section"}`}
               >
                 <div>
                   <h3 className="text-2xl font-bold font-heading mb-2">
@@ -409,7 +421,7 @@ export default function About() {
               <section
                 ref={sections[5].ref}
                 id="contact"
-                className="space-y-8"
+                className={`space-y-8 ${activeSection === "contact" ? "focused-section" : "faded-section"}`}
               >
                 <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
                   Get in Touch
