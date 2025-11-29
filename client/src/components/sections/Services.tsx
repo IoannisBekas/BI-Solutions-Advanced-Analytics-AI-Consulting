@@ -2,6 +2,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 import accountingIcon from "@assets/generated_images/abstract_3d_icon_for_accounting_services.png";
 import legalIcon from "@assets/generated_images/abstract_3d_icon_for_legal_services.png";
 import consultingIcon from "@assets/generated_images/abstract_3d_icon_for_business_consulting.png";
@@ -38,10 +39,10 @@ export function ServicesSection() {
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.2}>
-            <a href="/services" className="flex items-center gap-2 text-sm font-semibold text-black group hover:gap-3 transition-all">
+            <Link href="/services" className="flex items-center gap-2 text-sm font-semibold text-black group hover:gap-3 transition-all">
               View all services
               <div className="w-8 h-[1px] bg-black group-hover:w-12 transition-all" />
-            </a>
+            </Link>
           </ScrollReveal>
         </div>
 

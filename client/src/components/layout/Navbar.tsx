@@ -37,8 +37,7 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link href="/">
-          <a className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-3 group">
             <img 
               src="/bi-solutions-logo.png" 
               alt="BI Solutions" 
@@ -48,19 +47,19 @@ export function Navbar() {
               <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
               <span className="text-xs text-gray-500 font-medium">Advanced Analytics & AI Consulting</span>
             </div>
-          </a>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href}>
-              <a
-                className={cn(
-                  "text-sm font-medium transition-colors hover:text-black relative group",
-                  location === link.href ? "text-black" : "text-gray-500"
-                )}
-              >
+            <Link 
+              key={link.name} 
+              href={link.href}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-black relative group",
+                location === link.href ? "text-black" : "text-gray-500"
+              )}
+            >
                 {link.name}
                 <span 
                   className={cn(
@@ -68,7 +67,6 @@ export function Navbar() {
                     location === link.href ? "w-full" : ""
                   )} 
                 />
-              </a>
             </Link>
           ))}
           <Button className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105">
@@ -96,13 +94,13 @@ export function Navbar() {
           >
             <nav className="flex flex-col gap-8 text-2xl font-heading font-bold">
               {navLinks.map((link) => (
-                <Link key={link.name} href={link.href}>
-                  <a 
-                    className="hover:text-gray-500 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
+                <Link 
+                  key={link.name} 
+                  href={link.href}
+                  className="hover:text-gray-500 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
                     {link.name}
-                  </a>
                 </Link>
               ))}
               <Button className="w-full mt-8 rounded-full py-6 text-lg">

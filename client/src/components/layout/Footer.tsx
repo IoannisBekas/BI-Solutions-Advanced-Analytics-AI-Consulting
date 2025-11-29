@@ -13,8 +13,7 @@ export function Footer() {
           
           {/* Brand */}
           <div className="md:col-span-5 space-y-6">
-            <Link href="/">
-              <a className="flex items-center gap-3 block mb-4">
+            <Link href="/" className="flex items-center gap-3 block mb-4">
                 <img 
                   src="/bi-solutions-logo.png" 
                   alt="BI Solutions" 
@@ -24,7 +23,6 @@ export function Footer() {
                   <div className="text-xl font-bold font-heading tracking-tight">BI Solutions</div>
                   <div className="text-xs text-gray-400">Analytics & AI</div>
                 </div>
-              </a>
             </Link>
             <p className="text-gray-400 max-w-sm leading-relaxed">
               Enterprise analytics, AI, and digital transformation. Turning data into competitive advantage through cutting-edge technology and strategic consulting.
@@ -37,10 +35,11 @@ export function Footer() {
             <ul className="space-y-4">
               {["Home", "Services", "Portfolio", "Blog", "Contact"].map((item) => (
                 <li key={item}>
-                  <Link href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}>
-                    <a className="text-gray-400 hover:text-white transition-colors">
+                  <Link 
+                    href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                       {item}
-                    </a>
                   </Link>
                 </li>
               ))}
