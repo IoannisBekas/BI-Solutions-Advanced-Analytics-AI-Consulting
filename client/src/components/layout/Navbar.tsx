@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -39,8 +39,8 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/">
           <a className="text-2xl font-bold tracking-tighter font-heading group flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full group-hover:scale-110 transition-transform duration-300" />
-            <span>DATA<span className="text-gray-400">VERSE</span></span>
+            <div className="w-8 h-8 bg-black rounded-full group-hover:scale-110 transition-transform duration-300" />
+            <span>CACTUS<span className="text-gray-400">CLONE</span></span>
           </a>
         </Link>
 
@@ -57,14 +57,14 @@ export function Navbar() {
                 {link.name}
                 <span 
                   className={cn(
-                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover:w-full",
+                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full",
                     location === link.href ? "w-full" : ""
                   )} 
                 />
               </a>
             </Link>
           ))}
-          <Button className="rounded-full px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105">
+          <Button className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105">
             Get Started
           </Button>
         </nav>
@@ -99,7 +99,7 @@ export function Navbar() {
                   </a>
                 </Link>
               ))}
-              <Button className="w-full mt-8 rounded-full py-6 text-lg bg-gradient-to-r from-blue-600 to-purple-600">
+              <Button className="w-full mt-8 rounded-full py-6 text-lg">
                 Get Started
               </Button>
             </nav>
