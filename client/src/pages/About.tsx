@@ -32,7 +32,7 @@ export default function About() {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "0px 0px -75% 0px",
+      rootMargin: "-80px 0px -60% 0px",
       threshold: [0],
     };
 
@@ -61,17 +61,15 @@ export default function About() {
       const element = section.ref.current;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       const navbarHeight = 80; // navbar is pt-20 (80px)
-      const offsetPosition = elementPosition - navbarHeight;
+      const offsetPosition = elementPosition - navbarHeight - 20;
       
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth"
       });
       
-      // Manually trigger active section after scroll
-      setTimeout(() => {
-        setActiveSection(id);
-      }, 300);
+      // Update active section immediately for instant feedback
+      setActiveSection(id);
     }
   };
 
