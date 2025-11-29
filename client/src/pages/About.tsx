@@ -134,10 +134,10 @@ export default function About() {
                 </h2>
 
                 {/* Profile & Education Header Block */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
                   {/* Left: Profile Image */}
                   <div className="flex flex-col">
-                    <div className="w-full h-40 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+                    <div className="w-full max-w-sm h-96 md:h-full md:min-h-96 rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
                       <img
                         src={founderPhoto}
                         alt="Ioannis Bekas"
@@ -151,7 +151,7 @@ export default function About() {
                   <div
                     ref={sections[4].ref}
                     id="education"
-                    className="space-y-6"
+                    className="space-y-6 pt-0"
                   >
                     <div>
                       <h3 className="text-2xl font-bold font-heading mb-2">
