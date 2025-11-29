@@ -61,7 +61,7 @@ export default function About() {
       const element = section.ref.current;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       const navbarHeight = 80; // navbar is pt-20 (80px)
-      const offsetPosition = elementPosition - navbarHeight - 20;
+      const offsetPosition = elementPosition - navbarHeight;
       
       window.scrollTo({
         top: offsetPosition,
