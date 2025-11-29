@@ -14,6 +14,7 @@ interface SectionRef {
 
 export default function About() {
   const [activeSection, setActiveSection] = useState("introduction");
+  const [isScrolling, setIsScrolling] = useState(false);
   const sections: SectionRef[] = [
     { id: "introduction", ref: useRef<HTMLDivElement>(null), label: "Introduction" },
     { id: "un", ref: useRef<HTMLDivElement>(null), label: "United Nations" },
@@ -32,16 +33,18 @@ export default function About() {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-80px 0px -60% 0px",
+      rootMargin: "-100px 0px -50% 0px",
       threshold: [0],
     };
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+      // Only update if not manually scrolling
+      if (!isScrolling) {
+        const intersectingEntry = entries.find((entry) => entry.isIntersecting);
+        if (intersectingEntry) {
+          setActiveSection(intersectingEntry.target.id);
         }
-      });
+      }
     };
 
     const observer = new IntersectionObserver(handleIntersection, observerOptions);
@@ -53,11 +56,14 @@ export default function About() {
     });
 
     return () => observer.disconnect();
-  }, [sections]);
+  }, [sections, isScrolling]);
 
   const scrollToSection = (id: string) => {
     const section = sections.find((s) => s.id === id);
     if (section?.ref.current) {
+      setIsScrolling(true);
+      setActiveSection(id);
+      
       const element = section.ref.current;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       const navbarHeight = 80; // navbar is pt-20 (80px)
@@ -68,8 +74,10 @@ export default function About() {
         behavior: "smooth"
       });
       
-      // Update active section immediately for instant feedback
-      setActiveSection(id);
+      // Re-enable observer detection after scroll completes
+      setTimeout(() => {
+        setIsScrolling(false);
+      }, 1000);
     }
   };
 
