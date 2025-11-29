@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import heroBg from "@assets/generated_images/minimalist_white_and_light_gray_abstract_3d_fluid_shapes_hero_background.png";
 
 export function Hero() {
@@ -57,13 +58,17 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap gap-4"
           >
-            <Button className="rounded-full h-14 px-8 text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group">
-              Our Services
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button variant="outline" className="rounded-full h-14 px-8 text-lg border-gray-300 hover:bg-gray-50 transition-all">
-              Contact Us
-            </Button>
+            <Link href="/services">
+              <Button className="rounded-full h-14 px-8 text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group">
+                Our Services
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="outline" className="rounded-full h-14 px-8 text-lg border-gray-300 hover:bg-gray-50 transition-all">
+                Contact Us
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
