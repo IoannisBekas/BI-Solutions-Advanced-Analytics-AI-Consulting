@@ -1,0 +1,43 @@
+Add a new standalone page to the website named “AI Professional Advisor”.
+
+This page should NOT be part of the public homepage or services pages. It should exist as its own route:
+   /ai-advisor
+
+Page Requirements:
+1. Display the existing AI advisor UI:
+   - The three professional role buttons (“Λογιστής”, “Δικηγόρος”, “Σύμβουλος”)
+   - The question input field
+   - The send/submit button
+   - The header and description text as shown in the design
+
+2. The page must be publicly visible. Anyone can open it and see the interface.
+
+3. Add subscription gating logic:
+   - When a user presses the “send”/submit button:
+        • If the user is NOT an active subscriber:
+              Show a modal or popup message:
+              “This feature is available only to active customers with an active subscription.”
+              Do not send the request to the AI endpoint.
+        • If the user IS an active subscriber:
+              Allow the request to be sent normally to the Gemini API handler.
+
+4. Create a simple mock check for user subscription status.
+   - You may implement this as:
+        • a placeholder boolean variable (e.g., `isSubscriber = false`)
+        • or a function returning mocked subscription state
+   - This logic must be easy to replace later when real authentication is added.
+
+5. Style Requirements:
+   - Match the existing UI: modern, minimal, rounded corners, soft shadows, and center alignment.
+   - The UI should be responsive for desktop, tablet, and mobile.
+   - Modal/popup must have a modern, smooth fade-in animation.
+
+6. Behavior:
+   - When a non-subscriber clicks “send”, do NOT clear the input field.
+   - When a subscriber clicks “send”, perform a normal API call.
+   - Disable the send button while the API is processing (loading state).
+
+Goal:
+Create a gated version of the AI Professional Advisor feature on a dedicated page. 
+The page is visible to everyone, but interactive response functionality is restricted 
+to users with an active subscription.
