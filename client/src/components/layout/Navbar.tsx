@@ -42,7 +42,7 @@ export function Navbar() {
             <img 
               src="/bi-solutions-logo.png" 
               alt="BI Solutions" 
-              className="w-10 h-10 group-hover:scale-110 transition-transform duration-300"
+              className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
             />
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
