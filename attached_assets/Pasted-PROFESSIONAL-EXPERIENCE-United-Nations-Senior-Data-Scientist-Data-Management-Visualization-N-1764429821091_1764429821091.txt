@@ -1,0 +1,42 @@
+PROFESSIONAL EXPERIENCE
+United Nations 
+Senior Data Scientist – Data Management & Visualization
+Nov 2023 – July 2025 | Geneva, Switzerland | 1 year 9 months
+
+•	Performed deep qualitative and quantitative assessments on global investment and service-capability ecosystems, identifying unmet needs, high-value opportunities, and improvement pathways used in strategic program design.
+•	Consolidated insights from over 12 global data and research sources to build executive dashboards that shaped product and service-experience planning across regions.
+•	Developed an investment-optimization and prioritization framework—structured like a financial ROI model—to support leadership in selecting high-impact service and product initiatives.
+•	Crafted narrative-driven presentations distilling complex technical findings into clear business implications, influencing senior stakeholders during budget allocation and long-term planning cycles.
+Designed KPI frameworks and refined SOPs that strengthened operational consistency, data quality, and analytical reliability across departments.
+•	Executed full-cycle research programs, including sentiment analysis, survey analytics, and behavioral segmentation, translating customer expectations into actionable service enhancements.
+•	Built real-time customer-experience monitoring dashboards in Power BI to track satisfaction, identify friction points, and support continuous product and service improvement.
+•	Produced executive-level reports synthesizing customer insights, competitive intelligence, and market trends into strategic recommendations aligned with long-term product roadmaps.
+•	Streamlined cross-functional processes by redesigning SOPs and introducing continuous-improvement practices, reducing operational complexity and improving service delivery.
+•	Led cross-department collaboration to align insight-driven recommendations with organizational goals, ensuring unified decision-making across stakeholders.
+
+BI Solutions — Advanced Analytics & AI Consulting
+Founder & Principal Consultant
+Aug 2021 – Dec 2023 | 2 years 4 months
+•	Advised executives at global enterprises (Fujitsu, LG, Nespresso, Collins Aerospace, Coca Cola, PepsiCo, LogicIn and others) on adopting data science, CRM analytics, and advanced visualization practices, enabling leadership teams to run measurable, data-driven marketing and sales initiatives.
+•	Scoped and delivered data solutions with directors and senior managers by mapping business objectives (e.g., market expansion, customer retention) directly to technical architectures and analytical workflows.
+•	Built and maintained enterprise-grade ETL pipelines in Python/SQL and dbt, standardizing CRM and e-commerce data across regions to give leadership teams a single source of truth.
+•	Designed and deployed machine learning solutions (classification models, recommendation engines, graph analytics in Neo4j) that improved customer segmentation, targeting accuracy, and campaign ROI.
+•	Embedded predictive and prescriptive models into decision-making processes, helping executives shift from reactive reporting to proactive, scenario-based planning.
+•	Productionized ML pipelines in Databricks Feature Store with full CI/CD automation (Docker, GitHub Actions), ensuring scalability, compliance, and operational resilience.
+•	Created tailored executive dashboards in Power BI and Tableau, providing board-level visibility into customer behavior, marketing effectiveness, and revenue growth drivers.
+
+United Nations | IAEA – International Atomic Energy Agency
+Information Systems Analyst (Internship) 
+Jul 2020 – Jun 2021 | Vienna, Austria |  1 year
+•	Created predictive HR dashboards in Power BI/SAP BO, modeling workforce trends from HRIS and ERP data.
+•	Conducted statistical modeling and anomaly detection for HR policy evaluation, including impact analysis of interventions.
+•	Built microservices pipelines for MTHR analytics with automated experiment tracking.
+•	Trained IAEA staff on applied statistics and data visualization best practices.
+•	Contributed to data governance frameworks, ensuring robust and reproducible data transformations.
+ 
+The Hellenic Institute of Cultural Diplomacy
+Statistician and Data Analyst
+Jul 2019 – Jun 2020 | Athens, Greece | 1 year
+•	Designed data collection systems and applied econometric modeling for financial and survey datasets.
+•	Delivered predictive analysis for business forecasts and international project evaluation.
+•	Created statistical reports and visualizations supporting diplomacy strategy and stakeholder engagement.

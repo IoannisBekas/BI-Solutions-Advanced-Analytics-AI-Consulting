@@ -9,6 +9,7 @@ import Services from "@/pages/Services";
 import Portfolio from "@/pages/Portfolio";
 import Blog from "@/pages/Blog";
 import Contact from "@/pages/Contact";
+import About from "@/pages/About";
 import AIAdvisorPage from "@/pages/AIAdvisorPage";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/portfolio" component={Portfolio} />
       <Route path="/blog" component={Blog} />
       <Route path="/contact" component={Contact} />
+      <Route path="/about" component={About} />
       <Route path="/ai-advisor" component={AIAdvisorPage} />
       <Route component={NotFound} />
     </Switch>

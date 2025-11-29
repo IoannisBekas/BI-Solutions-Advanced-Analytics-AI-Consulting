@@ -1,0 +1,76 @@
+Create a new dedicated “About the Founder” page at route:
+/about
+
+This page must include:
+• A sticky left-hand vertical navigation menu
+• Scroll-linked content sections on the right
+• Automatic highlighting of the active section as the user scrolls
+• Smooth animations and a modern clean layout
+
+STRUCTURE:
+
+Use a two-column layout:
+Left Column (Sidebar):
+    - Fixed/sticky navigation menu that remains visible while scrolling.
+    - Menu items linking to each section of the founder biography:
+          1. Introduction
+          2. United Nations Experience
+          3. BI Solutions (Consulting)
+          4. IAEA Experience
+          5. Cultural Diplomacy Institute
+          6. Photo & Contact
+    - As the user scrolls through the content on the right, highlight the active menu item.
+    - Implement scroll detection using IntersectionObserver (preferred) or a scroll library.
+
+Right Column (Main Content):
+    - Each section must be a separate scrollable block.
+    - Apply fade-in or slide-in animations (AOS or custom IntersectionObserver).
+    - On desktop: two-column layout.
+    - On mobile: sidebar collapses into a top horizontal menu or a dropdown.
+
+CONTENT SECTIONS (use the following text):
+
+SECTION 1 — Introduction
+    Add the founder’s portrait photo (placeholder for now).
+    Add a short introduction summarizing expertise:
+    “A data science and analytics specialist with experience across the United Nations, international agencies, and global enterprises. Expertise includes strategic analytics, machine learning, decision intelligence, CRM optimization, and data product development.”
+
+SECTION 2 — United Nations Experience (Senior Data Scientist, 2023–2025)
+    Include the full bullet list from the founder’s UN experience.
+
+SECTION 3 — BI Solutions (Founder & Principal Consultant, 2021–2023)
+    Include the full bullet list from the founder’s consulting experience.
+
+SECTION 4 — IAEA (Information Systems Analyst, 2020–2021)
+    Include the full bullet list from the IAEA role.
+
+SECTION 5 — Hellenic Institute of Cultural Diplomacy (2019–2020)
+    Include the bullet list for this role.
+
+SECTION 6 — Photo & Contact
+    - Display the founder photo again (styled).
+    - Add LinkedIn + Email icons.
+    - Add a “Book a Consultation” button (placeholder link).
+
+INTERACTIONS & BEHAVIOR:
+
+1. Sticky Sidebar:
+   - Use CSS position: sticky; top: 0.
+   - Sidebar stays fixed while the right content scrolls.
+
+2. Scroll-Linked Highlight:
+   - Detect which section is currently visible using IntersectionObserver.
+   - Automatically apply an "active" class to the corresponding sidebar menu item.
+   - Smooth scroll to sections when clicking sidebar links.
+
+3. Animations:
+   - Fade-in, slide-in, or staggered animations for text and images.
+   - Smooth transitions consistent with the site’s design.
+
+4. Visual Design:
+   - Follow the site’s color palette, typography, spacing, and card styles.
+   - Soft shadows, rounded corners, and a clean minimal layout.
+   - Fully responsive for desktop, tablet, and mobile.
+
+GOAL:
+Deliver a premium “About the Founder” page with a sticky left sidebar and scroll-linked navigation. The active menu item highlights as the user scrolls, and each biography section animates into view. Include the full professional biography and photo in a visually polished, modern layout.
