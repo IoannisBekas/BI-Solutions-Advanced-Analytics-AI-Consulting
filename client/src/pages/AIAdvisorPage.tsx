@@ -51,7 +51,7 @@ export default function AIAdvisorPage() {
   const [isSubscriber, setIsSubscriber] = useState(false); // Mock subscription status
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
 
@@ -63,13 +63,31 @@ export default function AIAdvisorPage() {
     setIsLoading(true);
     setResponse(null);
 
-    // Simulate API call
-    setTimeout(() => {
-      const roleResponses = mockResponses[selectedRole];
-      const randomResponse = roleResponses[Math.floor(Math.random() * roleResponses.length)];
-      setResponse(randomResponse);
+    try {
+      const res = await fetch("/api/ai-advisor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: selectedRole,
+          question: question.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setResponse(data.answer);
+      } else {
+        setResponse("Unable to process your request. Please try again.");
+      }
+    } catch (error) {
+      console.error("AI Advisor error:", error);
+      setResponse("Network error. Please check your connection and try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
