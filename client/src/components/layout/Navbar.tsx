@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import biLogo from "@assets/BI-Solutions-logo.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,9 +39,14 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/">
-          <a className="text-2xl font-bold tracking-tighter font-heading group flex items-center gap-2">
-            <div className="w-8 h-8 bg-black rounded-full group-hover:scale-110 transition-transform duration-300" />
-            <span>CACTUS<span className="text-gray-400">CLONE</span></span>
+          <a className="flex items-center gap-3 group">
+            <div className="w-8 h-8 bg-black rounded-full group-hover:scale-110 transition-transform duration-300 overflow-hidden flex items-center justify-center">
+              <span className="text-white font-heading font-bold text-sm">3T</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
+              <span className="text-xs text-gray-500 font-medium">Analytics & AI</span>
+            </div>
           </a>
         </Link>
 

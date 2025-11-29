@@ -14,12 +14,18 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-5 space-y-6">
             <Link href="/">
-              <a className="text-3xl font-bold font-heading tracking-tighter block mb-4">
-                CACTUS<span className="text-gray-500">CLONE</span>
+              <a className="flex items-center gap-3 block mb-4">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-black font-heading font-bold text-sm">3T</span>
+                </div>
+                <div>
+                  <div className="text-xl font-bold font-heading tracking-tight">BI Solutions</div>
+                  <div className="text-xs text-gray-400">Analytics & AI</div>
+                </div>
               </a>
             </Link>
             <p className="text-gray-400 max-w-sm leading-relaxed">
-              We build digital experiences that shape the future. Minimalist design meets powerful technology.
+              Enterprise analytics, AI, and digital transformation. Turning data into competitive advantage through cutting-edge technology and strategic consulting.
             </p>
           </div>
 
@@ -41,13 +47,13 @@ export function Footer() {
 
           {/* Services */}
           <div className="md:col-span-3 space-y-6">
-            <h4 className="text-lg font-bold font-heading">Services</h4>
-            <ul className="space-y-4 text-gray-400">
-              <li>Web Development</li>
-              <li>UI/UX Design</li>
-              <li>Digital Marketing</li>
-              <li>Brand Strategy</li>
-              <li>AI Consultation</li>
+            <h4 className="text-lg font-bold font-heading">Capabilities</h4>
+            <ul className="space-y-4 text-gray-400 text-sm">
+              <li>Cloud Migration</li>
+              <li>Advanced Analytics</li>
+              <li>Business Intelligence</li>
+              <li>MLOps & AI</li>
+              <li>Data Governance</li>
             </ul>
           </div>
 
@@ -70,7 +76,7 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 text-sm text-gray-500">
-          <p>&copy; 2025 CactusClone. All rights reserved.</p>
+          <p>&copy; 2025 BI Solutions. All rights reserved.</p>
           
           <button 
             onClick={scrollToTop}

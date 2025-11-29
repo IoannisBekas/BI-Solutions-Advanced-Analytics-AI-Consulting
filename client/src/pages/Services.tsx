@@ -9,19 +9,34 @@ import consultingIcon from "@assets/generated_images/abstract_3d_icon_for_busine
 export default function Services() {
   const servicesList = [
     {
-      title: "Accounting & Finance",
+      title: "Digital Transformation & Cloud Migration",
       icon: accountingIcon,
-      items: ["Tax Planning", "Bookkeeping", "Financial Analysis", "Payroll Management"]
+      items: ["Azure / AWS / GCP", "Snowflake / BigQuery", "Databricks", "Data Platform Architecture"]
     },
     {
-      title: "Legal Counsel",
+      title: "Advanced Analytics & AI",
       icon: legalIcon,
-      items: ["Corporate Law", "GDPR Compliance", "Intellectual Property", "Contract Review"]
+      items: ["Predictive Modeling", "Statistical Analysis", "ML Engineering", "Python / R / SQL"]
     },
     {
-      title: "Business Consulting",
+      title: "MLOps & Productionization",
       icon: consultingIcon,
-      items: ["Market Strategy", "Operational Efficiency", "Risk Management", "Digital Transformation"]
+      items: ["Feature Stores", "Model Registries", "CI/CD Pipelines", "Airflow / dbt"]
+    },
+    {
+      title: "Business Intelligence",
+      icon: accountingIcon,
+      items: ["Power BI / Tableau", "Looker Dashboards", "Semantic Modeling", "Data Governance"]
+    },
+    {
+      title: "Data Strategy & Governance",
+      icon: legalIcon,
+      items: ["Data Quality", "Lineage & Cataloging", "Compliance (GDPR)", "Access Controls"]
+    },
+    {
+      title: "AI Literacy & Change Management",
+      icon: consultingIcon,
+      items: ["Executive Briefings", "Company-wide Training", "Responsible AI", "Playbooks"]
     }
   ];
 
@@ -33,38 +48,27 @@ export default function Services() {
           <ScrollReveal>
             <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8">Our Expertise</h1>
             <p className="text-xl text-gray-600 max-w-2xl mb-20">
-              We offer a holistic range of professional services designed to help your business thrive in the modern economy.
+              End-to-end analytics, AI, and data engineering services. From strategy and architecture to delivery and managed support.
             </p>
           </ScrollReveal>
 
-          <div className="space-y-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {servicesList.map((service, index) => (
-              <ScrollReveal key={index} className="w-full">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                  <div className={`order-2 md:order-${index % 2 === 0 ? '1' : '2'}`}>
-                    <div className="w-24 h-24 rounded-2xl bg-white shadow-sm p-4 mb-8">
-                      <img src={service.icon} alt={service.title} className="w-full h-full object-cover" />
-                    </div>
-                    <h2 className="text-3xl font-bold mb-6">{service.title}</h2>
-                    <p className="text-gray-600 mb-8 text-lg">
-                      Detailed professional services tailored to your specific industry needs and regulatory requirements.
-                    </p>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ScrollReveal key={index} delay={index * 0.05} className="w-full">
+                <div className="flex gap-6">
+                  <div className="w-24 h-24 rounded-2xl bg-white shadow-sm p-4 flex-shrink-0">
+                    <img src={service.icon} alt={service.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold mb-4">{service.title}</h2>
+                    <ul className="space-y-2">
                       {service.items.map((item, i) => (
-                        <li key={i} className="flex items-center gap-3 text-gray-800 font-medium">
-                          <div className="w-2 h-2 rounded-full bg-black" />
+                        <li key={i} className="flex items-center gap-2 text-gray-600 text-sm">
+                          <div className="w-1.5 h-1.5 rounded-full bg-black" />
                           {item}
                         </li>
                       ))}
                     </ul>
-                  </div>
-                  <div className={`order-1 md:order-${index % 2 === 0 ? '2' : '1'}`}>
-                    <div className="aspect-square bg-gray-100 rounded-3xl overflow-hidden relative">
-                      <img src={service.icon} alt="" className="w-full h-full object-cover opacity-80 scale-150 blur-3xl absolute inset-0" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                         <img src={service.icon} alt="" className="w-1/2 h-1/2 object-contain drop-shadow-2xl" />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </ScrollReveal>

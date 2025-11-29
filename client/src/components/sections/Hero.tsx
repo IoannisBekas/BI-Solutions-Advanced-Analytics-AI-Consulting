@@ -31,7 +31,7 @@ export function Hero() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="inline-block py-1 px-3 rounded-full bg-black/5 text-sm font-semibold tracking-wide mb-6">
-              DIGITAL INNOVATION
+              ADVANCED ANALYTICS & AI
             </span>
           </motion.div>
           
@@ -41,8 +41,8 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading tracking-tight leading-[1.1] mb-8 text-balance"
           >
-            We craft digital <br/>
-            <span className="text-gray-400">experiences.</span>
+            Transform data into <br/>
+            <span className="text-gray-400">competitive advantage.</span>
           </motion.h1>
 
           <motion.p
@@ -51,7 +51,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-lg md:text-xl text-gray-600 max-w-xl mb-10 leading-relaxed"
           >
-            A creative agency focused on building brands, websites, and digital products that stand out in the noise.
+            End-to-end analytics, AI, and digital transformation for enterprises. From cloud migration to ML operations—we deliver measurable business outcomes.
           </motion.p>
 
           <motion.div
@@ -61,7 +61,7 @@ export function Hero() {
             className="flex flex-wrap gap-4"
           >
             <Button className="rounded-full h-14 px-8 text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group">
-              Our Projects
+              Our Services
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button variant="outline" className="rounded-full h-14 px-8 text-lg border-gray-300 hover:bg-gray-50 transition-all">

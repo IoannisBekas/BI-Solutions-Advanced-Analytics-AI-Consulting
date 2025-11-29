@@ -8,20 +8,20 @@ import consultingIcon from "@assets/generated_images/abstract_3d_icon_for_busine
 
 const services = [
   {
-    title: "Accounting & Finance",
-    description: "Comprehensive financial planning, tax optimization, and bookkeeping services for modern businesses.",
+    title: "Digital Transformation & Cloud Migration",
+    description: "Move from on-premise, Excel-based processes to secure, cloud-native data platforms (Azure, AWS, GCP; Snowflake, BigQuery, Databricks). Enable real-time analytics, collaboration, and scale.",
     icon: accountingIcon,
     delay: 0.1
   },
   {
-    title: "Legal Counsel",
-    description: "Expert legal advice specializing in corporate law, intellectual property, and digital compliance.",
+    title: "Advanced Analytics & Statistical Modeling",
+    description: "Design predictive, prescriptive, and diagnostic analytics using Python/R and SQL. Forecasting, classification, clustering, A/B testing, causal inference tied to business KPIs and OKRs.",
     icon: legalIcon,
     delay: 0.2
   },
   {
-    title: "Business Consulting",
-    description: "Strategic guidance to accelerate growth, streamline operations, and maximize market potential.",
+    title: "Business Intelligence & Data Visualization",
+    description: "Build executive dashboards and self-service analytics with Power BI, Tableau, and Looker. Governed semantic models, DAX/MDX, row-level security, certified datasets.",
     icon: consultingIcon,
     delay: 0.3
   }
@@ -34,7 +34,7 @@ export function ServicesSection() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <ScrollReveal width="100%">
             <h2 className="text-4xl md:text-5xl font-bold font-heading leading-tight">
-              We provide solutions <br/> for your growth.
+              Core capabilities to <br/> drive your success.
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.2}>
