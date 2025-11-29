@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Mail, Linkedin } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import founderPhoto from "@assets/founder-photo.jpg";
 
 interface SectionRef {
   id: string;
@@ -99,9 +100,9 @@ export default function About() {
                 <h2 className="text-4xl md:text-5xl font-bold font-heading">
                   Ioannis Bekas
                 </h2>
-                <div className="aspect-square md:aspect-auto md:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-8">
+                <div className="aspect-square md:aspect-auto md:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-8 shadow-lg">
                   <img
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23f3f4f6' width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%239ca3af'%3EFounder Portrait%3C/text%3E%3C/svg%3E"
+                    src={founderPhoto}
                     alt="Ioannis Bekas"
                     className="w-full h-full object-cover"
                   />
@@ -375,9 +376,9 @@ export default function About() {
                   <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">
                     Get in Touch
                   </h2>
-                  <div className="aspect-square md:aspect-auto md:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-12">
+                  <div className="aspect-square md:aspect-auto md:h-96 rounded-2xl overflow-hidden bg-gray-100 mb-12 shadow-lg">
                     <img
-                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23f3f4f6' width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%239ca3af'%3EFounder Portrait%3C/text%3E%3C/svg%3E"
+                      src={founderPhoto}
                       alt="Ioannis Bekas"
                       className="w-full h-full object-cover"
                     />
