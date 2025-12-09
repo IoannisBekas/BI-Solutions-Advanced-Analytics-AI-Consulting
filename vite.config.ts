@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 export default defineConfig({
-  base: "./",
+  base: "/BI-Solutions-Advanced-Analytics-AI-Consulting/",
   plugins: [
     react(),
     tailwindcss(),
