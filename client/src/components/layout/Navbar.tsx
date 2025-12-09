@@ -31,43 +31,43 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out px-6 md:px-12",
-        isScrolled 
-          ? "py-4 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm" 
+        isScrolled
+          ? "py-4 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm"
           : "py-8 bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-            <img 
-              src="/bi-solutions-logo.png" 
-              alt="BI Solutions" 
-              className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
-            />
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
-              <span className="text-xs text-gray-500 font-medium">Advanced Analytics & AI Consulting</span>
-            </div>
+          <img
+            src="/BI-Solutions-Advanced-Analytics-AI-Consulting/bi-solutions-logo.png"
+            alt="BI Solutions"
+            className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
+          />
+          <div className="flex flex-col">
+            <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
+            <span className="text-xs text-gray-500 font-medium">Advanced Analytics & AI Consulting</span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
+            <Link
+              key={link.name}
               href={link.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-black relative group",
                 location === link.href ? "text-black" : "text-gray-500"
               )}
             >
-                {link.name}
-                <span 
-                  className={cn(
-                    "absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full",
-                    location === link.href ? "w-full" : ""
-                  )} 
-                />
+              {link.name}
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full",
+                  location === link.href ? "w-full" : ""
+                )}
+              />
             </Link>
           ))}
           <Button className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105">
@@ -76,7 +76,7 @@ export function Navbar() {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           className="md:hidden p-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -95,13 +95,13 @@ export function Navbar() {
           >
             <nav className="flex flex-col gap-8 text-2xl font-heading font-bold">
               {navLinks.map((link) => (
-                <Link 
-                  key={link.name} 
+                <Link
+                  key={link.name}
                   href={link.href}
                   className="hover:text-gray-500 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                    {link.name}
+                  {link.name}
                 </Link>
               ))}
               <Button className="w-full mt-8 rounded-full py-6 text-lg">
