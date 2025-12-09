@@ -1,17 +1,35 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { DeviceMockup } from "@/components/DeviceMockup";
-import portfolio1 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_1.png";
-import portfolio2 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_2.png";
-import portfolio3 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_3.png";
+import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
+import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
+import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
 
 const projects = [
-  { id: 1, title: "Lumina Fashion", category: "E-commerce", image: portfolio1, size: "large" },
-  { id: 2, title: "FinFlow App", category: "Mobile Design", image: portfolio2, size: "small" },
-  { id: 3, title: "Archistudio", category: "Branding", image: portfolio3, size: "small" },
-  { id: 4, title: "Urban Pulse", category: "Web Development", image: portfolio1, size: "small" },
-  { id: 5, title: "Neon Tech", category: "Product Design", image: portfolio2, size: "large" },
+  {
+    id: 1,
+    title: "UNICEF Audit Reports Dashboard",
+    category: "Risk Management / Strategy",
+    image: unicefDashboard,
+    description: "A comprehensive oversight tool for Member States and senior management to track country-office audits.",
+    link: "https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/UNICEF%20OIAI%20Country-Office%20Audit%20Reports.md"
+  },
+  {
+    id: 2,
+    title: "IAEA Scientific Analysis",
+    category: "Data Science / Laboratory Network",
+    image: iaeaDashboard,
+    description: "Global Water Analysis Laboratory Network dashboard tracking isotope types, measurement accuracy, and result quality.",
+    link: "https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/IAEA%20-%20Global%20Water%20Analysis%20Laboratory%20Network.md"
+  },
+  {
+    id: 3,
+    title: "IFC Talent Strategy",
+    category: "HR Analytics / Operations",
+    image: ifcDashboard,
+    description: "Strategic HR dashboard analyzing global talent acquisition, application sources, and gender distribution.",
+    link: "https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/World%20Bank%20HR%20Dashboard.md"
+  }
 ];
 
 export default function Portfolio() {
@@ -23,56 +41,49 @@ export default function Portfolio() {
           <ScrollReveal>
             <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8">Selected Work</h1>
             <p className="text-xl text-gray-600 max-w-2xl mb-20">
-              A collection of projects that define our approach to digital design and development.
+              Transforming complex data into clear, actionable insights through advanced analytics and intuitive design.
             </p>
           </ScrollReveal>
 
-          {/* Device Mockup Section */}
-          <div className="mb-24 pb-12 border-b border-gray-200">
-            <ScrollReveal>
-              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">Dashboard Showcases</h2>
-              <p className="text-lg text-gray-600 mb-12">
-                View our data analytics dashboards across different devices
-              </p>
-            </ScrollReveal>
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 md:p-12 shadow-md">
-              <DeviceMockup 
-                desktopImage="/dashboard-water.png"
-                tabletImage="/dashboard-hr.png"
-                mobileImage="/dashboard-audit.png"
-              />
-            </div>
-          </div>
-
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-20">
             {projects.map((project, index) => (
-              <ScrollReveal 
-                key={project.id} 
+              <ScrollReveal
+                key={project.id}
                 delay={index * 0.1}
-                className={project.size === "large" ? "md:col-span-2" : ""}
+                className="w-full"
               >
-                <div className="group cursor-pointer">
-                  <div className="relative overflow-hidden rounded-2xl mb-6 bg-gray-100">
-                    <div className={`aspect-[${project.size === "large" ? "21/9" : "4/3"}]`}>
-                      <img 
-                        src={project.image} 
-                        alt={project.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                <a
+                  href={project.link}
+                  target={project.link !== "#" ? "_blank" : undefined}
+                  rel={project.link !== "#" ? "noopener noreferrer" : undefined}
+                  className={`group block cursor-pointer transition-opacity ${project.link === "#" ? "hover:opacity-100 cursor-default" : "hover:opacity-90"}`}
+                  onClick={(e) => project.link === "#" && e.preventDefault()}
+                >
+                  <div className="relative overflow-hidden rounded-2xl mb-8 bg-gray-100 border border-gray-200">
+                    <div className="aspect-[16/9]">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
                   </div>
-                  <div className="flex justify-between items-end">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                     <div>
-                      <h3 className="text-2xl font-bold mb-1">{project.title}</h3>
-                      <p className="text-gray-500">{project.category}</p>
+                      <h3 className={`text-3xl font-bold mb-2 ${project.link !== "#" ? "group-hover:underline decoration-2 underline-offset-4" : ""}`}>{project.title}</h3>
+                      <p className="text-lg text-gray-500 font-medium mb-4">{project.category}</p>
+                      <p className="text-gray-600 max-w-2xl leading-relaxed">
+                        {project.description}
+                      </p>
                     </div>
-                    <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-black group-hover:text-white group-hover:border-black transition-all">
-                      <span className="text-lg leading-none mb-1">↗</span>
-                    </div>
+                    {project.link !== "#" && (
+                      <div className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-black group-hover:text-white group-hover:border-black transition-all flex-shrink-0">
+                        <span className="text-xl leading-none mb-1">↗</span>
+                      </div>
+                    )}
                   </div>
-                </div>
+                </a>
               </ScrollReveal>
             ))}
           </div>

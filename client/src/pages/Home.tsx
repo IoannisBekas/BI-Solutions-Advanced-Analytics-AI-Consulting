@@ -3,8 +3,9 @@ import { Hero } from "@/components/sections/Hero";
 import { ServicesSection } from "@/components/sections/Services";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import portfolio1 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_1.png";
-import portfolio2 from "@assets/generated_images/modern_website_mockup_for_portfolio_item_2.png";
+import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
+import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
+import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
 
 export default function Home() {
   return (
@@ -13,41 +14,70 @@ export default function Home() {
       <main>
         <Hero />
         <ServicesSection />
-        
+
         {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <ScrollReveal className="mb-16">
               <h2 className="text-4xl md:text-5xl font-bold font-heading text-white">Selected Works</h2>
             </ScrollReveal>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
               <ScrollReveal delay={0.1}>
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/3] overflow-hidden rounded-2xl mb-6">
-                    <img 
-                      src={portfolio1} 
-                      alt="Project 1" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                <a
+                  href="https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/UNICEF%20OIAI%20Country-Office%20Audit%20Reports.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block cursor-pointer"
+                >
+                  <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
+                    <img
+                      src={unicefDashboard}
+                      alt="UNICEF Audit Reports Dashboard"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">Lumina Fashion</h3>
-                  <p className="text-gray-400">E-commerce / Branding</p>
-                </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-gray-300 transition-colors">UNICEF Audit Compliance</h3>
+                  <p className="text-gray-400 text-sm">Risk Management / Strategy</p>
+                </a>
               </ScrollReveal>
-              
-              <ScrollReveal delay={0.2} className="md:mt-24">
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/3] overflow-hidden rounded-2xl mb-6">
-                    <img 
-                      src={portfolio2} 
-                      alt="Project 2" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+
+              <ScrollReveal delay={0.2} className="lg:mt-12">
+                <a
+                  href="https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/IAEA%20-%20Global%20Water%20Analysis%20Laboratory%20Network.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block cursor-pointer"
+                >
+                  <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
+                    <img
+                      src={iaeaDashboard}
+                      alt="IAEA Water Analysis Dashboard"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">FinFlow App</h3>
-                  <p className="text-gray-400">Product Design / Mobile</p>
-                </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-gray-300 transition-colors">IAEA Scientific Analysis</h3>
+                  <p className="text-gray-400 text-sm">Data Science / Laboratory Network</p>
+                </a>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.3} className="lg:mt-24">
+                <a
+                  href="https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/World%20Bank%20HR%20Dashboard.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block cursor-pointer"
+                >
+                  <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
+                    <img
+                      src={ifcDashboard}
+                      alt="IFC HR Analyst Dashboard"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-gray-300 transition-colors">IFC Talent Strategy</h3>
+                  <p className="text-gray-400 text-sm">HR Analytics / Operations</p>
+                </a>
               </ScrollReveal>
             </div>
           </div>

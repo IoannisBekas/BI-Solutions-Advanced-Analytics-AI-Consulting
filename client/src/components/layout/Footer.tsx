@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Facebook, Instagram, Linkedin, Twitter, ArrowUp } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter, ArrowUp, Github } from "lucide-react";
 
 export function Footer() {
   const scrollToTop = () => {
@@ -10,19 +10,19 @@ export function Footer() {
     <footer className="bg-black text-white pt-20 pb-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20 border-b border-white/10 pb-12">
-          
+
           {/* Brand */}
           <div className="md:col-span-5 space-y-6">
             <Link href="/" className="flex items-center gap-3 block mb-4">
-                <img 
-                  src="/bi-solutions-logo.png" 
-                  alt="BI Solutions" 
-                  className="w-10 h-10 invert"
-                />
-                <div>
-                  <div className="text-xl font-bold font-heading tracking-tight">BI Solutions</div>
-                  <div className="text-xs text-gray-400">Analytics & AI</div>
-                </div>
+              <img
+                src="/bi-solutions-logo.png"
+                alt="BI Solutions"
+                className="w-10 h-10 invert"
+              />
+              <div>
+                <div className="text-xl font-bold font-heading tracking-tight">BI Solutions</div>
+                <div className="text-xs text-gray-400">Analytics & AI</div>
+              </div>
             </Link>
             <p className="text-gray-400 max-w-sm leading-relaxed">
               Enterprise analytics, AI, and digital transformation. Turning data into competitive advantage through cutting-edge technology and strategic consulting.
@@ -35,11 +35,11 @@ export function Footer() {
             <ul className="space-y-4">
               {["Home", "Services", "Portfolio", "Blog", "Contact"].map((item) => (
                 <li key={item}>
-                  <Link 
+                  <Link
                     href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
                     className="text-gray-400 hover:text-white transition-colors"
                   >
-                      {item}
+                    {item}
                   </Link>
                 </li>
               ))}
@@ -60,26 +60,26 @@ export function Footer() {
 
           {/* Social */}
           <div className="md:col-span-2 space-y-6">
-             <h4 className="text-lg font-bold font-heading">Social</h4>
-             <div className="flex gap-4">
-               <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                 <Instagram className="w-5 h-5" />
-               </a>
-               <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                 <Linkedin className="w-5 h-5" />
-               </a>
-               <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                 <Twitter className="w-5 h-5" />
-               </a>
-             </div>
+            <h4 className="text-lg font-bold font-heading">Social</h4>
+            <div className="flex gap-4">
+              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href="https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a href="https://github.com/IoannisBekas" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <Github className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 text-sm text-gray-500">
           <p>&copy; 2025 BI Solutions. All rights reserved.</p>
-          
-          <button 
+
+          <button
             onClick={scrollToTop}
             className="mt-4 md:mt-0 flex items-center gap-2 hover:text-white transition-colors group"
           >
