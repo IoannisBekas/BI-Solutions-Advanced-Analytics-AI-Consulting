@@ -59,6 +59,21 @@ export default function Contact() {
 
                 <div className="space-y-6">
                   <a
+                    href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2AmeaTgf0_WRSHIy9kwRUy603-E-4T9Mz8TfQosOodm16fT1pB92IgypC23negth62NxmeY_I2?gv=true"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 text-lg hover:text-gray-600 transition-colors group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Calendar className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="font-bold">Book a Consultation</div>
+                      <div className="text-gray-500 text-sm">Schedule a meeting with us</div>
+                    </div>
+                  </a>
+
+                  <a
                     href="https://www.google.com/maps/place/BI+Solutions+%7C+BEKAS+IOANNIS+-+%CE%9C%CE%A0%CE%95%CE%9A%CE%91%CE%A3+%CE%99%CE%A9%CE%91%CE%9D%CE%9D%CE%97%CE%A3/@51.2072,-79.19775,3z/data=!3m1!4b1!4m6!3m5!1s0x8b72b1c0bdff5865:0xc7a521d46d96ec7f!8m2!3d51.2072!4d-79.19775!16s%2Fg%2F11p5znwz2w?entry=ttu&g_ep=EgoyMDI1MDIyNS4wIKXMDSoASAFQAw%3D%3D"
                     target="_blank"
                     rel="noopener noreferrer"
