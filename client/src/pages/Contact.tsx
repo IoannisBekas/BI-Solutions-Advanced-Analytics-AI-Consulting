@@ -85,6 +85,21 @@ export default function Contact() {
                       <div className="text-gray-500 text-sm">contact@bisolutions.com</div>
                     </div>
                   </a>
+
+                  <a
+                    href="https://g.page/r/CX_slm3UIaXHEAE/review"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 text-lg hover:text-gray-600 transition-colors group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                      <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                    </div>
+                    <div>
+                      <div className="font-bold">Rate Us</div>
+                      <div className="text-gray-500 text-sm">Leave a 5-star review</div>
+                    </div>
+                  </a>
                 </div>
               </ScrollReveal>
             </div>
