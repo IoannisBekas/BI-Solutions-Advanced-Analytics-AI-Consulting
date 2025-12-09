@@ -56,6 +56,36 @@ export default function Contact() {
                 <p className="text-xl text-gray-600 mb-12">
                   Have a project in mind? We'd love to hear from you. Send us a message and we'll get back to you shortly.
                 </p>
+
+                <div className="space-y-6">
+                  <a
+                    href="https://www.google.com/maps/place/BI+Solutions+%7C+BEKAS+IOANNIS+-+%CE%9C%CE%A0%CE%95%CE%9A%CE%91%CE%A3+%CE%99%CE%A9%CE%91%CE%9D%CE%9D%CE%97%CE%A3/@51.2072,-79.19775,3z/data=!3m1!4b1!4m6!3m5!1s0x8b72b1c0bdff5865:0xc7a521d46d96ec7f!8m2!3d51.2072!4d-79.19775!16s%2Fg%2F11p5znwz2w?entry=ttu&g_ep=EgoyMDI1MDIyNS4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 text-lg hover:text-gray-600 transition-colors group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="font-bold">Visit Us</div>
+                      <div className="text-gray-500 text-sm">Find us on Google Maps</div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="mailto:contact@bisolutions.com"
+                    className="flex items-center gap-4 text-lg hover:text-gray-600 transition-colors group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="font-bold">Email Us</div>
+                      <div className="text-gray-500 text-sm">contact@bisolutions.com</div>
+                    </div>
+                  </a>
+                </div>
               </ScrollReveal>
             </div>
 
