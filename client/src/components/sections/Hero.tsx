@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import heroBg from "@/assets/generated_images/minimalist_white_and_light_gray_abstract_3d_fluid_shapes_hero_background.png";
 
 
 export function Hero() {
@@ -16,9 +17,10 @@ export function Hero() {
         style={{ y: y1, opacity }}
         className="absolute inset-0 z-0"
       >
-        <div className="absolute inset-0 bg-white" />
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-gray-100 via-gray-50 to-white opacity-80" />
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        />
         <div className="absolute inset-0 bg-white/30" />
       </motion.div>
       {/* Content */}
