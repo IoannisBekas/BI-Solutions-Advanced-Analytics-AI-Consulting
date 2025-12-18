@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import heroBg from "@/assets/generated_images/minimalist_white_and_light_gray_abstract_3d_fluid_shapes_hero_background.png";
+import heroBg from "@/assets/generated_images/hero_bg_3d.png";
 
 
 export function Hero() {
