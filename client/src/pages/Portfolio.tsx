@@ -4,6 +4,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
 import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
 import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
+import chaniaTaxImage from "@/assets/partnerships/chania_tax_office.png";
 
 const projects = [
   {
@@ -29,6 +30,14 @@ const projects = [
     image: ifcDashboard,
     description: "Strategic HR dashboard analyzing global talent acquisition, application sources, and gender distribution.",
     link: "https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/World%20Bank%20HR%20Dashboard.md"
+  },
+  {
+    id: 4,
+    title: "Chania Tax IKE",
+    category: "Strategic Partnership",
+    image: chaniaTaxImage,
+    description: "Strategic partnership with Chania Tax IKE, delivering advanced analytics and digital transformation solutions.",
+    link: "https://chaniatax.gr/"
   }
 ];
 
