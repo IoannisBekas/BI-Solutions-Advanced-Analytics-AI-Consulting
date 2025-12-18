@@ -1,29 +1,26 @@
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BarChart3, Scale, Handshake } from "lucide-react";
 import { Link } from "wouter";
-import accountingIcon from "@assets/generated_images/abstract_3d_icon_for_accounting_services.png";
-import legalIcon from "@assets/generated_images/abstract_3d_icon_for_legal_services.png";
-import consultingIcon from "@assets/generated_images/abstract_3d_icon_for_business_consulting.png";
 
 const services = [
   {
     title: "Digital Transformation & Cloud Migration",
     description: "Move from on-premise, Excel-based processes to secure, cloud-native data platforms (Azure, AWS, GCP; Snowflake, BigQuery, Databricks). Enable real-time analytics, collaboration, and scale.",
-    icon: accountingIcon,
+    icon: BarChart3,
     delay: 0.1
   },
   {
     title: "Advanced Analytics & Statistical Modeling",
     description: "Design predictive, prescriptive, and diagnostic analytics using Python/R and SQL. Forecasting, classification, clustering, A/B testing, causal inference tied to business KPIs and OKRs.",
-    icon: legalIcon,
+    icon: Scale,
     delay: 0.2
   },
   {
     title: "Business Intelligence & Data Visualization",
     description: "Build executive dashboards and self-service analytics with Power BI, Tableau, and Looker. Governed semantic models, DAX/MDX, row-level security, certified datasets.",
-    icon: consultingIcon,
+    icon: Handshake,
     delay: 0.3
   }
 ];
@@ -35,7 +32,7 @@ export function ServicesSection() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <ScrollReveal width="100%">
             <h2 className="text-4xl md:text-5xl font-bold font-heading leading-tight">
-              Core capabilities to <br/> drive your success.
+              Core capabilities to <br /> drive your success.
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.2}>
@@ -53,6 +50,9 @@ export function ServicesSection() {
                 <h3 className="text-2xl font-bold font-heading mb-4 group-hover:text-blue-600 transition-colors">
                   {service.title}
                 </h3>
+                <div className="mb-6 text-gray-400 group-hover:text-blue-600 transition-colors">
+                  <service.icon size={48} strokeWidth={1} />
+                </div>
                 <p className="text-gray-500 leading-relaxed mb-8">
                   {service.description}
                 </p>

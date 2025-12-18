@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import heroBg from "@assets/generated_images/minimalist_white_and_light_gray_abstract_3d_fluid_shapes_hero_background.png";
+
 
 export function Hero() {
   const { scrollY } = useScroll();
@@ -12,11 +12,11 @@ export function Hero() {
   return (
     <section className="relative h-screen min-h-[700px] w-full overflow-hidden flex items-center justify-center">
       {/* Parallax Background */}
-      <motion.div 
+      <motion.div
         style={{ y: y1, opacity }}
         className="absolute inset-0 z-0"
       >
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
           style={{ backgroundImage: `url(${heroBg})` }}
         />
@@ -32,14 +32,14 @@ export function Hero() {
           >
             <span className="inline-block py-1 px-3 rounded-full bg-black/5 text-sm font-semibold tracking-wide mb-6">Advanced Analytics & AI Consulting</span>
           </motion.div>
-          
+
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading tracking-tight leading-[1.1] mb-8 text-balance"
           >
-            Transform data into <br/>
+            Transform data into <br />
             <span className="text-gray-400">competitive advantage.</span>
           </motion.h1>
 
@@ -73,7 +73,7 @@ export function Hero() {
         </div>
       </div>
       {/* Scroll Indicator */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
@@ -81,7 +81,7 @@ export function Hero() {
       >
         <span className="text-xs font-medium uppercase tracking-widest text-gray-400">Scroll</span>
         <div className="w-[1px] h-12 bg-gray-300 overflow-hidden">
-          <motion.div 
+          <motion.div
             animate={{ y: ["-100%", "100%"] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
             className="w-full h-1/2 bg-black"

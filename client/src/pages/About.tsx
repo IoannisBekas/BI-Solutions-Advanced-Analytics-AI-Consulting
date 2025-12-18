@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import founderPhoto from "@assets/founder-photo.jpg";
+import founderPhoto from "@/assets/founder-photo.jpg";
 import { Button } from "@/components/ui/button";
 import { Mail, Linkedin, MapPin, Download, Phone, Github } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
