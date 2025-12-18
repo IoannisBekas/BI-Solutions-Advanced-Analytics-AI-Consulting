@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { ServicesSection } from "@/components/sections/Services";
+import { ClientMap } from "@/components/sections/ClientMap";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
@@ -14,6 +15,8 @@ export default function Home() {
       <main>
         <Hero />
         <ServicesSection />
+
+        <ClientMap />
 
         {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">
