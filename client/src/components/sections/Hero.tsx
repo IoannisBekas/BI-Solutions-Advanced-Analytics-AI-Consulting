@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
@@ -17,8 +17,7 @@ export function Hero() {
         className="absolute inset-0 z-0"
       >
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
-          style={{ backgroundImage: `url(${heroBg})` }}
+          className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white"
         />
         <div className="absolute inset-0 bg-white/30" />
       </motion.div>
@@ -61,7 +60,6 @@ export function Hero() {
             <Link href="/services">
               <Button className="rounded-full h-14 px-8 text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group">
                 Our Services
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/contact">
