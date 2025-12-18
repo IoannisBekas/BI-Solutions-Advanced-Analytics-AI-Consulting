@@ -43,7 +43,7 @@ const projects = [
     title: "Chania Tax IKE",
     category: "Strategic Partnership",
     images: [chaniaTaxImage, chaniaTax1, chaniaTax2, chaniaTax3, chaniaTax4],
-    description: "Strategic partnership with Chania Tax IKE, delivering advanced analytics and digital transformation solutions.",
+    description: "A strategic partnership driving digital transformation in the financial sector. We implemented secure cloud infrastructure, automated reporting systems, and advanced analytics to optimize operational efficiency and decision-making for Chania's leading tax consultancy.",
     link: "https://chaniatax.gr/"
   }
 ];
