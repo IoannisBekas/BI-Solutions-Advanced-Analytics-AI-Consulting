@@ -454,41 +454,7 @@ export default function About() {
               </div>
             </section>
 
-            {/* References Section */}
-            <section id="references" className="mb-32 scroll-mt-32">
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-16"
-              >
-                References
-              </motion.h2>
 
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="grid grid-cols-1 md:grid-cols-2 gap-8"
-              >
-                {[
-                  { name: "Peter Frobel", title: "Director MTHR, United Nations, IAEA", email: "p.frobel@iaea.org" },
-                  { name: "Mattias Gregersen", title: "Data Analyst, United Nations, IOM", email: "mgregersen@iom.int" },
-                  { name: "Nicholas Daras", title: "Dean & Director, Hellenic Military Academy", email: "njdaras@gmail.com" },
-                  { name: "Benjamin Baumslag", title: "Professor, Imperial College of London", email: "benjaminbaumslag@yahoo.se" },
-                  { name: "Dragana Marusic", title: "Programme Associate, United Nations, UNIDO", email: "draganamarusic87@gmail.com" },
-                  { name: "Michalis Diakantonis", title: "Vice President, H.I.C.D", email: "diakantonis.hicd@gmail.com" },
-                  { name: "Ioannis N. Tzen", title: "Former President, Hellenic Foreign Trade Board", email: "tzen@otenet.gr" },
-                ].map((ref, i) => (
-                  <div key={i} className="p-6 bg-gray-50 rounded-xl">
-                    <h3 className="font-bold text-lg mb-1">{ref.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2">{ref.title}</p>
-                    <p className="text-gray-500 text-sm">{ref.email}</p>
-                  </div>
-                ))}
-              </motion.div>
-            </section>
 
             {/* Contact Section */}
             <section ref={sections[4].ref} id="contact" className="mb-12 scroll-mt-32">
@@ -506,18 +472,7 @@ export default function About() {
                       I'm always open to discussing data strategy, AI implementation, or potential collaborations.
                     </p>
                     <div className="space-y-6">
-                      <a href="mailto:Bekas.Ioannis.1996@gmail.com" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Mail className="w-5 h-5" />
-                        </span>
-                        Bekas.Ioannis.1996@gmail.com
-                      </a>
-                      <a href="tel:+306981752107" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Phone className="w-5 h-5" />
-                        </span>
-                        (+30) 6981752107
-                      </a>
+
                       <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors">
                         <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Linkedin className="w-5 h-5" />
