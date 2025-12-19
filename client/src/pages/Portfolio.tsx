@@ -15,6 +15,14 @@ import chaniaTax4 from "@/assets/partnerships/chania_tax_4.png";
 
 const projects = [
   {
+    id: 4,
+    title: "Chania Tax IKE",
+    category: "Strategic Partnership",
+    images: [chaniaTax1, chaniaTax2, chaniaTax3, chaniaTax4],
+    description: "A strategic partnership with the CEO of Chania Tax IKE, Mr Antonakakis, driving digital transformation in the financial sector. We implemented secure cloud infrastructure, automated reporting systems, and advanced analytics to optimize operational efficiency and decision-making for Chania's leading tax consultancy.",
+    link: "https://chaniatax.gr/"
+  },
+  {
     id: 1,
     title: "UNICEF Audit Reports Dashboard",
     category: "Risk Management / Strategy",
@@ -37,14 +45,6 @@ const projects = [
     images: [ifcDashboard],
     description: "Strategic HR dashboard analyzing global talent acquisition, application sources, and gender distribution.",
     link: "https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/World%20Bank%20HR%20Dashboard.md"
-  },
-  {
-    id: 4,
-    title: "Chania Tax IKE",
-    category: "Strategic Partnership",
-    images: [chaniaTax1, chaniaTax2, chaniaTax3, chaniaTax4],
-    description: "A strategic partnership with the CEO of Chania Tax IKE, Mr Antonakakis, driving digital transformation in the financial sector. We implemented secure cloud infrastructure, automated reporting systems, and advanced analytics to optimize operational efficiency and decision-making for Chania's leading tax consultancy.",
-    link: "https://chaniatax.gr/"
   }
 ];
 
