@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { ServicesSection } from "@/components/sections/Services";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -15,8 +16,7 @@ export default function Home() {
       <main>
         <Hero />
         <ServicesSection />
-
-
+        <ReviewsSection />
 
         {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">
