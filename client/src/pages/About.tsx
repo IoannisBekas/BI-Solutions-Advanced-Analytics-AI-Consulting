@@ -202,176 +202,28 @@ export default function About() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-16"
+                className="text-3xl md:text-4xl font-bold font-heading mb-12"
               >
                 Experience
               </motion.h2>
 
-              <div className="space-y-20">
-                {/* UN Senior Data Scientist */}
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-100px" }}
-                  variants={staggerContainer}
-                >
-                  <motion.div variants={staggerItem} className="mb-6">
-                    <h3 className="text-2xl font-bold">United Nations</h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-lg">
-                      <span className="text-gray-900 font-medium">Senior Data Scientist – Data Management & Visualization</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Nov 2023 – July 2025</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Geneva, Switzerland</span>
-                    </div>
-                  </motion.div>
-                  <motion.ul className="space-y-4 border-l border-gray-200 pl-6 ml-1">
-                    {[
-                      "Teaching process mapping, waste reduction, data-driven decision-making, performance measurement and Lean Six Sigma methodologies.",
-                      "Performed deep qualitative and quantitative assessments on global investment and service-capability ecosystems.",
-                      "Consolidated insights from over 12 global data and research sources to build executive dashboards that shaped product and service-experience planning.",
-                      "Developed an investment-optimization and prioritization framework—structured like a financial ROI model.",
-                      "Crafted narrative-driven presentations distilling complex technical findings into clear business implications.",
-                      "Designed KPI frameworks and refined SOPs that strengthened operational consistency and data quality.",
-                      "Executed full-cycle research programs translating customer expectations into actionable service enhancements.",
-                      "Built real-time customer-experience monitoring dashboards in Power BI.",
-                      "Streamlined cross-functional processes by redesigning SOPs and introducing continuous-improvement practices.",
-                      "Led cross-department collaboration to align insight-driven recommendations with organizational goals."
-                    ].map((item, index) => (
-                      <motion.li key={index} variants={staggerItem} className="text-gray-600 leading-relaxed relative">
-                        <span className="absolute -left-[29px] top-2.5 w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        {item}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-
-                {/* BI Solutions */}
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-100px" }}
-                  variants={staggerContainer}
-                >
-                  <motion.div variants={staggerItem} className="mb-6">
-                    <h3 className="text-2xl font-bold">BI Solutions — Advanced Analytics & AI Consulting</h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-lg">
-                      <span className="text-gray-900 font-medium">Founder & Principal Consultant</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Aug 2021 – Dec 2023</span>
-                    </div>
-                  </motion.div>
-                  <motion.ul className="space-y-4 border-l border-gray-200 pl-6 ml-1">
-                    {[
-                      "Advised executives at global enterprises (Fujitsu, LG, Nespresso, Collins Aerospace, Coca Cola, PepsiCo, etc.) on adopting data science and advanced visualization.",
-                      "Scoped and delivered data solutions by mapping business objectives to technical architectures.",
-                      "Built and maintained enterprise-grade ETL pipelines in Python/SQL and dbt.",
-                      "Designed and deployed machine learning solutions (classification, recommendation engines, graph analytics).",
-                      "Embedded predictive and prescriptive models into decision-making processes.",
-                      "Productionized ML pipelines in Databricks Feature Store with full CI/CD automation.",
-                      "Created tailored executive dashboards in Power BI and Tableau."
-                    ].map((item, index) => (
-                      <motion.li key={index} variants={staggerItem} className="text-gray-600 leading-relaxed relative">
-                        <span className="absolute -left-[29px] top-2.5 w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        {item}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-
-                {/* IAEA */}
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-100px" }}
-                  variants={staggerContainer}
-                >
-                  <motion.div variants={staggerItem} className="mb-6">
-                    <h3 className="text-2xl font-bold">United Nations | IAEA</h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-lg">
-                      <span className="text-gray-900 font-medium">Information Systems Analyst (Internship)</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Jul 2020 – Jun 2021</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Vienna, Austria</span>
-                    </div>
-                  </motion.div>
-                  <motion.ul className="space-y-4 border-l border-gray-200 pl-6 ml-1">
-                    {[
-                      "Created predictive HR dashboards in Power BI/SAP BO, modeling workforce trends.",
-                      "Conducted statistical modeling and anomaly detection for HR policy evaluation.",
-                      "Built microservices pipelines for MTHR analytics with automated experiment tracking.",
-                      "Trained IAEA staff on applied statistics and data visualization best practices.",
-                      "Contributed to data governance frameworks, ensuring robust and reproducible data transformations."
-                    ].map((item, index) => (
-                      <motion.li key={index} variants={staggerItem} className="text-gray-600 leading-relaxed relative">
-                        <span className="absolute -left-[29px] top-2.5 w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        {item}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-
-                {/* Hellenic Institute */}
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-100px" }}
-                  variants={staggerContainer}
-                >
-                  <motion.div variants={staggerItem} className="mb-6">
-                    <h3 className="text-2xl font-bold">The Hellenic Institute of Cultural Diplomacy</h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-lg">
-                      <span className="text-gray-900 font-medium">Statistician and Data Analyst</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Jul 2019 – Jun 2020</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Athens, Greece</span>
-                    </div>
-                  </motion.div>
-                  <motion.ul className="space-y-4 border-l border-gray-200 pl-6 ml-1">
-                    {[
-                      "Designed data collection systems and applied econometric modeling for financial and survey datasets.",
-                      "Delivered predictive analysis for business forecasts and international project evaluation.",
-                      "Created statistical reports and visualizations supporting diplomacy strategy and stakeholder engagement."
-                    ].map((item, index) => (
-                      <motion.li key={index} variants={staggerItem} className="text-gray-600 leading-relaxed relative">
-                        <span className="absolute -left-[29px] top-2.5 w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        {item}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-
-                {/* TS2 Office */}
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-100px" }}
-                  variants={staggerContainer}
-                >
-                  <motion.div variants={staggerItem} className="mb-6">
-                    <h3 className="text-2xl font-bold">TS2 Office</h3>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-lg">
-                      <span className="text-gray-900 font-medium">Junior Data Analyst</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-gray-500">Oct 2014 – Jun 2019</span>
-                    </div>
-                  </motion.div>
-                  <motion.ul className="space-y-4 border-l border-gray-200 pl-6 ml-1">
-                    {[
-                      "Supported data collection and preprocessing tasks for client analytics projects.",
-                      "Assisted in building automated reports and dashboards using Excel and Python.",
-                      "Contributed to ad-hoc analysis of financial data and basic machine learning experiments."
-                    ].map((item, index) => (
-                      <motion.li key={index} variants={staggerItem} className="text-gray-600 leading-relaxed relative">
-                        <span className="absolute -left-[29px] top-2.5 w-1.5 h-1.5 rounded-full bg-gray-300" />
-                        {item}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-              </div>
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+                className="space-y-8"
+              >
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  I am a Mathematician, Investor, Data Scientist, Analytics Engineer, and Business Intelligence Developer with experience across both international organizations and the private sector. My expertise includes data management, statistical analysis, artificial intelligence, and information visualization, with a focus on building advanced analytical tools that support data-driven decision-making and training data models for predictive analytics and automation.
+                </p>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  My professional background spans international organizations such as the International Atomic Energy Agency (IAEA), the International Organization for Migration (IOM), and the United Nations Office for Disaster Risk Reduction (UNDRR), as well as private-sector environments. Across these settings, I have contributed to structuring and analyzing large-scale datasets, developing data governance frameworks, and designing scalable business intelligence and analytics solutions.
+                </p>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  In parallel, I have consulted professionals and teams across Canada, the United States, and Europe, supporting data, analytics, and decision-making initiatives for organizations including Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola, PepsiCo, and multiple SMEs.
+                </p>
+              </motion.div>
             </section>
 
             {/* Education Section */}
