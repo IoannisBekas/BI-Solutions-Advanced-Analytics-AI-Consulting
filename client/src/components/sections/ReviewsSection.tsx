@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Star } from "lucide-react";
 
@@ -59,36 +60,50 @@ export function ReviewsSection() {
                     </p>
                 </ScrollReveal>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {reviews.map((review, index) => (
-                        <ScrollReveal key={review.id} delay={index * 0.1}>
-                            <a
-                                href={review.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block h-full"
-                            >
-                                <Card className="h-full bg-card/50 backdrop-blur border-border/50 hover:bg-card/80 transition-colors duration-300">
-                                    <CardHeader>
-                                        <div className="flex items-center justify-between mb-2">
-                                            <div className="flex space-x-1">
-                                                {[...Array(review.rating)].map((_, i) => (
-                                                    <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                                                ))}
-                                            </div>
-                                            <span className="text-xs text-muted-foreground">{review.date}</span>
-                                        </div>
-                                        <CardTitle className="text-lg font-bold">{review.author}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-muted-foreground text-sm leading-relaxed">
-                                            "{review.text}"
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            </a>
-                        </ScrollReveal>
-                    ))}
+                <div className="relative px-8 md:px-12">
+                    <Carousel
+                        opts={{
+                            align: "start",
+                            loop: true,
+                        }}
+                        className="w-full"
+                    >
+                        <CarouselContent>
+                            {reviews.map((review, index) => (
+                                <CarouselItem key={review.id} className="md:basis-1/2 lg:basis-1/3 pl-6">
+                                    <div className="h-full py-2">
+                                        <a
+                                            href={review.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block h-full"
+                                        >
+                                            <Card className="h-full bg-card/50 backdrop-blur border-border/50 hover:bg-card/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                                                <CardHeader>
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <div className="flex space-x-1">
+                                                            {[...Array(review.rating)].map((_, i) => (
+                                                                <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-xs text-muted-foreground">{review.date}</span>
+                                                    </div>
+                                                    <CardTitle className="text-lg font-bold line-clamp-1">{review.author}</CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-6">
+                                                        "{review.text}"
+                                                    </p>
+                                                </CardContent>
+                                            </Card>
+                                        </a>
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="-left-4 md:-left-12" />
+                        <CarouselNext className="-right-4 md:-right-12" />
+                    </Carousel>
                 </div>
             </div>
         </section>
