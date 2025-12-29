@@ -35,6 +35,14 @@ const reviews: Review[] = [
         text: "I’ve been working with Ioannis the last months to get his advice on various data engineering challenges I faced. He’s incredibly efficient, respects our company’s data privacy, and consistently delivers fast, high-quality results. Even though his rates are premium, the clarity and impact he brings to reporting and decision-making make his support absolutely worth it. Highly recommended.",
         date: "2 months ago",
         link: "https://maps.app.goo.gl/LJnsgzhmqGjeHQPE7"
+    },
+    {
+        id: 4,
+        author: "Vasilis Antonakakis",
+        rating: 5,
+        text: "I had the pleasure of working with Yannis on the automation and analytics transformation of our accounting firm. From the very beginning, he demonstrated deep expertise in data engineering, business intelligence, and advanced analytics, combined with a strong understanding of real operational needs. I strongly recommend his services to any business looking to modernize its processes through analytics and AI.",
+        date: "Dec 2024",
+        link: "https://maps.app.goo.gl/dRfe4tXaRSymdoxz5"
     }
 ];
 
