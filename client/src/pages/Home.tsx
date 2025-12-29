@@ -16,7 +16,6 @@ export default function Home() {
       <main>
         <Hero />
         <ServicesSection />
-        <ReviewsSection />
 
         {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">
@@ -85,6 +84,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <ReviewsSection />
       </main>
       <Footer />
     </div>
