@@ -64,13 +64,13 @@ export function ReviewsSection() {
                     <Carousel
                         opts={{
                             align: "start",
-                            loop: true,
+                            loop: false,
                         }}
                         className="w-full"
                     >
                         <CarouselContent>
                             {reviews.map((review, index) => (
-                                <CarouselItem key={review.id} className="md:basis-1/2 lg:basis-1/3 pl-6">
+                                <CarouselItem key={review.id} className="md:basis-1/2 lg:basis-1/2 pl-6">
                                     <div className="h-full py-2">
                                         <a
                                             href={review.link}
