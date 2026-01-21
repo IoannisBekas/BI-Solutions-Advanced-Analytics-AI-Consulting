@@ -160,7 +160,7 @@ export default function About() {
                   </h1>
                   <h2 className="text-2xl font-medium text-gray-800 mb-6">Strategic Business & Data Analyst</h2>
                   <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                    Strategic Business & Data Analyst with 7+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work across international organizations and complex operational environments. Responsible for managing projects and implementing solutions.
+                    Strategic Business & Data Analyst with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work across international organizations and complex operational environments. Responsible for managing projects and implementing solutions.
                   </p>
                   <p className="text-lg text-gray-600 mb-8">
                     Advanced proficiency with Power BI, Tableau, Excel, SQL, AI-powered research tools, and customer behavior analytics.

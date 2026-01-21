@@ -34,14 +34,39 @@ export default function Contact() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    console.log("Form submitted:", data);
-    toast.success("Message sent successfully! We'll be in touch soon.");
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "0246063d-239b-44b8-96bf-df146771b309",
+          name: data.name,
+          email: data.email,
+          subject: data.subject,
+          message: data.message,
+          from_name: "BI Solutions Contact Form",
+          to_email: "bekasyannis@gmail.com",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Message sent successfully! We'll be in touch soon.");
+        reset();
+      } else {
+        toast.error("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      toast.error("Failed to send message. Please try again.");
+      console.error("Form submission error:", error);
+    }
 
     setIsSubmitting(false);
-    reset();
   };
 
   return (
