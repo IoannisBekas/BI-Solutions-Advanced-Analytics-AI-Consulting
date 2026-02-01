@@ -103,7 +103,7 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-white z-40 pt-24 px-8 md:hidden"
+            className="fixed inset-0 bg-white z-[60] pt-24 px-8 md:hidden"
           >
             <nav className="flex flex-col gap-8 text-2xl font-heading font-bold">
               {navLinks.map((link) => (
