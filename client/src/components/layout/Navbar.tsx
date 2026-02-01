@@ -34,9 +34,7 @@ export function Navbar() {
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     { name: "Portfolio", href: "/portfolio" },
-
     { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -83,9 +81,11 @@ export function Navbar() {
                 />
               </Link>
             ))}
-            <Button className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105">
-              Get Started
-            </Button>
+            <Link href="/contact">
+              <Button className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105">
+                Get Started
+              </Button>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -147,12 +147,11 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              <Button
-                className="w-full mt-8 rounded-full py-6 text-lg"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Get Started
-              </Button>
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button className="w-full mt-8 rounded-full py-6 text-lg">
+                  Get Started
+                </Button>
+              </Link>
             </nav>
           </motion.div>
         )}
