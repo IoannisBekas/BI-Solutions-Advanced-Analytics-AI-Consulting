@@ -113,18 +113,17 @@ export default function Contact() {
                     </div>
                   </a>
 
-                  <a
-                    href="mailto:contact@bisolutions.com"
-                    className="flex items-center gap-4 text-lg hover:text-gray-600 transition-colors group"
+                  <div
+                    className="flex items-center gap-4 text-lg"
                   >
-                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
                       <Mail className="w-6 h-6" />
                     </div>
                     <div>
                       <div className="font-bold">Email Us</div>
-                      <div className="text-gray-500 text-sm">contact@bisolutions.com</div>
+                      <div className="text-gray-500 text-sm">Fill in the form</div>
                     </div>
-                  </a>
+                  </div>
 
                   <a
                     href="https://g.page/r/CX_slm3UIaXHEAE/review"
