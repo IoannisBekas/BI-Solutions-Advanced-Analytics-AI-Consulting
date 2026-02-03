@@ -38,7 +38,7 @@ export default function Blog() {
                 {/* Hero Section */}
                 <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-b from-gray-50 to-white">
                     <div className="max-w-7xl mx-auto px-6 md:px-12">
-                        <ScrollReveal>
+                        <ScrollReveal width="100%" className="overflow-visible">
                             <h1 className="text-4xl md:text-6xl font-bold font-heading mb-6">
                                 Insights & <span className="text-gray-400">Perspectives</span>
                             </h1>

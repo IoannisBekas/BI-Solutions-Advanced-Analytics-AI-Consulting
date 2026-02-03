@@ -76,7 +76,7 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
             <div>
-              <ScrollReveal>
+              <ScrollReveal width="100%" className="overflow-visible">
                 <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8">Let's Talk</h1>
                 <p className="text-xl text-gray-600 mb-12">
                   Have a project in mind? We'd love to hear from you. Send us a message and we'll get back to you shortly.
