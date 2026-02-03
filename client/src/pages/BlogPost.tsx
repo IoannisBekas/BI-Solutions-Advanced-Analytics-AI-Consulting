@@ -13,14 +13,56 @@ export default function BlogPost() {
     const post = getBlogPostBySlug(slug);
     const relatedPosts = getRelatedPosts(slug, 2);
 
-    // Update document title and meta for SEO
+    // Update document title, meta, and structured data for SEO
     useEffect(() => {
         if (post) {
+            // Update Title
             document.title = `${post.title} | BI Solutions Blog`;
+
+            // Update Meta Description
             const metaDescription = document.querySelector('meta[name="description"]');
             if (metaDescription) {
                 metaDescription.setAttribute("content", post.excerpt);
             }
+
+            // Add JSON-LD Structured Data
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.id = 'json-ld-article';
+            script.innerHTML = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": post.title,
+                "description": post.excerpt,
+                "image": `https://bisolutions.group${post.featuredImage}`,
+                "author": {
+                    "@type": "Organization",
+                    "name": "BI Solutions",
+                    "url": "https://bisolutions.group"
+                },
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "BI Solutions",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://bisolutions.group/bi-solutions-logo.png"
+                    }
+                },
+                "datePublished": new Date(post.date).toISOString(),
+                "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": `https://bisolutions.group/blog/${post.slug}`
+                }
+            });
+            document.head.appendChild(script);
+
+            // Cleanup
+            return () => {
+                const existingScript = document.getElementById('json-ld-article');
+                if (existingScript) {
+                    document.head.removeChild(existingScript);
+                }
+            };
         }
     }, [post]);
 
