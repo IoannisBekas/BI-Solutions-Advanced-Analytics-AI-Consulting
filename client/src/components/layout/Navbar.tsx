@@ -118,7 +118,7 @@ export function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <img
-                  src="/BI-Solutions-Advanced-Analytics-AI-Consulting/bi-solutions-logo.png"
+                  src="/bi-solutions-logo.png"
                   alt="BI Solutions"
                   className="w-10 h-10"
                 />
