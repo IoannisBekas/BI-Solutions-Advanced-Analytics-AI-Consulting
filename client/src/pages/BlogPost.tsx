@@ -25,6 +25,15 @@ export default function BlogPost() {
                 metaDescription.setAttribute("content", post.excerpt);
             }
 
+            // Update Open Graph & Twitter Image
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            const imageUrl = `https://bisolutions.group${post.featuredImage}`;
+
+            if (ogImage) ogImage.setAttribute("content", imageUrl);
+            if (twitterImage) twitterImage.setAttribute("content", imageUrl);
+
+
             // Add JSON-LD Structured Data
             const script = document.createElement('script');
             script.type = 'application/ld+json';
