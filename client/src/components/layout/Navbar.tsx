@@ -57,7 +57,7 @@ export function Navbar() {
               className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
             />
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions</span>
+              <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions Group</span>
               <span className="text-xs text-gray-500 font-medium">Advanced Analytics & AI Consulting</span>
             </div>
           </Link>
@@ -123,7 +123,7 @@ export function Navbar() {
                   className="w-10 h-10"
                 />
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold tracking-tight font-heading">BI Solutions</span>
+                  <span className="text-lg font-bold tracking-tight font-heading">BI Solutions Group</span>
                   <span className="text-xs text-gray-500 font-medium">Advanced Analytics & AI Consulting</span>
                 </div>
               </Link>

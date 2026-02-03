@@ -20,7 +20,7 @@ export function Footer() {
                 className="w-10 h-10 invert"
               />
               <div>
-                <div className="text-xl font-bold font-heading tracking-tight">BI Solutions</div>
+                <div className="text-xl font-bold font-heading tracking-tight">BI Solutions Group</div>
                 <div className="text-xs text-gray-400">Analytics & AI</div>
               </div>
             </Link>
@@ -77,7 +77,7 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 text-sm text-gray-500">
-          <p>&copy; 2025 BI Solutions. All rights reserved.</p>
+          <p>&copy; 2026 BI Solutions Group. All rights reserved.</p>
 
           <button
             onClick={scrollToTop}
