@@ -15,7 +15,7 @@ export function Footer() {
           <div className="md:col-span-5 space-y-6">
             <Link href="/" className="flex items-center gap-3 block mb-4">
               <img
-                src="/BI-Solutions-Advanced-Analytics-AI-Consulting/bi-solutions-logo.png"
+                src="/bi-solutions-logo.png"
                 alt="BI Solutions"
                 className="w-10 h-10 invert"
               />

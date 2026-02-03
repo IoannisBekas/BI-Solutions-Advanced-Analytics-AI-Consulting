@@ -52,7 +52,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <img
-              src="/BI-Solutions-Advanced-Analytics-AI-Consulting/bi-solutions-logo.png"
+              src="/bi-solutions-logo.png"
               alt="BI Solutions"
               className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
             />
