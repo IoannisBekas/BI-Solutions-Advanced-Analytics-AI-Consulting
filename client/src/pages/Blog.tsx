@@ -46,9 +46,9 @@ export default function Blog() {
                                 Expert insights on AI, analytics, and digital transformation. Stay ahead with the latest trends and strategies.
                             </p>
 
-                            {/* Search Bar */}
-                            <div className="relative max-w-lg">
-                                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-400">
+                            {/* Search Bar - Added padding container to prevent border clipping */}
+                            <div className="relative max-w-lg p-1">
+                                <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-400">
                                     <Search className="w-5 h-5" />
                                 </div>
                                 <input
