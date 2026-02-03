@@ -10,10 +10,10 @@ interface ScrollRevealProps {
   duration?: number;
 }
 
-export const ScrollReveal = ({ 
-  children, 
-  width = "fit-content", 
-  delay = 0, 
+export const ScrollReveal = ({
+  children,
+  width = "fit-content",
+  delay = 0,
   direction = "up",
   className = "",
   duration = 0.5
@@ -42,18 +42,18 @@ export const ScrollReveal = ({
 
     return {
       hidden: initial,
-      visible: { 
-        x: 0, 
-        y: 0, 
-        opacity: 1, 
+      visible: {
+        x: 0,
+        y: 0,
+        opacity: 1,
         scale: 1,
-        transition: { duration, delay, ease: "easeOut" } 
+        transition: { duration, delay, ease: "easeOut" }
       },
     };
   };
 
   return (
-    <div ref={ref} style={{ width, position: "relative", overflow: "hidden" }} className={className}>
+    <div ref={ref} style={{ width, position: "relative" }} className={className}>
       <motion.div
         variants={getVariants()}
         initial="hidden"
