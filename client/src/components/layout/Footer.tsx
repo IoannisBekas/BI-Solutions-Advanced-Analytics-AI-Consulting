@@ -13,7 +13,7 @@ export function Footer() {
 
           {/* Brand */}
           <div className="md:col-span-5 space-y-6">
-            <Link href="/" className="flex items-center gap-3 block mb-4">
+            <Link href="/" className="flex items-center gap-3 mb-4">
               <img
                 src="/bi-solutions-logo.png"
                 alt="BI Solutions"
@@ -21,7 +21,7 @@ export function Footer() {
               />
               <div>
                 <div className="text-xl font-bold font-heading tracking-tight">BI Solutions Group</div>
-                <div className="text-xs text-gray-400">Analytics & AI</div>
+                <div className="text-xs text-gray-400">Advanced Analytics & AI Consulting</div>
               </div>
             </Link>
             <p className="text-gray-400 max-w-sm leading-relaxed">
