@@ -50,12 +50,38 @@ export default function Contact() {
           message: data.message,
           from_name: "BI Solutions Contact Form",
           to_email: "bekasyannis@gmail.com",
+          // Try to send a copy to the user using CC if supported, or rely on auto-responder if enabled in dashboard.
+          // Since we can't guarantee dashboard settings, we will try to send a second email to the user as a confirmation.
         }),
       });
 
       const result = await response.json();
 
       if (result.success) {
+        // Attempt to send a confirmation email to the user
+        // Note: This relies on the service allowing sending TO external emails, which might be restricted on free tier.
+        // We do this silently so it doesn't fail the main submission if it fails.
+        try {
+          await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              access_key: "0246063d-239b-44b8-96bf-df146771b309",
+              name: "BI Solutions",
+              email: "bekasyannis@gmail.com", // From us
+              subject: `Confirmation: ${data.subject}`,
+              message: `Hi ${data.name},\n\nWe received your message:\n\n"${data.message}"\n\nWe'll get back to you shortly.\n\nBest,\nBI Solutions Team`,
+              to_email: data.email, // To the user
+              from_name: "BI Solutions",
+            }),
+          });
+        } catch (e) {
+          console.error("Failed to send confirmation copy", e);
+        }
+
         toast.success("Message sent successfully! We'll be in touch soon.");
         reset();
       } else {
