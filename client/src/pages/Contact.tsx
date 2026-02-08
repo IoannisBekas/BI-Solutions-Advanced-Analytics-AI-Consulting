@@ -10,6 +10,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import emailjs from "@emailjs/browser";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -50,8 +51,7 @@ export default function Contact() {
           message: data.message,
           from_name: "BI Solutions Contact Form",
           to_email: "bekasyannis@gmail.com",
-          // Try to send a copy to the user using CC if supported, or rely on auto-responder if enabled in dashboard.
-          // Since we can't guarantee dashboard settings, we will try to send a second email to the user as a confirmation.
+
         }),
       });
 
@@ -61,25 +61,32 @@ export default function Contact() {
         // Attempt to send a confirmation email to the user
         // Note: This relies on the service allowing sending TO external emails, which might be restricted on free tier.
         // We do this silently so it doesn't fail the main submission if it fails.
+        // Send a confirmation email to the user using EmailJS
+        // This avoids the duplicate notification issue with Web3Forms
         try {
-          await fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({
-              access_key: "0246063d-239b-44b8-96bf-df146771b309",
-              name: "BI Solutions",
-              email: "bekasyannis@gmail.com", // From us
-              subject: `Confirmation: ${data.subject}`,
-              message: `Hi ${data.name},\n\nWe received your message:\n\n"${data.message}"\n\nWe'll get back to you shortly.\n\nBest,\nBI Solutions Team`,
-              to_email: data.email, // To the user
-              from_name: "BI Solutions",
-            }),
-          });
+          // TODO: Replace these placeholders with your actual EmailJS keys
+          // Get them from https://dashboard.emailjs.com/admin
+          const SERVICE_ID = "YOUR_SERVICE_ID";
+          const TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+          const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+
+          if (SERVICE_ID !== "YOUR_SERVICE_ID") {
+            await emailjs.send(
+              SERVICE_ID,
+              TEMPLATE_ID,
+              {
+                to_name: data.name,
+                to_email: data.email,
+                subject: data.subject,
+                message: data.message,
+              },
+              PUBLIC_KEY
+            );
+          } else {
+            console.warn("EmailJS keys not configured. Confirmation email not sent.");
+          }
         } catch (e) {
-          console.error("Failed to send confirmation copy", e);
+          console.error("Failed to send confirmation copy via EmailJS", e);
         }
 
         toast.success("Message sent successfully! We'll be in touch soon.");
