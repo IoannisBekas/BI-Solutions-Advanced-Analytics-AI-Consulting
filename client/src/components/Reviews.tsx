@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollRevealTitle } from "@/components/ui/ScrollRevealTitle";
 
 const reviews = [
     {
@@ -37,33 +38,11 @@ export function Reviews() {
     return (
         <section className="py-24 bg-gray-50">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
-                <div className="text-center mb-16 overflow-hidden">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-100px" }}
-                        className="mb-6"
-                    >
-                        <h2 className="text-3xl md:text-5xl font-bold font-heading overflow-hidden flex flex-wrap justify-center gap-x-3">
-                            {"WHAT OUR CLIENTS SAY".split(" ").map((word, i) => (
-                                <motion.span
-                                    key={i}
-                                    variants={{
-                                        hidden: { y: "100%" },
-                                        visible: { y: 0 }
-                                    }}
-                                    transition={{
-                                        duration: 0.5,
-                                        ease: [0.33, 1, 0.68, 1],
-                                        delay: i * 0.1
-                                    }}
-                                    className="inline-block"
-                                >
-                                    {word}
-                                </motion.span>
-                            ))}
-                        </h2>
-                    </motion.div>
+                <div className="text-center mb-16">
+                    <ScrollRevealTitle
+                        text="WHAT OUR CLIENTS SAY"
+                        className="text-3xl md:text-5xl font-bold font-heading justify-center mb-6"
+                    />
 
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}

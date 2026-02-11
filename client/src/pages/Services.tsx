@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
 import { Reviews } from "@/components/Reviews";
+import { ScrollRevealTitle } from "@/components/ui/ScrollRevealTitle";
 
 
 export default function Services() {
@@ -39,7 +40,10 @@ export default function Services() {
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <ScrollReveal>
-            <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8">Our Expertise</h1>
+            <ScrollRevealTitle
+              text="Our Expertise"
+              className="text-5xl md:text-7xl font-bold font-heading mb-8"
+            />
             <p className="text-xl text-gray-600 max-w-2xl mb-20">
               End-to-end analytics, AI, and data engineering services. From strategy and architecture to delivery and managed support.
             </p>
