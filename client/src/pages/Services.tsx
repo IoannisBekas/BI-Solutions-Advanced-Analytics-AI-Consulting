@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
+import { Reviews } from "@/components/Reviews";
 
 
 export default function Services() {
@@ -63,6 +64,7 @@ export default function Services() {
           </div>
         </div>
       </main>
+      <Reviews />
       <Footer />
     </div>
   );
