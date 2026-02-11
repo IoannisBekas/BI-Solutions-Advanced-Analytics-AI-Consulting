@@ -158,13 +158,11 @@ export default function About() {
                   <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8 tracking-tight">
                     Ioannis Bekas
                   </h1>
-                  <h2 className="text-2xl font-medium text-gray-800 mb-6">Strategic Business & Data Analyst</h2>
+                  <h2 className="text-2xl font-medium text-gray-800 mb-6">Data Scientist & AI Developer</h2>
                   <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                    Strategic Business & Data Analyst with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work across international organizations and complex operational environments. Responsible for managing projects and implementing solutions.
+                    Data Scientist & AI Developer with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work. Responsible for managing projects and implementing solutions.
                   </p>
-                  <p className="text-lg text-gray-600 mb-8">
-                    Advanced proficiency with Power BI, Tableau, Excel, SQL, AI-powered research tools, and customer behavior analytics.
-                  </p>
+
                   <div className="flex gap-4">
                     <Button
                       onClick={() => scrollToSection('contact')}
@@ -215,7 +213,7 @@ export default function About() {
                 className="space-y-8"
               >
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  I am a Mathematician, Investor, Data Scientist, Analytics Engineer, and Business Intelligence Developer with experience across both international organizations and the private sector. My expertise includes data management, statistical analysis, artificial intelligence, and information visualization, with a focus on building advanced analytical tools that support data-driven decision-making and training data models for predictive analytics and automation.
+                  My expertise includes data management, statistical analysis, artificial intelligence, and information visualization, with a focus on building advanced analytical tools that support data-driven decision-making and training data models for predictive analytics and automation.
                 </p>
                 <p className="text-lg text-gray-600 leading-relaxed">
                   My professional background spans international organizations such as the International Atomic Energy Agency (IAEA), the International Organization for Migration (IOM), and the United Nations Office for Disaster Risk Reduction (UNDRR), as well as private-sector environments. Across these settings, I have contributed to structuring and analyzing large-scale datasets, developing data governance frameworks, and designing scalable business intelligence and analytics solutions.
