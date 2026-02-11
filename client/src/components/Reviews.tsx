@@ -37,15 +37,41 @@ export function Reviews() {
     return (
         <section className="py-24 bg-gray-50">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
-                >
-                    <h2 className="text-3xl md:text-5xl font-bold font-heading mb-6">WHAT OUR CLIENTS SAY</h2>
-                    <div className="flex justify-center items-center gap-2 mb-4">
+                <div className="text-center mb-16 overflow-hidden">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-100px" }}
+                        className="mb-6"
+                    >
+                        <h2 className="text-3xl md:text-5xl font-bold font-heading overflow-hidden flex flex-wrap justify-center gap-x-3">
+                            {"WHAT OUR CLIENTS SAY".split(" ").map((word, i) => (
+                                <motion.span
+                                    key={i}
+                                    variants={{
+                                        hidden: { y: "100%" },
+                                        visible: { y: 0 }
+                                    }}
+                                    transition={{
+                                        duration: 0.5,
+                                        ease: [0.33, 1, 0.68, 1],
+                                        delay: i * 0.1
+                                    }}
+                                    className="inline-block"
+                                >
+                                    {word}
+                                </motion.span>
+                            ))}
+                        </h2>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.6, duration: 0.5 }}
+                        className="flex justify-center items-center gap-2 mb-4"
+                    >
                         <span className="text-2xl font-bold">5.0</span>
                         <div className="flex text-yellow-500">
                             {[...Array(5)].map((_, i) => (
@@ -53,8 +79,8 @@ export function Reviews() {
                             ))}
                         </div>
                         <span className="text-gray-500 ml-2">(Google Reviews)</span>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
                     {reviews.map((review, index) => (
@@ -95,7 +121,7 @@ export function Reviews() {
                     className="mt-12 text-center"
                 >
                     <a
-                        href="https://www.google.com/maps/place/BI+Solutions+Group+%E2%80%94+Advanced+Analytics+%26+AI+Consulting/@51.2072,-79.19775,3z/data=!3m1!4b1!4m6!3m5!1s0x8b72b1c0bdff5865:0xc7a521d46d96ec7f!8m2!3d51.2072!4d-79.19775"
+                        href="https://www.google.com/maps/place/BI+Solutions+%7C+BEKAS+IOANNIS+-+%CE%9C%CE%A0%CE%95%CE%9A%CE%91%CE%A3+%CE%99%CE%A9%CE%91%CE%9D%CE%9D%CE%97%CE%A3/@51.2072,-79.19775,3z/data=!3m1!4b1!4m6!3m5!1s0x8b72b1c0bdff5865:0xc7a521d46d96ec7f!8m2!3d51.2072!4d-79.19775!16s%2Fg%2F11p5znwz2w?entry=ttu&g_ep=EgoyMDI1MDIyNS4wIKXMDSoASAFQAw%3D%3D"
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-black hover:bg-gray-800 transition-colors"
