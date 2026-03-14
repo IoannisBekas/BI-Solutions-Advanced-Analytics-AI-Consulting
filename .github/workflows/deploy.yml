@@ -24,6 +24,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Quantus dependencies
+        run: cd Quantus && npm ci
+
+      - name: Install Power BI Solutions dependencies
+        run: cd PowerBI_Solutions/app && npm ci
+
       - name: Build
         run: npm run build
 
