@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
@@ -51,6 +52,11 @@ const projects = [
 export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Portfolio and Selected Analytics Work"
+        description="See BI Solutions portfolio work across UNICEF, IAEA, IFC, and strategic partnerships delivering analytics, dashboards, and digital transformation."
+        path="/portfolio"
+      />
       <Navbar />
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

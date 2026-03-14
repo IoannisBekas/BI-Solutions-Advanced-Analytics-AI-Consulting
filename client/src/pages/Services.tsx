@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
 import { Reviews } from "@/components/Reviews";
@@ -36,6 +37,11 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Analytics, AI, and Data Services"
+        description="Explore BI Solutions services across cloud migration, advanced analytics, AI delivery, Power BI, MLOps, and data strategy."
+        path="/services"
+      />
       <Navbar />
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

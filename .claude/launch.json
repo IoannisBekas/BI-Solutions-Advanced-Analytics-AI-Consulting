@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--import", "tsx", "server/index.ts"],
+      "port": 5001,
+      "env": {
+        "PORT": "5001",
+        "NODE_ENV": "development"
+      }
+    }
+  ]
+}

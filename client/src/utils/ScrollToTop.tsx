@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useHashLocation } from "wouter/use-hash-location";
+import { useLocation } from "wouter";
 
 export default function ScrollToTop() {
-    const [location] = useHashLocation();
+    const [location] = useLocation();
 
     useEffect(() => {
         window.scrollTo(0, 0);

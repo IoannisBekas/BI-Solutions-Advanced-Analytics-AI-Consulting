@@ -1,0 +1,977 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..800;1,300..800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@theme {
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* ── Light mode colors (default — BI Solutions style) ────────────────── */
+  --color-bg-base: #FFFFFF;
+  --color-surface: #F9FAFB;
+  --color-surface-2: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-border-light: #D1D5DB;
+
+  /* Data signal colors — preserved for financial widgets */
+  --color-blue: #2563EB;
+  --color-emerald: #10B981;
+  --color-red: #EF4444;
+  --color-amber: #F59E0B;
+
+  /* ── Text ──────────────────────────────────────────────────────────────── */
+  --color-text-primary: #09090B;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+
+  /* ── Radii ─────────────────────────────────────────────────────────────── */
+  --radius-card: 24px;
+  --radius-pill: 9999px;
+
+  /* ── Shadows ───────────────────────────────────────────────────────────── */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 24px rgba(0, 0, 0, 0.06);
+  --shadow-glow-blue: 0 0 40px rgba(37, 99, 235, 0.15);
+  --shadow-glow-emerald: 0 0 40px rgba(16, 185, 129, 0.15);
+}
+
+/* ────────────────────────────────── BASE ────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ticker-tape { animation: none !important; }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+textarea,
+select {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+img,
+svg {
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.03em;
+}
+
+body {
+  @apply antialiased;
+  margin: 0;
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-feature-settings: "liga" 1, "kern" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Dark Mode ──────────────────────────────────────────────────────────── */
+
+body.dark-mode {
+  --color-bg-base: #0A1018;
+  --color-surface: #101826;
+  --color-surface-2: #172131;
+  --color-border: #223046;
+  --color-border-light: #31425B;
+  --color-text-primary: #F0F6FF;
+  --color-text-secondary: #97A8BF;
+  --color-text-muted: #6F829B;
+
+  background-color: #0A1018;
+  color: #F0F6FF;
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 42% 35% at -5% 30%, rgba(148, 163, 184, 0.05) 0%, transparent 68%),
+    radial-gradient(ellipse 42% 35% at 105% 30%, rgba(16, 185, 129, 0.04) 0%, transparent 68%);
+}
+
+body.dark-mode .surface-card {
+  background: #0D1117;
+  border-color: #223046;
+  color: #F0F6FF;
+}
+
+body.dark-mode .surface-card:hover {
+  border-color: #31425B;
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+body.dark-mode .text-secondary {
+  color: #8B9DB5 !important;
+}
+
+body.dark-mode .nav-bar {
+  background: rgba(10, 16, 24, 0.94) !important;
+  border-color: #223046 !important;
+}
+
+body.dark-mode .glass {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+body.dark-mode .glass-input {
+  background: rgba(10, 16, 24, 0.52);
+  border-color: #223046;
+  color: #F0F6FF;
+}
+
+body.dark-mode .skeleton {
+  background: linear-gradient(90deg, #223046 25%, #31425B 50%, #223046 75%);
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #0A1018;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #223046;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #31425B;
+}
+
+body.dark-mode ::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #F0F6FF;
+}
+
+body.dark-mode .progress-bar {
+  background: #223046;
+}
+
+body.dark-mode .tab-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.dark-mode .tab-btn.active {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+body.dark-mode .section-divider {
+  border-color: #223046;
+}
+
+/* ── Scrollbar (light default) ──────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F9FAFB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+::selection {
+  background: rgba(37, 99, 235, 0.15);
+  color: #09090B;
+}
+
+/* ──────────────────────────── UTILITY CLASSES ───────────────────────────── */
+
+/* Surface / Card — now light default */
+.surface-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.surface-card:hover {
+  border-color: var(--color-border-light);
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04) inset;
+}
+
+/* Glassmorphism — light style */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+}
+
+/* Search input */
+.glass-input {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-card);
+}
+
+.glass-input:focus {
+  border-color: var(--color-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ── BI Solutions Buttons ─────────────────────────────────────────────────── */
+
+/* Primary: black pill */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  background: #09090B;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: #1F2937;
+  transform: scale(1.03);
+}
+
+/* Secondary: white outline pill */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  background: transparent;
+  color: #09090B;
+  border: 1px solid #D1D5DB;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background: #F9FAFB;
+  border-color: #9CA3AF;
+}
+
+body.dark-mode .btn-secondary {
+  color: #F0F6FF;
+  border-color: #374151;
+}
+
+body.dark-mode .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Nav pill CTA (Get Started style) ─────────────────────────────────────── */
+.btn-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #09090B;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-nav-cta:hover {
+  background: #1F2937;
+  transform: scale(1.02);
+}
+
+body.dark-mode .btn-nav-cta {
+  background: #FFFFFF;
+  color: #09090B;
+}
+
+body.dark-mode .btn-nav-cta:hover {
+  background: #F3F4F6;
+}
+
+/* ── BI Solutions Label Pill ─────────────────────────────────────────────── */
+.bis-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  background: transparent;
+  border: 1px solid #D1D5DB;
+}
+
+body.dark-mode .bis-label {
+  color: #9CA3AF;
+  border-color: #374151;
+}
+
+/* ── Signal Badges ────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-strong-buy {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badge-buy {
+  background: rgba(52, 211, 153, 0.08);
+  color: #059669;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.badge-neutral {
+  background: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-sell {
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.badge-strong-sell {
+  background: rgba(239, 68, 68, 0.15);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-equity {
+  background: rgba(107, 114, 128, 0.08);
+  color: #4B5563;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.badge-crypto {
+  background: rgba(107, 114, 128, 0.08);
+  color: #4B5563;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.badge-commodity {
+  background: rgba(107, 114, 128, 0.08);
+  color: #4B5563;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.badge-etf {
+  background: rgba(107, 114, 128, 0.08);
+  color: #4B5563;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+body.dark-mode .badge-equity,
+body.dark-mode .badge-crypto,
+body.dark-mode .badge-commodity,
+body.dark-mode .badge-etf {
+  background: rgba(255, 255, 255, 0.06);
+  color: #9CA3AF;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ── Regime Badges ─────────────────────────────────────────────────────────── */
+.regime-badge {
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.regime-strong-uptrend {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.regime-uptrend {
+  background: rgba(52, 211, 153, 0.08);
+  color: #059669;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.regime-mean-reverting {
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563EB;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.regime-high-volatility {
+  background: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.regime-downtrend {
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.regime-strong-downtrend {
+  background: rgba(239, 68, 68, 0.15);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ── Metric Numbers ────────────────────────────────────────────────────────── */
+.metric-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+/* ── Tab Buttons ───────────────────────────────────────────────────────────── */
+.tab-btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--color-text-primary);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.tab-btn.active {
+  color: #09090B;
+  background: rgba(9, 9, 11, 0.07);
+  border-color: rgba(0, 0, 0, 0.12);
+  font-weight: 600;
+}
+
+/* ── Pill chips ────────────────────────────────────────────────────────────── */
+.pill-positive {
+  background: rgba(16, 185, 129, 0.08);
+  color: #059669;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-negative {
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-neutral {
+  background: rgba(245, 158, 11, 0.08);
+  color: #D97706;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-blue {
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563EB;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── Progress bar ──────────────────────────────────────────────────────────── */
+.progress-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #E5E7EB;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1.5s ease;
+}
+
+/* ── Signal pulse animation ──────────────────────────────────────────────── */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+}
+
+.pulse-buy {
+  animation: pulse-glow 2.5s infinite;
+}
+
+@keyframes pulse-red {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+.pulse-sell {
+  animation: pulse-red 2.5s infinite;
+}
+
+/* ── Live dot ──────────────────────────────────────────────────────────────── */
+@keyframes live-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  }
+
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+  }
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: live-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ── Skeleton loader ───────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ── Count-up animation ────────────────────────────────────────────────────── */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-up {
+  animation: count-up 0.6s ease forwards;
+}
+
+/* ── Ticker tape ───────────────────────────────────────────────────────────── */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-tape {
+  animation: ticker-scroll 40s linear infinite;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.ticker-tape:hover {
+  animation-play-state: paused;
+}
+
+/* ── Section divider ───────────────────────────────────────────────────────── */
+.section-divider {
+  border-top: 1px solid var(--color-border);
+  margin: 24px 0;
+}
+
+/* ── Heat-map colors ───────────────────────────────────────────────────────── */
+.heat-high {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+}
+
+.heat-medium {
+  background: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+}
+
+.heat-low {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.heat-neutral {
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563EB;
+}
+
+/* ── Gradient text (BI Solutions monochromatic style) ──────────────────────── */
+.gradient-text {
+  color: #09090B;
+}
+
+body.dark-mode .gradient-text {
+  background: linear-gradient(135deg, #F0F6FF 0%, #93C5FD 40%, #818CF8 70%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-blue {
+  color: #2563EB;
+}
+
+body.dark-mode .gradient-text-blue {
+  background: linear-gradient(135deg, #F0F6FF 30%, #60A5FA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow button shimmer ───────────────────────────────────────────────────── */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-glow:hover::after {
+  opacity: 1;
+}
+
+/* ── Wave hero background ──────────────────────────────────────────────────── */
+.bis-wave-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.bis-wave-bg::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 30%, rgba(209, 213, 219, 0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 30% 60%, rgba(229, 231, 235, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 70%, rgba(243, 244, 246, 0.8) 0%, transparent 55%);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: wave-morph 18s ease-in-out infinite;
+}
+
+.bis-wave-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  right: -5%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(ellipse, rgba(229, 231, 235, 0.6) 0%, transparent 60%);
+  border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+  animation: wave-morph 24s ease-in-out infinite reverse;
+}
+
+@keyframes wave-morph {
+
+  0%,
+  100% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  33% {
+    border-radius: 70% 30% 40% 60% / 60% 40% 70% 30%;
+    transform: translate(20px, -15px) rotate(3deg);
+  }
+
+  66% {
+    border-radius: 30% 70% 60% 40% / 50% 60% 40% 60%;
+    transform: translate(-15px, 10px) rotate(-2deg);
+  }
+}
+
+body.dark-mode .bis-wave-bg::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 30%, rgba(59, 130, 246, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 30% 60%, rgba(99, 102, 241, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 70%, rgba(148, 163, 184, 0.05) 0%, transparent 55%);
+}
+
+body.dark-mode .bis-wave-bg::after {
+  background: radial-gradient(ellipse, rgba(148, 163, 184, 0.05) 0%, transparent 60%);
+}
+
+/* ── Ambient glow orb ──────────────────────────────────────────────────────── */
+@keyframes float-orb {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(20px, -15px) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-15px, 10px) scale(0.97);
+  }
+}
+
+.ambient-orb {
+  animation: float-orb 12s ease-in-out infinite;
+}
+
+/* ── Number highlights ─────────────────────────────────────────────────────── */
+.num-positive {
+  color: #059669;
+}
+
+.num-negative {
+  color: #DC2626;
+}
+
+.num-neutral {
+  color: #D97706;
+}
+
+body.dark-mode .num-positive {
+  color: #10B981;
+}
+
+body.dark-mode .num-negative {
+  color: #EF4444;
+}
+
+body.dark-mode .num-neutral {
+  color: #F59E0B;
+}
+
+/* ── Transition utilities ──────────────────────────────────────────────────── */
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Sparkline container ───────────────────────────────────────────────────── */
+.sparkline-container {
+  overflow: hidden;
+}
+
+.sparkline-container svg {
+  display: block;
+}
+
+/* ────────────────────────── PRINT STYLESHEET ────────────────────────────── */
+@media print {
+
+  nav,
+  header,
+  footer,
+  .no-print,
+  button,
+  .tab-btn,
+  .live-dot,
+  .ticker-tape,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print-section {
+    page-break-inside: avoid;
+    border: 1px solid #e0e0e0 !important;
+    background: white !important;
+    color: black !important;
+    border-radius: 0 !important;
+    margin-bottom: 24px;
+    padding: 16px !important;
+  }
+
+  .metric-value {
+    color: black !important;
+  }
+
+  .surface-card {
+    background: white !important;
+    border: 1px solid #ddd !important;
+    color: black !important;
+  }
+
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+}

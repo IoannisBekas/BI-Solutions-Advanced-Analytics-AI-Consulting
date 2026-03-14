@@ -6,13 +6,26 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const sitemapLinks = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Products", href: "/products" },
+    { label: "Portfolio", href: "/portfolio" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ];
+  const productLinks = [
+    { label: "Quantus", href: "/quantus" },
+    { label: "Power BI Solutions", href: "/power-bi-solutions" },
+  ];
+
   return (
     <footer className="bg-black text-white pt-20 pb-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20 border-b border-white/10 pb-12">
 
           {/* Brand */}
-          <div className="md:col-span-5 space-y-6">
+          <div className="md:col-span-4 space-y-6">
             <Link href="/" className="flex items-center gap-3 mb-4">
               <img
                 src="/bi-solutions-logo.png"
@@ -33,13 +46,26 @@ export function Footer() {
           <div className="md:col-span-2 space-y-6">
             <h4 className="text-lg font-bold font-heading">Sitemap</h4>
             <ul className="space-y-4">
-              {["Home", "Services", "Portfolio", "Blog", "Contact"].map((item) => (
-                <li key={item}>
+              {sitemapLinks.map((item) => (
+                <li key={item.label}>
                   <Link
-                    href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+                    href={item.href}
                     className="text-gray-400 hover:text-white transition-colors"
                   >
-                    {item}
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:col-span-2 space-y-6">
+            <h4 className="text-lg font-bold font-heading">Products</h4>
+            <ul className="space-y-4">
+              {productLinks.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-gray-400 hover:text-white transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -47,7 +73,7 @@ export function Footer() {
           </div>
 
           {/* Services */}
-          <div className="md:col-span-3 space-y-6">
+          <div className="md:col-span-2 space-y-6">
             <h4 className="text-lg font-bold font-heading">Capabilities</h4>
             <ul className="space-y-4 text-gray-400 text-sm">
               <li>Cloud Migration</li>

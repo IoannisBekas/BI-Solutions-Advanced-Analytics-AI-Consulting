@@ -1,21 +1,13 @@
 import { Link } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { blogPosts } from "@/data/blogData";
 import { ArrowRight, Calendar, Clock, Tag, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Blog() {
-    // Update document title for SEO
-    useEffect(() => {
-        document.title = "Blog | BI Solutions - Advanced Analytics & AI Insights";
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) {
-            metaDescription.setAttribute("content", "Explore insights on AI, machine learning, data analytics, and business intelligence from BI Solutions experts.");
-        }
-    }, []);
-
     const [searchQuery, setSearchQuery] = useState("");
 
     const filteredPosts = blogPosts.filter((post) => {
@@ -33,6 +25,17 @@ export default function Blog() {
 
     return (
         <div className="min-h-screen bg-background font-sans text-foreground">
+            <Seo
+                title="Blog"
+                description="Explore BI Solutions insights on AI, analytics, business intelligence, machine learning, and digital transformation."
+                path="/blog"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Blog",
+                    name: "BI Solutions Blog",
+                    url: "https://bisolutions.group/blog",
+                }}
+            />
             <Navbar />
             <main>
                 {/* Hero Section */}

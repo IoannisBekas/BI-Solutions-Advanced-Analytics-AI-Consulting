@@ -1,10 +1,10 @@
 import { useRoute, Link, useLocation } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { getBlogPostBySlug, getRelatedPosts, blogPosts } from "@/data/blogData";
+import { getBlogPostBySlug, getRelatedPosts } from "@/data/blogData";
 import { ArrowLeft, Calendar, Clock, Tag, Share2, Linkedin, Twitter } from "lucide-react";
-import { useEffect } from "react";
 
 export default function BlogPost() {
     const [, params] = useRoute("/blog/:slug");
@@ -12,68 +12,6 @@ export default function BlogPost() {
     const slug = params?.slug || "";
     const post = getBlogPostBySlug(slug);
     const relatedPosts = getRelatedPosts(slug, 2);
-
-    // Update document title, meta, and structured data for SEO
-    useEffect(() => {
-        if (post) {
-            // Update Title
-            document.title = `${post.title} | BI Solutions Blog`;
-
-            // Update Meta Description
-            const metaDescription = document.querySelector('meta[name="description"]');
-            if (metaDescription) {
-                metaDescription.setAttribute("content", post.excerpt);
-            }
-
-            // Update Open Graph & Twitter Image
-            const ogImage = document.querySelector('meta[property="og:image"]');
-            const twitterImage = document.querySelector('meta[name="twitter:image"]');
-            const imageUrl = `https://bisolutions.group${post.featuredImage}`;
-
-            if (ogImage) ogImage.setAttribute("content", imageUrl);
-            if (twitterImage) twitterImage.setAttribute("content", imageUrl);
-
-
-            // Add JSON-LD Structured Data
-            const script = document.createElement('script');
-            script.type = 'application/ld+json';
-            script.id = 'json-ld-article';
-            script.innerHTML = JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "BlogPosting",
-                "headline": post.title,
-                "description": post.excerpt,
-                "image": `https://bisolutions.group${post.featuredImage}`,
-                "author": {
-                    "@type": "Organization",
-                    "name": "BI Solutions",
-                    "url": "https://bisolutions.group"
-                },
-                "publisher": {
-                    "@type": "Organization",
-                    "name": "BI Solutions",
-                    "logo": {
-                        "@type": "ImageObject",
-                        "url": "https://bisolutions.group/bi-solutions-logo.png"
-                    }
-                },
-                "datePublished": new Date(post.date).toISOString(),
-                "mainEntityOfPage": {
-                    "@type": "WebPage",
-                    "@id": `https://bisolutions.group/blog/${post.slug}`
-                }
-            });
-            document.head.appendChild(script);
-
-            // Cleanup
-            return () => {
-                const existingScript = document.getElementById('json-ld-article');
-                if (existingScript) {
-                    document.head.removeChild(existingScript);
-                }
-            };
-        }
-    }, [post]);
 
     // Handle 404
     if (!post) {
@@ -136,6 +74,38 @@ export default function BlogPost() {
 
     return (
         <div className="min-h-screen bg-background font-sans text-foreground">
+            <Seo
+                title={post.title}
+                description={post.excerpt}
+                path={`/blog/${post.slug}`}
+                image={post.featuredImage}
+                type="article"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    headline: post.title,
+                    description: post.excerpt,
+                    image: `https://bisolutions.group${post.featuredImage}`,
+                    author: {
+                        "@type": "Organization",
+                        name: "BI Solutions",
+                        url: "https://bisolutions.group",
+                    },
+                    publisher: {
+                        "@type": "Organization",
+                        name: "BI Solutions",
+                        logo: {
+                            "@type": "ImageObject",
+                            url: "https://bisolutions.group/bi-solutions-logo.png",
+                        },
+                    },
+                    datePublished: new Date(post.date).toISOString(),
+                    mainEntityOfPage: {
+                        "@type": "WebPage",
+                        "@id": `https://bisolutions.group/blog/${post.slug}`,
+                    },
+                }}
+            />
             <Navbar />
             <main>
                 {/* Hero */}

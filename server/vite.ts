@@ -1,6 +1,7 @@
 import { type Express } from "express";
 import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
+import express from "express";
 import viteConfig from "../vite.config";
 import fs from "fs";
 import path from "path";
@@ -30,6 +31,26 @@ export async function setupVite(server: Server, app: Express) {
   });
 
   app.use(vite.middlewares);
+
+  // Serve pre-built product SPAs (Quantus, Power BI Solutions) in dev mode
+  // These must be mounted BEFORE the Vite catch-all so they take precedence
+  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  for (const [mount, dir] of [
+    ["/quantus", path.resolve(distPath, "quantus")],
+    ["/power-bi-solutions", path.resolve(distPath, "power-bi-solutions")],
+  ]) {
+    if (fs.existsSync(dir)) {
+      app.use(mount, express.static(dir));
+      app.use(`${mount}/*`, (_req, res, next) => {
+        const indexPath = path.resolve(dir, "index.html");
+        if (fs.existsSync(indexPath)) {
+          res.sendFile(indexPath);
+        } else {
+          next();
+        }
+      });
+    }
+  }
 
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;

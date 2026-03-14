@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /c/Users/bekas/Downloads/quantreport-ai/pipelines/*.py /c/Users/bekas/Downloads/quantreport-ai/services/*.py)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls \"C:/Users/bekas/Downloads/quantreport-ai/node_modules/.bin/vite\"* \"C:/Users/bekas/Downloads/quantreport-ai/node_modules/.bin/tsx\"*)",
+      "Bash(npm install --save express-rate-limit helmet jsonwebtoken)",
+      "Bash(npm install --save-dev eslint @eslint/js typescript-eslint prettier eslint-config-prettier vitest @testing-library/react @testing-library/jest-dom jsdom @types/jsonwebtoken)",
+      "Bash(npx vitest run)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(gh api repos/IoannisBekas/BI-Solutions-Advanced-Analytics-AI-Consulting/contents --query=\".[].name\")",
+      "Bash(gh repo clone IoannisBekas/BI-Solutions-Advanced-Analytics-AI-Consulting /tmp/repo)",
+      "Bash(cat /tmp/repo/.github/workflows/*)",
+      "Bash(cat /tmp/repo/client/src/data/*)",
+      "Bash(node node_modules/typescript/bin/tsc --noEmit)",
+      "Bash(node \"C:/Users/bekas/Downloads/BI Solutions/node_modules/typescript/bin/tsc\" --project \"C:/Users/bekas/Downloads/BI Solutions/tsconfig.json\" --noEmit)"
+    ]
+  }
+}

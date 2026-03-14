@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -104,6 +105,11 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Contact BI Solutions"
+        description="Contact BI Solutions Group to discuss analytics strategy, Power BI projects, AI consulting, or product partnerships."
+        path="/contact"
+      />
       <Navbar />
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

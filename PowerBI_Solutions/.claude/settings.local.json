@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where npm.cmd)",
+      "Bash(where npx.cmd)",
+      "Bash(where node.exe)",
+      "Bash(grep -r \"react-router\\\\|BrowserRouter\\\\|Routes\\\\|Route\" C:UsersbekasDownloadsPowerBI_Solutionsappsrc --include=*.tsx --include=*.ts)",
+      "Bash(node node_modules/vite/bin/vite.js build)"
+    ]
+  }
+}

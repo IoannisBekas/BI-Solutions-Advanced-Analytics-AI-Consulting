@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import founderPhoto from "@/assets/founder-photo-2.jpg";
 import { Button } from "@/components/ui/button";
 import { Mail, Linkedin, MapPin, Download, Phone, Github } from "lucide-react";
@@ -87,6 +88,26 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground selection:bg-black/10">
+      <Seo
+        title="About Ioannis Bekas and BI Solutions"
+        description="Learn about Ioannis Bekas, BI Solutions Group, and the background behind the company’s analytics, AI, and data strategy practice."
+        path="/about"
+        image={founderPhoto}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Ioannis Bekas",
+          jobTitle: "Data Scientist & AI Developer",
+          worksFor: {
+            "@type": "Organization",
+            name: "BI Solutions Group",
+          },
+          sameAs: [
+            "https://linkedin.com/in/ioannisbekas",
+            "https://github.com/IoannisBekas",
+          ],
+        }}
+      />
       <Navbar />
 
       {/* Scroll Progress Bar */}

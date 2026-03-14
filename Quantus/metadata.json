@@ -1,0 +1,5 @@
+{
+  "name": "QuantReport AI",
+  "description": "Generate institutional-grade quantitative trading reports for any stock ticker based on industry-specific models.",
+  "requestFramePermissions": []
+}

@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -92,6 +93,11 @@ export default function AIAdvisorPage() {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
+      <Seo
+        title="AI Professional Advisor"
+        description="Use the BI Solutions AI Professional Advisor for guided questions across accounting, legal, and consulting workflows."
+        path="/ai-advisor"
+      />
       <Navbar />
       <main className="pt-32 pb-20">
         <section className="relative overflow-hidden">

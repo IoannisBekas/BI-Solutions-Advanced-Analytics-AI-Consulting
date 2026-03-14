@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["./node_modules/tsx/dist/cli.mjs", "server/index.ts"],
+      "port": 3001
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["./node_modules/vite/bin/vite.js", "--port=3000", "--host=0.0.0.0"],
+      "port": 3000
+    },
+    {
+      "name": "bisolutions",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["../BI Solutions/node_modules/vite/bin/vite.js", "--port=5001", "--host=0.0.0.0", "--config", "../BI Solutions/vite.config.ts"],
+      "port": 5001
+    }
+  ]
+}

@@ -1,21 +1,42 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
+import { ProductShowcase } from "@/components/sections/ProductShowcase";
 import { ServicesSection } from "@/components/sections/Services";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
-
 import { Footer } from "@/components/layout/Footer";
+import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
 import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
 import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
+import {
+  ArrowRight,
+} from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
+      <Seo
+        title="Advanced Analytics, AI Consulting, and BI Products"
+        description="BI Solutions Group delivers advanced analytics, AI consulting, Power BI expertise, and native products like Quantus and Power BI Solutions."
+        path="/"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "BI Solutions Group",
+          url: "https://bisolutions.group/",
+          logo: "https://bisolutions.group/bi-solutions-logo.png",
+          sameAs: [
+            "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
+            "https://github.com/IoannisBekas",
+          ],
+        }}
+      />
       <Navbar />
       <main>
         <Hero />
         <ServicesSection />
+        <ProductShowcase badge="Product Studio" id="products" />
 
         {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">

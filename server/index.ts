@@ -1,10 +1,12 @@
 import express, { type Request, Response, NextFunction } from "express";
+import helmet from "helmet";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
 const httpServer = createServer(app);
+const isProduction = process.env.NODE_ENV === "production";
 
 declare module "http" {
   interface IncomingMessage {
@@ -12,15 +14,48 @@ declare module "http" {
   }
 }
 
+app.disable("x-powered-by");
+
+app.use(
+  helmet({
+    contentSecurityPolicy: isProduction
+      ? {
+          useDefaults: true,
+          directives: {
+            "img-src": ["'self'", "data:", "https:"],
+            "script-src": [
+              "'self'",
+              "'unsafe-inline'",
+              "https://www.googletagmanager.com",
+              "https://www.google-analytics.com",
+            ],
+            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
+            "connect-src": [
+              "'self'",
+              "https://api.emailjs.com",
+              "https://api.anthropic.com",
+              "https://generativelanguage.googleapis.com",
+              "https://www.google-analytics.com",
+              "https://region1.google-analytics.com",
+            ],
+          },
+        }
+      : false,
+    crossOriginEmbedderPolicy: false,
+  }),
+);
+
 app.use(
   express.json({
+    limit: "2mb",
     verify: (req, _res, buf) => {
       req.rawBody = buf;
     },
   }),
 );
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -46,7 +81,12 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
+    const isApiRequest =
+      path.startsWith("/api") ||
+      path.startsWith("/quantus/api") ||
+      path.startsWith("/power-bi-solutions/api");
+
+    if (isApiRequest) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;

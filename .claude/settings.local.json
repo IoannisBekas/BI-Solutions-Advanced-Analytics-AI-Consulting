@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where npx:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //PID 42952 //F)",
+      "Bash(npx tsc:*)",
+      "Bash(find 'C:\\\\Users\\\\bekas\\\\Downloads\\\\BI Solutions\\\\client' -name tailwind.config.* -o -name globals.css -o -name index.css)",
+      "Bash(npx vite:*)",
+      "Bash(find 'C:\\\\Users\\\\bekas\\\\Downloads\\\\BI Solutions' -name *.test.* -o -name *.spec.*)"
+    ]
+  }
+}

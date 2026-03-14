@@ -1,0 +1,4 @@
+yfinance>=0.2.40
+rapidfuzz>=3.6
+pytest>=8.0
+pytest-mock>=3.14
