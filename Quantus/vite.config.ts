@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
-  const quantusBase = '/quantus/';
+  const quantusBase = '/quantus/workspace/';
   const quantusApiTarget = env.VITE_QUANTUS_API_TARGET || 'http://localhost:3001';
 
   return {

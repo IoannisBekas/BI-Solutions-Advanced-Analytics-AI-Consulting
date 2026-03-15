@@ -35,8 +35,22 @@ export async function setupVite(server: Server, app: Express) {
   // Serve pre-built product SPAs (Quantus, Power BI Solutions) in dev mode
   // These must be mounted BEFORE the Vite catch-all so they take precedence
   const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  app.use((req, res, next) => {
+    if (req.method === "GET" && req.originalUrl === "/quantus/") {
+      res.redirect(308, "/quantus/workspace/");
+      return;
+    }
+
+    if (req.method === "GET" && req.originalUrl === "/quantus/sectors") {
+      res.redirect(308, "/quantus/workspace/sectors");
+      return;
+    }
+
+    next();
+  });
+
   for (const [mount, dir] of [
-    ["/quantus", path.resolve(distPath, "quantus")],
+    ["/quantus/workspace", path.resolve(distPath, "quantus")],
     ["/power-bi-solutions", path.resolve(distPath, "power-bi-solutions")],
   ]) {
     if (fs.existsSync(dir)) {

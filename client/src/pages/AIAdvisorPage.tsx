@@ -9,16 +9,6 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 const roles = [
   { id: "accountant", label: "Λογιστής", icon: Calculator, color: "bg-blue-100 text-blue-600" },
@@ -26,43 +16,20 @@ const roles = [
   { id: "consultant", label: "Σύμβουλος", icon: Briefcase, color: "bg-emerald-100 text-emerald-600" },
 ];
 
-const mockResponses: Record<string, string[]> = {
-  accountant: [
-    "Σύμφωνα με τον Κώδικα Φορολογίας Εισοδήματος (Ν. 4172/2013), οι δαπάνες αυτές εκπίπτουν εφόσον πραγματοποιούνται προς το συμφέρον της επιχείρησης.",
-    "Για την έναρξη ατομικής επιχείρησης απαιτείται εγγραφή στο ΓΕΜΗ και απόδοση ΑΦΜ από την αρμόδια ΔΟΥ.",
-    "Ο συντελεστής ΦΠΑ για την κατηγορία αυτή ανέρχεται στο 24%, εκτός αν υπάγεται στις εξαιρέσεις του άρθρου 21."
-  ],
-  lawyer: [
-    "Βάσει του Αστικού Κώδικα, η σύμβαση αυτή απαιτεί έγγραφο τύπο για να είναι έγκυρη.",
-    "Η προθεσμία για την άσκηση του ενδίκου μέσου είναι 30 ημέρες από την επίδοση της απόφασης.",
-    "Το άρθρο 57 του ΑΚ προστατεύει την προσωπικότητα από προσβολές, παρέχοντας δικαίωμα για άρση της προσβολής και αποζημίωση."
-  ],
-  consultant: [
-    "Για την βελτιστοποίηση της ροής εργασιών, προτείνουμε την εφαρμογή της μεθοδολογίας Lean Management.",
-    "Η ανάλυση SWOT δείχνει ότι υπάρχει σημαντική ευκαιρία ανάπτυξης στις νέες αγορές της Νοτιοανατολικής Ευρώπης.",
-    "Η στρατηγική τοποθέτηση του προϊόντος απαιτεί επαναξιολόγηση της τιμολογιακής πολιτικής βάσει του ανταγωνισμού."
-  ]
-};
-
 export default function AIAdvisorPage() {
   const [selectedRole, setSelectedRole] = useState(roles[0].id);
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSubscriber, setIsSubscriber] = useState(false); // Mock subscription status
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
 
-    if (!isSubscriber) {
-      setShowSubscriptionModal(true);
-      return;
-    }
-
     setIsLoading(true);
     setResponse(null);
+    setErrorMsg(null);
 
     try {
       const res = await fetch("/api/ai-advisor", {
@@ -81,11 +48,11 @@ export default function AIAdvisorPage() {
       if (data.success) {
         setResponse(data.answer);
       } else {
-        setResponse("Unable to process your request. Please try again.");
+        setErrorMsg(data.error || "Unable to process your request. Please try again.");
       }
     } catch (error) {
       console.error("AI Advisor error:", error);
-      setResponse("Network error. Please check your connection and try again.");
+      setErrorMsg("Network error. Please check your connection and try again.");
     } finally {
       setIsLoading(false);
     }
@@ -94,8 +61,8 @@ export default function AIAdvisorPage() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="AI Professional Advisor"
-        description="Use the BI Solutions AI Professional Advisor for guided questions across accounting, legal, and consulting workflows."
+        title="Greek AI Professional Advisor"
+        description="Use the BI Solutions Greek AI Professional Advisor for guided questions across accounting, legal, and consulting workflows."
         path="/ai-advisor"
       />
       <Navbar />
@@ -108,17 +75,17 @@ export default function AIAdvisorPage() {
           </div>
 
           <div className="max-w-4xl mx-auto px-6 relative z-10">
-            <ScrollReveal className="text-center mb-12">
+            <ScrollReveal className="text-center mb-12" width="100%">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-black text-white mb-6 shadow-lg shadow-black/20">
                 <Bot className="w-6 h-6" />
               </div>
-              <h2 className="text-4xl font-bold font-heading mb-4">AI Professional Advisor</h2>
+              <h2 className="text-4xl font-bold font-heading mb-4">Greek AI Professional Advisor</h2>
               <p className="text-gray-600 max-w-xl mx-auto">
                 Select a professional role and ask a question. Our AI, trained on Greek law and business practices, will provide an initial guidance.
               </p>
             </ScrollReveal>
 
-            <ScrollReveal direction="up" delay={0.2}>
+            <ScrollReveal direction="up" delay={0.2} width="100%">
               <Card className="bg-white/80 backdrop-blur-xl border-white/50 shadow-xl p-2 md:p-8 rounded-2xl overflow-hidden">
                 
                 {/* Role Selection */}
@@ -173,8 +140,20 @@ export default function AIAdvisorPage() {
                   </form>
 
                   <AnimatePresence mode="wait">
+                    {errorMsg && (
+                      <motion.div
+                        key="error"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="bg-red-50 text-red-700 rounded-xl p-4 border border-red-200 text-sm"
+                      >
+                        {errorMsg}
+                      </motion.div>
+                    )}
                     {response && (
                       <motion.div
+                        key="response"
                         initial={{ opacity: 0, height: 0, y: 20 }}
                         animate={{ opacity: 1, height: "auto", y: 0 }}
                         exit={{ opacity: 0, height: 0, y: -20 }}
@@ -191,7 +170,7 @@ export default function AIAdvisorPage() {
                               <p className="font-semibold text-sm text-gray-500 uppercase tracking-wider">
                                 AI Response ({roles.find(r => r.id === selectedRole)?.label})
                               </p>
-                              <p className="text-gray-800 leading-relaxed text-lg">
+                              <p className="text-gray-800 leading-relaxed text-lg whitespace-pre-line">
                                 {response}
                               </p>
                             </div>
@@ -207,26 +186,6 @@ export default function AIAdvisorPage() {
         </section>
       </main>
       <Footer />
-
-      <AlertDialog open={showSubscriptionModal} onOpenChange={setShowSubscriptionModal}>
-        <AlertDialogContent className="rounded-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="font-heading text-2xl">Subscription Required</AlertDialogTitle>
-            <AlertDialogDescription className="text-lg text-gray-600">
-              This feature is available only to active customers with an active subscription.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-full px-6">Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={() => setShowSubscriptionModal(false)}
-              className="rounded-full px-6 bg-black text-white hover:bg-gray-800"
-            >
-              View Plans
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

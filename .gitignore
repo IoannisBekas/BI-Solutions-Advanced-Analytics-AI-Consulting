@@ -1,5 +1,6 @@
 node_modules
 dist
+data/
 .DS_Store
 server/public
 vite.config.ts.*
@@ -22,3 +23,6 @@ PowerBI_Solutions/app/.env.*
 !PowerBI_Solutions/app/.env.example
 PowerBI_Solutions/app/.env
 PowerBI_Solutions/app/.env.local
+root-dev.log
+attached_assets/
+{console.error(e.message)

@@ -1,517 +1,794 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArrowLeft } from 'lucide-react';
 import { Layout } from './components/Layout';
 import { SearchHero } from './components/SearchHero';
+import { StickyReportStrip } from './components/StickyReportStrip';
 import { WelcomeCard } from './components/WelcomeCard';
 import { ProgressInsightFeed } from './components/IndustryIndicator';
-import { ReportDashboard } from './components/Report';
 import { NotFoundView } from './components/NotFoundView';
 import { PWAInstallBanner, SWUpdateBanner } from './components/PWAInstallBanner';
-import SectorPacksDashboard from './pages/SectorPacks';
 import { AuthModal } from './auth/AuthModal';
 import { useAuth } from './auth/AuthContext';
 import { cacheReportForOffline } from './hooks/usePWA';
-import type { ReportData, InsightCard, AssetEntry } from './types';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft } from 'lucide-react';
+import { fetchWorkspaceAsset, fetchWorkspaceReport, fetchWorkspaceSummary } from './services/workspace';
+import type { AssetEntry, InsightCard, ReportResponse, WorkspaceSummary, WorkspaceStatus } from './types';
 
-type View = 'hero' | 'generating' | 'report' | 'sectors' | 'notFound';
+const ReportDashboard = lazy(async () => {
+    const module = await import('./components/Report');
+    return { default: module.ReportDashboard };
+});
+const SectorPacksDashboard = lazy(() => import('./pages/SectorPacks'));
+const Watchlist = lazy(async () => {
+    const module = await import('./pages/Watchlist');
+    return { default: module.Watchlist };
+});
+const Archive = lazy(async () => {
+    const module = await import('./pages/Archive');
+    return { default: module.Archive };
+});
+const AccuracyDashboard = lazy(async () => {
+    const module = await import('./pages/AccuracyDashboard');
+    return { default: module.AccuracyDashboard };
+});
+const Methodology = lazy(async () => {
+    const module = await import('./pages/Methodology');
+    return { default: module.Methodology };
+});
 
-const QUANTUS_WORKSPACE_ROUTE = '/quantus/';
-const QUANTUS_SECTORS_ROUTE = '/quantus/sectors';
+type RouteView = 'hero' | 'report' | 'sectors' | 'watchlist' | 'archive' | 'accuracy' | 'methodology' | 'notFound';
+type DisplayView = RouteView | 'generating';
 
-function normalizeQuantusPath(pathname: string): string {
-  const trimmed = pathname.replace(/\/+$/, '');
-
-  if (trimmed === '/quantus' || trimmed === '') {
-    return QUANTUS_WORKSPACE_ROUTE;
-  }
-
-  if (trimmed === QUANTUS_SECTORS_ROUTE) {
-    return QUANTUS_SECTORS_ROUTE;
-  }
-
-  return trimmed || QUANTUS_WORKSPACE_ROUTE;
+interface RouteState {
+    view: RouteView;
+    path: string;
+    ticker?: string;
 }
 
-function resolveRouteView(pathname: string): View {
-  const normalized = normalizeQuantusPath(pathname);
+const QUANTUS_WORKSPACE_ROUTE = '/quantus/workspace/';
+const QUANTUS_REPORT_ROUTE_PREFIX = '/quantus/workspace/report';
+const QUANTUS_SECTORS_ROUTE = '/quantus/workspace/sectors';
+const QUANTUS_WATCHLIST_ROUTE = '/quantus/workspace/watchlist';
+const QUANTUS_ARCHIVE_ROUTE = '/quantus/workspace/archive';
+const QUANTUS_ACCURACY_ROUTE = '/quantus/workspace/accuracy';
+const QUANTUS_METHODOLOGY_ROUTE = '/quantus/workspace/methodology';
+const QUANTUS_LEGACY_WORKSPACE_ROUTE = '/quantus';
+const RECENT_ASSETS_STORAGE_KEY = 'quantus-recent-assets';
+const PINNED_ASSETS_STORAGE_KEY = 'quantus-pinned-assets';
 
-  if (normalized === QUANTUS_WORKSPACE_ROUTE) {
-    return 'hero';
-  }
+function getReportRoute(ticker: string) {
+    return `${QUANTUS_REPORT_ROUTE_PREFIX}/${encodeURIComponent(ticker.trim().toUpperCase())}`;
+}
 
-  if (normalized === QUANTUS_SECTORS_ROUTE) {
-    return 'sectors';
-  }
+function normalizeQuantusPath(pathname: string) {
+    const trimmed = pathname.replace(/\/+$/, '');
 
-  return 'notFound';
+    if (trimmed === '' || trimmed === QUANTUS_LEGACY_WORKSPACE_ROUTE || trimmed === '/quantus/workspace') {
+        return QUANTUS_WORKSPACE_ROUTE;
+    }
+
+    if (trimmed === QUANTUS_REPORT_ROUTE_PREFIX || trimmed === '/quantus/report') {
+        return QUANTUS_WORKSPACE_ROUTE;
+    }
+
+    if (trimmed.startsWith('/quantus/report/')) {
+        return `${QUANTUS_REPORT_ROUTE_PREFIX}/${trimmed.slice('/quantus/report/'.length)}`;
+    }
+
+    if (trimmed.startsWith(`${QUANTUS_REPORT_ROUTE_PREFIX}/`)) {
+        const reportTicker = decodeURIComponent(trimmed.slice(`${QUANTUS_REPORT_ROUTE_PREFIX}/`.length)).trim().toUpperCase();
+        return reportTicker ? getReportRoute(reportTicker) : QUANTUS_WORKSPACE_ROUTE;
+    }
+
+    if (trimmed === QUANTUS_SECTORS_ROUTE) return QUANTUS_SECTORS_ROUTE;
+    if (trimmed === QUANTUS_WATCHLIST_ROUTE) return QUANTUS_WATCHLIST_ROUTE;
+    if (trimmed === QUANTUS_ARCHIVE_ROUTE) return QUANTUS_ARCHIVE_ROUTE;
+    if (trimmed === QUANTUS_ACCURACY_ROUTE) return QUANTUS_ACCURACY_ROUTE;
+    if (trimmed === QUANTUS_METHODOLOGY_ROUTE) return QUANTUS_METHODOLOGY_ROUTE;
+
+    return trimmed;
+}
+
+function resolveRoute(pathname: string): RouteState {
+    const normalized = normalizeQuantusPath(pathname);
+
+    if (normalized === QUANTUS_WORKSPACE_ROUTE) {
+        return { view: 'hero', path: QUANTUS_WORKSPACE_ROUTE };
+    }
+
+    if (normalized === QUANTUS_SECTORS_ROUTE) {
+        return { view: 'sectors', path: QUANTUS_SECTORS_ROUTE };
+    }
+
+    if (normalized === QUANTUS_WATCHLIST_ROUTE) {
+        return { view: 'watchlist', path: QUANTUS_WATCHLIST_ROUTE };
+    }
+
+    if (normalized === QUANTUS_ARCHIVE_ROUTE) {
+        return { view: 'archive', path: QUANTUS_ARCHIVE_ROUTE };
+    }
+
+    if (normalized === QUANTUS_ACCURACY_ROUTE) {
+        return { view: 'accuracy', path: QUANTUS_ACCURACY_ROUTE };
+    }
+
+    if (normalized === QUANTUS_METHODOLOGY_ROUTE) {
+        return { view: 'methodology', path: QUANTUS_METHODOLOGY_ROUTE };
+    }
+
+    if (normalized.startsWith(`${QUANTUS_REPORT_ROUTE_PREFIX}/`)) {
+        const ticker = decodeURIComponent(normalized.slice(`${QUANTUS_REPORT_ROUTE_PREFIX}/`.length)).trim().toUpperCase();
+        if (ticker) {
+            return { view: 'report', path: getReportRoute(ticker), ticker };
+        }
+    }
+
+    return { view: 'notFound', path: normalized };
+}
+
+function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus): ReportResponse {
+    return {
+        report: {
+            engine: 'Meridian v2.4',
+            report_id: `QRS-2026-${String(Math.floor(Math.random() * 90000 + 10000))}`,
+            ticker: asset.ticker,
+            company_name: asset.name,
+            exchange: asset.exchange,
+            sector: asset.sector ?? 'Unclassified',
+            industry: asset.sector ?? 'Unclassified',
+            market_cap: 'Unavailable',
+            asset_class: asset.assetClass,
+            description: `${asset.name} is visible in the Quantus workspace, but the report service was unavailable during load. This emergency starter shell keeps the URL and workflow intact until the API is reachable again.`,
+            current_price: asset.currentPrice ?? 0,
+            day_change: asset.dayChange ?? 0,
+            day_change_pct: asset.dayChangePct ?? 0,
+            week_52_high: asset.currentPrice ?? 0,
+            week_52_low: asset.currentPrice ?? 0,
+            regime: {
+                label: 'Transitional',
+                implication: 'Quantus could not complete the report handoff because the API request failed.',
+                active_strategies: ['Manual review'],
+                suppressed_strategies: ['Automated conviction signals'],
+            },
+            overall_signal: 'NEUTRAL',
+            confidence_score: 20,
+            confidence_breakdown: {
+                momentum: 3,
+                sentiment: 3,
+                regime_alignment: 3,
+                model_ensemble_agreement: 3,
+                alternative_data: 3,
+                macro_context: 3,
+                data_quality: 2,
+            },
+            model_ensemble: {
+                lstm: { forecast: 'Unavailable', weight: 'N/A', accuracy: 'N/A' },
+                prophet: { forecast: 'Unavailable', weight: 'N/A', accuracy: 'N/A' },
+                arima: { forecast: 'Unavailable', weight: 'N/A', accuracy: 'N/A' },
+                ensemble_forecast: 'Unavailable',
+                confidence_band: { low: 'N/A', high: 'N/A' },
+                regime_accuracy_note: 'The Quantus API request failed before a model run could be loaded.',
+            },
+            signal_cards: [
+                {
+                    label: 'Workspace state',
+                    value: 'API unavailable',
+                    trend: 'neutral',
+                    plain_note: 'This page is an emergency fallback generated in the browser because the Quantus API could not be reached.',
+                    data_source: 'Client fallback',
+                    freshness: 'Unavailable',
+                    quality_score: 15,
+                },
+            ],
+            alternative_data: {
+                grok_x_sentiment: { score: 0.5, volume: 0, credibility_weighted: 0.5, campaign_detected: false, freshness: 'Unavailable' },
+                reddit_score: 0.5,
+                news_score: 0.5,
+                composite_sentiment: 0.5,
+                institutional_flow: 'Unavailable',
+                insider_activity: 'Unavailable',
+                short_interest: 'Unavailable',
+                iv_rank: 'Unavailable',
+                implied_move: 'Unavailable',
+                transcript_score: 'Unavailable',
+                sec_language_trend: 'Unavailable',
+            },
+            risk: {
+                var_dollar: 'Unavailable',
+                expected_shortfall: 'Unavailable',
+                max_drawdown: 'Unavailable',
+                sharpe_ratio: 0,
+                volatility_vs_peers: 'Unavailable',
+                implied_move: 'Unavailable',
+                stress_tests: [{ scenario: 'API unavailable', return: 'Unavailable', recovery: 'Unavailable' }],
+                macro_context: { fed_rate: 'Unavailable', yield_curve: 'Unavailable', vix: 'Unavailable', credit_spreads: 'Unavailable' },
+            },
+            strategy: {
+                action: 'NEUTRAL',
+                confidence: 20,
+                regime_context: 'The Quantus API request failed, so this report should not be treated as a signal.',
+                entry_zone: 'Unavailable',
+                target: 'Unavailable',
+                stop_loss: 'Unavailable',
+                risk_reward: 'Unavailable',
+                position_size_pct: 'Manual only',
+                kelly_derived_max: 'Unavailable',
+            },
+            narrative_executive_summary: 'Quantus could not load the report service for this ticker. The route remains available, but this page is only an emergency fallback.',
+            narrative_plain: 'Refresh once the Quantus API is reachable again.',
+            researcher_count: 0,
+            generated_at: new Date().toISOString(),
+            cache_age: 'Unavailable',
+            data_sources: [{ name: 'Client emergency fallback', tier: 4, freshness: 'Unavailable' }],
+            peer_group: [],
+        },
+        source: 'starter',
+        ticker: asset.ticker,
+        message: 'Quantus report service unavailable.',
+        detail: 'The API request failed, so an emergency starter shell was opened locally.',
+        freshness: 'Unavailable',
+        status,
+    };
+}
+
+function isStoredAssetEntry(value: unknown): value is AssetEntry {
+    return typeof value === 'object'
+        && value !== null
+        && typeof (value as AssetEntry).ticker === 'string'
+        && typeof (value as AssetEntry).name === 'string'
+        && typeof (value as AssetEntry).exchange === 'string'
+        && typeof (value as AssetEntry).assetClass === 'string';
+}
+
+function readStoredAssets(key: string) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return [] as AssetEntry[];
+        const parsed: unknown = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed.filter(isStoredAssetEntry) : [];
+    } catch {
+        return [] as AssetEntry[];
+    }
+}
+
+function upsertAsset(list: AssetEntry[], asset: AssetEntry, maxItems = 6) {
+    return [asset, ...list.filter((entry) => entry.ticker !== asset.ticker)].slice(0, maxItems);
+}
+
+function buildAssetEntryFromReport(report: ReportResponse['report'], source: ReportResponse['source']): AssetEntry {
+    return {
+        ticker: report.ticker,
+        name: report.company_name,
+        exchange: report.exchange,
+        assetClass: report.asset_class,
+        sector: report.sector,
+        hasCachedReport: source === 'cached',
+        cachedReportAge: report.cache_age,
+        researcherCount: report.researcher_count,
+        currentPrice: report.current_price,
+        dayChange: report.day_change,
+        dayChangePct: report.day_change_pct,
+    };
+}
+
+function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
+    return (
+        <div
+            className="rounded-3xl border px-6 py-8 text-sm"
+            style={{
+                background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.03)',
+                borderColor: lightMode ? '#E5E7EB' : '#223046',
+                color: lightMode ? '#6B7280' : '#9CA3AF',
+            }}
+        >
+            Loading Quantus workspace panel...
+        </div>
+    );
 }
 
 function App() {
-  const { user, signOut } = useAuth();
-  const [view, setView] = useState<View>(() => resolveRouteView(window.location.pathname));
-  const [lightMode, setLightMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem('quantus-theme');
-    return saved !== null ? saved === 'light' : true;
-  });
-  const [report, setReport] = useState<ReportData | null>(null);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [insights, setInsights] = useState<InsightCard[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [currentTicker, setCurrentTicker] = useState('');
-  const [currentPath, setCurrentPath] = useState(() => normalizeQuantusPath(window.location.pathname));
-  const [, setCurrentAsset] = useState<AssetEntry | null>(null);
-  const reportRef = useRef<HTMLDivElement>(null);
+    const { user, signOut } = useAuth();
+    const [lightMode, setLightMode] = useState<boolean>(() => {
+        const saved = localStorage.getItem('quantus-theme');
+        return saved !== null ? saved === 'light' : true;
+    });
+    const [workspaceSummary, setWorkspaceSummary] = useState<WorkspaceSummary | null>(null);
+    const [reportResponse, setReportResponse] = useState<ReportResponse | null>(null);
+    const [insights, setInsights] = useState<InsightCard[]>([]);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [currentTicker, setCurrentTicker] = useState('');
+    const [recentAssets, setRecentAssets] = useState<AssetEntry[]>(() => readStoredAssets(RECENT_ASSETS_STORAGE_KEY));
+    const [pinnedAssets, setPinnedAssets] = useState<AssetEntry[]>(() => readStoredAssets(PINNED_ASSETS_STORAGE_KEY));
+    const [showStickyStrip, setShowStickyStrip] = useState(false);
+    const [currentPath, setCurrentPath] = useState(() => normalizeQuantusPath(window.location.pathname));
+    const [authModalOpen, setAuthModalOpen] = useState(false);
+    const reportRef = useRef<HTMLDivElement>(null);
+    const searchAbortRef = useRef<AbortController | null>(null);
+    const insightAbortRef = useRef<AbortController | null>(null);
+    const inflightTickerRef = useRef<string | null>(null);
+    const pendingAssetRef = useRef<AssetEntry | null>(null);
 
-  // AbortController refs for cancelling in-flight requests
-  const searchAbortRef = useRef<AbortController | null>(null);
-  const insightAbortRef = useRef<AbortController | null>(null);
+    const route = useMemo(() => resolveRoute(currentPath), [currentPath]);
+    const report = reportResponse?.report ?? null;
+    const displayView: DisplayView = route.view === 'report'
+        ? (isGenerating || reportResponse?.ticker !== route.ticker ? 'generating' : 'report')
+        : route.view;
 
-  // Use refs for keyboard handler to avoid stale closures
-  const viewRef = useRef(view);
-  viewRef.current = view;
+    const syncBrowserRoute = useCallback((nextPath: string, replace = false) => {
+        const normalized = normalizeQuantusPath(nextPath);
 
-  const syncBrowserRoute = useCallback((nextPath: string, replace = false) => {
-    const normalized = normalizeQuantusPath(nextPath);
-
-    if (window.location.pathname !== normalized) {
-      window.history[replace ? 'replaceState' : 'pushState'](window.history.state, '', normalized);
-    }
-
-    setCurrentPath(normalized);
-  }, []);
-
-  // Keyboard Navigation — uses refs to avoid stale closures
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
-        return;
-      }
-
-      switch (e.key.toLowerCase()) {
-        case 't': {
-          e.preventDefault();
-          const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
-          if (searchInput) searchInput.focus();
-          break;
+        if (window.location.pathname !== normalized) {
+            window.history[replace ? 'replaceState' : 'pushState'](window.history.state, '', normalized);
         }
-        case 'g':
-          break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-          e.preventDefault();
-          document.querySelectorAll('.report-section')[parseInt(e.key) - 1]?.scrollIntoView({ behavior: 'smooth' });
-          break;
-        case 'e': {
-          e.preventDefault();
-          const firstDeepDive = document.querySelector('.deep-dive-trigger') as HTMLButtonElement;
-          if (firstDeepDive) firstDeepDive.click();
-          break;
+
+        setCurrentPath(normalized);
+    }, []);
+
+    useEffect(() => {
+        const normalized = normalizeQuantusPath(window.location.pathname);
+
+        if (normalized !== window.location.pathname) {
+            window.history.replaceState(window.history.state, '', normalized);
         }
-        case 'w':
-          e.preventDefault();
-          break;
-        case 'p':
-          if (!e.ctrlKey && !e.metaKey) {
-            e.preventDefault();
-            window.print();
-          }
-          break;
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
-  // Cleanup AbortControllers on unmount
-  useEffect(() => {
-    return () => {
-      searchAbortRef.current?.abort();
-      insightAbortRef.current?.abort();
-    };
-  }, []);
+        setCurrentPath(normalized);
 
-  useEffect(() => {
-    const normalized = normalizeQuantusPath(window.location.pathname);
+        const handlePopState = () => {
+            setCurrentPath(normalizeQuantusPath(window.location.pathname));
+        };
 
-    if (normalized !== window.location.pathname) {
-      window.history.replaceState(window.history.state, '', normalized);
-    }
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
 
-    setCurrentPath(normalized);
-    setView(resolveRouteView(normalized));
+    useEffect(() => {
+        void fetchWorkspaceSummary().then(setWorkspaceSummary).catch((error) => {
+            console.error('Workspace summary error:', error);
+        });
+    }, []);
 
-    const handlePopState = () => {
-      const nextPath = normalizeQuantusPath(window.location.pathname);
-      setCurrentPath(nextPath);
-      setView(resolveRouteView(nextPath));
-    };
+    useEffect(() => {
+        localStorage.setItem(RECENT_ASSETS_STORAGE_KEY, JSON.stringify(recentAssets));
+    }, [recentAssets]);
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+    useEffect(() => {
+        localStorage.setItem(PINNED_ASSETS_STORAGE_KEY, JSON.stringify(pinnedAssets));
+    }, [pinnedAssets]);
 
-  useEffect(() => {
-    if (!report?.ticker) return;
-    cacheReportForOffline(report.ticker);
-  }, [report?.ticker]);
+    useEffect(() => {
+        return () => {
+            searchAbortRef.current?.abort();
+            insightAbortRef.current?.abort();
+        };
+    }, []);
 
-  useEffect(() => {
-    const pagePath = view === 'sectors'
-      ? QUANTUS_SECTORS_ROUTE
-      : view === 'notFound'
-        ? currentPath
-        : QUANTUS_WORKSPACE_ROUTE;
+    useEffect(() => {
+        if (!report?.ticker) return;
+        cacheReportForOffline(report.ticker);
+    }, [report?.ticker]);
 
-    const pageTitle = view === 'sectors'
-      ? 'Quantus Sector Packs | BI Solutions Group'
-      : view === 'report'
-        ? `${report?.ticker ?? currentTicker ?? 'Quantus'} Research Report | BI Solutions Group`
-        : view === 'generating'
-          ? `Generating ${currentTicker || 'Quantus'} Research | BI Solutions Group`
-          : view === 'notFound'
-            ? 'Quantus Not Found | BI Solutions Group'
-            : 'Quantus Workspace | BI Solutions Group';
-
-    document.title = pageTitle;
-
-    if (typeof window.gtag === 'function') {
-      window.gtag('config', 'G-M1276CBX6M', {
-        page_path: pagePath,
-        page_title: pageTitle,
-      });
-    }
-  }, [currentPath, currentTicker, report?.ticker, view]);
-
-  const handleSearch = useCallback(async (ticker: string, asset: AssetEntry) => {
-    // Abort any previous in-flight search and insight stream
-    searchAbortRef.current?.abort();
-    insightAbortRef.current?.abort();
-    const searchController = new AbortController();
-    searchAbortRef.current = searchController;
-
-    setCurrentTicker(ticker);
-    setCurrentAsset(asset);
-    setInsights([]);
-    setReport(null);
-    setIsGenerating(true);
-    setView('generating');
-    syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE);
-
-    // Fire Telemetry Tracking (non-critical, no abort needed)
-    fetch('/quantus/api/v1/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: 'anon_local_dev',
-          event_type: 'search_ticker',
-          data: { ticker, asset_class: asset.assetClass },
-        })
-    }).catch(() => { /* telemetry is non-critical, silently ignore */ });
-
-    // Start streaming insights
-    streamInsights(ticker, asset.assetClass);
-
-    try {
-      const resp = await fetch(`/quantus/api/report/${encodeURIComponent(ticker)}?user_tier=UNLOCKED`, {
-        signal: searchController.signal,
-      });
-      if (resp.ok) {
-        const data = await resp.json();
-        const reportPayload = data.report ?? data;
-        if (reportPayload?.ticker && reportPayload?.company_name) {
-          setReport(reportPayload);
-        } else {
-          setReport(buildShellReport(ticker, asset));
+    useEffect(() => {
+        if (route.view !== 'report') {
+            setShowStickyStrip(false);
+            return;
         }
-      } else {
-        setReport(buildShellReport(ticker, asset));
-      }
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return; // cancelled, ignore
-      console.error('Report fetch error:', err);
-      setReport(buildShellReport(ticker, asset));
-    } finally {
-      if (!searchController.signal.aborted) {
-        setInsights(prev => [...prev, {
-          id: String(prev.length + 1),
-          category: 'model',
-          text: `Report complete — shared with research community. Quantus Engine: Meridian v2.4`,
-        }]);
-        setIsGenerating(false);
-      }
-    }
-  }, [syncBrowserRoute]);
 
-  const streamInsights = useCallback(async (ticker: string, assetClass: string) => {
-    // Abort any previous insight stream
-    insightAbortRef.current?.abort();
-    const controller = new AbortController();
-    insightAbortRef.current = controller;
+        const handleScroll = () => {
+            setShowStickyStrip(window.scrollY > 360);
+        };
 
-    try {
-      const resp = await fetch('/quantus/api/insights', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ticker, assetClass }),
-        signal: controller.signal,
-      });
-      if (!resp.ok || !resp.body) return;
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [route.path, route.view]);
 
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
+    useEffect(() => {
+        const pageTitle = route.view === 'report'
+            ? `${route.ticker ?? 'Quantus'} Research Report | BI Solutions Group`
+            : route.view === 'sectors'
+                ? 'Quantus Sector Packs | BI Solutions Group'
+                : route.view === 'watchlist'
+                    ? 'Quantus Watchlist | BI Solutions Group'
+                    : route.view === 'archive'
+                        ? 'Quantus Archive | BI Solutions Group'
+                        : route.view === 'accuracy'
+                            ? 'Quantus Accuracy | BI Solutions Group'
+                            : route.view === 'methodology'
+                                ? 'Quantus Methodology | BI Solutions Group'
+                                : route.view === 'notFound'
+                                    ? 'Quantus Not Found | BI Solutions Group'
+                                    : 'Quantus Workspace | BI Solutions Group';
 
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          const lines = decoder.decode(value).split('\n');
-          for (const line of lines) {
-            if (line.startsWith('data: ') && !line.includes('[DONE]')) {
-              try {
-                const card = JSON.parse(line.slice(6));
-                if (card.id) {
-                  setInsights(prev => {
-                    if (prev.some(p => p.id === card.id)) return prev;
-                    return [...prev, card];
-                  });
+        document.title = pageTitle;
+
+        if (typeof window.gtag === 'function') {
+            window.gtag('config', 'G-M1276CBX6M', {
+                page_path: route.path,
+                page_title: pageTitle,
+            });
+        }
+    }, [route.path, route.ticker, route.view]);
+
+    const streamInsights = useCallback(async (ticker: string, assetClass: string) => {
+        insightAbortRef.current?.abort();
+        const controller = new AbortController();
+        insightAbortRef.current = controller;
+
+        try {
+            const response = await fetch('/quantus/api/insights', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ticker, assetClass }),
+                signal: controller.signal,
+            });
+
+            if (!response.ok || !response.body) return;
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const lines = decoder.decode(value).split('\n');
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ') || line.includes('[DONE]')) continue;
+
+                        try {
+                            const card = JSON.parse(line.slice(6));
+                            if (card.id) {
+                                setInsights((previous) => (previous.some((item) => item.id === card.id) ? previous : [...previous, card]));
+                            }
+                        } catch {
+                            // Ignore malformed SSE chunks.
+                        }
+                    }
                 }
-              } catch {
-                // Ignore malformed SSE chunks
-              }
+            } finally {
+                reader.releaseLock();
             }
-          }
+        } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
+            console.error('Insight stream error:', error);
         }
-      } finally {
-        reader.releaseLock();
-      }
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return;
-      console.error('Insight stream error:', err);
-    }
-  }, []);
+    }, []);
 
-  const handleViewReport = useCallback(() => {
-    syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE);
-    setView('report');
-    setTimeout(() => {
-      reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 200);
-  }, [syncBrowserRoute]);
+    const loadReport = useCallback(async (ticker: string, assetHint?: AssetEntry | null) => {
+        const normalizedTicker = ticker.trim().toUpperCase();
+        if (!normalizedTicker) return;
 
-  const handleBack = useCallback(() => {
-    syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE);
-    setView('hero');
-    setReport(null);
-    setInsights([]);
-    setCurrentTicker('');
-  }, [syncBrowserRoute]);
+        searchAbortRef.current?.abort();
+        insightAbortRef.current?.abort();
+        const controller = new AbortController();
+        searchAbortRef.current = controller;
+        inflightTickerRef.current = normalizedTicker;
 
-  const handleOpenSectors = useCallback(() => {
-    syncBrowserRoute(QUANTUS_SECTORS_ROUTE);
-    setView('sectors');
-  }, [syncBrowserRoute]);
+        setCurrentTicker(normalizedTicker);
+        setInsights([]);
+        setReportResponse(null);
+        setIsGenerating(true);
 
-  const handleOpenWorkspace = useCallback(() => {
-    handleBack();
-  }, [handleBack]);
+        let responsePayload: ReportResponse | null = null;
+        let asset = assetHint ?? null;
 
-  return (
-    <Layout
-      currentView={view === 'report' || view === 'generating' ? 'hero' : view}
-      lightMode={lightMode}
-      userName={user?.name ?? null}
-      userTier={user?.tier ?? null}
-      onToggleLight={() => setLightMode(l => {
-        const next = !l;
-        localStorage.setItem('quantus-theme', next ? 'light' : 'dark');
-        return next;
-      })}
-      onOpenAuth={() => setAuthModalOpen(true)}
-      onSignOut={signOut}
-      onNavigate={v => {
-        if (v === 'hero') {
-          handleOpenWorkspace();
-        } else if (v === 'sectors') {
-          handleOpenSectors();
+        if (!asset) {
+            try {
+                asset = await fetchWorkspaceAsset(normalizedTicker, controller.signal);
+            } catch {
+                asset = null;
+            }
         }
-      }}
-    >
-      <AnimatePresence mode="wait">
-        {view === 'hero' && (
-          <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <SearchHero onSearch={handleSearch} lightMode={lightMode} />
-          </motion.div>
-        )}
 
-        {(view === 'generating' || view === 'report') && (
-          <motion.div key="report-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            {/* Back button */}
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 mb-6 text-sm cursor-pointer transition-colors hover:text-blue-400"
-              style={{ color: '#9CA3AF' }}
-            >
-              <ArrowLeft className="w-4 h-4" />
-              New Search
-            </button>
+        fetch('/quantus/api/v1/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: 'anon_local_dev',
+                event_type: 'search_ticker',
+                data: { ticker: normalizedTicker, asset_class: asset?.assetClass ?? 'EQUITY' },
+            }),
+        }).catch(() => undefined);
 
-            {/* WelcomeCard (shown while generating and after report loads) */}
-            {report && (
-              <WelcomeCard
-                report={report}
+        void streamInsights(normalizedTicker, asset?.assetClass ?? 'EQUITY');
+
+        try {
+            responsePayload = await fetchWorkspaceReport(normalizedTicker, controller.signal);
+            if (!controller.signal.aborted) {
+                setReportResponse(responsePayload);
+            }
+        } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
+            console.error('Report fetch error:', error);
+
+            const fallbackStatus = workspaceSummary?.status ?? {
+                mode: 'sandbox',
+                label: 'Service unavailable',
+                description: 'Quantus could not reach the report API.',
+                detail: 'A local fallback shell was opened instead.',
+                badgeTone: 'caution',
+            };
+
+            responsePayload = buildEmergencyStarterReport(
+                asset ?? {
+                    ticker: normalizedTicker,
+                    name: normalizedTicker,
+                    exchange: 'Manual input',
+                    assetClass: 'EQUITY',
+                    sector: 'Unclassified',
+                },
+                fallbackStatus,
+            );
+
+            if (!controller.signal.aborted) {
+                setReportResponse(responsePayload);
+            }
+        } finally {
+            if (!controller.signal.aborted) {
+                const rememberedAsset = responsePayload
+                    ? buildAssetEntryFromReport(responsePayload.report, responsePayload.source)
+                    : asset;
+
+                if (rememberedAsset) {
+                    setRecentAssets((previous) => upsertAsset(previous, rememberedAsset, 6));
+                }
+
+                const completionText = responsePayload?.source === 'cached'
+                    ? 'Cached Quantus coverage is ready.'
+                    : 'Starter shell ready — no cached Quantus coverage exists yet.';
+
+                setInsights((previous) => [
+                    ...previous,
+                    {
+                        id: `${normalizedTicker}-complete`,
+                        category: 'model',
+                        text: completionText,
+                        isComplete: true,
+                    },
+                ]);
+                setIsGenerating(false);
+            }
+        }
+    }, [streamInsights, workspaceSummary?.status]);
+
+    useEffect(() => {
+        if (route.view !== 'report' || !route.ticker) {
+            inflightTickerRef.current = null;
+            return;
+        }
+
+        if (route.ticker === inflightTickerRef.current && isGenerating) {
+            return;
+        }
+
+        if (route.ticker === reportResponse?.ticker && !isGenerating) {
+            return;
+        }
+
+        const assetHint = pendingAssetRef.current;
+        pendingAssetRef.current = null;
+        void loadReport(route.ticker, assetHint);
+    }, [route.ticker, route.view, isGenerating, loadReport, reportResponse?.ticker]);
+
+    const openReportRoute = useCallback((ticker: string, asset?: AssetEntry) => {
+        const normalizedTicker = ticker.trim().toUpperCase();
+        pendingAssetRef.current = asset ?? null;
+
+        const nextRoute = getReportRoute(normalizedTicker);
+        if (currentPath === nextRoute) {
+            void loadReport(normalizedTicker, asset ?? null);
+            return;
+        }
+
+        syncBrowserRoute(nextRoute);
+    }, [currentPath, loadReport, syncBrowserRoute]);
+
+    const handleBack = useCallback(() => {
+        searchAbortRef.current?.abort();
+        insightAbortRef.current?.abort();
+        inflightTickerRef.current = null;
+        setInsights([]);
+        setReportResponse(null);
+        setCurrentTicker('');
+        setIsGenerating(false);
+        syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE);
+    }, [syncBrowserRoute]);
+
+    const handleNavigate = useCallback((view: string) => {
+        if (view === 'hero') syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE);
+        if (view === 'sectors') syncBrowserRoute(QUANTUS_SECTORS_ROUTE);
+        if (view === 'watchlist') syncBrowserRoute(QUANTUS_WATCHLIST_ROUTE);
+        if (view === 'archive') syncBrowserRoute(QUANTUS_ARCHIVE_ROUTE);
+        if (view === 'accuracy') syncBrowserRoute(QUANTUS_ACCURACY_ROUTE);
+        if (view === 'methodology') syncBrowserRoute(QUANTUS_METHODOLOGY_ROUTE);
+    }, [syncBrowserRoute]);
+
+    const handleViewReport = useCallback(() => {
+        window.setTimeout(() => {
+            reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+    }, []);
+
+    const togglePinnedAsset = useCallback((asset: AssetEntry) => {
+        setPinnedAssets((previous) => {
+            if (previous.some((entry) => entry.ticker === asset.ticker)) {
+                return previous.filter((entry) => entry.ticker !== asset.ticker);
+            }
+
+            return upsertAsset(previous, asset, 8);
+        });
+    }, []);
+
+    return (
+        <Layout
+            currentView={route.view === 'report' ? 'hero' : route.view}
+            lightMode={lightMode}
+            userName={user?.name ?? null}
+            userTier={user?.tier ?? null}
+            workspaceStatus={workspaceSummary?.status ?? reportResponse?.status ?? null}
+            onToggleLight={() => setLightMode((value) => {
+                const next = !value;
+                localStorage.setItem('quantus-theme', next ? 'light' : 'dark');
+                return next;
+            })}
+            onOpenAuth={() => setAuthModalOpen(true)}
+            onSignOut={signOut}
+            onNavigate={handleNavigate}
+        >
+            <AnimatePresence mode="wait">
+                {route.view === 'hero' && (
+                    <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <SearchHero
+                            onSearch={openReportRoute}
+                            lightMode={lightMode}
+                            workspaceSummary={workspaceSummary}
+                            recentAssets={recentAssets}
+                            pinnedAssets={pinnedAssets}
+                            onTogglePinned={togglePinnedAsset}
+                        />
+                    </motion.div>
+                )}
+
+                {route.view === 'report' && (
+                    <motion.div key={route.path} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        {report && (
+                            <StickyReportStrip
+                                report={report}
+                                visible={showStickyStrip}
+                                lightMode={lightMode}
+                                reportSource={reportResponse?.source}
+                                reportMessage={reportResponse?.message}
+                                shareUrl={window.location.href}
+                                onSubscribe={() => undefined}
+                            />
+                        )}
+
+                        <button
+                            onClick={handleBack}
+                            className="flex items-center gap-2 mb-6 text-sm cursor-pointer transition-colors hover:text-blue-400"
+                            style={{ color: '#9CA3AF' }}
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            New Search
+                        </button>
+
+                        {report && (
+                            <WelcomeCard
+                                report={report}
+                                lightMode={lightMode}
+                                onSubscribe={() => undefined}
+                                reportSource={reportResponse?.source}
+                                reportMessage={reportResponse?.message}
+                                reportDetail={reportResponse?.detail}
+                            />
+                        )}
+
+                        <ProgressInsightFeed
+                            insights={insights}
+                            isGenerating={isGenerating}
+                            ticker={currentTicker || route.ticker || ''}
+                            reportId={report?.report_id}
+                            onViewReport={handleViewReport}
+                            lightMode={lightMode}
+                            completionTitle={reportResponse?.source === 'starter' ? 'Starter shell ready' : 'Cached report ready'}
+                            completionDetail={reportResponse ? `${reportResponse.ticker} · ${reportResponse.message}` : undefined}
+                        />
+
+                        {displayView === 'report' && report && (
+                            <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                                <div ref={reportRef}>
+                                    <ReportDashboard report={report} lightMode={lightMode} />
+                                </div>
+                            </Suspense>
+                        )}
+
+                        {displayView === 'generating' && !isGenerating && report && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="mt-8"
+                            >
+                                <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                                    <div ref={reportRef}>
+                                        <ReportDashboard report={report} lightMode={lightMode} />
+                                    </div>
+                                </Suspense>
+                            </motion.div>
+                        )}
+                    </motion.div>
+                )}
+
+                {route.view === 'sectors' && (
+                    <motion.div key="sectors" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <SectorPacksDashboard />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'watchlist' && (
+                    <motion.div key="watchlist" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <Watchlist
+                                userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
+                                lightMode={lightMode}
+                                onSelectTicker={(ticker) => openReportRoute(ticker)}
+                            />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'archive' && (
+                    <motion.div key="archive" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <Archive
+                                userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
+                                lightMode={lightMode}
+                                onViewReport={(snapshot: { ticker: string }) => openReportRoute(snapshot.ticker)}
+                            />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'accuracy' && (
+                    <motion.div key="accuracy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <AccuracyDashboard lightMode={lightMode} />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'methodology' && (
+                    <motion.div key="methodology" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <Methodology lightMode={lightMode} />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'notFound' && (
+                    <motion.div key="not-found" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <NotFoundView
+                            path={route.path}
+                            onGoWorkspace={() => syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE)}
+                            onGoSectors={() => syncBrowserRoute(QUANTUS_SECTORS_ROUTE)}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <PWAInstallBanner lightMode={lightMode} />
+            <SWUpdateBanner lightMode={lightMode} />
+            <AuthModal
+                open={authModalOpen}
+                onClose={() => setAuthModalOpen(false)}
+                defaultMode="signin"
                 lightMode={lightMode}
-                onSubscribe={() => undefined}
-              />
-            )}
-
-            {/* Progress insight feed — shown while generating */}
-            {view === 'generating' && (
-              <ProgressInsightFeed
-                insights={insights}
-                isGenerating={isGenerating}
-                ticker={currentTicker}
-                onViewReport={handleViewReport}
-                lightMode={lightMode}
-              />
-            )}
-
-            {/* Full report */}
-            {view === 'report' && report && (
-              <div ref={reportRef}>
-                <ReportDashboard report={report} lightMode={lightMode} />
-              </div>
-            )}
-
-            {/* If generating is done and no button clicked, auto-show report once insights complete */}
-            {view === 'generating' && !isGenerating && report && (
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-8"
-              >
-                <ReportDashboard report={report} lightMode={lightMode} />
-              </motion.div>
-            )}
-          </motion.div>
-        )}
-
-        {view === 'sectors' && (
-          <motion.div key="sectors" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <SectorPacksDashboard />
-          </motion.div>
-        )}
-
-        {view === 'notFound' && (
-          <motion.div key="not-found" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <NotFoundView
-              path={currentPath}
-              onGoWorkspace={handleOpenWorkspace}
-              onGoSectors={handleOpenSectors}
             />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <PWAInstallBanner lightMode={lightMode} />
-      <SWUpdateBanner lightMode={lightMode} />
-      <AuthModal
-        open={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        defaultMode="signin"
-        lightMode={lightMode}
-      />
-    </Layout>
-  );
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function buildShellReport(ticker: string, asset: AssetEntry): ReportData {
-  return {
-    engine: 'Meridian v2.4',
-    report_id: `QRS-2026-${String(Math.floor(Math.random() * 90000 + 10000))}`,
-    ticker,
-    company_name: asset.name,
-    exchange: asset.exchange,
-    sector: asset.sector ?? 'Unknown',
-    industry: asset.sector ?? 'Unknown',
-    market_cap: 'N/A',
-    asset_class: asset.assetClass,
-    description: `${asset.name} is a ${asset.assetClass.toLowerCase()} asset traded on ${asset.exchange}. This is a live report generated by Meridian v2.4. Full quantitative analysis requires live data API connections.`,
-    current_price: asset.currentPrice ?? 0,
-    day_change: asset.dayChange ?? 0,
-    day_change_pct: asset.dayChangePct ?? 0,
-    week_52_high: (asset.currentPrice ?? 0) * 1.3,
-    week_52_low: (asset.currentPrice ?? 0) * 0.7,
-    regime: {
-      label: 'Mean-Reverting',
-      implication: 'Live regime detection requires market data API. Defaulting to Mean-Reverting.',
-      active_strategies: ['Balanced'],
-      suppressed_strategies: [],
-    },
-    overall_signal: 'NEUTRAL',
-    confidence_score: 50,
-    confidence_breakdown: {
-      momentum: 8, sentiment: 7, regime_alignment: 8, model_ensemble_agreement: 7,
-      alternative_data: 7, macro_context: 8, data_quality: 5,
-    },
-    model_ensemble: {
-      lstm: { forecast: 'N/A', weight: '45%', accuracy: 'N/A' },
-      prophet: { forecast: 'N/A', weight: '35%', accuracy: 'N/A' },
-      arima: { forecast: 'N/A', weight: '20%', accuracy: 'N/A' },
-      ensemble_forecast: 'N/A',
-      confidence_band: { low: 'N/A', high: 'N/A' },
-      regime_accuracy_note: 'Connect to live data APIs for model ensemble.',
-    },
-    signal_cards: [
-      { label: 'Status', value: 'Live report', trend: 'neutral', plain_note: 'This asset does not yet have pre-computed data. Quantitative signals require live market data integration.', data_source: 'Meridian v2.4', freshness: 'Now', quality_score: 50, icon: '🔬' },
-    ],
-    alternative_data: {
-      grok_x_sentiment: { score: 0.5, volume: 0, credibility_weighted: 0.5, campaign_detected: false, freshness: 'N/A' },
-      reddit_score: 0.5,
-      news_score: 0.5,
-      composite_sentiment: 0.5,
-      institutional_flow: 'N/A — live data required',
-      insider_activity: 'N/A',
-      short_interest: 'N/A',
-      iv_rank: 'N/A',
-      implied_move: 'N/A',
-      transcript_score: 'N/A',
-      sec_language_trend: 'N/A',
-    },
-    risk: {
-      var_dollar: 'N/A',
-      expected_shortfall: 'N/A',
-      max_drawdown: 'N/A',
-      sharpe_ratio: 0,
-      volatility_vs_peers: 'N/A',
-      implied_move: 'N/A',
-      stress_tests: [{ scenario: 'Live data required', return: 'N/A', recovery: 'N/A' }],
-      macro_context: { fed_rate: '4.25%', yield_curve: 'Slightly inverted', vix: '16.4', credit_spreads: '98bps' },
-    },
-    strategy: {
-      action: 'NEUTRAL',
-      confidence: 50,
-      regime_context: 'Connect to live APIs for strategy recommendation',
-      entry_zone: 'N/A',
-      target: 'N/A',
-      stop_loss: 'N/A',
-      risk_reward: 'N/A',
-      position_size_pct: 'N/A',
-      kelly_derived_max: 'N/A',
-    },
-    narrative_executive_summary: `This is a live Quantus report for ${ticker} (${asset.name}). Complete quantitative signals require connections to live market data APIs (Yahoo Finance, Grok API, CBOE options, SEC EDGAR, etc.). The deep dive modules above are powered by Gemini AI and are fully functional — click any to generate institutional narrative analysis.`,
-    narrative_plain: `${asset.name} doesn't yet have pre-computed signals. The AI-powered deep dives below are live — click any module to generate expert analysis.`,
-    researcher_count: 1,
-    generated_at: new Date().toISOString(),
-    cache_age: 'Just now',
-    data_sources: [{ name: 'Gemini AI (Narrative)', tier: 2, freshness: 'Live' }],
-    peer_group: [],
-  };
+        </Layout>
+    );
 }
 
 export default App;

@@ -11,8 +11,6 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import emailjs from "@emailjs/browser";
-
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -38,62 +36,24 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          access_key: "0246063d-239b-44b8-96bf-df146771b309",
           name: data.name,
           email: data.email,
           subject: data.subject,
           message: data.message,
-          from_name: "BI Solutions Contact Form",
-          to_email: "bekasyannis@gmail.com",
-
         }),
       });
 
       const result = await response.json();
 
-      if (result.success) {
-        // Attempt to send a confirmation email to the user
-        // Note: This relies on the service allowing sending TO external emails, which might be restricted on free tier.
-        // We do this silently so it doesn't fail the main submission if it fails.
-        // Send a confirmation email to the user using EmailJS
-        // This avoids the duplicate notification issue with Web3Forms
-        try {
-          // TODO: Replace these placeholders with your actual EmailJS keys
-          // Get them from https://dashboard.emailjs.com/admin
-          const SERVICE_ID = "YOUR_SERVICE_ID";
-          const TEMPLATE_ID = "YOUR_TEMPLATE_ID";
-          const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-
-          if (SERVICE_ID !== "YOUR_SERVICE_ID") {
-            await emailjs.send(
-              SERVICE_ID,
-              TEMPLATE_ID,
-              {
-                to_name: data.name,
-                to_email: data.email,
-                subject: data.subject,
-                message: data.message,
-              },
-              PUBLIC_KEY
-            );
-          } else {
-            console.warn("EmailJS keys not configured. Confirmation email not sent.");
-          }
-        } catch (e) {
-          console.error("Failed to send confirmation copy via EmailJS", e);
-        }
-
+      if (response.ok && result.success) {
         toast.success("Message sent successfully! We'll be in touch soon.");
         reset();
       } else {
-        toast.error("Failed to send message. Please try again.");
+        toast.error(result.message || "Failed to send message. Please try again.");
       }
     } catch (error) {
       toast.error("Failed to send message. Please try again.");

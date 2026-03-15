@@ -109,11 +109,11 @@ self.addEventListener('push', (event: PushEvent) => {
     }
 
     const icons: Record<string, string> = {
-        SIGNAL_CHANGE: '/quantus/icons/icon-192x192.png',
-        NEW_REPORT: '/quantus/icons/icon-192x192.png',
-        MATERIAL_EVENT: '/quantus/icons/icon-192x192.png',
-        EARNINGS_FLAG: '/quantus/icons/icon-192x192.png',
-        CROSS_TICKER_ALERT: '/quantus/icons/icon-192x192.png',
+        SIGNAL_CHANGE: '/quantus/workspace/icons/icon-192x192.png',
+        NEW_REPORT: '/quantus/workspace/icons/icon-192x192.png',
+        MATERIAL_EVENT: '/quantus/workspace/icons/icon-192x192.png',
+        EARNINGS_FLAG: '/quantus/workspace/icons/icon-192x192.png',
+        CROSS_TICKER_ALERT: '/quantus/workspace/icons/icon-192x192.png',
     };
 
     const badgeColors: Record<string, string> = {
@@ -126,12 +126,12 @@ self.addEventListener('push', (event: PushEvent) => {
 
     const notifOptions: NotificationOptions = {
         body: payload.body,
-        icon: icons[payload.type] ?? '/quantus/icons/icon-192x192.png',
-        badge: '/quantus/icons/icon-72x72.png',
+        icon: icons[payload.type] ?? '/quantus/workspace/icons/icon-192x192.png',
+        badge: '/quantus/workspace/icons/icon-72x72.png',
         tag: `quantus-${payload.type}-${payload.ticker ?? 'global'}`,
         silent: false,
         data: {
-            url: payload.url ?? '/quantus/',
+            url: payload.url ?? '/quantus/workspace/',
             type: payload.type,
             ticker: payload.ticker,
         },
@@ -152,7 +152,7 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
 
     if (event.action === 'dismiss') return;
 
-    const targetUrl: string = event.notification.data?.url ?? '/quantus/';
+    const targetUrl: string = event.notification.data?.url ?? '/quantus/workspace/';
 
     event.waitUntil(
         (self.clients as Clients).matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {

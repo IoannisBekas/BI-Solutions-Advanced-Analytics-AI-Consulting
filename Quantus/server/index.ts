@@ -4,17 +4,80 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import Database from 'better-sqlite3';
+import path from 'path';
+import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
 import { getMockReport } from './data/mockReports.js';
+import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, searchAssets } from './data/assetUniverse.js';
+import type { AssetEntry, ReportData, ReportResponse } from '../src/types/index.js';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();
+
+// ─── SHARED SQLITE DATABASE ─────────────────────────────────────────────────
+// Re-use the same database file the main server creates
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), '..', 'data');
+if (!fs.existsSync(DATA_DIR)) { fs.mkdirSync(DATA_DIR, { recursive: true }); }
+const qdb = new Database(path.join(DATA_DIR, 'bisolutions.db'));
+qdb.pragma('journal_mode = WAL');
+qdb.pragma('foreign_keys = ON');
+qdb.pragma('busy_timeout = 5000');
+
+// Ensure users table exists (idempotent — same schema as server/db.ts)
+qdb.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id            TEXT PRIMARY KEY,
+    email         TEXT NOT NULL UNIQUE COLLATE NOCASE,
+    name          TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    tier          TEXT NOT NULL DEFAULT 'FREE',
+    credits       REAL NOT NULL DEFAULT 0,
+    reports_this_month INTEGER NOT NULL DEFAULT 0,
+    jurisdiction  TEXT NOT NULL DEFAULT 'US',
+    referral_token TEXT UNIQUE,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+  CREATE INDEX IF NOT EXISTS idx_users_referral ON users(referral_token);
+`);
+
+interface DbUser {
+  id: string; email: string; name: string; password_hash: string;
+  tier: string; credits: number; reports_this_month: number;
+  jurisdiction: string; referral_token: string | null;
+  created_at: string; updated_at: string;
+}
+
+const dbStmts = {
+  findByEmail: qdb.prepare<[string], DbUser>('SELECT * FROM users WHERE email = ? COLLATE NOCASE'),
+  findById: qdb.prepare<[string], DbUser>('SELECT * FROM users WHERE id = ?'),
+  findByReferral: qdb.prepare<[string], DbUser>('SELECT * FROM users WHERE referral_token = ?'),
+  insert: qdb.prepare<[string, string, string, string, number, string]>(
+    `INSERT INTO users (id, email, name, password_hash, credits, referral_token) VALUES (?, ?, ?, ?, ?, ?)`
+  ),
+  updateCredits: qdb.prepare<[number, string]>('UPDATE users SET credits = ?, updated_at = datetime(\'now\') WHERE id = ?'),
+};
+
+function stripPasswordHash(u: DbUser) {
+  const { password_hash: _, ...safe } = u;
+  return safe;
+}
+
+const SALT_ROUNDS = 12;
 
 const app = express();
 const API_PREFIX = '/quantus/api';
 const isProduction = process.env.NODE_ENV === 'production';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'quantus-dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || (isProduction ? '' : 'quantus-dev-secret');
+if (isProduction && !JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET env var is required in production');
+  process.exit(1);
+}
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────────────────────
@@ -90,61 +153,84 @@ function optionalAuth(req: AuthenticatedRequest, _res: express.Response, next: e
 
 app.use(optionalAuth);
 
-// ─── AUTH ENDPOINTS ─────────────────────────────────────────────────────────
+// ─── AUTH ENDPOINTS (real SQLite-backed) ────────────────────────────────────
 app.post(`${API_PREFIX}/auth/login`, async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) { res.status(400).json({ error: 'Email and password required' }); return; }
-    // Production: validate against database. For MVP, accept any login and return a JWT.
-    const user = {
-        userId: 'usr_001',
-        email,
-        name: String(email).split('@')[0],
-        tier: 'UNLOCKED',
-        credits: 12,
-        reportsThisMonth: 2,
-        jurisdiction: 'US' as const,
-    };
-    const token = jwt.sign({
-        userId: user.userId,
-        email: user.email,
-        name: user.name,
-        tier: user.tier,
-        credits: user.credits,
-        reportsThisMonth: user.reportsThisMonth,
-        jurisdiction: user.jurisdiction,
-    }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user });
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) { res.status(400).json({ error: 'Email and password required' }); return; }
+
+        const user = dbStmts.findByEmail.get(email);
+        if (!user) { res.status(401).json({ error: 'Invalid email or password' }); return; }
+
+        const valid = await bcrypt.compare(password, user.password_hash);
+        if (!valid) { res.status(401).json({ error: 'Invalid email or password' }); return; }
+
+        const token = jwt.sign({
+            userId: user.id,
+            email: user.email,
+            name: user.name,
+            tier: user.tier,
+            credits: user.credits,
+            reportsThisMonth: user.reports_this_month,
+            jurisdiction: user.jurisdiction,
+        }, JWT_SECRET, { expiresIn: '7d' });
+
+        res.json({ token, user: stripPasswordHash(user) });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Login failed' });
+    }
 });
 
 app.post(`${API_PREFIX}/auth/register`, async (req, res) => {
-    const { email, name, referralToken } = req.body;
-    if (!email || !name) { res.status(400).json({ error: 'Email and name required' }); return; }
-    const userId = 'usr_' + Math.random().toString(36).slice(2, 8);
-    const user = {
-        userId,
-        email,
-        name,
-        tier: 'UNLOCKED',
-        credits: referralToken ? 5 : 0,
-        reportsThisMonth: 0,
-        jurisdiction: 'US' as const,
-    };
-    const token = jwt.sign({
-        userId,
-        email,
-        name: user.name,
-        tier: user.tier,
-        credits: user.credits,
-        reportsThisMonth: user.reportsThisMonth,
-        jurisdiction: user.jurisdiction,
-    }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user });
+    try {
+        const { email, name, password, referralToken } = req.body;
+        if (!email || !name || !password) { res.status(400).json({ error: 'Email, name, and password required' }); return; }
+        if (typeof password !== 'string' || password.length < 8) { res.status(400).json({ error: 'Password must be at least 8 characters' }); return; }
+
+        const existing = dbStmts.findByEmail.get(email);
+        if (existing) { res.status(409).json({ error: 'An account with this email already exists' }); return; }
+
+        // Handle referral bonus
+        let bonusCredits = 0;
+        if (referralToken && typeof referralToken === 'string') {
+            const referrer = dbStmts.findByReferral.get(referralToken);
+            if (referrer) {
+                bonusCredits = 5;
+                dbStmts.updateCredits.run(referrer.credits + 3, referrer.id);
+            }
+        }
+
+        const userId = `usr_${crypto.randomBytes(6).toString('hex')}`;
+        const myReferralToken = `ref_${crypto.randomBytes(8).toString('hex')}`;
+        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
+        dbStmts.insert.run(userId, email, name, passwordHash, bonusCredits, myReferralToken);
+        const user = dbStmts.findById.get(userId)!;
+
+        const token = jwt.sign({
+            userId: user.id,
+            email: user.email,
+            name: user.name,
+            tier: user.tier,
+            credits: user.credits,
+            reportsThisMonth: user.reports_this_month,
+            jurisdiction: user.jurisdiction,
+        }, JWT_SECRET, { expiresIn: '7d' });
+
+        res.status(201).json({ token, user: stripPasswordHash(user) });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'Registration failed' });
+    }
 });
 
 app.get(`${API_PREFIX}/auth/me`, (req: AuthenticatedRequest, res) => {
-    const user = req.user;
-    if (!user) { res.status(401).json({ error: 'Not authenticated' }); return; }
-    res.json(user);
+    if (!req.user) { res.status(401).json({ error: 'Not authenticated' }); return; }
+    // Re-fetch from DB for fresh data
+    const user = dbStmts.findById.get(req.user.userId);
+    if (!user) { res.status(404).json({ error: 'User not found' }); return; }
+    res.json(stripPasswordHash(user));
 });
 
 // Lazy AI client — don't throw at startup if key not set yet
@@ -159,12 +245,75 @@ function getAI() {
 app.get(`${API_PREFIX}/report/:ticker`, (req, res) => {
     const ticker = sanitizeTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
+
+    const asset = getAssetByTicker(ticker) ?? {
+        ticker,
+        name: ticker,
+        exchange: 'Manual input',
+        assetClass: 'EQUITY',
+        sector: 'Unclassified',
+        hasCachedReport: false,
+        researcherCount: 0,
+    } satisfies AssetEntry;
+
     const report = getMockReport(ticker);
-    if (!report) {
-        res.status(404).json({ error: 'No cached report — use POST /api/generate to create one.' });
+    if (report) {
+        const response: ReportResponse = {
+            report,
+            source: 'cached',
+            ticker,
+            message: 'Cached Quantus coverage loaded.',
+            detail: `Shared Quantus coverage is available for ${ticker} and can be bookmarked or shared directly.`,
+            freshness: report.cache_age,
+            status: getWorkspaceStatus(),
+        };
+
+        res.json(response);
         return;
     }
-    res.json(report);
+
+    const response: ReportResponse = {
+        report: buildStarterReport(asset),
+        source: 'starter',
+        ticker,
+        message: 'No cached Quantus coverage yet.',
+        detail: 'You are viewing a starter shell seeded from directory metadata only. Quantitative sections stay conservative until live services are connected.',
+        freshness: 'On demand',
+        status: getWorkspaceStatus(),
+    };
+
+    res.json(response);
+});
+
+app.get(`${API_PREFIX}/workspace/summary`, (_req, res) => {
+    res.json(getWorkspaceSummary());
+});
+
+app.get(`${API_PREFIX}/assets/search`, (req, res) => {
+    const query = typeof req.query.q === 'string' ? req.query.q.slice(0, 60) : '';
+    const requestedLimit = Number.parseInt(String(req.query.limit ?? '6'), 10);
+    const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 12) : 6;
+
+    res.json({
+        query,
+        results: searchAssets(query, limit),
+        status: getWorkspaceStatus(),
+    });
+});
+
+app.get(`${API_PREFIX}/assets/:ticker`, (req, res) => {
+    const ticker = typeof req.params.ticker === 'string' ? req.params.ticker.slice(0, 30) : '';
+    const asset = getAssetByTicker(ticker);
+
+    if (!asset) {
+        res.status(404).json({ error: 'Asset not found' });
+        return;
+    }
+
+    res.json({
+        asset,
+        status: getWorkspaceStatus(),
+    });
 });
 
 // ─── GENERATE REPORT (STREAMING NARRATIVE) ──────────────────────────────────
@@ -396,10 +545,110 @@ function getInsightCards(ticker: string, assetClass: string) {
         ] : []),
         { id: '9', category: 'knowledge', text: `Knowledge graph: cross-ticker relationships mapped. Supply chain alerts checked.` },
         { id: '10', category: 'model', text: `Data quality scoring: all inputs validated. Confidence score compositing.` },
-        { id: '11', category: 'sentiment', text: `Report complete — shared with research community. Quantus Engine: Meridian v2.4` },
+        { id: '11', category: 'model', text: `Coverage check complete — preparing the workspace handoff for ${ticker}.` },
     ];
 
     return cards;
+}
+
+function buildStarterReport(asset: AssetEntry): ReportData {
+    const ticker = asset.ticker;
+
+    return {
+        engine: 'Meridian v2.4',
+        report_id: `QRS-2026-${String(Math.floor(Math.random() * 90000 + 10000))}`,
+        ticker,
+        company_name: asset.name,
+        exchange: asset.exchange,
+        sector: asset.sector ?? 'Unknown',
+        industry: asset.sector ?? 'Unknown',
+        market_cap: 'Not connected',
+        asset_class: asset.assetClass,
+        description: `${asset.name} is available in the Quantus workspace, but this ticker does not yet have cached Quantus coverage. This starter shell uses directory metadata only while live data services are being connected.`,
+        current_price: asset.currentPrice ?? 0,
+        day_change: asset.dayChange ?? 0,
+        day_change_pct: asset.dayChangePct ?? 0,
+        week_52_high: (asset.currentPrice ?? 0) * 1.08,
+        week_52_low: (asset.currentPrice ?? 0) * 0.92,
+        regime: {
+            label: 'Transitional',
+            implication: 'This is a starter shell. Regime analysis will upgrade automatically once live market data is connected.',
+            active_strategies: ['Manual review'],
+            suppressed_strategies: ['Automated conviction signals'],
+        },
+        overall_signal: 'NEUTRAL',
+        confidence_score: 34,
+        confidence_breakdown: {
+            momentum: 4,
+            sentiment: 4,
+            regime_alignment: 5,
+            model_ensemble_agreement: 4,
+            alternative_data: 4,
+            macro_context: 8,
+            data_quality: 5,
+        },
+        model_ensemble: {
+            lstm: { forecast: 'Pending', weight: 'N/A', accuracy: 'N/A' },
+            prophet: { forecast: 'Pending', weight: 'N/A', accuracy: 'N/A' },
+            arima: { forecast: 'Pending', weight: 'N/A', accuracy: 'N/A' },
+            ensemble_forecast: 'Pending live data',
+            confidence_band: { low: 'N/A', high: 'N/A' },
+            regime_accuracy_note: 'No cached Quantus model run exists for this ticker yet.',
+        },
+        signal_cards: [
+            {
+                label: 'Coverage status',
+                value: 'Starter shell',
+                trend: 'neutral',
+                plain_note: 'No cached report exists yet. Quantitative signals remain conservative until a live model run is available.',
+                data_source: 'Workspace directory',
+                freshness: 'On demand',
+                quality_score: 42,
+                icon: '🧭',
+            },
+        ],
+        alternative_data: {
+            grok_x_sentiment: { score: 0.5, volume: 0, credibility_weighted: 0.5, campaign_detected: false, freshness: 'Unavailable' },
+            reddit_score: 0.5,
+            news_score: 0.5,
+            composite_sentiment: 0.5,
+            institutional_flow: 'Unavailable until live integrations are connected',
+            insider_activity: 'Unavailable',
+            short_interest: 'Unavailable',
+            iv_rank: 'Unavailable',
+            implied_move: 'Unavailable',
+            transcript_score: 'Unavailable',
+            sec_language_trend: 'Unavailable',
+        },
+        risk: {
+            var_dollar: 'Unavailable',
+            expected_shortfall: 'Unavailable',
+            max_drawdown: 'Unavailable',
+            sharpe_ratio: 0,
+            volatility_vs_peers: 'Unavailable',
+            implied_move: 'Unavailable',
+            stress_tests: [{ scenario: 'Starter shell', return: 'Unavailable', recovery: 'Unavailable' }],
+            macro_context: { fed_rate: '4.25%', yield_curve: 'Checking', vix: '16.4', credit_spreads: 'Checking' },
+        },
+        strategy: {
+            action: 'NEUTRAL',
+            confidence: 34,
+            regime_context: 'No cached Quantus coverage. Use this page as a starting point, not a trading signal.',
+            entry_zone: 'Pending live data',
+            target: 'Pending live data',
+            stop_loss: 'Pending live data',
+            risk_reward: 'Pending live data',
+            position_size_pct: 'Manual only',
+            kelly_derived_max: 'Pending live data',
+        },
+        narrative_executive_summary: `${ticker} does not yet have cached Quantus coverage. This page is a starter shell that preserves the workspace handoff, but it should not be treated as a completed quantitative report until a live model run exists.`,
+        narrative_plain: `${asset.name} is searchable in Quantus, but the full report has not been generated yet. Treat this as a placeholder workspace, not a production signal.`,
+        researcher_count: asset.researcherCount ?? 0,
+        generated_at: new Date().toISOString(),
+        cache_age: 'Starter shell',
+        data_sources: [{ name: 'Quantus workspace directory', tier: 3, freshness: 'On demand' }],
+        peer_group: [],
+    };
 }
 
 function getMockScreenerResults(filters: Record<string, unknown>) {

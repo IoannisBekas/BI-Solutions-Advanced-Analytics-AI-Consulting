@@ -12,7 +12,7 @@ export default function Products() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Products"
-        description="Explore Quantus and Power BI Solutions, two native BI Solutions products delivered under the bisolutions.group brand."
+        description="Explore Quantus, Power BI Solutions, and Greek AI Professional Advisor — native products delivered under the bisolutions.group brand."
         path="/products"
         structuredData={{
           "@context": "https://schema.org",
@@ -22,6 +22,7 @@ export default function Products() {
           hasPart: [
             "https://bisolutions.group/quantus",
             "https://bisolutions.group/power-bi-solutions",
+            "https://bisolutions.group/ai-advisor",
           ],
         }}
       />
@@ -39,10 +40,10 @@ export default function Products() {
                   Native product experiences inside the BI Solutions ecosystem.
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                  Quantus and Power BI Solutions now live under the same BI
-                  Solutions brand domain, each with its own runtime and
-                  authentication model while staying discoverable from one
-                  shared site.
+                  Quantus, Power BI Solutions, and the Greek AI Professional Advisor
+                  now live under the same BI Solutions brand domain, each with
+                  its own runtime while staying discoverable from one shared
+                  site.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Link href="/contact">
@@ -51,7 +52,7 @@ export default function Products() {
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <a href="/quantus/">
+                  <a href="/quantus/workspace/">
                     <Button
                       variant="outline"
                       className="rounded-full border-gray-300 px-8"
@@ -67,7 +68,7 @@ export default function Products() {
 
         <ProductShowcase
           heading="Choose the product experience that fits the workflow."
-          description="hosts both applications as first-class BI Solutions products, keeping the public site, product discovery, and app entry points aligned."
+          description="hosts all three products as first-class BI Solutions experiences, keeping the public site, product discovery, and app entry points aligned."
         />
       </main>
 

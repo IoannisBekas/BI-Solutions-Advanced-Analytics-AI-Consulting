@@ -98,9 +98,9 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                                 onClick={() => setMode(m)}
                                 className="flex-1 py-2 text-sm font-semibold rounded-lg cursor-pointer transition-all"
                                 style={{
-                                    background: mode === m ? 'rgba(59,130,246,0.15)' : 'transparent',
-                                    color: mode === m ? '#3B82F6' : ts,
-                                    border: mode === m ? '1px solid rgba(59,130,246,0.3)' : '1px solid transparent',
+                                    background: mode === m ? (lightMode ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.1)') : 'transparent',
+                                    color: mode === m ? tp : ts,
+                                    border: mode === m ? `1px solid ${lightMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)'}` : '1px solid transparent',
                                 }}
                             >
                                 {m === 'signup' ? 'Create Preview Account' : 'Sign In'}
@@ -155,7 +155,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                             type="submit"
                             disabled={isLoading}
                             className="w-full py-3 rounded-xl font-semibold text-sm cursor-pointer transition-all hover:scale-[1.02] disabled:opacity-60"
-                            style={{ background: 'linear-gradient(135deg, #3B82F6, #6366F1)', color: 'white' }}
+                            style={{ background: '#09090B', color: 'white' }}
                         >
                             {isLoading ? 'Please wait…' : mode === 'signup' ? 'Create Quantus Preview Account →' : 'Sign In to Quantus →'}
                         </button>

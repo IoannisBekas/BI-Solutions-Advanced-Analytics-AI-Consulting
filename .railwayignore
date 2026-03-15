@@ -1,0 +1,33 @@
+# Root node_modules
+node_modules/
+
+# Nested node_modules (explicit paths)
+Quantus/node_modules/
+PowerBI_Solutions/app/node_modules/
+client/node_modules/
+
+# Catch-all for any other nested node_modules
+**/node_modules/
+
+# Build output
+dist/
+**/dist/
+Quantus/dist/
+PowerBI_Solutions/app/dist/
+
+# Database files (cause file locks)
+*.db
+*.db-shm
+*.db-wal
+data/
+
+# Git history
+.git/
+
+# Logs and large assets
+root-dev.log
+attached_assets/
+
+# OS files
+Thumbs.db
+.DS_Store

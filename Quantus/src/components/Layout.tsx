@@ -1,7 +1,11 @@
 import { ReactNode, useEffect, useState } from 'react';
 import {
+    Archive,
     ArrowUpRight,
+    BarChart3,
+    BookOpen,
     Layers,
+    List,
     Menu,
     Moon,
     Search,
@@ -9,6 +13,7 @@ import {
     X,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import type { WorkspaceStatus } from '../types';
 
 interface LayoutProps {
     children: ReactNode;
@@ -20,6 +25,7 @@ interface LayoutProps {
     onSignOut?: () => void;
     userName?: string | null;
     userTier?: string | null;
+    workspaceStatus?: WorkspaceStatus | null;
 }
 
 export function Layout({
@@ -32,6 +38,7 @@ export function Layout({
     onSignOut,
     userName,
     userTier,
+    workspaceStatus,
 }: LayoutProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -53,12 +60,38 @@ export function Layout({
     const navLinks = [
         { label: 'Workspace', icon: Search, action: () => onNavigate?.('hero'), view: 'hero' },
         { label: 'Sector Packs', icon: Layers, action: () => onNavigate?.('sectors'), view: 'sectors' },
+        { label: 'Watchlist', icon: List, action: () => onNavigate?.('watchlist'), view: 'watchlist' },
+        { label: 'Archive', icon: Archive, action: () => onNavigate?.('archive'), view: 'archive' },
+        { label: 'Accuracy', icon: BarChart3, action: () => onNavigate?.('accuracy'), view: 'accuracy' },
+        { label: 'Methodology', icon: BookOpen, action: () => onNavigate?.('methodology'), view: 'methodology' },
     ];
 
     const pageBg = lightMode ? '#FCFCFD' : '#060810';
     const textColor = lightMode ? '#09090B' : '#F0F6FF';
     const borderColor = lightMode ? '#E5E7EB' : '#1A2235';
     const muted = lightMode ? '#6B7280' : '#8B9DB5';
+
+    const statusTone = workspaceStatus?.badgeTone ?? 'neutral';
+    const statusColors = {
+        neutral: {
+            bg: lightMode ? 'rgba(148,163,184,0.10)' : 'rgba(148,163,184,0.10)',
+            border: borderColor,
+            fg: muted,
+            dot: '#64748B',
+        },
+        success: {
+            bg: lightMode ? 'rgba(16,185,129,0.10)' : 'rgba(16,185,129,0.12)',
+            border: lightMode ? '#A7F3D0' : '#064E3B',
+            fg: lightMode ? '#047857' : '#6EE7B7',
+            dot: '#10B981',
+        },
+        caution: {
+            bg: lightMode ? 'rgba(245,158,11,0.10)' : 'rgba(245,158,11,0.12)',
+            border: lightMode ? '#FCD34D' : '#6B4A12',
+            fg: lightMode ? '#92400E' : '#FCD34D',
+            dot: '#D97706',
+        },
+    }[statusTone];
     const footerLinkButtonStyle = {
         background: 'transparent',
         border: 'none',
@@ -155,13 +188,14 @@ export function Layout({
                         <div
                             className="hidden xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs"
                             style={{
-                                background: lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.05)',
-                                border: `1px solid ${borderColor}`,
-                                color: muted,
+                                background: statusColors.bg,
+                                border: `1px solid ${statusColors.border}`,
+                                color: statusColors.fg,
                             }}
+                            title={workspaceStatus?.description}
                         >
-                            <span className="live-dot" />
-                            <span className="font-medium">Live · Meridian v2.4</span>
+                            <span className="h-2.5 w-2.5 rounded-full" style={{ background: statusColors.dot }} />
+                            <span className="font-medium">{workspaceStatus?.label ?? 'Loading workspace'}</span>
                         </div>
 
                         <button
@@ -389,7 +423,38 @@ export function Layout({
                                     >
                                         Sector Packs
                                     </button>
-                                    <span style={{ color: lightMode ? '#6B7280' : '#6B7280' }}>Signals, reports, and deep dives</span>
+                                    <button
+                                        type="button"
+                                        className="w-fit text-left transition-colors duration-200 hover:underline hover:underline-offset-4"
+                                        style={footerLinkButtonStyle}
+                                        onClick={() => onNavigate?.('watchlist')}
+                                    >
+                                        Watchlist
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="w-fit text-left transition-colors duration-200 hover:underline hover:underline-offset-4"
+                                        style={footerLinkButtonStyle}
+                                        onClick={() => onNavigate?.('archive')}
+                                    >
+                                        Archive
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="w-fit text-left transition-colors duration-200 hover:underline hover:underline-offset-4"
+                                        style={footerLinkButtonStyle}
+                                        onClick={() => onNavigate?.('accuracy')}
+                                    >
+                                        Accuracy
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="w-fit text-left transition-colors duration-200 hover:underline hover:underline-offset-4"
+                                        style={footerLinkButtonStyle}
+                                        onClick={() => onNavigate?.('methodology')}
+                                    >
+                                        Methodology
+                                    </button>
                                 </div>
                             </div>
 

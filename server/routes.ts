@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import type { Server } from "http";
 import { Readable } from "stream";
+import { authRouter } from "./auth";
 
 const QUANTUS_API_PREFIX = "/quantus/api";
 const POWERBI_SOLUTIONS_API_PREFIX = "/power-bi-solutions/api";
@@ -66,10 +67,135 @@ function copyProxyResponseHeaders(res: Response, upstream: globalThis.Response) 
   });
 }
 
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+
+function getWeb3FormsKey() {
+  return (process.env.WEB3FORMS_ACCESS_KEY || "").trim();
+}
+
+function getContactRecipient() {
+  return (process.env.CONTACT_RECIPIENT_EMAIL || "").trim();
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // ─── Health check ────────────────────────────────────────────────────────
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
+  });
+
+  // ─── Auth routes (/api/auth/*) ─────────────────────────────────────────────
+  app.use("/api/auth", authRouter);
+
+  // ─── Contact form proxy ──────────────────────────────────────────────────
+  app.post("/api/contact", async (req, res) => {
+    const accessKey = getWeb3FormsKey();
+    const recipient = getContactRecipient();
+
+    if (!accessKey) {
+      res.status(500).json({ message: "Contact form is not configured on the server." });
+      return;
+    }
+
+    const { name, email, subject, message } = req.body;
+    if (!name || !email || !subject || !message) {
+      res.status(400).json({ message: "All fields (name, email, subject, message) are required." });
+      return;
+    }
+
+    try {
+      const payload: Record<string, string> = {
+        access_key: accessKey,
+        name,
+        email,
+        subject,
+        message,
+        from_name: "BI Solutions Contact Form",
+      };
+      if (recipient) {
+        payload.to_email = recipient;
+      }
+
+      const upstream = await fetch(WEB3FORMS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(15_000),
+      });
+
+      const result = await upstream.json();
+      if ((result as any).success) {
+        res.json({ success: true });
+      } else {
+        res.status(502).json({ message: "Failed to deliver message. Please try again." });
+      }
+    } catch (error) {
+      console.error("Contact form proxy failed:", error);
+      res.status(502).json({ message: "Failed to deliver message. Please try again." });
+    }
+  });
+
+  // ─── AI Advisor (Anthropic-powered) ─────────────────────────────────────────
+  app.post("/api/ai-advisor", async (req, res) => {
+    const apiKey = getAnthropicApiKey();
+    if (!apiKey) {
+      res.status(500).json({ success: false, error: "AI Advisor is not configured on the server." });
+      return;
+    }
+
+    const { role, question } = req.body;
+    if (!role || !question || typeof question !== "string") {
+      res.status(400).json({ success: false, error: "Role and question are required." });
+      return;
+    }
+
+    const validRoles = ["accountant", "lawyer", "consultant"] as const;
+    if (!validRoles.includes(role)) {
+      res.status(400).json({ success: false, error: "Invalid role." });
+      return;
+    }
+
+    const systemPrompts: Record<string, string> = {
+      accountant: `You are an expert Greek accountant (Λογιστής) at BI Solutions Group. You provide accurate, professional guidance on Greek tax law, accounting standards (ΕΛΠ/IFRS), VAT regulations, ΓΕΜΗ registration, and financial compliance. Always reference specific Greek laws and articles when applicable (e.g., Ν. 4172/2013, ΚΦΕ). Respond in Greek. Be concise but thorough — max 3 paragraphs.`,
+      lawyer: `You are an expert Greek lawyer (Δικηγόρος) at BI Solutions Group. You provide accurate, professional guidance on Greek civil law (Αστικός Κώδικας), commercial law, employment law, GDPR compliance, and corporate regulations. Always reference specific articles and legal codes when applicable. Include relevant deadlines and procedural requirements. Respond in Greek. Be concise but thorough — max 3 paragraphs. Include a disclaimer that this is general guidance, not legal advice.`,
+      consultant: `You are an expert business consultant (Σύμβουλος Επιχειρήσεων) at BI Solutions Group. You provide strategic guidance on business operations in the Greek and EU market — SWOT analysis, market entry, process optimization, digital transformation, funding (ΕΣΠΑ, ΠΔΕ), and competitive strategy. Respond in Greek. Be concise and actionable — max 3 paragraphs.`,
+    };
+
+    try {
+      const upstream = await fetch(ANTHROPIC_MESSAGES_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": DEFAULT_ANTHROPIC_VERSION,
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1024,
+          system: systemPrompts[role],
+          messages: [{ role: "user", content: question.slice(0, 2000) }],
+        }),
+        signal: AbortSignal.timeout(30_000),
+      });
+
+      if (!upstream.ok) {
+        const errText = await upstream.text();
+        console.error("AI Advisor upstream error:", upstream.status, errText);
+        res.status(502).json({ success: false, error: "AI service temporarily unavailable." });
+        return;
+      }
+
+      const result = await upstream.json() as { content?: Array<{ text?: string }> };
+      const answer = result.content?.[0]?.text || "No response generated.";
+      res.json({ success: true, answer });
+    } catch (error) {
+      console.error("AI Advisor error:", error);
+      res.status(502).json({ success: false, error: "AI service temporarily unavailable." });
+    }
+  });
+
   app.all(`${QUANTUS_API_PREFIX}/*`, async (req, res) => {
     try {
       const upstreamUrl = new URL(req.originalUrl, `${getQuantusApiTarget()}/`);

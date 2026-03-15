@@ -26,6 +26,8 @@ interface ProgressInsightFeedProps {
     reportId?: string;
     onViewReport?: () => void;
     lightMode?: boolean;
+    completionTitle?: string;
+    completionDetail?: string;
 }
 
 // ─── Single insight card ──────────────────────────────────────────────────────
@@ -97,9 +99,9 @@ function InsightCardItem({ card, index, isLatest, isGenerating, lightMode }: Ins
 // ─── Final "complete" card ────────────────────────────────────────────────────
 
 function CompletionCard({
-    ticker, reportId, onViewReport,
+    ticker, reportId, onViewReport, title, detail,
 }: {
-    ticker: string; reportId: string; onViewReport?: () => void;
+    ticker: string; reportId: string; onViewReport?: () => void; title: string; detail?: string;
 }) {
     const date = useMemo(
         () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
@@ -119,10 +121,10 @@ function CompletionCard({
                     <span className="text-xl leading-none mt-0.5 flex-shrink-0">✅</span>
                     <div>
                         <div className="font-semibold text-sm text-emerald-400">
-                            Report complete — shared with research community
+                            {title}
                         </div>
                         <div className="text-xs mt-1 font-mono" style={{ color: '#6B7280' }}>
-                            {reportId} · Meridian v2.4 · {ticker} · {date}
+                            {detail ?? `${reportId} · Meridian v2.4 · ${ticker} · ${date}`}
                         </div>
                     </div>
                 </div>
@@ -165,7 +167,7 @@ function SkeletonCard({ lightMode }: { lightMode?: boolean }) {
 // ─── Main ProgressInsightFeed ─────────────────────────────────────────────────
 
 export function ProgressInsightFeed({
-    insights, isGenerating, ticker, reportId, onViewReport, lightMode,
+    insights, isGenerating, ticker, reportId, onViewReport, lightMode, completionTitle, completionDetail,
 }: ProgressInsightFeedProps) {
     const endRef = useRef<HTMLDivElement>(null);
     const isDone = !isGenerating && insights.length > 0;
@@ -173,9 +175,7 @@ export function ProgressInsightFeed({
     const rid = reportId ?? stableRid;
 
     // Filter out completion cards — check `isComplete` flag first, fall back to text matching
-    const regularCards = insights.filter(
-        c => !c.isComplete && !c.text.includes('Report complete') && !c.text.includes('Analysis complete'),
-    );
+    const regularCards = insights.filter((card) => !card.isComplete);
     const hasFinalCard = insights.length > regularCards.length;
 
     // Auto-scroll to latest card as they arrive, respecting reduced motion
@@ -237,6 +237,8 @@ export function ProgressInsightFeed({
                         ticker={ticker}
                         reportId={rid}
                         onViewReport={onViewReport}
+                        title={completionTitle ?? 'Report ready'}
+                        detail={completionDetail}
                     />
                 )}
 

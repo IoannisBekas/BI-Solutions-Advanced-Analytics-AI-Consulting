@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ReportData } from '../../types';
 import { themeColors } from './helpers';
+import { SkimSummary } from './SkimSummary';
 import { ReportHeader } from './ReportHeader';
 import { SectionA } from './SectionA';
 import { SectionB } from './SectionB';
@@ -20,6 +21,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
 
     return (
         <div>
+            <SkimSummary report={report} lightMode={lightMode} />
             <ReportHeader report={report} lightMode={lightMode} />
             <SectionA report={report} lightMode={lightMode} />
             <SectionB report={report} lightMode={lightMode} />

@@ -1,64 +1,21 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-    ArrowRight,
-    CheckCircle2,
-    Search,
-    Sparkles,
-    TrendingDown,
-    TrendingUp,
-    X,
-} from 'lucide-react';
+import { startTransition, useCallback, useDeferredValue, useEffect, useRef, useState } from 'react';
+import { AlertTriangle, ArrowRight, Bookmark, CheckCircle2, Clock3, Database, FileStack, Search, Sparkles, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { DISCOVERY_FEED, resolveAsset, searchAssets } from '../constants/assetRegistry';
-import type { AssetEntry } from '../types';
+import { searchWorkspaceAssets } from '../services/workspace';
+import type { AssetEntry, WorkspaceSummary } from '../types';
 
 interface SearchHeroProps {
     onSearch: (ticker: string, assetEntry: AssetEntry) => void;
     lightMode?: boolean;
+    workspaceSummary: WorkspaceSummary | null;
+    recentAssets: AssetEntry[];
+    pinnedAssets: AssetEntry[];
+    onTogglePinned: (asset: AssetEntry) => void;
 }
-
-const LIVE_ACTIVITY_ITEMS = [
-    'Meridian refreshed NVDA 2 hours ago',
-    'BTC-USD has 89 active researchers today',
-    'GC=F report updated for commodity flows',
-    'Shared research is accelerating cross-asset coverage',
-];
-
-const SIGNAL_META: Record<string, { signal: string; confidence: number }> = {
-    NVDA: { signal: 'STRONG BUY', confidence: 82 },
-    AAPL: { signal: 'BUY', confidence: 69 },
-    MSFT: { signal: 'BUY', confidence: 73 },
-    TSLA: { signal: 'NEUTRAL', confidence: 54 },
-    'BTC-USD': { signal: 'BUY', confidence: 74 },
-    'ETH-USD': { signal: 'BUY', confidence: 66 },
-    'GC=F': { signal: 'BUY', confidence: 71 },
-    SPY: { signal: 'NEUTRAL', confidence: 61 },
-};
-
-const HERO_STATS = [
-    { label: 'Tracked signals', value: '847' },
-    { label: 'Asset classes', value: '4' },
-    { label: 'Research engine', value: 'Meridian v2.4' },
-];
-
-const WORKSPACE_GUIDES = [
-    {
-        title: 'Search once',
-        description: 'Start with a ticker, company, crypto pair, or commodity and jump straight into the report flow.',
-    },
-    {
-        title: 'Open coverage fast',
-        description: 'Load cached research instantly when Quantus already has community coverage on the asset.',
-    },
-    {
-        title: 'Keep moving',
-        description: 'Stay inside the same BI Solutions product shell as you move into deeper Quantus workflows.',
-    },
-];
 
 function formatPrice(value?: number) {
     if (value == null) return 'N/A';
-    if (value >= 1000) return `$${value.toLocaleString()}`;
+    if (value >= 1000) return `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
     return `$${value.toFixed(2)}`;
 }
 
@@ -73,36 +30,49 @@ function AssetClassBadge({ cls }: { cls: string }) {
     return <span className={styles[cls] ?? 'badge badge-equity'}>{cls}</span>;
 }
 
-function LiveActivityStrip({ lightMode }: { lightMode?: boolean }) {
-    const [index, setIndex] = useState(0);
-
-    useEffect(() => {
-        const timer = setInterval(() => setIndex((value) => (value + 1) % LIVE_ACTIVITY_ITEMS.length), 3200);
-        return () => clearInterval(timer);
-    }, []);
+function StatusBadge({
+    lightMode,
+    label,
+    tone,
+}: {
+    lightMode?: boolean;
+    label: string;
+    tone: 'neutral' | 'success' | 'caution';
+}) {
+    const toneColors = {
+        neutral: {
+            dot: '#64748B',
+            fg: lightMode ? '#475569' : '#CBD5E1',
+            bg: lightMode ? 'rgba(148,163,184,0.12)' : 'rgba(148,163,184,0.12)',
+            border: lightMode ? '#CBD5E1' : '#334155',
+        },
+        success: {
+            dot: '#10B981',
+            fg: lightMode ? '#047857' : '#6EE7B7',
+            bg: lightMode ? 'rgba(16,185,129,0.10)' : 'rgba(16,185,129,0.12)',
+            border: lightMode ? '#A7F3D0' : '#064E3B',
+        },
+        caution: {
+            dot: '#D97706',
+            fg: lightMode ? '#92400E' : '#FCD34D',
+            bg: lightMode ? 'rgba(245,158,11,0.10)' : 'rgba(245,158,11,0.12)',
+            border: lightMode ? '#FCD34D' : '#6B4A12',
+        },
+    }[tone];
 
     return (
         <div
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs"
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium shadow-sm"
             style={{
-                background: lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.05)',
-                borderColor: lightMode ? '#E5E7EB' : '#1F2937',
-                color: lightMode ? '#475569' : '#9CA3AF',
+                background: toneColors.bg,
+                borderColor: toneColors.border,
+                color: toneColors.fg,
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
             }}
         >
-            <span className="live-dot" />
-            <span className="font-semibold" style={{ color: lightMode ? '#374151' : '#D1D5DB' }}>Live</span>
-            <AnimatePresence mode="wait">
-                <motion.span
-                    key={index}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    transition={{ duration: 0.25 }}
-                >
-                    {LIVE_ACTIVITY_ITEMS[index]}
-                </motion.span>
-            </AnimatePresence>
+            <span className="h-2 w-2 rounded-full" style={{ background: toneColors.dot }} />
+            {label}
         </div>
     );
 }
@@ -129,13 +99,20 @@ function AutocompleteResult({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
             onClick={() => onSelect(asset)}
-            className="w-full flex items-center gap-4 px-5 py-4 text-left"
-            style={{ borderTop: index === 0 ? 'none' : `1px solid ${cardBorder}` }}
+            className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors duration-200"
+            style={{
+                borderTop: index === 0 ? 'none' : `1px solid ${lightMode ? 'rgba(229,231,235,0.6)' : cardBorder}`,
+                background: 'transparent',
+            }}
+            whileHover={{ background: lightMode ? 'rgba(249,250,251,0.8)' : 'rgba(255,255,255,0.03)' }}
             type="button"
         >
             <div
-                className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm flex-shrink-0"
-                style={{ background: lightMode ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)', color: lightMode ? '#374151' : '#D1D5DB' }}
+                className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm flex-shrink-0 shadow-sm"
+                style={{
+                    background: lightMode ? 'linear-gradient(135deg, #09090B, #1a1a2e)' : 'rgba(255,255,255,0.08)',
+                    color: lightMode ? '#FFFFFF' : '#D1D5DB',
+                }}
             >
                 {asset.ticker.slice(0, 2)}
             </div>
@@ -146,7 +123,10 @@ function AutocompleteResult({
                     </span>
                     <AssetClassBadge cls={asset.assetClass} />
                     {asset.hasCachedReport && (
-                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-medium" style={{ background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)', color: lightMode ? '#4B5563' : '#9CA3AF' }}>
+                        <span
+                            className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-medium"
+                            style={{ background: lightMode ? 'rgba(16,185,129,0.08)' : 'rgba(16,185,129,0.12)', color: lightMode ? '#047857' : '#6EE7B7' }}
+                        >
                             <CheckCircle2 className="w-3 h-3" />
                             Cached
                         </span>
@@ -163,8 +143,7 @@ function AutocompleteResult({
                     {formatPrice(asset.currentPrice)}
                 </div>
                 {asset.dayChangePct != null && (
-                    <div className="mt-1 inline-flex items-center gap-1 text-xs" style={{ color: positive ? '#059669' : '#DC2626' }}>
-                        {positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                    <div className="mt-1 text-xs font-medium" style={{ color: positive ? '#059669' : '#DC2626' }}>
                         {positive ? '+' : ''}{asset.dayChangePct.toFixed(2)}%
                     </div>
                 )}
@@ -182,40 +161,39 @@ function DiscoveryTile({
     onSelect: (asset: AssetEntry) => void;
     lightMode?: boolean;
 }) {
-    const positive = (asset.dayChangePct ?? 0) >= 0;
-    const meta = SIGNAL_META[asset.ticker] ?? { signal: 'NEUTRAL', confidence: 60 };
-
     return (
         <motion.button
-            whileHover={{ y: -3 }}
+            whileHover={{ y: -6, boxShadow: lightMode ? '0 24px 56px rgba(15,23,42,0.10)' : '0 28px 64px rgba(0,0,0,0.35)' }}
             onClick={() => onSelect(asset)}
-            className="group rounded-[28px] border p-5 md:p-6 text-left transition-all w-full h-full"
+            className="group rounded-3xl border p-6 md:p-7 text-left transition-all duration-300 w-full h-full"
             style={{
-                background: lightMode ? 'rgba(255,255,255,0.94)' : 'rgba(12,18,28,0.92)',
-                borderColor: lightMode ? '#E5E7EB' : '#223046',
-                boxShadow: lightMode ? '0 18px 42px rgba(15,23,42,0.06)' : '0 22px 56px rgba(0,0,0,0.24)',
+                background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(12,18,28,0.92)',
+                borderColor: lightMode ? 'rgba(229,231,235,0.8)' : '#223046',
+                boxShadow: lightMode ? '0 4px 24px rgba(15,23,42,0.04)' : '0 22px 56px rgba(0,0,0,0.24)',
+                backdropFilter: lightMode ? 'blur(8px)' : undefined,
+                WebkitBackdropFilter: lightMode ? 'blur(8px)' : undefined,
             }}
             type="button"
         >
             <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 min-w-0">
+                <div className="flex items-start gap-3">
                     <div
-                        className="w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-bold flex-shrink-0"
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-bold flex-shrink-0 shadow-md"
                         style={{
-                            background: lightMode ? 'rgba(9,9,11,0.05)' : 'rgba(255,255,255,0.06)',
-                            color: lightMode ? '#111827' : '#F9FAFB',
+                            background: lightMode ? 'linear-gradient(135deg, #09090B, #1a1a2e)' : 'rgba(255,255,255,0.08)',
+                            color: lightMode ? '#FFFFFF' : '#D1D5DB',
                         }}
                     >
                         {asset.ticker.slice(0, 2)}
                     </div>
-                    <div className="min-w-0">
-                        <div className="text-base font-semibold truncate" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>
+                    <div>
+                        <div className="text-base font-bold tracking-tight" style={{ color: lightMode ? '#111827' : '#F9FAFB', fontFamily: 'var(--font-heading)' }}>
                             {asset.ticker}
                         </div>
                         <div className="mt-1 text-sm leading-snug" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
                             {asset.name}
                         </div>
-                        <div className="mt-2 text-xs font-mono" style={{ color: lightMode ? '#9CA3AF' : '#7B8CA4' }}>
+                        <div className="mt-1.5 text-xs font-mono" style={{ color: lightMode ? '#9CA3AF' : '#7B8CA4' }}>
                             {asset.exchange}
                         </div>
                     </div>
@@ -223,48 +201,64 @@ function DiscoveryTile({
                 <AssetClassBadge cls={asset.assetClass} />
             </div>
 
-            <div className="mt-5 flex items-end justify-between gap-4">
+            <div className="mt-6 flex items-end justify-between gap-4">
                 <div>
-                    <div className="text-xl font-semibold font-mono" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
+                    <div className="text-2xl font-bold font-mono tracking-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
                         {formatPrice(asset.currentPrice)}
                     </div>
-                    {asset.dayChangePct != null && (
-                        <div className="mt-1 inline-flex items-center gap-1 text-xs" style={{ color: positive ? '#059669' : '#DC2626' }}>
-                            {positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                            {positive ? '+' : ''}{asset.dayChangePct.toFixed(2)}%
-                        </div>
-                    )}
-                    <div className="mt-3 text-xs" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                        {asset.researcherCount ?? 0} researchers following
+                    <div className="mt-2 text-xs" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                        {asset.cachedReportAge ?? 'Starter shell'} · {asset.researcherCount ?? 0} researchers
                     </div>
                 </div>
-                <div className="text-right">
-                    <div className="inline-flex rounded-full px-3 py-1 text-[11px] font-semibold" style={{ background: lightMode ? 'rgba(9,9,11,0.05)' : 'rgba(255,255,255,0.06)', color: lightMode ? '#374151' : '#D1D5DB' }}>
-                        {meta.signal}
-                    </div>
-                    <div className="mt-2 text-xs" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                        {meta.confidence}% confidence
-                    </div>
+                <div
+                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold shadow-sm"
+                    style={{
+                        background: asset.hasCachedReport
+                            ? (lightMode ? 'rgba(16,185,129,0.10)' : 'rgba(16,185,129,0.12)')
+                            : (lightMode ? 'rgba(245,158,11,0.10)' : 'rgba(245,158,11,0.12)'),
+                        color: asset.hasCachedReport
+                            ? (lightMode ? '#047857' : '#6EE7B7')
+                            : (lightMode ? '#92400E' : '#FCD34D'),
+                    }}
+                >
+                    {asset.hasCachedReport ? 'Cached' : 'Starter'}
                 </div>
             </div>
 
             <div
-                className="mt-5 pt-4 flex items-center justify-between gap-3 text-xs"
-                style={{ borderTop: `1px solid ${lightMode ? '#E5E7EB' : '#223046'}`, color: lightMode ? '#6B7280' : '#9CA3AF' }}
+                className="mt-6 pt-4 flex items-center justify-between gap-3 text-xs font-medium"
+                style={{ borderTop: `1px solid ${lightMode ? 'rgba(229,231,235,0.6)' : '#223046'}`, color: lightMode ? '#6B7280' : '#9CA3AF' }}
             >
-                <span>{asset.cachedReportAge ?? 'Ready to generate'}</span>
-                <span className="transition-transform group-hover:translate-x-0.5">Open report</span>
+                <span>{asset.hasCachedReport ? 'Open report URL' : 'Open starter shell'}</span>
+                <span className="inline-flex items-center gap-1 transition-transform group-hover:translate-x-1">
+                    Open report <ArrowRight className="w-3.5 h-3.5" />
+                </span>
             </div>
         </motion.button>
     );
 }
 
-export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
+export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets, pinnedAssets, onTogglePinned }: SearchHeroProps) {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<AssetEntry[]>([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchError, setSearchError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const dropRef = useRef<HTMLDivElement>(null);
+    const deferredQuery = useDeferredValue(query);
+
+    const status = workspaceSummary?.status ?? {
+        mode: 'mixed',
+        label: 'Loading workspace',
+        description: 'Fetching coverage data for the Quantus workspace.',
+        detail: 'Search results will show cached coverage and freshness.',
+        badgeTone: 'neutral' as const,
+    };
+    const metrics = workspaceSummary?.metrics ?? [];
+    const guides = workspaceSummary?.guides ?? [];
+    const featuredAssets = workspaceSummary?.featuredAssets ?? [];
+    const popularTickers = workspaceSummary?.popularTickers ?? [];
 
     useEffect(() => {
         const handler = (event: KeyboardEvent) => {
@@ -273,24 +267,50 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                 inputRef.current?.focus();
             }
         };
+
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
     }, []);
 
     useEffect(() => {
-        if (!query.trim()) {
+        if (!deferredQuery.trim()) {
             setResults([]);
             setDropdownOpen(false);
+            setSearchError(null);
+            setIsSearching(false);
             return;
         }
 
-        const timer = setTimeout(() => {
-            const found = searchAssets(query, 6);
-            setResults(found);
-            setDropdownOpen(found.length > 0);
+        const controller = new AbortController();
+        const timer = window.setTimeout(async () => {
+            setIsSearching(true);
+            setSearchError(null);
+
+            try {
+                const found = await searchWorkspaceAssets(deferredQuery, 6, controller.signal);
+                if (controller.signal.aborted) return;
+
+                startTransition(() => {
+                    setResults(found);
+                    setDropdownOpen(found.length > 0);
+                });
+            } catch (error) {
+                if (controller.signal.aborted) return;
+                setSearchError(error instanceof Error ? error.message : 'Search unavailable');
+                setResults([]);
+                setDropdownOpen(false);
+            } finally {
+                if (!controller.signal.aborted) {
+                    setIsSearching(false);
+                }
+            }
         }, 120);
-        return () => clearTimeout(timer);
-    }, [query]);
+
+        return () => {
+            controller.abort();
+            window.clearTimeout(timer);
+        };
+    }, [deferredQuery]);
 
     useEffect(() => {
         const handler = (event: MouseEvent) => {
@@ -298,6 +318,7 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                 setDropdownOpen(false);
             }
         };
+
         document.addEventListener('mousedown', handler);
         return () => document.removeEventListener('mousedown', handler);
     }, []);
@@ -310,158 +331,306 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
 
     const handleSubmit = useCallback((event: React.FormEvent) => {
         event.preventDefault();
-        if (query.trim() && results.length > 0) {
+
+        if (results.length > 0) {
             onSearch(results[0].ticker, results[0]);
             return;
         }
-        if (!query.trim()) return;
-        const resolved = resolveAsset(query);
-        if (resolved) {
-            onSearch(resolved.ticker, resolved);
+
+        if (!query.trim()) {
             return;
         }
-        onSearch(query.toUpperCase(), {
-            ticker: query.toUpperCase(),
-            name: query.toUpperCase(),
-            exchange: 'Unknown',
+
+        const ticker = query.trim().toUpperCase();
+        onSearch(ticker, {
+            ticker,
+            name: ticker,
+            exchange: 'Manual input',
             assetClass: 'EQUITY',
-            sector: 'Unknown',
-        } as AssetEntry);
+            sector: 'Unclassified',
+            hasCachedReport: false,
+            researcherCount: 0,
+        });
     }, [onSearch, query, results]);
 
     const cardBg = lightMode ? 'rgba(252,252,253,0.96)' : 'rgba(14,20,31,0.96)';
-    const cardBorder = lightMode ? '#E5E7EB' : '#223046';
-    const ctaLabel = results[0]?.hasCachedReport ? 'View current report' : 'Generate report';
-    const ctaSubtext = results[0]?.hasCachedReport
-        ? `Cached ${results[0].cachedReportAge} · ${results[0].researcherCount ?? 0} researchers`
+    const cardBorder = lightMode ? 'rgba(229,231,235,0.8)' : '#223046';
+    const headline = workspaceSummary
+        ? 'Search coverage first, then move into signal.'
+        : 'Opening the Quantus workspace\u2026';
+    const bodyCopy = workspaceSummary
+        ? 'Every search now runs against the Quantus server. Cached reports open instantly, and uncached assets hand off into a clearly labeled starter shell.'
+        : 'Fetching workspace status, cached coverage, and server-side search.';
+    const helperText = results[0]?.hasCachedReport
+        ? `Cached ${results[0].cachedReportAge} \u00B7 ${results[0].researcherCount ?? 0} researchers`
         : 'Press T to jump back into search at any time';
+    const resumeAsset = recentAssets[0] ?? pinnedAssets[0] ?? null;
 
     return (
         <section className="relative">
+            {/* ── Main hero card ──────────────────────────────────────────────── */}
             <div
-                className="relative overflow-hidden rounded-[36px] border"
+                className="relative overflow-hidden rounded-[2.5rem] border"
                 style={{
                     background: lightMode
-                        ? 'linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(249,250,251,0.95) 100%)'
+                        ? 'rgba(255,255,255,0.95)'
                         : 'linear-gradient(180deg, rgba(12,18,28,0.96) 0%, rgba(9,13,21,0.98) 100%)',
                     borderColor: cardBorder,
-                    boxShadow: lightMode ? '0 28px 80px rgba(15,23,42,0.08)' : '0 28px 80px rgba(0,0,0,0.32)',
+                    boxShadow: lightMode
+                        ? '0 8px 40px rgba(15,23,42,0.06)'
+                        : '0 28px 80px rgba(0,0,0,0.32)',
+                    backdropFilter: lightMode ? 'blur(16px)' : undefined,
+                    WebkitBackdropFilter: lightMode ? 'blur(16px)' : undefined,
                 }}
             >
                 <div className="bis-wave-bg" />
-                <div className="relative z-10 px-4 py-5 md:px-8 md:py-8">
-                    <div className="grid gap-8 xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] xl:items-start">
+                <div className="relative z-10 px-6 py-8 md:px-10 md:py-12">
+                    <div className="grid gap-10 xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] xl:items-start">
                         <div className="max-w-3xl">
-                            <div className="bis-label inline-flex mb-5">
+                            {/* Label pill */}
+                            <div
+                                className="inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-sm font-medium shadow-sm mb-6"
+                                style={{
+                                    background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
+                                    borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                    color: lightMode ? '#6B7280' : '#9CA3AF',
+                                    backdropFilter: 'blur(8px)',
+                                    WebkitBackdropFilter: 'blur(8px)',
+                                }}
+                            >
                                 <Sparkles className="w-3.5 h-3.5" />
                                 Quantus workspace on the BI Solutions platform
                             </div>
+
+                            {/* Hero heading */}
                             <motion.h1
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="font-bold leading-[0.98] tracking-[-0.05em]"
+                                className="font-bold tracking-tight leading-[1.02]"
                                 style={{
                                     fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(2.1rem, 4vw, 3.75rem)',
+                                    fontSize: 'clamp(2.2rem, 4.2vw, 3.8rem)',
                                     color: lightMode ? '#09090B' : '#F9FAFB',
                                 }}
                             >
-                                Start your Quantus research workflow.
+                                {headline}
                             </motion.h1>
+
+                            {/* Body copy */}
                             <motion.p
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.05 }}
-                                className="mt-5 max-w-2xl text-base md:text-lg leading-relaxed"
+                                className="mt-6 max-w-2xl text-lg leading-relaxed"
                                 style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}
                             >
-                                Search a market, open the latest report, and move into deeper
-                                research without leaving the BI Solutions product ecosystem.
+                                {bodyCopy}
                             </motion.p>
-                            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                                {HERO_STATS.map((item) => (
+
+                            {/* Status badges */}
+                            <div className="mt-7 flex flex-wrap items-center gap-3">
+                                <StatusBadge lightMode={lightMode} label={status.label} tone={status.badgeTone} />
+                                <div
+                                    className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium shadow-sm"
+                                    style={{
+                                        background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
+                                        borderColor: lightMode ? '#E5E7EB' : '#1F2937',
+                                        color: lightMode ? '#475569' : '#9CA3AF',
+                                        backdropFilter: 'blur(8px)',
+                                        WebkitBackdropFilter: 'blur(8px)',
+                                    }}
+                                >
+                                    <Database className="w-3.5 h-3.5" />
+                                    Server-backed search and report URLs
+                                </div>
+                            </div>
+
+                            {/* ── Metrics cards grid ─────────────────────────────── */}
+                            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                {metrics.map((item) => (
                                     <div
                                         key={item.label}
-                                        className="rounded-[24px] border px-4 py-4"
+                                        className="rounded-2xl border px-5 py-4 shadow-sm transition-all duration-300"
                                         style={{
-                                            background: lightMode ? 'rgba(255,255,255,0.84)' : 'rgba(255,255,255,0.03)',
+                                            background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
                                             borderColor: cardBorder,
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
                                         }}
                                     >
-                                        <div className="text-[11px] uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#7B8CA4' }}>
+                                        <div className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#7B8CA4' }}>
                                             {item.label}
                                         </div>
-                                        <div className="mt-2 text-lg font-semibold" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
+                                        <div className="mt-2 text-2xl font-bold tracking-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB', fontFamily: 'var(--font-heading)' }}>
                                             {item.value}
                                         </div>
+                                        {item.supportingText && (
+                                            <div className="mt-2 text-xs leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                                                {item.supportingText}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
+
+                            {/* ── Resume + Pinned cards ──────────────────────────── */}
+                            {(resumeAsset || pinnedAssets.length > 0 || recentAssets.length > 0) && (
+                                <div className="mt-6 grid gap-3 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+                                    {resumeAsset && (
+                                        <motion.button
+                                            type="button"
+                                            whileHover={{ y: -2, boxShadow: lightMode ? '0 12px 32px rgba(15,23,42,0.08)' : '0 16px 40px rgba(0,0,0,0.3)' }}
+                                            onClick={() => onSearch(resumeAsset.ticker, resumeAsset)}
+                                            className="rounded-3xl border px-5 py-5 text-left shadow-sm transition-all duration-300"
+                                            style={{
+                                                background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
+                                                borderColor: cardBorder,
+                                                backdropFilter: 'blur(8px)',
+                                                WebkitBackdropFilter: 'blur(8px)',
+                                            }}
+                                        >
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div>
+                                                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
+                                                        Resume last report
+                                                    </p>
+                                                    <div className="mt-2 text-lg font-bold tracking-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB', fontFamily: 'var(--font-heading)' }}>
+                                                        {resumeAsset.ticker} · {resumeAsset.name}
+                                                    </div>
+                                                    <p className="mt-2 text-sm leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                                                        Jump back into the most recent Quantus route without typing again.
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            onTogglePinned(resumeAsset);
+                                                        }}
+                                                        className="rounded-full px-3 py-1.5 text-[11px] font-semibold shadow-sm transition-colors"
+                                                        style={{ background: lightMode ? 'rgba(9,9,11,0.04)' : 'rgba(255,255,255,0.06)', color: lightMode ? '#374151' : '#D1D5DB' }}
+                                                    >
+                                                        {pinnedAssets.some((asset) => asset.ticker === resumeAsset.ticker) ? 'Unpin' : 'Pin'}
+                                                    </button>
+                                                    <div className="rounded-full px-3 py-1.5 text-[11px] font-semibold shadow-sm" style={{ background: lightMode ? 'rgba(9,9,11,0.04)' : 'rgba(255,255,255,0.06)', color: lightMode ? '#374151' : '#D1D5DB' }}>
+                                                        {resumeAsset.hasCachedReport ? 'Cached' : 'Starter'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.button>
+                                    )}
+
+                                    <div
+                                        className="rounded-3xl border px-5 py-5 shadow-sm"
+                                        style={{
+                                            background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
+                                            borderColor: cardBorder,
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
+                                            <Bookmark className="w-3.5 h-3.5" />
+                                            Pinned tickers
+                                        </div>
+                                        <div className="mt-3 flex flex-wrap gap-2">
+                                            {pinnedAssets.length === 0 && (
+                                                <span className="text-sm" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                                                    Pin high-priority names here for faster return visits.
+                                                </span>
+                                            )}
+                                            {pinnedAssets.map((asset) => (
+                                                <div
+                                                    key={asset.ticker}
+                                                    className="inline-flex items-center gap-1 rounded-full border px-1 py-1 shadow-sm transition-all duration-200"
+                                                    style={{
+                                                        background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
+                                                        borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                                    }}
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => onSearch(asset.ticker, asset)}
+                                                        className="rounded-full px-2.5 py-1 text-xs font-medium"
+                                                        style={{ color: lightMode ? '#374151' : '#D1D5DB' }}
+                                                    >
+                                                        {asset.ticker}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => onTogglePinned(asset)}
+                                                        className="rounded-full px-2 py-1 text-xs"
+                                                        style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}
+                                                        aria-label={`Unpin ${asset.ticker}`}
+                                                    >
+                                                        <Bookmark className="w-3 h-3" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ── Search panel ───────────────────────────────────── */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="mt-6"
+                                className="mt-8"
                                 ref={dropRef}
                             >
                                 <form onSubmit={handleSubmit}>
                                     <div
-                                        className="rounded-[30px] border p-4 md:p-5"
+                                        className="rounded-[2rem] border p-5 md:p-6"
                                         style={{
-                                            background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.03)',
+                                            background: lightMode ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.03)',
                                             borderColor: cardBorder,
-                                            boxShadow: lightMode ? '0 18px 48px rgba(15,23,42,0.08)' : '0 20px 56px rgba(0,0,0,0.25)',
+                                            boxShadow: lightMode
+                                                ? '0 8px 32px rgba(15,23,42,0.06), inset 0 0 0 1px rgba(255,255,255,0.6)'
+                                                : '0 20px 56px rgba(0,0,0,0.25)',
+                                            backdropFilter: lightMode ? 'blur(12px)' : undefined,
+                                            WebkitBackdropFilter: lightMode ? 'blur(12px)' : undefined,
                                         }}
                                     >
                                         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                                             <div>
-                                                <p className="text-xs uppercase tracking-[0.22em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
-                                                    Research workspace
+                                                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
+                                                    Coverage search
                                                 </p>
-                                                <p className="mt-1 text-sm" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                                    Search by ticker, company, crypto, or commodity and jump into the latest report flow.
+                                                <p className="mt-1 text-sm leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                                                    Search by ticker, company, crypto, or commodity and open the report route that Quantus knows about.
                                                 </p>
                                             </div>
-                                            <LiveActivityStrip lightMode={lightMode} />
+                                            <StatusBadge lightMode={lightMode} label={status.mode === 'mixed' ? 'Cached + starter handoff' : status.label} tone={status.badgeTone} />
                                         </div>
 
-                                        <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center">
+                                        <div className="mt-5 flex flex-col gap-4 lg:flex-row lg:items-center">
                                             <div
-                                                className="flex-1 rounded-[24px] border px-4 py-4 flex items-center gap-3"
+                                                className="search-input-focus flex-1 rounded-2xl border px-4 py-3.5 flex items-center gap-3 transition-all duration-300"
                                                 style={{
-                                                    background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
+                                                    background: lightMode
+                                                        ? 'linear-gradient(to right, rgba(249,250,251,1), rgba(255,255,255,1))'
+                                                        : 'rgba(255,255,255,0.02)',
                                                     borderColor: cardBorder,
                                                 }}
                                             >
-                                                <Search className="w-5 h-5 flex-shrink-0" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }} />
+                                                <Search className="w-5 h-5 flex-shrink-0" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }} />
                                                 <input
-                                                    ref={inputRef}
                                                     id="ticker-input"
+                                                    ref={inputRef}
                                                     type="text"
                                                     value={query}
                                                     onChange={(event) => setQuery(event.target.value)}
-                                                    placeholder="Search a ticker, company, crypto, or commodity"
-                                                    className="flex-1 bg-transparent text-base md:text-lg outline-none"
-                                                    style={{ color: lightMode ? '#111827' : '#F9FAFB' }}
+                                                    placeholder="Search NVDA, BTC-USD, gold, or a company name"
+                                                    className="flex-1 bg-transparent text-base md:text-lg outline-none placeholder:text-gray-400"
+                                                    style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}
                                                     autoComplete="off"
                                                     role="combobox"
                                                     aria-expanded={dropdownOpen}
                                                     aria-haspopup="listbox"
                                                     aria-controls="search-autocomplete"
-                                                    onFocus={() => {
-                                                        const container = inputRef.current?.parentElement;
-                                                        if (container) {
-                                                            container.style.borderColor = lightMode ? '#9CA3AF' : '#374151';
-                                                            container.style.boxShadow = `0 0 0 3px ${lightMode ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}`;
-                                                        }
-                                                    }}
-                                                    onBlur={() => {
-                                                        const container = inputRef.current?.parentElement;
-                                                        if (container) {
-                                                            container.style.borderColor = cardBorder;
-                                                            container.style.boxShadow = 'none';
-                                                        }
-                                                    }}
                                                 />
                                                 {query && (
                                                     <button
@@ -473,9 +642,9 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                                                             setResults([]);
                                                             setDropdownOpen(false);
                                                         }}
-                                                        className="w-8 h-8 rounded-full inline-flex items-center justify-center"
+                                                        className="w-8 h-8 rounded-full inline-flex items-center justify-center transition-colors"
                                                         style={{
-                                                            background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                                                            background: lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.06)',
                                                             color: lightMode ? '#6B7280' : '#9CA3AF',
                                                         }}
                                                     >
@@ -483,56 +652,51 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                                                     </button>
                                                 )}
                                             </div>
-                                            <button
+
+                                            <motion.button
                                                 type="submit"
-                                                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-4 text-sm font-semibold transition-all"
+                                                whileHover={{ y: -2 }}
+                                                className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-semibold transition-all duration-300"
                                                 style={{
                                                     background: lightMode ? '#09090B' : '#FFFFFF',
                                                     color: lightMode ? '#FFFFFF' : '#09090B',
-                                                    opacity: query.trim() ? 1 : 0.7,
+                                                    opacity: query.trim() ? 1 : 0.6,
+                                                    boxShadow: lightMode
+                                                        ? '0 4px 14px rgba(0,0,0,0.2)'
+                                                        : '0 4px 14px rgba(255,255,255,0.1)',
                                                 }}
                                             >
-                                                {ctaLabel}
-                                                <ArrowRight className="w-4 h-4" />
-                                            </button>
+                                                {results[0]?.hasCachedReport ? 'Open cached report' : 'Open report route'}
+                                                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                                            </motion.button>
                                         </div>
-                                        <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+
+                                        <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                                             <div
-                                                className="inline-flex max-w-xl items-start gap-3 rounded-2xl border px-3 py-2.5 text-xs text-left"
+                                                className="inline-flex max-w-xl items-start gap-3 rounded-2xl border px-4 py-3 text-xs text-left shadow-sm"
                                                 style={{
-                                                    background: lightMode ? 'rgba(245,158,11,0.08)' : 'rgba(245,158,11,0.12)',
-                                                    borderColor: lightMode ? '#FCD34D' : '#6B4A12',
+                                                    background: lightMode ? 'rgba(245,158,11,0.06)' : 'rgba(245,158,11,0.10)',
+                                                    borderColor: lightMode ? 'rgba(252,211,77,0.5)' : '#6B4A12',
                                                     color: lightMode ? '#78350F' : '#FDE68A',
                                                 }}
                                             >
-                                                <span className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full" style={{ background: lightMode ? '#D97706' : '#FBBF24' }} />
-                                                <span>
-                                                    Demo data is active while live market-data services are being connected.
-                                                </span>
+                                                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                                <span className="leading-relaxed">{status.description} {status.detail}</span>
                                             </div>
-                                            {!dropdownOpen && (
+
+                                            {!dropdownOpen && popularTickers.length > 0 && (
                                                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                                                    <span style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>Popular</span>
-                                                    {['NVDA', 'AAPL', 'BTC-USD', 'GC=F', 'SPY', 'TSLA'].map((ticker) => (
+                                                    <span className="font-medium" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>Popular</span>
+                                                    {popularTickers.map((ticker) => (
                                                         <button
                                                             key={ticker}
                                                             type="button"
                                                             onClick={() => setQuery(ticker)}
-                                                            className="rounded-full px-3 py-1.5 transition-all border"
+                                                            className="rounded-full px-3 py-1.5 transition-all duration-200 border font-medium shadow-sm"
                                                             style={{
-                                                                background: lightMode ? 'rgba(9,9,11,0.04)' : 'rgba(255,255,255,0.05)',
+                                                                background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
                                                                 borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                                                color: lightMode ? '#6B7280' : '#9CA3AF',
-                                                            }}
-                                                            onMouseEnter={(e) => {
-                                                                e.currentTarget.style.background = lightMode ? 'rgba(9,9,11,0.08)' : 'rgba(255,255,255,0.10)';
-                                                                e.currentTarget.style.borderColor = lightMode ? '#D1D5DB' : '#31425B';
-                                                                e.currentTarget.style.color = lightMode ? '#111827' : '#F9FAFB';
-                                                            }}
-                                                            onMouseLeave={(e) => {
-                                                                e.currentTarget.style.background = lightMode ? 'rgba(9,9,11,0.04)' : 'rgba(255,255,255,0.05)';
-                                                                e.currentTarget.style.borderColor = lightMode ? '#E5E7EB' : '#223046';
-                                                                e.currentTarget.style.color = lightMode ? '#6B7280' : '#9CA3AF';
+                                                                color: lightMode ? '#374151' : '#D1D5DB',
                                                             }}
                                                         >
                                                             {ticker}
@@ -543,6 +707,7 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                                         </div>
                                     </div>
 
+                                    {/* Autocomplete dropdown */}
                                     <AnimatePresence>
                                         {dropdownOpen && (
                                             <motion.div
@@ -551,11 +716,15 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                                                 initial={{ opacity: 0, y: -8, scale: 0.98 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                                                className="mt-3 rounded-[28px] border overflow-hidden"
+                                                className="mt-3 rounded-3xl border overflow-hidden"
                                                 style={{
                                                     background: cardBg,
                                                     borderColor: cardBorder,
-                                                    boxShadow: lightMode ? '0 24px 60px rgba(15,23,42,0.12)' : '0 24px 64px rgba(0,0,0,0.35)',
+                                                    boxShadow: lightMode
+                                                        ? '0 24px 60px rgba(15,23,42,0.12), inset 0 0 0 1px rgba(255,255,255,0.5)'
+                                                        : '0 24px 64px rgba(0,0,0,0.35)',
+                                                    backdropFilter: 'blur(16px)',
+                                                    WebkitBackdropFilter: 'blur(16px)',
                                                 }}
                                             >
                                                 {results.map((asset, index) => (
@@ -573,158 +742,157 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                                     </AnimatePresence>
                                 </form>
 
-                                <div className="mt-4 text-sm" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                    {ctaSubtext}
+                                <div className="mt-4 text-sm flex flex-wrap items-center gap-3" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                                    <span>{helperText}</span>
+                                    {isSearching && <span className="font-medium">Searching server coverage\u2026</span>}
+                                    {searchError && <span className="text-red-500">{searchError}</span>}
                                 </div>
+
+                                {/* Recent assets */}
+                                {recentAssets.length > 0 && (
+                                    <div
+                                        className="mt-4 rounded-2xl border px-4 py-3 shadow-sm"
+                                        style={{
+                                            background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.02)',
+                                            borderColor: lightMode ? 'rgba(229,231,235,0.6)' : '#1F2937',
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
+                                        }}
+                                    >
+                                        <div className="flex flex-wrap items-center gap-2 text-xs">
+                                            <span className="inline-flex items-center gap-1.5 font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
+                                                <Clock3 className="w-3.5 h-3.5" />
+                                                Recent
+                                            </span>
+                                            {recentAssets.slice(0, 5).map((asset) => (
+                                                <div
+                                                    key={asset.ticker}
+                                                    className="inline-flex items-center gap-1 rounded-full border px-1 py-1 shadow-sm transition-all duration-200"
+                                                    style={{
+                                                        background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
+                                                        borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                                    }}
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => onSearch(asset.ticker, asset)}
+                                                        className="rounded-full px-2.5 py-1 text-xs font-medium"
+                                                        style={{ color: lightMode ? '#374151' : '#D1D5DB' }}
+                                                    >
+                                                        {asset.ticker}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => onTogglePinned(asset)}
+                                                        className="rounded-full px-2 py-1 text-xs"
+                                                        style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}
+                                                        aria-label={`Pin ${asset.ticker}`}
+                                                    >
+                                                        <Bookmark className="w-3 h-3" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </motion.div>
                         </div>
 
+                        {/* ── Right column: Workspace handoff panel ───────────── */}
                         <div
-                            className="rounded-[30px] border p-5 md:p-6"
+                            className="rounded-[2rem] border p-6 md:p-7"
                             style={{
-                                background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(14,20,31,0.86)',
-                                borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                boxShadow: lightMode ? '0 24px 60px rgba(15,23,42,0.08)' : '0 24px 72px rgba(0,0,0,0.30)',
+                                background: lightMode ? 'rgba(255,255,255,0.95)' : 'rgba(14,20,31,0.86)',
+                                borderColor: cardBorder,
+                                boxShadow: lightMode
+                                    ? '0 8px 32px rgba(15,23,42,0.06)'
+                                    : '0 24px 72px rgba(0,0,0,0.30)',
+                                backdropFilter: lightMode ? 'blur(12px)' : undefined,
+                                WebkitBackdropFilter: lightMode ? 'blur(12px)' : undefined,
                             }}
                         >
                             <div className="flex items-start justify-between gap-4">
                                 <div>
-                                    <p className="text-xs uppercase tracking-[0.22em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
-                                        Workspace snapshot
+                                    <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
+                                        Workspace handoff
                                     </p>
-                                    <h2 className="mt-3 text-2xl font-bold leading-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB', fontFamily: 'var(--font-heading)' }}>
-                                        Cleaner search, faster report handoff.
+                                    <h2 className="mt-3 text-2xl font-bold leading-tight tracking-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB', fontFamily: 'var(--font-heading)' }}>
+                                        Cleaner search, explicit coverage, deeper routes.
                                     </h2>
                                 </div>
                                 <div
-                                    className="rounded-full px-3 py-1 text-xs font-medium"
+                                    className="rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm"
                                     style={{
-                                        background: lightMode ? 'rgba(9,9,11,0.04)' : 'rgba(255,255,255,0.06)',
-                                        color: lightMode ? '#6B7280' : '#9CA3AF',
+                                        background: lightMode ? 'linear-gradient(135deg, #1a1a2e, #16213e)' : 'rgba(255,255,255,0.06)',
+                                        color: lightMode ? '#FFFFFF' : '#9CA3AF',
+                                        letterSpacing: '0.05em',
                                     }}
                                 >
-                                    Shared runtime
-                                </div>
-                            </div>
-                            <div className="mt-5 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-                                {WORKSPACE_GUIDES.map((guide) => (
-                                    <div
-                                        key={guide.title}
-                                        className="rounded-[22px] border px-4 py-4"
-                                        style={{
-                                            background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.03)',
-                                            borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                        }}
-                                    >
-                                        <div className="text-sm font-semibold" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>
-                                            {guide.title}
-                                        </div>
-                                        <div className="mt-2 text-xs leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                            {guide.description}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="mt-5 space-y-3">
-                                {DISCOVERY_FEED.slice(0, 3).map((asset) => (
-                                    <button
-                                        key={asset.ticker}
-                                        onClick={() => handleSelect(asset)}
-                                        className="w-full rounded-2xl border px-4 py-4 text-left transition-all"
-                                        style={{
-                                            background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.03)',
-                                            borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                        }}
-                                        type="button"
-                                    >
-                                        <div className="flex items-start justify-between gap-3">
-                                            <div>
-                                                <div className="text-sm font-semibold" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>{asset.name}</div>
-                                                <div className="mt-1 text-xs font-mono" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                                    {asset.ticker} · {asset.cachedReportAge ?? 'Fresh'}
-                                                </div>
-                                                <div className="mt-2 text-xs" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                                    {asset.researcherCount ?? 0} researchers following
-                                                </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-sm font-semibold font-mono" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>
-                                                    {formatPrice(asset.currentPrice)}
-                                                </div>
-                                                <AssetClassBadge cls={asset.assetClass} />
-                                            </div>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="mt-5 grid grid-cols-2 gap-3">
-                                <div
-                                    className="rounded-[22px] border px-4 py-4"
-                                    style={{
-                                        background: lightMode ? 'rgba(249,250,251,0.96)' : 'rgba(255,255,255,0.02)',
-                                        borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                    }}
-                                >
-                                    <div className="text-[11px] uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
-                                        Cached Reports
-                                    </div>
-                                    <div className="mt-2 text-2xl font-semibold" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
-                                        128
-                                    </div>
-                                </div>
-                                <div
-                                    className="rounded-[22px] border px-4 py-4"
-                                    style={{
-                                        background: lightMode ? 'rgba(249,250,251,0.96)' : 'rgba(255,255,255,0.02)',
-                                        borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                    }}
-                                >
-                                    <div className="text-[11px] uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
-                                        Active Researchers
-                                    </div>
-                                    <div className="mt-2 text-2xl font-semibold" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
-                                        2.4k
-                                    </div>
+                                    /workspace/*
                                 </div>
                             </div>
 
-                            <div
-                                className="mt-6 rounded-[26px] border px-5 py-4"
-                                style={{
-                                    background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.03)',
-                                    borderColor: lightMode ? '#E5E7EB' : '#223046',
-                                }}
-                            >
-                                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                                    <div>
-                                        <p className="text-xs uppercase tracking-[0.22em]" style={{ color: lightMode ? '#374151' : '#9CA3AF' }}>
-                                            Quantus live signal performance
-                                        </p>
-                                        <p className="mt-2 text-sm leading-relaxed" style={{ color: lightMode ? '#475569' : '#9CA3AF' }}>
-                                            Strong-buy signals have averaged <strong style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>+11.2% over 30 days</strong>, while shared research keeps refresh cadence moving faster.
-                                        </p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-row sm:flex-wrap">
-                                        {[
-                                            { label: 'Signals tracked', value: '847' },
-                                            { label: 'Directional accuracy', value: '67%' },
-                                        ].map((metric) => (
+                            {/* Guide items with numbered indicators */}
+                            <div className="mt-6 grid gap-3">
+                                {guides.map((guide, index) => (
+                                    <div
+                                        key={guide.title}
+                                        className="rounded-3xl border px-5 py-5 shadow-sm transition-all duration-300"
+                                        style={{
+                                            background: lightMode
+                                                ? 'linear-gradient(135deg, rgba(249,250,251,0.8), rgba(255,255,255,1))'
+                                                : 'rgba(255,255,255,0.03)',
+                                            borderColor: cardBorder,
+                                        }}
+                                    >
+                                        <div className="flex items-start gap-4">
                                             <div
-                                                key={metric.label}
-                                                className="rounded-[20px] border px-4 py-3 min-w-[150px]"
+                                                className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold shadow-md"
                                                 style={{
-                                                    background: lightMode ? 'rgba(249,250,251,0.96)' : 'rgba(255,255,255,0.02)',
-                                                    borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                                    background: lightMode ? '#09090B' : '#FFFFFF',
+                                                    color: lightMode ? '#FFFFFF' : '#09090B',
                                                 }}
                                             >
-                                                <div className="text-[11px] uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
-                                                    {metric.label}
+                                                {index + 1}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-semibold" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>
+                                                    {guide.title}
                                                 </div>
-                                                <div className="mt-2 text-lg font-semibold" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
-                                                    {metric.value}
+                                                <div className="mt-1.5 text-xs leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                                                    {guide.description}
                                                 </div>
                                             </div>
-                                        ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Coverage note */}
+                            <div
+                                className="mt-6 rounded-3xl border px-5 py-5 shadow-sm"
+                                style={{
+                                    background: lightMode ? 'rgba(249,250,251,0.96)' : 'rgba(255,255,255,0.03)',
+                                    borderColor: cardBorder,
+                                }}
+                            >
+                                <div className="flex items-start gap-4">
+                                    <div
+                                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl shadow-sm"
+                                        style={{
+                                            background: lightMode ? 'rgba(249,250,251,1)' : 'rgba(255,255,255,0.06)',
+                                            border: `1px solid ${cardBorder}`,
+                                        }}
+                                    >
+                                        <FileStack className="w-5 h-5" style={{ color: lightMode ? '#111827' : '#F9FAFB' }} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>
+                                            Coverage note
+                                        </p>
+                                        <p className="mt-2 text-sm leading-relaxed" style={{ color: lightMode ? '#475569' : '#9CA3AF' }}>
+                                            Cached assets open directly into shareable report URLs. Everything else opens a starter shell with conservative defaults instead of pretending live data exists.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -733,25 +901,23 @@ export function SearchHero({ onSearch, lightMode }: SearchHeroProps) {
                 </div>
             </div>
 
-            <div className="mt-10">
-                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-6">
+            {/* ── Featured coverage section ───────────────────────────────────── */}
+            <div className="mt-16">
+                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-8">
                     <div>
-                        <p className="text-xs uppercase tracking-[0.22em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>Cached reports</p>
-                        <h2 className="mt-2 text-2xl md:text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: lightMode ? '#09090B' : '#F9FAFB' }}>
-                            Reports available now
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: lightMode ? '#9CA3AF' : '#6B7280' }}>Featured coverage</p>
+                        <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight" style={{ fontFamily: 'var(--font-heading)', color: lightMode ? '#09090B' : '#F9FAFB' }}>
+                            Cached reports available now
                         </h2>
-                        <p className="mt-2 text-sm leading-relaxed max-w-2xl" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                            Open the latest research snapshots directly from cache, then move into the full Quantus report when you need more context.
+                        <p className="mt-4 text-lg leading-relaxed max-w-2xl" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                            Open tracked assets instantly, bookmark the report route, and move deeper into Quantus without leaving the BI Solutions shell.
                         </p>
                     </div>
-                    <div className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm" style={{ color: lightMode ? '#6B7280' : '#9CA3AF', borderColor: lightMode ? '#E5E7EB' : '#223046', background: lightMode ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.03)' }}>
-                        <span className="live-dot" />
-                        Shared intelligence model · refreshed continuously
-                    </div>
+                    <StatusBadge lightMode={lightMode} label={status.label} tone={status.badgeTone} />
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    {DISCOVERY_FEED.slice(0, 6).map((asset) => (
+                <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                    {featuredAssets.map((asset) => (
                         <DiscoveryTile key={asset.ticker} asset={asset} onSelect={handleSelect} lightMode={lightMode} />
                     ))}
                 </div>

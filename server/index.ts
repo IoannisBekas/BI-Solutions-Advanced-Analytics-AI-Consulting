@@ -1,5 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
+import cors from "cors";
+import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -33,7 +35,6 @@ app.use(
             "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
             "connect-src": [
               "'self'",
-              "https://api.emailjs.com",
               "https://api.anthropic.com",
               "https://generativelanguage.googleapis.com",
               "https://www.google-analytics.com",
@@ -56,6 +57,42 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false, limit: "2mb" }));
+
+// ─── CORS ──────────────────────────────────────────────────────────────────
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+app.use(
+  cors({
+    origin: isProduction && allowedOrigins.length > 0 ? allowedOrigins : true,
+    credentials: true,
+  }),
+);
+
+// ─── Rate Limiting ─────────────────────────────────────────────────────────
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Too many requests — try again later." },
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Rate limit reached — try again in a few minutes." },
+});
+
+app.use("/api/", globalLimiter);
+app.use("/api/contact", strictLimiter);
+app.use("/api/auth", strictLimiter);
+
+// ─── JWT Secret (fail-fast in production) ──────────────────────────────────
+if (isProduction && !process.env.JWT_SECRET) {
+  console.error("FATAL: JWT_SECRET env var is required in production");
+  process.exit(1);
+}
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {

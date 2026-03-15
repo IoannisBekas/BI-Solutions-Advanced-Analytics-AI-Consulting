@@ -1,0 +1,138 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1120"/>
+      <stop offset="1" stop-color="#162033"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="400" y2="400">
+      <stop stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="200" y2="200">
+      <stop stop-color="#34D399"/>
+      <stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="cardBg" x1="700" y1="160" x2="1400" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.04" stroke="#FFFFFF" stroke-width="1">
+    <line x1="200" y1="0" x2="200" y2="900"/>
+    <line x1="400" y1="0" x2="400" y2="900"/>
+    <line x1="600" y1="0" x2="600" y2="900"/>
+    <line x1="800" y1="0" x2="800" y2="900"/>
+    <line x1="1000" y1="0" x2="1000" y2="900"/>
+    <line x1="1200" y1="0" x2="1200" y2="900"/>
+    <line x1="1400" y1="0" x2="1400" y2="900"/>
+    <line x1="0" y1="150" x2="1600" y2="150"/>
+    <line x1="0" y1="300" x2="1600" y2="300"/>
+    <line x1="0" y1="450" x2="1600" y2="450"/>
+    <line x1="0" y1="600" x2="1600" y2="600"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+  </g>
+
+  <!-- Decorative blurred circles -->
+  <circle cx="1300" cy="200" r="300" fill="#60A5FA" opacity="0.06"/>
+  <circle cx="300" cy="700" r="250" fill="#A78BFA" opacity="0.06"/>
+  <circle cx="900" cy="450" r="200" fill="#34D399" opacity="0.04"/>
+
+  <!-- Left content area -->
+  <!-- Power BI Solutions badge -->
+  <rect x="120" y="200" width="260" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.08"/>
+  <rect x="136" y="212" width="20" height="20" rx="5" fill="#F7B500"/>
+  <rect x="142" y="218" width="8" height="14" rx="2" fill="#0B1120"/>
+  <rect x="152" y="214" width="5" height="18" rx="2" fill="#0B1120"/>
+  <text x="168" y="228" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" letter-spacing="0.5">Power BI Solutions</text>
+
+  <!-- Main heading -->
+  <text x="120" y="330" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" letter-spacing="-2">Semantic</text>
+  <text x="120" y="410" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" letter-spacing="-2">Model</text>
+  <text x="120" y="490" fill="url(#accent)" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" letter-spacing="-2">Workspace</text>
+
+  <!-- Subtitle -->
+  <text x="120" y="560" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="400">TMDL review &#183; AI guidance &#183; Model diagnostics</text>
+
+  <!-- Tags -->
+  <rect x="120" y="610" width="140" height="36" rx="18" fill="#60A5FA" fill-opacity="0.15"/>
+  <text x="152" y="634" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600">TMDL Review</text>
+
+  <rect x="276" y="610" width="140" height="36" rx="18" fill="#34D399" fill-opacity="0.15"/>
+  <text x="304" y="634" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600">AI Guidance</text>
+
+  <rect x="432" y="610" width="160" height="36" rx="18" fill="#A78BFA" fill-opacity="0.15"/>
+  <text x="458" y="634" fill="#C4B5FD" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600">Optimization</text>
+
+  <!-- Right side: Abstract dashboard card -->
+  <g transform="translate(740, 140)">
+    <!-- Main card -->
+    <rect width="740" height="620" rx="24" fill="url(#cardBg)" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.5"/>
+
+    <!-- Card header -->
+    <rect x="32" y="32" width="676" height="56" rx="12" fill="#FFFFFF" fill-opacity="0.05"/>
+    <circle cx="64" cy="60" r="8" fill="#EF4444" opacity="0.6"/>
+    <circle cx="92" cy="60" r="8" fill="#F59E0B" opacity="0.6"/>
+    <circle cx="120" cy="60" r="8" fill="#22C55E" opacity="0.6"/>
+    <text x="200" y="66" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500">Semantic Model Analysis</text>
+
+    <!-- Model health score -->
+    <rect x="32" y="112" width="320" height="200" rx="16" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.06"/>
+    <text x="56" y="148" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" text-transform="uppercase" letter-spacing="1">MODEL HEALTH</text>
+    <text x="56" y="230" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="80" font-weight="800">87</text>
+    <text x="196" y="230" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="400">/100</text>
+    <rect x="56" y="260" width="260" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.1"/>
+    <rect x="56" y="260" width="226" height="8" rx="4" fill="url(#green)"/>
+    <text x="56" y="290" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600">+12 from last review</text>
+
+    <!-- Issues panel -->
+    <rect x="376" y="112" width="332" height="200" rx="16" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.06"/>
+    <text x="400" y="148" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" letter-spacing="1">DIAGNOSTICS</text>
+
+    <!-- Issue rows -->
+    <rect x="400" y="168" width="284" height="36" rx="8" fill="#EF4444" fill-opacity="0.1"/>
+    <circle cx="420" cy="186" r="5" fill="#EF4444"/>
+    <text x="436" y="191" fill="#FCA5A5" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500">3 Critical issues</text>
+    <text x="648" y="191" fill="#FCA5A5" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" text-anchor="end">Fix now</text>
+
+    <rect x="400" y="214" width="284" height="36" rx="8" fill="#F59E0B" fill-opacity="0.08"/>
+    <circle cx="420" cy="232" r="5" fill="#F59E0B"/>
+    <text x="436" y="237" fill="#FCD34D" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500">7 Warnings</text>
+    <text x="648" y="237" fill="#FCD34D" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" text-anchor="end">Review</text>
+
+    <rect x="400" y="260" width="284" height="36" rx="8" fill="#22C55E" fill-opacity="0.08"/>
+    <circle cx="420" cy="278" r="5" fill="#22C55E"/>
+    <text x="436" y="283" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500">24 Passed checks</text>
+    <text x="648" y="283" fill="#6EE7B7" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" text-anchor="end">Good</text>
+
+    <!-- AI Guidance section -->
+    <rect x="32" y="336" width="676" height="130" rx="16" fill="#FFFFFF" fill-opacity="0.05" stroke="#60A5FA" stroke-opacity="0.2" stroke-width="1.5"/>
+    <rect x="56" y="360" width="80" height="28" rx="14" fill="#60A5FA" fill-opacity="0.15"/>
+    <text x="72" y="379" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700">AI</text>
+    <text x="90" y="379" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500">Insight</text>
+    <text x="56" y="416" fill="#E2E8F0" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500">Consider replacing implicit measures with explicit</text>
+    <text x="56" y="440" fill="#E2E8F0" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500">DAX measures for better maintainability and control.</text>
+
+    <!-- Bottom bar charts -->
+    <rect x="32" y="490" width="676" height="106" rx="16" fill="#FFFFFF" fill-opacity="0.03"/>
+    <text x="56" y="520" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" letter-spacing="1">OPTIMIZATION PROGRESS</text>
+
+    <!-- Progress bars -->
+    <text x="56" y="552" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="13">Naming</text>
+    <rect x="160" y="540" width="400" height="10" rx="5" fill="#FFFFFF" fill-opacity="0.08"/>
+    <rect x="160" y="540" width="340" height="10" rx="5" fill="#60A5FA"/>
+    <text x="580" y="552" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600">85%</text>
+
+    <text x="56" y="578" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="13">Relations</text>
+    <rect x="160" y="566" width="400" height="10" rx="5" fill="#FFFFFF" fill-opacity="0.08"/>
+    <rect x="160" y="566" width="296" height="10" rx="5" fill="#A78BFA"/>
+    <text x="580" y="578" fill="#C4B5FD" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600">74%</text>
+  </g>
+
+  <!-- Bottom decoration line -->
+  <rect x="0" y="880" width="1600" height="20" fill="url(#accent)" opacity="0.15"/>
+</svg>

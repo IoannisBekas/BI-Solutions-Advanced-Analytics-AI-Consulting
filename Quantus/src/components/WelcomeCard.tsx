@@ -13,6 +13,9 @@ interface WelcomeCardProps {
     report: ReportData;
     lightMode?: boolean;
     onSubscribe?: () => void;
+    reportSource?: 'cached' | 'starter';
+    reportMessage?: string;
+    reportDetail?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -189,9 +192,10 @@ function MetricCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function WelcomeCard({ report, lightMode, onSubscribe }: WelcomeCardProps) {
+export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'cached', reportMessage, reportDetail }: WelcomeCardProps) {
     const positive = report.day_change_pct >= 0;
     const isEquity = report.asset_class === 'EQUITY' || report.asset_class === 'ETF';
+    const isStarter = reportSource === 'starter';
     const session = marketSession();
 
     const cardBg = lightMode ? 'rgba(255,255,255,0.97)' : 'rgba(13,18,30,0.98)';
@@ -200,7 +204,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe }: WelcomeCardProps
     const textSecondary = lightMode ? '#475569' : '#9CA3AF';
     const dimBg = lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)';
     const glassBorder = lightMode ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
-    const metrics = (report as ReportData & { metrics?: { risk?: { volatility_30d?: number; beta?: number } } }).metrics;
+    const metrics = report.metrics;
 
     // Momentum-based stats grid — asset-class adaptive
     const statsGrid = [
@@ -260,7 +264,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe }: WelcomeCardProps
                 <div className="flex items-center gap-3 text-xs">
                     <div className="flex items-center gap-1.5" style={{ color: '#6B7280' }}>
                         <Users className="w-3 h-3" />
-                        <span>{report.researcher_count} researchers · {report.cache_age}</span>
+                        <span>{report.researcher_count} researchers · {isStarter ? 'Starter shell' : report.cache_age}</span>
                     </div>
                     <div className="flex items-center gap-1" style={{ color: '#9CA3AF' }}>
                         <Zap className="w-3 h-3 text-blue-400" />
@@ -390,12 +394,21 @@ export function WelcomeCard({ report, lightMode, onSubscribe }: WelcomeCardProps
                     {/* Cache / shared status */}
                     <div
                         className="flex items-center gap-2 text-xs p-2.5 rounded-xl"
-                        style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.16)' }}
+                        style={{
+                            background: isStarter ? 'rgba(245,158,11,0.07)' : 'rgba(16,185,129,0.06)',
+                            border: isStarter ? '1px solid rgba(245,158,11,0.20)' : '1px solid rgba(16,185,129,0.16)',
+                        }}
                     >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                        <span style={{ color: '#10B981' }}>✓ Shared report</span>
+                        {isStarter ? (
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                        ) : (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                        )}
+                        <span style={{ color: isStarter ? '#F59E0B' : '#10B981' }}>
+                            {reportMessage ?? (isStarter ? 'Starter shell loaded' : 'Cached Quantus coverage loaded')}
+                        </span>
                         <span style={{ color: '#6B7280' }}>
-                            · Generated {report.cache_age} · {report.researcher_count} researchers · {report.engine}
+                            · {reportDetail ?? (isStarter ? 'Quantitative sections remain conservative until live coverage exists.' : `Generated ${report.cache_age} · ${report.researcher_count} researchers · ${report.engine}`)}
                         </span>
                     </div>
                 </div>
@@ -480,7 +493,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe }: WelcomeCardProps
                     <span>·</span>
                     <span className="flex items-center gap-1">
                         <Activity className="w-3 h-3 text-emerald-400" />
-                        Analysis complete
+                        {isStarter ? 'Starter shell ready' : 'Analysis complete'}
                     </span>
                 </div>
                 <div className="flex items-center gap-3" style={{ color: '#6B7280' }}>

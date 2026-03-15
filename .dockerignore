@@ -1,0 +1,13 @@
+node_modules
+Quantus/node_modules
+PowerBI_Solutions/app/node_modules
+dist
+data
+.env
+.env.local
+.env.*.local
+*.tar.gz
+.git
+.github
+.claude
+.DS_Store

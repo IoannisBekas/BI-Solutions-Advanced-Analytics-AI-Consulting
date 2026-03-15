@@ -30,6 +30,47 @@ export interface AssetEntry {
     dayChangePct?: number;
 }
 
+export type WorkspaceMode = 'live' | 'mixed' | 'sandbox';
+
+export interface WorkspaceStatus {
+    mode: WorkspaceMode;
+    label: string;
+    description: string;
+    detail: string;
+    badgeTone: 'neutral' | 'success' | 'caution';
+}
+
+export interface WorkspaceMetric {
+    label: string;
+    value: string;
+    supportingText?: string;
+}
+
+export interface WorkspaceGuide {
+    title: string;
+    description: string;
+}
+
+export interface WorkspaceSummary {
+    status: WorkspaceStatus;
+    metrics: WorkspaceMetric[];
+    guides: WorkspaceGuide[];
+    featuredAssets: AssetEntry[];
+    popularTickers: string[];
+}
+
+export type ReportSource = 'cached' | 'starter';
+
+export interface ReportResponse {
+    report: ReportData;
+    source: ReportSource;
+    ticker: string;
+    message: string;
+    detail: string;
+    freshness?: string;
+    status: WorkspaceStatus;
+}
+
 // ─── Insight Cards ───────────────────────────────────────────────────────────
 
 export type InsightCategory = 'momentum' | 'ai' | 'risk' | 'sentiment' | 'model' | 'altdata' | 'institutional' | 'event' | 'knowledge';
@@ -261,6 +302,14 @@ export interface ReportData {
     historical_signals?: HistoricalSignal[];
     data_sources: DataSource[];
     peer_group: string[];
+
+    // Optional extended metrics (populated by some report sources)
+    metrics?: {
+        risk?: {
+            volatility_30d?: number;
+            beta?: number;
+        };
+    };
 }
 
 // ─── Data Sources ────────────────────────────────────────────────────────────

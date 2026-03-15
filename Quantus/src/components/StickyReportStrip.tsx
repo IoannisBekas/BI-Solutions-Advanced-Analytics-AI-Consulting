@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Bell, Users, Zap, ExternalLink } from 'lucide-react';
+import { Bell, Link2, Users, Zap } from 'lucide-react';
 import type { ReportData } from '../types';
 
 // ─── Compact sticky strip that replaces the WelcomeCard once report scrolls ──
@@ -9,6 +9,9 @@ interface StickyReportStripProps {
     visible: boolean;
     lightMode?: boolean;
     onSubscribe?: () => void;
+    reportSource?: 'cached' | 'starter';
+    reportMessage?: string;
+    shareUrl?: string;
 }
 
 function fmtPrice(p: number): string {
@@ -16,20 +19,18 @@ function fmtPrice(p: number): string {
     return `$${p.toFixed(2)}`;
 }
 
-function fmtDate(iso: string): string {
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-export function StickyReportStrip({ report, visible, lightMode, onSubscribe }: StickyReportStripProps) {
+export function StickyReportStrip({ report, visible, lightMode, onSubscribe, reportSource = 'cached', reportMessage, shareUrl }: StickyReportStripProps) {
     const positive = report.day_change_pct >= 0;
+    const isStarter = reportSource === 'starter';
 
     return (
         <motion.div
             initial={{ y: -56, opacity: 0 }}
             animate={{ y: visible ? 0 : -56, opacity: visible ? 1 : 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 text-xs flex-wrap gap-y-2"
+            className="fixed left-0 right-0 z-50 flex items-center justify-between px-6 py-3 text-xs flex-wrap gap-y-2"
             style={{
+                top: 78,
                 background: lightMode ? 'rgba(255,255,255,0.94)' : 'rgba(13,18,30,0.96)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
@@ -53,15 +54,24 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe }: S
                 {/* Separator */}
                 <span style={{ color: '#374151' }}>·</span>
 
-                {/* Report ID + Engine */}
+                <span
+                    className="rounded-full px-2.5 py-1 font-semibold"
+                    style={{
+                        background: isStarter ? 'rgba(245,158,11,0.10)' : 'rgba(16,185,129,0.10)',
+                        color: isStarter ? '#F59E0B' : '#10B981',
+                    }}
+                >
+                    {isStarter ? 'Starter shell' : 'Cached report'}
+                </span>
+                <span style={{ color: '#6B7280' }}>{reportMessage ?? (isStarter ? 'No cached Quantus coverage yet.' : 'Shared Quantus coverage loaded.')}</span>
+
+                <span style={{ color: '#374151' }}>·</span>
+
                 <span className="font-mono" style={{ color: '#6B7280' }}>{report.report_id}</span>
                 <div className="flex items-center gap-1" style={{ color: '#6B7280' }}>
                     <Zap className="w-3 h-3 text-blue-400" />
                     {report.engine}
                 </div>
-
-                {/* Date */}
-                <span style={{ color: '#6B7280' }}>{fmtDate(report.generated_at)}</span>
 
                 {/* Researchers */}
                 <div className="flex items-center gap-1" style={{ color: '#6B7280' }}>
@@ -73,16 +83,15 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe }: S
             {/* Right actions */}
             <div className="flex items-center gap-3">
                 {/* Shareable URL */}
-                <a
-                    href={`https://bisolutions.group/report/${report.report_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <button
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText(shareUrl ?? window.location.href)}
                     className="flex items-center gap-1 transition-colors hover:text-blue-400 cursor-pointer"
                     style={{ color: '#6B7280' }}
                 >
-                    <ExternalLink className="w-3 h-3" />
-                    Share
-                </a>
+                    <Link2 className="w-3 h-3" />
+                    Copy link
+                </button>
 
                 {/* Subscribe */}
                 <button

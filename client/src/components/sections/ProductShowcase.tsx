@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   BarChart3,
+  Bot,
   Brain,
   Database,
   ExternalLink,
@@ -16,7 +17,7 @@ const products = [
   {
     name: "Quantus",
     href: "/quantus",
-    appHref: "/quantus/",
+    appHref: "/quantus/workspace/",
     icon: Brain,
     accent: "bg-blue-100 text-blue-700",
     description:
@@ -39,6 +40,20 @@ const products = [
       "Separate auth flow tailored to the Power BI product",
       "Server-side Anthropic proxy on the BI Solutions domain",
       "Designed for model diagnostics, recommendations, and AI chat",
+    ],
+  },
+  {
+    name: "Greek AI Professional Advisor",
+    href: "/ai-advisor",
+    appHref: "/ai-advisor",
+    icon: Bot,
+    accent: "bg-purple-100 text-purple-700",
+    description:
+      "AI-powered professional guidance across accounting, legal, and consulting domains — trained on Greek law and business practices.",
+    bullets: [
+      "Role-based AI advisors: Accountant, Lawyer, and Consultant",
+      "Powered by Claude with domain-specific Greek expertise",
+      "Instant professional guidance for tax, legal, and strategic questions",
     ],
   },
 ];
@@ -78,7 +93,7 @@ export function ProductShowcase({
           </p>
         </ScrollReveal>
 
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {products.map((product, index) => {
             const Icon = product.icon;
 

@@ -25,12 +25,18 @@ export function Navbar() {
       href: "/power-bi-solutions",
       description: "Semantic model analysis and AI-assisted optimization",
     },
+    {
+      name: "Greek AI Professional Advisor",
+      href: "/ai-advisor",
+      description: "AI-powered guidance for accounting, legal, and consulting",
+    },
   ];
 
   const isProductsActive =
     location === "/products" ||
     location === "/quantus" ||
-    location === "/power-bi-solutions";
+    location === "/power-bi-solutions" ||
+    location === "/ai-advisor";
 
   useEffect(() => {
     const handleScroll = () => {

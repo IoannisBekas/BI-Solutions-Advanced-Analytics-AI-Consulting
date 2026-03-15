@@ -17,6 +17,7 @@ export function Footer() {
   const productLinks = [
     { label: "Quantus", href: "/quantus" },
     { label: "Power BI Solutions", href: "/power-bi-solutions" },
+    { label: "Greek AI Professional Advisor", href: "/ai-advisor" },
   ];
 
   return (

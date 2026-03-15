@@ -20,7 +20,7 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-const QUANTUS_APP_URL = import.meta.env.VITE_QUANTUS_URL || "/quantus/";
+const QUANTUS_APP_URL = import.meta.env.VITE_QUANTUS_URL || "/quantus/workspace/";
 
 const heroMetrics = [
   { label: "Tracked signals", value: "847", icon: BarChart3 },
@@ -539,10 +539,10 @@ export default function QuantusPage() {
 
                   <div className="mt-8 rounded-3xl border border-gray-200/80 bg-gradient-to-br from-gray-50 to-white px-5 py-5 shadow-sm">
                     <p className="text-sm font-semibold text-gray-900">
-                      Product URL
+                      Workspace URL
                     </p>
                     <p className="mt-2 break-all font-mono text-sm text-gray-500">
-                      https://bisolutions.group/quantus/
+                      https://bisolutions.group/quantus/workspace/
                     </p>
                   </div>
                 </div>

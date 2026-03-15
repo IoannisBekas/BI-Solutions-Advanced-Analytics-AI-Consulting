@@ -84,7 +84,7 @@ export function AIAdvisor() {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-black text-white mb-6 shadow-lg shadow-black/20">
             <Bot className="w-6 h-6" />
           </div>
-          <h2 className="text-4xl font-bold font-heading mb-4">AI Professional Advisor</h2>
+          <h2 className="text-4xl font-bold font-heading mb-4">Greek AI Professional Advisor</h2>
           <p className="text-gray-600 max-w-xl mx-auto">
             Select a professional role and ask a question. Our AI, trained on Greek law and business practices, will provide an initial guidance.
           </p>
