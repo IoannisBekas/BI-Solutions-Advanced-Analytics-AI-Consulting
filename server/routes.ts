@@ -67,14 +67,12 @@ function copyProxyResponseHeaders(res: Response, upstream: globalThis.Response) 
   });
 }
 
-const WEB3FORMS_URL = "https://api.web3forms.com/submit";
-
-function getWeb3FormsKey() {
-  return (process.env.WEB3FORMS_ACCESS_KEY || "").trim();
+function getResendApiKey() {
+  return (process.env.RESEND_API_KEY || "").trim();
 }
 
 function getContactRecipient() {
-  return (process.env.CONTACT_RECIPIENT_EMAIL || "").trim();
+  return (process.env.CONTACT_RECIPIENT_EMAIL || "ibekas@ihu.gr").trim();
 }
 
 export async function registerRoutes(
@@ -91,10 +89,10 @@ export async function registerRoutes(
 
   // ─── Contact form proxy ──────────────────────────────────────────────────
   app.post("/api/contact", async (req, res) => {
-    const accessKey = getWeb3FormsKey();
+    const apiKey = getResendApiKey();
     const recipient = getContactRecipient();
 
-    if (!accessKey) {
+    if (!apiKey) {
       res.status(500).json({ message: "Contact form is not configured on the server." });
       return;
     }
@@ -106,30 +104,22 @@ export async function registerRoutes(
     }
 
     try {
-      const payload: Record<string, string> = {
-        access_key: accessKey,
-        name,
-        email,
-        subject,
-        message,
-        from_name: "BI Solutions Contact Form",
-      };
-      if (recipient) {
-        payload.to_email = recipient;
-      }
+      const { Resend } = await import("resend");
+      const resend = new Resend(apiKey);
 
-      const upstream = await fetch(WEB3FORMS_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(15_000),
+      const { error } = await resend.emails.send({
+        from: "BI Solutions Contact <onboarding@resend.dev>",
+        to: recipient,
+        replyTo: email,
+        subject: `[Contact] ${subject}`,
+        html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p><strong>Subject:</strong> ${subject}</p><hr/><p>${message.replace(/\n/g, "<br/>")}</p>`,
       });
 
-      const result = await upstream.json();
-      if ((result as any).success) {
-        res.json({ success: true });
-      } else {
+      if (error) {
+        console.error("Resend error:", error);
         res.status(502).json({ message: "Failed to deliver message. Please try again." });
+      } else {
+        res.json({ success: true });
       }
     } catch (error) {
       console.error("Contact form proxy failed:", error);
