@@ -6,15 +6,14 @@ export interface User {
   name: string;
   tier: string;
   credits: number;
-  reportsThisMonth: number;
-  referralToken: string;
+  reports_this_month: number;
+  referral_token: string | null;
   jurisdiction: string;
 }
 
-interface AuthContextType {
+interface AuthState {
   user: User | null;
   isLoading: boolean;
-  error: string | null;
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => void;
@@ -22,8 +21,8 @@ interface AuthContextType {
   setAuthDialogOpen: (open: boolean) => void;
 }
 
-const TOKEN_KEY = 'powerbi-token';
-const USER_KEY = 'powerbi-user';
+const TOKEN_KEY = 'bisolutions-token';
+const USER_KEY = 'bisolutions-user';
 
 function isValidStoredUser(data: unknown): data is User {
   return (
@@ -35,7 +34,7 @@ function isValidStoredUser(data: unknown): data is User {
   );
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
@@ -49,7 +48,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -77,9 +75,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!cancelled) setUser(data);
       })
       .catch(() => {
-        if (!cancelled && !user) {
+        if (!cancelled) {
           localStorage.removeItem(TOKEN_KEY);
           localStorage.removeItem(USER_KEY);
+          setUser(null);
         }
       })
       .finally(() => {
@@ -91,7 +90,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    setError(null);
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -100,18 +98,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        const msg = data.error || 'Sign in failed.';
-        setError(msg);
-        return { success: false, error: msg };
+        return { success: false, error: data.error || 'Sign in failed.' };
       }
       localStorage.setItem(TOKEN_KEY, data.token);
       setUser(data.user);
       setAuthDialogOpen(false);
       return { success: true };
     } catch {
-      const msg = 'Network error. Please try again.';
-      setError(msg);
-      return { success: false, error: msg };
+      return { success: false, error: 'Network error. Please try again.' };
     } finally {
       setIsLoading(false);
     }
@@ -119,7 +113,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    setError(null);
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
@@ -128,18 +121,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        const msg = data.error || 'Sign up failed.';
-        setError(msg);
-        return { success: false, error: msg };
+        return { success: false, error: data.error || 'Sign up failed.' };
       }
       localStorage.setItem(TOKEN_KEY, data.token);
       setUser(data.user);
       setAuthDialogOpen(false);
       return { success: true };
     } catch {
-      const msg = 'Network error. Please try again.';
-      setError(msg);
-      return { success: false, error: msg };
+      return { success: false, error: 'Network error. Please try again.' };
     } finally {
       setIsLoading(false);
     }
@@ -152,18 +141,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user, isLoading, error, signIn, signUp, signOut, isAuthDialogOpen, setAuthDialogOpen }}
-    >
+    <AuthContext.Provider value={{ user, isLoading, signIn, signUp, signOut, isAuthDialogOpen, setAuthDialogOpen }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+export function useAuth(): AuthState {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  return ctx;
 }

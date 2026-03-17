@@ -99,10 +99,6 @@ function AppContent() {
                   <span className="hidden sm:inline">Model Analyzed</span>
                 </div>
               )}
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 text-amber-800 text-xs border border-amber-200">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>Demo auth</span>
-              </div>
               {user ? (
                 <UserMenu />
               ) : (

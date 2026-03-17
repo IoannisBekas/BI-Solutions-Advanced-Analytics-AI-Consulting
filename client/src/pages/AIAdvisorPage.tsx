@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, Loader2, Briefcase, Scale, Calculator } from "lucide-react";
+import { Send, Bot, Loader2, Briefcase, Scale, Calculator, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthDialog } from "@/components/auth/AuthDialog";
 
 const roles = [
   { id: "accountant", label: "Λογιστής", icon: Calculator, color: "bg-blue-100 text-blue-600" },
@@ -17,6 +19,7 @@ const roles = [
 ];
 
 export default function AIAdvisorPage() {
+  const { user, setAuthDialogOpen } = useAuth();
   const [selectedRole, setSelectedRole] = useState(roles[0].id);
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState<string | null>(null);
@@ -31,11 +34,14 @@ export default function AIAdvisorPage() {
     setResponse(null);
     setErrorMsg(null);
 
+    const token = localStorage.getItem("bisolutions-token");
+
     try {
       const res = await fetch("/api/ai-advisor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           role: selectedRole,
@@ -86,8 +92,27 @@ export default function AIAdvisorPage() {
             </ScrollReveal>
 
             <ScrollReveal direction="up" delay={0.2} width="100%">
+              {!user ? (
+                <Card className="bg-white/80 backdrop-blur-xl border-white/50 shadow-xl p-8 md:p-12 rounded-2xl text-center">
+                  <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
+                    <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center">
+                      <LogIn className="w-7 h-7 text-gray-600" />
+                    </div>
+                    <h3 className="text-xl font-bold font-heading">Sign in to use the AI Advisor</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Create a free BI Solutions account to access the Greek AI Professional Advisor for accounting, legal, and consulting guidance.
+                    </p>
+                    <Button
+                      onClick={() => setAuthDialogOpen(true)}
+                      className="rounded-full bg-black px-8 py-6 text-lg text-white hover:bg-gray-800"
+                    >
+                      Sign In
+                    </Button>
+                  </div>
+                </Card>
+              ) : (
               <Card className="bg-white/80 backdrop-blur-xl border-white/50 shadow-xl p-2 md:p-8 rounded-2xl overflow-hidden">
-                
+
                 {/* Role Selection */}
                 <div className="grid grid-cols-3 gap-2 md:gap-4 mb-8 bg-gray-100/50 p-1.5 rounded-xl">
                   {roles.map((role) => {
@@ -181,10 +206,12 @@ export default function AIAdvisorPage() {
                   </AnimatePresence>
                 </div>
               </Card>
+              )}
             </ScrollReveal>
           </div>
         </section>
       </main>
+      <AuthDialog />
       <Footer />
     </div>
   );

@@ -31,7 +31,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
         setError('');
         const ok = mode === 'signin'
             ? await signIn(email, password)
-            : await signUp(email, name, referralToken);
+            : await signUp(email, name, password, referralToken);
         if (!ok) setError('Authentication failed. Please try again.');
         else onClose();
     };
@@ -67,7 +67,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Zap className="w-5 h-5 text-blue-400" />
-                            <span className="font-bold" style={{ color: tp }}>Quantus Preview Access</span>
+                            <span className="font-bold" style={{ color: tp }}>Quantus</span>
                         </div>
                         <button onClick={onClose} className="cursor-pointer opacity-50 hover:opacity-100">
                             <X className="w-4 h-4" style={{ color: ts }} />
@@ -83,13 +83,6 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                         </div>
                     )}
 
-                    <div
-                        className="rounded-xl p-3 mb-5 text-xs leading-relaxed"
-                        style={{ background: lightMode ? 'rgba(59,130,246,0.05)' : 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)', color: ts }}
-                    >
-                        Separate Quantus auth stays inside this product runtime. This preview sign-in is independent from Power BI Solutions and is intended for workspace access rehearsal before live billing and entitlement flows are connected.
-                    </div>
-
                     {/* Mode tabs */}
                     <div className="flex mb-6 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${border}` }}>
                         {(['signup', 'signin'] as const).map(m => (
@@ -103,7 +96,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                                     border: mode === m ? `1px solid ${lightMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)'}` : '1px solid transparent',
                                 }}
                             >
-                                {m === 'signup' ? 'Create Preview Account' : 'Sign In'}
+                                {m === 'signup' ? 'Create Account' : 'Sign In'}
                             </button>
                         ))}
                     </div>
@@ -157,7 +150,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                             className="w-full py-3 rounded-xl font-semibold text-sm cursor-pointer transition-all hover:scale-[1.02] disabled:opacity-60"
                             style={{ background: '#09090B', color: 'white' }}
                         >
-                            {isLoading ? 'Please wait…' : mode === 'signup' ? 'Create Quantus Preview Account →' : 'Sign In to Quantus →'}
+                            {isLoading ? 'Please wait…' : mode === 'signup' ? 'Create Account →' : 'Sign In →'}
                         </button>
                     </form>
 

@@ -19,7 +19,7 @@ interface AuthState {
     user: User | null;
     isLoading: boolean;
     signIn: (email: string, password: string) => Promise<boolean>;
-    signUp: (email: string, name: string, referralToken?: string) => Promise<boolean>;
+    signUp: (email: string, name: string, password: string, referralToken?: string) => Promise<boolean>;
     signOut: () => void;
     deductCredit: (cost: number) => boolean;
     refreshCredits: () => Promise<void>;
@@ -177,13 +177,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         finally { setIsLoading(false); }
     }, [user]);
 
-    const signUp = useCallback(async (email: string, name: string, referralToken?: string): Promise<boolean> => {
+    const signUp = useCallback(async (email: string, name: string, password: string, referralToken?: string): Promise<boolean> => {
         setIsLoading(true);
         try {
             const res = await fetch('/quantus/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, name, referralToken }),
+                body: JSON.stringify({ email, name, password, referralToken }),
             });
             if (!res.ok) { setIsLoading(false); return false; }
             const data = await res.json();

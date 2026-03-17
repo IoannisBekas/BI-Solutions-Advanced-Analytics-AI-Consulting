@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import type { Server } from "http";
 import { Readable } from "stream";
-import { authRouter } from "./auth";
+import { authRouter, requireAuth } from "./auth";
 
 const QUANTUS_API_PREFIX = "/quantus/api";
 const POWERBI_SOLUTIONS_API_PREFIX = "/power-bi-solutions/api";
@@ -128,7 +128,7 @@ export async function registerRoutes(
   });
 
   // ─── AI Advisor (Anthropic-powered) ─────────────────────────────────────────
-  app.post("/api/ai-advisor", async (req, res) => {
+  app.post("/api/ai-advisor", requireAuth, async (req, res) => {
     const apiKey = getAnthropicApiKey();
     if (!apiKey) {
       res.status(500).json({ success: false, error: "AI Advisor is not configured on the server." });
