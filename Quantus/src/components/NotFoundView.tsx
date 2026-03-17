@@ -18,13 +18,13 @@ export function NotFoundView({ path, onGoWorkspace, onGoSectors }: NotFoundViewP
                 }}
             >
                 <div className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em]" style={{ color: '#64748B', borderColor: '#E5E7EB' }}>
-                    Quantus route
+                    Quantus Investing route
                 </div>
                 <h1 className="mt-5 text-4xl font-bold tracking-[-0.04em]" style={{ color: '#09090B', fontFamily: 'var(--font-heading)' }}>
-                    This Quantus page does not exist.
+                    This Quantus Investing page does not exist.
                 </h1>
                 <p className="mt-4 text-base leading-relaxed" style={{ color: '#64748B' }}>
-                    The route <code style={{ color: '#0F172A' }}>{path}</code> is not part of the Quantus workspace. Use one of the supported product areas below.
+                    The route <code style={{ color: '#0F172A' }}>{path}</code> is not part of the Quantus Investing workspace. Use one of the supported product areas below.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                     <button
@@ -50,7 +50,7 @@ export function NotFoundView({ path, onGoWorkspace, onGoSectors }: NotFoundViewP
                     style={{ color: '#64748B' }}
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    Return to the Quantus home route
+                    Return to the Quantus Investing home route
                 </button>
             </div>
         </div>

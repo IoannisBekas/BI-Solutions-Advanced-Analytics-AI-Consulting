@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
             .then(async (res) => {
                 if (!res.ok) {
-                    throw new Error('Unable to restore Quantus session');
+                    throw new Error('Unable to restore Quantus Investing session');
                 }
                 const data = await res.json();
                 if (!cancelled) {

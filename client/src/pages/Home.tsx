@@ -18,7 +18,7 @@ export default function Home() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Advanced Analytics, AI Consulting, and BI Products"
-        description="BI Solutions Group delivers advanced analytics, AI consulting, Power BI expertise, and native products like Quantus and Power BI Solutions."
+        description="BI Solutions Group delivers advanced analytics, AI consulting, Power BI expertise, and native products like Quantus Investing and Power BI Solutions."
         path="/"
         structuredData={{
           "@context": "https://schema.org",

@@ -40,7 +40,7 @@ export function PWAInstallBanner({ lightMode }: PWAInstallBannerProps) {
                         <div className="flex-1 min-w-0">
                             <div className="font-semibold text-sm mb-0.5"
                                 style={{ color: lightMode ? '#0F172A' : '#F9FAFB' }}>
-                                Add Quantus to Home Screen
+                                Add Quantus Investing to Home Screen
                             </div>
                             <div className="text-xs" style={{ color: '#9CA3AF' }}>
                                 Instant access, offline cached reports, and push alerts.
@@ -102,7 +102,7 @@ export function SWUpdateBanner({ lightMode }: { lightMode?: boolean }) {
                         backdropFilter: 'blur(12px)',
                     }}
                 >
-                    <span style={{ color: lightMode ? '#047857' : '#10B981' }}>⚡ Quantus update available</span>
+                    <span style={{ color: lightMode ? '#047857' : '#10B981' }}>⚡ Quantus Investing update available</span>
                     <button
                         onClick={updateSW}
                         className="font-semibold text-xs px-3 py-1 rounded-lg cursor-pointer hover:scale-105 transition-all"

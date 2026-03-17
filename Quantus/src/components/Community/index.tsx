@@ -247,13 +247,13 @@ export function CommunityThread({
                 )}
             </div>
 
-            {/* Community vs Quantus divergence notice */}
+            {/* Community vs Quantus Investing divergence notice */}
             {comments.filter(c => c.body.toLowerCase().includes('disagree')).length >= 2 && (
                 <div className="flex items-start gap-2 text-xs p-3 rounded-xl"
                     style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
                     <span style={{ color: '#9CA3AF' }}>
-                        <span className="text-amber-400 font-semibold">Community divergence detected</span> — A portion of analysts disagree with this signal. Quantus confidence score adjusted accordingly. See Section A.
+                        <span className="text-amber-400 font-semibold">Community divergence detected</span> — A portion of analysts disagree with this signal. Quantus Investing confidence score adjusted accordingly. See Section A.
                     </span>
                 </div>
             )}

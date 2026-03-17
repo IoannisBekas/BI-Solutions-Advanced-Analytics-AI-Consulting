@@ -160,7 +160,7 @@ function AnalystStrip({
                         className="px-2 py-0.5 rounded-full font-semibold"
                         style={{ background: 'rgba(99,102,241,0.12)', color: '#818CF8', border: '1px solid rgba(99,102,241,0.25)' }}
                     >
-                        Quantus differs
+                        Quantus Investing differs
                     </span>
                 )}
             </div>
@@ -337,7 +337,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                 {/* ── CENTER: Description + Alerts ────────────────────────────── */}
                 <div>
                     <p className="text-xs font-semibold uppercase tracking-widest mb-2 opacity-40" style={{ color: textSecondary }}>
-                        Welcome to Quantus Research Solutions
+                        Welcome to Quantus Investing
                     </p>
 
                     <p className="text-sm leading-relaxed mb-4" style={{ color: textSecondary }}>
@@ -405,7 +405,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                         )}
                         <span style={{ color: isStarter ? '#F59E0B' : '#10B981' }}>
-                            {reportMessage ?? (isStarter ? 'Starter shell loaded' : 'Cached Quantus coverage loaded')}
+                            {reportMessage ?? (isStarter ? 'Starter shell loaded' : 'Cached Quantus Investing coverage loaded')}
                         </span>
                         <span style={{ color: '#6B7280' }}>
                             · {reportDetail ?? (isStarter ? 'Quantitative sections remain conservative until live coverage exists.' : `Generated ${report.cache_age} · ${report.researcher_count} researchers · ${report.engine}`)}

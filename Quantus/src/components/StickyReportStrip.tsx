@@ -63,7 +63,7 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe, rep
                 >
                     {isStarter ? 'Starter shell' : 'Cached report'}
                 </span>
-                <span style={{ color: '#6B7280' }}>{reportMessage ?? (isStarter ? 'No cached Quantus coverage yet.' : 'Shared Quantus coverage loaded.')}</span>
+                <span style={{ color: '#6B7280' }}>{reportMessage ?? (isStarter ? 'No cached Quantus Investing coverage yet.' : 'Shared Quantus Investing coverage loaded.')}</span>
 
                 <span style={{ color: '#374151' }}>·</span>
 

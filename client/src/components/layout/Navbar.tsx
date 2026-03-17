@@ -16,7 +16,7 @@ export function Navbar() {
 
   const productLinks = [
     {
-      name: "Quantus",
+      name: "Quantus Investing",
       href: "/quantus",
       description: "AI-native quantitative research and institutional reporting",
     },

@@ -155,7 +155,7 @@ export function Layout({
                                     color: muted,
                                 }}
                             >
-                                Quantus Research Platform
+                                Quantus Investing Research Platform
                             </div>
                         </div>
                     </button>
@@ -385,7 +385,7 @@ export function Layout({
                                         className="font-semibold tracking-tight"
                                         style={{ fontFamily: 'var(--font-heading)', fontSize: '20px' }}
                                     >
-                                        Quantus
+                                        Quantus Investing
                                     </div>
                                     <div
                                         className="uppercase tracking-[0.24em]"
@@ -489,7 +489,7 @@ export function Layout({
                             Past performance does not guarantee future results, and all investments involve risk.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
-                            <span>© 2026 BI Solutions Group · Quantus · bisolutions.group</span>
+                            <span>© 2026 BI Solutions Group · Quantus Investing · bisolutions.group</span>
                             <span>Meridian v2.4 · Separate product runtime</span>
                         </div>
                     </div>

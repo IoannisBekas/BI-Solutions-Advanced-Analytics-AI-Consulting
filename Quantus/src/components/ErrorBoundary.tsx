@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {
                         </div>
                         <h1 className="text-xl font-bold mb-3 text-white">Something went wrong</h1>
                         <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-                            We encountered an unexpected error while rendering this page. Refresh the app to retry the Quantus workspace.
+                            We encountered an unexpected error while rendering this page. Refresh the app to retry the Quantus Investing workspace.
                         </p>
                         <div className="bg-gray-900 rounded-lg p-3 text-left overflow-x-auto mb-6">
                             <code className="text-xs text-red-300 font-mono whitespace-pre">

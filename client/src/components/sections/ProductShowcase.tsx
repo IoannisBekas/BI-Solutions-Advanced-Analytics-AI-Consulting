@@ -5,7 +5,6 @@ import {
   Brain,
   Database,
   ExternalLink,
-  Shield,
   Sparkles,
 } from "lucide-react";
 import { Link } from "wouter";
@@ -15,7 +14,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 const products = [
   {
-    name: "Quantus",
+    name: "Quantus Investing",
     href: "/quantus",
     appHref: "/quantus/workspace/",
     icon: Brain,
@@ -23,7 +22,7 @@ const products = [
     description:
       "AI-native quantitative research, signal generation, report automation, and institutional-style deep dives across multiple asset classes.",
     bullets: [
-      "Separate product auth and premium workflows",
+      "Institutional-grade research with premium workflows",
       "Native application hosted on the BI Solutions domain",
       "Built for reports, sector packs, and ongoing research operations",
     ],
@@ -37,7 +36,7 @@ const products = [
     description:
       "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
     bullets: [
-      "Separate auth flow tailored to the Power BI product",
+      "Upload and parse TMDL files for instant model review",
       "Server-side Anthropic proxy on the BI Solutions domain",
       "Designed for model diagnostics, recommendations, and AI chat",
     ],
@@ -69,7 +68,7 @@ interface ProductShowcaseProps {
 export function ProductShowcase({
   badge = "Products",
   heading = "Productized analytics, now inside the BI Solutions ecosystem.",
-  description = "bisolutions.group now acts as the brand shell for advisory services and product entry points, with each application keeping its own authentication and runtime.",
+  description = "now acts as the brand shell for advisory services and product entry points, with each application keeping its own workspace and runtime.",
   className = "",
   id,
 }: ProductShowcaseProps) {
@@ -119,9 +118,6 @@ export function ProductShowcase({
                       <p className="mt-4 text-base leading-relaxed text-gray-600">
                         {product.description}
                       </p>
-                    </div>
-                    <div className="hidden rounded-2xl border border-gray-200 bg-gray-50 p-3 text-gray-500 sm:flex">
-                      <Shield className="h-6 w-6" />
                     </div>
                   </div>
 

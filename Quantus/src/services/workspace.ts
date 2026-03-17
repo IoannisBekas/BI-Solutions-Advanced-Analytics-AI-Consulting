@@ -5,7 +5,17 @@ async function readJson<T>(input: RequestInfo | URL, init?: RequestInit): Promis
 
     if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || `Request failed with ${response.status}`);
+        // Try to extract a human-readable message from JSON error responses
+        let message = `Request failed with ${response.status}`;
+        if (errorText) {
+            try {
+                const parsed = JSON.parse(errorText);
+                message = parsed.message ?? parsed.error ?? errorText;
+            } catch {
+                message = errorText;
+            }
+        }
+        throw new Error(message);
     }
 
     return response.json() as Promise<T>;

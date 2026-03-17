@@ -407,8 +407,8 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 {report.vs_consensus && (
                     <div className="p-3 rounded-xl text-xs" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                         <div className="flex items-center gap-3 mb-1">
-                            <span className="font-semibold" style={{ color: textSecondary }}>Quantus vs. Consensus:</span>
-                            <span className={`badge ${signalClass(report.vs_consensus.quantus)}`} style={{ fontSize: '10px' }}>Quantus: {report.vs_consensus.quantus}</span>
+                            <span className="font-semibold" style={{ color: textSecondary }}>Quantus Investing vs. Consensus:</span>
+                            <span className={`badge ${signalClass(report.vs_consensus.quantus)}`} style={{ fontSize: '10px' }}>Quantus Investing: {report.vs_consensus.quantus}</span>
                             <span className="badge badge-neutral" style={{ fontSize: '10px' }}>Consensus: {report.vs_consensus.consensus}</span>
                         </div>
                         <p style={{ color: textSecondary }}>{report.vs_consensus.divergence_explanation}</p>
@@ -418,7 +418,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 {/* Accuracy Tracker */}
                 {report.historical_signals && report.historical_signals.length >= 3 && (
                     <div className="mt-5">
-                        <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B7280' }}>Quantus Accuracy Tracker — {report.ticker}</div>
+                        <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B7280' }}>Quantus Investing Accuracy Tracker — {report.ticker}</div>
                         <div className="space-y-2">
                             {report.historical_signals.map((sig, i) => (
                                 <div key={i} className="flex items-center gap-3 text-xs rounded-lg px-3 py-2" style={{ background: dimBg }}>
@@ -544,7 +544,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                     { label: 'Short Interest', value: report.alternative_data.short_interest, sub: 'Bi-weekly reporting' },
                                     { label: 'IV Rank', value: report.alternative_data.iv_rank, sub: 'vs. 52-week range' },
                                     { label: 'Options Implied Move', value: report.alternative_data.implied_move, sub: 'Market-priced risk' },
-                                    { label: 'Earnings Call NLP', value: report.alternative_data.transcript_score, sub: 'Quantus corpus · management confidence' },
+                                    { label: 'Earnings Call NLP', value: report.alternative_data.transcript_score, sub: 'Quantus Investing corpus · management confidence' },
                                 ].map(item => (
                                     <div key={item.label} className="rounded-xl p-3" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                                         <div className="text-xs mb-1" style={{ color: '#6B7280' }}>{item.label}</div>
@@ -761,7 +761,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     ))}
                 </div>
                 <p className="mt-3" style={{ color: '#6B7280' }}>
-                    For educational research purposes only. Not financial advice. Quantus Research Solutions · {report.engine} · bisolutions.group
+                    For educational research purposes only. Not financial advice. Quantus Investing · {report.engine} · bisolutions.group
                 </p>
             </div>
         </div>

@@ -6,7 +6,6 @@ import {
   LineChart,
   MessageSquare,
   Search,
-  Shield,
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,16 +51,16 @@ const features = [
       "Generate immediate improvement suggestions for readability, maintainability, and performance-sensitive areas.",
   },
   {
-    icon: Shield,
-    title: "Separate Product Auth",
+    icon: Sparkles,
+    title: "Security & Best Practices",
     description:
-      "Keep Power BI Solutions access and state isolated from Quantus while still living under the BI Solutions parent brand.",
+      "Evaluate model security settings, role definitions, and access controls to mitigate risk and maintain data privacy standards.",
   },
 ];
 
 const launchChecklist = [
   "Open the native Power BI Solutions app on the BI Solutions domain.",
-  "Authenticate with the product-specific sign-in flow.",
+  "Sign in to your BI Solutions account to get started.",
   "Upload TMDL files, review model diagnostics, and continue with AI-assisted analysis.",
 ];
 
@@ -108,7 +107,7 @@ export default function PowerBISolutionsPage() {
                 </span>
               </h1>
               <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
-                Bring TMDL review, model diagnostics, AI guidance, and product-specific authentication into a dedicated workspace hosted under the BI Solutions domain.
+                Bring TMDL review, model diagnostics, AI guidance, and actionable recommendations into a dedicated workspace hosted under the BI Solutions domain.
               </p>
 
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -166,14 +165,14 @@ export default function PowerBISolutionsPage() {
               <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
                 <div>
                   <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white">
-                    <Shield className="h-4 w-4" />
-                    Separate auth, shared domain
+                    <Sparkles className="h-4 w-4" />
+                    Dedicated workspace
                   </div>
                   <h2 className="text-3xl md:text-4xl font-bold font-heading tracking-tight">
                     Launch a dedicated Power BI workflow without leaving the BI Solutions ecosystem
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
-                    The BI Solutions site becomes the product shell and discovery layer, while the native Power BI Solutions app handles uploads, analysis, recommendations, chat, and product-specific sessions at `/power-bi-solutions/`.
+                    The BI Solutions site becomes the product shell and discovery layer, while the native Power BI Solutions app handles uploads, analysis, recommendations, and AI-assisted chat workflows.
                   </p>
                 </div>
 

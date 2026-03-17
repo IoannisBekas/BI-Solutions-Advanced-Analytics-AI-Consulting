@@ -12,7 +12,7 @@ export default function Products() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Products"
-        description="Explore Quantus, Power BI Solutions, and Greek AI Professional Advisor — native products delivered under the bisolutions.group brand."
+        description="Explore Quantus Investing, Power BI Solutions, and Greek AI Professional Advisor — native products delivered under the bisolutions.group brand."
         path="/products"
         structuredData={{
           "@context": "https://schema.org",
@@ -40,7 +40,7 @@ export default function Products() {
                   Native product experiences inside the BI Solutions ecosystem.
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                  Quantus, Power BI Solutions, and the Greek AI Professional Advisor
+                  Quantus Investing, Power BI Solutions, and the Greek AI Professional Advisor
                   now live under the same BI Solutions brand domain, each with
                   its own runtime while staying discoverable from one shared
                   site.
@@ -57,7 +57,7 @@ export default function Products() {
                       variant="outline"
                       className="rounded-full border-gray-300 px-8"
                     >
-                      Open Quantus
+                      Open Quantus Investing
                     </Button>
                   </a>
                 </div>

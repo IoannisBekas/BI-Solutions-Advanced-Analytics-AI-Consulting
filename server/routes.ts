@@ -230,7 +230,7 @@ export async function registerRoutes(
       console.error("Quantus API proxy failed:", error);
       res.status(502).json({
         message:
-          "Unable to reach the Quantus API target from the BI Solutions server.",
+          "Unable to reach the Quantus Investing API target from the BI Solutions server.",
       });
     }
   });

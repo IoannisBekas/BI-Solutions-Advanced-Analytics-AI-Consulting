@@ -105,7 +105,7 @@ self.addEventListener('push', (event: PushEvent) => {
     try {
         payload = event.data.json();
     } catch {
-        payload = { type: 'generic', title: 'Quantus Update', body: event.data.text() };
+        payload = { type: 'generic', title: 'Quantus Investing Update', body: event.data.text() };
     }
 
     const icons: Record<string, string> = {
@@ -117,11 +117,11 @@ self.addEventListener('push', (event: PushEvent) => {
     };
 
     const badgeColors: Record<string, string> = {
-        SIGNAL_CHANGE: 'Quantus · Signal',
-        NEW_REPORT: 'Quantus · Report',
-        MATERIAL_EVENT: 'Quantus · Event',
-        EARNINGS_FLAG: 'Quantus · Earnings',
-        CROSS_TICKER_ALERT: 'Quantus · Alert',
+        SIGNAL_CHANGE: 'Quantus Investing · Signal',
+        NEW_REPORT: 'Quantus Investing · Report',
+        MATERIAL_EVENT: 'Quantus Investing · Event',
+        EARNINGS_FLAG: 'Quantus Investing · Earnings',
+        CROSS_TICKER_ALERT: 'Quantus Investing · Alert',
     };
 
     const notifOptions: NotificationOptions = {
@@ -139,7 +139,7 @@ self.addEventListener('push', (event: PushEvent) => {
 
     event.waitUntil(
         self.registration.showNotification(
-            badgeColors[payload.type] ?? 'Quantus Research Solutions',
+            badgeColors[payload.type] ?? 'Quantus Investing',
             notifOptions,
         ),
     );

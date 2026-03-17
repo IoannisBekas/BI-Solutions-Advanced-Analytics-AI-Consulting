@@ -40,7 +40,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     ))}
                 </div>
                 <p className="mt-3" style={{ color: '#6B7280' }}>
-                    For educational research purposes only. Not financial advice. Quantus Research Solutions · {report.engine} · bisolutions.group
+                    For educational research purposes only. Not financial advice. Quantus Investing · {report.engine} · bisolutions.group
                 </p>
             </div>
             <div className="mt-4">

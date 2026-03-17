@@ -7,7 +7,7 @@ export type Jurisdiction = 'US' | 'EU' | 'UK' | 'CA' | 'JP' | 'GLOBAL';
 // ─── Disclaimer text by jurisdiction × asset class ───────────────────────────
 
 const BASE: Record<Jurisdiction, string> = {
-    US: 'For educational and research purposes only. Past performance does not guarantee future results. This is not financial, investment, or legal advice. Quantus Research Solutions is not a registered investment adviser under the Investment Advisers Act of 1940.',
+    US: 'For educational and research purposes only. Past performance does not guarantee future results. This is not financial, investment, or legal advice. Quantus Investing is not a registered investment adviser under the Investment Advisers Act of 1940.',
     EU: 'This communication does not constitute investment research within the meaning of MiFID II Article 36 or a personal investment recommendation. It is provided for informational purposes to professional investors only. Past performance is not a reliable indicator of future results.',
     UK: 'This material is a marketing communication and has not been prepared in accordance with legal requirements designed to promote the independence of investment research. Not approved for distribution to retail clients under the Financial Services and Markets Act 2000. Professional investor use only.',
     CA: 'This report is provided for informational purposes only and does not constitute investment advice as defined by applicable securities legislation including the Ontario Securities Act and applicable CSA regulations. Not intended for retail investor distribution.',

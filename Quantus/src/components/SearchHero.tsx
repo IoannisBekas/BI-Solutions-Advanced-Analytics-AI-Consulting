@@ -251,7 +251,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
     const status = workspaceSummary?.status ?? {
         mode: 'mixed',
         label: 'Loading workspace',
-        description: 'Fetching coverage data for the Quantus workspace.',
+        description: 'Fetching coverage data for the Quantus Investing workspace.',
         detail: 'Search results will show cached coverage and freshness.',
         badgeTone: 'neutral' as const,
     };
@@ -357,9 +357,9 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
     const cardBorder = lightMode ? 'rgba(229,231,235,0.8)' : '#223046';
     const headline = workspaceSummary
         ? 'Search coverage first, then move into signal.'
-        : 'Opening the Quantus workspace\u2026';
+        : 'Opening the Quantus Investing workspace\u2026';
     const bodyCopy = workspaceSummary
-        ? 'Every search now runs against the Quantus server. Cached reports open instantly, and uncached assets hand off into a clearly labeled starter shell.'
+        ? 'Every search now runs against the Quantus Investing server. Cached reports open instantly, and uncached assets hand off into a clearly labeled starter shell.'
         : 'Fetching workspace status, cached coverage, and server-side search.';
     const helperText = results[0]?.hasCachedReport
         ? `Cached ${results[0].cachedReportAge} \u00B7 ${results[0].researcherCount ?? 0} researchers`
@@ -399,7 +399,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                 }}
                             >
                                 <Sparkles className="w-3.5 h-3.5" />
-                                Quantus workspace on the BI Solutions platform
+                                Quantus Investing workspace on the BI Solutions platform
                             </div>
 
                             {/* Hero heading */}
@@ -498,7 +498,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                         {resumeAsset.ticker} · {resumeAsset.name}
                                                     </div>
                                                     <p className="mt-2 text-sm leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                                        Jump back into the most recent Quantus route without typing again.
+                                                        Jump back into the most recent Quantus Investing route without typing again.
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -600,7 +600,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                     Coverage search
                                                 </p>
                                                 <p className="mt-1 text-sm leading-relaxed" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                                    Search by ticker, company, crypto, or commodity and open the report route that Quantus knows about.
+                                                    Search by ticker, company, crypto, or commodity and open the report route that Quantus Investing knows about.
                                                 </p>
                                             </div>
                                             <StatusBadge lightMode={lightMode} label={status.mode === 'mixed' ? 'Cached + starter handoff' : status.label} tone={status.badgeTone} />
@@ -910,7 +910,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                             Cached reports available now
                         </h2>
                         <p className="mt-4 text-lg leading-relaxed max-w-2xl" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                            Open tracked assets instantly, bookmark the report route, and move deeper into Quantus without leaving the BI Solutions shell.
+                            Open tracked assets instantly, bookmark the report route, and move deeper into Quantus Investing without leaving the BI Solutions shell.
                         </p>
                     </div>
                     <StatusBadge lightMode={lightMode} label={status.label} tone={status.badgeTone} />

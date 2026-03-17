@@ -258,7 +258,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
 
                 {/* Footer disclaimer */}
                 <p className="text-xs text-center mt-8" style={{ color: '#6B7280' }}>
-                    Quantus Research Solutions · Not investment advice · bisolutions.group/methodology for full model documentation
+                    Quantus Investing · Not investment advice · bisolutions.group/methodology for full model documentation
                 </p>
             </div>
         </div>

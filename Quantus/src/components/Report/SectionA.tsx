@@ -50,8 +50,8 @@ export function SectionA({ report, lightMode }: Props) {
             {report.vs_consensus && (
                 <div className="p-3 rounded-xl text-xs" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                     <div className="flex items-center gap-3 mb-1">
-                        <span className="font-semibold" style={{ color: textSecondary }}>Quantus vs. Consensus:</span>
-                        <span className={`badge ${signalClass(report.vs_consensus.quantus)}`} style={{ fontSize: '10px' }}>Quantus: {report.vs_consensus.quantus}</span>
+                        <span className="font-semibold" style={{ color: textSecondary }}>Quantus Investing vs. Consensus:</span>
+                        <span className={`badge ${signalClass(report.vs_consensus.quantus)}`} style={{ fontSize: '10px' }}>Quantus Investing: {report.vs_consensus.quantus}</span>
                         <span className="badge badge-neutral" style={{ fontSize: '10px' }}>Consensus: {report.vs_consensus.consensus}</span>
                     </div>
                     <p style={{ color: textSecondary }}>{report.vs_consensus.divergence_explanation}</p>
@@ -60,7 +60,7 @@ export function SectionA({ report, lightMode }: Props) {
 
             {report.historical_signals && report.historical_signals.length >= 3 && (
                 <div className="mt-5">
-                    <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B7280' }}>Quantus Accuracy Tracker — {report.ticker}</div>
+                    <div className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B7280' }}>Quantus Investing Accuracy Tracker — {report.ticker}</div>
                     <div className="space-y-2">
                         {report.historical_signals.map((sig, i) => (
                             <div key={i} className="flex items-center gap-3 text-xs rounded-lg px-3 py-2" style={{ background: dimBg }}>

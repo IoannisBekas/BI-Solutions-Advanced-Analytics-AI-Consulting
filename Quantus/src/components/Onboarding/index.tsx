@@ -17,7 +17,7 @@ const ALL_STEPS: TourStep[] = [
     {
         id: 'regime',
         title: 'Regime Badge — Why it comes first',
-        body: 'Markets cycle through distinct regimes: uptrend, downtrend, mean-reverting, high-volatility. Quantus leads with regime because the same signal (RSI 67) means opposite things in a Strong Uptrend vs a High-Volatility regime. Regime determines which strategies to activate — and which to suppress.',
+        body: 'Markets cycle through distinct regimes: uptrend, downtrend, mean-reverting, high-volatility. Quantus Investing leads with regime because the same signal (RSI 67) means opposite things in a Strong Uptrend vs a High-Volatility regime. Regime determines which strategies to activate — and which to suppress.',
         targetId: 'regime-badge',
         placement: 'bottom',
         priority: 'any',
@@ -33,7 +33,7 @@ const ALL_STEPS: TourStep[] = [
     {
         id: 'fundamentals',
         title: 'Fundamentals — Anchoring value stocks',
-        body: 'For value-oriented equities, the P/E, market cap, 52-week range, and insider trend are your anchors. Quantus combines these with the Kelly criterion for position sizing — so you see both the opportunity and the appropriate stake simultaneously.',
+        body: 'For value-oriented equities, the P/E, market cap, 52-week range, and insider trend are your anchors. Quantus Investing combines these with the Kelly criterion for position sizing — so you see both the opportunity and the appropriate stake simultaneously.',
         targetId: 'metrics-panel',
         placement: 'bottom',
         priority: 'value',

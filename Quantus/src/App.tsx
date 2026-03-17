@@ -138,7 +138,7 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
             industry: asset.sector ?? 'Unclassified',
             market_cap: 'Unavailable',
             asset_class: asset.assetClass,
-            description: `${asset.name} is visible in the Quantus workspace, but the report service was unavailable during load. This emergency starter shell keeps the URL and workflow intact until the API is reachable again.`,
+            description: `${asset.name} is visible in the Quantus Investing workspace, but the report service was unavailable during load. This emergency starter shell keeps the URL and workflow intact until the API is reachable again.`,
             current_price: asset.currentPrice ?? 0,
             day_change: asset.dayChange ?? 0,
             day_change_pct: asset.dayChangePct ?? 0,
@@ -146,7 +146,7 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
             week_52_low: asset.currentPrice ?? 0,
             regime: {
                 label: 'Transitional',
-                implication: 'Quantus could not complete the report handoff because the API request failed.',
+                implication: 'Quantus Investing could not complete the report handoff because the API request failed.',
                 active_strategies: ['Manual review'],
                 suppressed_strategies: ['Automated conviction signals'],
             },
@@ -167,14 +167,14 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
                 arima: { forecast: 'Unavailable', weight: 'N/A', accuracy: 'N/A' },
                 ensemble_forecast: 'Unavailable',
                 confidence_band: { low: 'N/A', high: 'N/A' },
-                regime_accuracy_note: 'The Quantus API request failed before a model run could be loaded.',
+                regime_accuracy_note: 'The Quantus Investing API request failed before a model run could be loaded.',
             },
             signal_cards: [
                 {
                     label: 'Workspace state',
                     value: 'API unavailable',
                     trend: 'neutral',
-                    plain_note: 'This page is an emergency fallback generated in the browser because the Quantus API could not be reached.',
+                    plain_note: 'This page is an emergency fallback generated in the browser because the Quantus Investing API could not be reached.',
                     data_source: 'Client fallback',
                     freshness: 'Unavailable',
                     quality_score: 15,
@@ -206,7 +206,7 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
             strategy: {
                 action: 'NEUTRAL',
                 confidence: 20,
-                regime_context: 'The Quantus API request failed, so this report should not be treated as a signal.',
+                regime_context: 'The Quantus Investing API request failed, so this report should not be treated as a signal.',
                 entry_zone: 'Unavailable',
                 target: 'Unavailable',
                 stop_loss: 'Unavailable',
@@ -214,8 +214,8 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
                 position_size_pct: 'Manual only',
                 kelly_derived_max: 'Unavailable',
             },
-            narrative_executive_summary: 'Quantus could not load the report service for this ticker. The route remains available, but this page is only an emergency fallback.',
-            narrative_plain: 'Refresh once the Quantus API is reachable again.',
+            narrative_executive_summary: 'Quantus Investing could not load the report service for this ticker. The route remains available, but this page is only an emergency fallback.',
+            narrative_plain: 'Refresh once the Quantus Investing API is reachable again.',
             researcher_count: 0,
             generated_at: new Date().toISOString(),
             cache_age: 'Unavailable',
@@ -224,7 +224,7 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
         },
         source: 'starter',
         ticker: asset.ticker,
-        message: 'Quantus report service unavailable.',
+        message: 'Quantus Investing report service unavailable.',
         detail: 'The API request failed, so an emergency starter shell was opened locally.',
         freshness: 'Unavailable',
         status,
@@ -281,7 +281,7 @@ function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
                 color: lightMode ? '#6B7280' : '#9CA3AF',
             }}
         >
-            Loading Quantus workspace panel...
+            Loading Quantus Investing workspace panel...
         </div>
     );
 }
@@ -384,20 +384,20 @@ function App() {
 
     useEffect(() => {
         const pageTitle = route.view === 'report'
-            ? `${route.ticker ?? 'Quantus'} Research Report | BI Solutions Group`
+            ? `${route.ticker ?? 'Quantus Investing'} Research Report | BI Solutions Group`
             : route.view === 'sectors'
-                ? 'Quantus Sector Packs | BI Solutions Group'
+                ? 'Quantus Investing Sector Packs | BI Solutions Group'
                 : route.view === 'watchlist'
-                    ? 'Quantus Watchlist | BI Solutions Group'
+                    ? 'Quantus Investing Watchlist | BI Solutions Group'
                     : route.view === 'archive'
-                        ? 'Quantus Archive | BI Solutions Group'
+                        ? 'Quantus Investing Archive | BI Solutions Group'
                         : route.view === 'accuracy'
-                            ? 'Quantus Accuracy | BI Solutions Group'
+                            ? 'Quantus Investing Accuracy | BI Solutions Group'
                             : route.view === 'methodology'
-                                ? 'Quantus Methodology | BI Solutions Group'
+                                ? 'Quantus Investing Methodology | BI Solutions Group'
                                 : route.view === 'notFound'
-                                    ? 'Quantus Not Found | BI Solutions Group'
-                                    : 'Quantus Workspace | BI Solutions Group';
+                                    ? 'Quantus Investing Not Found | BI Solutions Group'
+                                    : 'Quantus Investing Workspace | BI Solutions Group';
 
         document.title = pageTitle;
 
@@ -535,8 +535,8 @@ function App() {
                 }
 
                 const completionText = responsePayload?.source === 'cached'
-                    ? 'Cached Quantus coverage is ready.'
-                    : 'Starter shell ready — no cached Quantus coverage exists yet.';
+                    ? 'Cached Quantus Investing coverage is ready.'
+                    : 'Starter shell ready — no cached Quantus Investing coverage exists yet.';
 
                 setInsights((previous) => [
                     ...previous,

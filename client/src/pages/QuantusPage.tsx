@@ -31,7 +31,7 @@ const heroMetrics = [
 const marketCoverage = [
   { label: "Coverage", value: "Equities, ETFs, crypto, and commodities", icon: TrendingUp },
   { label: "Flow", value: "Search, cached reports, deep dives, and sector packs", icon: Zap },
-  { label: "Positioning", value: "Native BI Solutions product with a dedicated research workspace", icon: Shield },
+  { label: "Positioning", value: "Native BI Solutions product with a dedicated research workspace", icon: TrendingUp },
 ];
 
 const previewSignals = [
@@ -75,7 +75,7 @@ const capabilities = [
     icon: Sparkles,
     title: "Premium Surface",
     description:
-      "Quantus now lives inside the BI Solutions ecosystem with a cleaner entry point and stronger product identity.",
+      "Quantus Investing now lives inside the BI Solutions ecosystem with a cleaner entry point and stronger product identity.",
   },
 ];
 
@@ -93,7 +93,7 @@ const workflowStages = [
   {
     title: "Continue deeper",
     description:
-      "Move into deep dives, sector packs, and more advanced Quantus workflows without leaving the product shell.",
+      "Move into deep dives, sector packs, and more advanced Quantus Investing workflows without leaving the product shell.",
   },
 ];
 
@@ -138,14 +138,14 @@ export default function QuantusPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#fafbfc] via-white to-[#f5f6f8] font-sans text-foreground">
       <Seo
-        title="Quantus"
-        description="Quantus is BI Solutions Group's AI-native quantitative research platform for signals, reports, sector packs, and institutional-style analysis."
+        title="Quantus Investing"
+        description="Quantus Investing is BI Solutions Group's AI-native quantitative research platform for signals, reports, sector packs, and institutional-style analysis."
         path="/quantus"
         type="website"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "Quantus",
+          name: "Quantus Investing",
           applicationCategory: "FinanceApplication",
           operatingSystem: "Web",
           url: "https://bisolutions.group/quantus",
@@ -208,7 +208,7 @@ export default function QuantusPage() {
                 <span className="relative flex h-2 w-2">
                   <span className="inline-flex h-2 w-2 rounded-full bg-black" />
                 </span>
-                Quantus · Native product on bisolutions.group
+                Quantus Investing · Native product on bisolutions.group
               </div>
 
               <h1 className="mt-7 max-w-4xl text-4xl font-bold font-heading tracking-tight leading-[1.02] md:text-6xl xl:text-[4.7rem]">
@@ -228,7 +228,7 @@ export default function QuantusPage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-600 md:text-xl">
-                Quantus helps teams search markets quickly, load research faster,
+                Quantus Investing helps teams search markets quickly, load research faster,
                 and move into deeper signal workflows without the usual sprawl of
                 disconnected tools and scattered analysis.
               </p>
@@ -252,7 +252,7 @@ export default function QuantusPage() {
                 <a href={QUANTUS_APP_URL}>
                   <Button className="group/btn relative overflow-hidden rounded-full bg-black px-8 py-6 text-lg text-white shadow-lg shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-black/30 hover:-translate-y-0.5">
                     <span className="relative z-10 flex items-center gap-2">
-                      Open Quantus
+                      Open Quantus Investing
                       <ArrowRight className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" />
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-0 transition-opacity group-hover/btn:opacity-100" />
@@ -304,7 +304,7 @@ export default function QuantusPage() {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200/80 pb-4">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                          Quantus workspace preview
+                          Quantus Investing workspace preview
                         </p>
                         <h2 className="mt-2 text-2xl font-bold font-heading tracking-tight text-black md:text-[2rem]">
                           From search to signal in one place.
@@ -468,7 +468,7 @@ export default function QuantusPage() {
             <div className="max-w-3xl">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/80 px-4 py-2 text-sm font-medium text-gray-500 shadow-sm">
                 <Sparkles className="h-3.5 w-3.5" />
-                Quantus capabilities
+                Quantus Investing capabilities
               </div>
               <h2 className="mt-1 text-4xl font-bold font-heading tracking-tight md:text-5xl">
                 A research product, not just a{" "}
@@ -477,7 +477,7 @@ export default function QuantusPage() {
                 </span>
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                Quantus is designed to help users move faster from idea to context,
+                Quantus Investing is designed to help users move faster from idea to context,
                 then from context into a deeper market workflow.
               </p>
             </div>
@@ -527,14 +527,14 @@ export default function QuantusPage() {
                     Research workflow
                   </div>
                   <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
-                    Quantus should feel native to BI Solutions and still behave like a{" "}
+                    Quantus Investing should feel native to BI Solutions and still behave like a{" "}
                     <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 bg-clip-text text-transparent">
                       serious product.
                     </span>
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
                     The public page should establish trust quickly, then hand users
-                    into the dedicated Quantus workspace for the actual research flow.
+                    into the dedicated Quantus Investing workspace for the actual research flow.
                   </p>
 
                   <div className="mt-8 rounded-3xl border border-gray-200/80 bg-gradient-to-br from-gray-50 to-white px-5 py-5 shadow-sm">
@@ -572,7 +572,7 @@ export default function QuantusPage() {
                   <a href={QUANTUS_APP_URL} className="block">
                     <Button className="group/cta relative w-full overflow-hidden rounded-full bg-black py-6 text-lg text-white shadow-lg shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-black/30 hover:-translate-y-0.5">
                       <span className="relative z-10 flex items-center justify-center gap-2">
-                        Enter Quantus workspace
+                        Enter Quantus Investing workspace
                         <ArrowRight className="h-5 w-5 transition-transform group-hover/cta:translate-x-1" />
                       </span>
                       <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black opacity-0 transition-opacity group-hover/cta:opacity-100" />
