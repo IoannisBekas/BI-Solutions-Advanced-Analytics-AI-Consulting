@@ -37,7 +37,7 @@ export default function Blog() {
                 }}
             />
             <Navbar />
-            <main>
+            <main id="main-content">
                 {/* Hero Section */}
                 <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-b from-gray-50 to-white">
                     <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -83,7 +83,7 @@ export default function Blog() {
                                         >
                                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                                                 <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-gray-100">
-                                                    <img
+                                                    <img loading="lazy"
                                                         src={featuredPost.featuredImage}
                                                         alt={featuredPost.title}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -136,7 +136,7 @@ export default function Blog() {
                                                     className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300 h-full flex flex-col"
                                                 >
                                                     <div className="aspect-[16/10] overflow-hidden">
-                                                        <img
+                                                        <img loading="lazy"
                                                             src={post.featuredImage}
                                                             alt={post.title}
                                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -186,7 +186,7 @@ export default function Blog() {
                                                 className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300 h-full flex flex-col"
                                             >
                                                 <div className="aspect-[16/10] overflow-hidden">
-                                                    <img
+                                                    <img loading="lazy"
                                                         src={post.featuredImage}
                                                         alt={post.title}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"

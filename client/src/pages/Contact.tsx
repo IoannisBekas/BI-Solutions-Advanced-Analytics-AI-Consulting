@@ -71,7 +71,7 @@ export default function Contact() {
         path="/contact"
       />
       <Navbar />
-      <main className="pt-32 pb-20">
+      <main id="main-content" className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
             <div>
@@ -146,18 +146,23 @@ export default function Contact() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold uppercase tracking-wider text-gray-500">Name</label>
+                    <label htmlFor="contact-name" className="text-sm font-semibold uppercase tracking-wider text-gray-500">Name</label>
                     <Input
+                      id="contact-name"
                       {...register("name")}
+                      required
                       placeholder="John Doe"
                       className={`bg-white border-gray-200 h-12 focus-visible:ring-black ${errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                     />
                     {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold uppercase tracking-wider text-gray-500">Email</label>
+                    <label htmlFor="contact-email" className="text-sm font-semibold uppercase tracking-wider text-gray-500">Email</label>
                     <Input
+                      id="contact-email"
+                      type="email"
                       {...register("email")}
+                      required
                       placeholder="john@example.com"
                       className={`bg-white border-gray-200 h-12 focus-visible:ring-black ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                     />
@@ -166,9 +171,11 @@ export default function Contact() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold uppercase tracking-wider text-gray-500">Subject</label>
+                  <label htmlFor="contact-subject" className="text-sm font-semibold uppercase tracking-wider text-gray-500">Subject</label>
                   <Input
+                    id="contact-subject"
                     {...register("subject")}
+                    required
                     placeholder="Project Inquiry"
                     className={`bg-white border-gray-200 h-12 focus-visible:ring-black ${errors.subject ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   />
@@ -176,9 +183,11 @@ export default function Contact() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold uppercase tracking-wider text-gray-500">Message</label>
+                  <label htmlFor="contact-message" className="text-sm font-semibold uppercase tracking-wider text-gray-500">Message</label>
                   <Textarea
+                    id="contact-message"
                     {...register("message")}
+                    required
                     className={`w-full min-h-[150px] p-4 rounded-md border border-gray-200 bg-white focus-visible:ring-black resize-y ${errors.message ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                     placeholder="Tell us about your project..."
                   />

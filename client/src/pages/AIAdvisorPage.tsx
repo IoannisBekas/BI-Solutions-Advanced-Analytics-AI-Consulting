@@ -72,7 +72,7 @@ export default function AIAdvisorPage() {
         path="/ai-advisor"
       />
       <Navbar />
-      <main className="pt-32 pb-20">
+      <main id="main-content" className="pt-32 pb-20">
         <section className="relative overflow-hidden">
           {/* Decorative background elements */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">

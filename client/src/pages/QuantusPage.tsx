@@ -136,7 +136,7 @@ function AnimatedCounter({ value }: { value: string }) {
 
 export default function QuantusPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#fafbfc] via-white to-[#f5f6f8] font-sans text-foreground">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fafbfc] via-white to-[#f5f6f8] font-sans text-foreground">
       <Seo
         title="Quantus Investing"
         description="Quantus Investing is BI Solutions Group's AI-native quantitative research platform for signals, reports, sector packs, and institutional-style analysis."
@@ -184,7 +184,7 @@ export default function QuantusPage() {
 
       <Navbar />
 
-      <main className="pt-32 pb-20">
+      <main id="main-content" className="pt-32 pb-20 w-full max-w-[100vw] overflow-hidden">
         {/* ─── HERO ─── */}
         <section className="relative overflow-hidden px-6 pb-16 md:px-12">
           {/* Ambient background orbs */}
@@ -201,7 +201,7 @@ export default function QuantusPage() {
             }}
           />
 
-          <div className="relative z-10 mx-auto grid max-w-7xl gap-12 xl:grid-cols-[0.92fr_1.08fr] xl:items-center">
+          <div className="relative z-10 mx-auto grid max-w-7xl gap-12 xl:grid-cols-[0.92fr_1.08fr] xl:items-center [&>*]:min-w-0">
             {/* Left column */}
             <ScrollReveal width="100%">
               <div className="group inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/80 px-4 py-2 text-sm font-medium text-gray-600 shadow-sm backdrop-blur-sm transition-all hover:border-gray-300 hover:shadow-md">
@@ -211,7 +211,7 @@ export default function QuantusPage() {
                 Quantus Investing · Native product on bisolutions.group
               </div>
 
-              <h1 className="mt-7 max-w-4xl text-4xl font-bold font-heading tracking-tight leading-[1.02] md:text-6xl xl:text-[4.7rem]">
+              <h1 className="mt-7 max-w-4xl text-3xl font-bold font-heading tracking-tight leading-[1.02] sm:text-4xl md:text-6xl xl:text-[4.7rem]">
                 <span
                   className="bg-clip-text text-transparent"
                   style={{
@@ -220,14 +220,14 @@ export default function QuantusPage() {
                     animation: "gradient-shift 6s ease infinite",
                   }}
                 >
-                  Institutional-grade
+                  Institutional-grade{" "}
                 </span>
                 <span className="block bg-gradient-to-r from-gray-400 via-gray-350 to-gray-300 bg-clip-text text-transparent">
                   quantitative research, built for execution.
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-600 md:text-xl">
+              <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg md:text-xl">
                 Quantus Investing helps teams search markets quickly, load research faster,
                 and move into deeper signal workflows without the usual sprawl of
                 disconnected tools and scattered analysis.

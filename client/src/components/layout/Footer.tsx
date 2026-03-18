@@ -102,6 +102,13 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Legal links */}
+        <div className="flex flex-wrap gap-6 text-sm text-gray-500 pb-6 border-b border-white/10">
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          <Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
+        </div>
+
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 text-sm text-gray-500">
           <p>&copy; 2026 BI Solutions Group. All rights reserved.</p>

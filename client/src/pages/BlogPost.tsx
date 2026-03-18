@@ -18,7 +18,7 @@ export default function BlogPost() {
         return (
             <div className="min-h-screen bg-background font-sans text-foreground">
                 <Navbar />
-                <main className="pt-32 pb-24">
+                <main id="main-content" className="pt-32 pb-24">
                     <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
                         <h1 className="text-4xl font-bold font-heading mb-4">Article Not Found</h1>
                         <p className="text-gray-600 mb-8">The article you're looking for doesn't exist.</p>
@@ -107,7 +107,7 @@ export default function BlogPost() {
                 }}
             />
             <Navbar />
-            <main>
+            <main id="main-content">
                 {/* Hero */}
                 <section className="pt-32 pb-12 md:pt-40 md:pb-16 bg-gradient-to-b from-gray-50 to-white">
                     <div className="max-w-4xl mx-auto px-6 md:px-12">
@@ -149,7 +149,7 @@ export default function BlogPost() {
                     <div className="max-w-5xl mx-auto px-6 md:px-12">
                         <ScrollReveal>
                             <div className="aspect-[16/9] overflow-hidden rounded-2xl bg-gray-100">
-                                <img
+                                <img loading="lazy"
                                     src={post.featuredImage}
                                     alt={post.title}
                                     className="w-full h-full object-cover"
@@ -222,7 +222,7 @@ export default function BlogPost() {
                                             className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
                                         >
                                             <div className="aspect-[16/10] overflow-hidden">
-                                                <img
+                                                <img loading="lazy"
                                                     src={relatedPost.featuredImage}
                                                     alt={relatedPost.title}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"

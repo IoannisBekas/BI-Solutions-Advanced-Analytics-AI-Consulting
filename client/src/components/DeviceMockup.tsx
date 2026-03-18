@@ -70,7 +70,7 @@ export function DeviceMockup({ desktopImage, tabletImage, mobileImage }: DeviceM
                   <div className="bg-gray-900 rounded-2xl overflow-hidden shadow-inner">
                     {/* Screen */}
                     <div className="relative overflow-hidden bg-black">
-                      <img
+                      <img loading="lazy"
                         src={images.desktop}
                         alt="Dashboard"
                         className="w-full h-auto object-cover"
@@ -98,7 +98,7 @@ export function DeviceMockup({ desktopImage, tabletImage, mobileImage }: DeviceM
                   <div className="bg-gray-300 rounded-2xl overflow-hidden">
                     {/* Screen */}
                     <div className="relative overflow-hidden bg-black rounded-2xl">
-                      <img
+                      <img loading="lazy"
                         src={images.tablet}
                         alt="Dashboard Tablet"
                         className="w-full h-auto object-cover"
@@ -127,7 +127,7 @@ export function DeviceMockup({ desktopImage, tabletImage, mobileImage }: DeviceM
                   
                   {/* Screen */}
                   <div className="relative overflow-hidden rounded-2xl bg-black h-full shadow-inner">
-                    <img
+                    <img loading="lazy"
                       src={images.mobile}
                       alt="Dashboard Mobile"
                       className="w-full h-full object-cover"

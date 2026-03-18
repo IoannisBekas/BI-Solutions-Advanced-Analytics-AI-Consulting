@@ -28,7 +28,7 @@ export default function Products() {
       />
       <Navbar />
 
-      <main className="pt-32">
+      <main id="main-content" className="pt-32">
         <section className="px-6 pb-8 md:px-12">
           <div className="max-w-7xl mx-auto">
             <ScrollReveal width="100%">

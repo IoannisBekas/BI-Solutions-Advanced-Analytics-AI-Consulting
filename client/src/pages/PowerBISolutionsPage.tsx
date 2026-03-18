@@ -86,7 +86,7 @@ export default function PowerBISolutionsPage() {
       />
       <Navbar />
 
-      <main className="pt-32 pb-20">
+      <main id="main-content" className="pt-32 pb-20">
         <section className="relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute -right-16 top-20 h-96 w-96 rounded-full bg-emerald-200/25 blur-3xl" />

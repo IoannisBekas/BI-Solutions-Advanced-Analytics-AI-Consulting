@@ -123,7 +123,7 @@ export function Layout({
                 <div className="max-w-[1320px] mx-auto px-4 md:px-8 h-[78px] flex items-center justify-between gap-4">
                     <button
                         onClick={() => onNavigate?.('hero')}
-                        className="flex items-center gap-3 group flex-shrink-0 cursor-pointer text-left"
+                        className="flex items-center gap-3 group min-w-0 xl:flex-shrink-0 cursor-pointer text-left"
                     >
                         <div
                             className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
@@ -136,9 +136,9 @@ export function Layout({
                         >
                             BI
                         </div>
-                        <div className="flex flex-col items-start select-none">
+                        <div className="flex flex-col items-start select-none min-w-0">
                             <div
-                                className="font-semibold tracking-tight"
+                                className="font-semibold tracking-tight truncate max-w-full"
                                 style={{
                                     fontFamily: 'var(--font-heading)',
                                     fontSize: '16px',
@@ -149,7 +149,7 @@ export function Layout({
                                 BI Solutions Group
                             </div>
                             <div
-                                className="uppercase tracking-[0.22em]"
+                                className="hidden sm:block uppercase tracking-[0.22em]"
                                 style={{
                                     fontSize: '10px',
                                     color: muted,
@@ -160,7 +160,7 @@ export function Layout({
                         </div>
                     </button>
 
-                    <nav className="hidden lg:flex items-center gap-2">
+                    <nav className="hidden xl:flex items-center gap-1">
                         {navLinks.map((link) => {
                             const isActive = currentView === link.view;
 
@@ -168,7 +168,7 @@ export function Layout({
                                 <button
                                     key={link.view}
                                     onClick={link.action}
-                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
+                                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-all"
                                     style={{
                                         color: isActive ? textColor : muted,
                                         background: isActive
@@ -177,7 +177,7 @@ export function Layout({
                                         border: `1px solid ${isActive ? borderColor : 'transparent'}`,
                                     }}
                                 >
-                                    <link.icon className="w-4 h-4" />
+                                    <link.icon className="w-4 h-4 hidden 2xl:block" />
                                     {link.label}
                                 </button>
                             );
@@ -186,7 +186,7 @@ export function Layout({
 
                     <div className="flex items-center gap-2">
                         <div
-                            className="hidden xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs"
+                            className="hidden 2xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs"
                             style={{
                                 background: statusColors.bg,
                                 border: `1px solid ${statusColors.border}`,
@@ -212,7 +212,7 @@ export function Layout({
 
                         <a
                             href="/quantus"
-                            className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
+                            className="hidden 2xl:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
                             style={{
                                 background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.06)',
                                 color: textColor,
@@ -261,7 +261,7 @@ export function Layout({
 
                         <button
                             onClick={() => setMobileMenuOpen((value) => !value)}
-                            className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center transition-all"
+                            className="xl:hidden w-10 h-10 rounded-full flex items-center justify-center transition-all"
                             aria-label="Toggle navigation menu"
                             aria-expanded={mobileMenuOpen}
                             style={{
@@ -280,7 +280,7 @@ export function Layout({
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="lg:hidden overflow-hidden"
+                            className="xl:hidden overflow-hidden"
                             style={{ borderTop: `1px solid ${borderColor}` }}
                         >
                             <div

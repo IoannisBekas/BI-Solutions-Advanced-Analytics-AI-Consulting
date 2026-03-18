@@ -116,7 +116,7 @@ export default function About() {
         style={{ scaleX }}
       />
 
-      <main className="flex justify-center pt-32 px-6 md:px-12 pb-20">
+      <main id="main-content" className="flex justify-center pt-32 px-6 md:px-12 pb-20">
         <div className="flex gap-16 w-full max-w-7xl relative">
 
           {/* Left Sidebar - Sticky Navigation */}
@@ -206,7 +206,7 @@ export default function About() {
                   transition={{ duration: 0.8 }}
                   className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 shadow-xl"
                 >
-                  <img
+                  <img loading="lazy"
                     src={founderPhoto}
                     alt="Ioannis Bekas"
                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"

@@ -17,6 +17,16 @@ import ScrollToTop from "@/utils/ScrollToTop";
 import AIAdvisorPage from "@/pages/AIAdvisorPage";
 import QuantusPage from "@/pages/QuantusPage";
 import PowerBISolutionsPage from "@/pages/PowerBISolutionsPage";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfService from "@/pages/TermsOfService";
+import CookiePolicy from "@/pages/CookiePolicy";
+import { CookieConsent } from "@/components/CookieConsent";
+
+declare global {
+  interface Window {
+    enableAnalytics?: () => void;
+  }
+}
 
 function App() {
   return (
@@ -26,6 +36,7 @@ function App() {
           <Toaster />
           <ScrollToTop />
           <Router />
+          <CookieConsent />
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
@@ -47,6 +58,9 @@ function Router() {
         <Route path="/ai-advisor" component={AIAdvisorPage} />
         <Route path="/quantus" component={QuantusPage} />
         <Route path="/power-bi-solutions" component={PowerBISolutionsPage} />
+        <Route path="/privacy" component={PrivacyPolicy} />
+        <Route path="/terms" component={TermsOfService} />
+        <Route path="/cookies" component={CookiePolicy} />
         <Route component={NotFound} />
       </Switch>
     </WouterRouter>

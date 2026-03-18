@@ -58,7 +58,7 @@ export default function Portfolio() {
         path="/portfolio"
       />
       <Navbar />
-      <main className="pt-32 pb-20">
+      <main id="main-content" className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <ScrollReveal width="100%">
             <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8">Selected Work</h1>
@@ -109,7 +109,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0], index: n
             <div className="flex">
               {project.images.map((img, i) => (
                 <div key={i} className="flex-[0_0_100%] min-w-0 aspect-[16/9] relative bg-white">
-                  <img
+                  <img loading="lazy"
                     src={img}
                     alt={`${project.title} - Image ${i + 1}`}
                     className="w-full h-full object-cover"

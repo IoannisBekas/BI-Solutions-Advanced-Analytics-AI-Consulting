@@ -33,7 +33,7 @@ export default function Home() {
         }}
       />
       <Navbar />
-      <main>
+      <main id="main-content">
         <Hero />
         <ServicesSection />
         <ProductShowcase badge="Product Studio" id="products" />
@@ -54,7 +54,7 @@ export default function Home() {
                   className="group block cursor-pointer"
                 >
                   <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
-                    <img
+                    <img loading="lazy"
                       src={unicefDashboard}
                       alt="UNICEF Audit Reports Dashboard"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -73,7 +73,7 @@ export default function Home() {
                   className="group block cursor-pointer"
                 >
                   <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
-                    <img
+                    <img loading="lazy"
                       src={iaeaDashboard}
                       alt="IAEA Water Analysis Dashboard"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -92,7 +92,7 @@ export default function Home() {
                   className="group block cursor-pointer"
                 >
                   <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
-                    <img
+                    <img loading="lazy"
                       src={ifcDashboard}
                       alt="IFC HR Analyst Dashboard"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
