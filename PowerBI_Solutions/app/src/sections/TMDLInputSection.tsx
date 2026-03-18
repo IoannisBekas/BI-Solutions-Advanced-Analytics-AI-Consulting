@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { Upload, FileCode, X, Check, Sparkles, ChevronDown, ChevronUp, Download, Monitor, FolderOpen, FileText } from 'lucide-react';
+import { Upload, FileCode, X, Check, Sparkles, ChevronDown, ChevronUp, Download, Settings, Save, FolderOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { analyzeTMDL } from '@/utils/tmdlParser';
@@ -80,24 +80,24 @@ const sampleTMDL = `model SalesModel
 
 const guideSteps = [
   {
-    icon: Monitor,
-    title: 'Open Power BI Desktop',
-    description: 'Launch Power BI Desktop and open the report containing the model you want to analyze.',
+    icon: Settings,
+    title: 'Enable TMDL in Settings',
+    description: 'Go to File → Options and settings → Options. Under Global, select Preview features and check "Store semantic model using TMDL format". Restart Power BI Desktop.',
   },
   {
-    icon: Download,
-    title: 'Export the Model',
-    description: 'Go to File → Export → Power BI template. This creates a .pbit file with your model structure.',
+    icon: Save,
+    title: 'Save as a Power BI Project (.pbip)',
+    description: 'Go to File → Save as. In the file type dropdown, select Power BI Project (*.pbip). Choose a folder and save.',
   },
   {
     icon: FolderOpen,
-    title: 'Extract the Template',
-    description: 'Rename the .pbit file to .zip and extract it. Inside, you\'ll find a "Model" folder.',
+    title: 'Find Your TMDL Files',
+    description: 'Open the folder where you saved the project. Go into the folder ending in .SemanticModel, then open the definition folder.',
   },
   {
     icon: FileText,
-    title: 'Find the TMDL File',
-    description: 'In the Model folder, locate the .tmdl file. This contains your complete model definition.',
+    title: 'Success!',
+    description: 'All your tables, measures, and relationships are now stored here as individual .tmdl files.',
   },
 ];
 
@@ -422,7 +422,7 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
                 </div>
                 <div className="text-left">
                   <h3 className="text-black font-semibold">How to Get Your TMDL File</h3>
-                  <p className="text-sm text-muted-foreground">Learn how to extract TMDL from Power BI Desktop</p>
+                  <p className="text-sm text-muted-foreground">Learn how to export TMDL from Power BI Desktop</p>
                 </div>
               </div>
               {showGuide ? (
@@ -462,8 +462,8 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
 
                 <div className="mt-5 p-4 rounded-xl bg-blue-50 border border-blue-100">
                   <p className="text-sm text-blue-800">
-                    <strong>Tip:</strong> You can also use Tabular Editor 3 or SQL Server Management Studio (SSMS) to script out your model as TMDL.
-                    In Tabular Editor, go to File → Save As → TMDL Script.
+                    <strong>Tip:</strong> You can also use Tabular Editor 3 to export your model as TMDL.
+                    In Tabular Editor, go to File → Save to Folder and select TMDL as the serialization format.
                   </p>
                 </div>
               </div>
