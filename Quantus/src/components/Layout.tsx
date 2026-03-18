@@ -177,7 +177,6 @@ export function Layout({
                                         border: `1px solid ${isActive ? borderColor : 'transparent'}`,
                                     }}
                                 >
-                                    <link.icon className="w-4 h-4 hidden 2xl:block" />
                                     {link.label}
                                 </button>
                             );
@@ -185,19 +184,6 @@ export function Layout({
                     </nav>
 
                     <div className="flex items-center gap-2">
-                        <div
-                            className="hidden 2xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs"
-                            style={{
-                                background: statusColors.bg,
-                                border: `1px solid ${statusColors.border}`,
-                                color: statusColors.fg,
-                            }}
-                            title={workspaceStatus?.description}
-                        >
-                            <span className="h-2.5 w-2.5 rounded-full" style={{ background: statusColors.dot }} />
-                            <span className="font-medium">{workspaceStatus?.label ?? 'Loading workspace'}</span>
-                        </div>
-
                         <button
                             onClick={onToggleLight}
                             className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
@@ -209,19 +195,6 @@ export function Layout({
                         >
                             {lightMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
                         </button>
-
-                        <a
-                            href="/quantus"
-                            className="hidden 2xl:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
-                            style={{
-                                background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.06)',
-                                color: textColor,
-                                border: `1px solid ${borderColor}`,
-                            }}
-                        >
-                            Product page
-                            <ArrowUpRight className="w-4 h-4" />
-                        </a>
 
                         {userName ? (
                             <div className="hidden sm:flex items-center gap-2">
