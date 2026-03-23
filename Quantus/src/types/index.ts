@@ -59,7 +59,7 @@ export interface WorkspaceSummary {
     popularTickers: string[];
 }
 
-export type ReportSource = 'cached' | 'starter';
+export type ReportSource = 'live' | 'cached' | 'starter';
 
 export interface ReportResponse {
     report: ReportData;

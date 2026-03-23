@@ -10,8 +10,7 @@ Credit costs:
   Portfolio analyzer   = 2.0 credits
   Screener query       = 0.5 credits
 
-Credits stored in PostgreSQL users table.
-Deductions are atomic (SELECT FOR UPDATE in a DB transaction).
+Deductions are atomic.
 Institutional clients: team credit pool, admin assigns per-user allocations.
 """
 
@@ -50,7 +49,7 @@ CREDIT_BUNDLES = [
     CreditBundle("Institutional",credits=200,  price_usd_cents=9999,  stripe_price_id="price_inst_placeholder"),
 ]
 
-# ─── In-memory mock store (replace with PostgreSQL) ──────────────────────────
+# ─── In-memory store ─────────────────────────────────────────────────────────
 
 _user_credits: dict[str, float] = {}
 _team_pools:   dict[str, float] = {}    # team_id → pool balance
@@ -71,12 +70,7 @@ class InsufficientCreditsError(Exception):
         super().__init__(f"Insufficient credits: needed {needed}, have {available}")
 
 class CreditService:
-    """Atomic credit accounting.
-
-    Production: all mutating operations run inside a PostgreSQL
-    transaction with `SELECT balance FROM users WHERE id=$1 FOR UPDATE`
-    to prevent double-spend.
-    """
+    """Atomic credit accounting."""
 
     @staticmethod
     def get_balance(user_id: str, tier: str = "UNLOCKED") -> float:
@@ -116,7 +110,6 @@ class CreditService:
             logger.info("credit_deduct | INSTITUTIONAL bypass | user=%s | %s", user_id, cost.name)
             return float("inf")
 
-        # Production: BEGIN; SELECT … FOR UPDATE;
         current = _get_balance(user_id)
         if current < cost.value:
             raise InsufficientCreditsError(needed=cost.value, available=current)

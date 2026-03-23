@@ -18,24 +18,50 @@ db.pragma("foreign_keys = ON");
 db.pragma("busy_timeout = 5000");
 
 // ─── Schema migrations ──────────────────────────────────────────────────────
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id            TEXT PRIMARY KEY,
-    email         TEXT NOT NULL UNIQUE COLLATE NOCASE,
-    name          TEXT NOT NULL,
-    password_hash TEXT NOT NULL,
-    tier          TEXT NOT NULL DEFAULT 'FREE',
-    credits       REAL NOT NULL DEFAULT 0,
-    reports_this_month INTEGER NOT NULL DEFAULT 0,
-    jurisdiction  TEXT NOT NULL DEFAULT 'US',
-    referral_token TEXT UNIQUE,
-    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
-  );
+// Simple version-tracked migrations. The schema_version table tracks which
+// migrations have been applied so we never re-run them.
 
-  CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-  CREATE INDEX IF NOT EXISTS idx_users_referral ON users(referral_token);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS schema_version (
+    version INTEGER PRIMARY KEY,
+    applied_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
+
+function getSchemaVersion(): number {
+  const row = db.prepare("SELECT MAX(version) as v FROM schema_version").get() as { v: number | null } | undefined;
+  return row?.v ?? 0;
+}
+
+function setSchemaVersion(version: number): void {
+  db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (?)").run(version);
+}
+
+// Migration 1: Initial users table
+if (getSchemaVersion() < 1) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id            TEXT PRIMARY KEY,
+      email         TEXT NOT NULL UNIQUE COLLATE NOCASE,
+      name          TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      tier          TEXT NOT NULL DEFAULT 'FREE',
+      credits       INTEGER NOT NULL DEFAULT 0,
+      reports_this_month INTEGER NOT NULL DEFAULT 0,
+      jurisdiction  TEXT NOT NULL DEFAULT 'US',
+      referral_token TEXT UNIQUE,
+      created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+    CREATE INDEX IF NOT EXISTS idx_users_referral ON users(referral_token);
+  `);
+  // Round any existing REAL credits to INTEGER (safe for existing DBs)
+  db.exec("UPDATE users SET credits = CAST(ROUND(credits) AS INTEGER) WHERE typeof(credits) = 'real'");
+  setSchemaVersion(1);
+  console.log("DB migration 1 applied: users table + credits → INTEGER");
+}
 
 // ─── Prepared statements ─────────────────────────────────────────────────────
 
@@ -79,15 +105,16 @@ const stmts = {
   incrementReports: db.prepare<[string]>(
     "UPDATE users SET reports_this_month = reports_this_month + 1, updated_at = datetime('now') WHERE id = ?"
   ),
-  deductCredit: db.prepare<[number, string]>(
+  deductCredit: db.prepare<[number, string, number]>(
     "UPDATE users SET credits = credits - ?, updated_at = datetime('now') WHERE id = ? AND credits >= ?"
   ),
+  deleteUser: db.prepare<[string]>(
+    "DELETE FROM users WHERE id = ?"
+  ),
+  resetMonthlyReports: db.prepare(
+    "UPDATE users SET reports_this_month = 0, updated_at = datetime('now') WHERE reports_this_month > 0"
+  ),
 };
-
-// Overload deductCredit to also check balance
-const deductCreditStmt = db.prepare<[number, string, number]>(
-  "UPDATE users SET credits = credits - ?, updated_at = datetime('now') WHERE id = ? AND credits >= ?"
-);
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
@@ -135,8 +162,23 @@ export function incrementReports(userId: string): void {
 }
 
 export function deductCredit(userId: string, amount: number): boolean {
-  const result = deductCreditStmt.run(amount, userId, amount);
+  const result = stmts.deductCredit.run(amount, userId, amount);
   return result.changes > 0;
+}
+
+/** GDPR Art. 17 — Right to erasure. Permanently deletes user and all data. */
+export function deleteUser(userId: string): boolean {
+  const result = stmts.deleteUser.run(userId);
+  return result.changes > 0;
+}
+
+/**
+ * Reset reports_this_month for all users.
+ * Call once per month (e.g., on first request after month boundary).
+ */
+export function resetMonthlyReports(): number {
+  const result = stmts.resetMonthlyReports.run();
+  return result.changes;
 }
 
 /** Strip password_hash before sending to the client */

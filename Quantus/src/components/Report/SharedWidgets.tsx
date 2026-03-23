@@ -87,7 +87,7 @@ export function SectionCard({ title, id, children, lightMode }: { title: string;
             className="surface-card p-6 mb-6 print-section"
             style={{ background: lightMode ? 'rgba(255,255,255,0.9)' : '#111827', borderColor: lightMode ? '#E2E8F0' : '#1F2937' }}
         >
-            <h3 className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: '#6B7280' }}>{title}</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-widest mb-5 text-gray-500">{title}</h3>
             {children}
         </motion.div>
     );
@@ -113,7 +113,7 @@ export function MetricCard({ label, value, sub, trend, note, freshness, lightMod
                 <div className="metric-value text-xl font-bold mb-1" style={{ color: textPrimary }}>{value}</div>
                 {sub && <div className="text-xs" style={{ color: textSecondary }}>{sub}</div>}
                 {note && <div className="text-xs mt-2 leading-relaxed" style={{ color: textSecondary }}>{note}</div>}
-                {freshness && <div className="text-xs mt-2" style={{ color: '#6B7280' }}>🕒 {freshness}</div>}
+                {freshness && <div className="text-xs mt-2 text-gray-500">🕒 {freshness}</div>}
             </div>
             <div className="mt-auto pt-2 border-t mt-3" style={{ borderColor: lightMode ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
                 <ExplainButton contextText={`${label} - ${value}${note ? ' - ' + note : ''}`} lightMode={lightMode} />

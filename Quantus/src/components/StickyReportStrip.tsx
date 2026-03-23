@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Bell, Link2, Users, Zap } from 'lucide-react';
-import type { ReportData } from '../types';
+import type { ReportData, ReportSource } from '../types';
 
 // ─── Compact sticky strip that replaces the WelcomeCard once report scrolls ──
 
@@ -9,19 +9,52 @@ interface StickyReportStripProps {
     visible: boolean;
     lightMode?: boolean;
     onSubscribe?: () => void;
-    reportSource?: 'cached' | 'starter';
+    reportSource?: ReportSource;
     reportMessage?: string;
     shareUrl?: string;
 }
 
-function fmtPrice(p: number): string {
+function isFiniteNumber(value: number | undefined | null): value is number {
+    return typeof value === 'number' && Number.isFinite(value);
+}
+
+function fmtPrice(p: number | undefined | null): string {
+    if (!isFiniteNumber(p) || p === 0) return '$—';
     if (p > 10_000) return `$${p.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
     return `$${p.toFixed(2)}`;
 }
 
+function fmtSignedPercent(value: number | undefined | null): string {
+    if (!isFiniteNumber(value)) return '—';
+    return `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
+}
+
 export function StickyReportStrip({ report, visible, lightMode, onSubscribe, reportSource = 'cached', reportMessage, shareUrl }: StickyReportStripProps) {
-    const positive = report.day_change_pct >= 0;
+    const dayChangePct = isFiniteNumber(report.day_change_pct) ? report.day_change_pct : null;
+    const positive = (dayChangePct ?? 0) >= 0;
     const isStarter = reportSource === 'starter';
+    const isLive = reportSource === 'live';
+    const sourceLabel = isStarter ? 'Starter shell' : isLive ? 'Live pipeline' : 'Cached report';
+    const sourceMessage = reportMessage ?? (isStarter
+        ? 'No cached Quantus coverage yet.'
+        : isLive
+            ? 'Live Quantus coverage loaded.'
+            : 'Shared Quantus coverage loaded.');
+    const dayChangeColor = dayChangePct == null ? '#6B7280' : positive ? '#34D399' : '#F87171';
+    const copyLink = async () => {
+        const url = shareUrl ?? window.location.href;
+
+        try {
+            if (!navigator.clipboard?.writeText) {
+                throw new Error('Clipboard unavailable');
+            }
+
+            await navigator.clipboard.writeText(url);
+            window.alert('Report link copied to clipboard.');
+        } catch {
+            window.prompt('Copy this report link:', url);
+        }
+    };
 
     return (
         <motion.div
@@ -46,8 +79,8 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe, rep
                 <span className="font-mono font-semibold" style={{ color: lightMode ? '#0F172A' : '#F9FAFB' }}>
                     {fmtPrice(report.current_price)}
                 </span>
-                <span className={`font-semibold ${positive ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {positive ? '+' : ''}{report.day_change_pct.toFixed(2)}%
+                <span className="font-semibold" style={{ color: dayChangeColor }}>
+                    {fmtSignedPercent(dayChangePct)}
                 </span>
                 <span style={{ color: '#6B7280' }}>{report.exchange}</span>
 
@@ -57,13 +90,17 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe, rep
                 <span
                     className="rounded-full px-2.5 py-1 font-semibold"
                     style={{
-                        background: isStarter ? 'rgba(245,158,11,0.10)' : 'rgba(16,185,129,0.10)',
-                        color: isStarter ? '#F59E0B' : '#10B981',
+                        background: isStarter
+                            ? 'rgba(245,158,11,0.10)'
+                            : isLive
+                                ? 'rgba(59,130,246,0.10)'
+                                : 'rgba(16,185,129,0.10)',
+                        color: isStarter ? '#F59E0B' : isLive ? '#3B82F6' : '#10B981',
                     }}
                 >
-                    {isStarter ? 'Starter shell' : 'Cached report'}
+                    {sourceLabel}
                 </span>
-                <span style={{ color: '#6B7280' }}>{reportMessage ?? (isStarter ? 'No cached Quantus coverage yet.' : 'Shared Quantus coverage loaded.')}</span>
+                <span style={{ color: '#6B7280' }}>{sourceMessage}</span>
 
                 <span style={{ color: '#374151' }}>·</span>
 
@@ -85,7 +122,7 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe, rep
                 {/* Shareable URL */}
                 <button
                     type="button"
-                    onClick={() => navigator.clipboard.writeText(shareUrl ?? window.location.href)}
+                    onClick={copyLink}
                     className="flex items-center gap-1 transition-colors hover:text-blue-400 cursor-pointer"
                     style={{ color: '#6B7280' }}
                 >

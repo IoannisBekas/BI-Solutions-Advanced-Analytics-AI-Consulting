@@ -136,7 +136,7 @@ function AnimatedCounter({ value }: { value: string }) {
 
 export default function QuantusPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#fafbfc] via-white to-[#f5f6f8] font-sans text-foreground">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 font-sans text-foreground">
       <Seo
         title="Quantus"
         description="Quantus is BI Solutions Group's AI-native quantitative research platform for signals, reports, sector packs, and institutional-style analysis."
@@ -215,7 +215,7 @@ export default function QuantusPage() {
                 <span
                   className="bg-clip-text text-transparent"
                   style={{
-                    backgroundImage: "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)",
+                    backgroundImage: "linear-gradient(135deg, rgb(10 10 10) 0%, rgb(26 26 46) 50%, rgb(22 33 62) 100%)",
                     backgroundSize: "200% 200%",
                     animation: "gradient-shift 6s ease infinite",
                   }}
@@ -300,7 +300,7 @@ export default function QuantusPage() {
                 <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-gray-200/30 via-transparent to-gray-200/30 blur-2xl" />
 
                 <Card className="relative rounded-[2rem] border-gray-200/80 bg-white/95 p-4 shadow-2xl shadow-black/10 backdrop-blur-sm">
-                  <div className="rounded-[1.7rem] border border-gray-200/60 bg-gradient-to-b from-[#f8f9fa] to-[#f1f3f5] p-5 md:p-6">
+                  <div className="rounded-[1.7rem] border border-gray-200/60 bg-gradient-to-b from-gray-50 to-gray-100 p-5 md:p-6">
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200/80 pb-4">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
@@ -357,10 +357,7 @@ export default function QuantusPage() {
                               </div>
                             </div>
                             <div
-                              className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-sm"
-                              style={{
-                                background: "linear-gradient(135deg, #1a1a2e, #16213e)",
-                              }}
+                              className="rounded-full bg-gradient-to-br from-gray-900 to-gray-800 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-sm"
                             >
                               Meridian v2.4
                             </div>

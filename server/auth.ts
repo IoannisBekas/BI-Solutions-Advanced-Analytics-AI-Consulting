@@ -8,6 +8,8 @@ import {
   findUserByReferralToken,
   createUser,
   updateUserCredits,
+  deleteUser,
+  resetMonthlyReports,
   toSafeUser,
   type DbUser,
 } from "./db";
@@ -17,7 +19,11 @@ const SALT_ROUNDS = 12;
 const TOKEN_EXPIRY = "7d";
 
 function getJwtSecret(): string {
-  return process.env.JWT_SECRET || "dev-secret-do-not-use-in-production";
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is required");
+  }
+  return secret;
 }
 
 // ─── JWT helpers ─────────────────────────────────────────────────────────────
@@ -84,6 +90,13 @@ export function requireAuth(
   });
 }
 
+// ─── Validation helpers ─────────────────────────────────────────────────────
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmail(value: unknown): value is string {
+  return typeof value === "string" && EMAIL_RE.test(value) && value.length <= 254;
+}
+
 // ─── Router ──────────────────────────────────────────────────────────────────
 export const authRouter = Router();
 
@@ -96,6 +109,11 @@ authRouter.post("/register", async (req: Request, res: Response) => {
       res
         .status(400)
         .json({ error: "Email, name, and password are required" });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      res.status(400).json({ error: "Invalid email address" });
       return;
     }
 
@@ -189,3 +207,57 @@ authRouter.get(
     res.json(toSafeUser(user));
   }
 );
+
+// ── DELETE /api/auth/account — GDPR Art. 17 Right to Erasure ────────────────
+authRouter.delete(
+  "/account",
+  requireAuth,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { password } = req.body;
+
+      if (!password || typeof password !== "string") {
+        res.status(400).json({ error: "Password confirmation is required to delete your account" });
+        return;
+      }
+
+      const user = findUserById(req.user!.userId);
+      if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+
+      // Require password confirmation before deletion
+      const valid = await bcrypt.compare(password, user.password_hash);
+      if (!valid) {
+        res.status(401).json({ error: "Incorrect password" });
+        return;
+      }
+
+      const deleted = deleteUser(user.id);
+      if (!deleted) {
+        res.status(500).json({ error: "Failed to delete account. Please try again." });
+        return;
+      }
+
+      res.json({ success: true, message: "Account permanently deleted" });
+    } catch (error) {
+      console.error("Account deletion error:", error);
+      res.status(500).json({ error: "Account deletion failed. Please try again." });
+    }
+  }
+);
+
+// ── Monthly reports reset (lazy check) ──────────────────────────────────────
+let _lastResetMonth = -1;
+
+export function checkMonthlyReset(): void {
+  const currentMonth = new Date().getMonth();
+  if (_lastResetMonth !== currentMonth) {
+    const resetCount = resetMonthlyReports();
+    if (resetCount > 0) {
+      console.log(`Monthly reset: cleared reports_this_month for ${resetCount} users`);
+    }
+    _lastResetMonth = currentMonth;
+  }
+}

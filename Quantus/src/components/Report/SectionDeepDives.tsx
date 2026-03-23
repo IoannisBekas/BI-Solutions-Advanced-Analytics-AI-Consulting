@@ -109,7 +109,7 @@ export function SectionDeepDives({ report, lightMode }: Props) {
                                 <span className="text-xs font-mono text-blue-400">{String(i + 1).padStart(2, '0')}</span>
                                 {title}
                             </span>
-                            {expandedDive === i ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: '#6B7280' }} /> : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: '#6B7280' }} />}
+                            {expandedDive === i ? <ChevronUp className="w-4 h-4 flex-shrink-0 text-gray-500" /> : <ChevronDown className="w-4 h-4 flex-shrink-0 text-gray-500" />}
                         </button>
                         <AnimatePresence>
                             {expandedDive === i && (
@@ -125,7 +125,7 @@ export function SectionDeepDives({ report, lightMode }: Props) {
                                                                 transition={{ duration: 1.2, repeat: Infinity, delay: j * 0.2 }} />
                                                         ))}
                                                     </div>
-                                                    <span className="text-xs" style={{ color: '#6B7280' }}>Generating deep analysis — ~8 seconds</span>
+                                                    <span className="text-xs text-gray-500">Generating deep analysis — ~8 seconds</span>
                                                 </div>
                                                 <div className="space-y-2">{[1, 0.9, 0.7, 0.6].map((w, k) => <div key={k} className="h-3 rounded skeleton" style={{ width: `${w * 100}%` }} />)}</div>
                                             </div>
@@ -135,7 +135,7 @@ export function SectionDeepDives({ report, lightMode }: Props) {
                                                     <ReactMarkdown>{diveContent[i] || 'Loading…'}</ReactMarkdown>
                                                 </div>
                                                 <div className="flex justify-between items-center mt-4">
-                                                    <div className="text-xs" style={{ color: '#6B7280' }}>Powered by Meridian v2.4 · Cached for all researchers</div>
+                                                    <div className="text-xs text-gray-500">Powered by Meridian v2.4 · Cached for all researchers</div>
                                                     <Feedback />
                                                 </div>
                                             </div>

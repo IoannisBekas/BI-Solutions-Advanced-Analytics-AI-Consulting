@@ -56,7 +56,7 @@ function TierGate({ tier, onUpgrade }: { tier: string; onUpgrade?: () => void })
             <div className="text-sm font-semibold mb-1" style={{ color: '#F9FAFB' }}>
                 {tier === 'INSTITUTIONAL' ? 'Institutional tier required' : 'Unlock tier required'}
             </div>
-            <div className="text-xs mb-3" style={{ color: '#9CA3AF' }}>
+            <div className="text-xs mb-3 text-gray-400">
                 {tier === 'INSTITUTIONAL'
                     ? 'Available for institutional subscribers'
                     : 'Sign up to access all 12 deep dive modules'}
@@ -134,7 +134,7 @@ function MockModuleResult({ module, ticker }: { module: DeepDiveModule; ticker: 
                         strokeWidth="2"
                     />
                 </svg>
-                <div className="absolute top-2 right-3 text-xs font-mono" style={{ color: '#6B7280' }}>
+                <div className="absolute top-2 right-3 text-xs font-mono text-gray-500">
                     Module {module.id} · Plotly dark theme
                 </div>
             </div>
@@ -148,33 +148,32 @@ function MockModuleResult({ module, ticker }: { module: DeepDiveModule; ticker: 
                 ].map(s => (
                     <div key={s.l} className="rounded-lg p-2 text-center text-xs"
                         style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                        <div style={{ color: '#6B7280' }}>{s.l}</div>
+                        <div className="text-gray-500">{s.l}</div>
                         <div className="font-mono font-semibold mt-0.5" style={{ color: module.color }}>{s.v}</div>
                     </div>
                 ))}
             </div>
 
             {/* Narrative */}
-            <div className="text-sm leading-relaxed" style={{ color: '#9CA3AF' }}>
+            <div className="text-sm leading-relaxed text-gray-400">
                 {showTechnical ? technicalText : plainText}
             </div>
 
             {/* Peer benchmark */}
             <div className="text-xs p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <span style={{ color: '#6B7280' }}>Peer benchmark:</span>
-                <span className="ml-2" style={{ color: '#9CA3AF' }}>
+                <span className="text-gray-500">Peer benchmark:</span>
+                <span className="ml-2 text-gray-400">
                     {ticker} scores in top {(Math.random() * 20 + 20).toFixed(0)}th percentile for this metric vs sector peers.
                 </span>
             </div>
 
             {/* Footer actions */}
-            <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t" style={{ borderColor: '#1F2937' }}>
+            <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-gray-800">
                 <div className="flex items-center gap-3">
                     {/* Technical toggle */}
                     <button
                         onClick={() => setShowTechnical(t => !t)}
-                        className="text-xs cursor-pointer transition-colors hover:text-blue-400"
-                        style={{ color: '#6B7280' }}
+                        className="text-xs cursor-pointer transition-colors hover:text-blue-400 text-gray-500"
                     >
                         {showTechnical ? 'Plain English' : 'Technical Detail'}
                     </button>
@@ -195,12 +194,12 @@ function MockModuleResult({ module, ticker }: { module: DeepDiveModule; ticker: 
                             <ThumbsDown className="w-3.5 h-3.5" />
                         </button>
                     </div>
-                    <button className="p-1 rounded cursor-pointer transition-colors hover:text-blue-400" style={{ color: '#6B7280' }}>
+                    <button className="p-1 rounded cursor-pointer transition-colors hover:text-blue-400 text-gray-500">
                         <Bookmark className="w-3.5 h-3.5" />
                     </button>
                 </div>
                 {/* Data freshness */}
-                <div className="flex items-center gap-1 text-xs" style={{ color: '#6B7280' }}>
+                <div className="flex items-center gap-1 text-xs text-gray-500">
                     <Clock className="w-3 h-3" />
                     <span>Generated just now · Cached in Redis</span>
                 </div>
@@ -300,9 +299,9 @@ function ModuleCard({
                         )}
                         {state === 'done' && <span className="text-emerald-400 text-xs">✓ Cached</span>}
                     </div>
-                    <div className="text-xs mt-0.5" style={{ color: '#6B7280' }}>{module.description}</div>
+                    <div className="text-xs mt-0.5 text-gray-500">{module.description}</div>
                 </div>
-                <div className="flex-shrink-0" style={{ color: '#6B7280' }}>
+                <div className="flex-shrink-0 text-gray-500">
                     {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </div>
             </button>
@@ -321,7 +320,7 @@ function ModuleCard({
                             {/* Progress bar while loading */}
                             {state === 'loading' && (
                                 <div className="mb-3">
-                                    <div className="flex items-center justify-between text-xs mb-1.5" style={{ color: '#6B7280' }}>
+                                    <div className="flex items-center justify-between text-xs mb-1.5 text-gray-500">
                                         <span>Generating deep analysis…</span>
                                         <span>~{Math.ceil(module.estimatedSeconds * (1 - progress / 100))}s</span>
                                     </div>
@@ -360,7 +359,7 @@ export function SectionE({ ticker, reportId, userTier = 'FREE', lightMode, onUpg
                     Section E — Deep Dive Modules
                 </h2>
             </div>
-            <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
+            <p className="text-sm mb-6 text-gray-500">
                 12 on-demand quantitative modules · Click to expand · Results cached after first generation
             </p>
 

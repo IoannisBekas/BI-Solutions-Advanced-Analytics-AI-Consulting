@@ -302,6 +302,7 @@ function App() {
     const [showStickyStrip, setShowStickyStrip] = useState(false);
     const [currentPath, setCurrentPath] = useState(() => normalizeQuantusPath(window.location.pathname));
     const [authModalOpen, setAuthModalOpen] = useState(false);
+    const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
     const reportRef = useRef<HTMLDivElement>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
     const insightAbortRef = useRef<AbortController | null>(null);
@@ -310,6 +311,13 @@ function App() {
 
     const route = useMemo(() => resolveRoute(currentPath), [currentPath]);
     const report = reportResponse?.report ?? null;
+    const currentReportAsset = useMemo(() => {
+        if (!report || !reportResponse) return null;
+        return buildAssetEntryFromReport(report, reportResponse.source);
+    }, [report, reportResponse]);
+    const isCurrentReportPinned = useMemo(() => (
+        currentReportAsset != null && pinnedAssets.some((entry) => entry.ticker === currentReportAsset.ticker)
+    ), [currentReportAsset, pinnedAssets]);
     const displayView: DisplayView = route.view === 'report'
         ? (isGenerating || reportResponse?.ticker !== route.ticker ? 'generating' : 'report')
         : route.view;
@@ -322,6 +330,11 @@ function App() {
         }
 
         setCurrentPath(normalized);
+    }, []);
+
+    const openAuthModal = useCallback((mode: 'signin' | 'signup' = 'signin') => {
+        setAuthModalMode(mode);
+        setAuthModalOpen(true);
     }, []);
 
     useEffect(() => {
@@ -536,7 +549,9 @@ function App() {
 
                 const completionText = responsePayload?.source === 'cached'
                     ? 'Cached Quantus coverage is ready.'
-                    : 'Starter shell ready — no cached Quantus coverage exists yet.';
+                    : responsePayload?.source === 'live'
+                        ? 'Live Quantus pipeline report is ready.'
+                        : 'Starter shell ready — no cached Quantus coverage exists yet.';
 
                 setInsights((previous) => [
                     ...previous,
@@ -620,6 +635,44 @@ function App() {
         });
     }, []);
 
+    const handleToggleCurrentReportPinned = useCallback(() => {
+        if (!currentReportAsset) return;
+        togglePinnedAsset(currentReportAsset);
+    }, [currentReportAsset, togglePinnedAsset]);
+
+    const handleSubscribe = useCallback(() => {
+        if (!currentReportAsset) return;
+
+        if (!user) {
+            openAuthModal('signup');
+            return;
+        }
+
+        const wasPinned = pinnedAssets.some((entry) => entry.ticker === currentReportAsset.ticker);
+
+        if (!wasPinned) {
+            togglePinnedAsset(currentReportAsset);
+        }
+
+        window.alert(
+            `Alerts for ${currentReportAsset.ticker} are not connected yet in this preview. `
+            + `${wasPinned ? 'It is already in your local watchlist.' : 'It was added to your local watchlist.'}`,
+        );
+    }, [currentReportAsset, openAuthModal, pinnedAssets, togglePinnedAsset, user]);
+
+    const handleManageAlerts = useCallback(() => {
+        if (!user) {
+            openAuthModal('signup');
+            return;
+        }
+
+        window.alert('Custom watchlist alerts are not connected yet in this preview. Sign-in works; alert delivery is the next integration.');
+    }, [openAuthModal, user]);
+
+    const handleOpenRelatedTicker = useCallback((ticker: string) => {
+        openReportRoute(ticker);
+    }, [openReportRoute]);
+
     return (
         <Layout
             currentView={route.view === 'report' ? 'hero' : route.view}
@@ -632,7 +685,7 @@ function App() {
                 localStorage.setItem('quantus-theme', next ? 'light' : 'dark');
                 return next;
             })}
-            onOpenAuth={() => setAuthModalOpen(true)}
+            onOpenAuth={(mode) => openAuthModal(mode ?? 'signin')}
             onSignOut={signOut}
             onNavigate={handleNavigate}
         >
@@ -660,7 +713,7 @@ function App() {
                                 reportSource={reportResponse?.source}
                                 reportMessage={reportResponse?.message}
                                 shareUrl={window.location.href}
-                                onSubscribe={() => undefined}
+                                onSubscribe={handleSubscribe}
                             />
                         )}
 
@@ -677,7 +730,8 @@ function App() {
                             <WelcomeCard
                                 report={report}
                                 lightMode={lightMode}
-                                onSubscribe={() => undefined}
+                                onSubscribe={handleSubscribe}
+                                onOpenTicker={handleOpenRelatedTicker}
                                 reportSource={reportResponse?.source}
                                 reportMessage={reportResponse?.message}
                                 reportDetail={reportResponse?.detail}
@@ -691,14 +745,24 @@ function App() {
                             reportId={report?.report_id}
                             onViewReport={handleViewReport}
                             lightMode={lightMode}
-                            completionTitle={reportResponse?.source === 'starter' ? 'Starter shell ready' : 'Cached report ready'}
+                            completionTitle={reportResponse?.source === 'starter'
+                                ? 'Starter shell ready'
+                                : reportResponse?.source === 'live'
+                                    ? 'Live report ready'
+                                    : 'Cached report ready'}
                             completionDetail={reportResponse ? `${reportResponse.ticker} · ${reportResponse.message}` : undefined}
                         />
 
                         {displayView === 'report' && report && (
                             <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                                 <div ref={reportRef}>
-                                    <ReportDashboard report={report} lightMode={lightMode} />
+                                    <ReportDashboard
+                                        report={report}
+                                        lightMode={lightMode}
+                                        onSubscribe={handleSubscribe}
+                                        onToggleWatchlist={handleToggleCurrentReportPinned}
+                                        isWatchlisted={isCurrentReportPinned}
+                                    />
                                 </div>
                             </Suspense>
                         )}
@@ -712,7 +776,13 @@ function App() {
                             >
                                 <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                                     <div ref={reportRef}>
-                                        <ReportDashboard report={report} lightMode={lightMode} />
+                                        <ReportDashboard
+                                            report={report}
+                                            lightMode={lightMode}
+                                            onSubscribe={handleSubscribe}
+                                            onToggleWatchlist={handleToggleCurrentReportPinned}
+                                            isWatchlisted={isCurrentReportPinned}
+                                        />
                                     </div>
                                 </Suspense>
                             </motion.div>
@@ -734,6 +804,8 @@ function App() {
                             <Watchlist
                                 userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
                                 lightMode={lightMode}
+                                savedAssets={pinnedAssets}
+                                onOpenAlerts={handleManageAlerts}
                                 onSelectTicker={(ticker) => openReportRoute(ticker)}
                             />
                         </Suspense>
@@ -784,7 +856,7 @@ function App() {
             <AuthModal
                 open={authModalOpen}
                 onClose={() => setAuthModalOpen(false)}
-                defaultMode="signin"
+                defaultMode={authModalMode}
                 lightMode={lightMode}
             />
         </Layout>

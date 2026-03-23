@@ -97,7 +97,7 @@ function CommentCard({
             <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <span className="font-semibold text-sm" style={{ color: tp }}>{comment.author}</span>
                 <TierBadge tier={comment.tier} />
-                <span className="text-xs ml-auto" style={{ color: '#6B7280' }}>{elapsed}</span>
+                <span className="text-xs ml-auto text-gray-500">{elapsed}</span>
             </div>
 
             {/* Body */}
@@ -130,7 +130,7 @@ function CommentCard({
                     <ThumbsDown className="w-3 h-3" />{comment.downvotes}
                 </button>
                 {userTier === 'FREE' && (
-                    <span className="text-xs" style={{ color: '#6B7280' }}>Sign up to vote</span>
+                    <span className="text-xs text-gray-500">Sign up to vote</span>
                 )}
             </div>
         </motion.div>
@@ -157,7 +157,7 @@ export function CommunityThread({
             >
                 <Users className="w-6 h-6 mx-auto mb-3 text-indigo-400" />
                 <p className="font-semibold text-sm mb-1" style={{ color: '#F9FAFB' }}>Community opens at launch milestone</p>
-                <p className="text-xs" style={{ color: '#6B7280' }}>
+                <p className="text-xs text-gray-500">
                     {registeredUsers.toLocaleString()} / {UNLOCK_THRESHOLD.toLocaleString()} members — Community activates when we reach {UNLOCK_THRESHOLD.toLocaleString()} researchers.
                 </p>
                 <div className="mt-4 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
@@ -206,10 +206,10 @@ export function CommunityThread({
                 <span className="font-semibold text-sm" style={{ color: lightMode ? '#0F172A' : '#F9FAFB' }}>
                     {anchorLabel} Discussion
                 </span>
-                <span className="text-xs ml-2" style={{ color: '#6B7280' }}>
+                <span className="text-xs ml-2 text-gray-500">
                     {comments.length} comment{comments.length !== 1 ? 's' : ''}
                 </span>
-                <div className="flex items-center gap-1 ml-auto text-xs" style={{ color: '#6B7280' }}>
+                <div className="flex items-center gap-1 ml-auto text-xs text-gray-500">
                     <Shield className="w-3 h-3" />
                     AI-moderated
                 </div>
@@ -221,7 +221,7 @@ export function CommunityThread({
                 style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${border}` }}
             >
                 {userTier === 'FREE' ? (
-                    <p className="text-xs text-center py-1" style={{ color: '#6B7280' }}>
+                    <p className="text-xs text-center py-1 text-gray-500">
                         <a href="#" className="text-blue-400 hover:underline">Sign up</a> to join the discussion
                     </p>
                 ) : (
@@ -252,7 +252,7 @@ export function CommunityThread({
                 <div className="flex items-start gap-2 text-xs p-3 rounded-xl"
                     style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-                    <span style={{ color: '#9CA3AF' }}>
+                    <span className="text-gray-400">
                         <span className="text-amber-400 font-semibold">Community divergence detected</span> — A portion of analysts disagree with this signal. Quantus confidence score adjusted accordingly. See Section A.
                     </span>
                 </div>
@@ -272,7 +272,7 @@ export function CommunityThread({
                     ))}
                 </AnimatePresence>
                 {comments.length === 0 && (
-                    <p className="text-center text-sm py-4" style={{ color: '#6B7280' }}>
+                    <p className="text-center text-sm py-4 text-gray-500">
                         No comments yet. Be the first to contribute analysis.
                     </p>
                 )}

@@ -104,7 +104,17 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 text-sm text-gray-500">
-          <p>&copy; 2026 BI Solutions Group. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+            <p>&copy; 2026 BI Solutions Group. All rights reserved.</p>
+            <div className="flex gap-4">
+              <Link href="/privacy-policy" className="hover:text-white transition-colors">
+                Πολιτική Απορρήτου
+              </Link>
+              <Link href="/terms-of-service" className="hover:text-white transition-colors">
+                Όροι Χρήσης
+              </Link>
+            </div>
+          </div>
 
           <button
             onClick={scrollToTop}

@@ -35,15 +35,11 @@ def set_cache(c: ReportCache) -> None:
     global _cache; _cache = c
 
 # ---------------------------------------------------------------------------
-# In-memory ticker index (production: Redis SCAN or PostgreSQL)
+# In-memory ticker index
 # ---------------------------------------------------------------------------
 
 class TickerIndex:
-    """Lightweight in-memory index of cached report metadata.
-
-    Production: backed by Redis SET quantus:screener:index storing all tickers
-    with active cached reports, queried via SCAN or an auxiliary Postgres table.
-    """
+    """Lightweight in-memory index of cached report metadata."""
 
     def __init__(self, cache: ReportCache):
         self._cache = cache

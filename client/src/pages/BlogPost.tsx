@@ -35,6 +35,14 @@ export default function BlogPost() {
         );
     }
 
+    // Render inline bold (**text**) as React elements — no dangerouslySetInnerHTML
+    const renderInline = (text: string, boldClass = "font-semibold") => {
+        const parts = text.split(/\*\*(.*?)\*\*/g);
+        return parts.map((part, i) =>
+            i % 2 === 1 ? <strong key={i} className={boldClass}>{part}</strong> : part
+        );
+    };
+
     // Parse content into paragraphs and headings
     const renderContent = (content: string) => {
         const lines = content.split("\n\n");
@@ -54,17 +62,17 @@ export default function BlogPost() {
                         key={index}
                         className="border-l-4 border-black pl-6 py-2 my-6 bg-gray-50 rounded-r-lg"
                     >
-                        <p className="text-gray-700 italic" dangerouslySetInnerHTML={{ __html: line.replace("> ", "").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") }} />
+                        <p className="text-gray-700 italic">
+                            {renderInline(line.replace("> ", ""))}
+                        </p>
                     </blockquote>
                 );
             }
             // Regular paragraphs with bold support
             return (
-                <p
-                    key={index}
-                    className="text-gray-700 leading-relaxed mb-4"
-                    dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, "<strong class='text-black'>$1</strong>") }}
-                />
+                <p key={index} className="text-gray-700 leading-relaxed mb-4">
+                    {renderInline(line, "font-semibold text-black")}
+                </p>
             );
         });
     };

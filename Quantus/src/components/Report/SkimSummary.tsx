@@ -21,7 +21,7 @@ function buildKeyRisk(report: ReportData) {
         return `${report.cross_ticker_alerts[0].related_ticker}: ${report.cross_ticker_alerts[0].impact}`;
     }
 
-    return `Expected shortfall ${report.risk.expected_shortfall} and implied move ${report.risk.implied_move}.`;
+    return `Expected shortfall ${report.risk?.expected_shortfall ?? 'N/A'} and implied move ${report.risk?.implied_move ?? 'N/A'}.`;
 }
 
 function buildSuggestedAction(report: ReportData) {
@@ -29,7 +29,7 @@ function buildSuggestedAction(report: ReportData) {
 }
 
 function buildWhatChanged(report: ReportData) {
-    return report.signal_cards[0]?.plain_note ?? report.regime.implication;
+    return report.signal_cards?.[0]?.plain_note ?? report.regime?.implication ?? 'No data available';
 }
 
 export function SkimSummary({ report, lightMode }: SkimSummaryProps) {
@@ -64,7 +64,7 @@ export function SkimSummary({ report, lightMode }: SkimSummaryProps) {
         >
             <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
                 <div>
-                    <div className="text-xs uppercase tracking-[0.22em]" style={{ color: '#6B7280' }}>
+                    <div className="text-xs uppercase tracking-[0.22em] text-gray-500">
                         Skim First
                     </div>
                     <h2 className="mt-2 text-xl font-bold" style={{ color: textPrimary }}>

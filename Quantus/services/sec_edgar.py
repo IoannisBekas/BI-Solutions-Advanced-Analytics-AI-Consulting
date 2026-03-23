@@ -14,18 +14,9 @@ import urllib.request
 import urllib.error
 import logging
 import random
-from datetime import datetime, timezone
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
-
-# Attempt to load Postgres dependency
-try:
-    import psycopg2
-    from psycopg2.extras import RealDictCursor
-    HAS_DB = True
-except ImportError:
-    HAS_DB = False
 
 # Attempt to load HuggingFace Transformers
 try:
@@ -50,10 +41,6 @@ class SECEdgarService:
     USER_AGENT = "QuantusResearchSolutions (admin@quantus.api)"
     
     def __init__(self):
-        self.db_url = os.environ.get("DATABASE_URL")
-        self.conn = None
-        self._initialize_db()
-        
         # Init actual ML pipeline if present
         if HAS_NLP:
             try:
@@ -62,44 +49,110 @@ class SECEdgarService:
             except Exception as e:
                 logger.error(f"Failed to load FinBERT: {e}")
                 self.nlp = None
-                
-    def _initialize_db(self):
-        if self.db_url and HAS_DB:
-            try:
-                self.conn = psycopg2.connect(self.db_url, cursor_factory=RealDictCursor)
-                self._create_tables()
-            except Exception as e:
-                logger.warning(f"Failed to connect to PG for SEC cache: {e}")
-                self.conn = None
 
-    def _create_tables(self):
-        if not self.conn:
-            return
-        with self.conn.cursor() as cur:
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS sec_nlp_cache (
-                    ticker VARCHAR(10) PRIMARY KEY,
-                    form_type VARCHAR(10),
-                    filing_date DATE,
-                    prior_filing_date DATE,
-                    delta_score FLOAT,
-                    summary_plain TEXT,
-                    updated_at TIMESTAMP
-                )
-            """)
-            self.conn.commit()
+    _cik_cache: dict | None = None
+    _cik_cache_path = os.path.join(os.path.dirname(__file__), "..", ".sec_cik_cache.json")
 
     def _get_cik(self, ticker: str) -> str:
-        """Find the 10-digit CIK for a given ticker."""
-        # In a real app we'd query the SEC's company_tickers.json mapping
-        # For this execution, we simulate looking it up.
-        # Format requires zero padding to 10 digits
-        mock_ciks = {
-            "AAPL": "0000320193",
-            "TSLA": "0001318605",
-            "NVDA": "0001045810",
-        }
-        return mock_ciks.get(ticker.upper(), "0000000000")
+        """Find the 10-digit CIK for a given ticker.
+        
+        Uses SEC's official company_tickers.json mapping, cached locally
+        for 7 days to avoid hitting the SEC API on every call.
+        """
+        ticker = ticker.upper().strip()
+
+        # Load cache (in-memory first, then disk, then API)
+        if SECEdgarService._cik_cache is None:
+            SECEdgarService._cik_cache = self._load_cik_map()
+
+        cik = SECEdgarService._cik_cache.get(ticker)
+        if cik:
+            return cik.zfill(10)
+
+        # Fallback for tickers not in the SEC database
+        logger.warning("SEC CIK not found for ticker: %s", ticker)
+        return "0000000000"
+
+    def _load_cik_map(self) -> dict:
+        """Load ticker→CIK mapping from cache or SEC API."""
+        # Try disk cache first (7-day TTL)
+        cache_path = self._cik_cache_path
+        if os.path.exists(cache_path):
+            try:
+                mtime = os.path.getmtime(cache_path)
+                age_days = (time.time() - mtime) / 86400
+                if age_days < 7:
+                    with open(cache_path, "r") as f:
+                        return json.load(f)
+                    logger.info("SEC CIK cache loaded from disk (%d tickers)", len(data))
+            except Exception as e:
+                logger.warning("Failed to read SEC CIK cache: %s", e)
+
+        # Fetch from SEC API
+        try:
+            url = "https://www.sec.gov/files/company_tickers.json"
+            req = urllib.request.Request(url, headers={"User-Agent": self.USER_AGENT})
+            with urllib.request.urlopen(req, timeout=10) as response:
+                raw = json.loads(response.read().decode())
+
+            # Build ticker → CIK mapping
+            cik_map = {}
+            for entry in raw.values():
+                t = entry.get("ticker", "").upper()
+                c = str(entry.get("cik_str", ""))
+                if t and c:
+                    cik_map[t] = c
+
+            # Save to disk cache
+            try:
+                with open(cache_path, "w") as f:
+                    json.dump(cik_map, f)
+                logger.info("SEC CIK map downloaded: %d tickers", len(cik_map))
+            except Exception as e:
+                logger.warning("Failed to write SEC CIK cache: %s", e)
+
+            return cik_map
+        except Exception as e:
+            logger.error("Failed to fetch SEC company_tickers.json: %s", e)
+            # Return minimal fallback
+            return {
+                "AAPL": "320193",
+                "TSLA": "1318605",
+                "NVDA": "1045810",
+                "MSFT": "789019",
+                "GOOGL": "1652044",
+                "AMZN": "1018724",
+                "META": "1326801",
+            }
+
+    def search_tickers(self, query: str, limit: int = 5) -> list[dict]:
+        """Search the disk-cached SEC tickers for a fast autocomplete feature."""
+        query = query.upper().strip()
+        if not query:
+            return []
+            
+        if SECEdgarService._cik_cache is None:
+            SECEdgarService._cik_cache = self._load_cik_map()
+            
+        matches = []
+        for ticker in SECEdgarService._cik_cache.keys():
+            if ticker.startswith(query):
+                matches.append(ticker)
+                
+        # Sort exactly by length (so query "A" puts "A" first, then "AA", etc.)
+        matches.sort(key=len)
+        
+        results = []
+        for t in matches[:limit]:
+            results.append({
+                "ticker": t,
+                "name": t, # Don't have company name in cache, just use ticker
+                "assetClass": "EQUITY",
+                "sector": "Unknown",
+                "hasCachedReport": False,
+                "researcherCount": 0
+            })
+        return results
 
     def _fetch_submissions(self, cik: str) -> dict:
         """Fetch the submissions history from data.sec.gov"""
@@ -167,21 +220,6 @@ class SECEdgarService:
             return f"Management tone remains neutral and consistent with the prior quarter."
 
     def _get_cached_tier1(self, ticker: str) -> SECDeltaResult:
-        if self.conn:
-            with self.conn.cursor() as cur:
-                cur.execute("SELECT * FROM sec_nlp_cache WHERE ticker = %s", (ticker.upper(),))
-                row = cur.fetchone()
-                if row:
-                    return SECDeltaResult(
-                        ticker=row['ticker'],
-                        form_type=row['form_type'],
-                        filing_date=row['filing_date'].isoformat() if row['filing_date'] else "Unknown",
-                        prior_filing_date=row['prior_filing_date'].isoformat() if row['prior_filing_date'] else "Unknown",
-                        delta_score=row['delta_score'],
-                        summary_plain=row['summary_plain'],
-                        is_cached_fallback=True
-                    )
-        # Mock fallback if DB missing
         return SECDeltaResult(
             ticker=ticker.upper(),
             form_type="10-Q",
@@ -193,24 +231,7 @@ class SECEdgarService:
         )
 
     def _save_cache_tier1(self, result: SECDeltaResult):
-        if self.conn:
-            with self.conn.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO sec_nlp_cache (ticker, form_type, filing_date, prior_filing_date, delta_score, summary_plain, updated_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (ticker) DO UPDATE SET
-                        form_type = EXCLUDED.form_type,
-                        filing_date = EXCLUDED.filing_date,
-                        prior_filing_date = EXCLUDED.prior_filing_date,
-                        delta_score = EXCLUDED.delta_score,
-                        summary_plain = EXCLUDED.summary_plain,
-                        updated_at = EXCLUDED.updated_at
-                """, (
-                    result.ticker, result.form_type, result.filing_date, 
-                    result.prior_filing_date, result.delta_score, result.summary_plain, 
-                    datetime.now(timezone.utc)
-                ))
-            self.conn.commit()
+        logger.debug("Cache tier1 for %s (in-memory only)", result.ticker)
 
     def analyze_ticker(self, ticker: str) -> SECDeltaResult:
         """

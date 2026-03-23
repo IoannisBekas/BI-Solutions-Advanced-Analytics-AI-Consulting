@@ -31,7 +31,7 @@ export function SectionD({ report, lightMode }: Props) {
                     { label: 'Risk / Reward', value: report.strategy.risk_reward },
                 ].map(item => (
                     <div key={item.label} className="rounded-xl p-3 text-center" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
-                        <div className="text-xs mb-1" style={{ color: '#6B7280' }}>{item.label}</div>
+                        <div className="text-xs mb-1 text-gray-500">{item.label}</div>
                         <div className="font-mono font-bold" style={{ color: textPrimary }}>{item.value}</div>
                     </div>
                 ))}
@@ -44,7 +44,7 @@ export function SectionD({ report, lightMode }: Props) {
                     ...(report.strategy.portfolio_sharpe_improvement ? [{ label: 'Portfolio Sharpe ΔΔ', value: report.strategy.portfolio_sharpe_improvement }] : []),
                 ].map(item => (
                     <div key={item.label} className="rounded-lg px-3 py-2 flex items-center gap-2" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
-                        <span style={{ color: '#6B7280' }}>{item.label}:</span>
+                        <span className="text-gray-500">{item.label}:</span>
                         <span className="font-semibold" style={{ color: textPrimary }}>{item.value}</span>
                     </div>
                 ))}
@@ -64,11 +64,11 @@ export function SectionD({ report, lightMode }: Props) {
                         {[
                             { label: 'Long', value: report.strategy.pairs_trade.long },
                             { label: 'Short', value: report.strategy.pairs_trade.short },
-                            { label: 'Z-Score', value: report.strategy.pairs_trade.current_zscore.toFixed(1) },
+                            { label: 'Z-Score', value: typeof report.strategy.pairs_trade?.current_zscore === 'number' ? report.strategy.pairs_trade.current_zscore.toFixed(1) : 'N/A' },
                             { label: 'Half-Life', value: `${report.strategy.pairs_trade.half_life_days}d` },
                         ].map(p => (
                             <div key={p.label}>
-                                <span style={{ color: '#6B7280' }}>{p.label}: </span>
+                                <span className="text-gray-500">{p.label}: </span>
                                 <span className="font-semibold" style={{ color: textPrimary }}>{p.value}</span>
                             </div>
                         ))}

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, Loader2, Briefcase, Scale, Calculator } from "lucide-react";
+import { Send, Bot, Loader2, Briefcase, Scale, Calculator, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -22,25 +22,26 @@ export default function AIAdvisorPage() {
   const [response, setResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+  const lastRequestRef = useRef<{ role: string; question: string } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!question.trim()) return;
+  const submitRequest = useCallback(async (role: string, q: string) => {
+    // Cancel any in-flight request
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     setIsLoading(true);
     setResponse(null);
     setErrorMsg(null);
+    lastRequestRef.current = { role, question: q };
 
     try {
       const res = await fetch("/api/ai-advisor", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          role: selectedRole,
-          question: question.trim(),
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, question: q }),
+        signal: controller.signal,
       });
 
       const data = await res.json();
@@ -51,10 +52,25 @@ export default function AIAdvisorPage() {
         setErrorMsg(data.error || "Unable to process your request. Please try again.");
       }
     } catch (error) {
+      if ((error as Error).name === "AbortError") return;
       console.error("AI Advisor error:", error);
       setErrorMsg("Network error. Please check your connection and try again.");
     } finally {
-      setIsLoading(false);
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+      }
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!question.trim()) return;
+    submitRequest(selectedRole, question.trim());
+  };
+
+  const handleRetry = () => {
+    if (lastRequestRef.current) {
+      submitRequest(lastRequestRef.current.role, lastRequestRef.current.question);
     }
   };
 
@@ -146,9 +162,44 @@ export default function AIAdvisorPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="bg-red-50 text-red-700 rounded-xl p-4 border border-red-200 text-sm"
+                        className="bg-red-50 text-red-700 rounded-xl p-4 border border-red-200 text-sm flex items-center justify-between gap-4"
                       >
-                        {errorMsg}
+                        <span>{errorMsg}</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleRetry}
+                          className="flex-shrink-0 gap-1.5 border-red-300 text-red-700 hover:bg-red-100"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" /> Retry
+                        </Button>
+                      </motion.div>
+                    )}
+                    {isLoading && (
+                      <motion.div
+                        key="loading"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="bg-gray-50 rounded-2xl p-6 border border-gray-100 relative"
+                      >
+                        <div className="absolute top-0 left-0 w-1 h-full bg-black/10" />
+                        <div className="flex gap-4">
+                          <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mt-1">
+                            <Bot className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 space-y-3">
+                            <p className="font-semibold text-sm text-gray-500 uppercase tracking-wider">
+                              AI Response ({roles.find(r => r.id === selectedRole)?.label})
+                            </p>
+                            <div className="space-y-2.5 animate-pulse">
+                              <div className="h-4 bg-gray-200 rounded-md w-full" />
+                              <div className="h-4 bg-gray-200 rounded-md w-5/6" />
+                              <div className="h-4 bg-gray-200 rounded-md w-4/6" />
+                            </div>
+                            <p className="text-xs text-gray-400 mt-3">Generating response…</p>
+                          </div>
+                        </div>
                       </motion.div>
                     )}
                     {response && (

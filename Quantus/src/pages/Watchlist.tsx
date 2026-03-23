@@ -4,7 +4,7 @@ import {
     RefreshCw, Bell, TrendingUp, TrendingDown, AlertTriangle,
     Users, Clock, Filter, Calendar,
 } from 'lucide-react';
-import type { AssetClass, SignalType } from '../types';
+import type { AssetClass, AssetEntry, SignalType } from '../types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,6 +35,8 @@ interface WatchlistProps {
     userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL';
     lightMode?: boolean;
     onSelectTicker?: (ticker: string) => void;
+    onOpenAlerts?: () => void;
+    savedAssets?: AssetEntry[];
 }
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
@@ -109,11 +111,31 @@ function MiniBar({ value, color }: { value: number; color: string }) {
     );
 }
 
+function savedAssetToWatchlistItem(asset: AssetEntry): WatchlistItem {
+    return {
+        ticker: asset.ticker,
+        name: asset.name,
+        assetClass: asset.assetClass,
+        signal: 'NEUTRAL',
+        confidence: asset.hasCachedReport ? 60 : 20,
+        regime: asset.hasCachedReport ? 'Tracked' : 'Starter',
+        momentum: 0,
+        sentiment: 0,
+        currentPrice: asset.currentPrice ?? 0,
+        dayChangePct: asset.dayChangePct ?? 0,
+        forecast30d: asset.hasCachedReport ? 'Cached route' : 'Starter shell',
+        lastUpdated: new Date().toISOString(),
+        nextRefresh: asset.cachedReportAge ?? 'Pinned',
+        researcherCount: asset.researcherCount ?? 0,
+        knowledgeGraphAlert: asset.sector ? `${asset.sector} · saved from workspace` : 'Saved from workspace',
+    };
+}
+
 // ─── Skeleton card ────────────────────────────────────────────────────────────
 
 function SkeletonCard() {
     return (
-        <div className="rounded-xl p-4" style={{ background: '#111827', border: '1px solid #1F2937' }}>
+        <div className="rounded-xl p-4 bg-gray-900 border border-gray-800">
             {[80, 60, 48, 36, 52].map((w, i) => (
                 <div key={i} className={`h-${i === 0 ? 4 : 2.5} rounded skeleton mb-${i === 0 ? 3 : 2}`} style={{ width: `${w}%` }} />
             ))}
@@ -153,15 +175,15 @@ function WatchlistCard({
                 <div className="flex items-start gap-1.5 text-xs p-2 rounded-lg mb-3"
                     style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0 mt-0.5" />
-                    <span style={{ color: '#9CA3AF' }}>{item.knowledgeGraphAlert}</span>
+                    <span className="text-gray-400">{item.knowledgeGraphAlert}</span>
                 </div>
             )}
 
             {/* Header row */}
             <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0"
-                        style={{ background: 'rgba(59,130,246,0.14)', color: '#3B82F6' }}>
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0 text-blue-500"
+                        style={{ background: 'rgba(59,130,246,0.14)' }}>
                         {item.ticker.slice(0, 2)}
                     </div>
                     <div>
@@ -179,17 +201,17 @@ function WatchlistCard({
                     {item.signal}
                 </span>
                 <span className="text-xs" style={{ color: ts }}>{item.confidence}%</span>
-                <span className="text-xs ml-auto" style={{ color: '#6B7280' }}>{item.regime}</span>
+                <span className="text-xs ml-auto text-gray-500">{item.regime}</span>
             </div>
 
             {/* Momentum + Sentiment pills */}
             <div className="flex items-center gap-4 mb-3">
                 <div className="flex items-center gap-1.5">
-                    <span className="text-xs" style={{ color: '#6B7280' }}>Mom</span>
+                    <span className="text-xs text-gray-500">Mom</span>
                     <MiniBar value={item.momentum} color={item.momentum >= 0 ? '#10B981' : '#EF4444'} />
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <span className="text-xs" style={{ color: '#6B7280' }}>Sent</span>
+                    <span className="text-xs text-gray-500">Sent</span>
                     <MiniBar value={item.sentiment} color={item.sentiment >= 0 ? '#3B82F6' : '#F97316'} />
                 </div>
             </div>
@@ -223,7 +245,7 @@ function WatchlistCard({
                     {positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                     {positive ? '+' : ''}{item.dayChangePct.toFixed(2)}%
                 </span>
-                <span className="text-xs" style={{ color: '#6B7280' }}>30d: {item.forecast30d}</span>
+                <span className="text-xs text-gray-500">30d: {item.forecast30d}</span>
             </div>
 
             {/* Earnings flag — equity / ETF only */}
@@ -237,7 +259,7 @@ function WatchlistCard({
 
             {/* Footer */}
             <div className="flex items-center justify-between pt-2 border-t text-xs flex-wrap gap-1" style={{ borderColor: border }}>
-                <div className="flex items-center gap-3" style={{ color: '#6B7280' }}>
+                <div className="flex items-center gap-3 text-gray-500">
                     <span className="flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         {item.researcherCount}
@@ -255,7 +277,7 @@ function WatchlistCard({
 
 // ─── Main Watchlist ───────────────────────────────────────────────────────────
 
-export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker }: WatchlistProps) {
+export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker, onOpenAlerts, savedAssets = [] }: WatchlistProps) {
     const [refreshing, setRefreshing] = useState(false);
     const [filter, setFilter] = useState<string>('ALL');
 
@@ -266,9 +288,25 @@ export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker }: Watc
         setRefreshing(false);
     }, [userTier]);
 
+    const allItems = useMemo(() => {
+        const merged = new Map<string, WatchlistItem>();
+
+        for (const item of MOCK_WATCHLIST) {
+            merged.set(item.ticker, item);
+        }
+
+        for (const asset of savedAssets) {
+            if (!merged.has(asset.ticker)) {
+                merged.set(asset.ticker, savedAssetToWatchlistItem(asset));
+            }
+        }
+
+        return Array.from(merged.values());
+    }, [savedAssets]);
+
     const filtered = useMemo(() =>
-        filter === 'ALL' ? MOCK_WATCHLIST : MOCK_WATCHLIST.filter(i => i.assetClass === filter),
-        [filter],
+        filter === 'ALL' ? allItems : allItems.filter(i => i.assetClass === filter),
+        [allItems, filter],
     );
 
     const bg = lightMode ? '#F0F4FF' : '#0A0D14';
@@ -282,7 +320,7 @@ export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker }: Watc
                 <div>
                     <h1 className="text-2xl font-bold" style={{ color: tp }}>Watchlist</h1>
                     <p className="text-sm mt-0.5" style={{ color: ts }}>
-                        {MOCK_WATCHLIST.length} tickers · Real-time signal monitoring
+                        {allItems.length} tickers · Real-time signal monitoring
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -297,7 +335,10 @@ export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker }: Watc
                         <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                         Refresh All
                     </button>
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm cursor-pointer transition-all hover:scale-105"
+                    <button
+                        type="button"
+                        onClick={onOpenAlerts}
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm cursor-pointer transition-all hover:scale-105"
                         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: ts }}>
                         <Bell className="w-4 h-4" />
                         Alerts
@@ -307,7 +348,7 @@ export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker }: Watc
 
             {/* Filter bar */}
             <div className="flex items-center gap-2 mb-6 flex-wrap">
-                <Filter className="w-4 h-4" style={{ color: '#6B7280' }} />
+                <Filter className="w-4 h-4 text-gray-500" />
                 {['ALL', 'EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'].map(f => (
                     <button
                         key={f}
@@ -351,7 +392,7 @@ export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker }: Watc
                     className="text-center mt-8 p-4 rounded-xl"
                     style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)' }}
                 >
-                    <p className="text-sm" style={{ color: '#818CF8' }}>
+                    <p className="text-sm text-indigo-400">
                         Watchlist limited to 5 tickers on Free tier. Upgrade to Unlocked for up to 25.
                     </p>
                 </motion.div>

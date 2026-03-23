@@ -9,22 +9,7 @@ Every shared report URL embeds a referral token:
 When a new user signs up via that URL:
   - Referral is attributed to the token owner
   - Referrer earns 5 credits immediately
-  - Attribution stored in PostgreSQL referrals table
-
-Schema (production PostgreSQL):
-  CREATE TABLE referrals (
-    id            SERIAL PRIMARY KEY,
-    referrer_id   TEXT NOT NULL,
-    referred_id   TEXT NOT NULL,
-    token         TEXT NOT NULL UNIQUE,
-    report_id     TEXT,
-    credited_at   TIMESTAMPTZ,
-    credits_earned NUMERIC(10,4) DEFAULT 5,
-    created_at    TIMESTAMPTZ DEFAULT NOW()
-  );
-
-  CREATE INDEX ON referrals (referrer_id);
-  CREATE INDEX ON referrals (token);
+  - Attribution stored in referrals table
 """
 
 from __future__ import annotations
@@ -44,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 REFERRAL_CREDIT_REWARD = 5.0
 
-# ─── In-memory store (replace with PostgreSQL) ───────────────────────────────
+# ─── In-memory store ─────────────────────────────────────────────────────────
 
 _tokens:   dict[str, str] = {}     # token → referrer_user_id
 _referrals: list[dict]    = []     # full attribution log

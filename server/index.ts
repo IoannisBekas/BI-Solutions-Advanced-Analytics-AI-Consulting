@@ -144,7 +144,7 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    console.error(err);
   });
 
   // importantly only setup vite in development and after
@@ -171,4 +171,30 @@ app.use((req, res, next) => {
       log(`serving on port ${port}`);
     },
   );
+
+  // ─── Graceful shutdown (Railway / Docker SIGTERM) ─────────────────────────
+  function shutdown(signal: string) {
+    log(`${signal} received — shutting down gracefully`, "shutdown");
+    httpServer.close(() => {
+      log("HTTP server closed", "shutdown");
+      process.exit(0);
+    });
+    // Force exit after 10s if connections don't drain
+    setTimeout(() => {
+      log("Forced shutdown after timeout", "shutdown");
+      process.exit(1);
+    }, 10_000).unref();
+  }
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
+
+  // ─── Crash safety — log & exit instead of silent death ────────────────────
+  process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled Promise rejection:", reason);
+  });
+  process.on("uncaughtException", (err) => {
+    console.error("Uncaught exception:", err);
+    process.exit(1);
+  });
 })();

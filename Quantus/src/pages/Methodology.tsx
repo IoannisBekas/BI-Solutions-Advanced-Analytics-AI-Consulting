@@ -30,7 +30,7 @@ function AccordionSection({ section, lightMode }: { section: Section; lightMode?
                 className="w-full flex items-center justify-between px-6 py-4 text-left cursor-pointer hover:bg-white/[0.02] transition-colors"
             >
                 <span className="font-semibold text-sm" style={{ color: tp }}>{section.title}</span>
-                {open ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: '#6B7280' }} /> : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: '#6B7280' }} />}
+                {open ? <ChevronUp className="w-4 h-4 flex-shrink-0 text-gray-500" /> : <ChevronDown className="w-4 h-4 flex-shrink-0 text-gray-500" />}
             </button>
             {open && (
                 <motion.div

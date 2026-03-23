@@ -70,7 +70,7 @@ class ModerationQueueItem:
     ai_score:    float   # 0–1 confidence of policy violation
     created_at:  float   = field(default_factory=time.time)
 
-# ─── In-memory stores (replace with PostgreSQL) ───────────────────────────────
+# ─── In-memory stores ────────────────────────────────────────────────────────
 
 _comments:   dict[str, Comment]              = {}  # comment_id → Comment
 _votes:      dict[str, set[str]]             = {}  # comment_id → set of user_ids who voted

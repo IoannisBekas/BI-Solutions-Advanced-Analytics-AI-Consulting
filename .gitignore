@@ -24,5 +24,7 @@ PowerBI_Solutions/app/.env.*
 PowerBI_Solutions/app/.env
 PowerBI_Solutions/app/.env.local
 root-dev.log
+error.log
+build_log.txt
+*.log
 attached_assets/
-{console.error(e.message)

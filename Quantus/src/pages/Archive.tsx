@@ -62,7 +62,7 @@ function DiffRow({ label, oldVal, newVal }: { label: string; oldVal: string | nu
     const changed = String(oldVal) !== String(newVal);
     return (
         <div className="flex items-center gap-3 text-xs py-1">
-            <span className="w-28 flex-shrink-0" style={{ color: '#6B7280' }}>{label}</span>
+            <span className="w-28 flex-shrink-0 text-gray-500">{label}</span>
             <span className="font-mono" style={{ color: changed ? '#EF4444' : '#9CA3AF', textDecoration: changed ? 'line-through' : 'none' }}>
                 {oldVal}
             </span>
@@ -83,10 +83,10 @@ function ComparePanel({ old: o, cur: c, onClose }: { old: Snapshot; cur: Snapsho
             className="rounded-xl p-5 mb-6"
             style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.2)' }}>
             <div className="flex items-center justify-between mb-4">
-                <span className="font-semibold text-sm" style={{ color: '#818CF8' }}>
+                <span className="font-semibold text-sm text-indigo-400">
                     Comparing {fmtDate(o.generatedAt)} → Current
                 </span>
-                <button onClick={onClose} className="text-xs cursor-pointer" style={{ color: '#6B7280' }}>✕</button>
+                <button onClick={onClose} className="text-xs cursor-pointer text-gray-500">✕</button>
             </div>
             <DiffRow label="Signal" oldVal={o.signal} newVal={c.signal} />
             <DiffRow label="Confidence" oldVal={`${o.confidence}%`} newVal={`${c.confidence}%`} />
@@ -131,13 +131,13 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                             <span className="font-bold text-xs font-mono" style={{ color: cFill }}>{snap.signal}</span>
                             <span className="text-xs" style={{ color: ts }}>{snap.confidence}% conf</span>
-                            <span className="text-xs" style={{ color: '#6B7280' }}>{snap.regime}</span>
+                            <span className="text-xs text-gray-500">{snap.regime}</span>
                             <span className="text-xs px-1.5 py-0.5 rounded font-mono"
                                 style={{ background: 'rgba(59,130,246,0.08)', color: '#60A5FA' }}>
                                 {snap.engineVersion}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs" style={{ color: '#6B7280' }}>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
                             <Clock className="w-3 h-3" />
                             {fmtDate(snap.generatedAt)} · {snap.reportId} · ${snap.priceAtGen.toFixed(2)}
                         </div>
@@ -154,7 +154,7 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
                             style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)', color: '#3B82F6' }}>
                             <ExternalLink className="w-3 h-3" />Share
                         </a>
-                        <ChevronRight className="w-4 h-4" style={{ color: '#6B7280' }} />
+                        <ChevronRight className="w-4 h-4 text-gray-500" />
                     </div>
                 </div>
             </div>
@@ -166,11 +166,11 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
 function TimelineSlider({ total, value, onChange }: { total: number; value: number; onChange(v: number): void }) {
     return (
         <div className="flex items-center gap-3">
-            <SlidersHorizontal className="w-4 h-4 flex-shrink-0" style={{ color: '#6B7280' }} />
+            <SlidersHorizontal className="w-4 h-4 flex-shrink-0 text-gray-500" />
             <input type="range" min={0} max={total - 1} value={value}
                 onChange={e => onChange(Number(e.target.value))}
                 className="flex-1 h-1.5 rounded-full accent-indigo-500" />
-            <span className="text-xs w-20 text-right font-mono" style={{ color: '#6B7280' }}>
+            <span className="text-xs w-20 text-right font-mono text-gray-500">
                 Showing {total - value} of {total}
             </span>
         </div>
@@ -221,7 +221,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
                         {/* Ticker */}
                         <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
                             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937' }}>
-                            <span className="text-xs font-bold" style={{ color: '#3B82F6' }}>TICKER</span>
+                            <span className="text-xs font-bold text-blue-500">TICKER</span>
                             <input value={ticker} onChange={e => setTicker(e.target.value.toUpperCase())}
                                 className="bg-transparent text-sm font-mono w-20 focus:outline-none"
                                 style={{ color: tp }} placeholder="NVDA" />
@@ -229,7 +229,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
                         {/* Semantic search */}
                         <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl flex-1 min-w-56"
                             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937' }}>
-                            <Search className="w-4 h-4 flex-shrink-0" style={{ color: '#9CA3AF' }} />
+                            <Search className="w-4 h-4 flex-shrink-0 text-gray-400" />
                             <input value={query} onChange={e => setQuery(e.target.value)}
                                 placeholder='"regime change from uptrend…" or "Meridian v2.4"'
                                 className="flex-1 bg-transparent text-sm focus:outline-none"

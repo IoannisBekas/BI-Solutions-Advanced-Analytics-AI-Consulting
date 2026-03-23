@@ -261,6 +261,7 @@ def validate_report_json(raw: str) -> tuple[dict | None, list[str]]:
     """Parse and validate Claude's JSON response.
 
     Returns ``(parsed_dict, errors)``. ``errors`` is empty on success.
+    Enhanced with stricter field-level validation.
     """
     errors: list[str] = []
 
@@ -268,23 +269,59 @@ def validate_report_json(raw: str) -> tuple[dict | None, list[str]]:
     stripped = raw.strip()
     if stripped.startswith("```"):
         lines = stripped.split("\n")
-        stripped = "\n".join(lines[1:-1] if lines[-1] == "```" else lines[1:])
+        stripped = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
 
     try:
         obj = json.loads(stripped)
     except json.JSONDecodeError as exc:
         return None, [f"JSON parse error: {exc}"]
 
+    # Required keys check
     missing = REQUIRED_REPORT_KEYS - set(obj.keys())
     if missing:
         errors.append(f"Missing required keys: {sorted(missing)}")
 
+    # Engine version
     if obj.get("engine") != ENGINE_VERSION:
         errors.append(f"engine field mismatch: expected '{ENGINE_VERSION}', got '{obj.get('engine')}'")
 
+    # Confidence score range
     cs = obj.get("confidence_score")
     if cs is not None and not (0 <= float(cs) <= 100):
         errors.append(f"confidence_score {cs} out of range [0, 100]")
+
+    # Signal value validation
+    valid_signals = {"STRONG BUY", "BUY", "NEUTRAL", "SELL", "STRONG SELL"}
+    sig = obj.get("overall_signal")
+    if sig and sig not in valid_signals:
+        errors.append(f"overall_signal '{sig}' not in {valid_signals}")
+
+    strategy = obj.get("strategy")
+    if isinstance(strategy, dict):
+        action = strategy.get("action")
+        if action and action not in valid_signals:
+            errors.append(f"strategy.action '{action}' not in {valid_signals}")
+
+    # Confidence breakdown sum check (should be roughly 0-100)
+    breakdown = obj.get("confidence_breakdown")
+    if isinstance(breakdown, dict) and breakdown:
+        total = sum(v for v in breakdown.values() if isinstance(v, (int, float)))
+        if total > 105:  # 5% tolerance
+            errors.append(f"confidence_breakdown sums to {total}, should be ≤100")
+
+    # Narrative length checks
+    tech = obj.get("narrative_technical", "")
+    if isinstance(tech, str) and len(tech) < 50:
+        errors.append(f"narrative_technical too short ({len(tech)} chars, min 50)")
+
+    plain = obj.get("narrative_plain", "")
+    if isinstance(plain, str) and len(plain) < 20:
+        errors.append(f"narrative_plain too short ({len(plain)} chars, min 20)")
+
+    # key_metrics must be a list
+    km = obj.get("key_metrics")
+    if km is not None and not isinstance(km, list):
+        errors.append(f"key_metrics must be a list, got {type(km).__name__}")
 
     return (obj if not errors else None), errors
 
@@ -325,18 +362,33 @@ async def call_claude_collect(
     payload: QuantusPayload,
     section: str = "A",
     client: anthropic.AsyncAnthropic | None = None,
-    retry_on_invalid: bool = True,
+    max_retries: int = 2,
 ) -> tuple[dict, list[str]]:
     """Collect the full Claude response and validate it.
 
-    Returns ``(report_dict, errors)``. Retries once on invalid JSON.
+    Returns ``(report_dict, errors)``. Retries up to *max_retries* times
+    with corrective feedback on invalid JSON.
     """
     _client = client or anthropic.AsyncAnthropic()
     asset_class = payload.asset_class.lower()
     static_prompt = STATIC_PROMPTS.get(asset_class, STATIC_EQUITY_PROMPT)
     dynamic_prompt = build_dynamic_prompt(payload, section)
 
-    async def _call() -> str:
+    async def _call(correction: str | None = None) -> str:
+        messages = [{"role": "user", "content": dynamic_prompt}]
+
+        # On retry, include the errors as corrective feedback
+        if correction:
+            messages.append({"role": "assistant", "content": "(previous invalid attempt)"})
+            messages.append({
+                "role": "user",
+                "content": (
+                    f"Your previous response had validation errors:\n{correction}\n\n"
+                    f"Please fix these issues and respond with ONLY valid JSON "
+                    f"matching the schema. Engine must be '{ENGINE_VERSION}'."
+                ),
+            })
+
         response = await _client.messages.create(
             model=MODEL,
             max_tokens=MAX_TOKENS,
@@ -348,19 +400,27 @@ async def call_claude_collect(
                     "cache_control": {"type": "ephemeral"},
                 }
             ],
-            messages=[{"role": "user", "content": dynamic_prompt}],
+            messages=messages,
         )
         return response.content[0].text
 
+    # First attempt
     raw = await _call()
     result, errors = validate_report_json(raw)
 
-    if errors and retry_on_invalid:
-        logger.warning("call_claude_collect | invalid JSON on first attempt, retrying: %s", errors)
-        raw = await _call()
+    # Retry with corrective feedback
+    for attempt in range(max_retries):
+        if not errors:
+            break
+        logger.warning(
+            "call_claude_collect | attempt %d/%d invalid, retrying: %s",
+            attempt + 1, max_retries, errors,
+        )
+        correction_text = "\n".join(f"- {e}" for e in errors)
+        raw = await _call(correction=correction_text)
         result, errors = validate_report_json(raw)
 
     if errors:
-        logger.error("call_claude_collect | validation failed after retry: %s", errors)
+        logger.error("call_claude_collect | validation failed after %d retries: %s", max_retries, errors)
 
     return result or {}, errors

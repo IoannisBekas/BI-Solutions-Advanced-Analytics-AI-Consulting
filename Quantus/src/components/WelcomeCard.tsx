@@ -5,7 +5,7 @@ import {
     Users, Zap, Activity, ArrowUpRight, ArrowDownRight,
     Minus, ExternalLink, Clock, CheckCircle2, Building2,
 } from 'lucide-react';
-import type { ReportData } from '../types';
+import type { ReportData, ReportSource } from '../types';
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -13,22 +13,35 @@ interface WelcomeCardProps {
     report: ReportData;
     lightMode?: boolean;
     onSubscribe?: () => void;
-    reportSource?: 'cached' | 'starter';
+    onOpenTicker?: (ticker: string) => void;
+    reportSource?: ReportSource;
     reportMessage?: string;
     reportDetail?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function fmtPrice(p: number): string {
+function fmtPrice(p: number | undefined | null): string {
+    if (p == null || isNaN(p)) return '$—';
     if (p === 0) return '—';
     if (p > 10_000) return `$${p.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
     if (p > 1_000) return `$${p.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
     return `$${p.toFixed(2)}`;
 }
 
-function fmtMktCap(v: string | number): string {
+function isFiniteNumber(value: number | undefined | null): value is number {
+    return typeof value === 'number' && Number.isFinite(value);
+}
+
+function fmtSignedValue(value: number | undefined | null, suffix = ''): string {
+    if (!isFiniteNumber(value)) return '—';
+    return `${value > 0 ? '+' : ''}${value.toFixed(2)}${suffix}`;
+}
+
+function fmtMktCap(v: string | number | undefined | null): string {
+    if (v == null) return 'N/A';
     if (typeof v === 'string') return v;
+    if (isNaN(v)) return 'N/A';
     if (v >= 1e12) return `$${(v / 1e12).toFixed(2)}T`;
     if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
     if (v >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
@@ -153,7 +166,7 @@ function AnalystStrip({
                     <span className="text-emerald-400">{buy} Buy</span>
                     <span className="text-amber-400">{hold} Hold</span>
                     <span className="text-red-400">{sell} Sell</span>
-                    <span style={{ color: '#6B7280' }}>→ {consensus}</span>
+                    <span className="text-gray-500">→ {consensus}</span>
                 </div>
                 {diverges && (
                     <span
@@ -192,10 +205,21 @@ function MetricCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'cached', reportMessage, reportDetail }: WelcomeCardProps) {
-    const positive = report.day_change_pct >= 0;
+export function WelcomeCard({
+    report,
+    lightMode,
+    onSubscribe,
+    onOpenTicker,
+    reportSource = 'cached',
+    reportMessage,
+    reportDetail,
+}: WelcomeCardProps) {
+    const dayChange = isFiniteNumber(report.day_change) ? report.day_change : null;
+    const dayChangePct = isFiniteNumber(report.day_change_pct) ? report.day_change_pct : null;
+    const positive = (dayChangePct ?? dayChange ?? 0) >= 0;
     const isEquity = report.asset_class === 'EQUITY' || report.asset_class === 'ETF';
     const isStarter = reportSource === 'starter';
+    const isLive = reportSource === 'live';
     const session = marketSession();
 
     const cardBg = lightMode ? 'rgba(255,255,255,0.97)' : 'rgba(13,18,30,0.98)';
@@ -205,13 +229,14 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
     const dimBg = lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)';
     const glassBorder = lightMode ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
     const metrics = report.metrics;
+    const dayChangeColor = dayChange == null && dayChangePct == null ? '#6B7280' : positive ? '#34D399' : '#F87171';
 
     // Momentum-based stats grid — asset-class adaptive
     const statsGrid = [
         { label: '52W High', value: fmtPrice(report.week_52_high), freshness: 'Daily' },
         { label: '52W Low', value: fmtPrice(report.week_52_low), freshness: 'Daily' },
         ...(isEquity && report.pe_ratio
-            ? [{ label: 'P/E Ratio', value: `${report.pe_ratio.toFixed(1)}×`, freshness: 'Quarterly' }]
+            ? [{ label: 'P/E Ratio', value: `${(report.pe_ratio ?? 0).toFixed(1)}×`, freshness: 'Quarterly' }]
             : []),
         { label: 'Mkt Cap', value: fmtMktCap(report.market_cap_raw ?? report.market_cap), freshness: 'Live' },
         ...(isEquity && metrics?.risk?.volatility_30d
@@ -257,16 +282,16 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                 <div className="flex items-center gap-3 flex-wrap">
                     <span className={`badge badge-${report.asset_class.toLowerCase()}`}>{report.asset_class}</span>
                     <span className="text-xs font-mono" style={{ color: textSecondary }}>{report.exchange}</span>
-                    <span className="text-xs font-mono" style={{ color: '#6B7280' }}>
+                    <span className="text-xs font-mono text-gray-500">
                         {report.report_id} · {report.engine}
                     </span>
                 </div>
-                <div className="flex items-center gap-3 text-xs">
-                    <div className="flex items-center gap-1.5" style={{ color: '#6B7280' }}>
+                    <div className="flex items-center gap-3 text-xs">
+                    <div className="flex items-center gap-1.5 text-gray-500">
                         <Users className="w-3 h-3" />
-                        <span>{report.researcher_count} researchers · {isStarter ? 'Starter shell' : report.cache_age}</span>
+                        <span>{report.researcher_count} researchers · {isStarter ? 'Starter shell' : (report.cache_age ?? (isLive ? 'Live pipeline' : 'Cached report'))}</span>
                     </div>
-                    <div className="flex items-center gap-1" style={{ color: '#9CA3AF' }}>
+                    <div className="flex items-center gap-1 text-gray-400">
                         <Zap className="w-3 h-3 text-blue-400" />
                         <span>{report.engine}</span>
                     </div>
@@ -292,7 +317,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                                 className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0"
                                 style={{ background: dimBg, color: textPrimary }}
                             >
-                                {report.ticker.slice(0, 2)}
+                                {(report.ticker || '??').slice(0, 2)}
                             </div>
                         )}
                         <div>
@@ -323,13 +348,13 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                             className="rounded-2xl p-4 text-xs"
                             style={{ background: dimBg, border: `1px solid ${glassBorder}` }}
                         >
-                            <div className="flex items-center gap-2 mb-3" style={{ color: '#6B7280' }}>
+                            <div className="flex items-center gap-2 mb-3 text-gray-500">
                                 <Building2 className="w-4 h-4" />
                                 <span className="uppercase tracking-widest text-[10px] font-semibold">Knowledge Graph</span>
                             </div>
-                            <KGBadge label="Suppliers" tickers={report.suppliers ?? []} color="#3B82F6" onTicker={() => { /* TODO: navigate to ticker report */ }} />
-                            <KGBadge label="Customers" tickers={report.customers ?? []} color="#10B981" onTicker={() => { /* TODO: navigate to ticker report */ }} />
-                            <KGBadge label="Competitors" tickers={report.competitors ?? []} color="#9CA3AF" onTicker={() => { /* TODO: navigate to ticker report */ }} />
+                            <KGBadge label="Suppliers" tickers={report.suppliers ?? []} color="#3B82F6" onTicker={(ticker) => onOpenTicker?.(ticker)} />
+                            <KGBadge label="Customers" tickers={report.customers ?? []} color="#10B981" onTicker={(ticker) => onOpenTicker?.(ticker)} />
+                            <KGBadge label="Competitors" tickers={report.competitors ?? []} color="#9CA3AF" onTicker={(ticker) => onOpenTicker?.(ticker)} />
                         </div>
                     ) : null}
                 </div>
@@ -358,10 +383,10 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                                 <span className="font-semibold text-amber-400">
                                     Earnings in {report.earnings_flag.days_to_earnings} days
                                 </span>
-                                <span className="ml-2" style={{ color: '#9CA3AF' }}>
+                                <span className="ml-2 text-gray-400">
                                     · Options-implied: {report.earnings_flag.implied_move}
                                 </span>
-                                <p className="mt-1" style={{ color: '#9CA3AF' }}>
+                                <p className="mt-1 text-gray-400">
                                     {report.earnings_flag.strategy_adjustment}
                                 </p>
                             </div>
@@ -369,7 +394,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                     )}
 
                     {/* Cross-ticker alerts */}
-                    {report.cross_ticker_alerts?.slice(0, 2).map((alert, i) => (
+                    {(report.cross_ticker_alerts || []).slice(0, 2).map((alert, i) => (
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, x: -8 }}
@@ -381,7 +406,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                             <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                             <div>
                                 <span className="font-semibold text-amber-400">{alert.related_ticker} — {alert.event}</span>
-                                <p className="mt-0.5" style={{ color: '#9CA3AF' }}>
+                                <p className="mt-0.5 text-gray-400">
                                     {alert.relationship} · {alert.impact}
                                 </p>
                             </div>
@@ -405,10 +430,12 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                         )}
                         <span style={{ color: isStarter ? '#F59E0B' : '#10B981' }}>
-                            {reportMessage ?? (isStarter ? 'Starter shell loaded' : 'Cached Quantus coverage loaded')}
+                            {reportMessage ?? (isStarter ? 'Starter shell loaded' : isLive ? 'Live Quantus pipeline report loaded' : 'Cached Quantus coverage loaded')}
                         </span>
-                        <span style={{ color: '#6B7280' }}>
-                            · {reportDetail ?? (isStarter ? 'Quantitative sections remain conservative until live coverage exists.' : `Generated ${report.cache_age} · ${report.researcher_count} researchers · ${report.engine}`)}
+                        <span className="text-gray-500">
+                            · {reportDetail ?? (isStarter
+                                ? 'Quantitative sections remain conservative until live coverage exists.'
+                                : `Generated ${report.cache_age ?? (isLive ? 'just now' : 'recently')} · ${report.researcher_count} researchers · ${report.engine}`)}
                         </span>
                     </div>
                 </div>
@@ -424,20 +451,20 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                         >
                             {fmtPrice(report.current_price)}
                         </div>
-                        <div className={`flex items-center justify-end gap-1.5 mt-1.5 font-semibold font-mono ${positive ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="flex items-center justify-end gap-1.5 mt-1.5 font-semibold font-mono" style={{ color: dayChangeColor }}>
                             {positive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                             <span>
-                                {positive ? '+' : ''}{report.day_change.toFixed(2)} ({positive ? '+' : ''}{report.day_change_pct.toFixed(2)}%)
+                                {fmtSignedValue(dayChange)} ({fmtSignedValue(dayChangePct, '%')})
                             </span>
                         </div>
-                        <div className="text-xs mt-1" style={{ color: '#6B7280' }}>
+                        <div className="text-xs mt-1 text-gray-500">
                             Today · {session}
                         </div>
                     </div>
 
                     {/* Sparkline */}
                     <div className="flex justify-end">
-                        <Sparkline price={report.current_price} change={report.day_change_pct} />
+                        <Sparkline price={report.current_price ?? 0} change={report.day_change_pct ?? 0} />
                     </div>
 
                     {/* Stats grid */}
@@ -486,7 +513,7 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                 className="px-6 py-3 flex items-center justify-between border-t text-xs flex-wrap gap-2"
                 style={{ borderColor, background: 'rgba(255,255,255,0.01)' }}
             >
-                <div className="flex items-center gap-3" style={{ color: '#6B7280' }}>
+                <div className="flex items-center gap-3 text-gray-500">
                     <span className="font-mono">{report.report_id}</span>
                     <span>·</span>
                     <span>{report.engine}</span>
@@ -496,8 +523,8 @@ export function WelcomeCard({ report, lightMode, onSubscribe, reportSource = 'ca
                         {isStarter ? 'Starter shell ready' : 'Analysis complete'}
                     </span>
                 </div>
-                <div className="flex items-center gap-3" style={{ color: '#6B7280' }}>
-                    {report.data_sources.slice(0, 3).map(src => (
+                <div className="flex items-center gap-3 text-gray-500">
+                    {(report.data_sources ?? []).slice(0, 3).map(src => (
                         <span key={src.name} className="flex items-center gap-1">
                             <Shield className="w-2.5 h-2.5" style={{ color: src.tier === 1 ? '#10B981' : src.tier === 2 ? '#3B82F6' : '#9CA3AF' }} />
                             {src.name}

@@ -188,7 +188,7 @@ class QuantusPayload:
     """
 
     # ------------------------------------------------------------------
-    # Identity  (Tier 1 — PostgreSQL / Supabase)
+    # Identity  (Tier 1)
     # ------------------------------------------------------------------
     ticker: str
     company_name: str

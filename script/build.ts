@@ -7,32 +7,14 @@ import { spawn } from "child_process";
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
 const allowlist = [
-  "@google/generative-ai",
-  "@neondatabase/serverless",
-  "axios",
   "bcryptjs",
-  "connect-pg-simple",
+  "better-sqlite3",
   "cors",
-  "date-fns",
-  "drizzle-orm",
-  "drizzle-zod",
   "express",
   "express-rate-limit",
-  "express-session",
+  "helmet",
   "jsonwebtoken",
-  "memorystore",
-  "multer",
-  "nanoid",
-  "nodemailer",
-  "openai",
-  "passport",
-  "passport-local",
-  "stripe",
-  "uuid",
-  "ws",
-  "xlsx",
-  "zod",
-  "zod-validation-error",
+  "resend",
 ];
 
 async function buildAll() {

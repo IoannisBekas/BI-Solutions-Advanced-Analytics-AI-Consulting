@@ -640,11 +640,23 @@ async def run_equity_pipeline(
     comp_sentiment  = composite_sentiment(grok_raw_score, float(reddit_score), float(news_score))
 
     # ------------------------------------------------------------------ #
-    # Step 10 — Alternative data stubs                                     #
+    # Step 10 — Alternative data stubs + SEC EDGAR                          #
     # ------------------------------------------------------------------ #
     inst_flow    = fetch_institutional_flow(ticker)
     insider_act  = fetch_insider_activity(ticker)
     short_int    = fetch_short_interest(ticker)
+
+    # SEC EDGAR NLP delta (graceful — None if service unavailable)
+    sec_delta: float | None = None
+    try:
+        from services.sec_edgar import SECEdgarService
+        sec_svc = SECEdgarService()
+        sec_result = sec_svc.analyze_ticker(ticker)
+        sec_delta = sec_result.delta_score
+        logger.info("equity | %s | SEC EDGAR delta_score=%.2f", ticker, sec_delta)
+    except Exception as exc:
+        logger.warning("equity | %s | SEC EDGAR failed (non-fatal): %s", ticker, exc)
+        sec_delta = None
 
     # ------------------------------------------------------------------ #
     # Step 11 — Kelly criterion (INSTITUTIONAL tier only)                  #
@@ -731,7 +743,7 @@ async def run_equity_pipeline(
         composite_sentiment=comp_sentiment,
 
         # Optional fields
-        sec_language_delta=None,
+        sec_language_delta=sec_delta,
         institutional_flow_delta=inst_flow,
         insider_net_activity=insider_act,
         short_interest_pct=short_int,
@@ -751,8 +763,8 @@ async def run_equity_pipeline(
         python_model_versions={
             "arima": "0.14", "prophet": "stub", "lstm": "stub", "regime": "stub"
         },
-        data_sources_used=["yfinance", "grok_api_stub", "reddit_stub", "newsapi_stub"],
-        data_caveats=["prophet: stub", "lstm: stub", "regime: stub"],
+        data_sources_used=["yfinance", "sec_edgar", "grok_api_stub", "reddit_stub", "newsapi_stub"],
+        data_caveats=["prophet: stub", "lstm: stub", "regime: stub"] + (["sec_edgar: mock_nlp"] if sec_delta is None else []),
         circuit_breaker_activations=circuit_breaker_activations,
         fallbacks_used=fallbacks_used,
         user_tier=user_tier,

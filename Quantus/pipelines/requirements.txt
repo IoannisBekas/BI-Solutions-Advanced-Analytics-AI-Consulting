@@ -1,4 +1,13 @@
 yfinance>=0.2.40
 rapidfuzz>=3.6
+numpy>=1.24
+pandas>=2.0
+statsmodels>=0.14
+anthropic>=0.42
+google-genai>=1.0
+fastapi>=0.115
+uvicorn>=0.34
+httpx>=0.28
+python-dotenv>=1.0
 pytest>=8.0
 pytest-mock>=3.14

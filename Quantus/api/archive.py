@@ -45,7 +45,6 @@ class ReportSnapshot:
     restatement_note: str        = ""
     language:       str          = "en"
     jurisdiction:   str          = "US"
-    # Vector embedding stored separately in pgvector; summary for search
     narrative_summary: str       = ""
 
 @dataclass
@@ -66,7 +65,7 @@ class ResolvedSignal:
     excess_return:   float       # return_pct - benchmark_return
     resolved_at:     str         # ISO
 
-# ─── In-memory store (replace with PostgreSQL + pgvector) ────────────────────
+# ─── In-memory store ─────────────────────────────────────────────────────────
 
 _snapshots:       list[ReportSnapshot] = []
 _resolved_signals: list[ResolvedSignal] = []
@@ -132,15 +131,7 @@ class ArchiveService:
 
     @staticmethod
     def semantic_search(query: str, limit: int = 20) -> list[ReportSnapshot]:
-        """
-        Production: pgvector cosine similarity search on text embeddings.
-        This queries the pgvector service. For now, it falls back to keyword match
-        if pgvector is not available or query embedding is missing.
-        """
-        # In a real app, query would be converted to an embedding here via an LLM API:
-        # embedding = get_embedding(query)
-        # return kg_service.semantic_search(embedding, limit)
-        
+        """Keyword-based search across report snapshots."""
         q = query.lower()
         results = [
             s for s in _snapshots

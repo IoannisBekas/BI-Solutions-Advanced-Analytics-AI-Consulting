@@ -1,73 +1,23 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import helmet from 'helmet';
+import path from 'path';
 import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import Database from 'better-sqlite3';
-import path from 'path';
-import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
 import { getMockReport } from './data/mockReports.js';
 import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, searchAssets } from './data/assetUniverse.js';
-import type { AssetEntry, ReportData, ReportResponse } from '../src/types/index.js';
+import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../src/types/index.js';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
-// ─── SHARED SQLITE DATABASE ─────────────────────────────────────────────────
-// Re-use the same database file the main server creates
-const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), '..', 'data');
-if (!fs.existsSync(DATA_DIR)) { fs.mkdirSync(DATA_DIR, { recursive: true }); }
-const qdb = new Database(path.join(DATA_DIR, 'bisolutions.db'));
-qdb.pragma('journal_mode = WAL');
-qdb.pragma('foreign_keys = ON');
-qdb.pragma('busy_timeout = 5000');
-
-// Ensure users table exists (idempotent — same schema as server/db.ts)
-qdb.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id            TEXT PRIMARY KEY,
-    email         TEXT NOT NULL UNIQUE COLLATE NOCASE,
-    name          TEXT NOT NULL,
-    password_hash TEXT NOT NULL,
-    tier          TEXT NOT NULL DEFAULT 'FREE',
-    credits       REAL NOT NULL DEFAULT 0,
-    reports_this_month INTEGER NOT NULL DEFAULT 0,
-    jurisdiction  TEXT NOT NULL DEFAULT 'US',
-    referral_token TEXT UNIQUE,
-    created_at    TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-  CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-  CREATE INDEX IF NOT EXISTS idx_users_referral ON users(referral_token);
-`);
-
-interface DbUser {
-  id: string; email: string; name: string; password_hash: string;
-  tier: string; credits: number; reports_this_month: number;
-  jurisdiction: string; referral_token: string | null;
-  created_at: string; updated_at: string;
-}
-
-const dbStmts = {
-  findByEmail: qdb.prepare<[string], DbUser>('SELECT * FROM users WHERE email = ? COLLATE NOCASE'),
-  findById: qdb.prepare<[string], DbUser>('SELECT * FROM users WHERE id = ?'),
-  findByReferral: qdb.prepare<[string], DbUser>('SELECT * FROM users WHERE referral_token = ?'),
-  insert: qdb.prepare<[string, string, string, string, number, string]>(
-    `INSERT INTO users (id, email, name, password_hash, credits, referral_token) VALUES (?, ?, ?, ?, ?, ?)`
-  ),
-  updateCredits: qdb.prepare<[number, string]>('UPDATE users SET credits = ?, updated_at = datetime(\'now\') WHERE id = ?'),
-};
-
-function stripPasswordHash(u: DbUser) {
-  const { password_hash: _, ...safe } = u;
-  return safe;
-}
-
-const SALT_ROUNDS = 12;
+// ─── AUTH PROXY TARGET ──────────────────────────────────────────────────────
+// Instead of opening the SQLite DB directly (dual-writer risk), proxy auth
+// requests to the root BI Solutions server which owns the database.
+const AUTH_API_TARGET = process.env.AUTH_API_TARGET || 'http://localhost:5001';
 
 const app = express();
 const API_PREFIX = '/quantus/api';
@@ -153,84 +103,46 @@ function optionalAuth(req: AuthenticatedRequest, _res: express.Response, next: e
 
 app.use(optionalAuth);
 
-// ─── AUTH ENDPOINTS (real SQLite-backed) ────────────────────────────────────
-app.post(`${API_PREFIX}/auth/login`, async (req, res) => {
+// ─── AUTH ENDPOINTS (proxy to root server — single DB writer) ───────────────
+// All auth mutations go through the root BI Solutions server at AUTH_API_TARGET
+// so only one process ever writes to bisolutions.db.
+
+async function proxyAuthRequest(
+    method: 'GET' | 'POST' | 'DELETE',
+    path: string,
+    req: express.Request,
+    res: express.Response,
+) {
     try {
-        const { email, password } = req.body;
-        if (!email || !password) { res.status(400).json({ error: 'Email and password required' }); return; }
+        const headers: Record<string, string> = { 'content-type': 'application/json' };
+        const authHeader = req.headers.authorization;
+        if (authHeader) headers['authorization'] = authHeader;
 
-        const user = dbStmts.findByEmail.get(email);
-        if (!user) { res.status(401).json({ error: 'Invalid email or password' }); return; }
+        const upstream = await fetch(`${AUTH_API_TARGET}${path}`, {
+            method,
+            headers,
+            body: method !== 'GET' ? JSON.stringify(req.body) : undefined,
+            signal: AbortSignal.timeout(10_000),
+        });
 
-        const valid = await bcrypt.compare(password, user.password_hash);
-        if (!valid) { res.status(401).json({ error: 'Invalid email or password' }); return; }
-
-        const token = jwt.sign({
-            userId: user.id,
-            email: user.email,
-            name: user.name,
-            tier: user.tier,
-            credits: user.credits,
-            reportsThisMonth: user.reports_this_month,
-            jurisdiction: user.jurisdiction,
-        }, JWT_SECRET, { expiresIn: '7d' });
-
-        res.json({ token, user: stripPasswordHash(user) });
+        const text = await upstream.text();
+        res.status(upstream.status).setHeader('content-type', 'application/json').send(text);
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Login failed' });
+        console.error(`Auth proxy error (${path}):`, error);
+        res.status(502).json({ error: 'Auth service temporarily unavailable.' });
     }
+}
+
+app.post(`${API_PREFIX}/auth/login`, (req, res) => {
+    proxyAuthRequest('POST', '/api/auth/login', req, res);
 });
 
-app.post(`${API_PREFIX}/auth/register`, async (req, res) => {
-    try {
-        const { email, name, password, referralToken } = req.body;
-        if (!email || !name || !password) { res.status(400).json({ error: 'Email, name, and password required' }); return; }
-        if (typeof password !== 'string' || password.length < 8) { res.status(400).json({ error: 'Password must be at least 8 characters' }); return; }
-
-        const existing = dbStmts.findByEmail.get(email);
-        if (existing) { res.status(409).json({ error: 'An account with this email already exists' }); return; }
-
-        // Handle referral bonus
-        let bonusCredits = 0;
-        if (referralToken && typeof referralToken === 'string') {
-            const referrer = dbStmts.findByReferral.get(referralToken);
-            if (referrer) {
-                bonusCredits = 5;
-                dbStmts.updateCredits.run(referrer.credits + 3, referrer.id);
-            }
-        }
-
-        const userId = `usr_${crypto.randomBytes(6).toString('hex')}`;
-        const myReferralToken = `ref_${crypto.randomBytes(8).toString('hex')}`;
-        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-
-        dbStmts.insert.run(userId, email, name, passwordHash, bonusCredits, myReferralToken);
-        const user = dbStmts.findById.get(userId)!;
-
-        const token = jwt.sign({
-            userId: user.id,
-            email: user.email,
-            name: user.name,
-            tier: user.tier,
-            credits: user.credits,
-            reportsThisMonth: user.reports_this_month,
-            jurisdiction: user.jurisdiction,
-        }, JWT_SECRET, { expiresIn: '7d' });
-
-        res.status(201).json({ token, user: stripPasswordHash(user) });
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'Registration failed' });
-    }
+app.post(`${API_PREFIX}/auth/register`, (req, res) => {
+    proxyAuthRequest('POST', '/api/auth/register', req, res);
 });
 
-app.get(`${API_PREFIX}/auth/me`, (req: AuthenticatedRequest, res) => {
-    if (!req.user) { res.status(401).json({ error: 'Not authenticated' }); return; }
-    // Re-fetch from DB for fresh data
-    const user = dbStmts.findById.get(req.user.userId);
-    if (!user) { res.status(404).json({ error: 'User not found' }); return; }
-    res.json(stripPasswordHash(user));
+app.get(`${API_PREFIX}/auth/me`, (req, res) => {
+    proxyAuthRequest('GET', '/api/auth/me', req, res);
 });
 
 // Lazy AI client — don't throw at startup if key not set yet
@@ -240,9 +152,75 @@ function getAI() {
     return new GoogleGenAI({ apiKey: key });
 }
 
+// ─── PYTHON PIPELINE PROXY ──────────────────────────────────────────────────
+const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
-// ─── GET CACHED MOCK REPORT ──────────────────────────────────────────────────
-app.get(`${API_PREFIX}/report/:ticker`, (req, res) => {
+async function callPythonPipeline(ticker: string, options: { forceRefresh?: boolean; userTier?: string } = {}): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+        const params = new URLSearchParams({
+            force_refresh: String(options.forceRefresh ?? false),
+            user_tier: options.userTier ?? 'FREE',
+        });
+        const url = `${PYTHON_API_URL}/api/v1/report/${encodeURIComponent(ticker)}?${params}`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+        const response = await fetch(url, {
+            signal: controller.signal,
+            headers: { 'Accept': 'application/json' },
+        });
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            return { success: false, error: `Python API returned ${response.status}: ${errorBody}` };
+        }
+
+        const data = await response.json();
+        return { success: true, data };
+    } catch (err: any) {
+        if (err.name === 'AbortError') {
+            return { success: false, error: 'Python pipeline timeout (30s)' };
+        }
+        return { success: false, error: `Python API unavailable: ${err.message}` };
+    }
+}
+
+async function callPythonDeepDive(ticker: string, moduleIndex: number, assetClass: string): Promise<{ success: boolean; text?: string; error?: string }> {
+    try {
+        const url = `${PYTHON_API_URL}/api/v1/report/${encodeURIComponent(ticker)}/deepdive`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
+
+        const response = await fetch(url, {
+            method: 'POST',
+            signal: controller.signal,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ module: moduleIndex, assetClass }),
+        });
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+            return { success: false, error: `Python API returned ${response.status}` };
+        }
+
+        const data = await response.json();
+        return { success: true, text: data.text };
+    } catch (err: any) {
+        return { success: false, error: `Python API unavailable: ${err.message}` };
+    }
+}
+
+function normalizeReportSource(source: unknown): ReportSource {
+    if (source === 'cached' || source === 'starter' || source === 'live') {
+        return source;
+    }
+    return 'live';
+}
+
+
+// ─── GET REPORT (LIVE PIPELINE → MOCK FALLBACK) ─────────────────────────────
+app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
     const ticker = sanitizeTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
 
@@ -256,32 +234,66 @@ app.get(`${API_PREFIX}/report/:ticker`, (req, res) => {
         researcherCount: 0,
     } satisfies AssetEntry;
 
+    // 1. Try live Python pipeline first
+    const liveResult = await callPythonPipeline(ticker);
+    if (liveResult.success && liveResult.data?.report) {
+        const source = normalizeReportSource(liveResult.data.source);
+        const response: ReportResponse = {
+            report: liveResult.data.report as ReportData,
+            source,
+            ticker,
+            message: source === 'cached'
+                ? 'Cached live Quantus report.'
+                : source === 'starter'
+                    ? 'Python pipeline returned starter coverage.'
+                    : 'Live Quantus pipeline report generated.',
+            detail: liveResult.data.warning || (source === 'cached'
+                ? `Cached quantitative pipeline report loaded for ${ticker}.`
+                : source === 'starter'
+                    ? `Python pipeline returned starter coverage for ${ticker}.`
+                    : `Live quantitative pipeline executed for ${ticker}.`),
+            freshness: source === 'cached'
+                ? liveResult.data.report?.cache_age || 'Cached'
+                : source === 'starter'
+                    ? 'On demand'
+                    : 'Live',
+            status: getWorkspaceStatus(),
+        };
+        res.json(response);
+        return;
+    }
+
+    // 2. Log the pipeline failure and fall back to mocks
+    if (liveResult.error) {
+        console.warn(`[Pipeline fallback] ${ticker}: ${liveResult.error}`);
+    }
+
+    // 3. Check for a cached mock report
     const report = getMockReport(ticker);
     if (report) {
         const response: ReportResponse = {
             report,
             source: 'cached',
             ticker,
-            message: 'Cached Quantus coverage loaded.',
-            detail: `Shared Quantus coverage is available for ${ticker} and can be bookmarked or shared directly.`,
+            message: 'Cached Quantus coverage loaded (mock).',
+            detail: `Live pipeline unavailable — serving cached mock data for ${ticker}.`,
             freshness: report.cache_age,
             status: getWorkspaceStatus(),
         };
-
         res.json(response);
         return;
     }
 
+    // 4. Last resort: starter shell
     const response: ReportResponse = {
         report: buildStarterReport(asset),
         source: 'starter',
         ticker,
         message: 'No cached Quantus coverage yet.',
-        detail: 'You are viewing a starter shell seeded from directory metadata only. Quantitative sections stay conservative until live services are connected.',
+        detail: 'You are viewing a starter shell. Start the Python pipeline server for live data.',
         freshness: 'On demand',
         status: getWorkspaceStatus(),
     };
-
     res.json(response);
 });
 
@@ -289,14 +301,40 @@ app.get(`${API_PREFIX}/workspace/summary`, (_req, res) => {
     res.json(getWorkspaceSummary());
 });
 
-app.get(`${API_PREFIX}/assets/search`, (req, res) => {
+app.get(`${API_PREFIX}/assets/search`, async (req, res) => {
     const query = typeof req.query.q === 'string' ? req.query.q.slice(0, 60) : '';
     const requestedLimit = Number.parseInt(String(req.query.limit ?? '6'), 10);
     const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 12) : 6;
 
+    let expandedResults = searchAssets(query, limit);
+
+    // Concurrently fetch python search
+    if (query.trim().length > 0) {
+        try {
+            const pyRes = await fetch(`${PYTHON_API_URL}/api/v1/search?q=${encodeURIComponent(query)}&limit=${limit}`, {
+                signal: AbortSignal.timeout(2000)
+            });
+            if (pyRes.ok) {
+                const pyAssets = await pyRes.json();
+                if (Array.isArray(pyAssets)) {
+                    const seen = new Set(expandedResults.map(a => a.ticker));
+                    for (const pa of pyAssets) {
+                        if (!seen.has(pa.ticker)) {
+                            seen.add(pa.ticker);
+                            expandedResults.push(pa);
+                        }
+                    }
+                    expandedResults = expandedResults.slice(0, limit);
+                }
+            }
+        } catch (err) {
+            console.error('Python search failed to respond:', err);
+        }
+    }
+
     res.json({
         query,
-        results: searchAssets(query, limit),
+        results: expandedResults,
         status: getWorkspaceStatus(),
     });
 });
@@ -341,7 +379,7 @@ app.post(`${API_PREFIX}/generate`, async (req, res) => {
         const sectionPrompt = getSectionPrompt(ticker, section);
 
         const stream = await getAI().models.generateContentStream({
-            model: 'gemini-2.5-flash-preview-04-17',
+            model: 'gemini-2.5-flash',
             contents: `${systemPrompt}\n\n${sectionPrompt}`,
         });
 
@@ -407,7 +445,7 @@ app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
         const prompt = getDeepDivePrompt(ticker, moduleIndex, assetClass);
 
         const stream = await getAI().models.generateContentStream({
-            model: 'gemini-2.5-flash-preview-04-17',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
@@ -469,6 +507,39 @@ app.post(`${API_PREFIX}/v1/push/subscribe`, (_req, res) => {
 
 app.post(`${API_PREFIX}/v1/push/unsubscribe`, (_req, res) => {
     res.json({ ok: true });
+});
+
+// ─── SEC EDGAR PROXY ─────────────────────────────────────────────────────────
+app.get(`${API_PREFIX}/v1/sec-edgar/:ticker`, async (req, res) => {
+    const ticker = sanitizeTicker(req.params.ticker);
+    if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
+
+    try {
+        const response = await fetch(`${PYTHON_API_URL}/api/v1/sec-edgar/${encodeURIComponent(ticker)}`);
+        if (!response.ok) {
+            res.status(response.status).json({ error: `SEC EDGAR API error: ${response.statusText}` });
+            return;
+        }
+        const data = await response.json();
+        res.json(data);
+    } catch (err: any) {
+        res.status(503).json({ error: `SEC EDGAR service unavailable: ${err.message}` });
+    }
+});
+
+// ─── PYTHON HEALTH CHECK ─────────────────────────────────────────────────────
+app.get(`${API_PREFIX}/v1/python/health`, async (_req, res) => {
+    try {
+        const response = await fetch(`${PYTHON_API_URL}/health`);
+        if (!response.ok) {
+            res.status(503).json({ status: 'down', error: response.statusText });
+            return;
+        }
+        const data = await response.json();
+        res.json({ status: 'up', ...data });
+    } catch (err: any) {
+        res.json({ status: 'down', error: err.message });
+    }
 });
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
@@ -698,46 +769,6 @@ app.get(`${API_PREFIX}/v1/knowledge-graph/:ticker`, async (req, res) => {
     }
 });
 
-// ─── SEC EDGAR & FinBERT NLP ─────────────────────────────────────────────────
-app.get(`${API_PREFIX}/v1/sec-edgar/:ticker`, async (req, res) => {
-    try {
-        const ticker = sanitizeTicker(req.params.ticker);
-        if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
-        // In full production, this would make an internal RPC/HTTP call to a running Python API server 
-        // running `services/sec_edgar.py`. 
-        // For MVP graceful degradation logic, returning the expected schema:
-
-        // Simulate a slight delay to mock NLP runtime
-        await new Promise(resolve => setTimeout(resolve, 600));
-
-        // Generate a random mocked delta score between -0.4 and 0.4
-        const delta = Number((Math.random() * 0.8 - 0.4).toFixed(3));
-        let summaryText = "Management tone remains neutral and consistent with the prior quarter.";
-        if (delta < -0.3) {
-            summaryText = "Management language has shifted significantly more cautious vs Q3 — forward guidance hedging increased dramatically.";
-        } else if (delta < -0.1) {
-            summaryText = "Management language exhibits a slight negative shift, citing emerging headwinds.";
-        } else if (delta > 0.3) {
-            summaryText = "Management tone has shifted extremely positive, characterized by upgraded forward guidance.";
-        } else if (delta > 0.1) {
-            summaryText = "Management tone is incrementally more optimistic regarding margin expansion.";
-        }
-
-        res.json({
-            ticker,
-            form_type: "10-Q",
-            filing_date: new Date().toISOString().split('T')[0], // Simulate recent
-            prior_filing_date: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            delta_score: delta,
-            summary_plain: summaryText,
-            is_cached_fallback: true
-        });
-    } catch (error) {
-        console.error('Error fetching SEC Edgar NLP data:', error);
-        res.status(500).json({ error: 'Failed to fetch SEC Edgar filing' });
-    }
-});
-
 // ─── ENGINE VERSION STATUS ───────────────────────────────────────────────────
 app.get(`${API_PREFIX}/v1/engine/status`, (req, res) => {
     // In full prod, this hits PostgreSQL `user_engine_preferences` to see 
@@ -757,9 +788,6 @@ app.post(`${API_PREFIX}/v1/engine/dismiss-banner`, (req, res) => {
 });
 
 // ─── UI GATING & APP STATUS ──────────────────────────────────────────────────
-import fs from 'fs';
-import path from 'path';
-
 app.get(`${API_PREFIX}/v1/app-status`, (req, res) => {
     try {
         const statePath = path.join(process.cwd(), 'server', 'data', 'app_state.json');
@@ -945,7 +973,18 @@ app.use((err: unknown, req: express.Request, res: express.Response, _next: expre
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.warn(`Quantus Research Solutions API — http://localhost:${PORT}`);
     console.warn(`Engine: Meridian v2.4`);
 });
+
+// ─── Graceful shutdown (Railway / Docker SIGTERM) ───────────────────────────
+function shutdown(signal: string) {
+    console.warn(`${signal} received — shutting down Quantus server`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(1), 10_000).unref();
+}
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('unhandledRejection', (reason) => console.error('Unhandled rejection:', reason));
+process.on('uncaughtException', (err) => { console.error('Uncaught exception:', err); process.exit(1); });

@@ -138,7 +138,7 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
                         <ReturnBar pct={r.avg_excess_pct} maxAbs={maxAbs} />
                         <span className="font-semibold text-xs whitespace-nowrap" style={{ color: tp }}>{r.label}</span>
                     </div>
-                    <span className="text-right text-xs font-mono" style={{ color: '#6B7280' }}>{r.count}</span>
+                    <span className="text-right text-xs font-mono text-gray-500">{r.count}</span>
                     <span className="text-right"><ReturnChip pct={r.avg_return_pct} /></span>
                     <span className="text-right"><ReturnChip pct={r.avg_excess_pct} /></span>
                     {showWinRate && r.win_rate !== undefined && (
@@ -178,7 +178,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                         <div className="h-full rounded-full"
                             style={{ width: `${(RESOLVED_COUNT / UNLOCK_THRESHOLD) * 100}%`, background: 'linear-gradient(90deg,#6366F1,#8B5CF6)' }} />
                     </div>
-                    <p className="text-xs mt-2" style={{ color: '#6B7280' }}>{RESOLVED_COUNT} / {UNLOCK_THRESHOLD}</p>
+                    <p className="text-xs mt-2 text-gray-500">{RESOLVED_COUNT} / {UNLOCK_THRESHOLD}</p>
                 </div>
             </div>
         );
@@ -213,7 +213,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                                 <div key={k.label} className="text-center px-4 py-3 rounded-xl"
                                     style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937' }}>
                                     <div className="font-bold text-lg" style={{ color: k.color }}>{k.val}</div>
-                                    <div className="text-xs mt-0.5" style={{ color: '#6B7280' }}>{k.label}</div>
+                                    <div className="text-xs mt-0.5 text-gray-500">{k.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -222,7 +222,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                     <div className="flex items-start gap-2 text-xs p-3 rounded-xl mt-4"
                         style={{ background: 'rgba(245,158,11,0.05)', border: '1px solid rgba(245,158,11,0.15)' }}>
                         <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-                        <span style={{ color: '#9CA3AF' }}>
+                        <span className="text-gray-400">
                             Signal measured at report generation time. Outcome measured at 30 calendar days. Benchmark: S&P 500 for Equity/ETF, BTC for Crypto, Gold for Commodity.{' '}
                             <strong style={{ color: '#F59E0B' }}>Past performance does not guarantee future results.</strong>
                         </span>
@@ -231,7 +231,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
 
                 {/* Segment tabs */}
                 <div className="flex items-center gap-2 mb-5 flex-wrap">
-                    <Filter className="w-4 h-4" style={{ color: '#6B7280' }} />
+                    <Filter className="w-4 h-4 text-gray-500" />
                     {SEGMENT_OPTIONS.map(o => (
                         <button key={o.value} onClick={() => setSegment(o.value)}
                             className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer"
@@ -246,7 +246,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 </div>
 
                 {/* Column headers legend */}
-                <div className="flex items-center gap-2 text-xs mb-3" style={{ color: '#6B7280' }}>
+                <div className="flex items-center gap-2 text-xs mb-3 text-gray-500">
                     <span>Avg Return = 30-day price change %</span>
                     <span>·</span>
                     <span>Excess = vs benchmark (%)</span>
@@ -257,7 +257,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 <AccuracyTable rows={rows} showWinRate={showWinRate} lightMode={lightMode} />
 
                 {/* Footer disclaimer */}
-                <p className="text-xs text-center mt-8" style={{ color: '#6B7280' }}>
+                <p className="text-xs text-center mt-8 text-gray-500">
                     Quantus Research Solutions · Not investment advice · bisolutions.group/methodology for full model documentation
                 </p>
             </div>
