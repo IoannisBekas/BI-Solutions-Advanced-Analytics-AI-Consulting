@@ -8,7 +8,6 @@ import { spawn } from "child_process";
 // which helps cold start times
 const allowlist = [
   "bcryptjs",
-  "better-sqlite3",
   "cors",
   "express",
   "express-rate-limit",
@@ -16,6 +15,8 @@ const allowlist = [
   "jsonwebtoken",
   "resend",
 ];
+// NOTE: better-sqlite3 is a native addon (.node) and MUST remain external.
+// esbuild cannot bundle native C++ bindings — they must be loaded from node_modules at runtime.
 
 async function buildAll() {
   await rm("dist", { recursive: true, force: true });
