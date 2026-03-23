@@ -12,6 +12,7 @@
 
 const { spawn } = require("child_process");
 const path = require("path");
+const fs = require("fs");
 
 const ROOT = path.resolve(__dirname, "..");
 const QUANTUS_DIR = path.join(ROOT, "Quantus");
@@ -53,8 +54,11 @@ function launch(label, command, args, opts = {}) {
   return child;
 }
 
-// 1. Quantus FastAPI (Python)
-launch("quantus-api", "python3", [
+// 1. Quantus FastAPI (Python) — use venv Python if available (Railway), else system python3
+const venvPython = "/app/venv/bin/python3";
+const pythonBin = fs.existsSync(venvPython) ? venvPython : "python3";
+
+launch("quantus-api", pythonBin, [
   "-m", "uvicorn", "main:app",
   "--host", "0.0.0.0",
   "--port", "8000",
@@ -69,7 +73,6 @@ launch("quantus-api", "python3", [
 // but if a built version exists we should use that.
 // For now, the Quantus Express server is compiled alongside the root build.
 // Check if Quantus has a dist/server or if we need tsx:
-const fs = require("fs");
 const quantusServerEntry = path.join(QUANTUS_DIR, "server", "index.ts");
 
 launch("quantus-node", "node", [
