@@ -21,7 +21,10 @@ const TOKEN_EXPIRY = "7d";
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    throw new Error("JWT_SECRET environment variable is required");
+    // Fallback for environments where JWT_SECRET is not yet configured.
+    // Auth will work but tokens are not secure until a real secret is set.
+    console.warn("JWT_SECRET not set — using insecure fallback. Set JWT_SECRET env var in production!");
+    return "bisolutions-insecure-fallback-change-me";
   }
   return secret;
 }

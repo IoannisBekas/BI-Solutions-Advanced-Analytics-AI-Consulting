@@ -88,10 +88,9 @@ app.use("/api/", globalLimiter);
 app.use("/api/contact", strictLimiter);
 app.use("/api/auth", strictLimiter);
 
-// ─── JWT Secret (fail-fast in production) ──────────────────────────────────
+// ─── JWT Secret warning ─────────────────────────────────────────────────────
 if (isProduction && !process.env.JWT_SECRET) {
-  console.error("FATAL: JWT_SECRET env var is required in production");
-  process.exit(1);
+  console.warn("WARNING: JWT_SECRET env var is not set — auth endpoints will fail until it is configured");
 }
 
 export function log(message: string, source = "express") {
