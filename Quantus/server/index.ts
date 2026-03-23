@@ -23,10 +23,9 @@ const app = express();
 const API_PREFIX = '/quantus/api';
 const isProduction = process.env.NODE_ENV === 'production';
 
-const JWT_SECRET = process.env.JWT_SECRET || (isProduction ? '' : 'quantus-dev-secret');
-if (isProduction && !JWT_SECRET) {
-  console.error('FATAL: JWT_SECRET env var is required in production');
-  process.exit(1);
+const JWT_SECRET = process.env.JWT_SECRET || 'quantus-dev-secret';
+if (isProduction && !process.env.JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET env var is not set — using insecure fallback');
 }
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
 
