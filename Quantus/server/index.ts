@@ -7,9 +7,9 @@ import path from 'path';
 import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
 import { GoogleGenAI } from '@google/genai';
-import { getMockReport } from './data/mockReports';
-import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, searchAssets } from './data/assetUniverse';
-import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../src/types/index';
+import { getMockReport } from './data/mockReports.ts';
+import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, searchAssets } from './data/assetUniverse.ts';
+import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../src/types/index.ts';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();

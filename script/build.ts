@@ -55,7 +55,7 @@ async function buildAll() {
 
   // Build Quantus Express server — compile TS to JS so we can run with
   // plain `node` in production instead of tsx (which has ESM resolution issues).
-  console.log("building Quantus server...");
+  console.log("building Quantus server (with resolveExtensions + .ts imports)...");
   const quantusPkg = JSON.parse(
     await readFile(path.resolve("Quantus", "package.json"), "utf-8"),
   );
