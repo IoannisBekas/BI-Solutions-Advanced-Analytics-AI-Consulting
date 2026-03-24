@@ -68,14 +68,11 @@ launch("quantus-api", pythonBin, [
   env: { PORT: "8000" },
 });
 
-// 2. Quantus Express (Node) — use tsx binary directly so it resolves
-// .js imports → .ts files correctly (avoids ESM loader issues with
-// "moduleResolution": "bundler" in tsconfig).
-const quantusServerEntry = path.join(QUANTUS_DIR, "server", "index.ts");
-const tsxBin = path.join(QUANTUS_DIR, "node_modules", ".bin", "tsx");
-
-launch("quantus-node", tsxBin, [
-  quantusServerEntry,
+// 2. Quantus Express (Node) — run the esbuild-compiled CJS bundle.
+// tsx has ESM resolution issues with moduleResolution:bundler, so we
+// compile the Quantus server at build time instead.
+launch("quantus-node", "node", [
+  path.join(ROOT, "dist", "quantus-server.cjs"),
 ], {
   cwd: QUANTUS_DIR,
   env: {

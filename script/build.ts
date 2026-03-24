@@ -52,6 +52,30 @@ async function buildAll() {
     external: externals,
     logLevel: "info",
   });
+
+  // Build Quantus Express server — compile TS to JS so we can run with
+  // plain `node` in production instead of tsx (which has ESM resolution issues).
+  console.log("building Quantus server...");
+  const quantusPkg = JSON.parse(
+    await readFile(path.resolve("Quantus", "package.json"), "utf-8"),
+  );
+  const quantusDeps = [
+    ...Object.keys(quantusPkg.dependencies || {}),
+    ...Object.keys(quantusPkg.devDependencies || {}),
+  ];
+  await esbuild({
+    entryPoints: [path.resolve("Quantus", "server", "index.ts")],
+    platform: "node",
+    bundle: true,
+    format: "cjs",
+    outfile: "dist/quantus-server.cjs",
+    define: {
+      "process.env.NODE_ENV": '"production"',
+    },
+    minify: true,
+    external: quantusDeps,
+    logLevel: "info",
+  });
 }
 
 function runCommand(command: string, args: string[], cwd: string) {
