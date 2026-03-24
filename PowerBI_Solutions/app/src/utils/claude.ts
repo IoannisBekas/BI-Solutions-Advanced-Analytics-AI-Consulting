@@ -1,6 +1,6 @@
 import type { TMDLModel, DashboardReviewResult, VisualRecommendation } from '@/types';
 
-const CLAUDE_MODEL = import.meta.env.VITE_CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+const CLAUDE_MODEL = import.meta.env.VITE_CLAUDE_MODEL || 'claude-haiku-4-5-20251001';
 const POWERBI_SOLUTIONS_API_BASE =
   (import.meta.env.VITE_POWERBI_SOLUTIONS_API_BASE || '/power-bi-solutions/api').replace(/\/$/, '');
 const REQUEST_TIMEOUT_MS = 30_000;

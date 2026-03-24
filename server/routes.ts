@@ -176,7 +176,7 @@ export async function registerRoutes(
           "anthropic-version": DEFAULT_ANTHROPIC_VERSION,
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "claude-haiku-4-5-20251001",
           max_tokens: 1024,
           system: systemPrompts[role],
           messages: [{ role: "user", content: question.slice(0, 2000) }],
@@ -186,7 +186,11 @@ export async function registerRoutes(
 
       if (!upstream.ok) {
         const errText = await upstream.text();
-        console.error("AI Advisor upstream error:", upstream.status, errText);
+        console.error(`AI Advisor upstream error: HTTP ${upstream.status}`, errText);
+        // Surface auth errors clearly in logs while keeping user message generic
+        if (upstream.status === 401) {
+          console.error("AI Advisor: ANTHROPIC_API_KEY is invalid or missing — set it in Railway env vars");
+        }
         res.status(502).json({ success: false, error: "AI service temporarily unavailable." });
         return;
       }
