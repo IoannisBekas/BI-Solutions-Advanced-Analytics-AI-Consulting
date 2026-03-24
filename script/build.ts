@@ -74,6 +74,7 @@ async function buildAll() {
     },
     minify: true,
     external: quantusDeps,
+    resolveExtensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
     logLevel: "info",
   });
 }
