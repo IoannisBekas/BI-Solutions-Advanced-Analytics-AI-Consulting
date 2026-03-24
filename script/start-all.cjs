@@ -68,15 +68,13 @@ launch("quantus-api", pythonBin, [
   env: { PORT: "8000" },
 });
 
-// 2. Quantus Express (Node) — runs the built Quantus server
-// We use tsx to run the TypeScript server in production too,
-// but if a built version exists we should use that.
-// For now, the Quantus Express server is compiled alongside the root build.
-// Check if Quantus has a dist/server or if we need tsx:
+// 2. Quantus Express (Node) — use tsx binary directly so it resolves
+// .js imports → .ts files correctly (avoids ESM loader issues with
+// "moduleResolution": "bundler" in tsconfig).
 const quantusServerEntry = path.join(QUANTUS_DIR, "server", "index.ts");
+const tsxBin = path.join(QUANTUS_DIR, "node_modules", ".bin", "tsx");
 
-launch("quantus-node", "node", [
-  "--import", "tsx",
+launch("quantus-node", tsxBin, [
   quantusServerEntry,
 ], {
   cwd: QUANTUS_DIR,
