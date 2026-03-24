@@ -1,36 +1,8 @@
-import { build as esbuild, type Plugin } from "esbuild";
+import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { cp, readFile, rm, access } from "fs/promises";
+import { cp, readFile, rm } from "fs/promises";
 import path from "path";
 import { spawn } from "child_process";
-
-/**
- * esbuild plugin that resolves .js imports to .ts files.
- * TypeScript ESM convention uses .js extensions in imports even when the
- * actual source file is .ts — this plugin handles that mapping for esbuild.
- */
-function jsToTsPlugin(): Plugin {
-  return {
-    name: "js-to-ts",
-    setup(build) {
-      build.onResolve({ filter: /\.js$/ }, async (args) => {
-        if (args.kind !== "import-statement") return;
-        // Only handle relative imports
-        if (!args.path.startsWith(".")) return;
-
-        const tsPath = args.path.replace(/\.js$/, ".ts");
-        const resolved = path.resolve(args.resolveDir, tsPath);
-        try {
-          await access(resolved);
-          return { path: resolved };
-        } catch {
-          // .ts file doesn't exist, let esbuild handle it normally
-          return;
-        }
-      });
-    },
-  };
-}
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -102,7 +74,6 @@ async function buildAll() {
     },
     minify: true,
     external: quantusDeps,
-    plugins: [jsToTsPlugin()],
     logLevel: "info",
   });
 }
