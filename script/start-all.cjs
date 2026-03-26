@@ -79,6 +79,8 @@ launch("quantus-node", "node", [
     PORT: "3001",
     NODE_ENV: "production",
     AUTH_API_TARGET: `http://127.0.0.1:${MAIN_PORT}`,
+    // esbuild externalizes Quantus deps — Node must find them at runtime
+    NODE_PATH: path.join(QUANTUS_DIR, "node_modules"),
   },
 });
 
