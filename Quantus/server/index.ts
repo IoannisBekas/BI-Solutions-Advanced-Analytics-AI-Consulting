@@ -220,6 +220,7 @@ function normalizeReportSource(source: unknown): ReportSource {
 
 // ─── GET REPORT (LIVE PIPELINE → MOCK FALLBACK) ─────────────────────────────
 app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
+  try {
     const ticker = sanitizeTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
 
@@ -294,6 +295,10 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
         status: getWorkspaceStatus(),
     };
     res.json(response);
+  } catch (err) {
+    console.error(`[Report endpoint crash] ${req.params.ticker}:`, err);
+    res.status(500).json({ error: 'Internal server error generating report' });
+  }
 });
 
 app.get(`${API_PREFIX}/workspace/summary`, (_req, res) => {
