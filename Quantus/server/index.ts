@@ -22,11 +22,14 @@ const AUTH_API_TARGET = process.env.AUTH_API_TARGET || 'http://localhost:5001';
 const app = express();
 const API_PREFIX = '/quantus/api';
 const isProduction = process.env.NODE_ENV === 'production';
+const ALLOW_DEMO_DATA = process.env.QUANTUS_ALLOW_DEMO_DATA === 'true' || !isProduction;
+const ENABLE_PUSH_NOTIFICATIONS = process.env.QUANTUS_ENABLE_PUSH === 'true';
+const SHOW_ENGINE_BANNER = process.env.QUANTUS_SHOW_ENGINE_BANNER === 'true' || !isProduction;
 
-const JWT_SECRET = process.env.JWT_SECRET || 'quantus-dev-secret';
 if (isProduction && !process.env.JWT_SECRET) {
-  console.warn('WARNING: JWT_SECRET env var is not set — using insecure fallback');
+    throw new Error('JWT_SECRET env var is required in production');
 }
+const JWT_SECRET = process.env.JWT_SECRET || 'quantus-dev-secret';
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────────────────────
@@ -72,6 +75,13 @@ function sanitizeAssetClass(raw: unknown): string {
     if (typeof raw !== 'string') return 'EQUITY';
     const upper = raw.trim().toUpperCase();
     return ASSET_CLASSES.includes(upper) ? upper : 'EQUITY';
+}
+
+function sendFeatureUnavailable(res: express.Response, feature: string) {
+    res.status(503).json({
+        error: `${feature} is not enabled on this Quantus deployment.`,
+        code: 'feature_unavailable',
+    });
 }
 
 // ─── AUTH MIDDLEWARE (JWT) ───────────────────────────────────────────────────
@@ -266,6 +276,15 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
     // 2. Log the pipeline failure and fall back to mocks
     if (liveResult.error) {
         console.warn(`[Pipeline fallback] ${ticker}: ${liveResult.error}`);
+    }
+
+    if (isProduction && !ALLOW_DEMO_DATA) {
+        res.status(503).json({
+            error: 'Live Quantus research is temporarily unavailable.',
+            code: 'live_pipeline_unavailable',
+            detail: liveResult.error || 'The Python research pipeline did not return a report.',
+        });
+        return;
     }
 
     // 3. Check for a cached mock report
@@ -473,6 +492,10 @@ app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
 
 // ─── SCREENER ────────────────────────────────────────────────────────────────
 app.post(`${API_PREFIX}/screener`, (req, res) => {
+    if (isProduction && !ALLOW_DEMO_DATA) {
+        sendFeatureUnavailable(res, 'Quantus screener');
+        return;
+    }
     const { filters } = req.body;
     // Return mock screener results
     const results = getMockScreenerResults(filters || {});
@@ -481,6 +504,10 @@ app.post(`${API_PREFIX}/screener`, (req, res) => {
 
 // ─── PORTFOLIO ───────────────────────────────────────────────────────────────
 app.post(`${API_PREFIX}/portfolio`, (req, res) => {
+    if (isProduction && !ALLOW_DEMO_DATA) {
+        sendFeatureUnavailable(res, 'Quantus portfolio analysis');
+        return;
+    }
     const { holdings } = req.body;
     if (!holdings || !Array.isArray(holdings)) {
         res.status(400).json({ error: 'Holdings array required' });
@@ -506,10 +533,18 @@ app.post(`${API_PREFIX}/identify`, async (req, res) => {
 
 
 app.post(`${API_PREFIX}/v1/push/subscribe`, (_req, res) => {
+    if (!ENABLE_PUSH_NOTIFICATIONS) {
+        sendFeatureUnavailable(res, 'Push notifications');
+        return;
+    }
     res.json({ ok: true });
 });
 
 app.post(`${API_PREFIX}/v1/push/unsubscribe`, (_req, res) => {
+    if (!ENABLE_PUSH_NOTIFICATIONS) {
+        sendFeatureUnavailable(res, 'Push notifications');
+        return;
+    }
     res.json({ ok: true });
 });
 
@@ -744,6 +779,10 @@ app.get(`${API_PREFIX}/v1/knowledge-graph/:ticker`, async (req, res) => {
     try {
         const ticker = sanitizeTicker(req.params.ticker);
         if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
+        if (isProduction && !ALLOW_DEMO_DATA) {
+            sendFeatureUnavailable(res, 'Knowledge graph');
+            return;
+        }
         // In full production, this would make an internal RPC/HTTP call to a running Python API server.
         // For MVP, if a Python backend is not running, we provide graceful degradation mimicking the Python return.
 
@@ -779,7 +818,7 @@ app.get(`${API_PREFIX}/v1/engine/status`, (req, res) => {
     // if the banner should show for this specific user.
     // Simulating true so you can build the UI component.
     res.json({
-        show_banner: true,
+        show_banner: SHOW_ENGINE_BANNER,
         version: "Meridian v2.4",
         release_notes: "Upgraded LSTM lookback windows and enhanced FinBERT risk detection.",
         message: "Quantus Engine updated to Meridian v2.4 — Upgraded LSTM lookback windows and enhanced FinBERT risk detection."
@@ -813,6 +852,10 @@ app.get(`${API_PREFIX}/v1/app-status`, (req, res) => {
 
 // ─── SECTOR PACKS ────────────────────────────────────────────────────────────
 app.get(`${API_PREFIX}/v1/sectors/:sector/reports`, (req, res) => {
+    if (isProduction && !ALLOW_DEMO_DATA) {
+        sendFeatureUnavailable(res, 'Sector packs');
+        return;
+    }
     // In production, user auth middleware determines if they have a subscription
     // to `req.params.sector` via PostgreSQL `user_sector_subscriptions`.
     const { sector } = req.params;
@@ -880,6 +923,10 @@ app.get(`${API_PREFIX}/v1/blog/:slug`, (req, res) => {
 
 // ─── EXPLAINABILITY (ELI5) ───────────────────────────────────────────────────
 app.post(`${API_PREFIX}/v1/explain`, async (req, res) => {
+    if (isProduction && !ALLOW_DEMO_DATA) {
+        sendFeatureUnavailable(res, 'Explainability');
+        return;
+    }
     // In production, this proxies to `services/explainability.py` via HTTP/RPC
     try {
         const context_string = typeof req.body.context_string === 'string' ? req.body.context_string.slice(0, 500) : '';

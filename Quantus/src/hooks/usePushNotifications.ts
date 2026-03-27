@@ -52,11 +52,15 @@ export function usePushNotifications(): UsePushNotificationsReturn {
             });
 
             // POST subscription to backend
-            await fetch('/quantus/api/v1/push/subscribe', {
+            const response = await fetch('/quantus/api/v1/push/subscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ subscription: sub.toJSON(), alertTypes }),
             });
+            if (!response.ok) {
+                await sub.unsubscribe();
+                return false;
+            }
 
             setIsSubscribed(true);
             return true;

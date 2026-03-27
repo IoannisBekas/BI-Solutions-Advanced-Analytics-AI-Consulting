@@ -16,7 +16,9 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"server/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"server/**/*.ts\"",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:python": "python -m pytest -q",
+    "test:all": "npm run test && npm run test:python"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

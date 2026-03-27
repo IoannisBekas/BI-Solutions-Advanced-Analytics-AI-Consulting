@@ -25,6 +25,7 @@ from __future__ import annotations
 import dataclasses
 import json
 import logging
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -37,7 +38,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-BASE_URL = "https://app.quantus.ai"   # production URL
+BASE_URL = os.getenv("APP_URL", "https://app.quantus.ai")
 
 SIGNAL_EMOJI = {
     "STRONG BUY":  "🟢",

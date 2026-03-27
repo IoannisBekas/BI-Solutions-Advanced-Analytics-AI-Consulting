@@ -1,7 +1,7 @@
 """
 tests/test_email_service.py
 ============================
-Unit tests for services/email.py.
+Unit tests for services/email_service.py.
 
 Covers all 5 email types using MockEmailSender (no live SendGrid/Resend calls).
 The primary integration test sends a TSLA STRONG BUY email and validates
@@ -16,7 +16,7 @@ import uuid
 
 import pytest
 
-from services.email import (
+from services.email_service import (
     ASSET_CLASS_BADGE,
     DISCLAIMERS,
     EmailService,
@@ -81,7 +81,7 @@ def _prefs(jurisdiction: str = "US") -> UserEmailPreferences:
 
 
 def _run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ---------------------------------------------------------------------------

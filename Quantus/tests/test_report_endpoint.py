@@ -4,9 +4,9 @@ tests/test_report_endpoint.py
 Integration tests for api/report.py.
 
 All external calls mocked:
-  - run_equity_pipeline → pre-built TSLA QuantusPayload
-  - call_claude_collect  → valid QuantusReportSection JSON string
-  - Redis cache          → MockReportCache
+  - run_pipeline     → pre-built TSLA QuantusPayload
+  - LLM provider     → valid QuantusReportSection payload
+  - cache            → MockReportCache
 """
 
 from __future__ import annotations
@@ -20,7 +20,6 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from api import report as report_module
 from api.report import router, set_cache
 from pipelines.cache import MockReportCache
 from pipelines.data_architecture import QuantusPayload
@@ -116,6 +115,13 @@ def _make_valid_report(ticker: str = "TSLA", section: str = "A") -> dict:
     }
 
 
+class FakeLLMProvider:
+    def __init__(self, report: dict, errors: list[str] | None = None):
+        self._report = report
+        self._errors = errors or []
+        self.generate_report = AsyncMock(return_value=(report, self._errors))
+
+
 def _build_app(cache: MockReportCache) -> tuple[FastAPI, TestClient]:
     """Build a test FastAPI app with the report router mounted."""
     set_cache(cache)
@@ -137,59 +143,59 @@ class TestGetReportEndpoint:
         self.report  = _make_valid_report()
 
     def test_report_returns_200(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             resp = self.client.get("/api/v1/report/TSLA")
         assert resp.status_code == 200
 
     def test_report_body_has_report_key(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             body = self.client.get("/api/v1/report/TSLA").json()
         assert "report" in body
 
     def test_report_has_required_fields(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             body = self.client.get("/api/v1/report/TSLA").json()
         r = body["report"]
-        for key in ("engine", "report_id", "section", "asset_class",
+        for key in ("engine", "report_id", "asset_class",
                     "overall_signal", "confidence_score"):
             assert key in r, f"Missing key '{key}'"
 
     def test_engine_is_meridian(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             body = self.client.get("/api/v1/report/TSLA").json()
         assert body["report"]["engine"] == "Meridian v2.4"
 
     def test_fresh_report_cached_false(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             body = self.client.get("/api/v1/report/TSLA").json()
         assert body["cached"] is False
 
     def test_ticker_normalised_to_uppercase(self):
         """Lowercase ticker in URL should still return a valid report."""
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             resp = self.client.get("/api/v1/report/tsla")
         assert resp.status_code == 200
@@ -208,10 +214,10 @@ class TestCacheHit:
         self.report  = _make_valid_report()
 
     def _first_request(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             return self.client.get("/api/v1/report/TSLA").json()
 
@@ -228,7 +234,7 @@ class TestCacheHit:
     def test_pipeline_not_called_on_cache_hit(self):
         self._first_request()
         mock_pipeline = AsyncMock(return_value=self.payload)
-        with patch("api.report.run_equity_pipeline", new=mock_pipeline):
+        with patch("api.report.run_pipeline", new=mock_pipeline):
             self.client.get("/api/v1/report/TSLA")
         mock_pipeline.assert_not_called()
 
@@ -251,10 +257,10 @@ class TestStatusEndpoint:
         assert resp.json()["status"] == "MISS"
 
     def test_status_hit_after_report_generated(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             self.client.get("/api/v1/report/TSLA")
         status = self.client.get("/api/v1/report/TSLA/status").json()
@@ -262,10 +268,10 @@ class TestStatusEndpoint:
         assert status["cached"] is True
 
     def test_status_has_metadata_after_generation(self):
+        provider = FakeLLMProvider(self.report)
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=(self.report, []))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             self.client.get("/api/v1/report/TSLA")
         status = self.client.get("/api/v1/report/TSLA/status").json()
@@ -288,11 +294,14 @@ class TestClaudeValidationError:
         self.app, self.client = _build_app(self.cache)
         self.payload = _make_tsla_payload()
 
-    def test_claude_invalid_json_returns_422(self):
+    def test_invalid_llm_output_falls_back_to_pipeline_only(self):
+        provider = FakeLLMProvider({}, ["Missing required keys: ..."])
         with (
-            patch("api.report.run_equity_pipeline", new=AsyncMock(return_value=self.payload)),
-            patch("api.report.call_claude_collect",
-                  new=AsyncMock(return_value=({}, ["Missing required keys: ..."]))),
+            patch("api.report.run_pipeline", new=AsyncMock(return_value=self.payload)),
+            patch("api.report._get_llm", return_value=provider),
         ):
             resp = self.client.get("/api/v1/report/TSLA")
-        assert resp.status_code == 422
+        body = resp.json()
+        assert resp.status_code == 200
+        assert body["source"] == "pipeline_only"
+        assert "warning" in body

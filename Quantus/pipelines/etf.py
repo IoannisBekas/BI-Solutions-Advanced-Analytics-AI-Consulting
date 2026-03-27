@@ -62,6 +62,14 @@ logger = logging.getLogger(__name__)
 COMMODITY_ETFS = {"GLD", "IAU", "SLV", "USO", "BNO", "UNG", "PDBC"}
 CRYPTO_ETFS = {"IBIT", "FBTC", "ETHA", "BITB", "ARKB"}
 LEVERAGED_ETFS_PREFIX = ["SSO", "QLD", "UPRO", "TQQQ", "SQQQ", "SDS"]
+LEVERAGED_ETF_FACTORS = {
+    "SSO": 2.0,
+    "QLD": 2.0,
+    "UPRO": 3.0,
+    "TQQQ": 3.0,
+    "SQQQ": -3.0,
+    "SDS": -2.0,
+}
 
 # ---------------------------------------------------------------------------
 # ETF-Specific Data Fetching (Stubs)
@@ -203,10 +211,12 @@ async def apply_etf_overlay(payload: QuantusPayload, ticker: str, info: dict) ->
     
     # Check for leverage
     if is_leveraged(ticker, info):
-        # Determine factor (mock: default to 3x if detected)
-        leverage_factor = 3.0 if "3x" in info.get("longBusinessSummary", "") else 2.0
-        if "short" in info.get("longBusinessSummary", "").lower():
-            leverage_factor *= -1
+        leverage_factor = LEVERAGED_ETF_FACTORS.get(ticker)
+        if leverage_factor is None:
+            summary = info.get("longBusinessSummary", "")
+            leverage_factor = 3.0 if "3x" in summary else 2.0
+            if "short" in summary.lower():
+                leverage_factor *= -1
         payload = apply_leveraged_etf_overlay(payload, leverage_factor)
         
     return payload

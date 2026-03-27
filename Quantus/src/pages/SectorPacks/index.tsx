@@ -60,7 +60,18 @@ const SectorPacksDashboard = () => {
                 const response = await fetch(`/quantus/api/v1/sectors/${selectedSector}/reports`, {
                     signal: controller.signal,
                 });
-                if (!response.ok) throw new Error('Failed to fetch sector data');
+                if (!response.ok) {
+                    let message = 'Failed to fetch sector data';
+                    try {
+                        const body = await response.json();
+                        if (body?.error) {
+                            message = body.error;
+                        }
+                    } catch {
+                        // ignore invalid error payloads
+                    }
+                    throw new Error(message);
+                }
 
                 const result = await response.json();
                 if (!result || typeof result.sector !== 'string' || !Array.isArray(result.reports)) {
