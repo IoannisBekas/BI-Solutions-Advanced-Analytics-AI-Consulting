@@ -20,6 +20,7 @@ View your app in AI Studio: https://ai.studio/apps/c7df1ca4-1417-4918-b88b-4fe75
 3. Copy [.env.example](.env.example) to `.env.local` and set at minimum:
    `APP_URL`, `AUTH_API_TARGET`, `PYTHON_API_URL`, `ALLOWED_ORIGINS`, `JWT_SECRET`, and either `ANTHROPIC_API_KEY` or `GEMINI_API_KEY`
    Optional: set `ANTHROPIC_MODEL` to pin the Claude model snapshot used for report narratives.
+   Optional: set `QUANTUS_PYTHON_TIMEOUT_MS` to allow longer live-pipeline runs for slower tickers.
 4. Run the app:
    `npm run dev`
 

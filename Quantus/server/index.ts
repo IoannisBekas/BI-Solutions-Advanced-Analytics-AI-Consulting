@@ -25,6 +25,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const ALLOW_DEMO_DATA = process.env.QUANTUS_ALLOW_DEMO_DATA === 'true' || !isProduction;
 const ENABLE_PUSH_NOTIFICATIONS = process.env.QUANTUS_ENABLE_PUSH === 'true';
 const SHOW_ENGINE_BANNER = process.env.QUANTUS_SHOW_ENGINE_BANNER === 'true' || !isProduction;
+const PYTHON_PIPELINE_TIMEOUT_MS = Number.parseInt(process.env.QUANTUS_PYTHON_TIMEOUT_MS || '90000', 10);
 
 if (isProduction && !process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET env var is required in production');
@@ -172,7 +173,7 @@ async function callPythonPipeline(ticker: string, options: { forceRefresh?: bool
         });
         const url = `${PYTHON_API_URL}/api/v1/report/${encodeURIComponent(ticker)}?${params}`;
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30000); // 30s timeout
+        const timeout = setTimeout(() => controller.abort(), PYTHON_PIPELINE_TIMEOUT_MS);
 
         const response = await fetch(url, {
             signal: controller.signal,
@@ -189,7 +190,7 @@ async function callPythonPipeline(ticker: string, options: { forceRefresh?: bool
         return { success: true, data };
     } catch (err: any) {
         if (err.name === 'AbortError') {
-            return { success: false, error: 'Python pipeline timeout (30s)' };
+            return { success: false, error: `Python pipeline timeout (${Math.round(PYTHON_PIPELINE_TIMEOUT_MS / 1000)}s)` };
         }
         return { success: false, error: `Python API unavailable: ${err.message}` };
     }
