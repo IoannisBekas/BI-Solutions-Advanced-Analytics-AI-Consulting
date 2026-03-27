@@ -55,6 +55,7 @@ const QUANTUS_METHODOLOGY_ROUTE = '/quantus/workspace/methodology';
 const QUANTUS_LEGACY_WORKSPACE_ROUTE = '/quantus';
 const RECENT_ASSETS_STORAGE_KEY = 'quantus-recent-assets';
 const PINNED_ASSETS_STORAGE_KEY = 'quantus-pinned-assets';
+const REPORT_CACHE_STORAGE_PREFIX = 'quantus-last-report:';
 
 function getReportRoute(ticker: string) {
     return `${QUANTUS_REPORT_ROUTE_PREFIX}/${encodeURIComponent(ticker.trim().toUpperCase())}`;
@@ -230,6 +231,40 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
         freshness: 'Unavailable',
         status,
     };
+}
+
+function isStoredReportResponse(value: unknown): value is ReportResponse {
+    return typeof value === 'object'
+        && value !== null
+        && typeof (value as ReportResponse).ticker === 'string'
+        && typeof (value as ReportResponse).source === 'string'
+        && typeof (value as ReportResponse).message === 'string'
+        && typeof (value as ReportResponse).detail === 'string'
+        && typeof (value as ReportResponse).report === 'object'
+        && (value as ReportResponse).report !== null;
+}
+
+function readStoredReportResponse(ticker: string): ReportResponse | null {
+    try {
+        const raw = localStorage.getItem(`${REPORT_CACHE_STORAGE_PREFIX}${ticker.trim().toUpperCase()}`);
+        if (!raw) return null;
+        const parsed: unknown = JSON.parse(raw);
+        return isStoredReportResponse(parsed) ? parsed : null;
+    } catch {
+        return null;
+    }
+}
+
+function writeStoredReportResponse(response: ReportResponse) {
+    try {
+        if (response.source === 'starter') return;
+        localStorage.setItem(
+            `${REPORT_CACHE_STORAGE_PREFIX}${response.ticker.trim().toUpperCase()}`,
+            JSON.stringify(response),
+        );
+    } catch {
+        // Ignore storage quota / serialization issues.
+    }
 }
 
 function isStoredAssetEntry(value: unknown): value is AssetEntry {
@@ -510,6 +545,7 @@ function App() {
         try {
             responsePayload = await fetchWorkspaceReport(normalizedTicker, controller.signal);
             if (!controller.signal.aborted) {
+                writeStoredReportResponse(responsePayload);
                 setReportResponse(responsePayload);
             }
         } catch (error) {
@@ -524,16 +560,33 @@ function App() {
                 badgeTone: 'caution',
             };
 
-            responsePayload = buildEmergencyStarterReport(
-                asset ?? {
-                    ticker: normalizedTicker,
-                    name: normalizedTicker,
-                    exchange: 'Manual input',
-                    assetClass: 'EQUITY',
-                    sector: 'Unclassified',
-                },
-                fallbackStatus,
-            );
+            const lastKnownReport = readStoredReportResponse(normalizedTicker);
+            if (lastKnownReport) {
+                responsePayload = {
+                    ...lastKnownReport,
+                    source: 'cached',
+                    message: 'Last known Quantus report loaded.',
+                    detail: `Live refresh failed, so Quantus loaded the most recent cached report for ${normalizedTicker}. Market-sensitive fields may be stale until the API responds again.`,
+                    status: {
+                        mode: 'mixed',
+                        label: 'Cached report fallback',
+                        description: 'Live refresh failed. Quantus is showing the most recent cached research report.',
+                        detail: 'Stable report sections remain available, but quote-sensitive values may be stale.',
+                        badgeTone: 'caution',
+                    },
+                };
+            } else {
+                responsePayload = buildEmergencyStarterReport(
+                    asset ?? {
+                        ticker: normalizedTicker,
+                        name: normalizedTicker,
+                        exchange: 'Manual input',
+                        assetClass: 'EQUITY',
+                        sector: 'Unclassified',
+                    },
+                    fallbackStatus,
+                );
+            }
 
             if (!controller.signal.aborted) {
                 setReportResponse(responsePayload);
