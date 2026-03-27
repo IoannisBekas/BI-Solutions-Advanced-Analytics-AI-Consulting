@@ -58,30 +58,30 @@ registerRoute(
     new StaleWhileRevalidate({ cacheName: FONT_CACHE }),
 );
 
-// ─── Strategy 4: Network-first for API calls, offline fallback to cache ───────
+// ─── Strategy 4: Network-first for report JSON specifically ───────────────────
+// Register before the generic API handler so report requests get the
+// longer timeout/cache policy instead of the 8s API default.
 registerRoute(
-    ({ url }) => url.pathname.startsWith('/quantus/api/'),
+    ({ url }) => url.pathname.startsWith('/quantus/api/report/'),
+    new NetworkFirst({
+        cacheName: REPORT_CACHE,
+        networkTimeoutSeconds: 20,
+        plugins: [
+            new CacheableResponsePlugin({ statuses: [200] }),
+            new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 96 * 60 * 60 }), // 96h — matches Redis TTL
+        ],
+    }),
+);
+
+// ─── Strategy 5: Network-first for other API calls, offline fallback to cache ─
+registerRoute(
+    ({ url }) => url.pathname.startsWith('/quantus/api/') && !url.pathname.startsWith('/quantus/api/report/'),
     new NetworkFirst({
         cacheName: API_CACHE,
         networkTimeoutSeconds: 8,
         plugins: [
             new CacheableResponsePlugin({ statuses: [200] }),
             new ExpirationPlugin({ maxEntries: 60, maxAgeSeconds: 4 * 60 * 60 }), // 4h
-        ],
-    }),
-);
-
-// ─── Strategy 5: Cache-first for report JSON specifically ─────────────────────
-// Cache viewed report payloads separately with longer TTL so the last
-// opened research report remains available offline.
-registerRoute(
-    ({ url }) => url.pathname.startsWith('/quantus/api/report/'),
-    new NetworkFirst({
-        cacheName: REPORT_CACHE,
-        networkTimeoutSeconds: 10,
-        plugins: [
-            new CacheableResponsePlugin({ statuses: [200] }),
-            new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 96 * 60 * 60 }), // 96h — matches Redis TTL
         ],
     }),
 );
