@@ -70,13 +70,7 @@ export function usePWA(): UsePWAReturn {
     }, []);
 
     // SW update handling from vite-plugin-pwa
-    const { needRefresh: [needsRefresh], updateServiceWorker } = useRegisterSW({
-        onRegisteredSW(_swUrl, r) {
-            // Poll for updates every hour in production
-            // This interval lives for the page lifetime (SPA), which is acceptable
-            if (r) setInterval(() => r.update(), 60 * 60 * 1000);
-        },
-    });
+    const { needRefresh: [needsRefresh], updateServiceWorker } = useRegisterSW();
 
     return {
         canInstall, showInstallBanner: showBanner,

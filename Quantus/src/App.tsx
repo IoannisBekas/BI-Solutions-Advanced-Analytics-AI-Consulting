@@ -10,7 +10,7 @@ import { NotFoundView } from './components/NotFoundView';
 import { PWAInstallBanner, SWUpdateBanner } from './components/PWAInstallBanner';
 import { AuthModal } from './auth/AuthModal';
 import { useAuth } from './auth/AuthContext';
-import { cacheReportForOffline } from './hooks/usePWA';
+import { cacheReportForOffline, usePWA } from './hooks/usePWA';
 import { fetchWorkspaceAsset, fetchWorkspaceReport, fetchWorkspaceSummary } from './services/workspace';
 import type { AssetEntry, InsightCard, ReportResponse, WorkspaceSummary, WorkspaceStatus } from './types';
 
@@ -339,6 +339,7 @@ function App() {
     const [currentPath, setCurrentPath] = useState(() => normalizeQuantusPath(window.location.pathname));
     const [authModalOpen, setAuthModalOpen] = useState(false);
     const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
+    const [dismissedUpdateBanner, setDismissedUpdateBanner] = useState(false);
     const reportRef = useRef<HTMLDivElement>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
     const insightAbortRef = useRef<AbortController | null>(null);
@@ -346,6 +347,13 @@ function App() {
     const pendingAssetRef = useRef<AssetEntry | null>(null);
 
     const route = useMemo(() => resolveRoute(currentPath), [currentPath]);
+    const {
+        showInstallBanner,
+        install,
+        dismissBanner,
+        needsRefresh,
+        updateSW,
+    } = usePWA();
     const report = reportResponse?.report ?? null;
     const currentReportAsset = useMemo(() => {
         if (!report || !reportResponse) return null;
@@ -415,6 +423,12 @@ function App() {
         if (!report?.ticker) return;
         cacheReportForOffline(report.ticker);
     }, [report?.ticker]);
+
+    useEffect(() => {
+        if (needsRefresh) {
+            setDismissedUpdateBanner(false);
+        }
+    }, [needsRefresh]);
 
     useEffect(() => {
         if (route.view !== 'report') {
@@ -905,8 +919,18 @@ function App() {
                 )}
             </AnimatePresence>
 
-            <PWAInstallBanner lightMode={lightMode} />
-            <SWUpdateBanner lightMode={lightMode} />
+            <PWAInstallBanner
+                lightMode={lightMode}
+                showInstallBanner={showInstallBanner}
+                install={install}
+                dismissBanner={dismissBanner}
+            />
+            <SWUpdateBanner
+                lightMode={lightMode}
+                needsRefresh={needsRefresh && !dismissedUpdateBanner}
+                updateSW={updateSW}
+                dismiss={() => setDismissedUpdateBanner(true)}
+            />
             <AuthModal
                 open={authModalOpen}
                 onClose={() => setAuthModalOpen(false)}

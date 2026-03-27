@@ -1,17 +1,17 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Download, X, Zap } from 'lucide-react';
-import { usePWA } from '../hooks/usePWA';
 
 // ─── PWA Install Banner ───────────────────────────────────────────────────────
 // Subtle, appears after 3rd visit, one-time dismissible, never re-shown
 
 interface PWAInstallBannerProps {
     lightMode?: boolean;
+    showInstallBanner: boolean;
+    install: () => Promise<void>;
+    dismissBanner: () => void;
 }
 
-export function PWAInstallBanner({ lightMode }: PWAInstallBannerProps) {
-    const { showInstallBanner, install, dismissBanner } = usePWA();
-
+export function PWAInstallBanner({ lightMode, showInstallBanner, install, dismissBanner }: PWAInstallBannerProps) {
     return (
         <AnimatePresence>
             {showInstallBanner && (
@@ -84,9 +84,14 @@ export function PWAInstallBanner({ lightMode }: PWAInstallBannerProps) {
 
 // ─── SW Update Ready Banner ───────────────────────────────────────────────────
 
-export function SWUpdateBanner({ lightMode }: { lightMode?: boolean }) {
-    const { needsRefresh, updateSW } = usePWA();
+interface SWUpdateBannerProps {
+    lightMode?: boolean;
+    needsRefresh: boolean;
+    updateSW: () => void;
+    dismiss: () => void;
+}
 
+export function SWUpdateBanner({ lightMode, needsRefresh, updateSW, dismiss }: SWUpdateBannerProps) {
     return (
         <AnimatePresence>
             {needsRefresh && (
@@ -112,6 +117,13 @@ export function SWUpdateBanner({ lightMode }: { lightMode?: boolean }) {
                         }}
                     >
                         Refresh
+                    </button>
+                    <button
+                        onClick={dismiss}
+                        className="opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+                        aria-label="Dismiss update banner"
+                    >
+                        <X className="w-4 h-4" style={{ color: lightMode ? '#047857' : '#10B981' }} />
                     </button>
                 </motion.div>
             )}
