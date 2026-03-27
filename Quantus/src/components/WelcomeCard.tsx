@@ -48,7 +48,9 @@ function fmtMktCap(v: string | number | undefined | null): string {
     return `$${v.toLocaleString()}`;
 }
 
-function marketSession(): string {
+function marketSession(assetClass: ReportData['asset_class']): string {
+    if (assetClass === 'CRYPTO') return '24/7 Market';
+
     // Use Intl to get the actual ET hour regardless of user's timezone
     const etHour = parseInt(
         new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/New_York' }).format(new Date()),
@@ -220,7 +222,7 @@ export function WelcomeCard({
     const isEquity = report.asset_class === 'EQUITY' || report.asset_class === 'ETF';
     const isStarter = reportSource === 'starter';
     const isLive = reportSource === 'live';
-    const session = marketSession();
+    const session = marketSession(report.asset_class);
 
     const cardBg = lightMode ? 'rgba(255,255,255,0.97)' : 'rgba(13,18,30,0.98)';
     const borderColor = lightMode ? '#E2E8F0' : '#1F2937';

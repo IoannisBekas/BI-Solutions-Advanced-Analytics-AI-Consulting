@@ -139,11 +139,12 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
             market_cap: 'Unavailable',
             asset_class: asset.assetClass,
             description: `${asset.name} is visible in the Quantus workspace, but the report service was unavailable during load. This emergency starter shell keeps the URL and workflow intact until the API is reachable again.`,
-            current_price: asset.currentPrice ?? 0,
-            day_change: asset.dayChange ?? 0,
-            day_change_pct: asset.dayChangePct ?? 0,
-            week_52_high: asset.currentPrice ?? 0,
-            week_52_low: asset.currentPrice ?? 0,
+            // Never display stale registry prices as if they were live market data.
+            current_price: 0,
+            day_change: 0,
+            day_change_pct: 0,
+            week_52_high: 0,
+            week_52_low: 0,
             regime: {
                 label: 'Transitional',
                 implication: 'Quantus could not complete the report handoff because the API request failed.',
