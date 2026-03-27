@@ -18,6 +18,7 @@ from __future__ import annotations
 import dataclasses
 import json
 import logging
+import os
 import uuid
 from dataclasses import dataclass, field
 from typing import AsyncGenerator, Any
@@ -31,7 +32,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Model config  (skill spec §Model Configuration)
 # ---------------------------------------------------------------------------
-MODEL       = "claude-sonnet-4-5-20251001"
+# Default to a valid Claude API alias, with env override for pinned snapshots.
+MODEL       = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-5")
 MAX_TOKENS  = 4096
 TEMPERATURE = 0.3
 
