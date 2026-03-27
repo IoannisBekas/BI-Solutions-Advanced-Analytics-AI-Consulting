@@ -100,6 +100,11 @@ function normalizeQuery(query: string) {
     return query.trim().toLowerCase();
 }
 
+function stripVolatileQuoteFields(asset: AssetEntry): AssetEntry {
+    const { currentPrice: _currentPrice, dayChange: _dayChange, dayChangePct: _dayChangePct, ...stableAsset } = asset;
+    return stableAsset;
+}
+
 function scoreAssetMatch(asset: AssetEntry, normalizedQuery: string) {
     let score = 0;
     const ticker = asset.ticker.toLowerCase();
@@ -127,7 +132,8 @@ export function listFeaturedAssets(limit = 6) {
     return ASSET_REGISTRY
         .filter((asset) => asset.hasCachedReport)
         .sort((left, right) => (right.researcherCount ?? 0) - (left.researcherCount ?? 0))
-        .slice(0, limit);
+        .slice(0, limit)
+        .map(stripVolatileQuoteFields);
 }
 
 export function getPopularTickers(limit = 6) {
@@ -171,14 +177,17 @@ export function resolveAsset(query: string): AssetEntry | null {
 
     const aliasedTicker = ALIAS_MAP[normalizedQuery];
     if (aliasedTicker) {
-        return ASSET_REGISTRY.find((asset) => asset.ticker === aliasedTicker) ?? null;
+        const asset = ASSET_REGISTRY.find((candidate) => candidate.ticker === aliasedTicker);
+        return asset ? stripVolatileQuoteFields(asset) : null;
     }
 
-    return (
-        ASSET_REGISTRY.find((asset) => asset.ticker.toLowerCase() === normalizedQuery) ??
-        ASSET_REGISTRY.find((asset) => asset.name.toLowerCase() === normalizedQuery) ??
+    const asset = (
+        ASSET_REGISTRY.find((candidate) => candidate.ticker.toLowerCase() === normalizedQuery) ??
+        ASSET_REGISTRY.find((candidate) => candidate.name.toLowerCase() === normalizedQuery) ??
         null
     );
+
+    return asset ? stripVolatileQuoteFields(asset) : null;
 }
 
 export function getAssetByTicker(ticker: string): AssetEntry | null {
@@ -198,7 +207,7 @@ export function searchAssets(query: string, maxResults = 6): AssetEntry[] {
         .filter((entry) => entry.score > 0)
         .sort((left, right) => right.score - left.score || (right.asset.researcherCount ?? 0) - (left.asset.researcherCount ?? 0))
         .slice(0, maxResults)
-        .map((entry) => entry.asset);
+        .map((entry) => stripVolatileQuoteFields(entry.asset));
 
     const deduped: AssetEntry[] = [];
     const seen = new Set<string>();

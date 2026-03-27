@@ -91,6 +91,7 @@ function AutocompleteResult({
     cardBorder: string;
 }) {
     const positive = (asset.dayChangePct ?? 0) >= 0;
+    const hasQuote = asset.currentPrice != null;
 
     return (
         <motion.button
@@ -139,10 +140,16 @@ function AutocompleteResult({
                 </div>
             </div>
             <div className="text-right flex-shrink-0">
-                <div className="text-sm font-semibold font-mono" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>
-                    {formatPrice(asset.currentPrice)}
-                </div>
-                {asset.dayChangePct != null && (
+                {hasQuote ? (
+                    <div className="text-sm font-semibold font-mono" style={{ color: lightMode ? '#111827' : '#F9FAFB' }}>
+                        {formatPrice(asset.currentPrice)}
+                    </div>
+                ) : (
+                    <div className="text-[11px] font-medium" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
+                        Quote in report
+                    </div>
+                )}
+                {hasQuote && asset.dayChangePct != null && (
                     <div className="mt-1 text-xs font-medium" style={{ color: positive ? '#059669' : '#DC2626' }}>
                         {positive ? '+' : ''}{asset.dayChangePct.toFixed(2)}%
                     </div>
@@ -161,6 +168,7 @@ function DiscoveryTile({
     onSelect: (asset: AssetEntry) => void;
     lightMode?: boolean;
 }) {
+    const hasQuote = asset.currentPrice != null;
     return (
         <motion.button
             whileHover={{ y: -6, boxShadow: lightMode ? '0 24px 56px rgba(15,23,42,0.10)' : '0 28px 64px rgba(0,0,0,0.35)' }}
@@ -203,9 +211,15 @@ function DiscoveryTile({
 
             <div className="mt-6 flex items-end justify-between gap-4">
                 <div>
-                    <div className="text-2xl font-bold font-mono tracking-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
-                        {formatPrice(asset.currentPrice)}
-                    </div>
+                    {hasQuote ? (
+                        <div className="text-2xl font-bold font-mono tracking-tight" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}>
+                            {formatPrice(asset.currentPrice)}
+                        </div>
+                    ) : (
+                        <div className="text-sm font-semibold tracking-tight" style={{ color: lightMode ? '#475569' : '#D1D5DB' }}>
+                            Live quote in report
+                        </div>
+                    )}
                     <div className="mt-2 text-xs" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
                         {asset.cachedReportAge ?? 'Starter shell'} · {asset.researcherCount ?? 0} researchers
                     </div>
