@@ -1,3 +1,4 @@
 [phases.setup]
 nixPkgs = ["nodejs_22", "python3", "gcc", "gnumake"]
+nixLibs = ["gcc-unwrapped"]
 aptPkgs = ["libstdc++6"]
