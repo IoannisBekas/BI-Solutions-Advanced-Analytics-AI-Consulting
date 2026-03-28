@@ -29,17 +29,17 @@ export function Navbar() {
     {
       name: "Power BI Solutions",
       href: PRODUCT_ROUTES.powerBiSolutions,
-      description: "Semantic model analysis and AI-assisted optimization",
+      description: "Semantic model audits and AI-assisted optimization",
     },
     {
       name: "Greek AI Professional Advisor",
       href: PRODUCT_ROUTES.aiAdvisor,
-      description: "AI-powered guidance for accounting, legal, and consulting",
+      description: "Greek-language AI guidance for accounting, legal, and consulting",
     },
     {
       name: "Website & App Portfolio",
       href: PRODUCT_ROUTES.websiteAppPortfolio,
-      description: "Showcase page for BI Solutions website and app builds",
+      description: "Case-study portfolio for websites, apps, and BI dashboards",
     },
   ];
 

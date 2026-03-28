@@ -13,7 +13,7 @@ export default function Products() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Products"
-        description="Explore Quantus Investing, Power BI Solutions, the Greek AI Professional Advisor, and BI Solutions' website and app portfolio showcase."
+        description="Explore Quantus Investing, Power BI Solutions, the Greek AI Professional Advisor, and the Website & App Portfolio showcase from one searchable hub."
         path="/products"
         structuredData={{
           "@context": "https://schema.org",
@@ -39,15 +39,13 @@ export default function Products() {
                   Products
                 </div>
                 <h1 className="mt-6 text-5xl md:text-6xl font-bold font-heading tracking-tight leading-tight">
-                  Native product experiences inside the BI Solutions ecosystem.
-                </h1>
-                <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                  Quantus Investing, Power BI Solutions, the Greek AI Professional Advisor,
-                  and a dedicated website and app portfolio showcase now live
-                  under the same BI Solutions brand domain, each with its own
-                  runtime or presentation layer while staying discoverable from
-                  one shared site.
-                </p>
+                Native product experiences with separate search intent and dedicated pages.
+              </h1>
+              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
+                Each product now has a focused entry point, stronger metadata, and clearer
+                copy for the audience it serves. That gives Google and visitors a cleaner way
+                to understand what each offer actually does.
+              </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Link href="/contact">
                     <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
@@ -71,7 +69,7 @@ export default function Products() {
 
         <ProductShowcase
           heading="Choose the product experience that fits the workflow."
-          description="hosts product experiences and portfolio showcases as first-class BI Solutions surfaces, keeping the public site, product discovery, and app entry points aligned."
+          description="The product hub keeps discovery clear while each product page handles its own keyword set, use case, and conversion path."
         />
       </main>
 

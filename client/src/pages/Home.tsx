@@ -17,8 +17,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="Advanced Analytics, AI Consulting, and BI Products"
-        description="BI Solutions Group delivers advanced analytics, AI consulting, Power BI expertise, and native products like Quantus and Power BI Solutions."
+        title="AI Product Portfolio and BI Consulting"
+        description="BI Solutions Group presents Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and a website and app portfolio with dedicated product pages."
         path="/"
         structuredData={{
           "@context": "https://schema.org",
@@ -36,7 +36,12 @@ export default function Home() {
       <main>
         <Hero />
         <ServicesSection />
-        <ProductShowcase badge="Product Studio" id="products" />
+        <ProductShowcase
+          badge="Product Studio"
+          id="products"
+          heading="Four distinct products, each with its own search intent."
+          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio now have dedicated product positioning and clearer paths for discovery."
+        />
 
         {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">
