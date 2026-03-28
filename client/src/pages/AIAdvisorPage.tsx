@@ -11,11 +11,91 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
+type AdvisorLanguage = "greek" | "english";
+type AdvisorVerification = "grounded" | "unverified";
+type AdvisorSource = {
+  title: string;
+  uri: string;
+};
+
 const roles = [
-  { id: "accountant", label: "Λογιστής", icon: Calculator, color: "bg-blue-100 text-blue-600" },
-  { id: "lawyer", label: "Δικηγόρος", icon: Scale, color: "bg-amber-100 text-amber-600" },
-  { id: "consultant", label: "Σύμβουλος", icon: Briefcase, color: "bg-emerald-100 text-emerald-600" },
+  {
+    id: "accountant",
+    label: {
+      greek: "Λογιστής",
+      english: "Accountant",
+    },
+    icon: Calculator,
+    color: "bg-blue-100 text-blue-600",
+  },
+  {
+    id: "lawyer",
+    label: {
+      greek: "Δικηγόρος",
+      english: "Lawyer",
+    },
+    icon: Scale,
+    color: "bg-amber-100 text-amber-600",
+  },
+  {
+    id: "consultant",
+    label: {
+      greek: "Σύμβουλος",
+      english: "Consultant",
+    },
+    icon: Briefcase,
+    color: "bg-emerald-100 text-emerald-600",
+  },
 ];
+
+const languageOptions: Array<{ id: AdvisorLanguage; label: string }> = [
+  { id: "greek", label: "Ελληνικά" },
+  { id: "english", label: "English" },
+];
+
+const languageCopy: Record<
+  AdvisorLanguage,
+  {
+    languageLabel: string;
+    checkingAvailability: string;
+    advisorUnavailable: string;
+    askRole: (roleLabel: string) => string;
+    retry: string;
+    responseLabel: string;
+    generating: string;
+    networkError: string;
+    sourcesLabel: string;
+    groundedLabel: string;
+    unverifiedLabel: string;
+  }
+> = {
+  greek: {
+    languageLabel: "Γλώσσα Απάντησης",
+    checkingAvailability: "Έλεγχος διαθεσιμότητας advisor...",
+    advisorUnavailable: "Ο advisor δεν είναι διαθέσιμος αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.",
+    askRole: (roleLabel) => `Ρωτήστε τον ${roleLabel}...`,
+    retry: "Επανάληψη",
+    responseLabel: "AI Απάντηση",
+    generating: "Δημιουργία απάντησης…",
+    networkError: "Σφάλμα δικτύου. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.",
+    sourcesLabel: "Πηγές",
+    groundedLabel: "Επαληθεύτηκε με τρέχουσες διαδικτυακές πηγές.",
+    unverifiedLabel: "Δεν ήταν δυνατή η πλήρης επαλήθευση τρεχουσών πηγών για αυτή την απάντηση.",
+  },
+  english: {
+    languageLabel: "Response Language",
+    checkingAvailability: "Checking advisor availability...",
+    advisorUnavailable: "The advisor is currently unavailable. Please try again later.",
+    askRole: (roleLabel) => `Ask the ${roleLabel}...`,
+    retry: "Retry",
+    responseLabel: "AI Response",
+    generating: "Generating response…",
+    networkError: "Network error. Please check your connection and try again.",
+    sourcesLabel: "Sources",
+    groundedLabel: "Verified with current web sources.",
+    unverifiedLabel: "Current source verification was not fully available for this answer.",
+  },
+};
 
 const advisorFaqs = [
   {
@@ -37,13 +117,16 @@ const advisorFaqs = [
 
 export default function AIAdvisorPage() {
   const [selectedRole, setSelectedRole] = useState(roles[0].id);
+  const [language, setLanguage] = useState<AdvisorLanguage>("greek");
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState<string | null>(null);
+  const [sources, setSources] = useState<AdvisorSource[]>([]);
+  const [verification, setVerification] = useState<AdvisorVerification>("unverified");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [advisorStatus, setAdvisorStatus] = useState<"checking" | "ready" | "unavailable">("checking");
   const abortRef = useRef<AbortController | null>(null);
-  const lastRequestRef = useRef<{ role: string; question: string } | null>(null);
+  const lastRequestRef = useRef<{ role: string; question: string; language: AdvisorLanguage } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,7 +157,7 @@ export default function AIAdvisorPage() {
     };
   }, []);
 
-  const submitRequest = useCallback(async (role: string, q: string) => {
+  const submitRequest = useCallback(async (role: string, q: string, requestLanguage: AdvisorLanguage) => {
     if (advisorStatus !== "ready") {
       return;
     }
@@ -86,14 +169,16 @@ export default function AIAdvisorPage() {
 
     setIsLoading(true);
     setResponse(null);
+    setSources([]);
+    setVerification("unverified");
     setErrorMsg(null);
-    lastRequestRef.current = { role, question: q };
+    lastRequestRef.current = { role, question: q, language: requestLanguage };
 
     try {
       const res = await fetch("/api/ai-advisor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, question: q }),
+        body: JSON.stringify({ role, question: q, language: requestLanguage }),
         signal: controller.signal,
       });
 
@@ -102,11 +187,15 @@ export default function AIAdvisorPage() {
         answer?: string;
         error?: string;
         code?: string;
+        sources?: AdvisorSource[];
+        verification?: AdvisorVerification;
       };
 
       if (data.success) {
         setAdvisorStatus("ready");
         setResponse(data.answer ?? "No response generated.");
+        setSources(Array.isArray(data.sources) ? data.sources : []);
+        setVerification(data.verification === "grounded" ? "grounded" : "unverified");
       } else {
         if (data.code === "ADVISOR_UNAVAILABLE" || res.status === 503) {
           setAdvisorStatus("unavailable");
@@ -119,7 +208,7 @@ export default function AIAdvisorPage() {
     } catch (error) {
       if ((error as Error).name === "AbortError") return;
       console.error("AI Advisor error:", error);
-      setErrorMsg("Network error. Please check your connection and try again.");
+      setErrorMsg(languageCopy[requestLanguage].networkError);
     } finally {
       if (!controller.signal.aborted) {
         setIsLoading(false);
@@ -130,23 +219,28 @@ export default function AIAdvisorPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim() || advisorStatus !== "ready") return;
-    submitRequest(selectedRole, question.trim());
+    submitRequest(selectedRole, question.trim(), language);
   };
 
   const handleRetry = () => {
     if (lastRequestRef.current) {
-      submitRequest(lastRequestRef.current.role, lastRequestRef.current.question);
+      submitRequest(
+        lastRequestRef.current.role,
+        lastRequestRef.current.question,
+        lastRequestRef.current.language,
+      );
     }
   };
 
-  const selectedRoleLabel = roles.find((role) => role.id === selectedRole)?.label;
+  const copy = languageCopy[language];
+  const selectedRoleLabel = roles.find((role) => role.id === selectedRole)?.label[language];
   const isAdvisorChecking = advisorStatus === "checking";
   const isAdvisorUnavailable = advisorStatus === "unavailable";
   const inputPlaceholder = isAdvisorChecking
-    ? "Checking advisor availability..."
+    ? copy.checkingAvailability
     : isAdvisorUnavailable
-      ? "Advisor temporarily unavailable"
-      : `Ask the ${selectedRoleLabel}...`;
+      ? copy.advisorUnavailable
+      : copy.askRole(selectedRoleLabel ?? "");
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
@@ -232,6 +326,8 @@ export default function AIAdvisorPage() {
                         onClick={() => {
                           setSelectedRole(role.id);
                           setResponse(null);
+                          setSources([]);
+                          setVerification("unverified");
                         }}
                         className={cn(
                           "flex flex-col md:flex-row items-center justify-center gap-2 py-3 md:py-4 px-2 rounded-lg transition-all duration-300 relative overflow-hidden",
@@ -239,7 +335,7 @@ export default function AIAdvisorPage() {
                         )}
                       >
                         <Icon className={cn("w-5 h-5", isSelected ? "text-black" : "text-current")} />
-                        <span className="text-xs md:text-sm font-medium">{role.label}</span>
+                        <span className="text-xs md:text-sm font-medium">{role.label[language]}</span>
                         {isSelected && (
                           <motion.div
                             layoutId="activeRole"
@@ -253,6 +349,38 @@ export default function AIAdvisorPage() {
 
                 {/* Chat Interface */}
                 <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+                      {copy.languageLabel}
+                    </p>
+                    <div className="inline-flex w-fit rounded-full bg-gray-100 p-1">
+                      {languageOptions.map((option) => {
+                        const isSelected = option.id === language;
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            onClick={() => {
+                              setLanguage(option.id);
+                              setResponse(null);
+                              setSources([]);
+                              setVerification("unverified");
+                              setErrorMsg(null);
+                            }}
+                            className={cn(
+                              "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                              isSelected
+                                ? "bg-white text-black shadow-sm"
+                                : "text-gray-500 hover:text-gray-800",
+                            )}
+                          >
+                            {option.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                      <div className="relative">
                       <Input
@@ -289,7 +417,7 @@ export default function AIAdvisorPage() {
                       exit={{ opacity: 0, y: -10 }}
                       className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800"
                     >
-                      The advisor is currently unavailable. Please try again later.
+                      {copy.advisorUnavailable}
                     </motion.div>
                   )}
 
@@ -309,7 +437,7 @@ export default function AIAdvisorPage() {
                           onClick={handleRetry}
                           className="flex-shrink-0 gap-1.5 border-red-300 text-red-700 hover:bg-red-100"
                         >
-                          <RotateCcw className="w-3.5 h-3.5" /> Retry
+                          <RotateCcw className="w-3.5 h-3.5" /> {copy.retry}
                         </Button>
                       </motion.div>
                     )}
@@ -328,14 +456,14 @@ export default function AIAdvisorPage() {
                           </div>
                           <div className="flex-1 space-y-3">
                             <p className="font-semibold text-sm text-gray-500 uppercase tracking-wider">
-                              AI Response ({roles.find(r => r.id === selectedRole)?.label})
+                              {copy.responseLabel} ({roles.find((role) => role.id === selectedRole)?.label[language]})
                             </p>
                             <div className="space-y-2.5 animate-pulse">
                               <div className="h-4 bg-gray-200 rounded-md w-full" />
                               <div className="h-4 bg-gray-200 rounded-md w-5/6" />
                               <div className="h-4 bg-gray-200 rounded-md w-4/6" />
                             </div>
-                            <p className="text-xs text-gray-400 mt-3">Generating response…</p>
+                            <p className="text-xs text-gray-400 mt-3">{copy.generating}</p>
                           </div>
                         </div>
                       </motion.div>
@@ -357,11 +485,42 @@ export default function AIAdvisorPage() {
                             </div>
                             <div className="space-y-2">
                               <p className="font-semibold text-sm text-gray-500 uppercase tracking-wider">
-                                AI Response ({roles.find(r => r.id === selectedRole)?.label})
+                                {copy.responseLabel} ({roles.find((role) => role.id === selectedRole)?.label[language]})
                               </p>
                               <p className="text-gray-800 leading-relaxed text-lg whitespace-pre-line">
                                 {response}
                               </p>
+                              <div className="pt-2">
+                                <p
+                                  className={cn(
+                                    "text-sm font-medium",
+                                    verification === "grounded" ? "text-emerald-700" : "text-amber-700",
+                                  )}
+                                >
+                                  {verification === "grounded" ? copy.groundedLabel : copy.unverifiedLabel}
+                                </p>
+                              </div>
+                              {sources.length > 0 && (
+                                <div className="pt-3">
+                                  <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
+                                    {copy.sourcesLabel}
+                                  </p>
+                                  <div className="mt-3 space-y-2">
+                                    {sources.map((source) => (
+                                      <a
+                                        key={source.uri}
+                                        href={source.uri}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="block rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                                      >
+                                        <span className="block font-medium text-gray-900">{source.title}</span>
+                                        <span className="mt-1 block break-all text-xs text-gray-500">{source.uri}</span>
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
