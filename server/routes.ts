@@ -10,16 +10,26 @@ const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
 const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 const DEFAULT_QUANTUS_API_TARGET = "http://127.0.0.1:3001";
 
-function getAnthropicApiKey() {
-  return (
-    process.env.POWERBI_SOLUTIONS_ANTHROPIC_API_KEY ||
-    process.env.ANTHROPIC_API_KEY ||
-    ""
-  ).trim();
+function readEnv(key: string) {
+  return (process.env[key] || "").trim();
 }
 
-function isAnthropicConfigured() {
-  return getAnthropicApiKey().length > 0;
+function getAdvisorAnthropicApiKey() {
+  return (
+    readEnv("ANTHROPIC_API_KEY") ||
+    readEnv("POWERBI_SOLUTIONS_ANTHROPIC_API_KEY")
+  );
+}
+
+function getPowerBiAnthropicApiKey() {
+  return (
+    readEnv("POWERBI_SOLUTIONS_ANTHROPIC_API_KEY") ||
+    readEnv("ANTHROPIC_API_KEY")
+  );
+}
+
+function isAdvisorAnthropicConfigured() {
+  return getAdvisorAnthropicApiKey().length > 0;
 }
 
 function getAnthropicModel() {
@@ -155,11 +165,11 @@ export async function registerRoutes(
 
   // ─── AI Advisor (Anthropic-powered) ─────────────────────────────────────────
   app.get("/api/ai-advisor/health", (_req, res) => {
-    res.json({ ok: true, configured: isAnthropicConfigured() });
+    res.json({ ok: true, configured: isAdvisorAnthropicConfigured() });
   });
 
   app.post("/api/ai-advisor", async (req, res) => {
-    if (!isAnthropicConfigured()) {
+    if (!isAdvisorAnthropicConfigured()) {
       res.status(503).json({
         success: false,
         code: "ADVISOR_UNAVAILABLE",
@@ -168,7 +178,7 @@ export async function registerRoutes(
       return;
     }
 
-    const apiKey = getAnthropicApiKey();
+    const apiKey = getAdvisorAnthropicApiKey();
 
     const { role, question } = req.body;
     if (!role || !question || typeof question !== "string") {
@@ -279,7 +289,7 @@ export async function registerRoutes(
   });
 
   app.post(`${POWERBI_SOLUTIONS_API_PREFIX}/anthropic/v1/messages`, async (req, res) => {
-    const apiKey = getAnthropicApiKey();
+    const apiKey = getPowerBiAnthropicApiKey();
 
     if (!apiKey) {
       res.status(500).json({
