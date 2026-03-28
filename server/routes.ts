@@ -18,6 +18,10 @@ function getAnthropicApiKey() {
   ).trim();
 }
 
+function isAnthropicConfigured() {
+  return getAnthropicApiKey().length > 0;
+}
+
 function getAnthropicModel() {
   return (
     process.env.ANTHROPIC_MODEL ||
@@ -150,12 +154,21 @@ export async function registerRoutes(
   });
 
   // ─── AI Advisor (Anthropic-powered) ─────────────────────────────────────────
+  app.get("/api/ai-advisor/health", (_req, res) => {
+    res.json({ ok: true, configured: isAnthropicConfigured() });
+  });
+
   app.post("/api/ai-advisor", async (req, res) => {
-    const apiKey = getAnthropicApiKey();
-    if (!apiKey) {
-      res.status(500).json({ success: false, error: "AI Advisor is not configured on the server." });
+    if (!isAnthropicConfigured()) {
+      res.status(503).json({
+        success: false,
+        code: "ADVISOR_UNAVAILABLE",
+        error: "The advisor is temporarily unavailable right now.",
+      });
       return;
     }
+
+    const apiKey = getAnthropicApiKey();
 
     const { role, question } = req.body;
     if (!role || !question || typeof question !== "string") {

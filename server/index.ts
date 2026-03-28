@@ -152,6 +152,10 @@ if (isProduction && !process.env.JWT_SECRET) {
   console.warn("WARNING: JWT_SECRET env var is not set — auth endpoints will fail until it is configured");
 }
 
+if (!process.env.ANTHROPIC_API_KEY && !process.env.POWERBI_SOLUTIONS_ANTHROPIC_API_KEY) {
+  console.warn("WARNING: Anthropic API key env vars are not set — AI Advisor will remain unavailable until configured");
+}
+
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",

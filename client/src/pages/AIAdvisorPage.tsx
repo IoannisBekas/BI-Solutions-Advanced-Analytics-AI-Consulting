@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, Loader2, Briefcase, Scale, Calculator, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,10 +23,44 @@ export default function AIAdvisorPage() {
   const [response, setResponse] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [advisorStatus, setAdvisorStatus] = useState<"checking" | "ready" | "unavailable">("checking");
   const abortRef = useRef<AbortController | null>(null);
   const lastRequestRef = useRef<{ role: string; question: string } | null>(null);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkAdvisorAvailability() {
+      try {
+        const res = await fetch("/api/ai-advisor/health");
+        if (!res.ok) {
+          throw new Error("Unable to load advisor status.");
+        }
+
+        const data = await res.json() as { configured?: boolean };
+        if (!cancelled) {
+          setAdvisorStatus(data.configured ? "ready" : "unavailable");
+        }
+      } catch (error) {
+        console.error("AI Advisor status error:", error);
+        if (!cancelled) {
+          setAdvisorStatus("unavailable");
+        }
+      }
+    }
+
+    void checkAdvisorAvailability();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const submitRequest = useCallback(async (role: string, q: string) => {
+    if (advisorStatus !== "ready") {
+      return;
+    }
+
     // Cancel any in-flight request
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -45,11 +79,23 @@ export default function AIAdvisorPage() {
         signal: controller.signal,
       });
 
-      const data = await res.json();
+      const data = await res.json() as {
+        success?: boolean;
+        answer?: string;
+        error?: string;
+        code?: string;
+      };
 
       if (data.success) {
-        setResponse(data.answer);
+        setAdvisorStatus("ready");
+        setResponse(data.answer ?? "No response generated.");
       } else {
+        if (data.code === "ADVISOR_UNAVAILABLE" || res.status === 503) {
+          setAdvisorStatus("unavailable");
+          setErrorMsg(null);
+          return;
+        }
+
         setErrorMsg(data.error || "Unable to process your request. Please try again.");
       }
     } catch (error) {
@@ -61,11 +107,11 @@ export default function AIAdvisorPage() {
         setIsLoading(false);
       }
     }
-  }, []);
+  }, [advisorStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!question.trim()) return;
+    if (!question.trim() || advisorStatus !== "ready") return;
     submitRequest(selectedRole, question.trim());
   };
 
@@ -74,6 +120,15 @@ export default function AIAdvisorPage() {
       submitRequest(lastRequestRef.current.role, lastRequestRef.current.question);
     }
   };
+
+  const selectedRoleLabel = roles.find((role) => role.id === selectedRole)?.label;
+  const isAdvisorChecking = advisorStatus === "checking";
+  const isAdvisorUnavailable = advisorStatus === "unavailable";
+  const inputPlaceholder = isAdvisorChecking
+    ? "Checking advisor availability..."
+    : isAdvisorUnavailable
+      ? "Advisor temporarily unavailable"
+      : `Ask the ${selectedRoleLabel}...`;
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
@@ -142,7 +197,7 @@ export default function AIAdvisorPage() {
                       <Input
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
-                        placeholder={`Ask the ${roles.find(r => r.id === selectedRole)?.label}...`}
+                        placeholder={inputPlaceholder}
                         autoComplete="off"
                         autoCorrect="off"
                         autoCapitalize="off"
@@ -151,18 +206,31 @@ export default function AIAdvisorPage() {
                         data-gramm="false"
                         data-gramm_editor="false"
                         data-enable-grammarly="false"
+                        disabled={isAdvisorChecking || isAdvisorUnavailable || isLoading}
                         className="h-14 pl-4 pr-14 text-lg bg-white border-gray-200 focus:ring-black/10 focus:border-black transition-all rounded-xl shadow-sm"
                       />
                       <Button 
                         type="submit" 
                         size="icon"
-                        disabled={!question.trim() || isLoading}
+                        disabled={!question.trim() || isLoading || isAdvisorChecking || isAdvisorUnavailable}
                         className="absolute right-2 top-2 h-10 w-10 rounded-lg bg-black hover:bg-gray-800 text-white transition-all"
                       >
                         {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       </Button>
                      </div>
                   </form>
+
+                  {isAdvisorUnavailable && (
+                    <motion.div
+                      key="advisor-unavailable"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800"
+                    >
+                      The advisor is currently unavailable. Please try again later.
+                    </motion.div>
+                  )}
 
                   <AnimatePresence mode="wait">
                     {errorMsg && (
