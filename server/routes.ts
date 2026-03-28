@@ -15,6 +15,7 @@ const ADVISOR_ROLES = ["accountant", "lawyer", "consultant"] as const;
 
 type AdvisorRole = typeof ADVISOR_ROLES[number];
 type AdvisorLanguage = "greek" | "english";
+type AdvisorConfidence = "high" | "medium" | "low";
 type AdvisorSource = {
   title: string;
   uri: string;
@@ -24,7 +25,68 @@ type AdvisorAnswer = {
   answer: string;
   sources: AdvisorSource[];
   verification: "grounded" | "unverified";
+  asOf: string | null;
+  confidence: AdvisorConfidence;
+  requiresReview: boolean;
+  refusalReason: string | null;
 };
+
+const COMMON_OFFICIAL_HOST_SUFFIXES = [
+  "gov.gr",
+  ".gov.gr",
+  "aade.gr",
+  ".aade.gr",
+  "et.gr",
+  ".et.gr",
+  "eur-lex.europa.eu",
+  ".europa.eu",
+];
+
+const ROLE_OFFICIAL_HOST_SUFFIXES: Record<AdvisorRole, string[]> = {
+  accountant: [
+    "efka.gov.gr",
+    ".efka.gov.gr",
+    "gsis.gr",
+    ".gsis.gr",
+  ],
+  lawyer: [
+    "dpa.gr",
+    ".dpa.gr",
+    "areiospagos.gr",
+    ".areiospagos.gr",
+    "ste.gr",
+    ".ste.gr",
+  ],
+  consultant: [
+    "espa.gr",
+    ".espa.gr",
+    "elstat.gr",
+    ".elstat.gr",
+    "enterprisegreece.gov.gr",
+    ".enterprisegreece.gov.gr",
+  ],
+};
+
+const HIGH_RISK_CONSULTANT_PATTERNS = [
+  /compliance/i,
+  /grant/i,
+  /fund/i,
+  /subsid/i,
+  /license/i,
+  /permit/i,
+  /deadline/i,
+  /penalt/i,
+  /tax/i,
+  /gdpr/i,
+  /espa/i,
+  /προθεσμ/i,
+  /πρόστιμ/i,
+  /φορο/i,
+  /εσπα/i,
+  /άδεια/i,
+  /επιδότη/i,
+  /συμμόρφω/i,
+];
 
 function readEnv(key: string) {
   return (process.env[key] || "").trim();
@@ -76,6 +138,137 @@ function getAdvisorGeminiModel() {
 
 function parseAdvisorLanguage(value: unknown): AdvisorLanguage {
   return value === "english" ? "english" : "greek";
+}
+
+function getAdvisorAsOfDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function isHighRiskAdvisorQuestion(role: AdvisorRole, question: string) {
+  if (role === "accountant" || role === "lawyer") {
+    return true;
+  }
+
+  return HIGH_RISK_CONSULTANT_PATTERNS.some((pattern) => pattern.test(question));
+}
+
+function isOfficialSourceHost(hostname: string, role: AdvisorRole) {
+  const normalizedHost = hostname.trim().toLowerCase();
+  if (!normalizedHost) {
+    return false;
+  }
+
+  const suffixes = [...COMMON_OFFICIAL_HOST_SUFFIXES, ...ROLE_OFFICIAL_HOST_SUFFIXES[role]];
+  return suffixes.some((suffix) =>
+    suffix.startsWith(".")
+      ? normalizedHost.endsWith(suffix)
+      : normalizedHost === suffix || normalizedHost.endsWith(`.${suffix}`),
+  );
+}
+
+async function resolveAdvisorSourceUri(uri: string) {
+  const attempts: Array<() => Promise<globalThis.Response>> = [
+    () => fetch(uri, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(8_000) }),
+    () => fetch(uri, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(8_000) }),
+  ];
+
+  for (const attempt of attempts) {
+    try {
+      const response = await attempt();
+      if (response.url) {
+        return response.url;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return uri;
+}
+
+async function filterOfficialAdvisorSources(
+  role: AdvisorRole,
+  rawSources: AdvisorSource[],
+) {
+  const candidates = rawSources.slice(0, 6);
+  const resolvedSources = await Promise.all(
+    candidates.map(async (source) => {
+      const resolvedUri = await resolveAdvisorSourceUri(source.uri);
+      let hostname = "";
+
+      try {
+        hostname = new URL(resolvedUri).hostname;
+      } catch {
+        return null;
+      }
+
+      if (!isOfficialSourceHost(hostname, role)) {
+        return null;
+      }
+
+      return {
+        title: source.title,
+        uri: resolvedUri,
+      } satisfies AdvisorSource;
+    }),
+  );
+
+  const deduped = new Map<string, AdvisorSource>();
+  for (const source of resolvedSources) {
+    if (!source || deduped.has(source.uri)) {
+      continue;
+    }
+
+    deduped.set(source.uri, source);
+  }
+
+  return Array.from(deduped.values());
+}
+
+function buildAdvisorConfidence(
+  role: AdvisorRole,
+  verification: AdvisorAnswer["verification"],
+  sourceCount: number,
+) {
+  if (verification !== "grounded") {
+    return "low";
+  }
+
+  if (role === "lawyer") {
+    return "medium";
+  }
+
+  return sourceCount >= 2 ? "high" : "medium";
+}
+
+function buildAdvisorRequiresReview(
+  role: AdvisorRole,
+  verification: AdvisorAnswer["verification"],
+  highRisk: boolean,
+) {
+  return verification !== "grounded" || highRisk || role === "lawyer";
+}
+
+function buildVerificationRequiredAnswer(
+  role: AdvisorRole,
+  language: AdvisorLanguage,
+): AdvisorAnswer {
+  const answer = language === "english"
+    ? "I can't provide a definitive current answer for this question because I could not verify it against current official sources."
+    : "Δεν μπορώ να δώσω οριστική και επίκαιρη απάντηση για αυτό το ερώτημα, επειδή δεν κατέστη δυνατή η επαλήθευσή του με τρέχουσες επίσημες πηγές.";
+  const refusalReason = language === "english"
+    ? "Official current-source verification is required for this high-risk question."
+    : "Για αυτό το υψηλού ρίσκου ερώτημα απαιτείται επαλήθευση από επίσημες και τρέχουσες πηγές.";
+
+  return {
+    answer,
+    sources: [],
+    verification: "unverified",
+    asOf: null,
+    confidence: "low",
+    requiresReview: true,
+    refusalReason,
+  };
 }
 
 function buildAdvisorPrompt(role: AdvisorRole, language: AdvisorLanguage, grounded: boolean) {
@@ -139,12 +332,14 @@ function buildAdvisorPrompt(role: AdvisorRole, language: AdvisorLanguage, ground
 }
 
 function buildGroundedAdvisorUserPrompt(question: string, language: AdvisorLanguage) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getAdvisorAsOfDate();
   return [
     `Current date: ${today}.`,
     `Target response language: ${language === "english" ? "English" : "Greek"}.`,
     "Answer the question using current web-grounded information when needed.",
-    "Prefer official or primary public sources for Greece and the EU.",
+    "Prefer official public sources for Greece and the EU.",
+    "Do not rely on private blogs, private law firms, accounting firms, or commentary sites as primary authority.",
+    "If you cannot support the answer with official public sources, say that clearly.",
     "If the answer depends on a filing deadline, tax rate, legal change, fine, penalty, or threshold, state the applicable date or say that current confirmation is still needed.",
     "Question:",
     question,
@@ -244,7 +439,7 @@ async function generateGroundedAdvisorAnswer(
   }
 
   const answer = parseGeminiAnswerText(payload);
-  const sources = parseGeminiSources(payload);
+  const sources = await filterOfficialAdvisorSources(role, parseGeminiSources(payload));
 
   if (!answer) {
     throw new Error("Gemini grounding returned an empty answer.");
@@ -258,6 +453,10 @@ async function generateGroundedAdvisorAnswer(
     answer,
     sources,
     verification: "grounded",
+    asOf: getAdvisorAsOfDate(),
+    confidence: buildAdvisorConfidence(role, "grounded", sources.length),
+    requiresReview: buildAdvisorRequiresReview(role, "grounded", isHighRiskAdvisorQuestion(role, question)),
+    refusalReason: null,
   };
 }
 
@@ -307,6 +506,12 @@ async function generateFallbackAdvisorAnswer(
     answer: `${buildFallbackAdvisoryPrefix(language)}${answer}`,
     sources: [],
     verification: "unverified",
+    asOf: null,
+    confidence: "low",
+    requiresReview: true,
+    refusalReason: language === "english"
+      ? "Current official-source verification was not available for this answer."
+      : "Δεν ήταν διαθέσιμη επαλήθευση από τρέχουσες επίσημες πηγές για αυτή την απάντηση.",
   };
 }
 
@@ -456,6 +661,7 @@ export async function registerRoutes(
 
     const { role, question } = req.body;
     const language = parseAdvisorLanguage(req.body?.language);
+    const trimmedQuestion = typeof question === "string" ? question.slice(0, 2000) : "";
     if (!role || !question || typeof question !== "string") {
       res.status(400).json({ success: false, error: "Role and question are required." });
       return;
@@ -466,18 +672,39 @@ export async function registerRoutes(
       return;
     }
 
+    const highRisk = isHighRiskAdvisorQuestion(role, trimmedQuestion);
+
     try {
       if (isAdvisorGroundingConfigured()) {
-        const groundedAnswer = await generateGroundedAdvisorAnswer(role, question.slice(0, 2000), language);
+        const groundedAnswer = await generateGroundedAdvisorAnswer(role, trimmedQuestion, language);
         if (groundedAnswer) {
           res.json({
             success: true,
             answer: groundedAnswer.answer,
             sources: groundedAnswer.sources,
             verification: groundedAnswer.verification,
+            asOf: groundedAnswer.asOf,
+            confidence: groundedAnswer.confidence,
+            requiresReview: groundedAnswer.requiresReview,
+            refusalReason: groundedAnswer.refusalReason,
           });
           return;
         }
+      }
+
+      if (highRisk) {
+        const verificationRequiredAnswer = buildVerificationRequiredAnswer(role, language);
+        res.json({
+          success: true,
+          answer: verificationRequiredAnswer.answer,
+          sources: verificationRequiredAnswer.sources,
+          verification: verificationRequiredAnswer.verification,
+          asOf: verificationRequiredAnswer.asOf,
+          confidence: verificationRequiredAnswer.confidence,
+          requiresReview: verificationRequiredAnswer.requiresReview,
+          refusalReason: verificationRequiredAnswer.refusalReason,
+        });
+        return;
       }
 
       if (!isAdvisorAnthropicConfigured()) {
@@ -488,23 +715,46 @@ export async function registerRoutes(
         return;
       }
 
-      const fallbackAnswer = await generateFallbackAdvisorAnswer(role, question.slice(0, 2000), language);
+      const fallbackAnswer = await generateFallbackAdvisorAnswer(role, trimmedQuestion, language);
       res.json({
         success: true,
         answer: fallbackAnswer.answer,
         sources: fallbackAnswer.sources,
         verification: fallbackAnswer.verification,
+        asOf: fallbackAnswer.asOf,
+        confidence: fallbackAnswer.confidence,
+        requiresReview: fallbackAnswer.requiresReview,
+        refusalReason: fallbackAnswer.refusalReason,
       });
     } catch (error) {
       console.error("AI Advisor error:", error);
+      if (highRisk) {
+        const verificationRequiredAnswer = buildVerificationRequiredAnswer(role, language);
+        res.json({
+          success: true,
+          answer: verificationRequiredAnswer.answer,
+          sources: verificationRequiredAnswer.sources,
+          verification: verificationRequiredAnswer.verification,
+          asOf: verificationRequiredAnswer.asOf,
+          confidence: verificationRequiredAnswer.confidence,
+          requiresReview: verificationRequiredAnswer.requiresReview,
+          refusalReason: verificationRequiredAnswer.refusalReason,
+        });
+        return;
+      }
+
       if (isAdvisorAnthropicConfigured()) {
         try {
-          const fallbackAnswer = await generateFallbackAdvisorAnswer(role, question.slice(0, 2000), language);
+          const fallbackAnswer = await generateFallbackAdvisorAnswer(role, trimmedQuestion, language);
           res.json({
             success: true,
             answer: fallbackAnswer.answer,
             sources: fallbackAnswer.sources,
             verification: fallbackAnswer.verification,
+            asOf: fallbackAnswer.asOf,
+            confidence: fallbackAnswer.confidence,
+            requiresReview: fallbackAnswer.requiresReview,
+            refusalReason: fallbackAnswer.refusalReason,
           });
           return;
         } catch (fallbackError) {

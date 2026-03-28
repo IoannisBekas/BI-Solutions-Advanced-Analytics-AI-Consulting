@@ -12,6 +12,7 @@ import { Seo } from "@/components/seo/Seo";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
 type AdvisorLanguage = "greek" | "english";
+type AdvisorConfidence = "high" | "medium" | "low";
 type AdvisorVerification = "grounded" | "unverified";
 type AdvisorSource = {
   title: string;
@@ -67,6 +68,10 @@ const languageCopy: Record<
     sourcesLabel: string;
     groundedLabel: string;
     unverifiedLabel: string;
+    asOfLabel: string;
+    confidenceLabel: string;
+    requiresReviewLabel: string;
+    confidenceValues: Record<AdvisorConfidence, string>;
   }
 > = {
   greek: {
@@ -81,6 +86,14 @@ const languageCopy: Record<
     sourcesLabel: "Πηγές",
     groundedLabel: "Επαληθεύτηκε με τρέχουσες διαδικτυακές πηγές.",
     unverifiedLabel: "Δεν ήταν δυνατή η πλήρης επαλήθευση τρεχουσών πηγών για αυτή την απάντηση.",
+    asOfLabel: "Ημερομηνία Αναφοράς",
+    confidenceLabel: "Επίπεδο Εμπιστοσύνης",
+    requiresReviewLabel: "Απαιτείται επαγγελματικός έλεγχος πριν από χρήση.",
+    confidenceValues: {
+      high: "Υψηλό",
+      medium: "Μεσαίο",
+      low: "Χαμηλό",
+    },
   },
   english: {
     languageLabel: "Response Language",
@@ -94,6 +107,14 @@ const languageCopy: Record<
     sourcesLabel: "Sources",
     groundedLabel: "Verified with current web sources.",
     unverifiedLabel: "Current source verification was not fully available for this answer.",
+    asOfLabel: "As Of",
+    confidenceLabel: "Confidence",
+    requiresReviewLabel: "Professional review is recommended before use.",
+    confidenceValues: {
+      high: "High",
+      medium: "Medium",
+      low: "Low",
+    },
   },
 };
 
@@ -121,6 +142,10 @@ export default function AIAdvisorPage() {
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState<string | null>(null);
   const [sources, setSources] = useState<AdvisorSource[]>([]);
+  const [asOf, setAsOf] = useState<string | null>(null);
+  const [confidence, setConfidence] = useState<AdvisorConfidence>("low");
+  const [requiresReview, setRequiresReview] = useState(false);
+  const [refusalReason, setRefusalReason] = useState<string | null>(null);
   const [verification, setVerification] = useState<AdvisorVerification>("unverified");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -170,6 +195,10 @@ export default function AIAdvisorPage() {
     setIsLoading(true);
     setResponse(null);
     setSources([]);
+    setAsOf(null);
+    setConfidence("low");
+    setRequiresReview(false);
+    setRefusalReason(null);
     setVerification("unverified");
     setErrorMsg(null);
     lastRequestRef.current = { role, question: q, language: requestLanguage };
@@ -189,12 +218,24 @@ export default function AIAdvisorPage() {
         code?: string;
         sources?: AdvisorSource[];
         verification?: AdvisorVerification;
+        asOf?: string | null;
+        confidence?: AdvisorConfidence;
+        requiresReview?: boolean;
+        refusalReason?: string | null;
       };
 
       if (data.success) {
         setAdvisorStatus("ready");
         setResponse(data.answer ?? "No response generated.");
         setSources(Array.isArray(data.sources) ? data.sources : []);
+        setAsOf(typeof data.asOf === "string" ? data.asOf : null);
+        setConfidence(
+          data.confidence === "high" || data.confidence === "medium" || data.confidence === "low"
+            ? data.confidence
+            : "low",
+        );
+        setRequiresReview(Boolean(data.requiresReview));
+        setRefusalReason(typeof data.refusalReason === "string" && data.refusalReason ? data.refusalReason : null);
         setVerification(data.verification === "grounded" ? "grounded" : "unverified");
       } else {
         if (data.code === "ADVISOR_UNAVAILABLE" || res.status === 503) {
@@ -327,6 +368,10 @@ export default function AIAdvisorPage() {
                           setSelectedRole(role.id);
                           setResponse(null);
                           setSources([]);
+                          setAsOf(null);
+                          setConfidence("low");
+                          setRequiresReview(false);
+                          setRefusalReason(null);
                           setVerification("unverified");
                         }}
                         className={cn(
@@ -364,6 +409,10 @@ export default function AIAdvisorPage() {
                               setLanguage(option.id);
                               setResponse(null);
                               setSources([]);
+                              setAsOf(null);
+                              setConfidence("low");
+                              setRequiresReview(false);
+                              setRefusalReason(null);
                               setVerification("unverified");
                               setErrorMsg(null);
                             }}
@@ -500,6 +549,25 @@ export default function AIAdvisorPage() {
                                   {verification === "grounded" ? copy.groundedLabel : copy.unverifiedLabel}
                                 </p>
                               </div>
+                              {(asOf || refusalReason || requiresReview) && (
+                                <div className="grid gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700">
+                                  {asOf && (
+                                    <p>
+                                      <span className="font-semibold text-gray-900">{copy.asOfLabel}:</span> {asOf}
+                                    </p>
+                                  )}
+                                  <p>
+                                    <span className="font-semibold text-gray-900">{copy.confidenceLabel}:</span>{" "}
+                                    {copy.confidenceValues[confidence]}
+                                  </p>
+                                  {requiresReview && (
+                                    <p className="font-medium text-amber-700">{copy.requiresReviewLabel}</p>
+                                  )}
+                                  {refusalReason && (
+                                    <p className="font-medium text-amber-700">{refusalReason}</p>
+                                  )}
+                                </div>
+                              )}
                               {sources.length > 0 && (
                                 <div className="pt-3">
                                   <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
