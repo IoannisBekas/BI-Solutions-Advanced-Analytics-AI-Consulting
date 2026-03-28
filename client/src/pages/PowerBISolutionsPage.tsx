@@ -16,7 +16,7 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
-import { PRODUCT_ROUTES } from "@/lib/routes";
+import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
 const POWERBI_SOLUTIONS_APP_URL =
   import.meta.env.VITE_POWERBI_SOLUTIONS_URL || "/power-bi-solutions/";
@@ -66,24 +66,71 @@ const launchChecklist = [
   "Upload TMDL files, review model diagnostics, and continue with AI-assisted analysis.",
 ];
 
+const powerBiFaqs = [
+  {
+    question: "Who is Power BI Solutions built for?",
+    answer:
+      "It is built for BI engineers, analytics teams, and Power BI owners who need faster semantic model diagnostics and clearer optimization decisions.",
+  },
+  {
+    question: "What inputs does the workspace analyze?",
+    answer:
+      "It analyzes TMDL model definitions so teams can review tables, measures, relationships, naming quality, and structural risks in one place.",
+  },
+  {
+    question: "Is this a generic chatbot for BI questions?",
+    answer:
+      "No. The assistant is embedded in the model review workflow so follow-up guidance stays tied to the uploaded semantic model context.",
+  },
+];
+
 export default function PowerBISolutionsPage() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="Power BI Solutions"
-        description="Power BI Solutions is BI Solutions Group’s product for semantic model review, TMDL analysis, AI assistance, and optimization workflows."
-        path={PRODUCT_ROUTES.powerBiSolutions}
+        title="Power BI Solutions | Semantic Model Audit and Optimization"
+        description="Power BI Solutions provides TMDL analysis, semantic model diagnostics, and AI-assisted optimization workflows for Power BI teams."
+        path={PRODUCT_ROUTE_ALIASES.powerBiSolutions}
+        keywords={[
+          "Power BI Solutions",
+          "semantic model audit",
+          "TMDL analysis",
+          "Power BI optimization service",
+          "DAX model review",
+        ]}
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          name: "Power BI Solutions",
-          applicationCategory: "BusinessApplication",
-          operatingSystem: "Web",
-          url: `https://bisolutions.group${PRODUCT_ROUTES.powerBiSolutions}`,
-          publisher: {
-            "@type": "Organization",
-            name: "BI Solutions Group",
-          },
+          "@graph": [
+            {
+              "@type": "WebPage",
+              name: "Power BI Solutions",
+              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+              description:
+                "Semantic model analysis and AI-assisted optimization workflows for Power BI.",
+            },
+            {
+              "@type": "SoftwareApplication",
+              name: "Power BI Solutions",
+              applicationCategory: "BusinessApplication",
+              operatingSystem: "Web",
+              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+              publisher: {
+                "@type": "Organization",
+                name: "BI Solutions Group",
+              },
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: powerBiFaqs.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            },
+          ],
         }}
       />
       <Navbar />
@@ -215,6 +262,24 @@ export default function PowerBISolutionsPage() {
                     </Button>
                   </a>
                 </div>
+              </div>
+            </Card>
+          </ScrollReveal>
+        </section>
+
+        <section className="mx-auto mb-16 max-w-7xl px-6">
+          <ScrollReveal width="100%">
+            <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.05] md:p-10">
+              <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                Power BI Solutions FAQ
+              </h2>
+              <div className="mt-6 space-y-4">
+                {powerBiFaqs.map((faq) => (
+                  <div key={faq.question} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                    <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             </Card>
           </ScrollReveal>

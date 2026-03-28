@@ -9,12 +9,30 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
-import { PRODUCT_ROUTES } from "@/lib/routes";
+import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
 const roles = [
   { id: "accountant", label: "Λογιστής", icon: Calculator, color: "bg-blue-100 text-blue-600" },
   { id: "lawyer", label: "Δικηγόρος", icon: Scale, color: "bg-amber-100 text-amber-600" },
   { id: "consultant", label: "Σύμβουλος", icon: Briefcase, color: "bg-emerald-100 text-emerald-600" },
+];
+
+const advisorFaqs = [
+  {
+    question: "What is the Greek AI Professional Advisor best used for?",
+    answer:
+      "It is best for first-pass professional guidance across accounting, legal, and consulting workflows where teams need structured responses in Greek.",
+  },
+  {
+    question: "Can I rely on responses without review?",
+    answer:
+      "No. Responses are intended as guided support and should be reviewed by qualified professionals before operational use.",
+  },
+  {
+    question: "How is this different from a generic AI chat?",
+    answer:
+      "It uses role-specific prompts and domain framing for Greek professional contexts instead of a broad one-size-fits-all assistant.",
+  },
 ];
 
 export default function AIAdvisorPage() {
@@ -133,9 +151,52 @@ export default function AIAdvisorPage() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="Greek AI Professional Advisor"
-        description="Use the BI Solutions Greek AI Professional Advisor for guided questions across accounting, legal, and consulting workflows."
-        path={PRODUCT_ROUTES.aiAdvisor}
+        title="Greek AI Professional Advisor | AI Guidance for Professional Teams"
+        description="Ask role-based AI questions for accounting, legal, and consulting workflows with Greek-language guidance and domain framing."
+        path={PRODUCT_ROUTE_ALIASES.aiAdvisor}
+        keywords={[
+          "Greek AI Professional Advisor",
+          "AI for accountants Greece",
+          "AI legal assistant Greece",
+          "AI consulting guidance",
+          "Greek professional AI workflows",
+        ]}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebPage",
+              name: "Greek AI Professional Advisor",
+              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}`,
+              description:
+                "Role-based AI guidance for accounting, legal, and consulting workflows.",
+            },
+            {
+              "@type": "Service",
+              name: "Greek AI Professional Advisor",
+              serviceType: "Professional AI workflow guidance",
+              provider: {
+                "@type": "Organization",
+                name: "BI Solutions Group",
+              },
+              areaServed: {
+                "@type": "Country",
+                name: "Greece",
+              },
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: advisorFaqs.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            },
+          ],
+        }}
       />
       <Navbar />
       <main className="pt-32 pb-20">
@@ -311,6 +372,22 @@ export default function AIAdvisorPage() {
               </Card>
             </ScrollReveal>
           </div>
+        </section>
+
+        <section className="mx-auto mt-14 max-w-4xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <Card className="rounded-2xl border-gray-200 bg-white p-6 shadow-lg md:p-8">
+              <h2 className="text-3xl font-bold font-heading tracking-tight">Advisor FAQ</h2>
+              <div className="mt-5 space-y-4">
+                {advisorFaqs.map((faq) => (
+                  <div key={faq.question} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </ScrollReveal>
         </section>
       </main>
       <Footer />

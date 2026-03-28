@@ -13,6 +13,7 @@ interface SeoProps {
   image?: string;
   type?: "website" | "article";
   robots?: string;
+  keywords?: string[];
   structuredData?: StructuredData;
 }
 
@@ -61,6 +62,7 @@ export function Seo({
   image = DEFAULT_IMAGE,
   type = "website",
   robots = "index,follow",
+  keywords,
   structuredData,
 }: SeoProps) {
   useEffect(() => {
@@ -73,7 +75,11 @@ export function Seo({
 
     setMetaTag("name", "description", description);
     setMetaTag("name", "robots", robots);
+    if (keywords && keywords.length > 0) {
+      setMetaTag("name", "keywords", keywords.join(", "));
+    }
     setMetaTag("property", "og:site_name", SITE_NAME);
+    setMetaTag("property", "og:locale", "en_US");
     setMetaTag("property", "og:title", pageTitle);
     setMetaTag("property", "og:description", description);
     setMetaTag("property", "og:url", canonicalUrl);
@@ -104,7 +110,7 @@ export function Seo({
         staleScript.remove();
       }
     };
-  }, [description, image, path, robots, structuredData, title, type]);
+  }, [description, image, keywords, path, robots, structuredData, title, type]);
 
   return null;
 }

@@ -16,7 +16,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { PRODUCT_ROUTES } from "@/lib/routes";
+import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import michailKarnasPreview from "@/assets/portfolio/michail-karnas-preview.svg";
 import rythmikiDrapetsonaPreview from "@/assets/portfolio/rythmiki-drapetsona-preview.jpg";
 import mathimatikosIcon from "@/assets/portfolio/mathimatikos-icon.png";
@@ -104,6 +104,24 @@ const showcaseProjects = [
     accentClassName: "from-slate-950 via-slate-900 to-violet-950",
   },
 ] as const;
+
+const portfolioFaqs = [
+  {
+    question: "What kind of projects are included in this portfolio?",
+    answer:
+      "The portfolio includes personal brand sites, organization websites, and product-style web applications that BI Solutions has designed and delivered.",
+  },
+  {
+    question: "Why is this page important for SEO?",
+    answer:
+      "It provides case-study style proof and delivery context, which helps visitors and search engines understand concrete capabilities beyond service claims.",
+  },
+  {
+    question: "Can this portfolio support custom project discussions?",
+    answer:
+      "Yes. Each showcased build is paired with contact paths so prospects can discuss similar website, app, or BI dashboard projects.",
+  },
+];
 
 function LazyPreviewVideo({
   src,
@@ -359,15 +377,37 @@ export default function WebsiteAppPortfolioPage() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="Website & App Portfolio"
-        description="Explore BI Solutions web work across personal portfolio sites, organization websites, and AI-powered application experiences."
-        path={PRODUCT_ROUTES.websiteAppPortfolio}
+        title="Website & App Portfolio | BI Dashboards, Websites, and Web Apps"
+        description="Explore BI Solutions delivery work across portfolio websites, organization sites, and AI-powered app experiences."
+        path={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}
+        keywords={[
+          "website app portfolio",
+          "BI dashboard portfolio",
+          "web app delivery portfolio",
+          "organization website development",
+          "BI Solutions case studies",
+        ]}
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          name: "BI Solutions Website & App Portfolio",
-          url: `https://bisolutions.group${PRODUCT_ROUTES.websiteAppPortfolio}`,
-          hasPart: showcaseProjects.map((project) => project.url),
+          "@graph": [
+            {
+              "@type": "CollectionPage",
+              name: "BI Solutions Website & App Portfolio",
+              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
+              hasPart: showcaseProjects.map((project) => project.url),
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: portfolioFaqs.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            },
+          ],
         }}
       />
       <Navbar />
@@ -486,6 +526,24 @@ export default function WebsiteAppPortfolioPage() {
               );
             })}
           </div>
+        </section>
+
+        <section className="mx-auto mb-20 max-w-7xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.05] md:p-10">
+              <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                Website & App Portfolio FAQ
+              </h2>
+              <div className="mt-6 space-y-4">
+                {portfolioFaqs.map((faq) => (
+                  <div key={faq.question} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                    <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </ScrollReveal>
         </section>
       </main>
 

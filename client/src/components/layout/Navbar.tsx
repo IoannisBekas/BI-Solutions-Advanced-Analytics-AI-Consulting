@@ -23,22 +23,22 @@ export function Navbar() {
   const productLinks = [
     {
       name: "Quantus Investing",
-      href: PRODUCT_ROUTES.quantus,
+      href: PRODUCT_ROUTE_ALIASES.quantus,
       description: "AI-native quantitative research and institutional reporting",
     },
     {
       name: "Power BI Solutions",
-      href: PRODUCT_ROUTES.powerBiSolutions,
+      href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
       description: "Semantic model audits and AI-assisted optimization",
     },
     {
       name: "Greek AI Professional Advisor",
-      href: PRODUCT_ROUTES.aiAdvisor,
+      href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
       description: "Greek-language AI guidance for accounting, legal, and consulting",
     },
     {
       name: "Website & App Portfolio",
-      href: PRODUCT_ROUTES.websiteAppPortfolio,
+      href: PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
       description: "Case-study portfolio for websites, apps, and BI dashboards",
     },
   ];

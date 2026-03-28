@@ -19,7 +19,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { PRODUCT_ROUTES } from "@/lib/routes";
+import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
 const QUANTUS_APP_URL = import.meta.env.VITE_QUANTUS_URL || "/quantus/workspace/";
 
@@ -98,6 +98,24 @@ const workflowStages = [
   },
 ];
 
+const quantusFaqs = [
+  {
+    question: "What does Quantus Investing optimize first?",
+    answer:
+      "It prioritizes research workflow speed and continuity: search, cached report access, deep dives, and sector context in one product shell.",
+  },
+  {
+    question: "Who should use Quantus Investing?",
+    answer:
+      "It is designed for analysts and investment research teams that need structured, repeatable research support instead of one-off generic AI output.",
+  },
+  {
+    question: "Does Quantus replace analyst judgment?",
+    answer:
+      "No. The platform supports analysis and reporting workflows, while final interpretation and decisions stay with the research team.",
+  },
+];
+
 /* ── tiny floating particle ── */
 function FloatingOrb({ className }: { className?: string }) {
   return (
@@ -139,26 +157,55 @@ export default function QuantusPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 font-sans text-foreground">
       <Seo
-        title="Quantus Investing"
-        description="Quantus Investing is BI Solutions Group's AI-native quantitative research platform for signals, reports, sector packs, and institutional-style analysis."
-        path={PRODUCT_ROUTES.quantus}
+        title="Quantus Investing | AI-Native Quantitative Research Platform"
+        description="Quantus Investing delivers AI-native quantitative research, sector packs, and institutional reporting workflows for analysts and research teams."
+        path={PRODUCT_ROUTE_ALIASES.quantus}
         type="website"
+        keywords={[
+          "Quantus Investing",
+          "AI quantitative research platform",
+          "institutional reporting workflow",
+          "factor analysis research",
+          "investment research AI",
+        ]}
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          name: "Quantus Investing",
-          applicationCategory: "FinanceApplication",
-          operatingSystem: "Web",
-          url: `https://bisolutions.group${PRODUCT_ROUTES.quantus}`,
-          offers: {
-            "@type": "Offer",
-            price: "0",
-            priceCurrency: "USD",
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "BI Solutions Group",
-          },
+          "@graph": [
+            {
+              "@type": "WebPage",
+              name: "Quantus Investing",
+              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+              description:
+                "AI-native quantitative research and institutional reporting workflows.",
+            },
+            {
+              "@type": "SoftwareApplication",
+              name: "Quantus Investing",
+              applicationCategory: "FinanceApplication",
+              operatingSystem: "Web",
+              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "BI Solutions Group",
+              },
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: quantusFaqs.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            },
+          ],
         }}
       />
 
@@ -579,6 +626,24 @@ export default function QuantusPage() {
                 </div>
               </div>
             </div>
+          </ScrollReveal>
+        </section>
+
+        <section className="mx-auto mb-16 max-w-7xl px-6">
+          <ScrollReveal width="100%">
+            <Card className="rounded-3xl border-gray-200 bg-white/95 p-8 shadow-xl shadow-black/[0.05] md:p-10">
+              <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                Quantus Investing FAQ
+              </h2>
+              <div className="mt-6 space-y-4">
+                {quantusFaqs.map((faq) => (
+                  <div key={faq.question} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                    <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
           </ScrollReveal>
         </section>
       </main>

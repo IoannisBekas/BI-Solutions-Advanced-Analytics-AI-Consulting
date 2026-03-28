@@ -6,7 +6,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ProductShowcase } from "@/components/sections/ProductShowcase";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PRODUCT_ROUTES } from "@/lib/routes";
+import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
 export default function Products() {
   return (
@@ -21,10 +21,10 @@ export default function Products() {
           name: "BI Solutions Products",
           url: "https://bisolutions.group/products",
           hasPart: [
-            `https://bisolutions.group${PRODUCT_ROUTES.quantus}`,
-            `https://bisolutions.group${PRODUCT_ROUTES.powerBiSolutions}`,
-            `https://bisolutions.group${PRODUCT_ROUTES.aiAdvisor}`,
-            `https://bisolutions.group${PRODUCT_ROUTES.websiteAppPortfolio}`,
+            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}`,
+            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
           ],
         }}
       />
