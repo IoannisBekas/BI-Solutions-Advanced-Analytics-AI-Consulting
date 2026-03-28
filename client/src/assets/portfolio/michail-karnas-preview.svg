@@ -1,0 +1,26 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F5F2EC"/>
+  <rect x="48" y="48" width="1104" height="534" rx="34" fill="#FFFCF8" stroke="#1A1A1A" stroke-opacity="0.08"/>
+  <circle cx="1008" cy="134" r="136" fill="url(#paint0_radial)"/>
+  <circle cx="184" cy="520" r="164" fill="url(#paint1_radial)"/>
+  <path d="M718 162L868 102L1017 198L961 368L784 398L692 288L718 162Z" fill="#F1E8DD" stroke="#1A1A1A" stroke-opacity="0.08"/>
+  <path d="M753 203L846 165L931 220L900 321L803 343L742 280L753 203Z" fill="#FFFFFF" stroke="#1A1A1A" stroke-opacity="0.08"/>
+  <text x="112" y="164" fill="#9B3022" font-family="Georgia, serif" font-size="24" letter-spacing="7">MICHAIL KARNAS</text>
+  <text x="112" y="268" fill="#181818" font-family="Georgia, serif" font-size="78">Senior Analytics Engineer</text>
+  <text x="112" y="360" fill="#6C6C6C" font-family="Arial, sans-serif" font-size="28">
+    Portfolio of systems, analytics, and decision infrastructure.
+  </text>
+  <text x="112" y="440" fill="#181818" font-family="Arial, sans-serif" font-size="22">
+    Product. Retail. Supply chain. CRM. Fraud.
+  </text>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1008 134) rotate(90) scale(136)">
+      <stop stop-color="#9B3022" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#9B3022" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(184 520) rotate(90) scale(164)">
+      <stop stop-color="#B7C1CA" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#B7C1CA" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>

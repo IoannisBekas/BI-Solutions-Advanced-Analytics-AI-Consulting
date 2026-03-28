@@ -2,9 +2,68 @@ import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import fs from "fs";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+
+function loadLocalEnvFiles() {
+  const mode = process.env.NODE_ENV || "development";
+  const protectedKeys = new Set(Object.keys(process.env));
+  const envFilePaths = [
+    ".env",
+    ".env.local",
+    `.env.${mode}`,
+    `.env.${mode}.local`,
+  ].map((file) => path.resolve(process.cwd(), file));
+
+  for (const filePath of envFilePaths) {
+    if (!fs.existsSync(filePath)) {
+      continue;
+    }
+
+    const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line || line.startsWith("#")) {
+        continue;
+      }
+
+      const match = line.match(/^(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+      if (!match) {
+        continue;
+      }
+
+      const [, key, rawValue] = match;
+      if (protectedKeys.has(key)) {
+        continue;
+      }
+
+      let value = rawValue.trim();
+      const wrappedInQuotes =
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"));
+
+      if (wrappedInQuotes) {
+        value = value.slice(1, -1);
+      } else {
+        const commentIndex = value.indexOf(" #");
+        if (commentIndex >= 0) {
+          value = value.slice(0, commentIndex).trimEnd();
+        }
+      }
+
+      process.env[key] = value
+        .replace(/\\n/g, "\n")
+        .replace(/\\r/g, "\r")
+        .replace(/\\t/g, "\t");
+    }
+  }
+}
+
+loadLocalEnvFiles();
 
 const app = express();
 const httpServer = createServer(app);

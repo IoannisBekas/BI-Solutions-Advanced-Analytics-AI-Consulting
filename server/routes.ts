@@ -6,6 +6,7 @@ import { authRouter, checkMonthlyReset } from "./auth";
 const QUANTUS_API_PREFIX = "/quantus/api";
 const POWERBI_SOLUTIONS_API_PREFIX = "/power-bi-solutions/api";
 const DEFAULT_ANTHROPIC_VERSION = "2023-06-01";
+const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
 const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 const DEFAULT_QUANTUS_API_TARGET = "http://127.0.0.1:3001";
 
@@ -15,6 +16,13 @@ function getAnthropicApiKey() {
     process.env.ANTHROPIC_API_KEY ||
     ""
   ).trim();
+}
+
+function getAnthropicModel() {
+  return (
+    process.env.ANTHROPIC_MODEL ||
+    DEFAULT_ANTHROPIC_MODEL
+  ).trim() || DEFAULT_ANTHROPIC_MODEL;
 }
 
 function getQuantusApiTarget() {
@@ -176,7 +184,7 @@ export async function registerRoutes(
           "anthropic-version": DEFAULT_ANTHROPIC_VERSION,
         },
         body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
+          model: getAnthropicModel(),
           max_tokens: 1024,
           system: systemPrompts[role],
           messages: [{ role: "user", content: question.slice(0, 2000) }],

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
+import { PRODUCT_ROUTES } from "@/lib/routes";
 
 const roles = [
   { id: "accountant", label: "Λογιστής", icon: Calculator, color: "bg-blue-100 text-blue-600" },
@@ -79,7 +80,7 @@ export default function AIAdvisorPage() {
       <Seo
         title="Greek AI Professional Advisor"
         description="Use the BI Solutions Greek AI Professional Advisor for guided questions across accounting, legal, and consulting workflows."
-        path="/ai-advisor"
+        path={PRODUCT_ROUTES.aiAdvisor}
       />
       <Navbar />
       <main className="pt-32 pb-20">
@@ -142,6 +143,14 @@ export default function AIAdvisorPage() {
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                         placeholder={`Ask the ${roles.find(r => r.id === selectedRole)?.label}...`}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck={false}
+                        enterKeyHint="send"
+                        data-gramm="false"
+                        data-gramm_editor="false"
+                        data-enable-grammarly="false"
                         className="h-14 pl-4 pr-14 text-lg bg-white border-gray-200 focus:ring-black/10 focus:border-black transition-all rounded-xl shadow-sm"
                       />
                       <Button 

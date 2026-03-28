@@ -4,6 +4,12 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  PRODUCT_ROUTES,
+  PRODUCT_ROUTE_ALIASES,
+  PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS,
+  pathMatches,
+} from "@/lib/routes";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -16,27 +22,39 @@ export function Navbar() {
 
   const productLinks = [
     {
-      name: "Quantus",
-      href: "/quantus",
+      name: "Quantus Investing",
+      href: PRODUCT_ROUTES.quantus,
       description: "AI-native quantitative research and institutional reporting",
     },
     {
       name: "Power BI Solutions",
-      href: "/power-bi-solutions",
+      href: PRODUCT_ROUTES.powerBiSolutions,
       description: "Semantic model analysis and AI-assisted optimization",
     },
     {
       name: "Greek AI Professional Advisor",
-      href: "/ai-advisor",
+      href: PRODUCT_ROUTES.aiAdvisor,
       description: "AI-powered guidance for accounting, legal, and consulting",
+    },
+    {
+      name: "Website & App Portfolio",
+      href: PRODUCT_ROUTES.websiteAppPortfolio,
+      description: "Showcase page for BI Solutions website and app builds",
     },
   ];
 
-  const isProductsActive =
-    location === "/products" ||
-    location === "/quantus" ||
-    location === "/power-bi-solutions" ||
-    location === "/ai-advisor";
+  const isProductsActive = pathMatches(location, [
+    "/products",
+    PRODUCT_ROUTES.quantus,
+    PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus,
+    PRODUCT_ROUTE_ALIASES.quantus,
+    PRODUCT_ROUTES.powerBiSolutions,
+    PRODUCT_ROUTE_ALIASES.powerBiSolutions,
+    PRODUCT_ROUTES.aiAdvisor,
+    PRODUCT_ROUTE_ALIASES.aiAdvisor,
+    PRODUCT_ROUTES.websiteAppPortfolio,
+    PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
+  ]);
 
   useEffect(() => {
     const handleScroll = () => {

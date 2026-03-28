@@ -1,8 +1,5 @@
 import {
   ArrowRight,
-  BarChart3,
-  Bot,
-  Brain,
   Database,
   ExternalLink,
   Shield,
@@ -12,14 +9,13 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { PRODUCT_ROUTES } from "@/lib/routes";
 
 const products = [
   {
-    name: "Quantus",
-    href: "/quantus",
+    name: "Quantus Investing",
+    href: PRODUCT_ROUTES.quantus,
     appHref: "/quantus/workspace/",
-    icon: Brain,
-    accent: "bg-blue-100 text-blue-700",
     description:
       "AI-native quantitative research, signal generation, report automation, and institutional-style deep dives across multiple asset classes.",
     bullets: [
@@ -30,10 +26,8 @@ const products = [
   },
   {
     name: "Power BI Solutions",
-    href: "/power-bi-solutions",
+    href: PRODUCT_ROUTES.powerBiSolutions,
     appHref: "/power-bi-solutions/",
-    icon: BarChart3,
-    accent: "bg-emerald-100 text-emerald-700",
     description:
       "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
     bullets: [
@@ -44,10 +38,8 @@ const products = [
   },
   {
     name: "Greek AI Professional Advisor",
-    href: "/ai-advisor",
-    appHref: "/ai-advisor",
-    icon: Bot,
-    accent: "bg-purple-100 text-purple-700",
+    href: PRODUCT_ROUTES.aiAdvisor,
+    appHref: PRODUCT_ROUTES.aiAdvisor,
     description:
       "AI-powered professional guidance across accounting, legal, and consulting domains — trained on Greek law and business practices.",
     bullets: [
@@ -56,7 +48,33 @@ const products = [
       "Instant professional guidance for tax, legal, and strategic questions",
     ],
   },
+  {
+    name: "Website & App Portfolio",
+    href: PRODUCT_ROUTES.websiteAppPortfolio,
+    appHref: `${PRODUCT_ROUTES.websiteAppPortfolio}#featured-sites`,
+    description:
+      "A curated showcase of BI Solutions web builds across personal branding, local organizations, and AI-native education products.",
+    bullets: [
+      "Live examples spanning portfolio sites, organizations, and education apps",
+      "Designed to show visual range, brand adaptation, and responsive delivery",
+      "Includes direct links to launched projects and a BI Solutions-led showcase page",
+    ],
+    primaryLabel: "View portfolio page",
+    secondaryLabel: "Open showcase",
+  },
 ];
+
+interface ProductItem {
+  name: string;
+  href: string;
+  appHref: string;
+  description: string;
+  bullets: string[];
+  primaryLabel?: string;
+  secondaryLabel?: string;
+}
+
+const typedProducts: ProductItem[] = products;
 
 interface ProductShowcaseProps {
   badge?: string;
@@ -93,10 +111,8 @@ export function ProductShowcase({
           </p>
         </ScrollReveal>
 
-        <div className="grid gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          {products.map((product, index) => {
-            const Icon = product.icon;
-
+        <div className="grid gap-8 lg:grid-cols-2">
+          {typedProducts.map((product, index) => {
             return (
               <ScrollReveal
                 key={product.name}
@@ -107,13 +123,7 @@ export function ProductShowcase({
                 <Card className="h-full rounded-3xl border-gray-200 bg-white/90 p-8 shadow-xl shadow-black/5">
                   <div className="flex items-start justify-between gap-6">
                     <div>
-                      <div
-                        className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium ${product.accent}`}
-                      >
-                        <Icon className="h-4 w-4" />
-                        {product.name}
-                      </div>
-                      <h3 className="mt-6 text-3xl font-bold font-heading tracking-tight">
+                      <h3 className="text-3xl font-bold font-heading tracking-tight">
                         {product.name}
                       </h3>
                       <p className="mt-4 text-base leading-relaxed text-gray-600">
@@ -140,7 +150,7 @@ export function ProductShowcase({
                   <div className="mt-8 flex flex-wrap gap-4">
                     <Link href={product.href}>
                       <Button className="rounded-full bg-black px-6 text-white hover:bg-gray-800">
-                        View product page
+                        {product.primaryLabel ?? "View product page"}
                         <ArrowRight className="h-4 w-4" />
                       </Button>
                     </Link>
@@ -149,7 +159,7 @@ export function ProductShowcase({
                         variant="outline"
                         className="rounded-full border-gray-300 px-6"
                       >
-                        Open app
+                        {product.secondaryLabel ?? "Open app"}
                         <ExternalLink className="h-4 w-4" />
                       </Button>
                     </a>

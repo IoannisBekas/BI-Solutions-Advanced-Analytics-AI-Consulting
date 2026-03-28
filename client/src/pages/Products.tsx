@@ -6,13 +6,14 @@ import { Seo } from "@/components/seo/Seo";
 import { ProductShowcase } from "@/components/sections/ProductShowcase";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { PRODUCT_ROUTES } from "@/lib/routes";
 
 export default function Products() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Products"
-        description="Explore Quantus, Power BI Solutions, and Greek AI Professional Advisor — native products delivered under the bisolutions.group brand."
+        description="Explore Quantus Investing, Power BI Solutions, the Greek AI Professional Advisor, and BI Solutions' website and app portfolio showcase."
         path="/products"
         structuredData={{
           "@context": "https://schema.org",
@@ -20,9 +21,10 @@ export default function Products() {
           name: "BI Solutions Products",
           url: "https://bisolutions.group/products",
           hasPart: [
-            "https://bisolutions.group/quantus",
-            "https://bisolutions.group/power-bi-solutions",
-            "https://bisolutions.group/ai-advisor",
+            `https://bisolutions.group${PRODUCT_ROUTES.quantus}`,
+            `https://bisolutions.group${PRODUCT_ROUTES.powerBiSolutions}`,
+            `https://bisolutions.group${PRODUCT_ROUTES.aiAdvisor}`,
+            `https://bisolutions.group${PRODUCT_ROUTES.websiteAppPortfolio}`,
           ],
         }}
       />
@@ -40,10 +42,11 @@ export default function Products() {
                   Native product experiences inside the BI Solutions ecosystem.
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                  Quantus, Power BI Solutions, and the Greek AI Professional Advisor
-                  now live under the same BI Solutions brand domain, each with
-                  its own runtime while staying discoverable from one shared
-                  site.
+                  Quantus Investing, Power BI Solutions, the Greek AI Professional Advisor,
+                  and a dedicated website and app portfolio showcase now live
+                  under the same BI Solutions brand domain, each with its own
+                  runtime or presentation layer while staying discoverable from
+                  one shared site.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Link href="/contact">
@@ -57,7 +60,7 @@ export default function Products() {
                       variant="outline"
                       className="rounded-full border-gray-300 px-8"
                     >
-                      Open Quantus
+                      Open Quantus Investing
                     </Button>
                   </a>
                 </div>
@@ -68,7 +71,7 @@ export default function Products() {
 
         <ProductShowcase
           heading="Choose the product experience that fits the workflow."
-          description="hosts all three products as first-class BI Solutions experiences, keeping the public site, product discovery, and app entry points aligned."
+          description="hosts product experiences and portfolio showcases as first-class BI Solutions surfaces, keeping the public site, product discovery, and app entry points aligned."
         />
       </main>
 

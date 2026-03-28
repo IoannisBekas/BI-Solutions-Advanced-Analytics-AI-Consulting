@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Facebook, Instagram, Linkedin, Twitter, ArrowUp, Github } from "lucide-react";
+import { PRODUCT_ROUTES } from "@/lib/routes";
 
 export function Footer() {
   const scrollToTop = () => {
@@ -15,9 +16,10 @@ export function Footer() {
     { label: "Contact", href: "/contact" },
   ];
   const productLinks = [
-    { label: "Quantus", href: "/quantus" },
-    { label: "Power BI Solutions", href: "/power-bi-solutions" },
-    { label: "Greek AI Professional Advisor", href: "/ai-advisor" },
+    { label: "Quantus Investing", href: PRODUCT_ROUTES.quantus },
+    { label: "Power BI Solutions", href: PRODUCT_ROUTES.powerBiSolutions },
+    { label: "Greek AI Professional Advisor", href: PRODUCT_ROUTES.aiAdvisor },
+    { label: "Website & App Portfolio", href: PRODUCT_ROUTES.websiteAppPortfolio },
   ];
 
   return (

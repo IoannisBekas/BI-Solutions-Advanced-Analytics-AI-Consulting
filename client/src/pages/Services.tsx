@@ -2,7 +2,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { Card } from "@/components/ui/card";
 import { Reviews } from "@/components/Reviews";
 import { ScrollRevealTitle } from "@/components/ui/ScrollRevealTitle";
 
@@ -26,6 +25,10 @@ export default function Services() {
       items: ["Power BI / Tableau", "Looker Dashboards", "Semantic Modeling", "Data Governance"]
     },
     {
+      title: "Website & App Development",
+      items: ["Corporate Websites", "Landing Pages", "Web Applications", "UX/UI Implementation"]
+    },
+    {
       title: "Data Strategy & Governance",
       items: ["Data Quality", "Lineage & Cataloging", "Compliance (GDPR)", "Access Controls"]
     },
@@ -39,7 +42,7 @@ export default function Services() {
     <div className="min-h-screen bg-background">
       <Seo
         title="Analytics, AI, and Data Services"
-        description="Explore BI Solutions services across cloud migration, advanced analytics, AI delivery, Power BI, MLOps, and data strategy."
+        description="Explore BI Solutions services across cloud migration, advanced analytics, AI delivery, website and app development, Power BI, MLOps, and data strategy."
         path="/services"
       />
       <Navbar />
@@ -51,7 +54,7 @@ export default function Services() {
               className="text-5xl md:text-7xl font-bold font-heading mb-8"
             />
             <p className="text-xl text-gray-600 max-w-2xl mb-20">
-              End-to-end analytics, AI, and data engineering services. From strategy and architecture to delivery and managed support.
+              End-to-end analytics, AI, software, and data engineering services. From strategy and architecture to delivery and managed support.
             </p>
           </ScrollReveal>
 

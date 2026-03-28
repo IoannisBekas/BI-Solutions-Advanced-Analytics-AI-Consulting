@@ -16,6 +16,7 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
+import { PRODUCT_ROUTES } from "@/lib/routes";
 
 const POWERBI_SOLUTIONS_APP_URL =
   import.meta.env.VITE_POWERBI_SOLUTIONS_URL || "/power-bi-solutions/";
@@ -71,14 +72,14 @@ export default function PowerBISolutionsPage() {
       <Seo
         title="Power BI Solutions"
         description="Power BI Solutions is BI Solutions Group’s product for semantic model review, TMDL analysis, AI assistance, and optimization workflows."
-        path="/power-bi-solutions"
+        path={PRODUCT_ROUTES.powerBiSolutions}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
           name: "Power BI Solutions",
           applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
-          url: "https://bisolutions.group/power-bi-solutions",
+          url: `https://bisolutions.group${PRODUCT_ROUTES.powerBiSolutions}`,
           publisher: {
             "@type": "Organization",
             name: "BI Solutions Group",
