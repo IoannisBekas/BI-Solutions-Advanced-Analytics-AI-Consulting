@@ -1,24 +1,55 @@
 import type { AssetEntry, ReportResponse, WorkspaceSummary } from '../types';
 
+export interface WorkspaceRequestError extends Error {
+    status: number;
+    code?: string;
+    detail?: string;
+    requestUrl?: string;
+}
+
+export function isWorkspaceRequestError(error: unknown): error is WorkspaceRequestError {
+    return error instanceof Error && typeof (error as Partial<WorkspaceRequestError>).status === 'number';
+}
+
 async function readJson<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
     const response = await fetch(input, init);
 
     if (!response.ok) {
         const errorText = await response.text();
         let message = errorText;
+        let detail = '';
+        let code = '';
 
         if (errorText) {
             try {
-                const parsed = JSON.parse(errorText) as { message?: unknown };
+                const parsed = JSON.parse(errorText) as {
+                    message?: unknown;
+                    error?: unknown;
+                    detail?: unknown;
+                    code?: unknown;
+                };
                 if (typeof parsed.message === 'string' && parsed.message.trim()) {
                     message = parsed.message;
+                } else if (typeof parsed.error === 'string' && parsed.error.trim()) {
+                    message = parsed.error;
+                }
+                if (typeof parsed.detail === 'string' && parsed.detail.trim()) {
+                    detail = parsed.detail;
+                }
+                if (typeof parsed.code === 'string' && parsed.code.trim()) {
+                    code = parsed.code;
                 }
             } catch {
                 // Keep the raw text when the response is not JSON.
             }
         }
 
-        throw new Error(message || `Request failed with ${response.status}`);
+        const requestError = new Error(message || `Request failed with ${response.status}`) as WorkspaceRequestError;
+        requestError.status = response.status;
+        requestError.code = code || undefined;
+        requestError.detail = detail || undefined;
+        requestError.requestUrl = typeof input === 'string' ? input : input.toString();
+        throw requestError;
     }
 
     return response.json() as Promise<T>;

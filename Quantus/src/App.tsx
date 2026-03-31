@@ -11,7 +11,12 @@ import { PWAInstallBanner, SWUpdateBanner } from './components/PWAInstallBanner'
 import { AuthModal } from './auth/AuthModal';
 import { useAuth } from './auth/AuthContext';
 import { cacheReportForOffline, usePWA } from './hooks/usePWA';
-import { fetchWorkspaceAsset, fetchWorkspaceReport, fetchWorkspaceSummary } from './services/workspace';
+import {
+    fetchWorkspaceAsset,
+    fetchWorkspaceReport,
+    fetchWorkspaceSummary,
+    isWorkspaceRequestError,
+} from './services/workspace';
 import type { AssetEntry, InsightCard, ReportResponse, WorkspaceSummary, WorkspaceStatus } from './types';
 
 const ReportDashboard = lazy(async () => {
@@ -240,6 +245,37 @@ function buildPipelineUnavailableStatus(detail?: string): WorkspaceStatus {
         description: 'Quantus could not reach the report service for this request, so starter coverage is being shown instead.',
         detail: detail ?? 'The report URL remains available while the research pipeline recovers.',
         badgeTone: 'caution',
+    };
+}
+
+function describeReportFetchFailure(error: unknown, ticker: string) {
+    if (isWorkspaceRequestError(error)) {
+        const detail = error.detail
+            ?? `${error.message} (HTTP ${error.status})`;
+
+        return {
+            message: error.status >= 500
+                ? 'Quantus report service unavailable.'
+                : `Quantus could not load ${ticker}.`,
+            detail,
+            status: buildPipelineUnavailableStatus(detail),
+        };
+    }
+
+    if (error instanceof Error && error.message.trim()) {
+        const detail = error.message.trim();
+        return {
+            message: 'Quantus report service unavailable.',
+            detail,
+            status: buildPipelineUnavailableStatus(detail),
+        };
+    }
+
+    const detail = 'The report API request failed before Quantus could load live or cached coverage.';
+    return {
+        message: 'Quantus report service unavailable.',
+        detail,
+        status: buildPipelineUnavailableStatus(detail),
     };
 }
 
@@ -576,9 +612,7 @@ function App() {
             if (error instanceof DOMException && error.name === 'AbortError') return;
             console.error('Report fetch error:', error);
 
-            const fallbackStatus = buildPipelineUnavailableStatus(
-                'A local starter shell was opened because the report API request failed.',
-            );
+            const failureState = describeReportFetchFailure(error, normalizedTicker);
 
             const lastKnownReport = readStoredReportResponse(normalizedTicker);
             if (lastKnownReport) {
@@ -586,12 +620,12 @@ function App() {
                     ...lastKnownReport,
                     source: 'cached',
                     message: 'Last known Quantus report loaded.',
-                    detail: `Live refresh failed, so Quantus loaded the most recent cached report for ${normalizedTicker}. Market-sensitive fields may be stale until the API responds again.`,
+                    detail: `${failureState.detail} Quantus loaded the most recent cached report for ${normalizedTicker}. Market-sensitive fields may be stale until the API responds again.`,
                     status: {
                         mode: 'mixed',
                         label: 'Cached report fallback',
                         description: 'Live refresh failed. Quantus is showing the most recent cached research report.',
-                        detail: 'Stable report sections remain available, but quote-sensitive values may be stale.',
+                        detail: `${failureState.detail} Stable report sections remain available, but quote-sensitive values may be stale.`,
                         badgeTone: 'caution',
                     },
                 };
@@ -604,8 +638,11 @@ function App() {
                         assetClass: 'EQUITY',
                         sector: 'Unclassified',
                     },
-                    fallbackStatus,
+                    failureState.status,
                 );
+                responsePayload.message = failureState.message;
+                responsePayload.detail = failureState.detail;
+                responsePayload.status = failureState.status;
             }
 
             if (!controller.signal.aborted) {

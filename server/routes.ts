@@ -808,9 +808,12 @@ export async function registerRoutes(
       Readable.fromWeb(upstream.body as never).pipe(res);
     } catch (error) {
       console.error("Quantus API proxy failed:", error);
+      const detail = error instanceof Error ? error.message : String(error);
       res.status(502).json({
         message:
           "Unable to reach the Quantus API target from the BI Solutions server.",
+        detail,
+        code: "quantus_api_proxy_unavailable",
       });
     }
   });
