@@ -233,6 +233,16 @@ function buildEmergencyStarterReport(asset: AssetEntry, status: WorkspaceStatus)
     };
 }
 
+function buildPipelineUnavailableStatus(detail?: string): WorkspaceStatus {
+    return {
+        mode: 'sandbox',
+        label: 'Live pipeline unavailable',
+        description: 'Quantus could not reach the report service for this request, so starter coverage is being shown instead.',
+        detail: detail ?? 'The report URL remains available while the research pipeline recovers.',
+        badgeTone: 'caution',
+    };
+}
+
 function isStoredReportResponse(value: unknown): value is ReportResponse {
     return typeof value === 'object'
         && value !== null
@@ -566,13 +576,9 @@ function App() {
             if (error instanceof DOMException && error.name === 'AbortError') return;
             console.error('Report fetch error:', error);
 
-            const fallbackStatus = workspaceSummary?.status ?? {
-                mode: 'sandbox',
-                label: 'Service unavailable',
-                description: 'Quantus could not reach the report API.',
-                detail: 'A local fallback shell was opened instead.',
-                badgeTone: 'caution',
-            };
+            const fallbackStatus = buildPipelineUnavailableStatus(
+                'A local starter shell was opened because the report API request failed.',
+            );
 
             const lastKnownReport = readStoredReportResponse(normalizedTicker);
             if (lastKnownReport) {
@@ -747,7 +753,9 @@ function App() {
             lightMode={lightMode}
             userName={user?.name ?? null}
             userTier={user?.tier ?? null}
-            workspaceStatus={workspaceSummary?.status ?? reportResponse?.status ?? null}
+            workspaceStatus={route.view === 'report'
+                ? (reportResponse?.status ?? workspaceSummary?.status ?? null)
+                : (workspaceSummary?.status ?? null)}
             onToggleLight={() => setLightMode((value) => {
                 const next = !value;
                 localStorage.setItem('quantus-theme', next ? 'light' : 'dark');

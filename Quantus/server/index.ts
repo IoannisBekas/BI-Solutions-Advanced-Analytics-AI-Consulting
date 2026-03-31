@@ -65,6 +65,7 @@ app.use(`${API_PREFIX}/deepdive`, generateLimiter);
 // ─── INPUT SANITIZATION ─────────────────────────────────────────────────────
 const TICKER_REGEX = /^[A-Za-z0-9.=^_-]{1,20}$/;
 const ASSET_CLASSES = ['EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'];
+const USER_TIERS = ['FREE', 'UNLOCKED', 'INSTITUTIONAL'];
 
 function sanitizeTicker(raw: unknown): string | null {
     if (typeof raw !== 'string') return null;
@@ -76,6 +77,20 @@ function sanitizeAssetClass(raw: unknown): string {
     if (typeof raw !== 'string') return 'EQUITY';
     const upper = raw.trim().toUpperCase();
     return ASSET_CLASSES.includes(upper) ? upper : 'EQUITY';
+}
+
+function sanitizeUserTier(raw: unknown): string {
+    if (typeof raw !== 'string') return 'FREE';
+    const upper = raw.trim().toUpperCase();
+    return USER_TIERS.includes(upper) ? upper : 'FREE';
+}
+
+function parseBooleanQuery(raw: unknown): boolean {
+    if (typeof raw === 'boolean') return raw;
+    if (typeof raw !== 'string') return false;
+
+    const normalized = raw.trim().toLowerCase();
+    return normalized === 'true' || normalized === '1';
 }
 
 function sendFeatureUnavailable(res: express.Response, feature: string) {
@@ -228,12 +243,24 @@ function normalizeReportSource(source: unknown): ReportSource {
     return 'live';
 }
 
+function getPipelineUnavailableStatus(detail: string) {
+    return {
+        mode: 'sandbox' as const,
+        label: 'Live pipeline unavailable',
+        description: 'Quantus could not complete a live research request, so starter coverage is being shown instead.',
+        detail,
+        badgeTone: 'caution' as const,
+    };
+}
+
 
 // ─── GET REPORT (LIVE PIPELINE → MOCK FALLBACK) ─────────────────────────────
 app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
   try {
     const ticker = sanitizeTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
+    const userTier = sanitizeUserTier(req.query.user_tier ?? req.query.userTier);
+    const forceRefresh = parseBooleanQuery(req.query.force_refresh ?? req.query.forceRefresh);
 
     const asset = getAssetByTicker(ticker) ?? {
         ticker,
@@ -246,7 +273,10 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
     } satisfies AssetEntry;
 
     // 1. Try live Python pipeline first
-    const liveResult = await callPythonPipeline(ticker);
+    const liveResult = await callPythonPipeline(ticker, {
+        forceRefresh,
+        userTier,
+    });
     if (liveResult.success && liveResult.data?.report) {
         const source = normalizeReportSource(liveResult.data.source);
         const response: ReportResponse = {
@@ -280,11 +310,17 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
     }
 
     if (isProduction && !ALLOW_DEMO_DATA) {
-        res.status(503).json({
-            error: 'Live Quantus research is temporarily unavailable.',
-            code: 'live_pipeline_unavailable',
-            detail: liveResult.error || 'The Python research pipeline did not return a report.',
-        });
+        const detail = liveResult.error || 'The Python research pipeline did not return a report.';
+        const response: ReportResponse = {
+            report: buildStarterReport(asset),
+            source: 'starter',
+            ticker,
+            message: 'Live Quantus research is temporarily unavailable.',
+            detail,
+            freshness: 'On demand',
+            status: getPipelineUnavailableStatus('The report route remains available, but live quantitative sections will stay conservative until the pipeline recovers.'),
+        };
+        res.json(response);
         return;
     }
 
