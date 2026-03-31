@@ -528,6 +528,23 @@ def _build_quality_scores(fields: list[str]) -> dict[str, int]:
     return {f: 85 for f in fields}
 
 
+def _estimate_vix_level(beta_raw: Any) -> float:
+    """Derive a safe VIX proxy from beta while honoring payload bounds."""
+    try:
+        beta = float(beta_raw)
+    except (TypeError, ValueError):
+        beta = 1.0
+
+    if not math.isfinite(beta):
+        beta = 1.0
+
+    beta = abs(beta)
+    if beta == 0.0:
+        beta = 1.0
+
+    return round(min(200.0, max(0.0, beta * 18.0)), 2)
+
+
 async def run_equity_pipeline(
     ticker: str,
     user_tier: str = "FREE",
@@ -672,7 +689,7 @@ async def run_equity_pipeline(
     # ------------------------------------------------------------------ #
     fed_rate          = 5.25    # stub: last known Fed rate
     yield_curve_shape = "INVERTED"
-    vix_level         = float(info.get("beta", 1.0) * 18.0)  # rough proxy
+    vix_level         = _estimate_vix_level(info.get("beta"))
     credit_spreads    = 1.2
 
     # ------------------------------------------------------------------ #

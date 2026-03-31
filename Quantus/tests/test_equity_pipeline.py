@@ -26,6 +26,7 @@ import pytest
 
 from pipelines.equity import (
     STRESS_SCENARIOS,
+    _estimate_vix_level,
     compute_bollinger,
     compute_es,
     compute_kelly,
@@ -89,6 +90,27 @@ def _mock_ticker(info: dict = _TSLA_INFO, ohlcv: pd.DataFrame = _OHLCV_DF):
 def _run_pipeline(**overrides) -> QuantusPayload:
     """Run the equity pipeline for TSLA with all external calls mocked."""
     ticker_mock = _mock_ticker()
+
+    async def _inner():
+        with (
+            patch("pipelines.equity.yf.Ticker", return_value=ticker_mock),
+            patch("pipelines.equity.fetch_grok_sentiment",
+                  new=AsyncMock(return_value={"score": 0.05, "volume": 1200,
+                                               "campaign_detected": False,
+                                               "top_themes": ["FSD"]})),
+            patch("pipelines.equity.fetch_reddit_sentiment",
+                  new=AsyncMock(return_value=0.08)),
+            patch("pipelines.equity.fetch_news_sentiment",
+                  new=AsyncMock(return_value=-0.02)),
+        ):
+            return await run_equity_pipeline("TSLA", **overrides)
+
+    return asyncio.run(_inner())
+
+
+def _run_pipeline_with_info(info: dict, **overrides) -> QuantusPayload:
+    """Run the equity pipeline with overridden ticker metadata."""
+    ticker_mock = _mock_ticker(info=info)
 
     async def _inner():
         with (
@@ -358,6 +380,20 @@ class TestKellyCriterion:
         assert compute_kelly(0.99, 100.0) <= 0.10
 
 
+class TestMacroFallbacks:
+
+    def test_negative_beta_does_not_break_vix_validation(self):
+        info = dict(_TSLA_INFO)
+        info["beta"] = -18.333
+
+        payload = _run_pipeline_with_info(info)
+
+        is_valid, errors = validate_payload(payload)
+        assert is_valid, f"Validation errors: {errors}"
+        assert 0.0 <= payload.vix_level <= 200.0
+        assert payload.vix_level == 200.0
+
+
 # ---------------------------------------------------------------------------
 # 9. Unit tests for individual computation functions
 # ---------------------------------------------------------------------------
@@ -411,6 +447,12 @@ class TestComputationFunctions:
 
     def test_kelly_zero_for_zero_edge(self):
         assert compute_kelly(0.0, 1.0) == 0.0
+
+    def test_estimated_vix_level_clamps_negative_beta(self):
+        assert _estimate_vix_level(-18.333) == 200.0
+
+    def test_estimated_vix_level_defaults_for_missing_beta(self):
+        assert _estimate_vix_level(None) == 18.0
 
     def test_stress_scenarios_all_present(self):
         for name in ("2008", "COVID", "2022"):
