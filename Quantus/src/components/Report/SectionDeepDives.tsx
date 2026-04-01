@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -27,8 +27,44 @@ export function SectionDeepDives({ report, lightMode }: Props) {
     const [expandedDive, setExpandedDive] = useState<number | null>(null);
     const [diveContent, setDiveContent] = useState<Record<number, string>>({});
     const [diveLoading, setDiveLoading] = useState<Record<number, boolean>>({});
+    const [warmupState, setWarmupState] = useState<'idle' | 'warming' | 'failed'>('idle');
     const abortRef = useRef<AbortController | null>(null);
     const { textPrimary, textSecondary, borderColor } = themeColors(lightMode);
+
+    useEffect(() => {
+        abortRef.current?.abort();
+        setExpandedDive(null);
+        setDiveContent({});
+        setDiveLoading({});
+        setWarmupState('warming');
+
+        let cancelled = false;
+
+        void fetch('/quantus/api/deepdive/prefetch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ticker: report.ticker,
+                assetClass: report.asset_class,
+                modules: DEEP_DIVE_MODULES.map((_, index) => index),
+            }),
+        })
+            .then((resp) => {
+                if (!resp.ok) {
+                    throw new Error('Deep dive warmup request failed');
+                }
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setWarmupState('failed');
+                }
+            });
+
+        return () => {
+            cancelled = true;
+            abortRef.current?.abort();
+        };
+    }, [report.asset_class, report.ticker]);
 
     const expandDeepDive = async (idx: number) => {
         if (expandedDive === idx) { setExpandedDive(null); return; }
@@ -99,6 +135,16 @@ export function SectionDeepDives({ report, lightMode }: Props) {
             <p className="text-xs mb-5" style={{ color: textSecondary }}>
                 Each analysis generated on-demand · cached immediately for all researchers · ~8 seconds first load
             </p>
+            {warmupState === 'warming' && (
+                <p className="text-xs mb-5" style={{ color: textSecondary }}>
+                    Background warmup active: deep dives are being cached while the reader reviews the report.
+                </p>
+            )}
+            {warmupState === 'failed' && (
+                <p className="text-xs mb-5 text-amber-500">
+                    Background warmup is unavailable right now. Deep dives will still generate when opened.
+                </p>
+            )}
             <div className="space-y-2">
                 {DEEP_DIVE_MODULES.map((title, i) => (
                     <div key={i} className="rounded-xl overflow-hidden" style={{ border: `1px solid ${expandedDive === i ? 'rgba(59,130,246,0.35)' : borderColor}` }}>

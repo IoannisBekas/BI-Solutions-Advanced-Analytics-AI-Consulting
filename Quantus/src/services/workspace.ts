@@ -78,6 +78,20 @@ export async function fetchWorkspaceAsset(ticker: string, signal?: AbortSignal) 
     return data.asset ?? null;
 }
 
-export async function fetchWorkspaceReport(ticker: string, signal?: AbortSignal) {
-    return readJson<ReportResponse>(`/quantus/api/report/${encodeURIComponent(ticker)}?user_tier=UNLOCKED`, { signal });
+export async function fetchWorkspaceReport(
+    ticker: string,
+    signal?: AbortSignal,
+    options?: {
+        forceRefresh?: boolean;
+    },
+) {
+    const params = new URLSearchParams({
+        user_tier: 'UNLOCKED',
+    });
+
+    if (options?.forceRefresh) {
+        params.set('force_refresh', 'true');
+    }
+
+    return readJson<ReportResponse>(`/quantus/api/report/${encodeURIComponent(ticker)}?${params.toString()}`, { signal });
 }

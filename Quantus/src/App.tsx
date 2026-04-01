@@ -18,6 +18,10 @@ import {
     isWorkspaceRequestError,
 } from './services/workspace';
 import type { AssetEntry, InsightCard, ReportResponse, WorkspaceSummary, WorkspaceStatus } from './types';
+import {
+    mergeReportResponseWithLiveRefresh,
+    shouldRefreshLiveSensitiveFields,
+} from './constants/reportFreshness';
 
 const ReportDashboard = lazy(async () => {
     const module = await import('./components/Report');
@@ -389,8 +393,10 @@ function App() {
     const reportRef = useRef<HTMLDivElement>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
     const insightAbortRef = useRef<AbortController | null>(null);
+    const liveRefreshAbortRef = useRef<AbortController | null>(null);
     const inflightTickerRef = useRef<string | null>(null);
     const pendingAssetRef = useRef<AssetEntry | null>(null);
+    const currentReportResponseRef = useRef<ReportResponse | null>(null);
 
     const route = useMemo(() => resolveRoute(currentPath), [currentPath]);
     const {
@@ -462,6 +468,7 @@ function App() {
         return () => {
             searchAbortRef.current?.abort();
             insightAbortRef.current?.abort();
+            liveRefreshAbortRef.current?.abort();
         };
     }, []);
 
@@ -469,6 +476,10 @@ function App() {
         if (!report?.ticker) return;
         cacheReportForOffline(report.ticker);
     }, [report?.ticker]);
+
+    useEffect(() => {
+        currentReportResponseRef.current = reportResponse;
+    }, [reportResponse]);
 
     useEffect(() => {
         if (needsRefresh) {
@@ -564,12 +575,49 @@ function App() {
         }
     }, []);
 
+    const refreshLiveSensitiveFields = useCallback(async (ticker: string) => {
+        liveRefreshAbortRef.current?.abort();
+        const controller = new AbortController();
+        liveRefreshAbortRef.current = controller;
+
+        try {
+            const liveResponse = await fetchWorkspaceReport(ticker, controller.signal, { forceRefresh: true });
+            if (controller.signal.aborted || liveResponse.source !== 'live') return;
+            if (inflightTickerRef.current !== ticker) return;
+
+            const currentResponse = currentReportResponseRef.current;
+            if (!currentResponse || currentResponse.ticker !== ticker) return;
+
+            const mergedResponse = mergeReportResponseWithLiveRefresh(currentResponse, liveResponse);
+            writeStoredReportResponse(mergedResponse);
+            setReportResponse(mergedResponse);
+
+            setInsights((previous) => (
+                previous.some((item) => item.id === `${ticker}-live-refresh`)
+                    ? previous
+                    : [
+                        ...previous,
+                        {
+                            id: `${ticker}-live-refresh`,
+                            category: 'model',
+                            text: 'Live-sensitive fields refreshed — price, regime, risk, forecast, and strategy are now current.',
+                            isComplete: true,
+                        },
+                    ]
+            ));
+        } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
+            console.error('Live-sensitive refresh error:', error);
+        }
+    }, []);
+
     const loadReport = useCallback(async (ticker: string, assetHint?: AssetEntry | null) => {
         const normalizedTicker = ticker.trim().toUpperCase();
         if (!normalizedTicker) return;
 
         searchAbortRef.current?.abort();
         insightAbortRef.current?.abort();
+        liveRefreshAbortRef.current?.abort();
         const controller = new AbortController();
         searchAbortRef.current = controller;
         inflightTickerRef.current = normalizedTicker;
@@ -606,7 +654,12 @@ function App() {
             responsePayload = await fetchWorkspaceReport(normalizedTicker, controller.signal);
             if (!controller.signal.aborted) {
                 writeStoredReportResponse(responsePayload);
+                currentReportResponseRef.current = responsePayload;
                 setReportResponse(responsePayload);
+
+                if (shouldRefreshLiveSensitiveFields(responsePayload)) {
+                    void refreshLiveSensitiveFields(normalizedTicker);
+                }
             }
         } catch (error) {
             if (error instanceof DOMException && error.name === 'AbortError') return;
@@ -646,6 +699,7 @@ function App() {
             }
 
             if (!controller.signal.aborted) {
+                currentReportResponseRef.current = responsePayload;
                 setReportResponse(responsePayload);
             }
         } finally {
@@ -659,7 +713,7 @@ function App() {
                 }
 
                 const completionText = responsePayload?.source === 'cached'
-                    ? 'Cached Quantus coverage is ready.'
+                    ? 'Cached Quantus coverage is ready. Live-sensitive fields are refreshing.'
                     : responsePayload?.source === 'live'
                         ? 'Live Quantus pipeline report is ready.'
                         : 'Starter shell ready — no cached Quantus coverage exists yet.';
@@ -676,7 +730,7 @@ function App() {
                 setIsGenerating(false);
             }
         }
-    }, [streamInsights, workspaceSummary?.status]);
+    }, [refreshLiveSensitiveFields, streamInsights, workspaceSummary?.status]);
 
     useEffect(() => {
         if (route.view !== 'report' || !route.ticker) {
@@ -713,8 +767,10 @@ function App() {
     const handleBack = useCallback(() => {
         searchAbortRef.current?.abort();
         insightAbortRef.current?.abort();
+        liveRefreshAbortRef.current?.abort();
         inflightTickerRef.current = null;
         setInsights([]);
+        currentReportResponseRef.current = null;
         setReportResponse(null);
         setCurrentTicker('');
         setIsGenerating(false);

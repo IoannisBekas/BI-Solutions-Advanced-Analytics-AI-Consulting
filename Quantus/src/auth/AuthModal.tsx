@@ -1,7 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Zap, Mail, Lock, User } from 'lucide-react';
 import { useAuth } from './AuthContext';
+
+declare global {
+    interface Window {
+        google?: {
+            accounts: {
+                id: {
+                    initialize: (options: {
+                        client_id: string;
+                        callback: (response: { credential?: string }) => void;
+                        context?: 'signin' | 'signup';
+                        ux_mode?: 'popup';
+                    }) => void;
+                    renderButton: (
+                        element: HTMLElement,
+                        options: {
+                            type?: 'standard';
+                            theme?: 'outline' | 'filled_black';
+                            size?: 'large' | 'medium' | 'small';
+                            text?: 'signin_with' | 'signup_with' | 'continue_with';
+                            shape?: 'pill' | 'rectangular';
+                            width?: string | number;
+                            logo_alignment?: 'left' | 'center';
+                        },
+                    ) => void;
+                    cancel?: () => void;
+                };
+            };
+        };
+    }
+}
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -16,15 +46,82 @@ interface AuthModalProps {
 // ─── Auth Modal ───────────────────────────────────────────────────────────────
 
 export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken, lightMode }: AuthModalProps) {
-    const { signIn, signUp, isLoading } = useAuth();
+    const { signIn, signUp, signInWithGoogle, googleClientId, googleEnabled, isLoading } = useAuth();
     const [mode, setMode] = useState<'signin' | 'signup'>(defaultMode);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPass] = useState('');
     const [error, setError] = useState('');
+    const googleButtonRef = useRef<HTMLDivElement | null>(null);
 
     // Sync internal mode when parent changes defaultMode prop
     useEffect(() => { setMode(defaultMode); }, [defaultMode]);
+
+    useEffect(() => {
+        if (!open || !googleEnabled || !googleClientId || !googleButtonRef.current) return;
+
+        let cancelled = false;
+
+        const handleCredential = async (response: { credential?: string }) => {
+            if (!response.credential) {
+                setError('Google sign-in did not return a credential.');
+                return;
+            }
+            setError('');
+            const ok = await signInWithGoogle(
+                response.credential,
+                mode === 'signup' ? referralToken : undefined,
+            );
+            if (!ok) {
+                setError('Google authentication failed. Please try again.');
+                return;
+            }
+            onClose();
+        };
+
+        const renderButton = () => {
+            if (cancelled || !googleButtonRef.current || !window.google?.accounts.id) return;
+            googleButtonRef.current.innerHTML = '';
+            window.google.accounts.id.initialize({
+                client_id: googleClientId,
+                callback: handleCredential,
+                context: mode,
+                ux_mode: 'popup',
+            });
+            window.google.accounts.id.renderButton(googleButtonRef.current, {
+                type: 'standard',
+                theme: lightMode ? 'outline' : 'filled_black',
+                size: 'large',
+                text: mode === 'signup' ? 'signup_with' : 'signin_with',
+                shape: 'pill',
+                width: '320',
+                logo_alignment: 'left',
+            });
+        };
+
+        if (window.google?.accounts.id) {
+            renderButton();
+        } else {
+            const existing = document.querySelector('script[data-google-identity="true"]') as HTMLScriptElement | null;
+            const script = existing ?? document.createElement('script');
+            if (!existing) {
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.async = true;
+                script.defer = true;
+                script.dataset.googleIdentity = 'true';
+                document.head.appendChild(script);
+            }
+            script.onload = () => renderButton();
+        }
+
+        return () => {
+            cancelled = true;
+            window.google?.accounts.id.cancel?.();
+            if (googleButtonRef.current) {
+                googleButtonRef.current.innerHTML = '';
+            }
+        };
+    }, [open, googleEnabled, googleClientId, mode, referralToken, lightMode, onClose, signInWithGoogle]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -107,6 +204,19 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                             </button>
                         ))}
                     </div>
+
+                    {googleEnabled && (
+                        <>
+                            <div className="mb-5">
+                                <div ref={googleButtonRef} className="flex justify-center" />
+                            </div>
+                            <div className="flex items-center gap-3 mb-5">
+                                <div className="h-px flex-1" style={{ background: border }} />
+                                <span className="text-[11px] uppercase tracking-[0.24em]" style={{ color: ts }}>or</span>
+                                <div className="h-px flex-1" style={{ background: border }} />
+                            </div>
+                        </>
+                    )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">

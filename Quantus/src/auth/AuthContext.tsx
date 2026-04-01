@@ -20,9 +20,12 @@ interface AuthState {
     isLoading: boolean;
     signIn: (email: string, password: string) => Promise<boolean>;
     signUp: (email: string, name: string, referralToken?: string) => Promise<boolean>;
+    signInWithGoogle: (credential: string, referralToken?: string) => Promise<boolean>;
     signOut: () => void;
     deductCredit: (cost: number) => boolean;
     refreshCredits: () => Promise<void>;
+    googleClientId: string | null;
+    googleEnabled: boolean;
 }
 
 const TOKEN_STORAGE_KEY = 'quantus-token';
@@ -115,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [googleClientId, setGoogleClientId] = useState<string | null>(null);
 
     useEffect(() => {
         if (user) {
@@ -160,6 +164,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
     }, []);
 
+    useEffect(() => {
+        let cancelled = false;
+
+        void fetch('/quantus/api/auth/google/config')
+            .then(async (res) => {
+                if (!res.ok) {
+                    throw new Error('Unable to load Google sign-in config');
+                }
+                const data = await res.json() as { enabled?: boolean; clientId?: string };
+                if (!cancelled) {
+                    setGoogleClientId(data.enabled && typeof data.clientId === 'string' ? data.clientId : null);
+                }
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setGoogleClientId(null);
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
     const signIn = useCallback(async (email: string, password: string): Promise<boolean> => {
         setIsLoading(true);
         try {
@@ -184,6 +212,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, name, referralToken }),
+            });
+            if (!res.ok) { setIsLoading(false); return false; }
+            const data = await res.json();
+            localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
+            setUser(buildUserFromPayload(data.user, user));
+            return true;
+        } catch { return false; }
+        finally { setIsLoading(false); }
+    }, [user]);
+
+    const signInWithGoogle = useCallback(async (credential: string, referralToken?: string): Promise<boolean> => {
+        setIsLoading(true);
+        try {
+            const res = await fetch('/quantus/api/auth/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential, referralToken }),
             });
             if (!res.ok) { setIsLoading(false); return false; }
             const data = await res.json();
@@ -226,7 +271,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, isLoading, signIn, signUp, signOut, deductCredit, refreshCredits }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                isLoading,
+                signIn,
+                signUp,
+                signInWithGoogle,
+                signOut,
+                deductCredit,
+                refreshCredits,
+                googleClientId,
+                googleEnabled: Boolean(googleClientId),
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

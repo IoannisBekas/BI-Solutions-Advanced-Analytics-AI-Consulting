@@ -29,6 +29,10 @@ function getJwtSecret(): string {
   return secret;
 }
 
+function getGoogleClientId(): string {
+  return process.env.GOOGLE_CLIENT_ID?.trim() || "";
+}
+
 // ─── JWT helpers ─────────────────────────────────────────────────────────────
 export interface JWTPayload {
   userId: string;
@@ -100,6 +104,81 @@ function isValidEmail(value: unknown): value is string {
   return typeof value === "string" && EMAIL_RE.test(value) && value.length <= 254;
 }
 
+function applyReferralBonus(referralToken: unknown): number {
+  if (typeof referralToken !== "string" || referralToken.length === 0) {
+    return 0;
+  }
+
+  const referrer = findUserByReferralToken(referralToken);
+  if (!referrer) {
+    return 0;
+  }
+
+  updateUserCredits(referrer.id, referrer.credits + 3);
+  return 5;
+}
+
+function buildUserIdentity(name: string | undefined, email: string) {
+  return {
+    userId: `usr_${crypto.randomBytes(6).toString("hex")}`,
+    referralToken: `ref_${crypto.randomBytes(8).toString("hex")}`,
+    name: (typeof name === "string" && name.trim()) || email.split("@")[0],
+  };
+}
+
+async function createAuthUser(params: {
+  email: string;
+  name?: string;
+  password: string;
+  referralToken?: unknown;
+}): Promise<DbUser> {
+  const identity = buildUserIdentity(params.name, params.email);
+  const passwordHash = await bcrypt.hash(params.password, SALT_ROUNDS);
+  const credits = applyReferralBonus(params.referralToken);
+
+  return createUser({
+    id: identity.userId,
+    email: params.email,
+    name: identity.name,
+    passwordHash,
+    credits,
+    referralToken: identity.referralToken,
+  });
+}
+
+interface GoogleTokenInfo {
+  aud: string;
+  email?: string;
+  email_verified?: string | boolean;
+  name?: string;
+}
+
+async function verifyGoogleCredential(idToken: string): Promise<GoogleTokenInfo> {
+  const clientId = getGoogleClientId();
+  if (!clientId) {
+    throw new Error("Google sign-in is not configured");
+  }
+
+  const response = await fetch(
+    `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`,
+    { signal: AbortSignal.timeout(10_000) }
+  );
+
+  if (!response.ok) {
+    throw new Error("Google rejected the credential");
+  }
+
+  const tokenInfo = (await response.json()) as GoogleTokenInfo;
+  if (tokenInfo.aud !== clientId) {
+    throw new Error("Google client ID mismatch");
+  }
+  if (!tokenInfo.email || `${tokenInfo.email_verified}` !== "true") {
+    throw new Error("Google account email is missing or unverified");
+  }
+
+  return tokenInfo;
+}
+
 // ─── Router ──────────────────────────────────────────────────────────────────
 export const authRouter = Router();
 
@@ -134,29 +213,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
       return;
     }
 
-    // Handle referral bonus
-    let bonusCredits = 0;
-    if (referralToken && typeof referralToken === "string") {
-      const referrer = findUserByReferralToken(referralToken);
-      if (referrer) {
-        bonusCredits = 5;
-        // Also give the referrer bonus credits
-        updateUserCredits(referrer.id, referrer.credits + 3);
-      }
-    }
-
-    const userId = `usr_${crypto.randomBytes(6).toString("hex")}`;
-    const myReferralToken = `ref_${crypto.randomBytes(8).toString("hex")}`;
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-
-    const user = createUser({
-      id: userId,
-      email,
-      name,
-      passwordHash,
-      credits: bonusCredits,
-      referralToken: myReferralToken,
-    });
+    const user = await createAuthUser({ email, name, password, referralToken });
 
     const token = signToken(user);
     res.status(201).json({ token, user: toSafeUser(user) });
@@ -193,6 +250,53 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Login failed. Please try again." });
+  }
+});
+
+// ── GET /api/auth/google/config ─────────────────────────────────────────────
+authRouter.get("/google/config", (_req: Request, res: Response) => {
+  const clientId = getGoogleClientId();
+  res.json({
+    enabled: Boolean(clientId),
+    clientId: clientId || undefined,
+  });
+});
+
+// ── POST /api/auth/google ───────────────────────────────────────────────────
+authRouter.post("/google", async (req: Request, res: Response) => {
+  try {
+    const credential =
+      typeof req.body?.credential === "string" ? req.body.credential.trim() : "";
+    const referralToken = req.body?.referralToken;
+
+    if (!credential) {
+      res.status(400).json({ error: "Google credential is required" });
+      return;
+    }
+
+    if (!getGoogleClientId()) {
+      res.status(503).json({ error: "Google sign-in is not configured" });
+      return;
+    }
+
+    const tokenInfo = await verifyGoogleCredential(credential);
+    let user = findUserByEmail(tokenInfo.email!);
+
+    if (!user) {
+      const generatedPassword = crypto.randomBytes(24).toString("hex");
+      user = await createAuthUser({
+        email: tokenInfo.email!,
+        name: tokenInfo.name,
+        password: generatedPassword,
+        referralToken,
+      });
+    }
+
+    const token = signToken(user);
+    res.json({ token, user: toSafeUser(user) });
+  } catch (error) {
+    console.error("Google auth error:", error);
+    res.status(401).json({ error: "Google authentication failed" });
   }
 });
 

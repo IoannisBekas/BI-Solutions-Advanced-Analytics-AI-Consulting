@@ -166,6 +166,14 @@ app.post(`${API_PREFIX}/auth/register`, (req, res) => {
     proxyAuthRequest('POST', '/api/auth/register', req, res);
 });
 
+app.post(`${API_PREFIX}/auth/google`, (req, res) => {
+    proxyAuthRequest('POST', '/api/auth/google', req, res);
+});
+
+app.get(`${API_PREFIX}/auth/google/config`, (req, res) => {
+    proxyAuthRequest('GET', '/api/auth/google/config', req, res);
+});
+
 app.get(`${API_PREFIX}/auth/me`, (req, res) => {
     proxyAuthRequest('GET', '/api/auth/me', req, res);
 });
@@ -251,6 +259,83 @@ function getPipelineUnavailableStatus(detail: string) {
         detail,
         badgeTone: 'caution' as const,
     };
+}
+
+const DEEP_DIVE_MODULE_COUNT = 12;
+const DEEP_DIVE_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+
+interface DeepDiveCacheEntry {
+    text: string;
+    updatedAt: number;
+}
+
+const deepDiveCache = new Map<string, DeepDiveCacheEntry>();
+const deepDiveInFlight = new Map<string, Promise<string>>();
+
+function getDeepDiveCacheKey(ticker: string, moduleIndex: number, assetClass: string) {
+    return `${ticker}:${assetClass}:${moduleIndex}`;
+}
+
+function getCachedDeepDive(key: string) {
+    const entry = deepDiveCache.get(key);
+    if (!entry) return null;
+    if (Date.now() - entry.updatedAt > DEEP_DIVE_CACHE_TTL_MS) {
+        deepDiveCache.delete(key);
+        return null;
+    }
+    return entry;
+}
+
+function writeDeepDiveSse(res: express.Response, text: string) {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.write(`data: ${JSON.stringify({ text })}\n\n`);
+    res.write('data: [DONE]\n\n');
+    res.end();
+}
+
+async function generateDeepDiveText(ticker: string, moduleIndex: number, assetClass: string) {
+    const prompt = getDeepDivePrompt(ticker, moduleIndex, assetClass);
+    const stream = await getAI().models.generateContentStream({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+    });
+
+    let text = '';
+    for await (const chunk of stream) {
+        if (chunk.text) {
+            text += chunk.text;
+        }
+    }
+
+    return text || 'Analysis complete.';
+}
+
+function getOrCreateDeepDiveJob(ticker: string, moduleIndex: number, assetClass: string) {
+    const cacheKey = getDeepDiveCacheKey(ticker, moduleIndex, assetClass);
+    const cached = getCachedDeepDive(cacheKey);
+    if (cached) {
+        return Promise.resolve(cached.text);
+    }
+
+    const existing = deepDiveInFlight.get(cacheKey);
+    if (existing) {
+        return existing;
+    }
+
+    const job = (async () => {
+        try {
+            const text = await generateDeepDiveText(ticker, moduleIndex, assetClass);
+            deepDiveCache.set(cacheKey, { text, updatedAt: Date.now() });
+            return text;
+        } finally {
+            deepDiveInFlight.delete(cacheKey);
+        }
+    })();
+
+    deepDiveInFlight.set(cacheKey, job);
+    return job;
 }
 
 
@@ -492,6 +577,41 @@ app.post(`${API_PREFIX}/insights`, async (req, res) => {
 });
 
 // ─── DEEP DIVE ────────────────────────────────────────────────────────────────
+app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
+    try {
+        const ticker = sanitizeTicker(req.body.ticker);
+        const assetClass = sanitizeAssetClass(req.body.assetClass);
+        const requestedModules = Array.isArray(req.body.modules) ? req.body.modules : null;
+        const modules = (requestedModules ?? Array.from({ length: DEEP_DIVE_MODULE_COUNT }, (_, index) => index))
+            .map((value) => typeof value === 'number' ? Math.floor(value) : Number.parseInt(String(value), 10))
+            .filter((value) => Number.isFinite(value) && value >= 0 && value < DEEP_DIVE_MODULE_COUNT);
+
+        if (!ticker || modules.length === 0) {
+            res.status(400).json({ error: 'Valid ticker and at least one module index required' });
+            return;
+        }
+
+        res.status(202).json({
+            status: 'warming',
+            ticker,
+            queuedModules: modules.length,
+        });
+
+        void (async () => {
+            for (const moduleIndex of modules) {
+                try {
+                    await getOrCreateDeepDiveJob(ticker, moduleIndex, assetClass);
+                } catch (error) {
+                    console.error(`Deep dive prefetch failed for ${ticker} module ${moduleIndex}:`, error);
+                }
+            }
+        })();
+    } catch (error) {
+        console.error('Error scheduling deep dive prefetch:', error);
+        res.status(500).json({ error: 'Failed to schedule deep dive prefetch' });
+    }
+});
+
 app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
     try {
         const ticker = sanitizeTicker(req.body.ticker);
@@ -502,25 +622,8 @@ app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
             return;
         }
 
-        const prompt = getDeepDivePrompt(ticker, moduleIndex, assetClass);
-
-        const stream = await getAI().models.generateContentStream({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
-
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-
-        for await (const chunk of stream) {
-            if (chunk.text) {
-                res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
-            }
-        }
-
-        res.write('data: [DONE]\n\n');
-        res.end();
+        const text = await getOrCreateDeepDiveJob(ticker, moduleIndex, assetClass);
+        writeDeepDiveSse(res, text);
     } catch (error) {
         console.error('Error generating deep dive:', error);
         res.status(500).json({ error: 'Failed to generate deep dive' });
