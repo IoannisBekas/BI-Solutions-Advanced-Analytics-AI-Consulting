@@ -17,6 +17,14 @@ import {
     fetchWorkspaceSummary,
     isWorkspaceRequestError,
 } from './services/workspace';
+import {
+    addWatchlistAsset,
+    fetchAlertSubscriptions,
+    fetchArchivedReport,
+    fetchUserWatchlist,
+    removeWatchlistAsset,
+    upsertAlertSubscription,
+} from './services/product';
 import type { AssetEntry, InsightCard, ReportResponse, WorkspaceSummary, WorkspaceStatus } from './types';
 import {
     mergeReportResponseWithLiveRefresh,
@@ -357,6 +365,34 @@ function buildAssetEntryFromReport(report: ReportResponse['report'], source: Rep
     };
 }
 
+function buildAssetEntryFromWatchlistItem(item: {
+    ticker: string;
+    name: string;
+    exchange?: string;
+    assetClass: AssetEntry['assetClass'];
+    sector?: string;
+    currentPrice?: number;
+    dayChange?: number;
+    dayChangePct?: number;
+    hasCachedReport?: boolean;
+    cachedReportAge?: string;
+    researcherCount?: number;
+}): AssetEntry {
+    return {
+        ticker: item.ticker,
+        name: item.name,
+        exchange: item.exchange ?? 'Workspace',
+        assetClass: item.assetClass,
+        sector: item.sector,
+        currentPrice: item.currentPrice,
+        dayChange: item.dayChange,
+        dayChangePct: item.dayChangePct,
+        hasCachedReport: item.hasCachedReport,
+        cachedReportAge: item.cachedReportAge,
+        researcherCount: item.researcherCount,
+    };
+}
+
 function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
     return (
         <div
@@ -387,6 +423,8 @@ function App() {
     const [pinnedAssets, setPinnedAssets] = useState<AssetEntry[]>(() => readStoredAssets(PINNED_ASSETS_STORAGE_KEY));
     const [showStickyStrip, setShowStickyStrip] = useState(false);
     const [currentPath, setCurrentPath] = useState(() => normalizeQuantusPath(window.location.pathname));
+    const [currentSearch, setCurrentSearch] = useState(() => window.location.search);
+    const [loadedSnapshotId, setLoadedSnapshotId] = useState<string | null>(null);
     const [authModalOpen, setAuthModalOpen] = useState(false);
     const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
     const [dismissedUpdateBanner, setDismissedUpdateBanner] = useState(false);
@@ -399,6 +437,10 @@ function App() {
     const currentReportResponseRef = useRef<ReportResponse | null>(null);
 
     const route = useMemo(() => resolveRoute(currentPath), [currentPath]);
+    const activeSnapshotId = useMemo(() => {
+        const value = new URLSearchParams(currentSearch).get('snapshot');
+        return value?.trim() ? value.trim() : null;
+    }, [currentSearch]);
     const {
         showInstallBanner,
         install,
@@ -418,14 +460,17 @@ function App() {
         ? (isGenerating || reportResponse?.ticker !== route.ticker ? 'generating' : 'report')
         : route.view;
 
-    const syncBrowserRoute = useCallback((nextPath: string, replace = false) => {
+    const syncBrowserRoute = useCallback((nextPath: string, replace = false, search = '') => {
         const normalized = normalizeQuantusPath(nextPath);
+        const normalizedSearch = search ? (search.startsWith('?') ? search : `?${search}`) : '';
+        const targetLocation = `${normalized}${normalizedSearch}`;
 
-        if (window.location.pathname !== normalized) {
-            window.history[replace ? 'replaceState' : 'pushState'](window.history.state, '', normalized);
+        if (`${window.location.pathname}${window.location.search}` !== targetLocation) {
+            window.history[replace ? 'replaceState' : 'pushState'](window.history.state, '', targetLocation);
         }
 
         setCurrentPath(normalized);
+        setCurrentSearch(normalizedSearch);
     }, []);
 
     const openAuthModal = useCallback((mode: 'signin' | 'signup' = 'signin') => {
@@ -437,13 +482,15 @@ function App() {
         const normalized = normalizeQuantusPath(window.location.pathname);
 
         if (normalized !== window.location.pathname) {
-            window.history.replaceState(window.history.state, '', normalized);
+            window.history.replaceState(window.history.state, '', `${normalized}${window.location.search}`);
         }
 
         setCurrentPath(normalized);
+        setCurrentSearch(window.location.search);
 
         const handlePopState = () => {
             setCurrentPath(normalizeQuantusPath(window.location.pathname));
+            setCurrentSearch(window.location.search);
         };
 
         window.addEventListener('popstate', handlePopState);
@@ -463,6 +510,25 @@ function App() {
     useEffect(() => {
         localStorage.setItem(PINNED_ASSETS_STORAGE_KEY, JSON.stringify(pinnedAssets));
     }, [pinnedAssets]);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        const controller = new AbortController();
+        void fetchUserWatchlist(controller.signal)
+            .then((data) => {
+                if (controller.signal.aborted) return;
+                setPinnedAssets((data.items ?? []).map((item) => buildAssetEntryFromWatchlistItem(item)));
+            })
+            .catch((error) => {
+                if (controller.signal.aborted) return;
+                console.error('Persisted watchlist sync error:', error);
+            });
+
+        return () => controller.abort();
+    }, [user]);
 
     useEffect(() => {
         return () => {
@@ -611,6 +677,53 @@ function App() {
         }
     }, []);
 
+    const loadArchivedReport = useCallback(async (reportId: string) => {
+        searchAbortRef.current?.abort();
+        insightAbortRef.current?.abort();
+        liveRefreshAbortRef.current?.abort();
+        const controller = new AbortController();
+        searchAbortRef.current = controller;
+        inflightTickerRef.current = null;
+
+        setInsights([]);
+        setReportResponse(null);
+        setLoadedSnapshotId(reportId);
+        setIsGenerating(true);
+
+        try {
+            const archivedResponse = await fetchArchivedReport(reportId, controller.signal);
+            if (controller.signal.aborted) return;
+
+            currentReportResponseRef.current = archivedResponse;
+            setCurrentTicker(archivedResponse.ticker);
+            setReportResponse(archivedResponse);
+            setLoadedSnapshotId(reportId);
+            setInsights([
+                {
+                    id: `${archivedResponse.report.report_id}-archive`,
+                    category: 'model',
+                    text: `Historical snapshot ready. ${archivedResponse.report.ticker} · ${archivedResponse.report.report_id}`,
+                    isComplete: true,
+                },
+            ]);
+        } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
+            console.error('Archived report fetch error:', error);
+            setInsights([
+                {
+                    id: `${reportId}-archive-error`,
+                    category: 'risk',
+                    text: error instanceof Error ? error.message : 'Unable to load the Quantus archive snapshot.',
+                    isComplete: true,
+                },
+            ]);
+        } finally {
+            if (!controller.signal.aborted) {
+                setIsGenerating(false);
+            }
+        }
+    }, []);
+
     const loadReport = useCallback(async (ticker: string, assetHint?: AssetEntry | null) => {
         const normalizedTicker = ticker.trim().toUpperCase();
         if (!normalizedTicker) return;
@@ -625,6 +738,7 @@ function App() {
         setCurrentTicker(normalizedTicker);
         setInsights([]);
         setReportResponse(null);
+        setLoadedSnapshotId(null);
         setIsGenerating(true);
 
         let responsePayload: ReportResponse | null = null;
@@ -738,31 +852,45 @@ function App() {
             return;
         }
 
+        if (activeSnapshotId) {
+            if (activeSnapshotId === loadedSnapshotId && !isGenerating) {
+                return;
+            }
+
+            void loadArchivedReport(activeSnapshotId);
+            return;
+        }
+
         if (route.ticker === inflightTickerRef.current && isGenerating) {
             return;
         }
 
-        if (route.ticker === reportResponse?.ticker && !isGenerating) {
+        if (route.ticker === reportResponse?.ticker && !isGenerating && loadedSnapshotId === null) {
             return;
         }
 
         const assetHint = pendingAssetRef.current;
         pendingAssetRef.current = null;
         void loadReport(route.ticker, assetHint);
-    }, [route.ticker, route.view, isGenerating, loadReport, reportResponse?.ticker]);
+    }, [activeSnapshotId, isGenerating, loadArchivedReport, loadReport, loadedSnapshotId, reportResponse?.ticker, route.ticker, route.view]);
 
-    const openReportRoute = useCallback((ticker: string, asset?: AssetEntry) => {
+    const openReportRoute = useCallback((ticker: string, asset?: AssetEntry, snapshotId?: string) => {
         const normalizedTicker = ticker.trim().toUpperCase();
         pendingAssetRef.current = asset ?? null;
 
         const nextRoute = getReportRoute(normalizedTicker);
-        if (currentPath === nextRoute) {
-            void loadReport(normalizedTicker, asset ?? null);
+        const search = snapshotId ? `snapshot=${encodeURIComponent(snapshotId)}` : '';
+        if (currentPath === nextRoute && currentSearch === (search ? `?${search}` : '')) {
+            if (snapshotId) {
+                void loadArchivedReport(snapshotId);
+            } else {
+                void loadReport(normalizedTicker, asset ?? null);
+            }
             return;
         }
 
-        syncBrowserRoute(nextRoute);
-    }, [currentPath, loadReport, syncBrowserRoute]);
+        syncBrowserRoute(nextRoute, false, search);
+    }, [currentPath, currentSearch, loadArchivedReport, loadReport, syncBrowserRoute]);
 
     const handleBack = useCallback(() => {
         searchAbortRef.current?.abort();
@@ -773,8 +901,9 @@ function App() {
         currentReportResponseRef.current = null;
         setReportResponse(null);
         setCurrentTicker('');
+        setLoadedSnapshotId(null);
         setIsGenerating(false);
-        syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE);
+        syncBrowserRoute(QUANTUS_WORKSPACE_ROUTE, false, '');
     }, [syncBrowserRoute]);
 
     const handleNavigate = useCallback((view: string) => {
@@ -792,7 +921,9 @@ function App() {
         }, 120);
     }, []);
 
-    const togglePinnedAsset = useCallback((asset: AssetEntry) => {
+    const togglePinnedAsset = useCallback(async (asset: AssetEntry) => {
+        const isPinned = pinnedAssets.some((entry) => entry.ticker === asset.ticker);
+
         setPinnedAssets((previous) => {
             if (previous.some((entry) => entry.ticker === asset.ticker)) {
                 return previous.filter((entry) => entry.ticker !== asset.ticker);
@@ -800,14 +931,29 @@ function App() {
 
             return upsertAsset(previous, asset, 8);
         });
-    }, []);
+
+        if (!user) {
+            return;
+        }
+
+        try {
+            if (isPinned) {
+                await removeWatchlistAsset(asset.ticker);
+            } else {
+                await addWatchlistAsset(asset.ticker, asset.assetClass);
+            }
+        } catch (error) {
+            console.error('Pinned asset sync error:', error);
+            setPinnedAssets(pinnedAssets);
+        }
+    }, [pinnedAssets, user]);
 
     const handleToggleCurrentReportPinned = useCallback(() => {
         if (!currentReportAsset) return;
         togglePinnedAsset(currentReportAsset);
     }, [currentReportAsset, togglePinnedAsset]);
 
-    const handleSubscribe = useCallback(() => {
+    const handleSubscribe = useCallback(async () => {
         if (!currentReportAsset) return;
 
         if (!user) {
@@ -818,22 +964,50 @@ function App() {
         const wasPinned = pinnedAssets.some((entry) => entry.ticker === currentReportAsset.ticker);
 
         if (!wasPinned) {
-            togglePinnedAsset(currentReportAsset);
+            await togglePinnedAsset(currentReportAsset);
         }
 
-        window.alert(
-            `Alerts for ${currentReportAsset.ticker} are not connected yet in this preview. `
-            + `${wasPinned ? 'It is already in your local watchlist.' : 'It was added to your local watchlist.'}`,
-        );
+        try {
+            await upsertAlertSubscription(currentReportAsset.ticker, currentReportAsset.assetClass);
+            setInsights((previous) => [
+                {
+                    id: `${currentReportAsset.ticker}-alert-subscription`,
+                    category: 'event',
+                    text: `Server-side alerts enabled for ${currentReportAsset.ticker}. ${wasPinned ? 'Watchlist already synced.' : 'The ticker was added to your persisted watchlist.'}`,
+                    isComplete: true,
+                },
+                ...previous,
+            ]);
+        } catch (error) {
+            console.error('Alert subscription error:', error);
+            setInsights((previous) => [
+                {
+                    id: `${currentReportAsset.ticker}-alert-error`,
+                    category: 'risk',
+                    text: error instanceof Error ? error.message : `Unable to enable alerts for ${currentReportAsset.ticker}.`,
+                    isComplete: true,
+                },
+                ...previous,
+            ]);
+        }
     }, [currentReportAsset, openAuthModal, pinnedAssets, togglePinnedAsset, user]);
 
-    const handleManageAlerts = useCallback(() => {
+    const handleManageAlerts = useCallback(async () => {
         if (!user) {
             openAuthModal('signup');
             return;
         }
 
-        window.alert('Custom watchlist alerts are not connected yet in this preview. Sign-in works; alert delivery is the next integration.');
+        try {
+            const alerts = await fetchAlertSubscriptions();
+            window.alert(
+                alerts.length === 0
+                    ? 'No persisted Quantus alert subscriptions yet. Subscribe from a report to create one.'
+                    : `${alerts.length} persisted Quantus alert subscription${alerts.length === 1 ? '' : 's'} active.`,
+            );
+        } catch (error) {
+            window.alert(error instanceof Error ? error.message : 'Unable to load persisted alert subscriptions.');
+        }
     }, [openAuthModal, user]);
 
     const handleOpenRelatedTicker = useCallback((ticker: string) => {
@@ -974,6 +1148,7 @@ function App() {
                                 userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
                                 lightMode={lightMode}
                                 savedAssets={pinnedAssets}
+                                isAuthenticated={Boolean(user)}
                                 onOpenAlerts={handleManageAlerts}
                                 onSelectTicker={(ticker) => openReportRoute(ticker)}
                             />
@@ -987,7 +1162,7 @@ function App() {
                             <Archive
                                 userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
                                 lightMode={lightMode}
-                                onViewReport={(snapshot: { ticker: string }) => openReportRoute(snapshot.ticker)}
+                                onViewReport={(snapshot: { ticker: string; reportId: string }) => openReportRoute(snapshot.ticker, undefined, snapshot.reportId)}
                             />
                         </Suspense>
                     </motion.div>

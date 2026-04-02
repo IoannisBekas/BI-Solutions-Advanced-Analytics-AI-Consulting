@@ -1,35 +1,11 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     RefreshCw, Bell, TrendingUp, TrendingDown, AlertTriangle,
     Users, Clock, Filter, Calendar,
 } from 'lucide-react';
-import type { AssetClass, AssetEntry, SignalType } from '../types';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface WatchlistItem {
-    ticker: string;
-    name: string;
-    assetClass: AssetClass;
-    signal: SignalType;
-    confidence: number;
-    regime: string;
-    momentum: number;     // -1 to 1
-    sentiment: number;    // -1 to 1
-    currentPrice: number;
-    dayChangePct: number;
-    forecast30d: string;
-    daysToEarnings?: number;
-    lastUpdated: string;  // ISO
-    nextRefresh: string;
-    researcherCount: number;
-    // Asset-class specific
-    fearAndGreed?: number;        // CRYPTO
-    cotSignal?: string;           // COMMODITY
-    fundFlows?: string;           // ETF
-    knowledgeGraphAlert?: string; // any
-}
+import { fetchUserWatchlist } from '../services/product';
+import type { AssetClass, AssetEntry, QuantusWatchlistItem as WatchlistItem, SignalType } from '../types';
 
 interface WatchlistProps {
     userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL';
@@ -37,51 +13,8 @@ interface WatchlistProps {
     onSelectTicker?: (ticker: string) => void;
     onOpenAlerts?: () => void;
     savedAssets?: AssetEntry[];
+    isAuthenticated?: boolean;
 }
-
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const MOCK_WATCHLIST: WatchlistItem[] = [
-    {
-        ticker: 'NVDA', name: 'NVIDIA Corp', assetClass: 'EQUITY',
-        signal: 'STRONG BUY', confidence: 82, regime: 'Strong Uptrend',
-        momentum: 0.84, sentiment: 0.71, currentPrice: 948.70, dayChangePct: 4.21,
-        forecast30d: '+12.4%', daysToEarnings: 28, lastUpdated: new Date(Date.now() - 3 * 3600_000).toISOString(),
-        nextRefresh: '21h', researcherCount: 47,
-        knowledgeGraphAlert: 'TSMC capacity constraint may impact H200 lead times',
-    },
-    {
-        ticker: 'AAPL', name: 'Apple Inc', assetClass: 'EQUITY',
-        signal: 'BUY', confidence: 69, regime: 'Uptrend',
-        momentum: 0.51, sentiment: 0.38, currentPrice: 213.49, dayChangePct: 0.44,
-        forecast30d: '+5.8%', lastUpdated: new Date(Date.now() - 5 * 3600_000).toISOString(),
-        nextRefresh: '19h', researcherCount: 34,
-    },
-    {
-        ticker: 'BTC-USD', name: 'Bitcoin', assetClass: 'CRYPTO',
-        signal: 'BUY', confidence: 74, regime: 'Strong Uptrend',
-        momentum: 0.76, sentiment: 0.62, currentPrice: 62480, dayChangePct: 2.87,
-        forecast30d: '+18.3%', lastUpdated: new Date(Date.now() - 2 * 3600_000).toISOString(),
-        nextRefresh: '22h', researcherCount: 89,
-        fearAndGreed: 72,
-    },
-    {
-        ticker: 'GC=F', name: 'Gold Futures', assetClass: 'COMMODITY',
-        signal: 'BUY', confidence: 71, regime: 'Uptrend',
-        momentum: 0.58, sentiment: 0.44, currentPrice: 2312, dayChangePct: 0.63,
-        forecast30d: '+4.1%', lastUpdated: new Date(Date.now() - 6 * 3600_000).toISOString(),
-        nextRefresh: '18h', researcherCount: 22,
-        cotSignal: 'Managed money net long +12%',
-    },
-    {
-        ticker: 'SPY', name: 'SPDR S&P 500 ETF', assetClass: 'ETF',
-        signal: 'NEUTRAL', confidence: 61, regime: 'Mean-Reverting',
-        momentum: 0.12, sentiment: 0.05, currentPrice: 539.24, dayChangePct: 0.21,
-        forecast30d: '+1.9%', lastUpdated: new Date(Date.now() - 4 * 3600_000).toISOString(),
-        nextRefresh: '20h', researcherCount: 53,
-        fundFlows: '$2.1B inflows (7d)',
-    },
-];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -105,7 +38,7 @@ function freshnessLabel(iso: string): { label: string; color: string } {
 function MiniBar({ value, color }: { value: number; color: string }) {
     const pct = Math.round((value + 1) * 50);
     return (
-        <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(15,23,42,0.08)' }}>
             <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
         </div>
     );
@@ -115,7 +48,9 @@ function savedAssetToWatchlistItem(asset: AssetEntry): WatchlistItem {
     return {
         ticker: asset.ticker,
         name: asset.name,
+        exchange: asset.exchange,
         assetClass: asset.assetClass,
+        sector: asset.sector,
         signal: 'NEUTRAL',
         confidence: asset.hasCachedReport ? 60 : 20,
         regime: asset.hasCachedReport ? 'Tracked' : 'Starter',
@@ -135,7 +70,7 @@ function savedAssetToWatchlistItem(asset: AssetEntry): WatchlistItem {
 
 function SkeletonCard() {
     return (
-        <div className="rounded-xl p-4 bg-gray-900 border border-gray-800">
+        <div className="bis-section-card rounded-[24px] p-4">
             {[80, 60, 48, 36, 52].map((w, i) => (
                 <div key={i} className={`h-${i === 0 ? 4 : 2.5} rounded skeleton mb-${i === 0 ? 3 : 2}`} style={{ width: `${w}%` }} />
             ))}
@@ -153,10 +88,9 @@ function WatchlistCard({
     const positive = item.dayChangePct >= 0;
     const sig = signalStyle(item.signal);
     const fresh = freshnessLabel(item.lastUpdated);
-    const cardBg = lightMode ? 'rgba(255,255,255,0.95)' : '#111827';
-    const border = lightMode ? '#E2E8F0' : '#1F2937';
-    const tp = lightMode ? '#0F172A' : '#F9FAFB';
-    const ts = lightMode ? '#475569' : '#9CA3AF';
+    const border = lightMode ? '#E5E7EB' : '#1F2937';
+    const tp = lightMode ? '#111827' : '#F9FAFB';
+    const ts = lightMode ? '#6B7280' : '#9CA3AF';
 
     const assetBadgeCls: Record<AssetClass, string> = {
         EQUITY: 'badge badge-equity', CRYPTO: 'badge badge-crypto',
@@ -165,17 +99,16 @@ function WatchlistCard({
 
     return (
         <motion.div
-            whileHover={{ scale: 1.015, y: -2 }}
+            whileHover={{ y: -3 }}
             onClick={onSelect}
-            className="rounded-xl p-4 cursor-pointer transition-colors relative"
-            style={{ background: cardBg, border: `1px solid ${border}` }}
+            className="bis-section-card rounded-[24px] p-4 cursor-pointer transition-colors relative"
         >
             {/* Knowledge graph alert banner */}
             {item.knowledgeGraphAlert && (
                 <div className="flex items-start gap-1.5 text-xs p-2 rounded-lg mb-3"
                     style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-400">{item.knowledgeGraphAlert}</span>
+                    <span style={{ color: ts }}>{item.knowledgeGraphAlert}</span>
                 </div>
             )}
 
@@ -200,18 +133,18 @@ function WatchlistCard({
                     style={{ background: sig.bg, color: sig.color, border: `1px solid ${sig.color}30` }}>
                     {item.signal}
                 </span>
-                <span className="text-xs" style={{ color: ts }}>{item.confidence}%</span>
-                <span className="text-xs ml-auto text-gray-500">{item.regime}</span>
+                    <span className="text-xs" style={{ color: ts }}>{item.confidence}%</span>
+                <span className="text-xs ml-auto" style={{ color: ts }}>{item.regime}</span>
             </div>
 
             {/* Momentum + Sentiment pills */}
             <div className="flex items-center gap-4 mb-3">
                 <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-gray-500">Mom</span>
+                    <span className="text-xs" style={{ color: ts }}>Mom</span>
                     <MiniBar value={item.momentum} color={item.momentum >= 0 ? '#10B981' : '#EF4444'} />
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-gray-500">Sent</span>
+                    <span className="text-xs" style={{ color: ts }}>Sent</span>
                     <MiniBar value={item.sentiment} color={item.sentiment >= 0 ? '#3B82F6' : '#F97316'} />
                 </div>
             </div>
@@ -245,7 +178,7 @@ function WatchlistCard({
                     {positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                     {positive ? '+' : ''}{item.dayChangePct.toFixed(2)}%
                 </span>
-                <span className="text-xs text-gray-500">30d: {item.forecast30d}</span>
+                <span className="text-xs" style={{ color: ts }}>Setup: {item.forecast30d}</span>
             </div>
 
             {/* Earnings flag — equity / ETF only */}
@@ -259,7 +192,7 @@ function WatchlistCard({
 
             {/* Footer */}
             <div className="flex items-center justify-between pt-2 border-t text-xs flex-wrap gap-1" style={{ borderColor: border }}>
-                <div className="flex items-center gap-3 text-gray-500">
+                <div className="flex items-center gap-3" style={{ color: ts }}>
                     <span className="flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         {item.researcherCount}
@@ -277,24 +210,75 @@ function WatchlistCard({
 
 // ─── Main Watchlist ───────────────────────────────────────────────────────────
 
-export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker, onOpenAlerts, savedAssets = [] }: WatchlistProps) {
+export function Watchlist({
+    userTier = 'FREE',
+    lightMode,
+    onSelectTicker,
+    onOpenAlerts,
+    savedAssets = [],
+    isAuthenticated = false,
+}: WatchlistProps) {
     const [refreshing, setRefreshing] = useState(false);
     const [filter, setFilter] = useState<string>('ALL');
+    const [serverItems, setServerItems] = useState<WatchlistItem[]>([]);
+    const [activeAlertCount, setActiveAlertCount] = useState(0);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(isAuthenticated);
 
-    const handleRefreshAll = useCallback(async () => {
-        if (userTier === 'FREE') return;
-        setRefreshing(true);
-        await new Promise(r => setTimeout(r, 2000));
-        setRefreshing(false);
-    }, [userTier]);
-
-    const allItems = useMemo(() => {
-        const merged = new Map<string, WatchlistItem>();
-
-        for (const item of MOCK_WATCHLIST) {
-            merged.set(item.ticker, item);
+    const loadWatchlist = useCallback(async (signal?: AbortSignal) => {
+        if (!isAuthenticated) {
+            setServerItems([]);
+            setActiveAlertCount(0);
+            setError(null);
+            setLoading(false);
+            return;
         }
 
+        setLoading(true);
+        const data = await fetchUserWatchlist(signal);
+        setServerItems(data.items ?? []);
+        setActiveAlertCount(Number(data.activeAlertCount ?? 0));
+        setError(null);
+        setLoading(false);
+    }, [isAuthenticated]);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setServerItems([]);
+            setActiveAlertCount(0);
+            setError(null);
+            setLoading(false);
+            return;
+        }
+
+        const controller = new AbortController();
+        void loadWatchlist(controller.signal).catch((loadError) => {
+            if (controller.signal.aborted) return;
+            setError(loadError instanceof Error ? loadError.message : 'Unable to load watchlist');
+            setLoading(false);
+        });
+
+        return () => controller.abort();
+    }, [isAuthenticated, loadWatchlist]);
+
+    const handleRefreshAll = useCallback(async () => {
+        if (!isAuthenticated) return;
+        setRefreshing(true);
+        try {
+            await loadWatchlist();
+        } catch (loadError) {
+            setError(loadError instanceof Error ? loadError.message : 'Unable to refresh watchlist');
+        } finally {
+            setRefreshing(false);
+        }
+    }, [isAuthenticated, loadWatchlist]);
+
+    const allItems = useMemo(() => {
+        if (isAuthenticated) {
+            return serverItems;
+        }
+
+        const merged = new Map<string, WatchlistItem>();
         for (const asset of savedAssets) {
             if (!merged.has(asset.ticker)) {
                 merged.set(asset.ticker, savedAssetToWatchlistItem(asset));
@@ -302,101 +286,119 @@ export function Watchlist({ userTier = 'FREE', lightMode, onSelectTicker, onOpen
         }
 
         return Array.from(merged.values());
-    }, [savedAssets]);
+    }, [isAuthenticated, savedAssets, serverItems]);
 
     const filtered = useMemo(() =>
         filter === 'ALL' ? allItems : allItems.filter(i => i.assetClass === filter),
         [allItems, filter],
     );
 
-    const bg = lightMode ? '#F0F4FF' : '#0A0D14';
-    const tp = lightMode ? '#0F172A' : '#F9FAFB';
-    const ts = lightMode ? '#475569' : '#9CA3AF';
+    const tp = lightMode ? '#111827' : '#F9FAFB';
+    const ts = lightMode ? '#6B7280' : '#9CA3AF';
 
     return (
-        <div style={{ background: bg, minHeight: '100vh', padding: '32px 24px' }}>
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-                <div>
-                    <h1 className="text-2xl font-bold" style={{ color: tp }}>Watchlist</h1>
-                    <p className="text-sm mt-0.5" style={{ color: ts }}>
-                        {allItems.length} tickers · Real-time signal monitoring
-                    </p>
+        <div className="mx-auto max-w-7xl">
+            <section className="bis-page-shell px-6 py-8 md:px-8 md:py-9">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
+                    <div>
+                        <div className="bis-eyebrow mb-4">
+                            <Bell className="h-3.5 w-3.5" />
+                            Quantus Watchlist
+                        </div>
+                        <h1 className="text-3xl font-bold tracking-tight md:text-4xl" style={{ color: tp }}>Watchlist</h1>
+                        <p className="text-sm mt-2 md:text-base" style={{ color: ts }}>
+                            {isAuthenticated
+                                ? `${allItems.length} persisted Quantus watchlist assets with live signal context, refresh cadence, and server-side alert subscriptions.`
+                                : `${allItems.length} locally saved assets. Sign in to persist your watchlist and alerts across devices.`}
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={handleRefreshAll}
+                            disabled={!isAuthenticated || refreshing}
+                            className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 transition-all hover:-translate-y-0.5 hover:shadow-sm disabled:opacity-40"
+                            title={isAuthenticated ? '' : 'Sign in to refresh the persisted watchlist'}
+                        >
+                            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                            Refresh Watchlist
+                        </button>
+                        <button
+                            type="button"
+                            onClick={onOpenAlerts}
+                            className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800"
+                        >
+                            <Bell className="w-4 h-4" />
+                            Alerts{activeAlertCount > 0 ? ` (${activeAlertCount})` : ''}
+                        </button>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    {/* Refresh all */}
-                    <button
-                        onClick={handleRefreshAll}
-                        disabled={userTier === 'FREE' || refreshing}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer disabled:opacity-40 hover:scale-105"
-                        style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', color: '#3B82F6' }}
-                        title={userTier === 'FREE' ? 'Unlock tier required' : ''}
-                    >
-                        <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                        Refresh All
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onOpenAlerts}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm cursor-pointer transition-all hover:scale-105"
-                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: ts }}>
-                        <Bell className="w-4 h-4" />
-                        Alerts
-                    </button>
+
+                {error && (
+                    <div className="mb-6 rounded-[20px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                        {error}
+                    </div>
+                )}
+
+                {/* Filter bar */}
+                <div className="mb-8 flex items-center gap-2 flex-wrap">
+                    <Filter className="w-4 h-4 text-gray-400" />
+                    {['ALL', 'EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'].map(f => (
+                        <button
+                            key={f}
+                            onClick={() => setFilter(f)}
+                            className={`tab-btn rounded-full border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${filter === f ? 'active' : ''}`}
+                        >
+                            {f}
+                        </button>
+                    ))}
                 </div>
-            </div>
 
-            {/* Filter bar */}
-            <div className="flex items-center gap-2 mb-6 flex-wrap">
-                <Filter className="w-4 h-4 text-gray-500" />
-                {['ALL', 'EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'].map(f => (
-                    <button
-                        key={f}
-                        onClick={() => setFilter(f)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer tab-btn ${filter === f ? 'active' : ''}`}
+                {/* Grid */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <AnimatePresence mode="popLayout">
+                        {refreshing || loading
+                            ? Array.from({ length: 5 }, (_, i) => <SkeletonCard key={i} />)
+                            : filtered.map((item, i) => (
+                                <motion.div
+                                    key={item.ticker}
+                                    initial={{ opacity: 0, y: 16 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ delay: i * 0.05 }}
+                                >
+                                    <WatchlistCard
+                                        item={item}
+                                        lightMode={lightMode}
+                                        onSelect={() => onSelectTicker?.(item.ticker)}
+                                    />
+                                </motion.div>
+                            ))
+                        }
+                    </AnimatePresence>
+                </div>
+
+                {!refreshing && !loading && filtered.length === 0 && (
+                    <div className="mt-6 rounded-[24px] border border-dashed border-gray-300 bg-white px-5 py-6 text-sm text-gray-600">
+                        {isAuthenticated
+                            ? 'No persisted watchlist assets yet. Save a ticker from the workspace or subscribe from a report to start building the list.'
+                            : 'No local watchlist assets yet. Save a ticker from search or sign in to persist your watchlist.'}
+                    </div>
+                )}
+
+                {/* FREE tier cap notice */}
+                {userTier === 'FREE' && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="mt-8 rounded-[24px] border border-gray-200 bg-white px-5 py-4 text-center"
                     >
-                        {f}
-                    </button>
-                ))}
-            </div>
-
-            {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <AnimatePresence mode="popLayout">
-                    {refreshing
-                        ? Array.from({ length: 5 }, (_, i) => <SkeletonCard key={i} />)
-                        : filtered.map((item, i) => (
-                            <motion.div
-                                key={item.ticker}
-                                initial={{ opacity: 0, y: 16 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ delay: i * 0.06 }}
-                            >
-                                <WatchlistCard
-                                    item={item}
-                                    lightMode={lightMode}
-                                    onSelect={() => onSelectTicker?.(item.ticker)}
-                                />
-                            </motion.div>
-                        ))
-                    }
-                </AnimatePresence>
-            </div>
-
-            {/* FREE tier cap notice */}
-            {userTier === 'FREE' && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center mt-8 p-4 rounded-xl"
-                    style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)' }}
-                >
-                    <p className="text-sm text-indigo-400">
-                        Watchlist limited to 5 tickers on Free tier. Upgrade to Unlocked for up to 25.
-                    </p>
-                </motion.div>
-            )}
+                        <p className="text-sm font-medium text-gray-600">
+                            Watchlist is limited to 5 tickers on Free tier. Upgrade to Unlocked for up to 25.
+                        </p>
+                    </motion.div>
+                )}
+            </section>
         </div>
     );
 }

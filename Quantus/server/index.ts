@@ -14,10 +14,12 @@ import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../sr
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
-// ─── AUTH PROXY TARGET ──────────────────────────────────────────────────────
+// ─── ROOT API TARGET ────────────────────────────────────────────────────────
 // Instead of opening the SQLite DB directly (dual-writer risk), proxy auth
-// requests to the root BI Solutions server which owns the database.
+// and Quantus persistence requests to the root BI Solutions server which owns
+// the database.
 const AUTH_API_TARGET = process.env.AUTH_API_TARGET || 'http://localhost:5001';
+const QUANTUS_INTERNAL_KEY = process.env.QUANTUS_INTERNAL_KEY || process.env.JWT_SECRET || 'quantus-dev-secret';
 
 const app = express();
 const API_PREFIX = '/quantus/api';
@@ -176,6 +178,347 @@ app.get(`${API_PREFIX}/auth/google/config`, (req, res) => {
 
 app.get(`${API_PREFIX}/auth/me`, (req, res) => {
     proxyAuthRequest('GET', '/api/auth/me', req, res);
+});
+
+async function fetchRootJson(
+    path: string,
+    init: RequestInit = {},
+    authHeader?: string,
+): Promise<{ ok: boolean; status: number; data: any; text: string }> {
+    const headers = new Headers(init.headers);
+    if (authHeader) {
+        headers.set('authorization', authHeader);
+    }
+    if (init.body && !headers.has('content-type')) {
+        headers.set('content-type', 'application/json');
+    }
+
+    const upstream = await fetch(`${AUTH_API_TARGET}${path}`, {
+        ...init,
+        headers,
+        signal: init.signal ?? AbortSignal.timeout(10_000),
+    });
+
+    const text = await upstream.text();
+    let data: any = {};
+
+    if (text) {
+        try {
+            data = JSON.parse(text);
+        } catch {
+            data = { message: text };
+        }
+    }
+
+    return {
+        ok: upstream.ok,
+        status: upstream.status,
+        data,
+        text,
+    };
+}
+
+async function proxyRootRequest(
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    path: string,
+    req: express.Request,
+    res: express.Response,
+) {
+    try {
+        const headers: Record<string, string> = {};
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            headers.authorization = authHeader;
+        }
+        if (method !== 'GET') {
+            headers['content-type'] = 'application/json';
+        }
+
+        const upstream = await fetch(`${AUTH_API_TARGET}${path}`, {
+            method,
+            headers,
+            body: method === 'GET' ? undefined : JSON.stringify(req.body),
+            signal: AbortSignal.timeout(10_000),
+        });
+
+        const text = await upstream.text();
+        res.status(upstream.status).setHeader('content-type', 'application/json').send(text);
+    } catch (error) {
+        console.error(`Root proxy error (${path}):`, error);
+        res.status(502).json({ error: 'Quantus persistence service temporarily unavailable.' });
+    }
+}
+
+function formatRelativeAge(iso: string | undefined) {
+    if (!iso) return 'Unknown';
+
+    const deltaMs = Date.now() - new Date(iso).getTime();
+    if (!Number.isFinite(deltaMs)) return 'Unknown';
+
+    const minutes = Math.max(1, Math.round(deltaMs / 60_000));
+    if (minutes < 60) return `${minutes}m ago`;
+
+    const hours = Math.round(minutes / 60);
+    if (hours < 48) return `${hours}h ago`;
+
+    const days = Math.round(hours / 24);
+    return `${days}d ago`;
+}
+
+function deriveSentiment(signal: string) {
+    switch (signal) {
+        case 'STRONG BUY':
+            return 0.8;
+        case 'BUY':
+            return 0.45;
+        case 'SELL':
+            return -0.45;
+        case 'STRONG SELL':
+            return -0.8;
+        case 'NEUTRAL':
+        default:
+            return 0;
+    }
+}
+
+function buildWatchlistBias(signal: string) {
+    switch (signal) {
+        case 'STRONG BUY':
+            return 'Upside bias';
+        case 'BUY':
+            return 'Positive bias';
+        case 'SELL':
+            return 'Downside bias';
+        case 'STRONG SELL':
+            return 'High-risk downside';
+        case 'NEUTRAL':
+        default:
+            return 'Balanced setup';
+    }
+}
+
+function buildWatchlistItem(entry: any) {
+    const latestSnapshot = entry?.latestSnapshot ?? null;
+    const ticker = sanitizeTicker(entry?.ticker) ?? 'UNKNOWN';
+    const assetClass = sanitizeAssetClass(entry?.assetClass) as AssetEntry['assetClass'];
+    const fallbackAsset: AssetEntry = {
+        ticker,
+        name: ticker,
+        exchange: 'Manual input',
+        assetClass,
+        sector: 'Unclassified',
+        hasCachedReport: false,
+        researcherCount: 0,
+        currentPrice: 0,
+        dayChange: 0,
+        dayChangePct: 0,
+        cachedReportAge: 'Starter shell',
+    };
+    const asset: AssetEntry = getAssetByTicker(ticker) ?? fallbackAsset;
+
+    const currentPrice = typeof asset.currentPrice === 'number'
+        ? asset.currentPrice
+        : typeof latestSnapshot?.priceAtGen === 'number'
+            ? latestSnapshot.priceAtGen
+            : 0;
+    const dayChangePct = typeof asset.dayChangePct === 'number' ? asset.dayChangePct : 0;
+    const snapshotSignal = typeof latestSnapshot?.signal === 'string' ? latestSnapshot.signal : 'NEUTRAL';
+    const snapshotConfidence = typeof latestSnapshot?.confidence === 'number' ? latestSnapshot.confidence : (asset.hasCachedReport ? 60 : 20);
+    const snapshotRegime = typeof latestSnapshot?.regime === 'string' ? latestSnapshot.regime : (asset.hasCachedReport ? 'Uptrend' : 'Transitional');
+    const lastUpdated = typeof latestSnapshot?.generatedAt === 'string' ? latestSnapshot.generatedAt : entry?.updatedAt ?? new Date().toISOString();
+
+    return {
+        ticker,
+        name: asset.name,
+        exchange: asset.exchange,
+        assetClass,
+        sector: asset.sector,
+        hasCachedReport: Boolean(latestSnapshot || asset.hasCachedReport),
+        cachedReportAge: latestSnapshot ? formatRelativeAge(latestSnapshot.generatedAt) : asset.cachedReportAge,
+        currentPrice,
+        dayChange: typeof asset.dayChange === 'number' ? asset.dayChange : 0,
+        dayChangePct,
+        signal: snapshotSignal,
+        confidence: snapshotConfidence,
+        regime: snapshotRegime,
+        momentum: Math.max(-1, Math.min(1, dayChangePct / 5)),
+        sentiment: deriveSentiment(snapshotSignal),
+        forecast30d: buildWatchlistBias(snapshotSignal),
+        lastUpdated,
+        nextRefresh: latestSnapshot ? 'On demand' : 'Starter shell',
+        researcherCount: asset.researcherCount ?? 0,
+        knowledgeGraphAlert: asset.sector ? `${asset.sector} coverage persisted in Quantus.` : 'Persisted Quantus watchlist item',
+    };
+}
+
+function getBenchmarkTicker(assetClass: ReportData['asset_class']) {
+    switch (assetClass) {
+        case 'CRYPTO':
+            return 'BTC-USD';
+        case 'COMMODITY':
+            return 'GC=F';
+        case 'ETF':
+        case 'EQUITY':
+        default:
+            return 'SPY';
+    }
+}
+
+function getMarketCapBucket(report: ReportData) {
+    const marketCapRaw = typeof report.market_cap_raw === 'number' ? report.market_cap_raw : null;
+    if (!marketCapRaw || !Number.isFinite(marketCapRaw)) {
+        return null;
+    }
+    if (marketCapRaw >= 10_000_000_000) return 'LARGE';
+    if (marketCapRaw >= 2_000_000_000) return 'MID';
+    return 'SMALL';
+}
+
+async function persistReportSnapshot(response: ReportResponse) {
+    if (response.source === 'starter') {
+        return;
+    }
+
+    const benchmarkTicker = getBenchmarkTicker(response.report.asset_class);
+    const benchmarkAsset = getAssetByTicker(benchmarkTicker);
+
+    try {
+        await fetch(`${AUTH_API_TARGET}/api/quantus/internal/snapshots`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'x-quantus-internal-key': QUANTUS_INTERNAL_KEY,
+            },
+            body: JSON.stringify({
+                snapshot: {
+                    reportId: response.report.report_id,
+                    ticker: response.report.ticker,
+                    assetClass: response.report.asset_class,
+                    companyName: response.report.company_name,
+                    sector: response.report.sector,
+                    engineVersion: response.report.engine,
+                    signal: response.report.overall_signal,
+                    confidenceScore: response.report.confidence_score,
+                    regimeLabel: response.report.regime.label,
+                    marketCapBucket: getMarketCapBucket(response.report),
+                    benchmarkSymbol: benchmarkTicker,
+                    benchmarkPriceAtGen: benchmarkAsset?.currentPrice ?? null,
+                    generatedAt: response.report.generated_at,
+                    priceAtGen: response.report.current_price,
+                    source: response.source,
+                    reportJson: response.report,
+                },
+            }),
+            signal: AbortSignal.timeout(5_000),
+        });
+    } catch (error) {
+        console.error(`Snapshot persistence failed for ${response.report.report_id}:`, error);
+    }
+}
+
+app.get(`${API_PREFIX}/watchlist`, async (req, res) => {
+    try {
+        const upstream = await fetchRootJson('/api/quantus/watchlist', { method: 'GET' }, req.headers.authorization);
+        if (!upstream.ok) {
+            res.status(upstream.status).json(upstream.data);
+            return;
+        }
+
+        const items = Array.isArray(upstream.data?.items)
+            ? upstream.data.items.map((entry: any) => buildWatchlistItem(entry))
+            : [];
+
+        res.json({
+            items,
+            activeAlertCount: Number(upstream.data?.activeAlertCount ?? 0),
+            status: getWorkspaceStatus(),
+        });
+    } catch (error) {
+        console.error('Quantus watchlist proxy error:', error);
+        res.status(502).json({ error: 'Unable to load the persisted Quantus watchlist.' });
+    }
+});
+
+app.post(`${API_PREFIX}/watchlist`, (req, res) => {
+    proxyRootRequest('POST', '/api/quantus/watchlist', req, res);
+});
+
+app.delete(`${API_PREFIX}/watchlist/:ticker`, (req, res) => {
+    proxyRootRequest('DELETE', `/api/quantus/watchlist/${encodeURIComponent(req.params.ticker)}`, req, res);
+});
+
+app.get(`${API_PREFIX}/alerts`, (req, res) => {
+    proxyRootRequest('GET', '/api/quantus/alerts', req, res);
+});
+
+app.put(`${API_PREFIX}/alerts/:ticker`, (req, res) => {
+    proxyRootRequest('PUT', `/api/quantus/alerts/${encodeURIComponent(req.params.ticker)}`, req, res);
+});
+
+app.delete(`${API_PREFIX}/alerts/:ticker`, (req, res) => {
+    proxyRootRequest('DELETE', `/api/quantus/alerts/${encodeURIComponent(req.params.ticker)}`, req, res);
+});
+
+app.get(`${API_PREFIX}/archive`, async (req, res) => {
+    const ticker = sanitizeTicker(req.query.ticker);
+    if (!ticker) {
+        res.status(400).json({ error: 'Ticker query param is required.' });
+        return;
+    }
+
+    const params = new URLSearchParams({
+        ticker,
+        limit: String(req.query.limit ?? '20'),
+    });
+
+    try {
+        const upstream = await fetchRootJson(`/api/quantus/archive?${params.toString()}`, { method: 'GET' });
+        res.status(upstream.status).json(upstream.data);
+    } catch (error) {
+        console.error('Quantus archive proxy error:', error);
+        res.status(502).json({ error: 'Unable to load the Quantus archive.' });
+    }
+});
+
+app.get(`${API_PREFIX}/archive/:reportId`, async (req, res) => {
+    try {
+        const upstream = await fetchRootJson(`/api/quantus/archive/${encodeURIComponent(req.params.reportId)}`, { method: 'GET' });
+        if (!upstream.ok) {
+            res.status(upstream.status).json(upstream.data);
+            return;
+        }
+
+        const report = upstream.data?.report as ReportData | undefined;
+        if (!report) {
+            res.status(502).json({ error: 'Quantus archive returned an invalid report payload.' });
+            return;
+        }
+
+        const response: ReportResponse = {
+            report,
+            source: 'cached',
+            ticker: report.ticker,
+            message: 'Historical Quantus snapshot loaded.',
+            detail: `Snapshot ${report.report_id} captured ${report.generated_at}.`,
+            freshness: 'Archived snapshot',
+            status: getWorkspaceStatus(),
+        };
+
+        res.json(response);
+    } catch (error) {
+        console.error('Quantus archived report proxy error:', error);
+        res.status(502).json({ error: 'Unable to load the Quantus archive snapshot.' });
+    }
+});
+
+app.get(`${API_PREFIX}/accuracy`, async (_req, res) => {
+    try {
+        const upstream = await fetchRootJson('/api/quantus/accuracy', { method: 'GET' });
+        res.status(upstream.status).json(upstream.data);
+    } catch (error) {
+        console.error('Quantus accuracy proxy error:', error);
+        res.status(502).json({ error: 'Unable to load Quantus accuracy metrics.' });
+    }
 });
 
 // Lazy AI client — don't throw at startup if key not set yet
@@ -385,6 +728,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
                     : 'Live',
             status: getWorkspaceStatus(),
         };
+        void persistReportSnapshot(response);
         res.json(response);
         return;
     }
@@ -421,6 +765,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
             freshness: report.cache_age,
             status: getWorkspaceStatus(),
         };
+        void persistReportSnapshot(response);
         res.json(response);
         return;
     }

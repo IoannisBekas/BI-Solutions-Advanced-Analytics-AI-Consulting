@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import type { Server } from "http";
 import { Readable } from "stream";
 import { authRouter, checkMonthlyReset } from "./auth";
+import { registerQuantusPersistenceRoutes } from "./quantusRoutes";
 
 const QUANTUS_API_PREFIX = "/quantus/api";
 const POWERBI_SOLUTIONS_API_PREFIX = "/power-bi-solutions/api";
@@ -598,6 +599,7 @@ export async function registerRoutes(
 
   // ─── Auth routes (/api/auth/*) ─────────────────────────────────────────────
   app.use("/api/auth", authRouter);
+  registerQuantusPersistenceRoutes(app);
 
   // ─── Contact form proxy ──────────────────────────────────────────────────
   app.post("/api/contact", async (req, res) => {

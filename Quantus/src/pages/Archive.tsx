@@ -1,54 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     Search, Clock, ChevronRight, ExternalLink, GitCompare,
     Flag, SlidersHorizontal,
 } from 'lucide-react';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-type SignalType = 'STRONG BUY' | 'BUY' | 'NEUTRAL' | 'SELL' | 'STRONG SELL';
-type AssetClass = 'EQUITY' | 'CRYPTO' | 'COMMODITY' | 'ETF';
-
-interface Snapshot {
-    reportId: string;
-    ticker: string;
-    company: string;
-    assetClass: AssetClass;
-    signal: SignalType;
-    confidence: number;
-    regime: string;
-    sector: string;
-    engineVersion: string;
-    generatedAt: string;
-    priceAtGen: number;
-    url: string;
-    hasRestatement?: boolean;
-    restatementNote?: string;
-}
+import { fetchArchiveSnapshots } from '../services/product';
+import type { ArchiveSnapshot as Snapshot, SignalType } from '../types';
 
 interface ArchiveProps { userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL'; lightMode?: boolean; onViewReport?(s: Snapshot): void; }
-
-// ─── Mock data ────────────────────────────────────────────────────────────────
-function mockSnapshots(ticker: string): Snapshot[] {
-    const sigs: SignalType[] = ['STRONG BUY', 'BUY', 'NEUTRAL', 'BUY', 'STRONG BUY', 'SELL', 'BUY', 'NEUTRAL'];
-    const regimes = ['Strong Uptrend', 'Uptrend', 'Mean-Reverting', 'Uptrend', 'Strong Uptrend', 'Downtrend', 'Uptrend', 'Sideways'];
-    return Array.from({ length: 8 }, (_, i) => ({
-        reportId: `QRS-2026-${10000 + i * 112}`,
-        ticker,
-        company: ticker === 'NVDA' ? 'NVIDIA Corp' : ticker,
-        assetClass: 'EQUITY' as AssetClass,
-        signal: sigs[i % sigs.length],
-        confidence: 60 + (i * 7) % 30,
-        regime: regimes[i % regimes.length],
-        sector: 'Technology',
-        engineVersion: i < 2 ? 'Meridian v2.4' : i < 5 ? 'Meridian v2.3' : 'Atlas',
-        generatedAt: new Date(Date.now() - i * 4 * 86_400_000).toISOString(),
-        priceAtGen: 948.70 - i * 12.4,
-        url: `https://bisolutions.group/report/QRS-2026-${10000 + i * 112}`,
-        hasRestatement: i === 4,
-        restatementNote: i === 4 ? 'EDGAR 10-K restated — historical comparables adjusted' : undefined,
-    }));
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const sigColor: Record<SignalType, string> = {
@@ -103,21 +62,21 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
     onView(): void; onCompare(): void; lightMode?: boolean;
 }) {
     const cFill = sigColor[snap.signal];
-    const cardBg = lightMode ? 'rgba(255,255,255,0.92)' : '#111827';
-    const border = isSelected ? `${cFill}50` : lightMode ? '#E2E8F0' : '#1F2937';
-    const ts = lightMode ? '#64748B' : '#9CA3AF';
+    const border = isSelected ? `${cFill}50` : lightMode ? '#E5E7EB' : '#1F2937';
+    const ts = lightMode ? '#6B7280' : '#9CA3AF';
 
     return (
         <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} className="flex gap-4">
             {/* Spine */}
             <div className="flex flex-col items-center flex-shrink-0 w-6">
-                <div className="w-3 h-3 rounded-full flex-shrink-0 mt-3 ring-2 ring-[#0A0D14]"
-                    style={{ background: cFill }} />
-                <div className="flex-1 w-px mt-1" style={{ background: isLast ? 'transparent' : '#1F2937' }} />
+                <div className="w-3 h-3 rounded-full flex-shrink-0 mt-3 ring-2"
+                    style={{ boxShadow: `0 0 0 2px ${lightMode ? '#FFFFFF' : '#0A0D14'}`, background: cFill }}
+                />
+                <div className="flex-1 w-px mt-1" style={{ background: isLast ? 'transparent' : lightMode ? '#D1D5DB' : '#1F2937' }} />
             </div>
             {/* Card */}
-            <div className="flex-1 rounded-xl p-4 mb-3 cursor-pointer hover:border-blue-500/30 transition-colors"
-                style={{ background: cardBg, border: `1px solid ${border}` }}
+            <div className="bis-section-card flex-1 mb-3 cursor-pointer rounded-[24px] p-4 transition-colors"
+                style={{ borderColor: border }}
                 onClick={onView}>
                 {snap.hasRestatement && (
                     <div className="flex items-center gap-1.5 text-xs p-2 rounded-lg mb-3"
@@ -144,14 +103,14 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <button onClick={e => { e.stopPropagation(); onCompare(); }}
-                            className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:scale-105"
-                            style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8' }}>
+                            className="flex items-center gap-1 rounded-full border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                            style={lightMode ? undefined : { background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937', color: '#D1D5DB' }}>
                             <GitCompare className="w-3 h-3" />vs Current
                         </button>
                         <a href={snap.url} target="_blank" rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:scale-105"
-                            style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)', color: '#3B82F6' }}>
+                            className="flex items-center gap-1 rounded-full border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                            style={lightMode ? undefined : { background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937', color: '#D1D5DB' }}>
                             <ExternalLink className="w-3 h-3" />Share
                         </a>
                         <ChevronRight className="w-4 h-4 text-gray-500" />
@@ -164,6 +123,15 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
 
 // ─── Slider ───────────────────────────────────────────────────────────────────
 function TimelineSlider({ total, value, onChange }: { total: number; value: number; onChange(v: number): void }) {
+    if (total <= 0) {
+        return (
+            <div className="flex items-center gap-3 text-xs text-gray-500">
+                <SlidersHorizontal className="w-4 h-4 flex-shrink-0 text-gray-500" />
+                No snapshots available yet
+            </div>
+        );
+    }
+
     return (
         <div className="flex items-center gap-3">
             <SlidersHorizontal className="w-4 h-4 flex-shrink-0 text-gray-500" />
@@ -184,8 +152,37 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
     const [compare, setCompare] = useState<Snapshot | null>(null);
     const [selectedId, setSelected] = useState<string | null>(null);
     const [sliderVal, setSlider] = useState(0);
+    const [all, setAll] = useState<Snapshot[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const all = useMemo(() => mockSnapshots(ticker), [ticker]);
+    useEffect(() => {
+        const controller = new AbortController();
+        setLoading(true);
+        setError(null);
+
+        void fetchArchiveSnapshots(ticker, 20, controller.signal)
+            .then((snapshots) => {
+                if (controller.signal.aborted) return;
+                setAll(snapshots);
+                setSlider(0);
+                setCompare(null);
+                setSelected(null);
+            })
+            .catch((loadError) => {
+                if (controller.signal.aborted) return;
+                setAll([]);
+                setError(loadError instanceof Error ? loadError.message : 'Unable to load Quantus archive');
+            })
+            .finally(() => {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
+            });
+
+        return () => controller.abort();
+    }, [ticker]);
+
     const current = all[0];
 
     const filtered = useMemo(() => {
@@ -200,18 +197,21 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
         );
     }, [all, sliderVal, query]);
 
-    const bg = lightMode ? '#F0F4FF' : '#0A0D14';
-    const tp = lightMode ? '#0F172A' : '#F9FAFB';
-    const ts = lightMode ? '#475569' : '#9CA3AF';
+    const tp = lightMode ? '#111827' : '#F9FAFB';
+    const ts = lightMode ? '#6B7280' : '#9CA3AF';
 
     return (
-        <div style={{ background: bg, minHeight: '100vh', padding: '48px 24px' }}>
-            <div className="max-w-3xl mx-auto">
+        <div className="mx-auto max-w-5xl">
+            <section className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold mb-1" style={{ color: tp }}>Historical Archive</h1>
-                    <p className="text-sm" style={{ color: ts }}>
-                        Read-only report snapshots · bisolutions.group/report/{'{report_id}'}
+                    <div className="bis-eyebrow mb-4">
+                        <Clock className="w-3.5 h-3.5" />
+                        Historical Snapshots
+                    </div>
+                    <h1 className="text-3xl font-bold tracking-tight mb-1 md:text-4xl" style={{ color: tp }}>Historical Archive</h1>
+                    <p className="mt-2 text-sm md:text-base" style={{ color: ts }}>
+                        Read-only Quantus snapshots with real report IDs and replayable archive routes
                     </p>
                 </div>
 
@@ -219,16 +219,14 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
                 <div className="space-y-4 mb-6">
                     <div className="flex items-center gap-3 flex-wrap">
                         {/* Ticker */}
-                        <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
-                            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937' }}>
+                        <div className="bis-input flex items-center gap-2 px-4 py-3">
                             <span className="text-xs font-bold text-blue-500">TICKER</span>
                             <input value={ticker} onChange={e => setTicker(e.target.value.toUpperCase())}
                                 className="bg-transparent text-sm font-mono w-20 focus:outline-none"
                                 style={{ color: tp }} placeholder="NVDA" />
                         </div>
                         {/* Semantic search */}
-                        <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl flex-1 min-w-56"
-                            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937' }}>
+                        <div className="bis-input flex items-center gap-2 px-4 py-3 flex-1 min-w-56">
                             <Search className="w-4 h-4 flex-shrink-0 text-gray-400" />
                             <input value={query} onChange={e => setQuery(e.target.value)}
                                 placeholder='"regime change from uptrend…" or "Meridian v2.4"'
@@ -240,13 +238,21 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
                     <TimelineSlider total={all.length} value={sliderVal} onChange={setSlider} />
                 </div>
 
+                {error && (
+                    <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                        {error}
+                    </div>
+                )}
+
                 {/* Compare panel */}
                 <AnimatePresence>
-                    {compare && <ComparePanel old={compare} cur={current} onClose={() => setCompare(null)} />}
+                    {compare && current && <ComparePanel old={compare} cur={current} onClose={() => setCompare(null)} />}
                 </AnimatePresence>
 
                 {/* Timeline */}
-                {filtered.map((snap, i) => (
+                {loading ? Array.from({ length: 4 }, (_, i) => (
+                    <div key={i} className="mb-3 h-28 rounded-[24px] border border-gray-200 bg-white/70 animate-pulse" />
+                )) : filtered.map((snap, i) => (
                     <TimelineRow key={snap.reportId} snap={snap}
                         isLast={i === filtered.length - 1}
                         isSelected={snap.reportId === selectedId}
@@ -255,23 +261,21 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
                         lightMode={lightMode} />
                 ))}
 
-                {filtered.length === 0 && (
+                {!loading && filtered.length === 0 && (
                     <div className="text-center py-12" style={{ color: ts }}>No snapshots match.</div>
                 )}
 
                 {/* FREE tier CTA */}
                 {userTier === 'FREE' && (
-                    <div className="mt-8 p-5 rounded-xl text-center"
-                        style={{ background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.2)' }}>
-                        <p className="text-sm font-semibold mb-1" style={{ color: '#F9FAFB' }}>Full archive with Unlocked tier</p>
+                    <div className="bis-section-card mt-8 p-5 text-center">
+                        <p className="text-sm font-semibold mb-1" style={{ color: tp }}>Full archive with Unlocked tier</p>
                         <p className="text-xs mb-3" style={{ color: ts }}>PDF export, unlimited history, compare any two snapshots.</p>
-                        <button className="px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer hover:scale-105 transition-all"
-                            style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', color: '#3B82F6' }}>
+                        <button className="rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800">
                             Create Free Account →
                         </button>
                     </div>
                 )}
-            </div>
+            </section>
         </div>
     );
 }

@@ -34,7 +34,7 @@ const USER_STORAGE_KEY = 'quantus-user';
 // ─── Monthly report limits per tier ──────────────────────────────────────────
 
 export const TIER_LIMITS: Record<Tier, { reports: number; credits: number; watchlist: number; holdings: number; screenerQueries: number }> = {
-    FREE: { reports: 3, credits: 0, watchlist: 0, holdings: 0, screenerQueries: 0 },
+    FREE: { reports: 3, credits: 0, watchlist: 5, holdings: 0, screenerQueries: 0 },
     UNLOCKED: { reports: 10, credits: 15, watchlist: 5, holdings: 10, screenerQueries: 3 },
     INSTITUTIONAL: { reports: -1, credits: -1, watchlist: -1, holdings: -1, screenerQueries: -1 }, // unlimited
 };
@@ -83,6 +83,7 @@ function isValidStoredUser(value: unknown): value is User {
 }
 
 function buildUserFromPayload(data: {
+    id?: string;
     userId?: string;
     email?: string;
     name?: string;
@@ -93,7 +94,7 @@ function buildUserFromPayload(data: {
 }, fallback?: User | null): User {
     const email = data.email ?? fallback?.email ?? 'researcher@quantus.local';
     return {
-        id: data.userId ?? fallback?.id ?? `usr_${Math.random().toString(36).slice(2, 10)}`,
+        id: data.id ?? data.userId ?? fallback?.id ?? `usr_${Math.random().toString(36).slice(2, 10)}`,
         email,
         name: data.name ?? fallback?.name ?? email.split('@')[0],
         tier: (data.tier as Tier | undefined) ?? fallback?.tier ?? 'FREE',

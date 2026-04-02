@@ -338,6 +338,78 @@ export interface WatchlistItem {
     researcherCount: number;
 }
 
+export interface QuantusWatchlistItem extends AssetEntry {
+    signal: SignalType;
+    confidence: number;
+    regime: string;
+    momentum: number;
+    sentiment: number;
+    forecast30d: string;
+    daysToEarnings?: number;
+    lastUpdated: string;
+    nextRefresh: string;
+    researcherCount: number;
+    fearAndGreed?: number;
+    cotSignal?: string;
+    fundFlows?: string;
+    knowledgeGraphAlert?: string;
+}
+
+export interface AlertSubscription {
+    ticker: string;
+    assetClass: AssetClass;
+    emailEnabled: boolean;
+    pushEnabled: boolean;
+    signalChange: boolean;
+    priceBreakout: boolean;
+    regimeShift: boolean;
+    dailyDigest: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ArchiveSnapshot {
+    reportId: string;
+    ticker: string;
+    company: string;
+    assetClass: AssetClass;
+    signal: SignalType;
+    confidence: number;
+    regime: string;
+    sector: string;
+    engineVersion: string;
+    generatedAt: string;
+    priceAtGen: number;
+    url: string;
+    hasRestatement?: boolean;
+    restatementNote?: string;
+}
+
+export interface AccuracyRow {
+    label: string;
+    count: number;
+    avgReturnPct: number;
+    avgExcessPct: number | null;
+    winRate: number | null;
+}
+
+export interface AccuracySummary {
+    resolvedCount: number;
+    pendingCount: number;
+    unlockThreshold: number;
+    engineInception: string | null;
+    lastUpdated: string | null;
+    methodologyNote: string;
+    overallAvgReturnPct: number | null;
+    overallWinRate: number | null;
+    bestEngine: string | null;
+    bySignal: AccuracyRow[];
+    byEngine: AccuracyRow[];
+    byRegime: AccuracyRow[];
+    bySector: AccuracyRow[];
+    byMarketCap: AccuracyRow[];
+}
+
 // ─── Screener ────────────────────────────────────────────────────────────────
 
 export interface ScreenerFilters {
