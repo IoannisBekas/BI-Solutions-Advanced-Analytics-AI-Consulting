@@ -1,0 +1,12 @@
+{
+  "name": "bi-solutions-marketing-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static marketing site preview for BI Solutions.",
+  "scripts": {
+    "start": "serve . -l $PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
