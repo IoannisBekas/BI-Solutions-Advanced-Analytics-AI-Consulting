@@ -24,15 +24,15 @@ import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 const QUANTUS_APP_URL = import.meta.env.VITE_QUANTUS_URL || "/quantus/workspace/";
 
 const heroMetrics = [
-  { label: "Tracked signals", value: "847", icon: BarChart3 },
-  { label: "Asset classes", value: "4", icon: Layers3 },
-  { label: "Core model", value: "Meridian v2.4", icon: Brain },
+  { label: "ML/Statistical models", value: "12", icon: Brain },
+  { label: "Report sections", value: "7", icon: Layers3 },
+  { label: "Backtested equities", value: "400+", icon: BarChart3 },
 ];
 
 const marketCoverage = [
-  { label: "Coverage", value: "Equities, ETFs, crypto, and commodities", icon: TrendingUp },
-  { label: "Flow", value: "Search, cached reports, deep dives, and sector packs", icon: Zap },
-  { label: "Positioning", value: "Native BI Solutions product with a dedicated research workspace", icon: Shield },
+  { label: "Coverage", value: "Equities, ETFs, crypto, and commodities across 10 sector groupings", icon: TrendingUp },
+  { label: "Data sources", value: "SEC EDGAR, FRED, and CBOE as primary sources, plus real-time sentiment from Grok/X, Reddit, and NewsAPI", icon: Shield },
+  { label: "Validation", value: "Walk-forward backtesting since 2018 with public accuracy dashboard segmented by signal, regime, sector, and market cap", icon: Zap },
 ];
 
 const previewSignals = [
@@ -44,75 +44,95 @@ const previewSignals = [
 const capabilities = [
   {
     icon: Brain,
-    title: "Signal Engine",
+    title: "12-Model Ensemble",
     description:
-      "Combine regime detection, narrative synthesis, and model reasoning inside a single research motion.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Cross-Asset Coverage",
-    description:
-      "Move across equities, ETFs, crypto, and commodities without switching tools or losing context.",
-  },
-  {
-    icon: Shield,
-    title: "Risk Framing",
-    description:
-      "See direction, downside, and volatility framing early so reports feel decision-oriented, not generic.",
+      "LSTM (45%), Prophet (35%), and ARIMA (20%) as core forecasting models, plus 9 specialized models covering sentiment, risk, options, factor analysis, and reinforcement learning. Regime context modulates weights in real time.",
   },
   {
     icon: Layers3,
-    title: "Sector Packs",
+    title: "7-Section Research Reports",
     description:
-      "Go beyond a single ticker and step into grouped market views when you need broader thematic context.",
+      "Each report covers an executive summary with ensemble forecasts, regime detection, risk metrics with VaR and stress tests, strategy recommendations with entry zones and position sizing, and on-demand deep dives.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Regime-Aware Signals",
+    description:
+      "Every signal is generated after classifying the market into one of five regimes: Strong Uptrend, Uptrend, Sideways, Downtrend, or High Volatility. Regime determines active models, strategy type, and position sizing.",
   },
   {
     icon: LineChart,
-    title: "Research Continuity",
+    title: "Sector Packs",
     description:
-      "Start with a cached report, then move deeper into product workflows instead of restarting the analysis elsewhere.",
+      "Pre-generated teardowns for the top 20 tickers across 10 sectors, refreshed every 96 hours via the Meridian batch engine. Move beyond single-ticker analysis into grouped thematic context.",
+  },
+  {
+    icon: Shield,
+    title: "Accuracy Dashboard",
+    description:
+      "Backtested track record segmented by signal type, engine version, regime, sector, and market cap. See win rates and excess returns for every signal category Quantus has issued.",
   },
   {
     icon: Sparkles,
-    title: "Premium Surface",
+    title: "Confidence Scoring",
     description:
-      "Quantus Investing now lives inside the BI Solutions ecosystem with a cleaner entry point and stronger product identity.",
+      "A 0–100 composite score built from 7 sub-signals: Momentum, Sentiment, Regime Alignment, Model Ensemble Agreement, Alternative Data, Macro Context, and Data Quality.",
   },
 ];
 
 const workflowStages = [
   {
-    title: "Start from a market idea",
+    title: "Search any asset",
     description:
-      "Search a ticker, company, crypto pair, or commodity and open the workspace from a single entry point.",
+      "Enter a ticker, company, crypto pair, or commodity. Cached reports load instantly when coverage exists, or generate a fresh report in seconds.",
   },
   {
-    title: "Open a report fast",
+    title: "Read the full research report",
     description:
-      "Use cached coverage where available or generate a fresh report with signal, regime, and narrative context.",
+      "Get a 7-section report with executive summary, ensemble forecasts, regime classification, risk framing, strategy recommendations, and on-demand deep dives.",
   },
   {
-    title: "Continue deeper",
+    title: "Track, compare, and act",
     description:
-      "Move into deep dives, sector packs, and more advanced Quantus Investing workflows without leaving the product shell.",
+      "Add tickers to your watchlist with signal-change and regime-shift alerts. Use the archive to compare any two report snapshots over time.",
   },
 ];
 
 const quantusFaqs = [
   {
-    question: "What does Quantus Investing optimize first?",
+    question: "What data sources does Quantus use?",
     answer:
-      "It prioritizes research workflow speed and continuity: search, cached report access, deep dives, and sector context in one product shell.",
+      "Quantus uses a tiered data source system. Tier A (highest credibility) includes SEC EDGAR filings, FRED economic data, and CBOE volatility indices. Tier B includes Yahoo Finance and Financial Modeling Prep for price data. Tier C includes Grok/X, Reddit, and NewsAPI for sentiment — these are advisory inputs and never override Tier A sources.",
   },
   {
-    question: "Who should use Quantus Investing?",
+    question: "How many models are in the ensemble?",
     answer:
-      "It is designed for analysts and investment research teams that need structured, repeatable research support instead of one-off generic AI output.",
+      "Meridian v2.4 runs 12 ML and statistical models. The three core forecasting models are LSTM (45% weight), Prophet (35%), and ARIMA (20%). The remaining nine cover sentiment analysis, mean reversion, portfolio optimization, SHAP explainability, high-frequency signals, VaR risk, options pricing, reinforcement learning, and factor analysis.",
   },
   {
-    question: "Does Quantus replace analyst judgment?",
+    question: "How is accuracy measured?",
     answer:
-      "No. The platform supports analysis and reporting workflows, while final interpretation and decisions stay with the research team.",
+      "The Accuracy Dashboard tracks resolved outcomes from persisted report snapshots. Results are segmented by signal type, engine version, market regime, sector, and market cap. It shows win rates and excess returns for each category so users can evaluate Quantus performance in conditions relevant to their strategy.",
+  },
+  {
+    question: "What does the confidence score mean?",
+    answer:
+      "The confidence score (0–100) is a weighted composite of seven sub-signals: Momentum, Sentiment, Regime Alignment, Model Ensemble Agreement, Alternative Data, Macro Context, and Data Quality. A score with low data quality should be interpreted differently than the same score with high data quality.",
+  },
+  {
+    question: "What asset classes are covered?",
+    answer:
+      "Equities, ETFs, cryptocurrencies, and commodities. Sector Packs provide pre-generated coverage for the top 20 tickers across 10 sectors, refreshed every 96 hours. Individual reports can be generated for any supported ticker on demand.",
+  },
+  {
+    question: "Is this financial advice?",
+    answer:
+      "No. Quantus Investing is a research and analysis tool. It supports investment research workflows but does not provide financial advice, manage portfolios, or execute trades. All signals, scores, and recommendations are informational. Final interpretation and investment decisions remain with the user.",
+  },
+  {
+    question: "Can I compare old reports to current ones?",
+    answer:
+      "Yes. The Archive stores every report snapshot with a unique report ID. You can load any historical snapshot and run a side-by-side diff against the current report to see how signals, regime classification, and confidence scores have changed over time.",
   },
 ];
 
@@ -158,15 +178,16 @@ export default function QuantusPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 font-sans text-foreground">
       <Seo
         title="Quantus Investing | AI-Native Quantitative Research Platform"
-        description="Quantus Investing delivers AI-native quantitative research, sector packs, and institutional reporting workflows for analysts and research teams."
+        description="Quantus Investing delivers 7-section research reports powered by a 12-model ML ensemble, 5-regime market classification, and a public accuracy dashboard with backtested track records."
         path={PRODUCT_ROUTE_ALIASES.quantus}
         type="website"
         keywords={[
           "Quantus Investing",
-          "AI quantitative research platform",
-          "institutional reporting workflow",
-          "factor analysis research",
-          "investment research AI",
+          "ML ensemble forecasting",
+          "backtested accuracy dashboard",
+          "regime detection",
+          "confidence scoring",
+          "quantitative research platform",
         ]}
         structuredData={{
           "@context": "https://schema.org",
@@ -176,7 +197,7 @@ export default function QuantusPage() {
               name: "Quantus Investing",
               url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
               description:
-                "AI-native quantitative research and institutional reporting workflows.",
+                "7-section research reports powered by a 12-model ML ensemble with public backtested accuracy.",
             },
             {
               "@type": "SoftwareApplication",
@@ -264,7 +285,7 @@ export default function QuantusPage() {
                 <span className="relative flex h-2 w-2">
                   <span className="inline-flex h-2 w-2 rounded-full bg-black" />
                 </span>
-                Quantus Investing · Native product on bisolutions.group
+                Quantus Investing · Meridian v2.4 engine
               </div>
 
               <h1 className="mt-7 max-w-4xl text-4xl font-bold font-heading tracking-tight leading-[1.02] md:text-6xl xl:text-[4.7rem]">
@@ -276,24 +297,24 @@ export default function QuantusPage() {
                     animation: "gradient-shift 6s ease infinite",
                   }}
                 >
-                  Institutional-grade
+                  12-model ensemble
                 </span>
                 <span className="block bg-gradient-to-r from-gray-400 via-gray-350 to-gray-300 bg-clip-text text-transparent">
-                  quantitative research, built for execution.
+                  quantitative research with public accuracy proof.
                 </span>
               </h1>
 
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-600 md:text-xl">
-                Quantus Investing helps teams search markets quickly, load research faster,
-                and move into deeper signal workflows without the usual sprawl of
-                disconnected tools and scattered analysis.
+                Quantus Investing runs every ticker through regime detection, 12 ML and
+                statistical models, tiered data validation, and a 7-component confidence
+                score. Then it shows you the backtested track record so you can verify.
               </p>
 
               <div className="mt-8 space-y-3.5">
                 {[
                   "Open cached reports instantly when coverage already exists.",
-                  "Move from signal to narrative and sector context in one workspace.",
-                  "Stay inside the BI Solutions ecosystem while using a dedicated product runtime.",
+                  "See a 7-component confidence breakdown behind every signal, not just a number.",
+                  "Verify accuracy with a public backtested track record segmented by regime and sector.",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3 text-sm text-gray-700 md:text-base">
                     <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-white shadow-sm">
@@ -370,7 +391,7 @@ export default function QuantusPage() {
                         <span className="relative flex h-2 w-2">
                           <span className="inline-flex h-2 w-2 rounded-full bg-black" />
                         </span>
-                        Live on the BI Solutions domain
+                        Meridian v2.4 engine
                       </div>
                     </div>
 
@@ -524,14 +545,14 @@ export default function QuantusPage() {
                 Quantus Investing capabilities
               </div>
               <h2 className="mt-1 text-4xl font-bold font-heading tracking-tight md:text-5xl">
-                A research product, not just a{" "}
+                Built on 12 models,{" "}
                 <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 bg-clip-text text-transparent">
-                  report generator.
+                  verified by backtesting.
                 </span>
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                Quantus Investing is designed to help users move faster from idea to context,
-                then from context into a deeper market workflow.
+                Every capability below is backed by documented methodology, tiered data
+                sources, and walk-forward validation across 400+ equities since 2018.
               </p>
             </div>
           </ScrollReveal>
@@ -580,14 +601,14 @@ export default function QuantusPage() {
                     Research workflow
                   </div>
                   <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
-                    Quantus Investing should feel native to BI Solutions and still behave like a{" "}
+                    How Quantus builds and validates{" "}
                     <span className="bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 bg-clip-text text-transparent">
-                      serious product.
+                      every signal.
                     </span>
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
-                    The public page should establish trust quickly, then hand users
-                    into the dedicated Quantus Investing workspace for the actual research flow.
+                    Every report passes through regime detection, a 12-model ensemble,
+                    tiered data source validation, and a 7-component confidence score before reaching you.
                   </p>
 
                   <div className="mt-8 rounded-3xl border border-gray-200/80 bg-gradient-to-br from-gray-50 to-white px-5 py-5 shadow-sm">
