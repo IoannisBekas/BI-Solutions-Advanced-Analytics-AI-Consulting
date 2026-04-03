@@ -91,7 +91,7 @@ export function Footer() {
           <div className="md:col-span-2 space-y-6">
             <h4 className="text-lg font-bold font-heading">Social</h4>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+              <a href="https://www.instagram.com/bisolutions.group/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
                 <Instagram className="w-5 h-5" />
               </a>
               <a href="https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
