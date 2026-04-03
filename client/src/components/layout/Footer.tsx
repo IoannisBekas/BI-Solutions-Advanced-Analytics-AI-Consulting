@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { Facebook, Instagram, Linkedin, Twitter, ArrowUp, Github } from "lucide-react";
-import { PRODUCT_ROUTES } from "@/lib/routes";
+import { Instagram, Linkedin, ArrowUp, Github } from "lucide-react";
+import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 
 export function Footer() {
   const scrollToTop = () => {
@@ -16,10 +16,10 @@ export function Footer() {
     { label: "Contact", href: "/contact" },
   ];
   const productLinks = [
-    { label: "Quantus Investing", href: PRODUCT_ROUTES.quantus },
-    { label: "Power BI Solutions", href: PRODUCT_ROUTES.powerBiSolutions },
-    { label: "Greek AI Professional Advisor", href: PRODUCT_ROUTES.aiAdvisor },
-    { label: "Website & App Portfolio", href: PRODUCT_ROUTES.websiteAppPortfolio },
+    { label: "Quantus Investing", href: PRODUCT_ROUTE_ALIASES.quantus },
+    { label: "Power BI Solutions", href: PRODUCT_ROUTE_ALIASES.powerBiSolutions },
+    { label: "Greek AI Professional Advisor", href: PRODUCT_ROUTE_ALIASES.aiAdvisor },
+    { label: "Website & App Portfolio", href: PRODUCT_ROUTE_ALIASES.websiteAppPortfolio },
   ];
 
   return (

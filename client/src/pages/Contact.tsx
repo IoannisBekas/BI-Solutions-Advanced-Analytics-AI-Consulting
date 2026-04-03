@@ -98,7 +98,7 @@ export default function Contact() {
                   </a>
 
                   <a
-                    href="https://www.google.com/maps/place/BI+Solutions+%7C+BEKAS+IOANNIS+-+%CE%9C%CE%A0%CE%95%CE%9A%CE%91%CE%A3+%CE%99%CE%A9%CE%91%CE%9D%CE%9D%CE%97%CE%A3/@51.2072,-79.19775,3z/data=!3m1!4b1!4m6!3m5!1s0x8b72b1c0bdff5865:0xc7a521d46d96ec7f!8m2!3d51.2072!4d-79.19775!16s%2Fg%2F11p5znwz2w?entry=ttu&g_ep=EgoyMDI1MDIyNS4wIKXMDSoASAFQAw%3D%3D"
+                    href="https://www.google.com/maps?cid=14385966453624892543"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 text-lg hover:text-gray-600 transition-colors group p-2 rounded-lg"

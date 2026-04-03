@@ -19,9 +19,9 @@ const products = [
     description:
       "AI-native quantitative research, signal generation, report automation, and institutional-style deep dives across multiple asset classes.",
     bullets: [
-      "Separate product auth and premium workflows",
-      "Native application hosted on the BI Solutions domain",
-      "Built for reports, sector packs, and ongoing research operations",
+      "Premium workflows for institutional-grade research",
+      "Reports, sector packs, and ongoing research operations",
+      "Cross-asset coverage: equities, ETFs, crypto, commodities",
     ],
   },
   {
@@ -31,9 +31,9 @@ const products = [
     description:
       "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
     bullets: [
-      "Separate auth flow tailored to the Power BI product",
-      "Server-side Anthropic proxy on the BI Solutions domain",
-      "Designed for model diagnostics, recommendations, and AI chat",
+      "Upload TMDL files and get instant model diagnostics",
+      "AI-powered recommendations to optimize your data architecture",
+      "Interactive chat workflow for guided improvements",
     ],
   },
   {
@@ -86,8 +86,8 @@ interface ProductShowcaseProps {
 
 export function ProductShowcase({
   badge = "Products",
-  heading = "Productized analytics, now inside the BI Solutions ecosystem.",
-  description = "bisolutions.group now acts as the brand shell for advisory services and product entry points, with each application keeping its own authentication and runtime.",
+  heading = "Analytics products from BI Solutions Group.",
+  description = "delivers advisory services and dedicated product experiences across analytics, AI, and web development.",
   className = "",
   id,
 }: ProductShowcaseProps) {

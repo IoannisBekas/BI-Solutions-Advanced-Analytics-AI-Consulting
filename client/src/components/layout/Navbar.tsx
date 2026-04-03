@@ -5,9 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
-  PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS,
   pathMatches,
 } from "@/lib/routes";
 
@@ -45,14 +43,9 @@ export function Navbar() {
 
   const isProductsActive = pathMatches(location, [
     "/products",
-    PRODUCT_ROUTES.quantus,
-    PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus,
     PRODUCT_ROUTE_ALIASES.quantus,
-    PRODUCT_ROUTES.powerBiSolutions,
     PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-    PRODUCT_ROUTES.aiAdvisor,
     PRODUCT_ROUTE_ALIASES.aiAdvisor,
-    PRODUCT_ROUTES.websiteAppPortfolio,
     PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
   ]);
 

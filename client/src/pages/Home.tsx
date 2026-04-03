@@ -39,8 +39,8 @@ export default function Home() {
         <ProductShowcase
           badge="Product Studio"
           id="products"
-          heading="Four distinct products, each with its own search intent."
-          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio now have dedicated product positioning and clearer paths for discovery."
+          heading="Four products, each purpose-built for a specific workflow."
+          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio — ready to explore."
         />
 
         {/* Selected Works Preview */}

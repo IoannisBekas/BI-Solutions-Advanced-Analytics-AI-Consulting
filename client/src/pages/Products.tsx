@@ -39,12 +39,11 @@ export default function Products() {
                   Products
                 </div>
                 <h1 className="mt-6 text-5xl md:text-6xl font-bold font-heading tracking-tight leading-tight">
-                Native product experiences with separate search intent and dedicated pages.
+                Purpose-built analytics products.
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                Each product now has a focused entry point, stronger metadata, and clearer
-                copy for the audience it serves. That gives Google and visitors a cleaner way
-                to understand what each offer actually does.
+                Each product has its own workspace, tailored for the audience and workflow it
+                serves. Pick the one that fits your problem.
               </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Link href="/contact">
@@ -68,8 +67,8 @@ export default function Products() {
         </section>
 
         <ProductShowcase
-          heading="Choose the product experience that fits the workflow."
-          description="The product hub keeps discovery clear while each product page handles its own keyword set, use case, and conversion path."
+          heading="Choose the product that fits your workflow."
+          description="Each product has a dedicated workspace designed around its core use case."
         />
       </main>
 

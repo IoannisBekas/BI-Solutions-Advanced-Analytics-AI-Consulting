@@ -407,6 +407,14 @@ export default function WebsiteAppPortfolioPage() {
                 },
               })),
             },
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://bisolutions.group/" },
+                { "@type": "ListItem", position: 2, name: "Products", item: "https://bisolutions.group/products" },
+                { "@type": "ListItem", position: 3, name: "Website & App Portfolio", item: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}` },
+              ],
+            },
           ],
         }}
       />

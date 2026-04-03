@@ -130,6 +130,14 @@ export default function PowerBISolutionsPage() {
                 },
               })),
             },
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://bisolutions.group/" },
+                { "@type": "ListItem", position: 2, name: "Products", item: "https://bisolutions.group/products" },
+                { "@type": "ListItem", position: 3, name: "Power BI Solutions", item: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}` },
+              ],
+            },
           ],
         }}
       />

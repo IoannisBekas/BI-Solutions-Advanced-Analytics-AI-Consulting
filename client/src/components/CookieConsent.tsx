@@ -3,6 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 
 const COOKIE_CONSENT_KEY = "cookie-consent";
+const GA_ID = "G-M1276CBX6M";
+
+function loadGA() {
+  if (document.querySelector(`script[src*="gtag/js?id=${GA_ID}"]`)) return;
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+  document.head.appendChild(script);
+  (window as any).dataLayer = (window as any).dataLayer || [];
+  function gtag(...args: any[]) { (window as any).dataLayer.push(args); }
+  gtag("js", new Date());
+  gtag("config", GA_ID);
+}
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
@@ -10,14 +23,16 @@ export function CookieConsent() {
   useEffect(() => {
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) {
-      // Small delay so it doesn't flash on initial load
       const timer = setTimeout(() => setVisible(true), 1000);
       return () => clearTimeout(timer);
+    } else if (consent === "accepted") {
+      loadGA();
     }
   }, []);
 
   const handleAccept = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+    loadGA();
     setVisible(false);
   };
 
