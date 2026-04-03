@@ -303,7 +303,29 @@ a { color: inherit; }
   color: var(--accent);
 }
 
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumb li + li::before {
+  content: "/";
+  color: var(--text-soft);
+}
+
 .breadcrumb a { text-decoration: none; }
+
+.breadcrumb [aria-current="page"] { font-weight: 700; }
 
 .page-grid,
 .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
