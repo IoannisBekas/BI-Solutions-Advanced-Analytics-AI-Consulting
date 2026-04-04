@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import {
     Archive,
     ArrowUpRight,
@@ -18,6 +18,7 @@ import type { WorkspaceStatus } from '../types';
 interface LayoutProps {
     children: ReactNode;
     onNavigate?: (view: string) => void;
+    onQuickSearch?: (ticker: string) => void;
     currentView?: string;
     lightMode?: boolean;
     onToggleLight?: () => void;
@@ -31,6 +32,7 @@ interface LayoutProps {
 export function Layout({
     children,
     onNavigate,
+    onQuickSearch,
     currentView,
     lightMode,
     onToggleLight,
@@ -42,6 +44,8 @@ export function Layout({
 }: LayoutProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [navQuery, setNavQuery] = useState('');
+    const navInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 16);
@@ -196,6 +200,48 @@ export function Layout({
                             );
                         })}
                     </nav>
+
+                    {/* ── Compact nav search ──────────────────────────── */}
+                    <form
+                        className="hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[260px] rounded-full px-3 py-1.5 transition-all duration-200"
+                        style={{
+                            background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                            border: `1px solid ${borderColor}`,
+                        }}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const ticker = navQuery.trim().toUpperCase();
+                            if (ticker && onQuickSearch) {
+                                onQuickSearch(ticker);
+                                setNavQuery('');
+                                navInputRef.current?.blur();
+                            }
+                        }}
+                    >
+                        <Search className="w-3.5 h-3.5 flex-shrink-0" style={{ color: muted }} />
+                        <input
+                            ref={navInputRef}
+                            type="text"
+                            value={navQuery}
+                            onChange={(e) => setNavQuery(e.target.value)}
+                            placeholder="Ticker…"
+                            className="flex-1 bg-transparent text-xs outline-none placeholder:text-gray-500"
+                            style={{ color: textColor, minWidth: 0 }}
+                            autoComplete="off"
+                            onKeyDown={(e) => { if (e.key === 'Escape') { setNavQuery(''); navInputRef.current?.blur(); } }}
+                        />
+                        {navQuery && (
+                            <button
+                                type="button"
+                                onClick={() => { setNavQuery(''); navInputRef.current?.focus(); }}
+                                className="text-xs"
+                                style={{ color: muted }}
+                                aria-label="Clear"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        )}
+                    </form>
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <div

@@ -396,11 +396,24 @@ export default function QuantusPage() {
                     </div>
 
                     <div className="mt-5 rounded-[1.4rem] border border-gray-200/60 bg-white p-4 shadow-inner shadow-gray-100/50">
-                      {/* Search bar */}
-                      <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-50/50 px-4 py-3 transition-all duration-300 hover:border-gray-300 hover:shadow-sm">
-                        <Search className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-500">Search NVDA, BTC-USD, SPY, gold, or sector themes</span>
-                      </div>
+                      {/* Search bar — functional, redirects to workspace */}
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          const input = (e.currentTarget.elements.namedItem('ticker') as HTMLInputElement)?.value?.trim().toUpperCase();
+                          if (input) window.location.href = `/quantus/workspace/report/${encodeURIComponent(input)}`;
+                        }}
+                        className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-gradient-to-r from-gray-50 to-gray-50/50 px-4 py-3 transition-all duration-300 hover:border-gray-300 hover:shadow-sm focus-within:border-gray-400 focus-within:shadow-md"
+                      >
+                        <Search className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                        <input
+                          name="ticker"
+                          type="text"
+                          placeholder="Search NVDA, BTC-USD, SPY, gold, or sector themes"
+                          className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-500"
+                          autoComplete="off"
+                        />
+                      </form>
 
                       {/* Filter chips */}
                       <div className="mt-4 flex flex-wrap gap-2">

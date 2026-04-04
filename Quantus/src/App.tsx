@@ -1034,6 +1034,7 @@ function App() {
         <Layout
             currentView={route.view === 'report' ? 'hero' : route.view}
             lightMode={lightMode}
+            onQuickSearch={openReportRoute}
             userName={user?.name ?? null}
             userTier={user?.tier ?? null}
             workspaceStatus={route.view === 'report'
