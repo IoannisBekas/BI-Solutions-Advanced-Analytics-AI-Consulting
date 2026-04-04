@@ -1146,6 +1146,8 @@ function App() {
                                             onSubscribe={handleSubscribe}
                                             onToggleWatchlist={handleToggleCurrentReportPinned}
                                             isWatchlisted={isCurrentReportPinned}
+                                            userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
+                                            onUpgrade={() => openAuthModal('signup')}
                                         />
                                     </div>
                                 </Suspense>

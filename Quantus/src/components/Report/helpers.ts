@@ -32,3 +32,26 @@ export function themeColors(lightMode?: boolean) {
         borderColor: lightMode ? '#E2E8F0' : '#1A1A1A',
     };
 }
+
+/** Sanitise metric values — replace stubs/placeholders with em dash */
+export function displayMetric(value: string | undefined | null): string {
+    if (!value) return '\u2014';
+    const lower = value.toLowerCase().trim();
+    if (['stub', 'n/a', 'unavailable', '0%', ''].includes(lower)) return '\u2014';
+    return value;
+}
+
+/** Split a long narrative into paragraphs of ~sentencesPerParagraph sentences */
+export function splitNarrative(text: string, sentencesPerParagraph = 3): string[] {
+    if (!text) return [];
+    // Try double-newline splits first
+    if (text.includes('\n\n')) return text.split(/\n\n+/).filter(Boolean);
+    // Split on sentence boundaries (period + space + capital letter)
+    const sentences = text.split(/(?<=\.)\s+(?=[A-Z])/).filter(Boolean);
+    if (sentences.length <= sentencesPerParagraph) return [text];
+    const paragraphs: string[] = [];
+    for (let i = 0; i < sentences.length; i += sentencesPerParagraph) {
+        paragraphs.push(sentences.slice(i, i + sentencesPerParagraph).join(' '));
+    }
+    return paragraphs;
+}

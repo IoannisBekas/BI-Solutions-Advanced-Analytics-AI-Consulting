@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import type { ReportData } from '../../types';
-import { signalClass, themeColors } from './helpers';
+import { signalClass, themeColors, splitNarrative } from './helpers';
 import { SectionCard, Feedback } from './SharedWidgets';
 
 interface Props { report: ReportData; lightMode?: boolean; }
@@ -10,12 +10,25 @@ export function SectionA({ report, lightMode }: Props) {
     const [plainEnglish, setPlainEnglish] = useState(false);
     const { textPrimary, textSecondary, dimBg, borderColor } = themeColors(lightMode);
 
+    const activeText = plainEnglish ? report.narrative_plain : report.narrative_executive_summary;
+    const paragraphs = splitNarrative(activeText ?? '');
+    const keyTakeaway = (activeText ?? '').split(/(?<=\.)\s+(?=[A-Z])/)[0] ?? '';
+
     return (
         <SectionCard title="A — Executive Summary" id="section-1" lightMode={lightMode}>
             <div className="mb-6">
-                <p className="text-sm leading-relaxed mb-3" style={{ color: textSecondary }}>
-                    {plainEnglish ? report.narrative_plain : report.narrative_executive_summary}
-                </p>
+                {/* Key takeaway highlight */}
+                {keyTakeaway && paragraphs.length > 1 && (
+                    <div className="p-3 rounded-xl mb-4 text-sm font-medium leading-relaxed"
+                        style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)', color: textPrimary }}>
+                        {keyTakeaway}
+                    </div>
+                )}
+                {paragraphs.map((para, i) => (
+                    <p key={i} className="text-sm leading-relaxed mb-3" style={{ color: textSecondary }}>
+                        {para}
+                    </p>
+                ))}
                 <button onClick={() => setPlainEnglish(p => !p)} className="text-xs text-blue-400 hover:underline cursor-pointer">
                     {plainEnglish ? 'Show full analysis' : 'What does this mean for me? →'}
                 </button>

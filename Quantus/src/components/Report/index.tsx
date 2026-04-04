@@ -7,7 +7,7 @@ import { SectionA } from './SectionA';
 import { SectionB } from './SectionB';
 import { SectionC } from './SectionC';
 import { SectionD } from './SectionD';
-import { SectionDeepDives } from './SectionDeepDives';
+import { SectionE } from './SectionE';
 import { JurisdictionDisclaimer, detectJurisdiction } from '../JurisdictionDisclaimer';
 
 interface ReportDashboardProps {
@@ -16,9 +16,11 @@ interface ReportDashboardProps {
     onSubscribe?: () => void;
     onToggleWatchlist?: () => void;
     isWatchlisted?: boolean;
+    userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL';
+    onUpgrade?: () => void;
 }
 
-export function ReportDashboard({ report, lightMode, onSubscribe, onToggleWatchlist, isWatchlisted }: ReportDashboardProps) {
+export function ReportDashboard({ report, lightMode, onSubscribe, onToggleWatchlist, isWatchlisted, userTier = 'FREE', onUpgrade }: ReportDashboardProps) {
     const { borderColor, dimBg } = themeColors(lightMode);
     const jurisdiction = detectJurisdiction();
 
@@ -36,7 +38,13 @@ export function ReportDashboard({ report, lightMode, onSubscribe, onToggleWatchl
             <SectionB report={report} lightMode={lightMode} />
             <SectionC report={report} lightMode={lightMode} />
             <SectionD report={report} lightMode={lightMode} />
-            <SectionDeepDives report={report} lightMode={lightMode} />
+            <SectionE
+                ticker={report.ticker}
+                reportId={report.report_id}
+                userTier={userTier}
+                lightMode={lightMode}
+                onUpgrade={onUpgrade}
+            />
 
             {/* Data Sources footer */}
             <div className="text-xs p-4 rounded-xl text-gray-500" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>

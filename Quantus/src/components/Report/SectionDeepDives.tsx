@@ -1,3 +1,4 @@
+// Legacy: retained for future backend SSE integration. Currently replaced by SectionE in Report/index.tsx.
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, ChevronUp } from 'lucide-react';

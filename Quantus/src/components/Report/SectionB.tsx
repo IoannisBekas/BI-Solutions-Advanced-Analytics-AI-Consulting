@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { ReportData } from '../../types';
-import { themeColors } from './helpers';
+import { themeColors, displayMetric } from './helpers';
 import { SectionCard, ExplainButton, Feedback } from './SharedWidgets';
 
 interface Props { report: ReportData; lightMode?: boolean; }
@@ -39,8 +39,8 @@ export function SectionB({ report, lightMode }: Props) {
                                     <div className="text-xs font-semibold mb-2" style={{ color: m.color }}>{m.name}</div>
                                     <div className="text-xl font-bold font-mono metric-value" style={{ color: textPrimary }}>{m.forecast}</div>
                                     <div className="flex gap-3 mt-2 text-xs text-gray-500">
-                                        <span>Weight: <strong style={{ color: textSecondary }}>{m.weight}</strong></span>
-                                        <span>Acc: <strong style={{ color: textSecondary }}>{m.accuracy}</strong></span>
+                                        <span>Weight: <strong style={{ color: textSecondary }}>{displayMetric(m.weight)}</strong></span>
+                                        <span>Acc: <strong style={{ color: textSecondary }}>{displayMetric(m.accuracy)}</strong></span>
                                     </div>
                                     <ExplainButton contextText={`${m.name} Model Forecast: ${m.forecast}`} lightMode={lightMode} />
                                 </div>

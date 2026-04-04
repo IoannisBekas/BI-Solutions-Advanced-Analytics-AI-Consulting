@@ -352,7 +352,7 @@ function ModuleCard({
 export function SectionE({ ticker, reportId, userTier = 'FREE', lightMode, onUpgrade }: SectionEProps) {
     void reportId;
     return (
-        <section className="py-8">
+        <section id="section-5" className="py-8">
             <div className="flex items-center gap-3 mb-2">
                 <BarChart2 className="w-5 h-5 text-blue-400" />
                 <h2 className="text-xl font-bold" style={{ color: lightMode ? '#0F172A' : '#F9FAFB' }}>
