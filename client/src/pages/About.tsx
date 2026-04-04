@@ -3,7 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import founderPhoto from "@/assets/founder-photo-2.jpg";
 import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, MapPin, Download, Phone, Github } from "lucide-react";
+import { Mail, Linkedin, MapPin, Download, Github } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -194,7 +194,7 @@ export default function About() {
                     <Button
                       variant="outline"
                       className="rounded-full px-8 h-12 border-gray-200 hover:bg-gray-50"
-                      onClick={() => window.open('https://linkedin.com/in/ioannisbekas', '_blank')}
+                      onClick={() => window.open('https://linkedin.com/in/ioannisbekas', '_blank', 'noopener,noreferrer')}
                     >
                       LinkedIn
                     </Button>

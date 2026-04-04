@@ -596,10 +596,6 @@ export function updateUserCredits(userId: string, credits: number): void {
   stmts.updateCredits.run(credits, userId);
 }
 
-export function updateUserTier(userId: string, tier: string): void {
-  stmts.updateTier.run(tier, userId);
-}
-
 export function incrementReports(userId: string): void {
   stmts.incrementReports.run(userId);
 }

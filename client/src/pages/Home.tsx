@@ -9,9 +9,6 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
 import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
 import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
-import {
-  ArrowRight,
-} from "lucide-react";
 
 export default function Home() {
   return (

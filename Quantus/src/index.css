@@ -272,61 +272,6 @@ body.dark-mode .section-divider {
 
 /* ── BI Solutions Buttons ─────────────────────────────────────────────────── */
 
-/* Primary: black pill */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border-radius: 9999px;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 600;
-  background: #09090B;
-  color: #FFFFFF;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.btn-primary:hover {
-  background: #1F2937;
-  transform: scale(1.03);
-}
-
-/* Secondary: white outline pill */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border-radius: 9999px;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 600;
-  background: transparent;
-  color: #09090B;
-  border: 1px solid #D1D5DB;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.btn-secondary:hover {
-  background: #F9FAFB;
-  border-color: #9CA3AF;
-}
-
-body.dark-mode .btn-secondary {
-  color: #F0F6FF;
-  border-color: #374151;
-}
-
-body.dark-mode .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
 /* ── Nav pill CTA (Get Started style) ─────────────────────────────────────── */
 .btn-nav-cta {
   display: inline-flex;
@@ -355,25 +300,6 @@ body.dark-mode .btn-nav-cta {
 
 body.dark-mode .btn-nav-cta:hover {
   background: #F3F4F6;
-}
-
-/* ── BI Solutions Label Pill ─────────────────────────────────────────────── */
-.bis-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 16px;
-  border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #374151;
-  background: transparent;
-  border: 1px solid #D1D5DB;
-}
-
-body.dark-mode .bis-label {
-  color: #9CA3AF;
-  border-color: #374151;
 }
 
 /* ── Quantus page shell aligned to main BI Solutions site ─────────────────── */
@@ -957,10 +883,6 @@ body.dark-mode .bis-wave-bg::after {
   }
 }
 
-.ambient-orb {
-  animation: float-orb 12s ease-in-out infinite;
-}
-
 /* ── Number highlights ─────────────────────────────────────────────────────── */
 .num-positive {
   color: #059669;
@@ -1031,15 +953,6 @@ body.dark-mode .num-neutral {
     opacity: 1;
     transform: scale(1);
   }
-}
-
-/* ── Sparkline container ───────────────────────────────────────────────────── */
-.sparkline-container {
-  overflow: hidden;
-}
-
-.sparkline-container svg {
-  display: block;
 }
 
 /* ── Hover lift utility ───────────────────────────────────────────────────── */
