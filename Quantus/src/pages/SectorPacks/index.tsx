@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Lock, FileText, Download, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Shield, Lock, FileText, Download, AlertTriangle, ArrowUpDown } from 'lucide-react';
 
 const Card = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div className={`rounded-xl border shadow-sm ${className}`} {...props}>
@@ -39,11 +39,29 @@ interface SectorPackData {
     reports: SectorReport[];
 }
 
-const SectorPacksDashboard = () => {
+type SortKey = 'confidence' | 'signal' | 'ticker';
+
+const SIGNAL_ORDER: Record<string, number> = {
+    'STRONG BUY': 5, 'BUY': 4, 'NEUTRAL': 3, 'SELL': 2, 'STRONG SELL': 1,
+};
+
+const SectorPacksDashboard = ({ onSelectTicker }: { onSelectTicker?: (ticker: string) => void }) => {
     const [selectedSector, setSelectedSector] = useState('Technology');
     const [data, setData] = useState<SectorPackData | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [sortBy, setSortBy] = useState<SortKey>('confidence');
+
+    const sortedReports = useMemo(() => {
+        if (!data?.reports) return [];
+        const sorted = [...data.reports];
+        switch (sortBy) {
+            case 'confidence': return sorted.sort((a, b) => b.confidence_score - a.confidence_score);
+            case 'signal': return sorted.sort((a, b) => (SIGNAL_ORDER[b.overall_signal] ?? 0) - (SIGNAL_ORDER[a.overall_signal] ?? 0));
+            case 'ticker': return sorted.sort((a, b) => a.ticker.localeCompare(b.ticker));
+            default: return sorted;
+        }
+    }, [data?.reports, sortBy]);
 
     const sectors = [
         "Technology", "Healthcare", "Financials", "Energy", "Consumer",
@@ -112,7 +130,10 @@ const SectorPacksDashboard = () => {
                     </p>
                 </div>
 
-                <button className="flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-medium border border-indigo-400/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                <button
+                    onClick={() => window.print()}
+                    className="flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-medium border border-indigo-400/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                >
                     <Download className="w-4 h-4" />
                     Download PDF Digest
                 </button>
@@ -148,18 +169,33 @@ const SectorPacksDashboard = () => {
                 </div>
             ) : data && data.tier_access === "authorized" ? (
                 <div>
-                    <div className="flex justify-between items-center mb-6">
+                    <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
                         <h2 className="text-xl font-medium text-slate-200">
                             {selectedSector} Top 20
                         </h2>
+                        <div className="flex items-center gap-2">
+                            <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
+                            {(['confidence', 'signal', 'ticker'] as SortKey[]).map(key => (
+                                <button
+                                    key={key}
+                                    onClick={() => setSortBy(key)}
+                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${sortBy === key
+                                        ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/50'
+                                        : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                                    }`}
+                                >
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                                </button>
+                            ))}
+                        </div>
                         <span className="text-xs text-slate-500 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
                             Last Generated: {new Date(data.generated_at).toLocaleString(undefined, { timeZoneName: 'short' })}
                         </span>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl">
-                        {data.reports.map((report, idx) => (
-                            <Card key={idx} className="bg-slate-900/50 border-slate-800 hover:bg-slate-900 hover:border-slate-700 transition-all cursor-pointer group">
+                        {sortedReports.map((report, idx) => (
+                            <Card key={idx} className="bg-slate-900/50 border-slate-800 hover:bg-slate-900 hover:border-slate-700 transition-all cursor-pointer group" onClick={() => onSelectTicker?.(report.ticker)}>
                                 <CardHeader className="p-4 pb-2">
                                     <div className="flex justify-between items-start">
                                         <div>

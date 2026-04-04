@@ -2,16 +2,23 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     RefreshCw, Bell, TrendingUp, TrendingDown, AlertTriangle,
-    Users, Clock, Filter, Calendar,
+    Users, Clock, Filter, Calendar, X, Search, ArrowUpDown,
 } from 'lucide-react';
 import { fetchUserWatchlist } from '../services/product';
 import type { AssetClass, AssetEntry, QuantusWatchlistItem as WatchlistItem, SignalType } from '../types';
+
+type WatchlistSortKey = 'name' | 'signal' | 'confidence' | 'change';
+
+const SIGNAL_RANK: Record<string, number> = {
+    'STRONG BUY': 5, 'BUY': 4, 'NEUTRAL': 3, 'SELL': 2, 'STRONG SELL': 1,
+};
 
 interface WatchlistProps {
     userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL';
     lightMode?: boolean;
     onSelectTicker?: (ticker: string) => void;
     onOpenAlerts?: () => void;
+    onRemove?: (ticker: string) => void;
     savedAssets?: AssetEntry[];
     isAuthenticated?: boolean;
 }
@@ -81,9 +88,9 @@ function SkeletonCard() {
 // ─── Watchlist ticker card ────────────────────────────────────────────────────
 
 function WatchlistCard({
-    item, lightMode, onSelect,
+    item, lightMode, onSelect, onRemove,
 }: {
-    item: WatchlistItem; lightMode?: boolean; onSelect: () => void;
+    item: WatchlistItem; lightMode?: boolean; onSelect: () => void; onRemove?: () => void;
 }) {
     const positive = item.dayChangePct >= 0;
     const sig = signalStyle(item.signal);
@@ -124,7 +131,18 @@ function WatchlistCard({
                         <div className="text-xs font-mono mt-0.5" style={{ color: ts }}>{item.ticker}</div>
                     </div>
                 </div>
-                <span className={assetBadgeCls[item.assetClass]}>{item.assetClass}</span>
+                <div className="flex items-center gap-1.5">
+                    <span className={assetBadgeCls[item.assetClass]}>{item.assetClass}</span>
+                    {onRemove && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onRemove(); }}
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                            title="Remove from watchlist"
+                        >
+                            <X className="w-3.5 h-3.5" />
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Signal + Regime */}
@@ -215,11 +233,14 @@ export function Watchlist({
     lightMode,
     onSelectTicker,
     onOpenAlerts,
+    onRemove,
     savedAssets = [],
     isAuthenticated = false,
 }: WatchlistProps) {
     const [refreshing, setRefreshing] = useState(false);
     const [filter, setFilter] = useState<string>('ALL');
+    const [sortBy, setSortBy] = useState<WatchlistSortKey>('name');
+    const [searchQuery, setSearchQuery] = useState('');
     const [serverItems, setServerItems] = useState<WatchlistItem[]>([]);
     const [activeAlertCount, setActiveAlertCount] = useState(0);
     const [error, setError] = useState<string | null>(null);
@@ -288,10 +309,25 @@ export function Watchlist({
         return Array.from(merged.values());
     }, [isAuthenticated, savedAssets, serverItems]);
 
-    const filtered = useMemo(() =>
-        filter === 'ALL' ? allItems : allItems.filter(i => i.assetClass === filter),
-        [allItems, filter],
-    );
+    const filtered = useMemo(() => {
+        let items = filter === 'ALL' ? allItems : allItems.filter(i => i.assetClass === filter);
+
+        // Search filter
+        if (searchQuery.trim()) {
+            const q = searchQuery.trim().toLowerCase();
+            items = items.filter(i => i.ticker.toLowerCase().includes(q) || i.name.toLowerCase().includes(q));
+        }
+
+        // Sort
+        const sorted = [...items];
+        switch (sortBy) {
+            case 'confidence': sorted.sort((a, b) => b.confidence - a.confidence); break;
+            case 'signal': sorted.sort((a, b) => (SIGNAL_RANK[b.signal] ?? 0) - (SIGNAL_RANK[a.signal] ?? 0)); break;
+            case 'change': sorted.sort((a, b) => b.dayChangePct - a.dayChangePct); break;
+            case 'name': default: sorted.sort((a, b) => a.name.localeCompare(b.name)); break;
+        }
+        return sorted;
+    }, [allItems, filter, searchQuery, sortBy]);
 
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
@@ -340,18 +376,57 @@ export function Watchlist({
                     </div>
                 )}
 
-                {/* Filter bar */}
-                <div className="mb-8 flex items-center gap-2 flex-wrap">
-                    <Filter className="w-4 h-4 text-gray-400" />
-                    {['ALL', 'EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'].map(f => (
-                        <button
-                            key={f}
-                            onClick={() => setFilter(f)}
-                            className={`tab-btn rounded-full border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${filter === f ? 'active' : ''}`}
-                        >
-                            {f}
-                        </button>
-                    ))}
+                {/* Search + Filter + Sort bar */}
+                <div className="mb-8 space-y-3">
+                    {/* Search input */}
+                    <div className="relative max-w-sm">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search by ticker or name..."
+                            className="w-full pl-9 pr-8 py-2 rounded-full text-sm border bg-transparent outline-none transition-colors"
+                            style={{
+                                borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
+                                color: lightMode ? '#111827' : '#F9FAFB',
+                            }}
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <Filter className="w-4 h-4 text-gray-400" />
+                        {['ALL', 'EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'].map(f => (
+                            <button
+                                key={f}
+                                onClick={() => setFilter(f)}
+                                className={`tab-btn rounded-full border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${filter === f ? 'active' : ''}`}
+                            >
+                                {f}
+                            </button>
+                        ))}
+
+                        <div className="w-px h-5 bg-slate-700 mx-1" />
+
+                        <ArrowUpDown className="w-3.5 h-3.5 text-gray-400" />
+                        {(['name', 'signal', 'confidence', 'change'] as WatchlistSortKey[]).map(key => (
+                            <button
+                                key={key}
+                                onClick={() => setSortBy(key)}
+                                className={`tab-btn rounded-full border border-transparent px-3 py-1.5 text-xs font-semibold capitalize tracking-[0.06em] ${sortBy === key ? 'active' : ''}`}
+                            >
+                                {key === 'change' ? '% Change' : key}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Grid */}
@@ -371,6 +446,7 @@ export function Watchlist({
                                         item={item}
                                         lightMode={lightMode}
                                         onSelect={() => onSelectTicker?.(item.ticker)}
+                                        onRemove={onRemove ? () => onRemove(item.ticker) : undefined}
                                     />
                                 </motion.div>
                             ))

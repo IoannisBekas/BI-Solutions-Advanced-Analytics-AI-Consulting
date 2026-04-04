@@ -1157,7 +1157,7 @@ function App() {
                 {route.view === 'sectors' && (
                     <motion.div key="sectors" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
-                            <SectorPacksDashboard />
+                            <SectorPacksDashboard onSelectTicker={(ticker: string) => openReportRoute(ticker)} />
                         </Suspense>
                     </motion.div>
                 )}
@@ -1172,6 +1172,10 @@ function App() {
                                 isAuthenticated={Boolean(user)}
                                 onOpenAlerts={handleManageAlerts}
                                 onSelectTicker={(ticker) => openReportRoute(ticker)}
+                                onRemove={(ticker: string) => {
+                                    const asset = pinnedAssets.find((a) => a.ticker === ticker);
+                                    if (asset) togglePinnedAsset(asset);
+                                }}
                             />
                         </Suspense>
                     </motion.div>
