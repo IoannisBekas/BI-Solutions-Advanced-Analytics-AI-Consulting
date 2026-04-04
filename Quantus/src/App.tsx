@@ -928,6 +928,7 @@ function App() {
         if (view === 'archive') syncBrowserRoute(QUANTUS_ARCHIVE_ROUTE);
         if (view === 'accuracy') syncBrowserRoute(QUANTUS_ACCURACY_ROUTE);
         if (view === 'methodology') syncBrowserRoute(QUANTUS_METHODOLOGY_ROUTE);
+        window.scrollTo({ top: 0, behavior: 'instant' });
     }, [syncBrowserRoute]);
 
     const handleViewReport = useCallback(() => {
@@ -1049,7 +1050,7 @@ function App() {
         >
             <AnimatePresence mode="wait">
                 {route.view === 'hero' && (
-                    <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key="hero" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <SearchHero
                             onSearch={openReportRoute}
                             lightMode={lightMode}
@@ -1062,7 +1063,7 @@ function App() {
                 )}
 
                 {route.view === 'report' && (
-                    <motion.div key={route.path} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key={route.path} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         {report && (
                             <StickyReportStrip
                                 report={report}
@@ -1084,16 +1085,34 @@ function App() {
                             New Search
                         </button>
 
-                        {report && (
-                            <WelcomeCard
-                                report={report}
-                                lightMode={lightMode}
-                                onSubscribe={handleSubscribe}
-                                onOpenTicker={handleOpenRelatedTicker}
-                                reportSource={reportResponse?.source}
-                                reportMessage={reportResponse?.message}
-                                reportDetail={reportResponse?.detail}
-                            />
+                        {report && !localStorage.getItem(`quantus-welcome-dismissed:${report.ticker}`) && (
+                            <div className="relative">
+                                <WelcomeCard
+                                    report={report}
+                                    lightMode={lightMode}
+                                    onSubscribe={handleSubscribe}
+                                    onOpenTicker={handleOpenRelatedTicker}
+                                    reportSource={reportResponse?.source}
+                                    reportMessage={reportResponse?.message}
+                                    reportDetail={reportResponse?.detail}
+                                />
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem(`quantus-welcome-dismissed:${report.ticker}`, '1');
+                                        // Force re-render by updating a trivial state
+                                        setInsights((prev) => [...prev]);
+                                    }}
+                                    className="absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center text-xs transition-colors"
+                                    style={{
+                                        background: lightMode ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)',
+                                        color: lightMode ? '#9CA3AF' : '#6B7280',
+                                    }}
+                                    title="Dismiss for this ticker"
+                                    aria-label="Dismiss welcome card"
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         )}
 
                         <ProgressInsightFeed
@@ -1135,7 +1154,7 @@ function App() {
                 )}
 
                 {route.view === 'sectors' && (
-                    <motion.div key="sectors" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key="sectors" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                             <SectorPacksDashboard />
                         </Suspense>
@@ -1143,7 +1162,7 @@ function App() {
                 )}
 
                 {route.view === 'watchlist' && (
-                    <motion.div key="watchlist" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key="watchlist" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                             <Watchlist
                                 userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
@@ -1158,7 +1177,7 @@ function App() {
                 )}
 
                 {route.view === 'archive' && (
-                    <motion.div key="archive" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key="archive" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                             <Archive
                                 userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
@@ -1170,7 +1189,7 @@ function App() {
                 )}
 
                 {route.view === 'accuracy' && (
-                    <motion.div key="accuracy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key="accuracy" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                             <AccuracyDashboard lightMode={lightMode} />
                         </Suspense>
@@ -1178,7 +1197,7 @@ function App() {
                 )}
 
                 {route.view === 'methodology' && (
-                    <motion.div key="methodology" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div key="methodology" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                             <Methodology lightMode={lightMode} />
                         </Suspense>

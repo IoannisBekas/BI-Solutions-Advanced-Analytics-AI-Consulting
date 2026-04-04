@@ -206,6 +206,17 @@ export function ProgressInsightFeed({
                     >
                         {isGenerating ? `Analyzing ${ticker}…` : 'Analysis Complete'}
                     </h3>
+                    {isGenerating && regularCards.length > 0 && (
+                        <span
+                            className="text-xs font-mono tabular-nums px-2 py-0.5 rounded-full"
+                            style={{
+                                background: lightMode ? 'rgba(59,130,246,0.08)' : 'rgba(59,130,246,0.12)',
+                                color: lightMode ? '#2563EB' : '#93C5FD',
+                            }}
+                        >
+                            {regularCards.length}/12
+                        </span>
+                    )}
                 </div>
                 <div className="flex-1 h-px" style={{ background: lightMode ? '#E2E8F0' : '#1A1A1A' }} />
                 {isDone && (

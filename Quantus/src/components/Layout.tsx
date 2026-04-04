@@ -124,7 +124,7 @@ export function Layout({
                     borderBottom: `1px solid ${scrolled ? borderColor : 'transparent'}`,
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-8 min-h-[78px] py-3 flex items-center justify-between gap-3 flex-wrap">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[78px] flex items-center justify-between gap-3 overflow-x-auto overflow-y-hidden scrollbar-none">
                     <button
                         onClick={() => onNavigate?.('hero')}
                         className="flex items-center gap-3 group flex-shrink-0 cursor-pointer text-left"
@@ -153,7 +153,7 @@ export function Layout({
                                 BI Solutions Group
                             </div>
                             <div
-                                className="text-xs font-medium"
+                                className="hidden xl:block text-xs font-medium"
                                 style={{
                                     color: muted,
                                 }}

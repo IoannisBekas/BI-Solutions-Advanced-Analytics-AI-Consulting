@@ -83,19 +83,23 @@ function AutocompleteResult({
     lightMode,
     onSelect,
     cardBorder,
+    highlighted,
 }: {
     asset: AssetEntry;
     index: number;
     lightMode?: boolean;
     onSelect: (asset: AssetEntry) => void;
     cardBorder: string;
+    highlighted?: boolean;
 }) {
     const positive = (asset.dayChangePct ?? 0) >= 0;
     const hasQuote = asset.currentPrice != null;
 
     return (
         <motion.button
+            id={`search-option-${index}`}
             role="option"
+            aria-selected={highlighted}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
@@ -103,7 +107,9 @@ function AutocompleteResult({
             className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors duration-200"
             style={{
                 borderTop: index === 0 ? 'none' : `1px solid ${lightMode ? 'rgba(229,231,235,0.6)' : cardBorder}`,
-                background: 'transparent',
+                background: highlighted
+                    ? (lightMode ? 'rgba(249,250,251,0.9)' : 'rgba(255,255,255,0.06)')
+                    : 'transparent',
             }}
             whileHover={{ background: lightMode ? 'rgba(249,250,251,0.8)' : 'rgba(255,255,255,0.03)' }}
             type="button"
@@ -274,9 +280,16 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
     const featuredAssets = workspaceSummary?.featuredAssets ?? [];
     const popularTickers = workspaceSummary?.popularTickers ?? [];
 
+    const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+    // Reset highlighted index when results change
+    useEffect(() => { setHighlightedIndex(-1); }, [results]);
+
     useEffect(() => {
         const handler = (event: KeyboardEvent) => {
-            if (event.key === 't' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName ?? '')) {
+            const tag = document.activeElement?.tagName ?? '';
+            if (['INPUT', 'TEXTAREA'].includes(tag)) return;
+            if (event.key === '/' || event.key === 't') {
                 event.preventDefault();
                 inputRef.current?.focus();
             }
@@ -343,8 +356,40 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
         onSearch(asset.ticker, asset);
     }, [onSearch]);
 
+    const handleInputKeyDown = useCallback((event: React.KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            if (dropdownOpen) {
+                setDropdownOpen(false);
+                setHighlightedIndex(-1);
+            } else {
+                inputRef.current?.blur();
+            }
+            return;
+        }
+        if (event.key === 'ArrowDown' && dropdownOpen && results.length > 0) {
+            event.preventDefault();
+            setHighlightedIndex((prev) => (prev + 1) % results.length);
+            return;
+        }
+        if (event.key === 'ArrowUp' && dropdownOpen && results.length > 0) {
+            event.preventDefault();
+            setHighlightedIndex((prev) => (prev <= 0 ? results.length - 1 : prev - 1));
+            return;
+        }
+        if (event.key === 'Enter' && highlightedIndex >= 0 && results[highlightedIndex]) {
+            event.preventDefault();
+            handleSelect(results[highlightedIndex]);
+            return;
+        }
+    }, [dropdownOpen, results, highlightedIndex, handleSelect]);
+
     const handleSubmit = useCallback((event: React.FormEvent) => {
         event.preventDefault();
+
+        if (highlightedIndex >= 0 && results[highlightedIndex]) {
+            onSearch(results[highlightedIndex].ticker, results[highlightedIndex]);
+            return;
+        }
 
         if (results.length > 0) {
             onSearch(results[0].ticker, results[0]);
@@ -365,7 +410,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
             hasCachedReport: false,
             researcherCount: 0,
         });
-    }, [onSearch, query, results]);
+    }, [onSearch, query, results, highlightedIndex]);
 
     const cardBg = lightMode ? 'rgba(252,252,253,0.96)' : 'rgba(0,0,0,0.96)';
     const cardBorder = lightMode ? 'rgba(229,231,235,0.8)' : '#1A1A1A';
@@ -637,7 +682,8 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                     type="text"
                                                     value={query}
                                                     onChange={(event) => setQuery(event.target.value)}
-                                                    placeholder="Search NVDA, BTC-USD, gold, or a company name"
+                                                    onKeyDown={handleInputKeyDown}
+                                                    placeholder="Press / to search · NVDA, BTC-USD, gold, or a company name"
                                                     className="flex-1 bg-transparent text-base md:text-lg outline-none placeholder:text-gray-400"
                                                     style={{ color: lightMode ? '#09090B' : '#F9FAFB' }}
                                                     autoComplete="off"
@@ -645,6 +691,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                     aria-expanded={dropdownOpen}
                                                     aria-haspopup="listbox"
                                                     aria-controls="search-autocomplete"
+                                                    aria-activedescendant={highlightedIndex >= 0 ? `search-option-${highlightedIndex}` : undefined}
                                                 />
                                                 {query && (
                                                     <button
@@ -749,6 +796,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                         onSelect={handleSelect}
                                                         lightMode={lightMode}
                                                         cardBorder={cardBorder}
+                                                        highlighted={index === highlightedIndex}
                                                     />
                                                 ))}
                                             </motion.div>
