@@ -4,11 +4,9 @@ import {
   ArrowRight,
   ExternalLink,
   Globe,
-  GraduationCap,
-  LayoutGrid,
   MonitorSmartphone,
+  Play,
   Sparkles,
-  UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -30,27 +28,6 @@ const portfolioMetrics = [
   { label: "Audience range", value: "Personal, local, and education" },
 ];
 
-const portfolioPillars = [
-  {
-    title: "Personal brand websites",
-    description:
-      "Portfolio-driven experiences that package credibility, case studies, and contact paths into a tighter professional narrative.",
-    icon: UserRound,
-  },
-  {
-    title: "Organization websites",
-    description:
-      "Clear public-facing websites for clubs and local organizations, balancing visual identity, structure, and straightforward calls to action.",
-    icon: Globe,
-  },
-  {
-    title: "Education product surfaces",
-    description:
-      "Application experiences that blend product positioning, utility, and responsive design for learning-focused workflows.",
-    icon: GraduationCap,
-  },
-];
-
 const showcaseProjects = [
   {
     name: "Michail Karnas",
@@ -64,6 +41,8 @@ const showcaseProjects = [
       "Portfolio storytelling around analytics and BI work",
       "Career-focused structure with clear navigation",
     ],
+    techStack: ["React", "Tailwind CSS", "Vite", "GitHub Pages"],
+    results: ["Lighthouse 95+", "Sub-2s load time", "Mobile-first responsive"],
     previewVideo: karnasShowcase,
     posterImage: michailKarnasPreview,
     videoClassName: "object-cover object-center",
@@ -81,6 +60,8 @@ const showcaseProjects = [
       "Program, timetable, testimonial, and contact sections",
       "Community-oriented design for a local organization",
     ],
+    techStack: ["React", "Tailwind CSS", "Vite", "GitHub Pages"],
+    results: ["Local SEO optimized", "Bilingual support", "Mobile-first"],
     previewVideo: rythdrapShowcase,
     posterImage: rythmikiDrapetsonaPreview,
     videoClassName: "object-cover object-center",
@@ -98,6 +79,8 @@ const showcaseProjects = [
       "Step-by-step solutions and custom problem generation",
       "Product-style surface tuned for repeat use",
     ],
+    techStack: ["React", "TypeScript", "Tailwind CSS", "Claude API"],
+    results: ["AI-native UX", "Real-time problem solving", "Repeat engagement"],
     previewVideo: mathShowcase,
     posterImage: mathimatikosIcon,
     videoClassName: "object-cover object-center",
@@ -107,19 +90,24 @@ const showcaseProjects = [
 
 const portfolioFaqs = [
   {
-    question: "What kind of projects are included in this portfolio?",
+    question: "What technologies do you use to build websites and apps?",
     answer:
-      "The portfolio includes personal brand sites, organization websites, and product-style web applications that BI Solutions has designed and delivered.",
+      "We primarily build with React, TypeScript, and Tailwind CSS, deployed on fast platforms like Vercel and GitHub Pages. For AI-powered features we integrate the Claude API and other modern tooling depending on the project's needs.",
   },
   {
-    question: "Why is this page important for SEO?",
+    question: "How long does a typical website or app project take?",
     answer:
-      "It provides case-study style proof and delivery context, which helps visitors and search engines understand concrete capabilities beyond service claims.",
+      "A focused portfolio or organization website typically ships in 2\u20134 weeks. Product-style web applications with AI features or complex workflows take 4\u20138 weeks depending on scope. We scope every project with a clear timeline before starting.",
   },
   {
-    question: "Can this portfolio support custom project discussions?",
+    question: "Do you offer ongoing maintenance and support?",
     answer:
-      "Yes. Each showcased build is paired with contact paths so prospects can discuss similar website, app, or BI dashboard projects.",
+      "Yes. Every project includes a post-launch support window. We also offer ongoing retainers for content updates, performance monitoring, analytics review, and feature additions.",
+  },
+  {
+    question: "Can you build something similar for my business or project?",
+    answer:
+      "Absolutely. Each build shown here solved a different communication problem \u2014 personal positioning, local organization visibility, or product-led learning. We adapt the same delivery discipline to your specific context and audience.",
   },
 ];
 
@@ -135,7 +123,9 @@ function LazyPreviewVideo({
   className: string;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     if (shouldLoad) return;
@@ -166,21 +156,51 @@ function LazyPreviewVideo({
     return () => observer.disconnect();
   }, [shouldLoad]);
 
+  useEffect(() => {
+    if (!shouldLoad || !videoRef.current) return;
+
+    const video = videoRef.current;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
+    }
+  }, [shouldLoad]);
+
+  const handlePlayClick = () => {
+    if (!videoRef.current) return;
+    videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+  };
+
   return (
-    <div ref={containerRef} className="h-full w-full">
+    <div ref={containerRef} className="relative h-full w-full">
       {shouldLoad ? (
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={poster}
-          className={`h-full w-full ${className}`}
-          aria-label={label}
-        >
-          <source src={src} type="video/mp4" />
-        </video>
+        <>
+          <video
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={poster}
+            className={`h-full w-full ${className}`}
+            aria-label={label}
+          >
+            <source src={src} type="video/mp4" />
+          </video>
+          {!isPlaying && (
+            <button
+              onClick={handlePlayClick}
+              className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors hover:bg-black/20"
+              aria-label={`Play ${label}`}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
+                <Play className="h-5 w-5 fill-gray-900 text-gray-900" />
+              </div>
+            </button>
+          )}
+        </>
       ) : (
         <img
           src={poster}
@@ -231,8 +251,10 @@ function PortfolioMetricCard({
 
 function PortfolioProjectCard({
   project,
+  reversed,
 }: {
   project: (typeof showcaseProjects)[number];
+  reversed?: boolean;
 }) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -289,85 +311,120 @@ function PortfolioProjectCard({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-90px" }}
-      className="h-full"
     >
-      <Card className="h-full rounded-[2rem] border-gray-200 bg-white/95 p-5 shadow-xl shadow-black/5">
-        <motion.div variants={itemVariants}>
-          <div
-            className={`rounded-[1.6rem] border border-gray-200 bg-gradient-to-br ${project.accentClassName}`}
-          >
-            <div className="flex items-center justify-between px-5 pt-5">
-              <motion.span
-                variants={itemVariants}
-                className="rounded-full bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gray-600 shadow-sm"
-              >
-                {project.category}
-              </motion.span>
-              <motion.a
-                variants={itemVariants}
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/85 text-gray-700 shadow-sm transition-colors hover:text-black"
-                aria-label={`Open ${project.name}`}
-              >
-                <ExternalLink className="h-4 w-4" />
-              </motion.a>
-            </div>
+      <Card className="overflow-hidden rounded-[2rem] border-gray-200/80 bg-white shadow-xl shadow-black/[0.08]">
+        <div
+          className={`flex flex-col ${reversed ? "lg:flex-row-reverse" : "lg:flex-row"}`}
+        >
+          {/* Media side */}
+          <motion.div variants={itemVariants} className="lg:w-[55%]">
+            <div
+              className={`h-full rounded-[2rem] bg-gradient-to-br ${project.accentClassName}`}
+            >
+              <div className="flex items-center justify-between px-5 pt-5">
+                <motion.span
+                  variants={itemVariants}
+                  className="rounded-full bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gray-600 shadow-sm"
+                >
+                  {project.category}
+                </motion.span>
+                <motion.a
+                  variants={itemVariants}
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/85 text-gray-700 shadow-sm transition-colors hover:text-black"
+                  aria-label={`Open ${project.name}`}
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </motion.a>
+              </div>
 
-            <div className="aspect-[16/10] overflow-hidden px-5 pb-5 pt-4">
-              <motion.div
-                variants={mediaVariants}
-                className="h-full overflow-hidden rounded-[1.3rem] border border-white/80 bg-white/70 shadow-lg shadow-black/5"
-              >
-                <LazyPreviewVideo
-                  src={project.previewVideo}
-                  poster={project.posterImage}
-                  label={`${project.name} showcase video`}
-                  className={project.videoClassName}
-                />
-              </motion.div>
+              <div className="aspect-[16/10] overflow-hidden px-5 pb-5 pt-4">
+                <motion.div
+                  variants={mediaVariants}
+                  className="h-full overflow-hidden rounded-[1.3rem] border border-white/80 bg-white/70 shadow-lg shadow-black/5"
+                >
+                  <LazyPreviewVideo
+                    src={project.previewVideo}
+                    poster={project.posterImage}
+                    label={`${project.name} showcase video`}
+                    className={project.videoClassName}
+                  />
+                </motion.div>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        <motion.div variants={itemVariants} className="px-2 pb-2 pt-6">
-          <p className="text-sm font-medium text-gray-500">
-            {project.subtitle}
-          </p>
-          <h3 className="mt-2 text-3xl font-bold font-heading tracking-tight text-gray-950">
-            {project.name}
-          </h3>
+          {/* Content side */}
           <motion.div
             variants={itemVariants}
-            className="mt-4 h-px w-16 origin-left bg-gradient-to-r from-black to-transparent"
-          />
-          <p className="mt-4 text-base leading-relaxed text-gray-600">
-            {project.description}
-          </p>
+            className="flex flex-col justify-center px-6 py-8 lg:w-[45%] lg:px-10 lg:py-10"
+          >
+            <p className="text-sm font-medium text-gray-500">
+              {project.subtitle}
+            </p>
+            <h3 className="mt-2 text-3xl font-bold font-heading tracking-tight text-gray-950 lg:text-4xl">
+              {project.name}
+            </h3>
+            <motion.div
+              variants={itemVariants}
+              className="mt-4 h-px w-16 origin-left bg-gradient-to-r from-black to-transparent"
+            />
+            <p className="mt-4 text-base leading-relaxed text-gray-600">
+              {project.description}
+            </p>
 
-          <div className="mt-6 space-y-3">
-            {project.highlights.map((highlight) => (
-              <motion.div
-                key={highlight}
-                variants={itemVariants}
-                className="flex gap-3 text-sm leading-relaxed text-gray-600"
-              >
-                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
-                <span>{highlight}</span>
-              </motion.div>
-            ))}
-          </div>
+            <div className="mt-6 space-y-3">
+              {project.highlights.map((highlight) => (
+                <motion.div
+                  key={highlight}
+                  variants={itemVariants}
+                  className="flex gap-3 text-sm leading-relaxed text-gray-600"
+                >
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+                  <span>{highlight}</span>
+                </motion.div>
+              ))}
+            </div>
 
-          <motion.div variants={itemVariants} className="mt-8 flex flex-wrap gap-3">
-            <a href={project.url} target="_blank" rel="noreferrer">
-              <Button className="rounded-full bg-black px-6 text-white hover:bg-gray-800">
-                Visit live site
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </a>
+            {/* Tech stack badges */}
+            <motion.div variants={itemVariants} className="mt-6 flex flex-wrap gap-2">
+              {project.techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-600"
+                >
+                  {tech}
+                </span>
+              ))}
+            </motion.div>
+
+            {/* Results */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-5 flex flex-wrap gap-3"
+            >
+              {project.results.map((result) => (
+                <span
+                  key={result}
+                  className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700"
+                >
+                  {result}
+                </span>
+              ))}
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="mt-8">
+              <a href={project.url} target="_blank" rel="noreferrer">
+                <Button className="rounded-full bg-black px-6 text-white hover:bg-gray-800">
+                  Visit live site
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
       </Card>
     </motion.div>
   );
@@ -421,6 +478,7 @@ export default function WebsiteAppPortfolioPage() {
       <Navbar />
 
       <main className="pt-32 pb-20">
+        {/* Hero */}
         <section className="relative overflow-hidden px-6 pb-10 md:px-12">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute -left-20 top-12 h-72 w-72 rounded-full bg-amber-200/30 blur-3xl" />
@@ -448,7 +506,7 @@ export default function WebsiteAppPortfolioPage() {
                   <a href="#featured-sites">
                     <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
                       View featured sites
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
                   <a href="/contact">
@@ -476,11 +534,15 @@ export default function WebsiteAppPortfolioPage() {
           </div>
         </section>
 
-        <section id="featured-sites" className="mx-auto mb-24 max-w-7xl px-6 md:px-12">
+        {/* Featured projects — stacked layout */}
+        <section
+          id="featured-sites"
+          className="mx-auto mb-16 max-w-7xl px-6 md:px-12"
+        >
           <ScrollReveal className="mb-10" width="100%">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600">
-                <LayoutGrid className="h-4 w-4" />
+                <Globe className="h-4 w-4" />
                 Featured launches
               </div>
               <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight md:text-5xl">
@@ -494,51 +556,57 @@ export default function WebsiteAppPortfolioPage() {
             </div>
           </ScrollReveal>
 
-          <div className="grid gap-8 xl:grid-cols-3">
+          <div className="space-y-10">
             {showcaseProjects.map((project, index) => (
               <ScrollReveal
                 key={project.name}
                 delay={index * 0.08}
                 width="100%"
-                className="h-full"
               >
-                <PortfolioProjectCard project={project} />
+                <PortfolioProjectCard
+                  project={project}
+                  reversed={index % 2 === 1}
+                />
               </ScrollReveal>
             ))}
           </div>
         </section>
 
-        <section className="mx-auto mb-20 max-w-7xl px-6 md:px-12">
-          <div className="grid gap-6 md:grid-cols-3">
-            {portfolioPillars.map((pillar, index) => {
-              const Icon = pillar.icon;
-
-              return (
-                <ScrollReveal
-                  key={pillar.title}
-                  delay={index * 0.08}
-                  width="100%"
-                >
-                  <Card className="h-full rounded-3xl border-gray-200 bg-gray-50/70 p-7 shadow-none">
-                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-black text-white">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <h3 className="text-xl font-bold font-heading tracking-tight">
-                      {pillar.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                      {pillar.description}
-                    </p>
-                  </Card>
-                </ScrollReveal>
-              );
-            })}
-          </div>
+        {/* Mid-page CTA */}
+        <section className="mx-auto mb-16 max-w-7xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <Card className="rounded-3xl border-gray-200 bg-gradient-to-br from-gray-950 to-gray-800 p-10 text-center shadow-2xl md:p-14">
+              <h2 className="text-3xl font-bold font-heading tracking-tight text-white md:text-4xl">
+                Have a similar project in mind?
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-300">
+                Whether you need a personal portfolio, an organization website,
+                or a product-style web application, we can scope and deliver it.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <a href="/contact">
+                  <Button className="rounded-full bg-white px-8 text-gray-900 hover:bg-gray-100">
+                    Start a conversation
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
+                <a href="/services">
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-gray-500 px-8 text-gray-300 hover:bg-white/10 hover:text-white"
+                  >
+                    View all services
+                  </Button>
+                </a>
+              </div>
+            </Card>
+          </ScrollReveal>
         </section>
 
+        {/* FAQ */}
         <section className="mx-auto mb-20 max-w-7xl px-6 md:px-12">
           <ScrollReveal width="100%">
-            <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.05] md:p-10">
+            <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.08] md:p-10">
               <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
                 Website & App Portfolio FAQ
               </h2>
