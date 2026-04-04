@@ -399,7 +399,7 @@ function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
             className="rounded-3xl border px-6 py-8 text-sm"
             style={{
                 background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.03)',
-                borderColor: lightMode ? '#E5E7EB' : '#223046',
+                borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                 color: lightMode ? '#6B7280' : '#9CA3AF',
             }}
         >
@@ -456,8 +456,12 @@ function App() {
     const isCurrentReportPinned = useMemo(() => (
         currentReportAsset != null && pinnedAssets.some((entry) => entry.ticker === currentReportAsset.ticker)
     ), [currentReportAsset, pinnedAssets]);
+    // Show the report view as soon as we have data for the current ticker —
+    // don't wait for isGenerating to become false. This lets cached reports
+    // appear instantly and fresh reports appear as soon as the API responds,
+    // while insight cards keep streaming above.
     const displayView: DisplayView = route.view === 'report'
-        ? (isGenerating || reportResponse?.ticker !== route.ticker ? 'generating' : 'report')
+        ? (reportResponse?.ticker === route.ticker ? 'report' : 'generating')
         : route.view;
 
     const syncBrowserRoute = useCallback((nextPath: string, replace = false, search = '') => {
@@ -737,7 +741,18 @@ function App() {
 
         setCurrentTicker(normalizedTicker);
         setInsights([]);
-        setReportResponse(null);
+
+        // ── Instant cached display ─────────────────────────────────────
+        // If we already have a cached report for this ticker, show it
+        // immediately (0 ms wait) while the fresh pipeline runs behind it.
+        const cachedResponse = readStoredReportResponse(normalizedTicker);
+        if (cachedResponse) {
+            currentReportResponseRef.current = cachedResponse;
+            setReportResponse(cachedResponse);
+        } else {
+            setReportResponse(null);
+        }
+
         setLoadedSnapshotId(null);
         setIsGenerating(true);
 
@@ -1097,25 +1112,11 @@ function App() {
                         />
 
                         {displayView === 'report' && report && (
-                            <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
-                                <div ref={reportRef}>
-                                    <ReportDashboard
-                                        report={report}
-                                        lightMode={lightMode}
-                                        onSubscribe={handleSubscribe}
-                                        onToggleWatchlist={handleToggleCurrentReportPinned}
-                                        isWatchlisted={isCurrentReportPinned}
-                                    />
-                                </div>
-                            </Suspense>
-                        )}
-
-                        {displayView === 'generating' && !isGenerating && report && (
                             <motion.div
-                                initial={{ opacity: 0, y: 16 }}
+                                key={reportResponse?.ticker}
+                                initial={{ opacity: 0, y: 12 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                                className="mt-8"
+                                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                             >
                                 <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                                     <div ref={reportRef}>

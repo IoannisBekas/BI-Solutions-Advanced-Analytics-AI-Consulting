@@ -60,7 +60,7 @@ export function SkimSummary({ report, lightMode }: SkimSummaryProps) {
     return (
         <div
             className="surface-card p-5 mb-6"
-            style={{ background: lightMode ? 'rgba(255,255,255,0.95)' : '#111827', borderColor }}
+            style={{ background: lightMode ? 'rgba(255,255,255,0.95)' : '#0A0A0A', borderColor }}
         >
             <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
                 <div>

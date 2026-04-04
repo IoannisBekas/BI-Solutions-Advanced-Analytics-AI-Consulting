@@ -62,7 +62,7 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
     onView(): void; onCompare(): void; lightMode?: boolean;
 }) {
     const cFill = sigColor[snap.signal];
-    const border = isSelected ? `${cFill}50` : lightMode ? '#E5E7EB' : '#1F2937';
+    const border = isSelected ? `${cFill}50` : lightMode ? '#E5E7EB' : '#1A1A1A';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
 
     return (
@@ -70,9 +70,9 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
             {/* Spine */}
             <div className="flex flex-col items-center flex-shrink-0 w-6">
                 <div className="w-3 h-3 rounded-full flex-shrink-0 mt-3 ring-2"
-                    style={{ boxShadow: `0 0 0 2px ${lightMode ? '#FFFFFF' : '#0A0D14'}`, background: cFill }}
+                    style={{ boxShadow: `0 0 0 2px ${lightMode ? '#FFFFFF' : '#000000'}`, background: cFill }}
                 />
-                <div className="flex-1 w-px mt-1" style={{ background: isLast ? 'transparent' : lightMode ? '#D1D5DB' : '#1F2937' }} />
+                <div className="flex-1 w-px mt-1" style={{ background: isLast ? 'transparent' : lightMode ? '#D1D5DB' : '#1A1A1A' }} />
             </div>
             {/* Card */}
             <div className="bis-section-card flex-1 mb-3 cursor-pointer rounded-[24px] p-4 transition-colors"

@@ -91,8 +91,8 @@ export function CreditPurchaseModal({ open, onClose, lightMode }: PurchaseModalP
 
     if (!open) return null;
 
-    const bg = lightMode ? 'rgba(255,255,255,0.97)' : '#111827';
-    const border = lightMode ? '#E2E8F0' : '#1F2937';
+    const bg = lightMode ? 'rgba(255,255,255,0.97)' : '#0A0A0A';
+    const border = lightMode ? '#E2E8F0' : '#1A1A1A';
     const tp = lightMode ? '#0F172A' : '#F9FAFB';
     const ts = lightMode ? '#64748B' : '#9CA3AF';
 

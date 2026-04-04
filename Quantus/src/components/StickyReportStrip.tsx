@@ -64,10 +64,10 @@ export function StickyReportStrip({ report, visible, lightMode, onSubscribe, rep
             className="fixed left-0 right-0 z-50 flex items-center justify-between px-6 py-3 text-xs flex-wrap gap-y-2"
             style={{
                 top: 78,
-                background: lightMode ? 'rgba(255,255,255,0.94)' : 'rgba(13,18,30,0.96)',
+                background: lightMode ? 'rgba(255,255,255,0.94)' : 'rgba(0,0,0,0.96)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                borderBottom: `1px solid ${lightMode ? '#E2E8F0' : '#1F2937'}`,
+                borderBottom: `1px solid ${lightMode ? '#E2E8F0' : '#1A1A1A'}`,
                 boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
             }}
         >

@@ -70,7 +70,7 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
     const maxAbs = Math.max(1, ...rows.map((row) => Math.abs(row.avgExcessPct ?? row.avgReturnPct)));
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
-    const border = lightMode ? '#E5E7EB' : '#1F2937';
+    const border = lightMode ? '#E5E7EB' : '#1A1A1A';
 
     return (
         <div className="bis-section-card rounded-[24px] overflow-hidden" style={{ borderColor: border }}>

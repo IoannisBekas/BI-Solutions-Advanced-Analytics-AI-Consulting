@@ -224,8 +224,8 @@ export function WelcomeCard({
     const isLive = reportSource === 'live';
     const session = marketSession(report.asset_class);
 
-    const cardBg = lightMode ? 'rgba(255,255,255,0.97)' : 'rgba(13,18,30,0.98)';
-    const borderColor = lightMode ? '#E2E8F0' : '#1F2937';
+    const cardBg = lightMode ? 'rgba(255,255,255,0.97)' : 'rgba(0,0,0,0.98)';
+    const borderColor = lightMode ? '#E2E8F0' : '#1A1A1A';
     const textPrimary = lightMode ? '#0F172A' : '#F9FAFB';
     const textSecondary = lightMode ? '#475569' : '#9CA3AF';
     const dimBg = lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)';

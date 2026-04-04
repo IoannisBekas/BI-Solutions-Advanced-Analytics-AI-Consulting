@@ -116,32 +116,28 @@ body {
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
 
 body.dark-mode {
-  --color-bg-base: #0A1018;
-  --color-surface: #101826;
-  --color-surface-2: #172131;
-  --color-border: #223046;
-  --color-border-light: #31425B;
+  --color-bg-base: #000000;
+  --color-surface: #0A0A0A;
+  --color-surface-2: #111111;
+  --color-border: #1A1A1A;
+  --color-border-light: #262626;
   --color-text-primary: #F0F6FF;
   --color-text-secondary: #97A8BF;
   --color-text-muted: #6F829B;
 
-  background-color: #0A1018;
+  background-color: #000000;
   color: #F0F6FF;
-  background-image:
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 42% 35% at -5% 30%, rgba(148, 163, 184, 0.05) 0%, transparent 68%),
-    radial-gradient(ellipse 42% 35% at 105% 30%, rgba(16, 185, 129, 0.04) 0%, transparent 68%);
 }
 
 body.dark-mode .surface-card {
-  background: #0D1117;
-  border-color: #223046;
+  background: #0A0A0A;
+  border-color: #1A1A1A;
   color: #F0F6FF;
 }
 
 body.dark-mode .surface-card:hover {
-  border-color: #31425B;
-  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  border-color: #262626;
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
 body.dark-mode .text-secondary {
@@ -149,8 +145,8 @@ body.dark-mode .text-secondary {
 }
 
 body.dark-mode .nav-bar {
-  background: rgba(10, 16, 24, 0.94) !important;
-  border-color: #223046 !important;
+  background: rgba(0, 0, 0, 0.94) !important;
+  border-color: #1A1A1A !important;
 }
 
 body.dark-mode .glass {
@@ -159,25 +155,25 @@ body.dark-mode .glass {
 }
 
 body.dark-mode .glass-input {
-  background: rgba(10, 16, 24, 0.52);
-  border-color: #223046;
+  background: rgba(0, 0, 0, 0.52);
+  border-color: #1A1A1A;
   color: #F0F6FF;
 }
 
 body.dark-mode .skeleton {
-  background: linear-gradient(90deg, #223046 25%, #31425B 50%, #223046 75%);
+  background: linear-gradient(90deg, #1A1A1A 25%, #262626 50%, #1A1A1A 75%);
 }
 
 body.dark-mode ::-webkit-scrollbar-track {
-  background: #0A1018;
+  background: #000000;
 }
 
 body.dark-mode ::-webkit-scrollbar-thumb {
-  background: #223046;
+  background: #1A1A1A;
 }
 
 body.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background: #31425B;
+  background: #262626;
 }
 
 body.dark-mode ::selection {
@@ -186,7 +182,7 @@ body.dark-mode ::selection {
 }
 
 body.dark-mode .progress-bar {
-  background: #223046;
+  background: #1A1A1A;
 }
 
 body.dark-mode .tab-btn:hover {
@@ -199,7 +195,7 @@ body.dark-mode .tab-btn.active {
 }
 
 body.dark-mode .section-divider {
-  border-color: #223046;
+  border-color: #1A1A1A;
 }
 
 /* ── Scrollbar (light default) ──────────────────────────────────────────── */
@@ -339,7 +335,7 @@ body.dark-mode .btn-secondary:hover {
 }
 
 .btn-nav-cta:hover {
-  background: #1F2937;
+  background: #1A1A1A;
   transform: scale(1.02);
 }
 
@@ -369,6 +365,115 @@ body.dark-mode .btn-nav-cta:hover {
 body.dark-mode .bis-label {
   color: #9CA3AF;
   border-color: #374151;
+}
+
+/* ── Quantus page shell aligned to main BI Solutions site ─────────────────── */
+.bis-page-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: 32px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(249, 250, 251, 0.94) 100%);
+  box-shadow: 0 24px 80px -52px rgba(15, 23, 42, 0.34);
+}
+
+.bis-page-shell::before {
+  content: "";
+  position: absolute;
+  top: -15%;
+  right: -10%;
+  width: 340px;
+  height: 340px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(229, 231, 235, 0.55) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bis-page-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.bis-section-card {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: 24px;
+  box-shadow: 0 14px 40px -34px rgba(15, 23, 42, 0.28);
+}
+
+.bis-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid #D1D5DB;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.bis-note {
+  border-radius: 20px;
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  background: rgba(255, 251, 235, 0.9);
+}
+
+.bis-input {
+  border: 1px solid #D1D5DB;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #111827;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.bis-input:focus-within,
+.bis-input:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+  outline: none;
+}
+
+body.dark-mode .bis-page-shell {
+  border-color: rgba(34, 48, 70, 0.95);
+  background:
+    linear-gradient(180deg, rgba(13, 17, 23, 0.98) 0%, rgba(16, 24, 38, 0.96) 100%);
+  box-shadow: 0 24px 80px -44px rgba(0, 0, 0, 0.55);
+}
+
+body.dark-mode .bis-page-shell::before {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 72%);
+}
+
+body.dark-mode .bis-section-card {
+  background: rgba(17, 24, 39, 0.96);
+  border-color: rgba(34, 48, 70, 0.95);
+  box-shadow: 0 16px 48px -36px rgba(0, 0, 0, 0.55);
+}
+
+body.dark-mode .bis-eyebrow {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #374151;
+  color: #9CA3AF;
+}
+
+body.dark-mode .bis-note {
+  background: rgba(120, 53, 15, 0.14);
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+body.dark-mode .bis-input {
+  background: rgba(0, 0, 0, 0.58);
+  border-color: #1A1A1A;
+  color: #F0F6FF;
+}
+
+body.dark-mode .bis-input:focus-within,
+body.dark-mode .bis-input:focus {
+  border-color: #64748B;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.14);
 }
 
 /* ── Signal Badges ────────────────────────────────────────────────────────── */

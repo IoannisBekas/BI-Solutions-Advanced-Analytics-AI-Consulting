@@ -18,16 +18,17 @@ interface Section {
 
 function AccordionSection({ section, lightMode }: { section: Section; lightMode?: boolean }) {
     const [open, setOpen] = useState(false);
-    const tp = lightMode ? '#0F172A' : '#F9FAFB';
-    const ts = lightMode ? '#475569' : '#9CA3AF';
-    const bg = lightMode ? 'rgba(255,255,255,0.9)' : '#111827';
-    const border = lightMode ? '#E2E8F0' : '#1F2937';
+    const tp = lightMode ? '#111827' : '#F9FAFB';
+    const ts = lightMode ? '#6B7280' : '#9CA3AF';
+    const border = lightMode ? '#E5E7EB' : '#1A1A1A';
 
     return (
-        <div className="rounded-xl overflow-hidden mb-3" style={{ background: bg, border: `1px solid ${border}` }}>
+        <div className="bis-section-card mb-3 overflow-hidden rounded-[24px]" style={{ borderColor: border }}>
             <button
                 onClick={() => setOpen(o => !o)}
-                className="w-full flex items-center justify-between px-6 py-4 text-left cursor-pointer hover:bg-white/[0.02] transition-colors"
+                className={`w-full flex items-center justify-between cursor-pointer px-6 py-4 text-left transition-colors ${
+                    lightMode ? 'hover:bg-gray-50/70' : 'hover:bg-white/[0.02]'
+                }`}
             >
                 <span className="font-semibold text-sm" style={{ color: tp }}>{section.title}</span>
                 {open ? <ChevronUp className="w-4 h-4 flex-shrink-0 text-gray-500" /> : <ChevronDown className="w-4 h-4 flex-shrink-0 text-gray-500" />}
@@ -144,7 +145,7 @@ const SECTIONS: Section[] = [
                             ['B', 'Yahoo Finance / yfinance, Financial Modeling Prep', 'High', 'Price, earnings, fundamentals'],
                             ['C', 'Grok/X, Reddit, NewsAPI', 'Medium', 'Sentiment only — never standalone signal'],
                         ].map(([tier, sources, cred, use]) => (
-                            <tr key={tier} className="border-b" style={{ borderColor: '#1F2937' }}>
+                            <tr key={tier} className="border-b" style={{ borderColor: '#1A1A1A' }}>
                                 <td className="py-2 font-bold" style={{ color: tier === 'A' ? '#10B981' : tier === 'B' ? '#3B82F6' : '#9CA3AF' }}>Tier {tier}</td>
                                 <td className="py-2">{sources}</td>
                                 <td className="py-2">{cred}</td>
@@ -236,7 +237,7 @@ const SECTIONS: Section[] = [
                             ['European Union', 'MiFID II Article 24 disclosure. Not PRIIP-compliant for retail.', 'Available to elective professional clients under MiFID II.'],
                             ['Global / Other', 'For informational purposes only. Not investment advice.', 'Institutional use presumed outside above jurisdictions.'],
                         ].map(([j, d, n]) => (
-                            <tr key={j} className="border-b" style={{ borderColor: '#1F2937' }}>
+                            <tr key={j} className="border-b" style={{ borderColor: '#1A1A1A' }}>
                                 <td className="py-2 font-semibold">{j}</td>
                                 <td className="py-2">{d}</td>
                                 <td className="py-2 opacity-60">{n}</td>
@@ -264,25 +265,23 @@ const SECTIONS: Section[] = [
 // ─── Main Methodology page ────────────────────────────────────────────────────
 
 export function Methodology({ lightMode }: MethodologyProps) {
-    const bg = lightMode ? '#F0F4FF' : '#0A0D14';
-    const tp = lightMode ? '#0F172A' : '#F9FAFB';
-    const ts = lightMode ? '#475569' : '#9CA3AF';
+    const tp = lightMode ? '#111827' : '#F9FAFB';
+    const ts = lightMode ? '#6B7280' : '#9CA3AF';
 
     return (
-        <div style={{ background: bg, minHeight: '100vh', padding: '48px 24px' }}>
-            <div className="max-w-3xl mx-auto">
+        <div className="mx-auto max-w-5xl">
+            <section className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
                 {/* Header */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-4"
-                        style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)', color: '#3B82F6' }}>
+                    <div className="bis-eyebrow mb-4">
                         Methodology Documentation · Meridian v2.4
                     </div>
-                    <h1 className="text-4xl font-bold mb-4" style={{ color: tp }}>How Quantus Works</h1>
+                    <h1 className="text-4xl font-bold tracking-tight mb-4" style={{ color: tp }}>How Quantus Works</h1>
                     <p className="text-lg leading-relaxed" style={{ color: ts }}>
                         Plain-English documentation of the models, data sources, and analytical framework behind every Quantus report.
                         Written for portfolio managers and executives — no raw code, no jargon.
                     </p>
-                    <div className="mt-4 p-4 rounded-xl text-sm" style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', color: '#F59E0B' }}>
+                    <div className="bis-note mt-5 p-4 text-sm text-amber-700">
                         ⚠️ Quantus reports are for informational purposes only and do not constitute investment advice.
                         Past signal performance does not guarantee future results.
                     </div>
@@ -296,11 +295,11 @@ export function Methodology({ lightMode }: MethodologyProps) {
                 </motion.div>
 
                 {/* Footer */}
-                <div className="mt-12 pt-8 border-t text-xs text-center" style={{ borderColor: '#1F2937', color: '#6B7280' }}>
+                <div className="mt-12 border-t pt-8 text-center text-xs" style={{ borderColor: lightMode ? '#E5E7EB' : '#1A1A1A', color: '#6B7280' }}>
                     <p>Quantus Research Solutions · BI Solutions Group (bisolutions.group)</p>
                     <p className="mt-1">Powered by Meridian v2.4 · Model accuracy audited quarterly · Last updated Feb 2026</p>
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

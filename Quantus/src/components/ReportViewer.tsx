@@ -128,7 +128,7 @@ function SectionCard({ title, id, children, lightMode }: { title: string; id: st
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="surface-card p-6 mb-6 print-section"
-            style={{ background: lightMode ? 'rgba(255,255,255,0.9)' : '#111827', borderColor: lightMode ? '#E2E8F0' : '#1F2937' }}
+            style={{ background: lightMode ? 'rgba(255,255,255,0.9)' : '#0A0A0A', borderColor: lightMode ? '#E2E8F0' : '#1A1A1A' }}
         >
             <h3 className="text-xs font-semibold uppercase tracking-widest mb-5 text-gray-500">{title}</h3>
             {children}
@@ -142,7 +142,7 @@ function MetricCard({ label, value, sub, trend, note, freshness, lightMode }: {
     const textPrimary = lightMode ? '#0F172A' : '#F9FAFB';
     const textSecondary = lightMode ? '#475569' : '#9CA3AF';
     const dimBg = lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)';
-    const borderColor = lightMode ? '#E2E8F0' : '#1F2937';
+    const borderColor = lightMode ? '#E2E8F0' : '#1A1A1A';
     return (
         <div className="rounded-xl p-4 flex flex-col h-full" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
             <div className="flex-1">
@@ -184,7 +184,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
     const textPrimary = lightMode ? '#0F172A' : '#F9FAFB';
     const textSecondary = lightMode ? '#475569' : '#9CA3AF';
     const dimBg = lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)';
-    const borderColor = lightMode ? '#E2E8F0' : '#1F2937';
+    const borderColor = lightMode ? '#E2E8F0' : '#1A1A1A';
 
     const togglePlain = (key: string) => setPlainEnglish(p => ({ ...p, [key]: !p[key] }));
 
@@ -258,7 +258,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="surface-card p-5 mb-6 print-section"
-                style={{ background: lightMode ? 'rgba(255,255,255,0.95)' : '#111827', borderColor }}
+                style={{ background: lightMode ? 'rgba(255,255,255,0.95)' : '#0A0A0A', borderColor }}
             >
                 {/* Top row */}
                 <div className="flex flex-wrap items-start gap-4 justify-between mb-4">

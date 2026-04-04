@@ -75,8 +75,8 @@ function CommentCard({
 }: {
     comment: CommentData; userTier: Tier; onVote: (id: string, dir: 'up' | 'down') => void; lightMode?: boolean;
 }) {
-    const cardBg = lightMode ? 'rgba(255,255,255,0.9)' : '#111827';
-    const border = lightMode ? '#E2E8F0' : '#1F2937';
+    const cardBg = lightMode ? 'rgba(255,255,255,0.9)' : '#0A0A0A';
+    const border = lightMode ? '#E2E8F0' : '#1A1A1A';
     const tp = lightMode ? '#0F172A' : '#F9FAFB';
     const ts = lightMode ? '#475569' : '#9CA3AF';
 
@@ -196,7 +196,7 @@ export function CommunityThread({
         setPosting(false);
     };
 
-    const border = lightMode ? '#E2E8F0' : '#1F2937';
+    const border = lightMode ? '#E2E8F0' : '#1A1A1A';
 
     return (
         <section className="space-y-4">

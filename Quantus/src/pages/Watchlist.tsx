@@ -88,7 +88,7 @@ function WatchlistCard({
     const positive = item.dayChangePct >= 0;
     const sig = signalStyle(item.signal);
     const fresh = freshnessLabel(item.lastUpdated);
-    const border = lightMode ? '#E5E7EB' : '#1F2937';
+    const border = lightMode ? '#E5E7EB' : '#1A1A1A';
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
 

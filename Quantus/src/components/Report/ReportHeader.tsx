@@ -36,7 +36,7 @@ export function ReportHeader({ report, lightMode, onSubscribe, onToggleWatchlist
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             className="surface-card p-5 mb-6 print-section"
-            style={{ background: lightMode ? 'rgba(255,255,255,0.95)' : '#111827', borderColor }}
+            style={{ background: lightMode ? 'rgba(255,255,255,0.95)' : '#0A0A0A', borderColor }}
         >
             <div className="flex flex-wrap items-start gap-4 justify-between mb-4">
                 <div className="flex items-start gap-4">

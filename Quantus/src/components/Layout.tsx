@@ -66,9 +66,9 @@ export function Layout({
         { label: 'Methodology', icon: BookOpen, action: () => onNavigate?.('methodology'), view: 'methodology' },
     ];
 
-    const pageBg = lightMode ? '#FCFCFD' : '#060810';
+    const pageBg = lightMode ? '#FAFAFA' : '#000000';
     const textColor = lightMode ? '#09090B' : '#F0F6FF';
-    const borderColor = lightMode ? '#E5E7EB' : '#1A2235';
+    const borderColor = lightMode ? '#E5E7EB' : '#1A1A1A';
     const muted = lightMode ? '#6B7280' : '#8B9DB5';
 
     const statusTone = workspaceStatus?.badgeTone ?? 'neutral';
@@ -103,6 +103,10 @@ export function Layout({
         appearance: 'none' as const,
         WebkitAppearance: 'none' as const,
     };
+    const quantusOverviewUrl = 'https://bisolutions.group/quantus';
+    const productsOverviewUrl = 'https://bisolutions.group/products';
+    const contactUrl = 'https://bisolutions.group/contact';
+    const bisolutionsHomeUrl = 'https://bisolutions.group/';
 
     return (
         <div
@@ -113,20 +117,20 @@ export function Layout({
                 className="nav-bar sticky top-0 z-50 transition-all duration-300"
                 style={{
                     background: lightMode
-                        ? scrolled ? 'rgba(252,252,253,0.96)' : 'rgba(252,252,253,0.88)'
-                        : scrolled ? 'rgba(6,8,16,0.97)' : 'rgba(6,8,16,0.82)',
+                        ? scrolled ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.9)'
+                        : scrolled ? 'rgba(0,0,0,0.97)' : 'rgba(0,0,0,0.82)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
                     borderBottom: `1px solid ${scrolled ? borderColor : 'transparent'}`,
                 }}
             >
-                <div className="max-w-[1320px] mx-auto px-4 md:px-8 h-[78px] flex items-center justify-between gap-4">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 min-h-[78px] py-3 flex items-center justify-between gap-3 flex-wrap">
                     <button
                         onClick={() => onNavigate?.('hero')}
                         className="flex items-center gap-3 group flex-shrink-0 cursor-pointer text-left"
                     >
                         <div
-                            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
+                            className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
                             style={{
                                 background: lightMode ? '#09090B' : '#FFFFFF',
                                 color: lightMode ? '#FFFFFF' : '#09090B',
@@ -149,18 +153,27 @@ export function Layout({
                                 BI Solutions Group
                             </div>
                             <div
-                                className="uppercase tracking-[0.22em]"
+                                className="text-xs font-medium"
                                 style={{
-                                    fontSize: '10px',
                                     color: muted,
                                 }}
                             >
-                                Quantus Research Platform
+                                Advanced Analytics & AI Consulting
                             </div>
+                        </div>
+                        <div
+                            className="hidden xl:inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold"
+                            style={{
+                                border: `1px solid ${borderColor}`,
+                                background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
+                                color: muted,
+                            }}
+                        >
+                            Quantus
                         </div>
                     </button>
 
-                    <nav className="hidden lg:flex items-center gap-2">
+                    <nav className="hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0">
                         {navLinks.map((link) => {
                             const isActive = currentView === link.view;
 
@@ -168,23 +181,23 @@ export function Layout({
                                 <button
                                     key={link.view}
                                     onClick={link.action}
-                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
-                                    style={{
-                                        color: isActive ? textColor : muted,
-                                        background: isActive
-                                            ? (lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.08)')
-                                            : 'transparent',
-                                        border: `1px solid ${isActive ? borderColor : 'transparent'}`,
-                                    }}
+                                    className={`group relative pb-1 text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-left after:transition-transform after:duration-200 after:content-[''] ${
+                                        lightMode
+                                            ? isActive
+                                                ? 'text-black after:bg-black after:scale-x-100'
+                                                : 'text-gray-500 hover:text-black after:bg-black after:scale-x-0 hover:after:scale-x-100'
+                                            : isActive
+                                                ? 'text-white after:bg-white after:scale-x-100'
+                                                : 'text-slate-400 hover:text-white after:bg-white after:scale-x-0 hover:after:scale-x-100'
+                                    }`}
                                 >
-                                    <link.icon className="w-4 h-4" />
                                     {link.label}
                                 </button>
                             );
                         })}
                     </nav>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                         <div
                             className="hidden xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs"
                             style={{
@@ -195,7 +208,7 @@ export function Layout({
                             title={workspaceStatus?.description}
                         >
                             <span className="h-2.5 w-2.5 rounded-full" style={{ background: statusColors.dot }} />
-                            <span className="font-medium">{workspaceStatus?.label ?? 'Loading workspace'}</span>
+                            <span className="font-medium">{workspaceStatus?.label ?? 'Research runtime'}</span>
                         </div>
 
                         <button
@@ -211,7 +224,7 @@ export function Layout({
                         </button>
 
                         <a
-                            href="/quantus"
+                            href={quantusOverviewUrl}
                             className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
                             style={{
                                 background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.06)',
@@ -219,7 +232,7 @@ export function Layout({
                                 border: `1px solid ${borderColor}`,
                             }}
                         >
-                            Product page
+                            Overview
                             <ArrowUpRight className="w-4 h-4" />
                         </a>
 
@@ -285,7 +298,7 @@ export function Layout({
                         >
                             <div
                                 className="px-4 py-4 flex flex-col gap-2"
-                                style={{ background: lightMode ? '#FCFCFD' : '#060810' }}
+                                style={{ background: lightMode ? '#FFFFFF' : '#000000' }}
                             >
                                 {navLinks.map((link) => (
                                     <button
@@ -307,7 +320,7 @@ export function Layout({
                                     </button>
                                 ))}
                                 <a
-                                    href="/quantus"
+                                    href={quantusOverviewUrl}
                                     className="flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium"
                                     style={{
                                         background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
@@ -315,7 +328,7 @@ export function Layout({
                                         color: textColor,
                                     }}
                                 >
-                                    Product page
+                                    Overview
                                     <ArrowUpRight className="w-4 h-4" />
                                 </a>
                                 {userName ? (
@@ -355,27 +368,28 @@ export function Layout({
                 </AnimatePresence>
             </header>
 
-            <main className="flex-1 max-w-[1320px] mx-auto w-full px-4 md:px-8 py-6 md:py-8">
+            <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8 md:py-10">
                 {children}
             </main>
 
             <footer
                 style={{
-                    background: lightMode ? '#F8FAFC' : '#09090B',
+                    background: lightMode ? '#FFFFFF' : '#09090B',
                     color: lightMode ? '#111827' : '#FFFFFF',
-                    borderTop: `1px solid ${lightMode ? '#E5E7EB' : '#1F2937'}`,
+                    borderTop: `1px solid ${lightMode ? '#E5E7EB' : '#1A1A1A'}`,
                 }}
             >
-                <div className="max-w-[1320px] mx-auto px-4 md:px-8 py-6 md:py-8">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
                     <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                         <div>
                             <div className="flex items-center gap-3 mb-4">
                                 <div
-                                    className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm"
+                                    className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm select-none"
                                     style={{
                                         background: lightMode ? '#09090B' : '#FFFFFF',
                                         color: lightMode ? '#FFFFFF' : '#09090B',
                                         fontFamily: 'var(--font-heading)',
+                                        letterSpacing: '0.08em',
                                     }}
                                 >
                                     BI
@@ -385,19 +399,19 @@ export function Layout({
                                         className="font-semibold tracking-tight"
                                         style={{ fontFamily: 'var(--font-heading)', fontSize: '20px' }}
                                     >
-                                        Quantus
+                                        BI Solutions Group
                                     </div>
                                     <div
-                                        className="uppercase tracking-[0.24em]"
-                                        style={{ fontSize: '10px', color: lightMode ? '#6B7280' : '#9CA3AF' }}
+                                        className="text-xs font-medium"
+                                        style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}
                                     >
-                                        Native BI Solutions product
+                                        Quantus Investing workspace
                                     </div>
                                 </div>
                             </div>
                             <p className="text-sm leading-relaxed max-w-xl" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                Institutional-grade quantitative research with a cleaner BI Solutions shell,
-                                fast search-to-report flow, and a dedicated workspace under the same domain.
+                                Quantus is the research product inside the BI Solutions ecosystem, with a dedicated
+                                workspace for signal review, archive access, methodology, and sector workflows.
                             </p>
                         </div>
 
@@ -463,13 +477,13 @@ export function Layout({
                                     Ecosystem
                                 </h4>
                                 <div className="flex flex-col gap-2.5 text-sm" style={{ color: lightMode ? '#374151' : '#D1D5DB' }}>
-                                    <a href="/products" className="transition-colors hover:underline" style={{ color: 'inherit' }}>
+                                    <a href={productsOverviewUrl} className="transition-colors hover:underline" style={{ color: 'inherit' }}>
                                         Products overview
                                     </a>
-                                    <a href="/contact" className="transition-colors hover:underline" style={{ color: 'inherit' }}>
+                                    <a href={contactUrl} className="transition-colors hover:underline" style={{ color: 'inherit' }}>
                                         Contact BI Solutions
                                     </a>
-                                    <a href="/" className="transition-colors hover:underline" style={{ color: 'inherit' }}>
+                                    <a href={bisolutionsHomeUrl} className="transition-colors hover:underline" style={{ color: 'inherit' }}>
                                         BI Solutions Group
                                     </a>
                                 </div>
@@ -477,23 +491,23 @@ export function Layout({
                         </div>
                     </div>
 
-                    <div
-                        className="border-t mt-6 pt-4 text-xs leading-relaxed"
-                        style={{
-                            borderColor: lightMode ? '#E5E7EB' : '#1F2937',
+                        <div
+                            className="border-t mt-6 pt-4 text-xs leading-relaxed"
+                            style={{
+                                borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                             color: lightMode ? '#6B7280' : '#6B7280',
                         }}
-                    >
-                        <p className="max-w-5xl">
-                            For educational and research purposes only. Not financial, investment, or legal advice.
-                            Past performance does not guarantee future results, and all investments involve risk.
-                        </p>
-                        <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
-                            <span>© 2026 BI Solutions Group · Quantus · bisolutions.group</span>
-                            <span>Meridian v2.4 · Separate product runtime</span>
+                        >
+                            <p className="max-w-5xl">
+                                For educational and research purposes only. Not financial, investment, or legal advice.
+                                Past performance does not guarantee future results, and all investments involve risk.
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
+                                <span>© 2026 BI Solutions Group · Quantus Investing · bisolutions.group</span>
+                                <span>Research workspace under the BI Solutions product suite</span>
+                            </div>
                         </div>
                     </div>
-                </div>
             </footer>
         </div>
     );

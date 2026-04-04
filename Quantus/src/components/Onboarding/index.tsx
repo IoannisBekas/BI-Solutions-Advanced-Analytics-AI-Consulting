@@ -99,7 +99,7 @@ function TourTooltip({ step, stepIndex, totalSteps, onNext, onPrev, onDismiss }:
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="fixed z-[100] max-w-sm rounded-2xl p-5 shadow-2xl"
             style={{
-                background: '#111827',
+                background: '#0A0A0A',
                 border: '1px solid rgba(99,102,241,0.4)',
                 boxShadow: '0 24px 72px rgba(0,0,0,0.6), 0 0 0 1px rgba(99,102,241,0.2)',
                 // Simple center positioning — production: compute from targetId bounds
@@ -193,7 +193,7 @@ export function MetricTooltip({ explanation, lightMode }: MetricTooltipProps) {
                         transition={{ duration: 0.15 }}
                         className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 rounded-xl p-3 text-xs"
                         style={{
-                            background: lightMode ? '#F9FAFB' : '#1F2937',
+                            background: lightMode ? '#F9FAFB' : '#1A1A1A',
                             border: `1px solid ${lightMode ? '#E2E8F0' : '#374151'}`,
                             boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                             color: lightMode ? '#374151' : '#D1D5DB',

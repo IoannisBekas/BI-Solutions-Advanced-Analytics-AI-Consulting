@@ -42,8 +42,8 @@ interface InsightCardItemProps {
 
 function InsightCardItem({ card, index, isLatest, isGenerating, lightMode }: InsightCardItemProps) {
     const meta = CATEGORY_META[card.category] ?? CATEGORY_META.model;
-    const cardBg = lightMode ? 'rgba(255,255,255,0.82)' : '#111827';
-    const borderColor = lightMode ? '#E2E8F0' : '#1F2937';
+    const cardBg = lightMode ? 'rgba(255,255,255,0.82)' : '#0A0A0A';
+    const borderColor = lightMode ? '#E2E8F0' : '#1A1A1A';
     const textSecondary = lightMode ? '#475569' : '#9CA3AF';
 
     return (
@@ -146,8 +146,8 @@ function CompletionCard({
 // ─── Skeleton placeholder ──────────────────────────────────────────────────────
 
 function SkeletonCard({ lightMode }: { lightMode?: boolean }) {
-    const cardBg = lightMode ? 'rgba(255,255,255,0.82)' : '#111827';
-    const borderColor = lightMode ? '#E2E8F0' : '#1F2937';
+    const cardBg = lightMode ? 'rgba(255,255,255,0.82)' : '#0A0A0A';
+    const borderColor = lightMode ? '#E2E8F0' : '#1A1A1A';
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -207,7 +207,7 @@ export function ProgressInsightFeed({
                         {isGenerating ? `Analyzing ${ticker}…` : 'Analysis Complete'}
                     </h3>
                 </div>
-                <div className="flex-1 h-px" style={{ background: lightMode ? '#E2E8F0' : '#1F2937' }} />
+                <div className="flex-1 h-px" style={{ background: lightMode ? '#E2E8F0' : '#1A1A1A' }} />
                 {isDone && (
                     <span className="text-xs font-medium text-emerald-400">
                         ✓ {regularCards.length} signals processed

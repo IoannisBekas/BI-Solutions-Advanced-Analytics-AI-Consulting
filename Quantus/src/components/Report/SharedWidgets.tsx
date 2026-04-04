@@ -85,7 +85,7 @@ export function SectionCard({ title, id, children, lightMode }: { title: string;
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="surface-card p-6 mb-6 print-section"
-            style={{ background: lightMode ? 'rgba(255,255,255,0.9)' : '#111827', borderColor: lightMode ? '#E2E8F0' : '#1F2937' }}
+            style={{ background: lightMode ? 'rgba(255,255,255,0.9)' : '#0A0A0A', borderColor: lightMode ? '#E2E8F0' : '#1A1A1A' }}
         >
             <h3 className="text-xs font-semibold uppercase tracking-widest mb-5 text-gray-500">{title}</h3>
             {children}
@@ -101,7 +101,7 @@ export function MetricCard({ label, value, sub, trend, note, freshness, lightMod
         textPrimary: lightMode ? '#0F172A' : '#F9FAFB',
         textSecondary: lightMode ? '#475569' : '#9CA3AF',
         dimBg: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)',
-        borderColor: lightMode ? '#E2E8F0' : '#1F2937',
+        borderColor: lightMode ? '#E2E8F0' : '#1A1A1A',
     }))();
 
     return (

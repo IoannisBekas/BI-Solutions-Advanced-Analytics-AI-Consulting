@@ -176,7 +176,7 @@ function DiscoveryTile({
             className="group rounded-3xl border p-6 md:p-7 text-left transition-all duration-300 w-full h-full"
             style={{
                 background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(12,18,28,0.92)',
-                borderColor: lightMode ? 'rgba(229,231,235,0.8)' : '#223046',
+                borderColor: lightMode ? 'rgba(229,231,235,0.8)' : '#1A1A1A',
                 boxShadow: lightMode ? '0 4px 24px rgba(15,23,42,0.04)' : '0 22px 56px rgba(0,0,0,0.24)',
                 backdropFilter: lightMode ? 'blur(8px)' : undefined,
                 WebkitBackdropFilter: lightMode ? 'blur(8px)' : undefined,
@@ -241,7 +241,7 @@ function DiscoveryTile({
 
             <div
                 className="mt-6 pt-4 flex items-center justify-between gap-3 text-xs font-medium"
-                style={{ borderTop: `1px solid ${lightMode ? 'rgba(229,231,235,0.6)' : '#223046'}`, color: lightMode ? '#6B7280' : '#9CA3AF' }}
+                style={{ borderTop: `1px solid ${lightMode ? 'rgba(229,231,235,0.6)' : '#1A1A1A'}`, color: lightMode ? '#6B7280' : '#9CA3AF' }}
             >
                 <span>{asset.hasCachedReport ? 'Open report URL' : 'Open starter shell'}</span>
                 <span className="inline-flex items-center gap-1 transition-transform group-hover:translate-x-1">
@@ -367,8 +367,8 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
         });
     }, [onSearch, query, results]);
 
-    const cardBg = lightMode ? 'rgba(252,252,253,0.96)' : 'rgba(14,20,31,0.96)';
-    const cardBorder = lightMode ? 'rgba(229,231,235,0.8)' : '#223046';
+    const cardBg = lightMode ? 'rgba(252,252,253,0.96)' : 'rgba(0,0,0,0.96)';
+    const cardBorder = lightMode ? 'rgba(229,231,235,0.8)' : '#1A1A1A';
     const headline = workspaceSummary
         ? 'Search coverage first, then move into signal.'
         : 'Opening the Quantus workspace\u2026';
@@ -406,7 +406,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                 className="inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-sm font-medium shadow-sm mb-6"
                                 style={{
                                     background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                    borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                    borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                                     color: lightMode ? '#6B7280' : '#9CA3AF',
                                     backdropFilter: 'blur(8px)',
                                     WebkitBackdropFilter: 'blur(8px)',
@@ -448,7 +448,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                     className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium shadow-sm"
                                     style={{
                                         background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                        borderColor: lightMode ? '#E5E7EB' : '#1F2937',
+                                        borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                                         color: lightMode ? '#475569' : '#9CA3AF',
                                         backdropFilter: 'blur(8px)',
                                         WebkitBackdropFilter: 'blur(8px)',
@@ -560,7 +560,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                     className="inline-flex items-center gap-1 rounded-full border px-1 py-1 shadow-sm transition-all duration-200"
                                                     style={{
                                                         background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                                        borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                                        borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                                                     }}
                                                 >
                                                     <button
@@ -709,7 +709,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                             className="rounded-full px-3 py-1.5 transition-all duration-200 border font-medium shadow-sm"
                                                             style={{
                                                                 background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                                                borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                                                borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                                                                 color: lightMode ? '#374151' : '#D1D5DB',
                                                             }}
                                                         >
@@ -768,7 +768,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                         className="mt-4 rounded-2xl border px-4 py-3 shadow-sm"
                                         style={{
                                             background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.02)',
-                                            borderColor: lightMode ? 'rgba(229,231,235,0.6)' : '#1F2937',
+                                            borderColor: lightMode ? 'rgba(229,231,235,0.6)' : '#1A1A1A',
                                             backdropFilter: 'blur(8px)',
                                             WebkitBackdropFilter: 'blur(8px)',
                                         }}
@@ -784,7 +784,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                                     className="inline-flex items-center gap-1 rounded-full border px-1 py-1 shadow-sm transition-all duration-200"
                                                     style={{
                                                         background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                                        borderColor: lightMode ? '#E5E7EB' : '#223046',
+                                                        borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
                                                     }}
                                                 >
                                                     <button
@@ -816,7 +816,7 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                         <div
                             className="rounded-[2rem] border p-6 md:p-7"
                             style={{
-                                background: lightMode ? 'rgba(255,255,255,0.95)' : 'rgba(14,20,31,0.86)',
+                                background: lightMode ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.86)',
                                 borderColor: cardBorder,
                                 boxShadow: lightMode
                                     ? '0 8px 32px rgba(15,23,42,0.06)'

@@ -42,6 +42,6 @@ describe('themeColors', () => {
   it('returns dark mode colors', () => {
     const colors = themeColors(false);
     expect(colors.textPrimary).toBe('#F9FAFB');
-    expect(colors.borderColor).toBe('#1F2937');
+    expect(colors.borderColor).toBe('#1A1A1A');
   });
 });

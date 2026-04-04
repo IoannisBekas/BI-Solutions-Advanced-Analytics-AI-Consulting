@@ -260,8 +260,8 @@ function ModuleCard({
         <div
             className="rounded-xl overflow-hidden relative transition-all"
             style={{
-                background: lightMode ? 'rgba(255,255,255,0.9)' : '#111827',
-                border: `1px solid ${open ? module.color + '40' : lightMode ? '#E2E8F0' : '#1F2937'}`,
+                background: lightMode ? 'rgba(255,255,255,0.9)' : '#0A0A0A',
+                border: `1px solid ${open ? module.color + '40' : lightMode ? '#E2E8F0' : '#1A1A1A'}`,
                 boxShadow: open ? `0 0 24px ${module.color}12` : 'none',
             }}
         >

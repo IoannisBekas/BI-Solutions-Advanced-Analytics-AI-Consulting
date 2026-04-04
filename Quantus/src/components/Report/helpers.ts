@@ -29,6 +29,6 @@ export function themeColors(lightMode?: boolean) {
         textPrimary: lightMode ? '#0F172A' : '#F9FAFB',
         textSecondary: lightMode ? '#475569' : '#9CA3AF',
         dimBg: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)',
-        borderColor: lightMode ? '#E2E8F0' : '#1F2937',
+        borderColor: lightMode ? '#E2E8F0' : '#1A1A1A',
     };
 }
