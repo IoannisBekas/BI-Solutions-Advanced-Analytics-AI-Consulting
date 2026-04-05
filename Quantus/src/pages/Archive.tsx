@@ -7,7 +7,7 @@ import {
 import { fetchArchiveSnapshots } from '../services/product';
 import type { ArchiveSnapshot as Snapshot, SignalType } from '../types';
 
-interface ArchiveProps { userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL'; lightMode?: boolean; onViewReport?(s: Snapshot): void; }
+interface ArchiveProps { userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL'; lightMode?: boolean; onViewReport?(s: Snapshot): void; onUpgrade?: () => void; }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const sigColor: Record<SignalType, string> = {
@@ -146,7 +146,7 @@ function TimelineSlider({ total, value, onChange }: { total: number; value: numb
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
-export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveProps) {
+export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade }: ArchiveProps) {
     const [ticker, setTicker] = useState('NVDA');
     const [query, setQuery] = useState('');
     const [compare, setCompare] = useState<Snapshot | null>(null);
@@ -270,7 +270,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport }: ArchiveP
                     <div className="bis-section-card mt-8 p-5 text-center">
                         <p className="text-sm font-semibold mb-1" style={{ color: tp }}>Full archive with Unlocked tier</p>
                         <p className="text-xs mb-3" style={{ color: ts }}>PDF export, unlimited history, compare any two snapshots.</p>
-                        <button className="rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800">
+                        <button onClick={onUpgrade} className="rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800">
                             Create Free Account →
                         </button>
                     </div>

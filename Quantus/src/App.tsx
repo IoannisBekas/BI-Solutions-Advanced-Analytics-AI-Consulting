@@ -1159,7 +1159,7 @@ function App() {
                 {route.view === 'sectors' && (
                     <motion.div key="sectors" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
-                            <SectorPacksDashboard onSelectTicker={(ticker: string) => openReportRoute(ticker)} />
+                            <SectorPacksDashboard onSelectTicker={(ticker: string) => openReportRoute(ticker)} onUpgrade={() => openAuthModal('signup')} />
                         </Suspense>
                     </motion.div>
                 )}
@@ -1190,6 +1190,7 @@ function App() {
                                 userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
                                 lightMode={lightMode}
                                 onViewReport={(snapshot: { ticker: string; reportId: string }) => openReportRoute(snapshot.ticker, undefined, snapshot.reportId)}
+                                onUpgrade={() => openAuthModal('signup')}
                             />
                         </Suspense>
                     </motion.div>

@@ -420,7 +420,7 @@ export default function QuantusPage() {
                         {["Equities", "Crypto", "Sector Packs", "Cached reports"].map((item) => (
                           <span
                             key={item}
-                            className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
+                            className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 shadow-sm"
                           >
                             {item}
                           </span>

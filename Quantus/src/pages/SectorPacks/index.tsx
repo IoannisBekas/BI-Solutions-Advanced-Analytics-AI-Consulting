@@ -45,7 +45,7 @@ const SIGNAL_ORDER: Record<string, number> = {
     'STRONG BUY': 5, 'BUY': 4, 'NEUTRAL': 3, 'SELL': 2, 'STRONG SELL': 1,
 };
 
-const SectorPacksDashboard = ({ onSelectTicker }: { onSelectTicker?: (ticker: string) => void }) => {
+const SectorPacksDashboard = ({ onSelectTicker, onUpgrade }: { onSelectTicker?: (ticker: string) => void; onUpgrade?: () => void }) => {
     const [selectedSector, setSelectedSector] = useState('Technology');
     const [data, setData] = useState<SectorPackData | null>(null);
     const [loading, setLoading] = useState(false);
@@ -240,7 +240,10 @@ const SectorPacksDashboard = ({ onSelectTicker }: { onSelectTicker?: (ticker: st
                         Your current tier does not include access to the {selectedSector} Sector Pack.
                         Subscribe to unlock 20 automated institutional reports updated weekly.
                     </p>
-                    <button className="mt-6 px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors text-sm font-medium border border-slate-700">
+                    <button
+                        onClick={onUpgrade}
+                        className="mt-6 px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors text-sm font-medium border border-slate-700"
+                    >
                         View Pricing Plans
                     </button>
                 </div>
