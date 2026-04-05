@@ -14,8 +14,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="AI Product Portfolio and BI Consulting"
-        description="BI Solutions Group presents Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and a website and app portfolio with dedicated product pages."
+        title="Advanced Analytics, AI Products & BI Consulting"
+        description="BI Solutions Group delivers enterprise analytics, AI-powered products, and business intelligence consulting. Explore Quantus Investing, Power BI Solutions, and custom AI tools built for data-driven organizations."
         path="/"
         structuredData={{
           "@context": "https://schema.org",
