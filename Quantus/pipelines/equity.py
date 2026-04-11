@@ -44,6 +44,21 @@ from pipelines.data_architecture import (
 
 logger = logging.getLogger(__name__)
 
+
+def _safe_yf(val) -> float | None:
+    """Coerce a yfinance value to float, returning None on failure/infinity."""
+    try:
+        f = float(val)
+        return None if (f != f or abs(f) == float("inf")) else round(f, 4)
+    except (TypeError, ValueError):
+        return None
+
+
+def _yf_pct(val) -> float | None:
+    """Convert a 0–1 yfinance fraction to a rounded percentage (×100)."""
+    f = _safe_yf(val)
+    return round(f * 100, 2) if f is not None else None
+
 # ---------------------------------------------------------------------------
 # Constants from skill spec
 # ---------------------------------------------------------------------------
@@ -167,6 +182,25 @@ def compute_bollinger(df: pd.DataFrame, period: int = 20, std: float = 2.0) -> s
     if last_close > last_sma:
         return "UPPER_HALF"
     return "LOWER_HALF"
+
+
+def compute_bollinger_percentile(df: pd.DataFrame, period: int = 20, std: float = 2.0) -> float | None:
+    """Return where the current close sits within the Bollinger Band as 0–100 percentile."""
+    close = df["close"]
+    sma   = close.rolling(period).mean()
+    sigma = close.rolling(period).std()
+    upper = sma + std * sigma
+    lower = sma - std * sigma
+
+    last_close = float(close.iloc[-1])
+    last_upper = float(upper.iloc[-1])
+    last_lower = float(lower.iloc[-1])
+
+    band_width = last_upper - last_lower
+    if band_width == 0:
+        return None
+    pct = (last_close - last_lower) / band_width * 100
+    return round(max(0.0, min(100.0, pct)), 1)
 
 
 def compute_zscore(df: pd.DataFrame, window: int = 90) -> float:
@@ -604,8 +638,14 @@ async def run_equity_pipeline(
     rsi              = compute_rsi(df)
     macd             = compute_macd(df)
     bollinger_pos    = compute_bollinger(df)
+    bollinger_pct    = compute_bollinger_percentile(df)
     zscore_90d       = compute_zscore(df)
     ohlcv_summary    = build_ohlcv_summary(df)
+    # 52-week high/low from yfinance info (preferred) or OHLCV history
+    week_52_high = float(info.get("fiftyTwoWeekHigh") or df["high"].tail(252).max())
+    week_52_low  = float(info.get("fiftyTwoWeekLow")  or df["low"].tail(252).min())
+    ohlcv_summary["high_52w"] = round(week_52_high, 4)
+    ohlcv_summary["low_52w"]  = round(week_52_low,  4)
 
     # ------------------------------------------------------------------ #
     # Step 3 — Regime detection                                            #
@@ -741,6 +781,7 @@ async def run_equity_pipeline(
         rsi=rsi,
         macd=macd,
         bollinger_position=bollinger_pos,
+        bollinger_percentile=bollinger_pct,
         zscore_90d=zscore_90d,
         var_99_per_10k=var_99_per_10k,
         expected_shortfall=expected_shortfall,
@@ -775,7 +816,37 @@ async def run_equity_pipeline(
         # Quality & meta
         data_quality_scores=quality_scores,
         signal_track_record=[],
-        asset_specific={},
+        asset_specific={
+            "fundamentals": {
+                "pe_ratio":            _safe_yf(info.get("trailingPE")),
+                "forward_pe":          _safe_yf(info.get("forwardPE")),
+                "peg_ratio":           _safe_yf(info.get("pegRatio")),
+                "ps_ratio":            _safe_yf(info.get("priceToSalesTrailing12Months")),
+                "pb_ratio":            _safe_yf(info.get("priceToBook")),
+                "ev_ebitda":           _safe_yf(info.get("enterpriseToEbitda")),
+                "gross_margin":        _yf_pct(info.get("grossMargins")),
+                "operating_margin":    _yf_pct(info.get("operatingMargins")),
+                "net_margin":          _yf_pct(info.get("profitMargins")),
+                "roe":                 _yf_pct(info.get("returnOnEquity")),
+                "roa":                 _yf_pct(info.get("returnOnAssets")),
+                "debt_to_equity":      _safe_yf(info.get("debtToEquity")),
+                "current_ratio":       _safe_yf(info.get("currentRatio")),
+                "revenue_growth_yoy":  _yf_pct(info.get("revenueGrowth")),
+                "earnings_growth_yoy": _yf_pct(info.get("earningsGrowth")),
+                "dividend_yield":      _yf_pct(info.get("dividendYield")),
+                "payout_ratio":        _yf_pct(info.get("payoutRatio")),
+                "target_mean_price":   _safe_yf(info.get("targetMeanPrice")),
+            },
+            "analyst": {
+                "recommendation_key":  info.get("recommendationKey"),
+                "num_analysts":        info.get("numberOfAnalystOpinions") or info.get("numAnalystOpinions"),
+                "target_mean":         _safe_yf(info.get("targetMeanPrice")),
+                "target_high":         _safe_yf(info.get("targetHighPrice")),
+                "target_low":          _safe_yf(info.get("targetLowPrice")),
+            },
+            "week_52_high": week_52_high,
+            "week_52_low":  week_52_low,
+        },
         payload_timestamp=datetime.now(timezone.utc).isoformat(),
         python_model_versions={
             "arima": "0.14", "prophet": "stub", "lstm": "stub", "regime": "stub"

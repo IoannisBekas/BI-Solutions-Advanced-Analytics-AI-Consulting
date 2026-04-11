@@ -323,8 +323,16 @@ def _build_pipeline_only_report(payload_dict: dict, ticker: str) -> dict:
         "current_price": round(current_price, 2),
         "day_change": day_change,
         "day_change_pct": round(day_change_pct, 2),
-        "week_52_high": p.get("ohlcv_summary", {}).get("high_52w", current_price * 1.1) if p.get("ohlcv_summary") else round(current_price * 1.15, 2),
-        "week_52_low": p.get("ohlcv_summary", {}).get("low_52w", current_price * 0.7) if p.get("ohlcv_summary") else round(current_price * 0.75, 2),
+        "week_52_high": (
+            p.get("asset_specific", {}).get("week_52_high")
+            or p.get("ohlcv_summary", {}).get("high_52w")
+            or round(current_price * 1.15, 2)
+        ),
+        "week_52_low": (
+            p.get("asset_specific", {}).get("week_52_low")
+            or p.get("ohlcv_summary", {}).get("low_52w")
+            or round(current_price * 0.75, 2)
+        ),
         "pe_ratio": p.get("pe_ratio"),
 
         # Regime
@@ -498,6 +506,32 @@ def _build_pipeline_only_report(payload_dict: dict, ticker: str) -> dict:
             f"{'Price is trending up.' if day_change_pct > 0 else 'Price is trending down.' if day_change_pct < 0 else 'Price is flat.'} "
             f"All numbers are from real Yahoo Finance data."
         ),
+
+        # Momentum (real computed values from yfinance OHLCV)
+        "momentum": {
+            "rsi": round(rsi, 1),
+            "rsi_note": (
+                "Approaching overbought" if rsi > 65
+                else "Approaching oversold" if rsi < 35
+                else "Healthy range"
+            ),
+            "macd": round(macd.get("macd_line", 0.0), 4) if isinstance(macd, dict) else None,
+            "macd_note": macd.get("crossover", "NEUTRAL").capitalize() + " crossover" if isinstance(macd, dict) else "",
+            "bollinger_position": bollinger_pos,
+            "bollinger_note": {
+                "ABOVE_UPPER": "Above upper band — extended",
+                "UPPER_HALF": "Upper half of band",
+                "LOWER_HALF": "Lower half of band",
+                "BELOW_LOWER": "Below lower band — oversold",
+            }.get(bollinger_pos, ""),
+            "bollinger_pct": p.get("bollinger_percentile"),
+        } if rsi else None,
+
+        # Fundamentals (from asset_specific populated by equity pipeline)
+        "fundamentals": _build_fundamentals(p, current_price),
+
+        # Analyst consensus (from asset_specific populated by equity pipeline)
+        "analyst_consensus": _build_analyst_consensus_from_payload(p),
 
         # Meta
         "researcher_count": 0,
@@ -712,6 +746,128 @@ def _regime_strategies(label: str) -> list[str]:
     if "HIGH_VOL" in label_upper or "HIGH VOL" in label_upper:
         return ["Volatility Strategies", "Hedging"]
     return ["Mean Reversion", "Range Trading"]
+
+
+def _build_fundamentals(p: dict, current_price: float) -> dict | None:
+    """Build FundamentalsData from the pipeline payload's asset_specific block."""
+    f = (p.get("asset_specific") or {}).get("fundamentals") or {}
+    if not any(v is not None for v in f.values()):
+        return None
+    target = f.get("target_mean_price")
+    dcf_upside = (
+        round((target - current_price) / current_price * 100, 1)
+        if target and current_price else None
+    )
+    return {
+        "pe_ratio":            f.get("pe_ratio"),
+        "forward_pe":          f.get("forward_pe"),
+        "peg_ratio":           f.get("peg_ratio"),
+        "ps_ratio":            f.get("ps_ratio"),
+        "pb_ratio":            f.get("pb_ratio"),
+        "ev_ebitda":           f.get("ev_ebitda"),
+        "gross_margin":        f.get("gross_margin"),
+        "operating_margin":    f.get("operating_margin"),
+        "net_margin":          f.get("net_margin"),
+        "roe":                 f.get("roe"),
+        "roa":                 f.get("roa"),
+        "roic":                None,
+        "debt_to_equity":      f.get("debt_to_equity"),
+        "current_ratio":       f.get("current_ratio"),
+        "interest_coverage":   None,
+        "revenue_growth_yoy":  f.get("revenue_growth_yoy"),
+        "earnings_growth_yoy": f.get("earnings_growth_yoy"),
+        "free_cash_flow_yield": None,
+        "dividend_yield":      f.get("dividend_yield"),
+        "payout_ratio":        f.get("payout_ratio"),
+        "dcf_fair_value":      target,
+        "dcf_upside_pct":      dcf_upside,
+    }
+
+
+_RECOMMENDATION_MAP_API = {
+    "strongbuy": "Strong Buy",
+    "buy": "Buy",
+    "hold": "Hold",
+    "underperform": "Sell",
+    "sell": "Strong Sell",
+    "overweight": "Buy",
+    "neutral": "Hold",
+    "underweight": "Sell",
+    "strongsell": "Strong Sell",
+}
+
+
+def _build_analyst_consensus_from_payload(p: dict) -> dict | None:
+    """Build AnalystConsensus from the pipeline payload's asset_specific block."""
+    a = (p.get("asset_specific") or {}).get("analyst") or {}
+    n = a.get("num_analysts") or 0
+    mean = a.get("target_mean")
+    if not n and not mean:
+        return None
+    rating_raw = str(a.get("recommendation_key") or "").lower().strip()
+    rating = _RECOMMENDATION_MAP_API.get(rating_raw, "Hold")
+    return {
+        "rating": rating,
+        "target_mean": mean,
+        "target_high": a.get("target_high"),
+        "target_low": a.get("target_low"),
+        "num_analysts": int(n),
+    }
+
+
+def _safe_float(val) -> float | None:
+    """Convert a value to float, returning None on failure or infinity."""
+    try:
+        f = float(val)
+        return None if (not isinstance(f, float) or f != f or abs(f) == float("inf")) else round(f, 4)
+    except (TypeError, ValueError):
+        return None
+
+
+def _pct(val) -> float | None:
+    """Convert a 0–1 fraction from yfinance to a percentage (0–100 range)."""
+    f = _safe_float(val)
+    return round(f * 100, 2) if f is not None else None
+
+
+_RECOMMENDATION_MAP = {
+    "strongBuy": "Strong Buy",
+    "buy": "Buy",
+    "hold": "Hold",
+    "underperform": "Sell",
+    "sell": "Strong Sell",
+    # Morningstar / other aliases
+    "strongbuy": "Strong Buy",
+    "overweight": "Buy",
+    "neutral": "Hold",
+    "underweight": "Sell",
+    "strongsell": "Strong Sell",
+}
+
+
+def _build_analyst_consensus(info: dict) -> dict | None:
+    """Build analyst consensus block from yfinance info dict."""
+    if not info:
+        return None
+    buy   = info.get("recommendationKey") or info.get("recommendation")
+    n     = info.get("numberOfAnalystOpinions") or info.get("numAnalystOpinions") or 0
+    mean  = _safe_float(info.get("targetMeanPrice"))
+    high  = _safe_float(info.get("targetHighPrice"))
+    low   = _safe_float(info.get("targetLowPrice"))
+
+    if not n and not mean:
+        return None
+
+    rating_raw = str(buy or "").lower().strip()
+    rating = _RECOMMENDATION_MAP.get(rating_raw, "Hold")
+
+    return {
+        "rating": rating,
+        "target_mean": mean,
+        "target_high": high,
+        "target_low": low,
+        "num_analysts": int(n),
+    }
 
 
 def _format_stress_tests(tests) -> list[dict]:

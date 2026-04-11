@@ -237,6 +237,7 @@ class QuantusPayload:
     rsi: float
     macd: dict
     bollinger_position: str     # "ABOVE_UPPER" | "MIDDLE" | "BELOW_LOWER" | etc.
+    bollinger_percentile: float | None = None   # 0–100 position within band
     zscore_90d: float
     var_99_per_10k: float       # VaR at 99 % confidence per $10 k notional
     expected_shortfall: float
