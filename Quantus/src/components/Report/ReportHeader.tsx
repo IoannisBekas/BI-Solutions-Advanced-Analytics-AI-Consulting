@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Share2, Download, Bell, Bookmark, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { Share2, Download, Bell, Bookmark, ChevronDown, ChevronUp, AlertTriangle, Users } from 'lucide-react';
 import type { ReportData } from '../../types';
 import { signalClass, regimeClass, themeColors } from './helpers';
 import { Feedback } from './SharedWidgets';
@@ -72,6 +72,58 @@ export function ReportHeader({ report, lightMode, onSubscribe, onToggleWatchlist
                 <span className={`regime-badge ${regimeClass(report.regime?.label ?? 'Mean-Reverting')}`}>{report.regime?.label ?? 'Unknown'}</span>
                 <span className="text-xs" style={{ color: textSecondary }}>{report.regime?.implication ?? ''}</span>
             </div>
+
+            {report.week_52_high != null && report.week_52_low != null && report.current_price != null && (
+                <div className="mb-4 px-1">
+                    <div className="flex items-center justify-between text-xs mb-1.5" style={{ color: textSecondary }}>
+                        <span className="font-mono">${report.week_52_low.toFixed(2)}</span>
+                        <span className="text-[10px] uppercase tracking-[0.15em]">52-Week Range</span>
+                        <span className="font-mono">${report.week_52_high.toFixed(2)}</span>
+                    </div>
+                    <div className="relative h-2 rounded-full overflow-hidden" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
+                        <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(90deg, #EF4444 0%, #F59E0B 35%, #10B981 100%)', opacity: 0.25 }} />
+                        <div
+                            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 shadow-sm"
+                            style={{
+                                left: `${Math.min(Math.max(((report.current_price - report.week_52_low) / (report.week_52_high - report.week_52_low)) * 100, 0), 100)}%`,
+                                transform: 'translate(-50%, -50%)',
+                                background: '#3B82F6',
+                                borderColor: lightMode ? '#FFFFFF' : '#0A0A0A',
+                            }}
+                        />
+                    </div>
+                    <div className="text-center mt-1">
+                        <span className="text-xs font-mono font-semibold" style={{ color: '#3B82F6' }}>${report.current_price.toFixed(2)}</span>
+                    </div>
+                </div>
+            )}
+
+            {report.analyst_consensus && (
+                <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
+                    <Users className="w-4 h-4 flex-shrink-0" style={{ color: textSecondary }} />
+                    <div className="flex items-center gap-3 flex-wrap text-xs">
+                        <span className="font-semibold px-2 py-0.5 rounded-full" style={{
+                            color: report.analyst_consensus.rating.includes('Buy') ? '#10B981' : report.analyst_consensus.rating.includes('Sell') ? '#EF4444' : '#F59E0B',
+                            background: report.analyst_consensus.rating.includes('Buy') ? 'rgba(16,185,129,0.1)' : report.analyst_consensus.rating.includes('Sell') ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)',
+                        }}>
+                            {report.analyst_consensus.rating}
+                        </span>
+                        <span style={{ color: textSecondary }}>
+                            {report.analyst_consensus.num_analysts} analysts
+                        </span>
+                        {report.analyst_consensus.target_mean != null && (
+                            <span style={{ color: textSecondary }}>
+                                Mean target: <span className="font-mono font-semibold" style={{ color: textPrimary }}>${report.analyst_consensus.target_mean.toFixed(2)}</span>
+                            </span>
+                        )}
+                        {report.analyst_consensus.target_low != null && report.analyst_consensus.target_high != null && (
+                            <span className="text-gray-500">
+                                (${report.analyst_consensus.target_low.toFixed(2)} – ${report.analyst_consensus.target_high.toFixed(2)})
+                            </span>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {report.cross_ticker_alerts?.map((alert, i) => (
                 <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg mb-3 text-xs"

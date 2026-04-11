@@ -201,7 +201,7 @@ function MockModuleResult({ module, ticker }: { module: DeepDiveModule; ticker: 
                 {/* Data freshness */}
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                     <Clock className="w-3 h-3" />
-                    <span>Generated just now · Cached in Redis</span>
+                    <span>Updated just now · Cached</span>
                 </div>
             </div>
         </div>
@@ -297,7 +297,11 @@ function ModuleCard({
                                 {module.requiresTier}
                             </span>
                         )}
-                        {state === 'done' && <span className="text-emerald-400 text-xs">✓ Cached</span>}
+                        {state === 'done' && (
+                            <span className="flex items-center gap-1 text-emerald-400 text-xs">
+                                <Clock className="w-3 h-3" /> Updated 2h ago
+                            </span>
+                        )}
                     </div>
                     <div className="text-xs mt-0.5 text-gray-500">{module.description}</div>
                 </div>

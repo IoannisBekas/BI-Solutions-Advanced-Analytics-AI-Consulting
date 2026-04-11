@@ -20,6 +20,12 @@
         "PORT": "3001",
         "NODE_ENV": "development"
       }
+    },
+    {
+      "name": "quantus-vite",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd Quantus && npx vite --port 4500"],
+      "port": 4500
     }
   ]
 }

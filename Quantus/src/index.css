@@ -125,7 +125,7 @@ body {
 /* ── Dark Mode ──────────────────────────────────────────────────────────── */
 
 body.dark-mode {
-  --color-bg-base: #000000;
+  --color-bg-base: #09090b;
   --color-surface: #0A0A0A;
   --color-surface-2: #111111;
   --color-border: #1A1A1A;
@@ -134,7 +134,7 @@ body.dark-mode {
   --color-text-secondary: #97A8BF;
   --color-text-muted: #6F829B;
 
-  background-color: #000000;
+  background-color: #09090b;
   color: #F0F6FF;
 }
 
@@ -174,7 +174,7 @@ body.dark-mode .skeleton {
 }
 
 body.dark-mode ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #09090b;
 }
 
 body.dark-mode ::-webkit-scrollbar-thumb {

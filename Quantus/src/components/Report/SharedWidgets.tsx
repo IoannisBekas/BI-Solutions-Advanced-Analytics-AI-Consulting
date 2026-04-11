@@ -97,6 +97,7 @@ export function MetricCard({ label, value, sub, trend, note, freshness, lightMod
     label: string; value: string; sub?: string; trend?: 'up' | 'down' | 'neutral'; note?: string; freshness?: string; lightMode?: boolean;
 }) {
     void trend;
+    const [copied, setCopied] = useState(false);
     const { textPrimary, textSecondary, dimBg, borderColor } = (() => ({
         textPrimary: lightMode ? '#0F172A' : '#F9FAFB',
         textSecondary: lightMode ? '#475569' : '#9CA3AF',
@@ -104,11 +105,20 @@ export function MetricCard({ label, value, sub, trend, note, freshness, lightMod
         borderColor: lightMode ? '#E2E8F0' : '#1A1A1A',
     }))();
 
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(`${label}: ${value}`);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+        } catch { /* clipboard unavailable */ }
+    };
+
     return (
-        <div className="rounded-xl p-4 flex flex-col h-full" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
-            <div className="flex-1">
+        <div className="rounded-xl p-4 flex flex-col h-full cursor-pointer group" style={{ background: dimBg, border: `1px solid ${borderColor}` }} onClick={handleCopy}>
+            <div className="flex-1 relative">
                 <div className="flex items-center justify-between mb-1">
                     <span className="text-xs uppercase tracking-wider" style={{ color: textSecondary }}>{label}</span>
+                    {copied && <span className="text-[10px] text-emerald-400 font-medium">Copied!</span>}
                 </div>
                 <div className="metric-value text-xl font-bold mb-1" style={{ color: textPrimary }}>{value}</div>
                 {sub && <div className="text-xs" style={{ color: textSecondary }}>{sub}</div>}

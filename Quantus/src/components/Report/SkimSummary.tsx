@@ -25,7 +25,11 @@ function buildKeyRisk(report: ReportData) {
 }
 
 function buildSuggestedAction(report: ReportData) {
-    return `${report.strategy.action} with ${report.strategy.confidence}% confidence. ${report.strategy.regime_context}`;
+    const base = `${report.strategy.action} with ${report.strategy.confidence}% confidence. ${report.strategy.regime_context}`;
+    if (report.analyst_consensus) {
+        return `${base} Wall Street consensus: ${report.analyst_consensus.rating} (${report.analyst_consensus.num_analysts} analysts, mean target $${report.analyst_consensus.target_mean?.toFixed(2) ?? 'N/A'}).`;
+    }
+    return base;
 }
 
 function buildWhatChanged(report: ReportData) {
@@ -34,26 +38,31 @@ function buildWhatChanged(report: ReportData) {
 
 export function SkimSummary({ report, lightMode }: SkimSummaryProps) {
     const { textPrimary, textSecondary, dimBg, borderColor } = themeColors(lightMode);
+    const isBullish = report.overall_signal.includes('BUY');
     const cards = [
         {
             title: 'Why it matters',
             text: firstSentence(report.narrative_plain || report.narrative_executive_summary),
             icon: Sparkles,
+            accent: '#3B82F6',
         },
         {
             title: 'What changed',
             text: buildWhatChanged(report),
             icon: Gauge,
+            accent: '#6366F1',
         },
         {
             title: 'Key risk',
             text: buildKeyRisk(report),
             icon: AlertTriangle,
+            accent: '#F59E0B',
         },
         {
             title: 'Suggested action',
             text: buildSuggestedAction(report),
             icon: ArrowRight,
+            accent: isBullish ? '#10B981' : '#EF4444',
         },
     ];
 
@@ -87,10 +96,10 @@ export function SkimSummary({ report, lightMode }: SkimSummaryProps) {
                     <div
                         key={card.title}
                         className="rounded-xl p-4"
-                        style={{ background: dimBg, border: `1px solid ${borderColor}` }}
+                        style={{ background: dimBg, border: `1px solid ${borderColor}`, borderLeft: `3px solid ${card.accent}` }}
                     >
-                        <div className="flex items-center gap-2 mb-3" style={{ color: textPrimary }}>
-                            <card.icon className="w-4 h-4" />
+                        <div className="flex items-center gap-2 mb-3" style={{ color: card.accent }}>
+                            <card.icon className="w-4.5 h-4.5" />
                             <span className="text-xs font-semibold uppercase tracking-[0.18em]">{card.title}</span>
                         </div>
                         <p className="text-sm leading-relaxed" style={{ color: textSecondary }}>

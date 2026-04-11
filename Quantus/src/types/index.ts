@@ -184,6 +184,67 @@ export interface RiskData {
     };
 }
 
+// ─── Momentum ───────────────────────────────────────────────────────────────
+
+export interface MomentumData {
+    rsi: number | null;
+    rsi_note?: string;
+    macd: number | null;
+    macd_note?: string;
+    bollinger_position: number | null;
+    bollinger_note?: string;
+    adx?: number | null;
+    moving_avg_50?: number | null;
+    moving_avg_200?: number | null;
+}
+
+// ─── Fundamentals ───────────────────────────────────────────────────────────
+
+export interface FundamentalsData {
+    pe_ratio?: number | null;
+    forward_pe?: number | null;
+    peg_ratio?: number | null;
+    ps_ratio?: number | null;
+    pb_ratio?: number | null;
+    ev_ebitda?: number | null;
+    gross_margin?: number | null;
+    operating_margin?: number | null;
+    net_margin?: number | null;
+    roe?: number | null;
+    roa?: number | null;
+    roic?: number | null;
+    debt_to_equity?: number | null;
+    current_ratio?: number | null;
+    interest_coverage?: number | null;
+    revenue_growth_yoy?: number | null;
+    earnings_growth_yoy?: number | null;
+    free_cash_flow_yield?: number | null;
+    dividend_yield?: number | null;
+    payout_ratio?: number | null;
+    dcf_fair_value?: number | null;
+    dcf_upside_pct?: number | null;
+}
+
+// ─── Analyst Consensus ──────────────────────────────────────────────────────
+
+export interface AnalystConsensus {
+    rating: 'Strong Buy' | 'Buy' | 'Hold' | 'Sell' | 'Strong Sell';
+    target_mean: number | null;
+    target_high: number | null;
+    target_low: number | null;
+    num_analysts: number;
+}
+
+// ─── Scenario Targets ───────────────────────────────────────────────────────
+
+export interface ScenarioTargets {
+    bull: { price: number; label?: string };
+    base: { price: number; label?: string };
+    bear: { price: number; label?: string };
+    conviction?: 'HIGH' | 'MEDIUM' | 'LOW';
+    time_horizon?: string;
+}
+
 // ─── Strategy ────────────────────────────────────────────────────────────────
 
 export interface PairsTrade {
@@ -209,6 +270,7 @@ export interface StrategyData {
     earnings_adjustment?: string;
     pairs_trade?: PairsTrade;
     portfolio_sharpe_improvement?: string;
+    scenario_targets?: ScenarioTargets;
 }
 
 // ─── Cross-Ticker Alert ──────────────────────────────────────────────────────
@@ -289,6 +351,9 @@ export interface ReportData {
     alternative_data: AlternativeData;
     risk: RiskData;
     strategy: StrategyData;
+    momentum?: MomentumData;
+    fundamentals?: FundamentalsData;
+    analyst_consensus?: AnalystConsensus;
 
     // Narrative
     narrative_executive_summary: string;

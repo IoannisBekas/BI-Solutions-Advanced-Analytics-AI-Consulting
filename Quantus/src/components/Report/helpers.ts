@@ -41,6 +41,18 @@ export function displayMetric(value: string | undefined | null): string {
     return value;
 }
 
+/** Format a number as a percentage with sign */
+export function formatPercent(v: number | null | undefined): string {
+    if (v == null) return '\u2014';
+    return `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+}
+
+/** Format a number with fixed decimals */
+export function formatRatio(v: number | null | undefined, decimals = 2): string {
+    if (v == null) return '\u2014';
+    return v.toFixed(decimals);
+}
+
 /** Split a long narrative into paragraphs of ~sentencesPerParagraph sentences */
 export function splitNarrative(text: string, sentencesPerParagraph = 3): string[] {
     if (!text) return [];
