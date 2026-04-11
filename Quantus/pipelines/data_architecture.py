@@ -237,7 +237,6 @@ class QuantusPayload:
     rsi: float
     macd: dict
     bollinger_position: str     # "ABOVE_UPPER" | "MIDDLE" | "BELOW_LOWER" | etc.
-    bollinger_percentile: float | None = None   # 0–100 position within band
     zscore_90d: float
     var_99_per_10k: float       # VaR at 99 % confidence per $10 k notional
     expected_shortfall: float
@@ -259,6 +258,7 @@ class QuantusPayload:
     # ------------------------------------------------------------------
     # Optional / conditional fields
     # ------------------------------------------------------------------
+    bollinger_percentile: float | None = field(default=None)   # 0–100 position within band
     sec_language_delta: str | None = field(default=None)
     institutional_flow_delta: float | None = field(default=None)
     insider_net_activity: float | None = field(default=None)

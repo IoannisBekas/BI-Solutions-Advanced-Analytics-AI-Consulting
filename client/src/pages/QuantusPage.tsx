@@ -418,12 +418,14 @@ export default function QuantusPage() {
                       {/* Filter chips */}
                       <div className="mt-4 flex flex-wrap gap-2">
                         {["Equities", "Crypto", "Sector Packs", "Cached reports"].map((item) => (
-                          <span
+                          <button
                             key={item}
-                            className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 shadow-sm"
+                            type="button"
+                            onClick={() => { window.location.href = "/quantus/workspace/"; }}
+                            className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 shadow-sm cursor-pointer transition-all duration-150 hover:border-gray-400 hover:bg-gray-50 hover:shadow-md active:scale-95"
                           >
                             {item}
-                          </span>
+                          </button>
                         ))}
                       </div>
 
@@ -474,9 +476,11 @@ export default function QuantusPage() {
                         {/* Signal cards column */}
                         <div className="space-y-3">
                           {previewSignals.map((item) => (
-                            <div
+                            <button
                               key={item.ticker}
-                              className="group/sig rounded-[1.35rem] border border-gray-200/80 bg-white px-4 py-4 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md"
+                              type="button"
+                              onClick={() => { window.location.href = `/quantus/workspace/report/${encodeURIComponent(item.ticker)}`; }}
+                              className="group/sig w-full text-left rounded-[1.35rem] border border-gray-200/80 bg-white px-4 py-4 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md cursor-pointer active:scale-[0.98]"
                             >
                               <div className="flex items-center justify-between gap-3">
                                 <div>
@@ -492,26 +496,34 @@ export default function QuantusPage() {
                                   {item.signal}
                                 </span>
                               </div>
-                            </div>
+                            </button>
                           ))}
 
                           <div className="grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-[1.35rem] border border-gray-800 bg-gradient-to-br from-gray-900 to-black px-4 py-4 text-white shadow-lg shadow-black/20">
+                            <button
+                              type="button"
+                              onClick={() => { window.location.href = "/quantus/workspace/"; }}
+                              className="w-full text-left rounded-[1.35rem] border border-gray-800 bg-gradient-to-br from-gray-900 to-black px-4 py-4 text-white shadow-lg shadow-black/20 cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-black/30 active:scale-[0.98]"
+                            >
                               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
                                 Sector packs
                               </p>
                               <p className="mt-3 text-sm leading-relaxed text-gray-300">
                                 Step from a single ticker into grouped market context.
                               </p>
-                            </div>
-                            <div className="rounded-[1.35rem] border border-gray-200 bg-gradient-to-br from-white to-gray-50 px-4 py-4 shadow-sm">
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { window.location.href = "/quantus/workspace/"; }}
+                              className="w-full text-left rounded-[1.35rem] border border-gray-200 bg-gradient-to-br from-white to-gray-50 px-4 py-4 shadow-sm cursor-pointer transition-all duration-200 hover:border-gray-300 hover:shadow-md active:scale-[0.98]"
+                            >
                               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                                 Deep dives
                               </p>
                               <p className="mt-3 text-sm leading-relaxed text-gray-600">
                                 Technical, macro, and narrative follow-through in the same flow.
                               </p>
-                            </div>
+                            </button>
                           </div>
                         </div>
                       </div>

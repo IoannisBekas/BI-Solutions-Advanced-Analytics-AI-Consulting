@@ -2,6 +2,18 @@ import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
 
+// Blog post meta — keep in sync with client/src/data/blogData.ts
+const blogPostMeta: Record<string, { title: string; description: string }> = {
+  "google-gemini-import-ai-chats": {
+    title: "Google Gemini is Making it Easy to Quit ChatGPT, Claude and other LLMs",
+    description: "Google is testing a breakthrough 'Import AI chats' feature that allows users to migrate their entire conversation histories from rival platforms directly into Gemini.",
+  },
+  "power-bi-solutions-semantic-model-analysis-workspace": {
+    title: "Why Power BI Solutions Deserves a Dedicated Semantic Model Workspace",
+    description: "Power BI Solutions brings TMDL review, semantic model diagnostics, AI guidance, and product-specific authentication into a focused workspace hosted directly on the BI Solutions domain.",
+  },
+};
+
 function redirectLegacyProductPath(app: Express, fromPath: string, toPath: string) {
   app.use((req, res, next) => {
     if (req.method === "GET" && req.originalUrl === fromPath) {
@@ -85,6 +97,11 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Insights on analytics, AI, data engineering, and digital transformation from BI Solutions Group.",
     path: "/blog",
   },
+  "/portfolio": {
+    title: "Portfolio and Selected Analytics Work — BI Solutions Group",
+    description: "See BI Solutions portfolio work across UNICEF, IAEA, IFC, and strategic partnerships delivering analytics, dashboards, and digital transformation.",
+    path: "/portfolio",
+  },
   "/privacy-policy": {
     title: "Privacy Policy — BI Solutions Group",
     description: "Privacy policy for bisolutions.group — how we collect, use, and protect your data.",
@@ -163,19 +180,38 @@ export function serveStatic(app: Express) {
 
   redirectLegacyProductPath(app, "/quantus/", "/quantus/workspace/");
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
-  serveProductSpa(app, "/quantus/workspace", path.resolve(distPath, "quantus"));
-  serveProductSpa(
-    app,
-    "/power-bi-solutions",
-    path.resolve(distPath, "power-bi-solutions"),
-  );
+
+  // Prefer compiled dist/public/<name>; fall back to source-tracked <product>/dist/
+  // so the live container can serve up-to-date builds that are committed to git.
+  const quantusDir = fs.existsSync(path.resolve(distPath, "quantus"))
+    ? path.resolve(distPath, "quantus")
+    : path.resolve(__dirname, "..", "Quantus", "dist");
+  const powerBiDir = fs.existsSync(path.resolve(distPath, "power-bi-solutions"))
+    ? path.resolve(distPath, "power-bi-solutions")
+    : path.resolve(__dirname, "..", "PowerBI_Solutions", "app", "dist");
+
+  serveProductSpa(app, "/quantus/workspace", quantusDir);
+  serveProductSpa(app, "/power-bi-solutions", powerBiDir);
 
   app.use(express.static(distPath, { index: false, redirect: false }));
 
   // fall through to index.html with route-specific meta tags
   app.use("*", (req, res) => {
     const routePath = req.originalUrl.split("?")[0].replace(/\/$/, "") || "/";
-    const meta = routeMetaMap[routePath] || routeMetaMap["/"];
-    res.type("html").send(injectMeta(indexHtml, meta));
+
+    let meta = routeMetaMap[routePath];
+
+    if (!meta) {
+      const blogMatch = routePath.match(/^\/blog\/(.+)$/);
+      if (blogMatch) {
+        const slug = blogMatch[1];
+        const postMeta = blogPostMeta[slug];
+        if (postMeta) {
+          meta = { ...postMeta, path: routePath };
+        }
+      }
+    }
+
+    res.type("html").send(injectMeta(indexHtml, meta || routeMetaMap["/"]));
   });
 }
