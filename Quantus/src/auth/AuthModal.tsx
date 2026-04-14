@@ -126,9 +126,13 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        if (mode === 'signup' && password.length < 8) {
+            setError('Password must be at least 8 characters.');
+            return;
+        }
         const ok = mode === 'signin'
             ? await signIn(email, password)
-            : await signUp(email, name, referralToken);
+            : await signUp(email, name, password, referralToken);
         if (!ok) setError('Authentication failed. Please try again.');
         else onClose();
     };

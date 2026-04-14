@@ -3,13 +3,17 @@ import { requireAuth, type AuthenticatedRequest } from "./auth";
 import {
   deleteQuantusAlertSubscription,
   deleteQuantusWatchlistEntry,
+  findUserById,
   findQuantusAlertSubscription,
   findQuantusWatchlistEntry,
   findQuantusReportSnapshot,
   getQuantusAccuracySummary,
+  incrementReports,
+  incrementReportsIfBelowLimit,
   listQuantusAlertSubscriptions,
   listQuantusReportSnapshots,
   listQuantusWatchlistEntries,
+  toSafeUser,
   upsertQuantusAlertSubscription,
   upsertQuantusReportSnapshot,
   upsertQuantusWatchlistEntry,
@@ -24,6 +28,11 @@ import {
 const QUANTUS_INTERNAL_HEADER = "x-quantus-internal-key";
 const TICKER_RE = /^[A-Z0-9.=^_-]{1,20}$/;
 const ASSET_CLASSES = new Set(["EQUITY", "CRYPTO", "COMMODITY", "ETF"]);
+const TIER_RANK: Record<string, number> = {
+  FREE: 0,
+  UNLOCKED: 1,
+  INSTITUTIONAL: 2,
+};
 
 function readEnv(key: string) {
   return (process.env[key] || "").trim();
@@ -83,6 +92,34 @@ function getWatchlistLimitForTier(tier: string) {
     default:
       return 5;
   }
+}
+
+function getMonthlyReportLimitForTier(tier: string) {
+  switch (tier) {
+    case "INSTITUTIONAL":
+      return -1;
+    case "UNLOCKED":
+      return 10;
+    case "FREE":
+    default:
+      return 3;
+  }
+}
+
+function getRequiredTierForDeepDiveModule(moduleIndex: number) {
+  if (moduleIndex === 10) {
+    return "INSTITUTIONAL";
+  }
+
+  if ([7, 8, 9, 11].includes(moduleIndex)) {
+    return "UNLOCKED";
+  }
+
+  return "FREE";
+}
+
+function hasRequiredTier(currentTier: string, requiredTier: string) {
+  return (TIER_RANK[currentTier] ?? 0) >= (TIER_RANK[requiredTier] ?? 0);
 }
 
 function mapSnapshotSummary(snapshot: DbQuantusSnapshotSummary | null | undefined) {
@@ -147,6 +184,7 @@ function mapArchiveSnapshot(snapshot: DbQuantusReportSnapshot) {
     engineVersion: snapshot.engine_version,
     generatedAt: snapshot.generated_at,
     priceAtGen: snapshot.price_at_gen,
+    source: snapshot.source,
     url: `/quantus/workspace/report/${encodeURIComponent(snapshot.ticker)}?snapshot=${encodeURIComponent(snapshot.report_id)}`,
   };
 }
@@ -389,6 +427,76 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     res.json(getQuantusAccuracySummary());
   });
 
+  app.post("/api/quantus/usage/report", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+    const user = findUserById(req.user!.userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    const limit = getMonthlyReportLimitForTier(user.tier);
+    if (limit >= 0) {
+      const incremented = incrementReportsIfBelowLimit(user.id, limit);
+      if (!incremented) {
+        res.status(403).json({
+          error: `Your ${user.tier} tier allows up to ${limit} full Quantus reports per month.`,
+          code: "report_limit_reached",
+          tier: user.tier,
+          reportLimit: limit,
+        });
+        return;
+      }
+    } else {
+      incrementReports(user.id);
+    }
+
+    const updatedUser = findUserById(user.id);
+    res.json({
+      ok: true,
+      user: updatedUser ? toSafeUser(updatedUser) : null,
+      reportLimit: limit,
+      remainingReports: updatedUser && limit >= 0
+        ? Math.max(0, limit - updatedUser.reports_this_month)
+        : null,
+    });
+  });
+
+  app.post("/api/quantus/usage/deep-dive-access", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+    const user = findUserById(req.user!.userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    const rawModule = req.body?.module;
+    const moduleIndex = typeof rawModule === "number"
+      ? Math.floor(rawModule)
+      : Number.parseInt(String(rawModule), 10);
+    if (!Number.isFinite(moduleIndex) || moduleIndex < 0 || moduleIndex > 11) {
+      res.status(400).json({ error: "Valid Deep Dive module index (0-11) is required." });
+      return;
+    }
+
+    const requiredTier = getRequiredTierForDeepDiveModule(moduleIndex);
+    if (!hasRequiredTier(user.tier, requiredTier)) {
+      res.status(403).json({
+        error: requiredTier === "INSTITUTIONAL"
+          ? "Institutional tier required for this Deep Dive module."
+          : "Unlocked tier required for this Deep Dive module.",
+        code: "deep_dive_tier_required",
+        requiredTier,
+        module: moduleIndex,
+      });
+      return;
+    }
+
+    res.json({
+      ok: true,
+      requiredTier,
+      user: toSafeUser(user),
+    });
+  });
+
   app.post("/api/quantus/internal/snapshots", (req: Request, res: Response) => {
     if (req.header(QUANTUS_INTERNAL_HEADER) !== getQuantusInternalKey()) {
       res.status(403).json({ error: "Forbidden" });
@@ -398,6 +506,11 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     const snapshot = parseSnapshotPayload(req.body as Record<string, unknown> | undefined);
     if (!snapshot) {
       res.status(400).json({ error: "Invalid snapshot payload." });
+      return;
+    }
+
+    if (snapshot.source !== "live") {
+      res.status(400).json({ error: "Only live Quantus snapshots may be persisted." });
       return;
     }
 

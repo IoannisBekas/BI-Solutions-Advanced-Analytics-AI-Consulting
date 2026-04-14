@@ -28,6 +28,7 @@ interface ProgressInsightFeedProps {
     lightMode?: boolean;
     completionTitle?: string;
     completionDetail?: string;
+    showCompletionCard?: boolean;
 }
 
 // ─── Single insight card ──────────────────────────────────────────────────────
@@ -167,7 +168,7 @@ function SkeletonCard({ lightMode }: { lightMode?: boolean }) {
 // ─── Main ProgressInsightFeed ─────────────────────────────────────────────────
 
 export function ProgressInsightFeed({
-    insights, isGenerating, ticker, reportId, onViewReport, lightMode, completionTitle, completionDetail,
+    insights, isGenerating, ticker, reportId, onViewReport, lightMode, completionTitle, completionDetail, showCompletionCard = true,
 }: ProgressInsightFeedProps) {
     const endRef = useRef<HTMLDivElement>(null);
     const isDone = !isGenerating && insights.length > 0;
@@ -243,7 +244,7 @@ export function ProgressInsightFeed({
                 {isGenerating && <SkeletonCard lightMode={lightMode} />}
 
                 {/* Final completion card */}
-                {(hasFinalCard || isDone) && (
+                {showCompletionCard && (hasFinalCard || isDone) && (
                     <CompletionCard
                         ticker={ticker}
                         reportId={rid}

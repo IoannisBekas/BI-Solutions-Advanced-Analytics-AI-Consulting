@@ -445,6 +445,7 @@ export interface ArchiveSnapshot {
     engineVersion: string;
     generatedAt: string;
     priceAtGen: number;
+    source?: string;
     url: string;
     hasRestatement?: boolean;
     restatementNote?: string;

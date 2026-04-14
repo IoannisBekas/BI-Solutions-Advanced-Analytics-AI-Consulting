@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { clearQuantusSessionArtifacts, TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../utils/sessionArtifacts';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,7 +20,7 @@ interface AuthState {
     user: User | null;
     isLoading: boolean;
     signIn: (email: string, password: string) => Promise<boolean>;
-    signUp: (email: string, name: string, referralToken?: string) => Promise<boolean>;
+    signUp: (email: string, name: string, password: string, referralToken?: string) => Promise<boolean>;
     signInWithGoogle: (credential: string, referralToken?: string) => Promise<boolean>;
     signOut: () => void;
     deductCredit: (cost: number) => boolean;
@@ -27,9 +28,6 @@ interface AuthState {
     googleClientId: string | null;
     googleEnabled: boolean;
 }
-
-const TOKEN_STORAGE_KEY = 'quantus-token';
-const USER_STORAGE_KEY = 'quantus-user';
 
 // ─── Monthly report limits per tier ──────────────────────────────────────────
 
@@ -90,7 +88,10 @@ function buildUserFromPayload(data: {
     tier?: string;
     credits?: number;
     reportsThisMonth?: number;
+    reports_this_month?: number;
     jurisdiction?: User['jurisdiction'];
+    referralToken?: string | null;
+    referral_token?: string | null;
 }, fallback?: User | null): User {
     const email = data.email ?? fallback?.email ?? 'researcher@quantus.local';
     return {
@@ -99,8 +100,8 @@ function buildUserFromPayload(data: {
         name: data.name ?? fallback?.name ?? email.split('@')[0],
         tier: (data.tier as Tier | undefined) ?? fallback?.tier ?? 'FREE',
         credits: data.credits ?? fallback?.credits ?? 0,
-        reportsThisMonth: data.reportsThisMonth ?? fallback?.reportsThisMonth ?? 0,
-        referralToken: fallback?.referralToken ?? `ref_${Math.random().toString(36).slice(2, 10)}`,
+        reportsThisMonth: data.reportsThisMonth ?? data.reports_this_month ?? fallback?.reportsThisMonth ?? 0,
+        referralToken: data.referralToken ?? data.referral_token ?? fallback?.referralToken ?? `ref_${Math.random().toString(36).slice(2, 10)}`,
         jurisdiction: data.jurisdiction ?? fallback?.jurisdiction ?? 'US',
     };
 }
@@ -120,6 +121,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [googleClientId, setGoogleClientId] = useState<string | null>(null);
+    const clearSession = useCallback(() => {
+        void clearQuantusSessionArtifacts().catch(() => undefined);
+        setUser(null);
+    }, []);
 
     useEffect(() => {
         if (user) {
@@ -141,17 +146,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
             .then(async (res) => {
                 if (!res.ok) {
-                    throw new Error('Unable to restore Quantus session');
+                    const error = new Error('Unable to restore Quantus session') as Error & { status?: number };
+                    error.status = res.status;
+                    throw error;
                 }
                 const data = await res.json();
                 if (!cancelled) {
                     setUser((current) => buildUserFromPayload(data, current));
                 }
             })
-            .catch(() => {
-                if (!cancelled && !user) {
-                    localStorage.removeItem(TOKEN_STORAGE_KEY);
-                    localStorage.removeItem(USER_STORAGE_KEY);
+            .catch((error: Error & { status?: number }) => {
+                if (!cancelled && (error.status === 401 || error.status === 403)) {
+                    clearSession();
                 }
             })
             .finally(() => {
@@ -163,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [clearSession]);
 
     useEffect(() => {
         let cancelled = false;
@@ -206,13 +212,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         finally { setIsLoading(false); }
     }, [user]);
 
-    const signUp = useCallback(async (email: string, name: string, referralToken?: string): Promise<boolean> => {
+    const signUp = useCallback(async (email: string, name: string, password: string, referralToken?: string): Promise<boolean> => {
         setIsLoading(true);
         try {
             const res = await fetch('/quantus/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, name, referralToken }),
+                body: JSON.stringify({ email, name, password, referralToken }),
             });
             if (!res.ok) { setIsLoading(false); return false; }
             const data = await res.json();
@@ -241,10 +247,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [user]);
 
     const signOut = useCallback(() => {
-        localStorage.removeItem(TOKEN_STORAGE_KEY);
-        localStorage.removeItem(USER_STORAGE_KEY);
-        setUser(null);
-    }, []);
+        clearSession();
+    }, [clearSession]);
 
     const deductCredit = useCallback((cost: number): boolean => {
         // Read latest user via ref-like pattern to avoid stale closures
@@ -267,9 +271,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (res.ok) {
                 const data = await res.json();
                 setUser((current) => current ? buildUserFromPayload(data, current) : current);
+            } else if (res.status === 401 || res.status === 403) {
+                clearSession();
             }
         } catch { /* silent */ }
-    }, []);
+    }, [clearSession]);
 
     return (
         <AuthContext.Provider

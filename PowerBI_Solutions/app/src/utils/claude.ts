@@ -51,8 +51,14 @@ export async function askClaude(
             if (status === 401) {
                 return "Authentication failed. Please check your API key configuration.";
             }
+            if (status === 403) {
+                return "This preview AI proxy only accepts requests from trusted browser origins.";
+            }
             if (status === 429) {
                 return "Rate limit exceeded. Please wait a moment and try again.";
+            }
+            if (status === 503) {
+                return "This deployment has the preview AI proxy disabled until server-side access control is configured.";
             }
             // Throw on 5xx to trigger retry
             if (status >= 500) {

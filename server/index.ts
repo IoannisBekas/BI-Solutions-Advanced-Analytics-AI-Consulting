@@ -119,9 +119,13 @@ app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 
 // ─── CORS ──────────────────────────────────────────────────────────────────
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+if (isProduction && allowedOrigins.length === 0) {
+  throw new Error("ALLOWED_ORIGINS env var must be set in production");
+}
+
 app.use(
   cors({
-    origin: isProduction && allowedOrigins.length > 0 ? allowedOrigins : true,
+    origin: isProduction ? allowedOrigins : true,
     credentials: true,
   }),
 );
@@ -143,13 +147,22 @@ const strictLimiter = rateLimit({
   message: { message: "Rate limit reached — try again in a few minutes." },
 });
 
+const powerBiAnthropicLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 12,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Preview AI rate limit reached â€” try again later." },
+});
+
 app.use("/api/", globalLimiter);
 app.use("/api/contact", strictLimiter);
 app.use("/api/auth", strictLimiter);
+app.use("/power-bi-solutions/api/anthropic", powerBiAnthropicLimiter);
 
 // ─── JWT Secret warning ─────────────────────────────────────────────────────
 if (isProduction && !process.env.JWT_SECRET) {
-  console.warn("WARNING: JWT_SECRET env var is not set — auth endpoints will fail until it is configured");
+  throw new Error("JWT_SECRET env var must be set in production");
 }
 
 if (!process.env.GEMINI_API_KEY && !process.env.ANTHROPIC_API_KEY && !process.env.POWERBI_SOLUTIONS_ANTHROPIC_API_KEY) {
@@ -167,10 +180,49 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
+function summarizeResponseBody(body: unknown): string | null {
+  if (body == null) {
+    return null;
+  }
+
+  if (Array.isArray(body)) {
+    return `array(length=${body.length})`;
+  }
+
+  if (typeof body !== "object") {
+    return null;
+  }
+
+  const record = body as Record<string, unknown>;
+  const summary: Record<string, unknown> = {};
+
+  for (const key of ["ok", "success", "configured", "enabled", "code", "error", "message", "status"]) {
+    const value = record[key];
+    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+      summary[key] = value;
+    }
+  }
+
+  if (Array.isArray(record.items)) {
+    summary.itemCount = record.items.length;
+  }
+
+  if (Array.isArray(record.sources)) {
+    summary.sourceCount = record.sources.length;
+  }
+
+  if (Object.keys(summary).length > 0) {
+    return JSON.stringify(summary);
+  }
+
+  const keys = Object.keys(record);
+  return keys.length > 0 ? `keys=${keys.join(",")}` : null;
+}
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  let capturedJsonResponse: unknown;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -187,8 +239,12 @@ app.use((req, res, next) => {
 
     if (isApiRequest) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      const responseSummary =
+        path.startsWith("/api/auth")
+          ? null
+          : summarizeResponseBody(capturedJsonResponse);
+      if (responseSummary) {
+        logLine += ` :: ${responseSummary}`;
       }
 
       log(logLine);

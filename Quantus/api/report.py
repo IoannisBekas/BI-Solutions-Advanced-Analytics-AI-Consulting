@@ -102,11 +102,15 @@ def _get_llm():
 # ---------------------------------------------------------------------------
 
 @router.get("/{ticker}/status")
-async def report_status(ticker: str) -> JSONResponse:
+async def report_status(
+    ticker: str,
+    section: str = Query(default="A"),
+    user_tier: str = Query(default="FREE"),
+) -> JSONResponse:
     """Return cache status for *ticker*."""
     ticker = ticker.upper().strip()
     cache = get_cache()
-    status = cache.get_status(ticker)
+    status = cache.get_status(ticker, section=section, user_tier=user_tier)
 
     if status in ("MISS", None, ""):
         return JSONResponse({"ticker": ticker, "status": "MISS",
@@ -118,7 +122,7 @@ async def report_status(ticker: str) -> JSONResponse:
         "queued": "GENERATING",
     }.get(status.lower(), status.upper())
 
-    meta = cache.get_metadata(ticker)
+    meta = cache.get_metadata(ticker, section=section, user_tier=user_tier)
     return JSONResponse({
         "ticker": ticker,
         "status": status_label,
@@ -153,16 +157,16 @@ async def get_report(
 
     # 1. Cache hit
     if not force_refresh:
-        cached = cache.get_report(ticker)
+        cached = cache.get_report(ticker, section=section, user_tier=user_tier)
         if cached:
             logger.info("report | %s | CACHE HIT", ticker)
             normalized_cached = _normalize_report_shape(cached, ticker)
             if normalized_cached != cached:
-                cache.set_report(ticker, normalized_cached)
+                cache.set_report(ticker, normalized_cached, section=section, user_tier=user_tier)
             return JSONResponse({"cached": True, "source": "cached", "report": normalized_cached})
 
     # 2. Mark as generating
-    cache.set_status(ticker, "refreshing")
+    cache.set_status(ticker, "refreshing", section=section, user_tier=user_tier)
 
     # 3. Run pipeline
     logger.info("report | %s | running pipeline", ticker)
@@ -170,7 +174,7 @@ async def get_report(
         payload = await run_pipeline(ticker, user_tier=user_tier)
     except Exception as exc:
         logger.error("report | %s | pipeline failed: %s", ticker, exc)
-        cache.set_status(ticker, "MISS")
+        cache.set_status(ticker, "MISS", section=section, user_tier=user_tier)
         raise HTTPException(status_code=502, detail=f"Pipeline failed: {exc}")
 
     # 4. Call LLM
@@ -183,7 +187,7 @@ async def get_report(
         logger.error("report | %s | LLM failed: %s", ticker, exc)
         # Return pipeline data without narrative as fallback
         fallback_report = _build_pipeline_only_report(payload_dict, ticker)
-        cache.set_report(ticker, fallback_report)
+        cache.set_report(ticker, fallback_report, section=section, user_tier=user_tier)
         return JSONResponse({
             "cached": False,
             "source": "pipeline_only",
@@ -195,7 +199,7 @@ async def get_report(
         logger.warning("report | %s | LLM validation errors: %s", ticker, errors)
         # Still return pipeline data
         fallback_report = _build_pipeline_only_report(payload_dict, ticker)
-        cache.set_report(ticker, fallback_report)
+        cache.set_report(ticker, fallback_report, section=section, user_tier=user_tier)
         return JSONResponse({
             "cached": False,
             "source": "pipeline_only",
@@ -206,14 +210,15 @@ async def get_report(
     # 5. Store in cache
     report = _normalize_report_shape(report, ticker, payload_dict)
     report["report_id"] = report.get("report_id") or str(uuid.uuid4())
-    cache.set_report(ticker, report)
+    cache.set_report(ticker, report, section=section, user_tier=user_tier)
     cache.set_metadata(ticker, {
         "report_id": report["report_id"],
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "engine": "Meridian v2.4",
         "section": section,
         "ticker": ticker,
-    })
+        "user_tier": user_tier,
+    }, section=section, user_tier=user_tier)
     logger.info("report | %s | cached (96h TTL)", ticker)
 
     # 6. Return
@@ -296,6 +301,8 @@ def _build_pipeline_only_report(payload_dict: dict, ticker: str) -> dict:
     sharpe = p.get("sharpe_ratio", 0) or 0
     max_dd = p.get("max_drawdown_historical", 0) or 0
     comp_sent = p.get("composite_sentiment", 0) or 0
+    macd = p.get("macd", {}) or {}
+    bollinger_pos = p.get("bollinger_position", "MIDDLE") or "MIDDLE"
     ensemble_fc = p.get("ensemble_forecast", {}) or {}
     ensemble_point = _extract_forecast_pct(ensemble_fc, current_price)
     ensemble_low, ensemble_high = _extract_forecast_band(ensemble_fc, current_price)

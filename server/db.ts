@@ -37,6 +37,11 @@ function setSchemaVersion(version: number): void {
   db.prepare("INSERT OR IGNORE INTO schema_version (version) VALUES (?)").run(version);
 }
 
+function hasTableColumn(tableName: "users" | "app_meta", columnName: string): boolean {
+  const rows = db.prepare(`PRAGMA table_info(${tableName})`).all() as Array<{ name: string }>;
+  return rows.some((row) => row.name === columnName);
+}
+
 // Migration 1: Initial users table
 if (getSchemaVersion() < 1) {
   db.exec(`
@@ -151,6 +156,24 @@ if (getSchemaVersion() < 2) {
   console.log("DB migration 2 applied: Quantus watchlists, alerts, snapshots, outcomes");
 }
 
+// Migration 3: persistent app metadata + auth provider tracking
+if (getSchemaVersion() < 3) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS app_meta (
+      key         TEXT PRIMARY KEY,
+      value       TEXT NOT NULL,
+      updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+  `);
+
+  if (!hasTableColumn("users", "auth_provider")) {
+    db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'password'");
+  }
+
+  setSchemaVersion(3);
+  console.log("DB migration 3 applied: app_meta + auth_provider");
+}
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 export interface DbUser {
@@ -158,6 +181,7 @@ export interface DbUser {
   email: string;
   name: string;
   password_hash: string;
+  auth_provider: string;
   tier: string;
   credits: number;
   reports_this_month: number;
@@ -168,7 +192,19 @@ export interface DbUser {
 }
 
 /** Public-facing user (no password hash) */
-export type SafeUser = Omit<DbUser, "password_hash">;
+export interface SafeUser {
+  id: string;
+  email: string;
+  name: string;
+  authProvider: string;
+  tier: string;
+  credits: number;
+  reportsThisMonth: number;
+  jurisdiction: string;
+  referralToken: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface DbQuantusSnapshotSummary {
   report_id: string;
@@ -307,17 +343,23 @@ const stmts = {
     "SELECT * FROM users WHERE referral_token = ?"
   ),
   insert: db.prepare(
-    `INSERT INTO users (id, email, name, password_hash, credits, referral_token)
-     VALUES (?, ?, ?, ?, ?, ?)`
+    `INSERT INTO users (id, email, name, password_hash, credits, referral_token, auth_provider)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`
   ),
   updateCredits: db.prepare(
     "UPDATE users SET credits = ?, updated_at = datetime('now') WHERE id = ?"
+  ),
+  updateAuthProvider: db.prepare(
+    "UPDATE users SET auth_provider = ?, updated_at = datetime('now') WHERE id = ?"
   ),
   updateTier: db.prepare(
     "UPDATE users SET tier = ?, updated_at = datetime('now') WHERE id = ?"
   ),
   incrementReports: db.prepare(
     "UPDATE users SET reports_this_month = reports_this_month + 1, updated_at = datetime('now') WHERE id = ?"
+  ),
+  incrementReportsIfBelowLimit: db.prepare(
+    "UPDATE users SET reports_this_month = reports_this_month + 1, updated_at = datetime('now') WHERE id = ? AND reports_this_month < ?"
   ),
   deductCredit: db.prepare(
     "UPDATE users SET credits = credits - ?, updated_at = datetime('now') WHERE id = ? AND credits >= ?"
@@ -327,6 +369,16 @@ const stmts = {
   ),
   resetMonthlyReports: db.prepare(
     "UPDATE users SET reports_this_month = 0, updated_at = datetime('now') WHERE reports_this_month > 0"
+  ),
+  getAppMeta: db.prepare(
+    "SELECT value FROM app_meta WHERE key = ?"
+  ),
+  upsertAppMeta: db.prepare(
+    `INSERT INTO app_meta (key, value, updated_at)
+     VALUES (?, ?, datetime('now'))
+     ON CONFLICT(key) DO UPDATE SET
+       value = excluded.value,
+       updated_at = datetime('now')`
   ),
 
   listQuantusWatchlistByUser: db.prepare(
@@ -391,7 +443,10 @@ const stmts = {
       benchmark_price_at_gen = excluded.benchmark_price_at_gen,
       generated_at = excluded.generated_at,
       price_at_gen = excluded.price_at_gen,
-      source = excluded.source,
+      source = CASE
+        WHEN excluded.source = 'live' THEN excluded.source
+        ELSE quantus_report_snapshots.source
+      END,
       report_json = excluded.report_json`
   ),
   findQuantusSnapshotByReportId: db.prepare(
@@ -424,13 +479,30 @@ const stmts = {
       updated_at = datetime('now')`
   ),
   listResolvableQuantusOutcomesByTicker: db.prepare(
-    "SELECT * FROM quantus_signal_outcomes WHERE ticker = ? AND return_pct IS NULL AND generated_at <= ? ORDER BY generated_at ASC"
+    `SELECT o.*
+     FROM quantus_signal_outcomes o
+     INNER JOIN quantus_report_snapshots s ON s.report_id = o.report_id
+     WHERE o.ticker = ?
+       AND o.return_pct IS NULL
+       AND o.generated_at <= ?
+       AND s.source = 'live'
+     ORDER BY o.generated_at ASC`
   ),
   listResolvedQuantusOutcomes: db.prepare(
-    "SELECT * FROM quantus_signal_outcomes WHERE return_pct IS NOT NULL ORDER BY COALESCE(resolved_at, updated_at, generated_at) DESC"
+    `SELECT o.*
+     FROM quantus_signal_outcomes o
+     INNER JOIN quantus_report_snapshots s ON s.report_id = o.report_id
+     WHERE o.return_pct IS NOT NULL
+       AND s.source = 'live'
+     ORDER BY COALESCE(o.resolved_at, o.updated_at, o.generated_at) DESC`
   ),
   listPendingQuantusOutcomes: db.prepare(
-    "SELECT * FROM quantus_signal_outcomes WHERE return_pct IS NULL ORDER BY generated_at DESC"
+    `SELECT o.*
+     FROM quantus_signal_outcomes o
+     INNER JOIN quantus_report_snapshots s ON s.report_id = o.report_id
+     WHERE o.return_pct IS NULL
+       AND s.source = 'live'
+     ORDER BY o.generated_at DESC`
   ),
   resolveQuantusOutcome: db.prepare(
     `UPDATE quantus_signal_outcomes
@@ -580,6 +652,7 @@ export function createUser(params: {
   passwordHash: string;
   credits?: number;
   referralToken: string;
+  authProvider?: string;
 }): DbUser {
   stmts.insert.run(
     params.id,
@@ -587,7 +660,8 @@ export function createUser(params: {
     params.name,
     params.passwordHash,
     params.credits ?? 0,
-    params.referralToken
+    params.referralToken,
+    params.authProvider ?? "password",
   );
   return stmts.findById.get(params.id) as DbUser;
 }
@@ -596,8 +670,17 @@ export function updateUserCredits(userId: string, credits: number): void {
   stmts.updateCredits.run(credits, userId);
 }
 
+export function updateUserAuthProvider(userId: string, authProvider: string): void {
+  stmts.updateAuthProvider.run(authProvider, userId);
+}
+
 export function incrementReports(userId: string): void {
   stmts.incrementReports.run(userId);
+}
+
+export function incrementReportsIfBelowLimit(userId: string, limit: number): boolean {
+  const result = stmts.incrementReportsIfBelowLimit.run(userId, limit) as { changes: number };
+  return result.changes > 0;
 }
 
 export function deductCredit(userId: string, amount: number): boolean {
@@ -620,10 +703,30 @@ export function resetMonthlyReports(): number {
   return result.changes;
 }
 
+export function getAppMeta(key: string): string | undefined {
+  const row = stmts.getAppMeta.get(key) as { value: string } | undefined;
+  return row?.value;
+}
+
+export function setAppMeta(key: string, value: string): void {
+  stmts.upsertAppMeta.run(key, value);
+}
+
 /** Strip password_hash before sending to the client */
 export function toSafeUser(user: DbUser): SafeUser {
-  const { password_hash: _, ...safe } = user;
-  return safe;
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    authProvider: user.auth_provider,
+    tier: user.tier,
+    credits: user.credits,
+    reportsThisMonth: user.reports_this_month,
+    jurisdiction: user.jurisdiction,
+    referralToken: user.referral_token,
+    createdAt: user.created_at,
+    updatedAt: user.updated_at,
+  };
 }
 
 export function listQuantusWatchlistEntries(userId: string): DbQuantusWatchlistEntry[] {

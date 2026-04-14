@@ -38,9 +38,24 @@ logger = logging.getLogger(__name__)
 REPORT_TTL_SECONDS = 96 * 3600   # 96 hours
 
 
-def _key_current(ticker: str)  -> str: return f"quantus:report:{ticker}:current"
-def _key_status(ticker: str)   -> str: return f"quantus:report:{ticker}:status"
-def _key_metadata(ticker: str) -> str: return f"quantus:report:{ticker}:metadata"
+def _normalize_cache_scope(section: str = "A", user_tier: str = "FREE") -> str:
+    safe_section = (section or "A").strip().upper() or "A"
+    safe_tier = (user_tier or "FREE").strip().upper() or "FREE"
+    return f"{safe_section}:{safe_tier}"
+
+
+def _key_current(ticker: str, section: str = "A", user_tier: str = "FREE") -> str:
+    return f"quantus:report:{ticker}:{_normalize_cache_scope(section, user_tier)}:current"
+
+
+def _key_status(ticker: str, section: str = "A", user_tier: str = "FREE") -> str:
+    return f"quantus:report:{ticker}:{_normalize_cache_scope(section, user_tier)}:status"
+
+
+def _key_metadata(ticker: str, section: str = "A", user_tier: str = "FREE") -> str:
+    return f"quantus:report:{ticker}:{_normalize_cache_scope(section, user_tier)}:metadata"
+
+
 def _key_archive(ticker: str, report_id: str) -> str:
     return f"quantus:report:{ticker}:archive:{report_id}"
 def _key_circuit(service: str) -> str: return f"quantus:circuit:{service}"
@@ -152,19 +167,23 @@ class ReportCache(ABC):
     def exists(self, key: str) -> bool: ...
 
     # High-level helpers
-    def get_report(self, ticker: str) -> dict | None:
-        raw = self.get(_key_current(ticker))
+    def get_report(self, ticker: str, section: str = "A", user_tier: str = "FREE") -> dict | None:
+        raw = self.get(_key_current(ticker, section=section, user_tier=user_tier))
         return json.loads(raw) if raw else None
 
-    def set_report(self, ticker: str, report: dict) -> None:
-        self.set(_key_current(ticker), json.dumps(report), ttl=REPORT_TTL_SECONDS)
-        self.set(_key_status(ticker), "ready")
+    def set_report(self, ticker: str, report: dict, section: str = "A", user_tier: str = "FREE") -> None:
+        self.set(
+            _key_current(ticker, section=section, user_tier=user_tier),
+            json.dumps(report),
+            ttl=REPORT_TTL_SECONDS,
+        )
+        self.set(_key_status(ticker, section=section, user_tier=user_tier), "ready")
 
-    def get_status(self, ticker: str) -> str:
-        return self.get(_key_status(ticker)) or "MISS"
+    def get_status(self, ticker: str, section: str = "A", user_tier: str = "FREE") -> str:
+        return self.get(_key_status(ticker, section=section, user_tier=user_tier)) or "MISS"
 
-    def set_status(self, ticker: str, status: str) -> None:
-        self.set(_key_status(ticker), status)
+    def set_status(self, ticker: str, status: str, section: str = "A", user_tier: str = "FREE") -> None:
+        self.set(_key_status(ticker, section=section, user_tier=user_tier), status)
 
     def archive_report(self, ticker: str, report: dict) -> str:
         report_id = report.get("report_id") or str(uuid.uuid4())
@@ -175,11 +194,11 @@ class ReportCache(ABC):
         raw = self.get(_key_archive(ticker, report_id))
         return json.loads(raw) if raw else None
 
-    def set_metadata(self, ticker: str, meta: dict) -> None:
-        self.set(_key_metadata(ticker), json.dumps(meta))
+    def set_metadata(self, ticker: str, meta: dict, section: str = "A", user_tier: str = "FREE") -> None:
+        self.set(_key_metadata(ticker, section=section, user_tier=user_tier), json.dumps(meta))
 
-    def get_metadata(self, ticker: str) -> dict | None:
-        raw = self.get(_key_metadata(ticker))
+    def get_metadata(self, ticker: str, section: str = "A", user_tier: str = "FREE") -> dict | None:
+        raw = self.get(_key_metadata(ticker, section=section, user_tier=user_tier))
         return json.loads(raw) if raw else None
 
     def enqueue(self, ticker: str, tier: str, reason: str) -> str:

@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft } from 'lucide-react';
 import { Layout } from './components/Layout';
 import { SearchHero } from './components/SearchHero';
-import { StickyReportStrip } from './components/StickyReportStrip';
-import { WelcomeCard } from './components/WelcomeCard';
 import { ProgressInsightFeed } from './components/IndustryIndicator';
 import { NotFoundView } from './components/NotFoundView';
 import { PWAInstallBanner, SWUpdateBanner } from './components/PWAInstallBanner';
@@ -30,6 +28,7 @@ import {
     mergeReportResponseWithLiveRefresh,
     shouldRefreshLiveSensitiveFields,
 } from './constants/reportFreshness';
+import { getStoredReportCacheKey } from './utils/sessionArtifacts';
 
 const ReportDashboard = lazy(async () => {
     const module = await import('./components/Report');
@@ -72,7 +71,25 @@ const QUANTUS_METHODOLOGY_ROUTE = '/quantus/workspace/methodology';
 const QUANTUS_LEGACY_WORKSPACE_ROUTE = '/quantus';
 const RECENT_ASSETS_STORAGE_KEY = 'quantus-recent-assets';
 const PINNED_ASSETS_STORAGE_KEY = 'quantus-pinned-assets';
-const REPORT_CACHE_STORAGE_PREFIX = 'quantus-last-report:';
+const LEGACY_THEME_STORAGE_KEY = 'quantus-theme';
+const THEME_STORAGE_KEY = 'quantus-theme-v2';
+
+function readStoredLightMode() {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (storedTheme === 'light') return true;
+    if (storedTheme === 'dark') return false;
+
+    // Reset older dark-mode sessions to the BI Solutions light default.
+    const legacyTheme = localStorage.getItem(LEGACY_THEME_STORAGE_KEY);
+    if (legacyTheme === 'light') return true;
+    return true;
+}
+
+function persistLightMode(lightMode: boolean) {
+    const value = lightMode ? 'light' : 'dark';
+    localStorage.setItem(THEME_STORAGE_KEY, value);
+    localStorage.setItem(LEGACY_THEME_STORAGE_KEY, value);
+}
 
 function getReportRoute(ticker: string) {
     return `${QUANTUS_REPORT_ROUTE_PREFIX}/${encodeURIComponent(ticker.trim().toUpperCase())}`;
@@ -302,9 +319,9 @@ function isStoredReportResponse(value: unknown): value is ReportResponse {
         && (value as ReportResponse).report !== null;
 }
 
-function readStoredReportResponse(ticker: string): ReportResponse | null {
+function readStoredReportResponse(ticker: string, userId?: string | null): ReportResponse | null {
     try {
-        const raw = localStorage.getItem(`${REPORT_CACHE_STORAGE_PREFIX}${ticker.trim().toUpperCase()}`);
+        const raw = localStorage.getItem(getStoredReportCacheKey(ticker, userId));
         if (!raw) return null;
         const parsed: unknown = JSON.parse(raw);
         return isStoredReportResponse(parsed) ? parsed : null;
@@ -313,11 +330,11 @@ function readStoredReportResponse(ticker: string): ReportResponse | null {
     }
 }
 
-function writeStoredReportResponse(response: ReportResponse) {
+function writeStoredReportResponse(response: ReportResponse, userId?: string | null) {
     try {
         if (response.source === 'starter') return;
         localStorage.setItem(
-            `${REPORT_CACHE_STORAGE_PREFIX}${response.ticker.trim().toUpperCase()}`,
+            getStoredReportCacheKey(response.ticker, userId),
             JSON.stringify(response),
         );
     } catch {
@@ -409,11 +426,8 @@ function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
 }
 
 function App() {
-    const { user, signOut } = useAuth();
-    const [lightMode, setLightMode] = useState<boolean>(() => {
-        const saved = localStorage.getItem('quantus-theme');
-        return saved !== null ? saved === 'light' : true;
-    });
+    const { user, signOut, isLoading } = useAuth();
+    const [lightMode, setLightMode] = useState<boolean>(() => readStoredLightMode());
     const [workspaceSummary, setWorkspaceSummary] = useState<WorkspaceSummary | null>(null);
     const [reportResponse, setReportResponse] = useState<ReportResponse | null>(null);
     const [insights, setInsights] = useState<InsightCard[]>([]);
@@ -421,7 +435,6 @@ function App() {
     const [currentTicker, setCurrentTicker] = useState('');
     const [recentAssets, setRecentAssets] = useState<AssetEntry[]>(() => readStoredAssets(RECENT_ASSETS_STORAGE_KEY));
     const [pinnedAssets, setPinnedAssets] = useState<AssetEntry[]>(() => readStoredAssets(PINNED_ASSETS_STORAGE_KEY));
-    const [showStickyStrip, setShowStickyStrip] = useState(false);
     const [currentPath, setCurrentPath] = useState(() => normalizeQuantusPath(window.location.pathname));
     const [currentSearch, setCurrentSearch] = useState(() => window.location.search);
     const [loadedSnapshotId, setLoadedSnapshotId] = useState<string | null>(null);
@@ -435,6 +448,7 @@ function App() {
     const inflightTickerRef = useRef<string | null>(null);
     const pendingAssetRef = useRef<AssetEntry | null>(null);
     const currentReportResponseRef = useRef<ReportResponse | null>(null);
+    const previousReportCacheUserIdRef = useRef<string | null>(user?.id ?? null);
 
     const route = useMemo(() => resolveRoute(currentPath), [currentPath]);
     const activeSnapshotId = useMemo(() => {
@@ -449,6 +463,14 @@ function App() {
         updateSW,
     } = usePWA();
     const report = reportResponse?.report ?? null;
+    const reportCacheUserId = user?.id ?? null;
+    const headerWorkspaceStatus = route.view === 'hero'
+        ? (workspaceSummary?.status ?? null)
+        : null;
+
+    useEffect(() => {
+        persistLightMode(lightMode);
+    }, [lightMode]);
     const currentReportAsset = useMemo(() => {
         if (!report || !reportResponse) return null;
         return buildAssetEntryFromReport(report, reportResponse.source);
@@ -516,6 +538,28 @@ function App() {
     }, [pinnedAssets]);
 
     useEffect(() => {
+        const nextUserId = user?.id ?? null;
+        if (previousReportCacheUserIdRef.current === nextUserId) {
+            return;
+        }
+
+        previousReportCacheUserIdRef.current = nextUserId;
+        searchAbortRef.current?.abort();
+        insightAbortRef.current?.abort();
+        liveRefreshAbortRef.current?.abort();
+        inflightTickerRef.current = null;
+        currentReportResponseRef.current = null;
+        setReportResponse(null);
+        setInsights([]);
+        setIsGenerating(false);
+        setCurrentTicker('');
+        setLoadedSnapshotId(null);
+        if (!nextUserId) {
+            setPinnedAssets([]);
+        }
+    }, [user?.id]);
+
+    useEffect(() => {
         if (!user) {
             return;
         }
@@ -556,21 +600,6 @@ function App() {
             setDismissedUpdateBanner(false);
         }
     }, [needsRefresh]);
-
-    useEffect(() => {
-        if (route.view !== 'report') {
-            setShowStickyStrip(false);
-            return;
-        }
-
-        const handleScroll = () => {
-            setShowStickyStrip(window.scrollY > 360);
-        };
-
-        handleScroll();
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [route.path, route.view]);
 
     useEffect(() => {
         const pageTitle = route.view === 'report'
@@ -659,7 +688,7 @@ function App() {
             if (!currentResponse || currentResponse.ticker !== ticker) return;
 
             const mergedResponse = mergeReportResponseWithLiveRefresh(currentResponse, liveResponse);
-            writeStoredReportResponse(mergedResponse);
+            writeStoredReportResponse(mergedResponse, reportCacheUserId);
             setReportResponse(mergedResponse);
 
             setInsights((previous) => (
@@ -679,7 +708,7 @@ function App() {
             if (error instanceof DOMException && error.name === 'AbortError') return;
             console.error('Live-sensitive refresh error:', error);
         }
-    }, []);
+    }, [reportCacheUserId]);
 
     const loadArchivedReport = useCallback(async (reportId: string) => {
         searchAbortRef.current?.abort();
@@ -745,7 +774,7 @@ function App() {
         // ── Instant cached display ─────────────────────────────────────
         // If we already have a cached report for this ticker, show it
         // immediately (0 ms wait) while the fresh pipeline runs behind it.
-        const cachedResponse = readStoredReportResponse(normalizedTicker);
+        const cachedResponse = readStoredReportResponse(normalizedTicker, reportCacheUserId);
         if (cachedResponse) {
             currentReportResponseRef.current = cachedResponse;
             setReportResponse(cachedResponse);
@@ -758,6 +787,7 @@ function App() {
 
         let responsePayload: ReportResponse | null = null;
         let asset = assetHint ?? null;
+        let blockedRequestMessage: string | null = null;
 
         if (!asset) {
             try {
@@ -782,7 +812,7 @@ function App() {
         try {
             responsePayload = await fetchWorkspaceReport(normalizedTicker, controller.signal);
             if (!controller.signal.aborted) {
-                writeStoredReportResponse(responsePayload);
+                writeStoredReportResponse(responsePayload, reportCacheUserId);
                 currentReportResponseRef.current = responsePayload;
                 setReportResponse(responsePayload);
 
@@ -794,9 +824,34 @@ function App() {
             if (error instanceof DOMException && error.name === 'AbortError') return;
             console.error('Report fetch error:', error);
 
+            if (isWorkspaceRequestError(error)) {
+                if (error.status === 401 || error.code === 'auth_required') {
+                    blockedRequestMessage = error.detail
+                        ?? 'Sign in to open a full Quantus report for this ticker.';
+                    openAuthModal('signin');
+                } else if (error.code === 'report_limit_reached') {
+                    blockedRequestMessage = error.detail ?? error.message;
+                }
+            }
+
+            if (blockedRequestMessage) {
+                if (!controller.signal.aborted) {
+                    currentReportResponseRef.current = null;
+                    setReportResponse(null);
+                    setInsights([
+                        {
+                            id: `${normalizedTicker}-blocked`,
+                            category: 'risk',
+                            text: blockedRequestMessage,
+                        },
+                    ]);
+                }
+                return;
+            }
+
             const failureState = describeReportFetchFailure(error, normalizedTicker);
 
-            const lastKnownReport = readStoredReportResponse(normalizedTicker);
+            const lastKnownReport = readStoredReportResponse(normalizedTicker, reportCacheUserId);
             if (lastKnownReport) {
                 responsePayload = {
                     ...lastKnownReport,
@@ -833,13 +888,18 @@ function App() {
             }
         } finally {
             if (!controller.signal.aborted) {
-                const rememberedAsset = responsePayload
+                if (blockedRequestMessage) {
+                    setIsGenerating(false);
+                }
+
+                if (!blockedRequestMessage) {
+                    const rememberedAsset = responsePayload
                     ? buildAssetEntryFromReport(responsePayload.report, responsePayload.source)
                     : asset;
 
-                if (rememberedAsset) {
-                    setRecentAssets((previous) => upsertAsset(previous, rememberedAsset, 6));
-                }
+                    if (rememberedAsset) {
+                        setRecentAssets((previous) => upsertAsset(previous, rememberedAsset, 6));
+                    }
 
                 const completionText = responsePayload?.source === 'cached'
                     ? 'Cached Quantus coverage is ready. Live-sensitive fields are refreshing.'
@@ -856,12 +916,17 @@ function App() {
                         isComplete: true,
                     },
                 ]);
+                }
                 setIsGenerating(false);
             }
         }
-    }, [refreshLiveSensitiveFields, streamInsights, workspaceSummary?.status]);
+    }, [openAuthModal, refreshLiveSensitiveFields, reportCacheUserId, streamInsights, workspaceSummary?.status]);
 
     useEffect(() => {
+        if (isLoading) {
+            return;
+        }
+
         if (route.view !== 'report' || !route.ticker) {
             inflightTickerRef.current = null;
             return;
@@ -887,7 +952,7 @@ function App() {
         const assetHint = pendingAssetRef.current;
         pendingAssetRef.current = null;
         void loadReport(route.ticker, assetHint);
-    }, [activeSnapshotId, isGenerating, loadArchivedReport, loadReport, loadedSnapshotId, reportResponse?.ticker, route.ticker, route.view]);
+    }, [activeSnapshotId, isGenerating, isLoading, loadArchivedReport, loadReport, loadedSnapshotId, reportResponse?.ticker, route.ticker, route.view]);
 
     const openReportRoute = useCallback((ticker: string, asset?: AssetEntry, snapshotId?: string) => {
         const normalizedTicker = ticker.trim().toUpperCase();
@@ -1033,18 +1098,13 @@ function App() {
     return (
         <Layout
             currentView={route.view === 'report' ? 'hero' : route.view}
+            minimalHeader={route.view === 'report'}
             lightMode={lightMode}
             onQuickSearch={openReportRoute}
             userName={user?.name ?? null}
             userTier={user?.tier ?? null}
-            workspaceStatus={route.view === 'report'
-                ? (reportResponse?.status ?? workspaceSummary?.status ?? null)
-                : (workspaceSummary?.status ?? null)}
-            onToggleLight={() => setLightMode((value) => {
-                const next = !value;
-                localStorage.setItem('quantus-theme', next ? 'light' : 'dark');
-                return next;
-            })}
+            workspaceStatus={headerWorkspaceStatus}
+            onToggleLight={() => setLightMode((value) => !value)}
             onOpenAuth={(mode) => openAuthModal(mode ?? 'signin')}
             onSignOut={signOut}
             onNavigate={handleNavigate}
@@ -1065,18 +1125,6 @@ function App() {
 
                 {route.view === 'report' && (
                     <motion.div key={route.path} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
-                        {report && (
-                            <StickyReportStrip
-                                report={report}
-                                visible={showStickyStrip}
-                                lightMode={lightMode}
-                                reportSource={reportResponse?.source}
-                                reportMessage={reportResponse?.message}
-                                shareUrl={window.location.href}
-                                onSubscribe={handleSubscribe}
-                            />
-                        )}
-
                         <button
                             onClick={handleBack}
                             className="flex items-center gap-2 mb-6 text-sm cursor-pointer transition-colors hover:text-blue-400"
@@ -1086,50 +1134,23 @@ function App() {
                             New Search
                         </button>
 
-                        {report && !localStorage.getItem(`quantus-welcome-dismissed:${report.ticker}`) && (
-                            <div className="relative">
-                                <WelcomeCard
-                                    report={report}
-                                    lightMode={lightMode}
-                                    onSubscribe={handleSubscribe}
-                                    onOpenTicker={handleOpenRelatedTicker}
-                                    reportSource={reportResponse?.source}
-                                    reportMessage={reportResponse?.message}
-                                    reportDetail={reportResponse?.detail}
-                                />
-                                <button
-                                    onClick={() => {
-                                        localStorage.setItem(`quantus-welcome-dismissed:${report.ticker}`, '1');
-                                        // Force re-render by updating a trivial state
-                                        setInsights((prev) => [...prev]);
-                                    }}
-                                    className="absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center text-xs transition-colors"
-                                    style={{
-                                        background: lightMode ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)',
-                                        color: lightMode ? '#9CA3AF' : '#6B7280',
-                                    }}
-                                    title="Dismiss for this ticker"
-                                    aria-label="Dismiss welcome card"
-                                >
-                                    ✕
-                                </button>
-                            </div>
+                        {(displayView !== 'report' || isGenerating) && (
+                            <ProgressInsightFeed
+                                insights={insights}
+                                isGenerating={isGenerating}
+                                ticker={currentTicker || route.ticker || ''}
+                                reportId={report?.report_id}
+                                onViewReport={handleViewReport}
+                                lightMode={lightMode}
+                                completionTitle={reportResponse?.source === 'starter'
+                                    ? 'Starter shell ready'
+                                    : reportResponse?.source === 'live'
+                                        ? 'Live report ready'
+                                        : 'Cached report ready'}
+                                completionDetail={reportResponse ? `${reportResponse.ticker} - ${reportResponse.message}` : undefined}
+                                showCompletionCard={Boolean(reportResponse)}
+                            />
                         )}
-
-                        <ProgressInsightFeed
-                            insights={insights}
-                            isGenerating={isGenerating}
-                            ticker={currentTicker || route.ticker || ''}
-                            reportId={report?.report_id}
-                            onViewReport={handleViewReport}
-                            lightMode={lightMode}
-                            completionTitle={reportResponse?.source === 'starter'
-                                ? 'Starter shell ready'
-                                : reportResponse?.source === 'live'
-                                    ? 'Live report ready'
-                                    : 'Cached report ready'}
-                            completionDetail={reportResponse ? `${reportResponse.ticker} · ${reportResponse.message}` : undefined}
-                        />
 
                         {displayView === 'report' && report && (
                             <motion.div
@@ -1139,17 +1160,23 @@ function App() {
                                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                             >
                                 <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
-                                    <div ref={reportRef}>
-                                        <ReportDashboard
-                                            report={report}
-                                            lightMode={lightMode}
-                                            onSubscribe={handleSubscribe}
-                                            onToggleWatchlist={handleToggleCurrentReportPinned}
-                                            isWatchlisted={isCurrentReportPinned}
-                                            userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
-                                            onUpgrade={() => openAuthModal('signup')}
-                                        />
-                                    </div>
+                                    <section className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
+                                        <div ref={reportRef}>
+                                            <ReportDashboard
+                                                report={report}
+                                                lightMode={lightMode}
+                                                onSubscribe={handleSubscribe}
+                                                onToggleWatchlist={handleToggleCurrentReportPinned}
+                                                isWatchlisted={isCurrentReportPinned}
+                                                isAuthenticated={Boolean(user)}
+                                                userTier={(user?.tier as 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL' | undefined) ?? 'FREE'}
+                                                onUpgrade={() => openAuthModal('signup')}
+                                                reportSource={reportResponse?.source}
+                                                reportMessage={reportResponse?.message}
+                                                reportDetail={reportResponse?.detail}
+                                            />
+                                        </div>
+                                    </section>
                                 </Suspense>
                             </motion.div>
                         )}

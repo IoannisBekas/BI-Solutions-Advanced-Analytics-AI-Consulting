@@ -7,9 +7,12 @@ import {
   findUserById,
   findUserByReferralToken,
   createUser,
+  getAppMeta,
   updateUserCredits,
+  updateUserAuthProvider,
   deleteUser,
   resetMonthlyReports,
+  setAppMeta,
   toSafeUser,
   type DbUser,
 } from "./db";
@@ -17,16 +20,21 @@ import {
 // ─── Config ──────────────────────────────────────────────────────────────────
 const SALT_ROUNDS = 12;
 const TOKEN_EXPIRY = "7d";
+const EPHEMERAL_JWT_SECRET = crypto.randomBytes(32).toString("hex");
+const MONTHLY_RESET_META_KEY = "reports.last_reset_month";
 
 function getJwtSecret(): string {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    // Fallback for environments where JWT_SECRET is not yet configured.
-    // Auth will work but tokens are not secure until a real secret is set.
-    console.warn("JWT_SECRET not set — using insecure fallback. Set JWT_SECRET env var in production!");
-    return "bisolutions-insecure-fallback-change-me";
+  const secret = process.env.JWT_SECRET?.trim();
+  if (secret) {
+    return secret;
   }
-  return secret;
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET env var is required in production");
+  }
+
+  console.warn("JWT_SECRET not set — using an ephemeral development secret for this process.");
+  return EPHEMERAL_JWT_SECRET;
 }
 
 function getGoogleClientId(): string {
@@ -131,6 +139,7 @@ async function createAuthUser(params: {
   name?: string;
   password: string;
   referralToken?: unknown;
+  authProvider?: "password" | "google";
 }): Promise<DbUser> {
   const identity = buildUserIdentity(params.name, params.email);
   const passwordHash = await bcrypt.hash(params.password, SALT_ROUNDS);
@@ -143,7 +152,78 @@ async function createAuthUser(params: {
     passwordHash,
     credits,
     referralToken: identity.referralToken,
+    authProvider: params.authProvider ?? "password",
   });
+}
+
+function mergeAuthProvider(current: string | undefined, incoming: "password" | "google") {
+  if (!current || current === incoming) {
+    return incoming;
+  }
+
+  if (current === "hybrid") {
+    return current;
+  }
+
+  return "hybrid";
+}
+
+async function verifyDeletionChallenge(user: DbUser, body: Record<string, unknown> | undefined) {
+  const password = typeof body?.password === "string" ? body.password : "";
+  const googleCredential = typeof body?.googleCredential === "string"
+    ? body.googleCredential.trim()
+    : "";
+  const authProvider = user.auth_provider || "password";
+
+  if (authProvider === "google") {
+    if (!googleCredential) {
+      return { status: 400, error: "Google account deletion requires a fresh Google sign-in credential." };
+    }
+
+    let tokenInfo: GoogleTokenInfo;
+    try {
+      tokenInfo = await verifyGoogleCredential(googleCredential);
+    } catch {
+      return { status: 401, error: "Google credential verification failed." };
+    }
+
+    if (tokenInfo.email?.toLowerCase() !== user.email.toLowerCase()) {
+      return { status: 401, error: "Google credential does not match the signed-in account." };
+    }
+
+    return null;
+  }
+
+  if (authProvider === "hybrid") {
+    if (googleCredential) {
+      let tokenInfo: GoogleTokenInfo;
+      try {
+        tokenInfo = await verifyGoogleCredential(googleCredential);
+      } catch {
+        return { status: 401, error: "Google credential verification failed." };
+      }
+
+      if (tokenInfo.email?.toLowerCase() !== user.email.toLowerCase()) {
+        return { status: 401, error: "Google credential does not match the signed-in account." };
+      }
+
+      return null;
+    }
+
+    if (!password) {
+      return { status: 400, error: "Confirm deletion with your password or a fresh Google sign-in credential." };
+    }
+
+    const valid = await bcrypt.compare(password, user.password_hash);
+    return valid ? null : { status: 401, error: "Incorrect password" };
+  }
+
+  if (!password) {
+    return { status: 400, error: "Password confirmation is required to delete your account." };
+  }
+
+  const valid = await bcrypt.compare(password, user.password_hash);
+  return valid ? null : { status: 401, error: "Incorrect password" };
 }
 
 interface GoogleTokenInfo {
@@ -213,7 +293,13 @@ authRouter.post("/register", async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await createAuthUser({ email, name, password, referralToken });
+    const user = await createAuthUser({
+      email,
+      name,
+      password,
+      referralToken,
+      authProvider: "password",
+    });
 
     const token = signToken(user);
     res.status(201).json({ token, user: toSafeUser(user) });
@@ -289,7 +375,14 @@ authRouter.post("/google", async (req: Request, res: Response) => {
         name: tokenInfo.name,
         password: generatedPassword,
         referralToken,
+        authProvider: "google",
       });
+    } else {
+      const mergedAuthProvider = mergeAuthProvider(user.auth_provider, "google");
+      if (mergedAuthProvider !== user.auth_provider) {
+        updateUserAuthProvider(user.id, mergedAuthProvider);
+        user = findUserById(user.id) ?? { ...user, auth_provider: mergedAuthProvider };
+      }
     }
 
     const token = signToken(user);
@@ -321,23 +414,18 @@ authRouter.delete(
   requireAuth,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { password } = req.body;
-
-      if (!password || typeof password !== "string") {
-        res.status(400).json({ error: "Password confirmation is required to delete your account" });
-        return;
-      }
-
       const user = findUserById(req.user!.userId);
       if (!user) {
         res.status(404).json({ error: "User not found" });
         return;
       }
 
-      // Require password confirmation before deletion
-      const valid = await bcrypt.compare(password, user.password_hash);
-      if (!valid) {
-        res.status(401).json({ error: "Incorrect password" });
+      const challengeError = await verifyDeletionChallenge(
+        user,
+        req.body as Record<string, unknown> | undefined,
+      );
+      if (challengeError) {
+        res.status(challengeError.status).json({ error: challengeError.error });
         return;
       }
 
@@ -356,15 +444,20 @@ authRouter.delete(
 );
 
 // ── Monthly reports reset (lazy check) ──────────────────────────────────────
-let _lastResetMonth = -1;
-
 export function checkMonthlyReset(): void {
-  const currentMonth = new Date().getMonth();
-  if (_lastResetMonth !== currentMonth) {
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const lastResetMonth = getAppMeta(MONTHLY_RESET_META_KEY);
+
+  if (!lastResetMonth) {
+    setAppMeta(MONTHLY_RESET_META_KEY, currentMonth);
+    return;
+  }
+
+  if (lastResetMonth !== currentMonth) {
     const resetCount = resetMonthlyReports();
+    setAppMeta(MONTHLY_RESET_META_KEY, currentMonth);
     if (resetCount > 0) {
       console.log(`Monthly reset: cleared reports_this_month for ${resetCount} users`);
     }
-    _lastResetMonth = currentMonth;
   }
 }

@@ -87,6 +87,18 @@ function sanitizeUserTier(raw: unknown): string {
     return USER_TIERS.includes(upper) ? upper : 'FREE';
 }
 
+function getMonthlyReportLimitForTier(tier: string): number {
+    switch (tier) {
+        case 'INSTITUTIONAL':
+            return -1;
+        case 'UNLOCKED':
+            return 10;
+        case 'FREE':
+        default:
+            return 3;
+    }
+}
+
 function parseBooleanQuery(raw: unknown): boolean {
     if (typeof raw === 'boolean') return raw;
     if (typeof raw !== 'string') return false;
@@ -111,6 +123,16 @@ interface JWTPayload {
     credits?: number;
     reportsThisMonth?: number;
     jurisdiction?: 'US' | 'UK' | 'EU' | 'GLOBAL';
+}
+
+interface QuantusSafeUser {
+    id: string;
+    email: string;
+    name: string;
+    tier: string;
+    credits: number;
+    reportsThisMonth: number;
+    jurisdiction: 'US' | 'UK' | 'EU' | 'GLOBAL';
 }
 
 interface AuthenticatedRequest extends express.Request {
@@ -180,6 +202,10 @@ app.get(`${API_PREFIX}/auth/me`, (req, res) => {
     proxyAuthRequest('GET', '/api/auth/me', req, res);
 });
 
+app.delete(`${API_PREFIX}/auth/account`, (req, res) => {
+    proxyAuthRequest('DELETE', '/api/auth/account', req, res);
+});
+
 async function fetchRootJson(
     path: string,
     init: RequestInit = {},
@@ -216,6 +242,36 @@ async function fetchRootJson(
         data,
         text,
     };
+}
+
+async function fetchFreshAuthenticatedUser(authHeader?: string): Promise<{ ok: boolean; status: number; data: any; text: string; user: QuantusSafeUser | null }> {
+    const upstream = await fetchRootJson('/api/auth/me', { method: 'GET' }, authHeader);
+    return {
+        ...upstream,
+        user: upstream.ok ? upstream.data as QuantusSafeUser : null,
+    };
+}
+
+async function consumeReportAllowance(authHeader: string) {
+    return fetchRootJson(
+        '/api/quantus/usage/report',
+        {
+            method: 'POST',
+            body: JSON.stringify({}),
+        },
+        authHeader,
+    );
+}
+
+async function assertDeepDiveAccess(authHeader: string, moduleIndex: number) {
+    return fetchRootJson(
+        '/api/quantus/usage/deep-dive-access',
+        {
+            method: 'POST',
+            body: JSON.stringify({ module: moduleIndex }),
+        },
+        authHeader,
+    );
 }
 
 async function proxyRootRequest(
@@ -375,7 +431,7 @@ function getMarketCapBucket(report: ReportData) {
 }
 
 async function persistReportSnapshot(response: ReportResponse) {
-    if (response.source === 'starter') {
+    if (response.source !== 'live') {
         return;
     }
 
@@ -405,7 +461,7 @@ async function persistReportSnapshot(response: ReportResponse) {
                     benchmarkPriceAtGen: benchmarkAsset?.currentPrice ?? null,
                     generatedAt: response.report.generated_at,
                     priceAtGen: response.report.current_price,
-                    source: response.source,
+                    source: 'live',
                     reportJson: response.report,
                 },
             }),
@@ -683,11 +739,44 @@ function getOrCreateDeepDiveJob(ticker: string, moduleIndex: number, assetClass:
 
 
 // ─── GET REPORT (LIVE PIPELINE → MOCK FALLBACK) ─────────────────────────────
-app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
+app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) => {
   try {
     const ticker = sanitizeTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
-    const userTier = sanitizeUserTier(req.query.user_tier ?? req.query.userTier);
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        res.status(401).json({
+            error: 'Sign in is required to generate a full Quantus report.',
+            code: 'auth_required',
+        });
+        return;
+    }
+
+    const authState = await fetchFreshAuthenticatedUser(authHeader);
+    if (!authState.ok || !authState.user) {
+        res.status(authState.status || 401).json(authState.data?.error ? authState.data : {
+            error: 'Authentication is required to generate a full Quantus report.',
+            code: 'auth_required',
+        });
+        return;
+    }
+
+    const userTier = sanitizeUserTier(authState.user.tier);
+    const monthlyReportLimit = getMonthlyReportLimitForTier(userTier);
+    if (
+        monthlyReportLimit >= 0
+        && Number.isFinite(authState.user.reportsThisMonth)
+        && authState.user.reportsThisMonth >= monthlyReportLimit
+    ) {
+        res.status(403).json({
+            error: `Your ${userTier} tier allows up to ${monthlyReportLimit} full Quantus reports per month.`,
+            code: 'report_limit_reached',
+            tier: userTier,
+            reportLimit: monthlyReportLimit,
+        });
+        return;
+    }
+
     const forceRefresh = parseBooleanQuery(req.query.force_refresh ?? req.query.forceRefresh);
 
     const asset = getAssetByTicker(ticker) ?? {
@@ -699,6 +788,18 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
         hasCachedReport: false,
         researcherCount: 0,
     } satisfies AssetEntry;
+
+    const finalizeReportResponse = async (response: ReportResponse) => {
+        if (response.source !== 'starter') {
+            const usageResult = await consumeReportAllowance(authHeader);
+            if (!usageResult.ok) {
+                res.status(usageResult.status).json(usageResult.data);
+                return;
+            }
+        }
+
+        res.json(response);
+    };
 
     // 1. Try live Python pipeline first
     const liveResult = await callPythonPipeline(ticker, {
@@ -726,10 +827,20 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
                 : source === 'starter'
                     ? 'On demand'
                     : 'Live',
-            status: getWorkspaceStatus(),
+            status: source === 'cached'
+                ? {
+                    mode: 'mixed',
+                    label: 'Cached pipeline snapshot',
+                    description: 'Quantus loaded an existing trusted pipeline snapshot for this ticker.',
+                    detail: `Cached quantitative pipeline coverage loaded for ${ticker}.`,
+                    badgeTone: 'neutral',
+                }
+                : getWorkspaceStatus(),
         };
-        void persistReportSnapshot(response);
-        res.json(response);
+        if (source === 'live') {
+            void persistReportSnapshot(response);
+        }
+        await finalizeReportResponse(response);
         return;
     }
 
@@ -749,7 +860,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
             freshness: 'On demand',
             status: getPipelineUnavailableStatus('The report route remains available, but live quantitative sections will stay conservative until the pipeline recovers.'),
         };
-        res.json(response);
+        await finalizeReportResponse(response);
         return;
     }
 
@@ -763,10 +874,9 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
             message: 'Cached Quantus coverage loaded (mock).',
             detail: `Live pipeline unavailable — serving cached mock data for ${ticker}.`,
             freshness: report.cache_age,
-            status: getWorkspaceStatus(),
+            status: getPipelineUnavailableStatus('Quantus is showing mock fallback coverage until the live pipeline recovers. Historical accuracy and archive persistence stay disabled for this response.'),
         };
-        void persistReportSnapshot(response);
-        res.json(response);
+        await finalizeReportResponse(response);
         return;
     }
 
@@ -780,7 +890,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req, res) => {
         freshness: 'On demand',
         status: getWorkspaceStatus(),
     };
-    res.json(response);
+    await finalizeReportResponse(response);
   } catch (err) {
     console.error(`[Report endpoint crash] ${req.params.ticker}:`, err);
     res.status(500).json({ error: 'Internal server error generating report' });
@@ -905,11 +1015,11 @@ app.post(`${API_PREFIX}/insights`, async (req, res) => {
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
 
-        // Generate synthetic insight cards for the progressive feed
-        const insights = getInsightCards(ticker, assetClass);
+        // Stream an honest orchestration feed for the workspace UI.
+        const insights = getHonestInsightCards(ticker, assetClass);
 
-        for (const insight of insights) {
-            await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
+        for (const [index, insight] of insights.entries()) {
+            await new Promise(resolve => setTimeout(resolve, 550 + (index * 90)));
             res.write(`data: ${JSON.stringify(insight)}\n\n`);
         }
 
@@ -924,6 +1034,15 @@ app.post(`${API_PREFIX}/insights`, async (req, res) => {
 // ─── DEEP DIVE ────────────────────────────────────────────────────────────────
 app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
     try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            res.status(401).json({
+                error: 'Sign in is required to prefetch Quantus Deep Dive modules.',
+                code: 'auth_required',
+            });
+            return;
+        }
+
         const ticker = sanitizeTicker(req.body.ticker);
         const assetClass = sanitizeAssetClass(req.body.assetClass);
         const requestedModules = Array.isArray(req.body.modules) ? req.body.modules : null;
@@ -934,6 +1053,14 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
         if (!ticker || modules.length === 0) {
             res.status(400).json({ error: 'Valid ticker and at least one module index required' });
             return;
+        }
+
+        for (const moduleIndex of modules) {
+            const access = await assertDeepDiveAccess(authHeader, moduleIndex);
+            if (!access.ok) {
+                res.status(access.status).json(access.data);
+                return;
+            }
         }
 
         res.status(202).json({
@@ -959,11 +1086,26 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
 
 app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
     try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            res.status(401).json({
+                error: 'Sign in is required to open Quantus Deep Dive modules.',
+                code: 'auth_required',
+            });
+            return;
+        }
+
         const ticker = sanitizeTicker(req.body.ticker);
         const moduleIndex = typeof req.body.module === 'number' ? Math.min(Math.max(Math.floor(req.body.module), 0), 11) : null;
         const assetClass = sanitizeAssetClass(req.body.assetClass);
         if (!ticker || moduleIndex === null) {
             res.status(400).json({ error: 'Valid ticker and module index (0-11) required' });
+            return;
+        }
+
+        const access = await assertDeepDiveAccess(authHeader, moduleIndex);
+        if (!access.ok) {
+            res.status(access.status).json(access.data);
             return;
         }
 
@@ -1144,6 +1286,31 @@ function getInsightCards(ticker: string, assetClass: string) {
     ];
 
     return cards;
+}
+
+function getHonestInsightCards(ticker: string, assetClass: string) {
+    const assetClassNote = assetClass === 'CRYPTO'
+        ? 'Routing the request through the crypto research profile.'
+        : assetClass === 'COMMODITY'
+            ? 'Routing the request through the commodity research profile.'
+            : assetClass === 'ETF'
+                ? 'Routing the request through the ETF research profile.'
+                : 'Routing the request through the equity research profile.';
+
+    return [
+        { id: '1', category: 'model', text: `${ticker}: request accepted. Validating ticker format, route context, and report permissions.` },
+        { id: '2', category: 'knowledge', text: `${ticker}: checking Quantus registry coverage and workspace metadata.` },
+        { id: '3', category: 'momentum', text: `${ticker}: inspecting cached report availability before any live fallback is needed.` },
+        { id: '4', category: 'model', text: `${ticker}: dispatching the live research request to the Quantus pipeline service.` },
+        { id: '5', category: 'risk', text: `${ticker}: waiting for the pipeline to return report sections, risk framing, and regime context.` },
+        { id: '6', category: 'altdata', text: `${ticker}: ${assetClassNote}` },
+        { id: '7', category: 'model', text: `${ticker}: normalizing the response into the workspace report schema.` },
+        { id: '8', category: 'sentiment', text: `${ticker}: assembling narrative sections for the research dashboard.` },
+        { id: '9', category: 'institutional', text: `${ticker}: checking whether snapshot persistence and archive handoff are eligible for this result.` },
+        { id: '10', category: 'event', text: `${ticker}: validating response freshness, source labels, and fallback messaging.` },
+        { id: '11', category: 'knowledge', text: `${ticker}: preparing watchlist, archive, and related-workspace hooks for the UI.` },
+        { id: '12', category: 'model', text: `${ticker}: final workspace handoff in progress. If live research is unavailable, Quantus will surface cached or starter coverage explicitly.` },
+    ];
 }
 
 function buildStarterReport(asset: AssetEntry): ReportData {

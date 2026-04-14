@@ -23,6 +23,15 @@ declare module 'virtual:pwa-register/react' {
   };
 }
 
+declare module 'virtual:pwa-register' {
+  export function registerSW(options?: {
+    immediate?: boolean;
+    onNeedRefresh?: () => void;
+    onOfflineReady?: () => void;
+    onRegisterError?: (error: unknown) => void;
+  }): (reloadPage?: boolean) => Promise<void>;
+}
+
 declare module 'i18next' {
   const i18n: {
     use(plugin: unknown): typeof i18n;
