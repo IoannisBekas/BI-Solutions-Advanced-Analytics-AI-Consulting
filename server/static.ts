@@ -181,22 +181,23 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/quantus/", "/quantus/workspace/");
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
 
-  // Prefer compiled dist/public/<name>; fall back to source-tracked <product>/dist/
-  // so the live container can serve up-to-date builds that are committed to git.
   const quantusDirCandidates = [
     path.resolve(distPath, "quantus", "workspace"),
     path.resolve(distPath, "quantus"),
-    path.resolve(__dirname, "..", "Quantus", "dist"),
   ];
   const quantusDir =
-    quantusDirCandidates.find((candidate) => fs.existsSync(candidate)) ||
-    quantusDirCandidates[quantusDirCandidates.length - 1];
+    quantusDirCandidates.find((candidate) => fs.existsSync(candidate)) || null;
   const powerBiDir = fs.existsSync(path.resolve(distPath, "power-bi-solutions"))
     ? path.resolve(distPath, "power-bi-solutions")
-    : path.resolve(__dirname, "..", "PowerBI_Solutions", "app", "dist");
+    : null;
 
-  serveProductSpa(app, "/quantus/workspace", quantusDir);
-  serveProductSpa(app, "/power-bi-solutions", powerBiDir);
+  if (quantusDir) {
+    serveProductSpa(app, "/quantus/workspace", quantusDir);
+  }
+
+  if (powerBiDir) {
+    serveProductSpa(app, "/power-bi-solutions", powerBiDir);
+  }
 
   app.use(express.static(distPath, { index: false, redirect: false }));
 

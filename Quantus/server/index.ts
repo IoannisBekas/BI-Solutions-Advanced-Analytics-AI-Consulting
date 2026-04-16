@@ -10,6 +10,14 @@ import { GoogleGenAI } from '@google/genai';
 import { getMockReport } from './data/mockReports.ts';
 import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, searchAssets } from './data/assetUniverse.ts';
 import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../src/types/index.ts';
+import {
+    QUANTUS_INTERNAL_HEADER,
+    getQuantusMonthlyReportLimitForTier,
+    readQuantusInternalKey,
+    sanitizeQuantusAssetClass,
+    sanitizeQuantusTicker,
+    sanitizeQuantusUserTier,
+} from '../../shared/quantus.ts';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();
@@ -19,7 +27,7 @@ dotenv.config();
 // and Quantus persistence requests to the root BI Solutions server which owns
 // the database.
 const AUTH_API_TARGET = process.env.AUTH_API_TARGET || 'http://localhost:5001';
-const QUANTUS_INTERNAL_KEY = process.env.QUANTUS_INTERNAL_KEY || process.env.JWT_SECRET || 'quantus-dev-secret';
+const QUANTUS_INTERNAL_KEY = readQuantusInternalKey();
 
 const app = express();
 const API_PREFIX = '/quantus/api';
@@ -65,40 +73,6 @@ app.use(`${API_PREFIX}/generate`, generateLimiter);
 app.use(`${API_PREFIX}/deepdive`, generateLimiter);
 
 // ─── INPUT SANITIZATION ─────────────────────────────────────────────────────
-const TICKER_REGEX = /^[A-Za-z0-9.=^_-]{1,20}$/;
-const ASSET_CLASSES = ['EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'];
-const USER_TIERS = ['FREE', 'UNLOCKED', 'INSTITUTIONAL'];
-
-function sanitizeTicker(raw: unknown): string | null {
-    if (typeof raw !== 'string') return null;
-    const trimmed = raw.trim().toUpperCase();
-    return TICKER_REGEX.test(trimmed) ? trimmed : null;
-}
-
-function sanitizeAssetClass(raw: unknown): string {
-    if (typeof raw !== 'string') return 'EQUITY';
-    const upper = raw.trim().toUpperCase();
-    return ASSET_CLASSES.includes(upper) ? upper : 'EQUITY';
-}
-
-function sanitizeUserTier(raw: unknown): string {
-    if (typeof raw !== 'string') return 'FREE';
-    const upper = raw.trim().toUpperCase();
-    return USER_TIERS.includes(upper) ? upper : 'FREE';
-}
-
-function getMonthlyReportLimitForTier(tier: string): number {
-    switch (tier) {
-        case 'INSTITUTIONAL':
-            return -1;
-        case 'UNLOCKED':
-            return 10;
-        case 'FREE':
-        default:
-            return 3;
-    }
-}
-
 function parseBooleanQuery(raw: unknown): boolean {
     if (typeof raw === 'boolean') return raw;
     if (typeof raw !== 'string') return false;
@@ -355,8 +329,8 @@ function buildWatchlistBias(signal: string) {
 
 function buildWatchlistItem(entry: any) {
     const latestSnapshot = entry?.latestSnapshot ?? null;
-    const ticker = sanitizeTicker(entry?.ticker) ?? 'UNKNOWN';
-    const assetClass = sanitizeAssetClass(entry?.assetClass) as AssetEntry['assetClass'];
+    const ticker = sanitizeQuantusTicker(entry?.ticker) ?? 'UNKNOWN';
+    const assetClass = sanitizeQuantusAssetClass(entry?.assetClass) as AssetEntry['assetClass'];
     const fallbackAsset: AssetEntry = {
         ticker,
         name: ticker,
@@ -443,7 +417,7 @@ async function persistReportSnapshot(response: ReportResponse) {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                'x-quantus-internal-key': QUANTUS_INTERNAL_KEY,
+                [QUANTUS_INTERNAL_HEADER]: QUANTUS_INTERNAL_KEY,
             },
             body: JSON.stringify({
                 snapshot: {
@@ -516,7 +490,7 @@ app.delete(`${API_PREFIX}/alerts/:ticker`, (req, res) => {
 });
 
 app.get(`${API_PREFIX}/archive`, async (req, res) => {
-    const ticker = sanitizeTicker(req.query.ticker);
+    const ticker = sanitizeQuantusTicker(req.query.ticker);
     if (!ticker) {
         res.status(400).json({ error: 'Ticker query param is required.' });
         return;
@@ -741,7 +715,7 @@ function getOrCreateDeepDiveJob(ticker: string, moduleIndex: number, assetClass:
 // ─── GET REPORT (LIVE PIPELINE → MOCK FALLBACK) ─────────────────────────────
 app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) => {
   try {
-    const ticker = sanitizeTicker(req.params.ticker);
+    const ticker = sanitizeQuantusTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
     const authHeader = req.headers.authorization;
     if (!authHeader) {
@@ -761,8 +735,8 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
         return;
     }
 
-    const userTier = sanitizeUserTier(authState.user.tier);
-    const monthlyReportLimit = getMonthlyReportLimitForTier(userTier);
+    const userTier = sanitizeQuantusUserTier(authState.user.tier);
+    const monthlyReportLimit = getQuantusMonthlyReportLimitForTier(userTier);
     if (
         monthlyReportLimit >= 0
         && Number.isFinite(authState.user.reportsThisMonth)
@@ -957,8 +931,8 @@ app.get(`${API_PREFIX}/assets/:ticker`, (req, res) => {
 // ─── GENERATE REPORT (STREAMING NARRATIVE) ──────────────────────────────────
 app.post(`${API_PREFIX}/generate`, async (req, res) => {
     try {
-        const ticker = sanitizeTicker(req.body.ticker);
-        const assetClass = sanitizeAssetClass(req.body.assetClass);
+        const ticker = sanitizeQuantusTicker(req.body.ticker);
+        const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
         if (!ticker) {
             res.status(400).json({ error: 'Valid ticker is required (1-20 alphanumeric chars)' });
             return;
@@ -1004,8 +978,8 @@ app.post(`${API_PREFIX}/generate`, async (req, res) => {
 // ─── STREAMING INSIGHT FEED ───────────────────────────────────────────────────
 app.post(`${API_PREFIX}/insights`, async (req, res) => {
     try {
-        const ticker = sanitizeTicker(req.body.ticker);
-        const assetClass = sanitizeAssetClass(req.body.assetClass);
+        const ticker = sanitizeQuantusTicker(req.body.ticker);
+        const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
         if (!ticker) {
             res.status(400).json({ error: 'Valid ticker is required' });
             return;
@@ -1043,8 +1017,8 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
             return;
         }
 
-        const ticker = sanitizeTicker(req.body.ticker);
-        const assetClass = sanitizeAssetClass(req.body.assetClass);
+        const ticker = sanitizeQuantusTicker(req.body.ticker);
+        const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
         const requestedModules = Array.isArray(req.body.modules) ? req.body.modules : null;
         const modules = (requestedModules ?? Array.from({ length: DEEP_DIVE_MODULE_COUNT }, (_, index) => index))
             .map((value) => typeof value === 'number' ? Math.floor(value) : Number.parseInt(String(value), 10))
@@ -1095,9 +1069,9 @@ app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
             return;
         }
 
-        const ticker = sanitizeTicker(req.body.ticker);
+        const ticker = sanitizeQuantusTicker(req.body.ticker);
         const moduleIndex = typeof req.body.module === 'number' ? Math.min(Math.max(Math.floor(req.body.module), 0), 11) : null;
-        const assetClass = sanitizeAssetClass(req.body.assetClass);
+        const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
         if (!ticker || moduleIndex === null) {
             res.status(400).json({ error: 'Valid ticker and module index (0-11) required' });
             return;
@@ -1146,7 +1120,7 @@ app.post(`${API_PREFIX}/portfolio`, (req, res) => {
 
 // ─── IDENTIFY (legacy endpoint — kept for compat) ────────────────────────────
 app.post(`${API_PREFIX}/identify`, async (req, res) => {
-    const ticker = sanitizeTicker(req.body.ticker);
+    const ticker = sanitizeQuantusTicker(req.body.ticker);
     if (!ticker) { res.status(400).json({ error: 'Valid ticker required' }); return; }
     const CRYPTO_TICKERS = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'DOGE', 'AVAX'];
     const COMMODITY_TICKERS = ['GC=F', 'CL=F', 'SI=F', 'NG=F', 'HG=F'];
@@ -1177,7 +1151,7 @@ app.post(`${API_PREFIX}/v1/push/unsubscribe`, (_req, res) => {
 
 // ─── SEC EDGAR PROXY ─────────────────────────────────────────────────────────
 app.get(`${API_PREFIX}/v1/sec-edgar/:ticker`, async (req, res) => {
-    const ticker = sanitizeTicker(req.params.ticker);
+    const ticker = sanitizeQuantusTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
 
     try {
@@ -1429,7 +1403,7 @@ function getMockScreenerResults(filters: Record<string, unknown>) {
 // ─── KNOWLEDGE GRAPH ─────────────────────────────────────────────────────────
 app.get(`${API_PREFIX}/v1/knowledge-graph/:ticker`, async (req, res) => {
     try {
-        const ticker = sanitizeTicker(req.params.ticker);
+        const ticker = sanitizeQuantusTicker(req.params.ticker);
         if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
         if (isProduction && !ALLOW_DEMO_DATA) {
             sendFeatureUnavailable(res, 'Knowledge graph');

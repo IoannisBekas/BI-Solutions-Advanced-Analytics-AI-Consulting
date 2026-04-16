@@ -28,3 +28,4 @@ error.log
 build_log.txt
 *.log
 attached_assets/
+client/public/quantus-app/

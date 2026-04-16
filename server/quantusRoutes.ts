@@ -24,41 +24,16 @@ import {
   type QuantusAlertSubscriptionInput,
   type QuantusSnapshotInput,
 } from "./db";
-
-const QUANTUS_INTERNAL_HEADER = "x-quantus-internal-key";
-const TICKER_RE = /^[A-Z0-9.=^_-]{1,20}$/;
-const ASSET_CLASSES = new Set(["EQUITY", "CRYPTO", "COMMODITY", "ETF"]);
-const TIER_RANK: Record<string, number> = {
-  FREE: 0,
-  UNLOCKED: 1,
-  INSTITUTIONAL: 2,
-};
-
-function readEnv(key: string) {
-  return (process.env[key] || "").trim();
-}
-
-function getQuantusInternalKey() {
-  return readEnv("QUANTUS_INTERNAL_KEY") || readEnv("JWT_SECRET") || "quantus-dev-secret";
-}
-
-function sanitizeTicker(value: unknown) {
-  if (typeof value !== "string") {
-    return null;
-  }
-
-  const ticker = value.trim().toUpperCase();
-  return TICKER_RE.test(ticker) ? ticker : null;
-}
-
-function sanitizeAssetClass(value: unknown) {
-  if (typeof value !== "string") {
-    return "EQUITY";
-  }
-
-  const assetClass = value.trim().toUpperCase();
-  return ASSET_CLASSES.has(assetClass) ? assetClass : "EQUITY";
-}
+import {
+  QUANTUS_INTERNAL_HEADER,
+  getQuantusMonthlyReportLimitForTier,
+  getQuantusWatchlistLimitForTier,
+  getRequiredQuantusTierForDeepDiveModule,
+  hasRequiredQuantusTier,
+  readQuantusInternalKey,
+  sanitizeQuantusAssetClass,
+  sanitizeQuantusTicker,
+} from "../shared/quantus";
 
 function sanitizeBoolean(value: unknown, fallback: boolean) {
   if (typeof value === "boolean") {
@@ -80,46 +55,6 @@ function sanitizeBoolean(value: unknown, fallback: boolean) {
   }
 
   return fallback;
-}
-
-function getWatchlistLimitForTier(tier: string) {
-  switch (tier) {
-    case "INSTITUTIONAL":
-      return -1;
-    case "UNLOCKED":
-      return 25;
-    case "FREE":
-    default:
-      return 5;
-  }
-}
-
-function getMonthlyReportLimitForTier(tier: string) {
-  switch (tier) {
-    case "INSTITUTIONAL":
-      return -1;
-    case "UNLOCKED":
-      return 10;
-    case "FREE":
-    default:
-      return 3;
-  }
-}
-
-function getRequiredTierForDeepDiveModule(moduleIndex: number) {
-  if (moduleIndex === 10) {
-    return "INSTITUTIONAL";
-  }
-
-  if ([7, 8, 9, 11].includes(moduleIndex)) {
-    return "UNLOCKED";
-  }
-
-  return "FREE";
-}
-
-function hasRequiredTier(currentTier: string, requiredTier: string) {
-  return (TIER_RANK[currentTier] ?? 0) >= (TIER_RANK[requiredTier] ?? 0);
 }
 
 function mapSnapshotSummary(snapshot: DbQuantusSnapshotSummary | null | undefined) {
@@ -203,7 +138,7 @@ function parseSnapshotPayload(body: Record<string, unknown> | undefined): Quantu
   const regimeLabelValue = snapshot.regimeLabel;
   const sourceValue = snapshot.source;
   const generatedAtValue = snapshot.generatedAt;
-  const ticker = sanitizeTicker(snapshot.ticker);
+  const ticker = sanitizeQuantusTicker(snapshot.ticker);
   const reportId = typeof reportIdValue === "string"
     ? reportIdValue.trim()
     : "";
@@ -248,7 +183,7 @@ function parseSnapshotPayload(body: Record<string, unknown> | undefined): Quantu
   return {
     reportId,
     ticker,
-    assetClass: sanitizeAssetClass(snapshot.assetClass),
+    assetClass: sanitizeQuantusAssetClass(snapshot.assetClass),
     companyName,
     sector: typeof snapshot.sector === "string"
       ? snapshot.sector.trim()
@@ -260,7 +195,7 @@ function parseSnapshotPayload(body: Record<string, unknown> | undefined): Quantu
     marketCapBucket: typeof snapshot.marketCapBucket === "string"
       ? snapshot.marketCapBucket.trim()
       : null,
-    benchmarkSymbol: sanitizeTicker(snapshot.benchmarkSymbol),
+    benchmarkSymbol: sanitizeQuantusTicker(snapshot.benchmarkSymbol),
     benchmarkPriceAtGen: benchmarkPriceAtGenRaw == null
       ? null
       : Number.isFinite(Number(benchmarkPriceAtGenRaw))
@@ -282,7 +217,7 @@ function buildAlertInput(
 ): QuantusAlertSubscriptionInput {
   return {
     ticker,
-    assetClass: sanitizeAssetClass(body?.assetClass ?? existing?.asset_class),
+    assetClass: sanitizeQuantusAssetClass(body?.assetClass ?? existing?.asset_class),
     emailEnabled: sanitizeBoolean(body?.emailEnabled, existing ? existing.email_enabled === 1 : true),
     pushEnabled: sanitizeBoolean(body?.pushEnabled, existing ? existing.push_enabled === 1 : false),
     signalChange: sanitizeBoolean(body?.signalChange, existing ? existing.signal_change === 1 : true),
@@ -302,7 +237,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
 
   app.post("/api/quantus/watchlist", requireAuth, (req: AuthenticatedRequest, res: Response) => {
     const body = req.body as Record<string, unknown> | undefined;
-    const ticker = sanitizeTicker(body?.ticker);
+    const ticker = sanitizeQuantusTicker(body?.ticker);
     if (!ticker) {
       res.status(400).json({ error: "Valid ticker is required." });
       return;
@@ -310,7 +245,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
 
     const userId = req.user!.userId;
     const existing = findQuantusWatchlistEntry(userId, ticker);
-    const limit = getWatchlistLimitForTier(req.user!.tier);
+    const limit = getQuantusWatchlistLimitForTier(req.user!.tier);
     const currentItems = listQuantusWatchlistEntries(userId);
 
     if (!existing && limit >= 0 && currentItems.length >= limit) {
@@ -324,7 +259,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     const entry = upsertQuantusWatchlistEntry(
       userId,
       ticker,
-      sanitizeAssetClass((req.body as Record<string, unknown> | undefined)?.assetClass),
+      sanitizeQuantusAssetClass((req.body as Record<string, unknown> | undefined)?.assetClass),
     );
 
     res.status(existing ? 200 : 201).json({
@@ -333,7 +268,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.delete("/api/quantus/watchlist/:ticker", requireAuth, (req: AuthenticatedRequest, res: Response) => {
-    const ticker = sanitizeTicker(req.params.ticker);
+    const ticker = sanitizeQuantusTicker(req.params.ticker);
     if (!ticker) {
       res.status(400).json({ error: "Valid ticker is required." });
       return;
@@ -350,7 +285,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.put("/api/quantus/alerts/:ticker", requireAuth, (req: AuthenticatedRequest, res: Response) => {
-    const ticker = sanitizeTicker(req.params.ticker);
+    const ticker = sanitizeQuantusTicker(req.params.ticker);
     if (!ticker) {
       res.status(400).json({ error: "Valid ticker is required." });
       return;
@@ -370,7 +305,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.delete("/api/quantus/alerts/:ticker", requireAuth, (req: AuthenticatedRequest, res: Response) => {
-    const ticker = sanitizeTicker(req.params.ticker);
+    const ticker = sanitizeQuantusTicker(req.params.ticker);
     if (!ticker) {
       res.status(400).json({ error: "Valid ticker is required." });
       return;
@@ -382,7 +317,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.get("/api/quantus/archive", (req: Request, res: Response) => {
-    const ticker = sanitizeTicker(req.query.ticker);
+    const ticker = sanitizeQuantusTicker(req.query.ticker);
     if (!ticker) {
       res.status(400).json({ error: "Ticker query param is required." });
       return;
@@ -434,7 +369,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
       return;
     }
 
-    const limit = getMonthlyReportLimitForTier(user.tier);
+    const limit = getQuantusMonthlyReportLimitForTier(user.tier);
     if (limit >= 0) {
       const incremented = incrementReportsIfBelowLimit(user.id, limit);
       if (!incremented) {
@@ -477,8 +412,8 @@ export function registerQuantusPersistenceRoutes(app: Express) {
       return;
     }
 
-    const requiredTier = getRequiredTierForDeepDiveModule(moduleIndex);
-    if (!hasRequiredTier(user.tier, requiredTier)) {
+    const requiredTier = getRequiredQuantusTierForDeepDiveModule(moduleIndex);
+    if (!hasRequiredQuantusTier(user.tier, requiredTier)) {
       res.status(403).json({
         error: requiredTier === "INSTITUTIONAL"
           ? "Institutional tier required for this Deep Dive module."
@@ -498,7 +433,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.post("/api/quantus/internal/snapshots", (req: Request, res: Response) => {
-    if (req.header(QUANTUS_INTERNAL_HEADER) !== getQuantusInternalKey()) {
+    if (req.header(QUANTUS_INTERNAL_HEADER) !== readQuantusInternalKey()) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }

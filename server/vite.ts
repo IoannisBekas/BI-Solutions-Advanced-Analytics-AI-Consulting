@@ -104,9 +104,6 @@ export async function setupVite(server: Server, app: Express) {
     next();
   });
 
-  // Resolve each product SPA: prefer compiled dist/public/<name>,
-  // fall back to the source-tracked <product>/dist/ when the compiled
-  // version hasn't been built yet (e.g. container running on new code).
   const productDirs: [string, string][] = [
     [
       "/quantus/workspace",
@@ -114,12 +111,12 @@ export async function setupVite(server: Server, app: Express) {
         ? path.resolve(distPath, "quantus", "workspace")
         : fs.existsSync(path.resolve(distPath, "quantus"))
           ? path.resolve(distPath, "quantus")
-          : path.resolve(import.meta.dirname, "..", "Quantus", "dist"),
+          : "",
     ],
-    ["/power-bi-solutions", fs.existsSync(path.resolve(distPath, "power-bi-solutions")) ? path.resolve(distPath, "power-bi-solutions") : path.resolve(import.meta.dirname, "..", "PowerBI_Solutions", "app", "dist")],
+    ["/power-bi-solutions", fs.existsSync(path.resolve(distPath, "power-bi-solutions")) ? path.resolve(distPath, "power-bi-solutions") : ""],
   ];
   for (const [mount, dir] of productDirs) {
-    if (fs.existsSync(dir)) {
+    if (dir && fs.existsSync(dir)) {
       app.use(mount, express.static(dir));
       app.use(`${mount}/*`, (_req, res, next) => {
         const indexPath = path.resolve(dir, "index.html");
