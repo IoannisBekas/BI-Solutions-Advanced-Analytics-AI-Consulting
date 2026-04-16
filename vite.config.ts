@@ -3,12 +3,13 @@ import react from "@vitejs/plugin-react";
 
 import path from "path";
 import { fileURLToPath } from "url";
+import { getDeployBasePath } from "./script/deployBase";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  base: "/",
+  base: getDeployBasePath(),
   plugins: [
     react(),
 

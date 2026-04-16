@@ -17,9 +17,11 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
+import { withSiteBase } from "@/lib/site";
 
 const POWERBI_SOLUTIONS_APP_URL =
-  import.meta.env.VITE_POWERBI_SOLUTIONS_URL || "/power-bi-solutions/";
+  import.meta.env.VITE_POWERBI_SOLUTIONS_URL ||
+  withSiteBase("/power-bi-solutions/");
 
 const features = [
   {
@@ -85,6 +87,11 @@ const powerBiFaqs = [
 ];
 
 export default function PowerBISolutionsPage() {
+  const powerBiWorkspaceDisplayUrl = new URL(
+    POWERBI_SOLUTIONS_APP_URL,
+    window.location.origin,
+  ).toString();
+
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
@@ -174,7 +181,7 @@ export default function PowerBISolutionsPage() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </a>
-                <a href="/contact">
+                <a href={withSiteBase("/contact")}>
                   <Button
                     variant="outline"
                     className="rounded-full border-gray-300 px-8 py-6 text-lg"
@@ -239,7 +246,7 @@ export default function PowerBISolutionsPage() {
                       Recommended product URL
                     </p>
                     <p className="break-all font-mono text-sm text-gray-500">
-                      https://bisolutions.group/power-bi-solutions/
+                      {powerBiWorkspaceDisplayUrl}
                     </p>
                   </div>
 

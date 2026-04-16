@@ -23,8 +23,9 @@ async function buildAll() {
 
   console.log("building client...");
   await viteBuild();
+  await cp("dist/public/index.html", "dist/public/404.html");
 
-  await buildNestedApp("Quantus", path.resolve("Quantus"), "quantus");
+  await buildNestedApp("Quantus", path.resolve("Quantus"), path.join("quantus", "workspace"));
   await buildNestedApp(
     "Power BI Solutions",
     path.resolve("PowerBI_Solutions", "app"),

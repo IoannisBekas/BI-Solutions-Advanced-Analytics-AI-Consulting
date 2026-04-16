@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Instagram, Linkedin, ArrowUp, Github } from "lucide-react";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
+import { withAssetBase } from "@/lib/site";
 
 export function Footer() {
   const scrollToTop = () => {
@@ -31,7 +32,7 @@ export function Footer() {
           <div className="md:col-span-4 space-y-6">
             <Link href="/" className="flex items-center gap-3 mb-4">
               <img
-                src="/bi-solutions-logo.png"
+                src={withAssetBase("bi-solutions-logo.png")}
                 alt="BI Solutions"
                 className="w-10 h-10 invert"
               />

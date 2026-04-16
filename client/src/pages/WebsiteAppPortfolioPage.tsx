@@ -15,17 +15,20 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
+import { withSiteBase } from "@/lib/site";
 import michailKarnasPreview from "@/assets/portfolio/michail-karnas-preview.svg";
 import rythmikiDrapetsonaPreview from "@/assets/portfolio/rythmiki-drapetsona-preview.jpg";
 import mathimatikosIcon from "@/assets/portfolio/mathimatikos-icon.png";
+import barberPreview from "@/assets/portfolio/barber-preview.png";
 import karnasShowcase from "@/assets/portfolio/karnas-showcase.mp4";
 import mathShowcase from "@/assets/portfolio/math-showcase.mp4";
 import rythdrapShowcase from "@/assets/portfolio/rythdrap-showcase.mp4";
+import barberShowcase from "@/assets/portfolio/barber-showcase.mp4";
 
 const portfolioMetrics = [
-  { label: "Live launches", value: "3" },
+  { label: "Live launches", value: "4" },
   { label: "Delivery formats", value: "Websites + web apps" },
-  { label: "Audience range", value: "Personal, local, and education" },
+  { label: "Audience range", value: "Personal, local, service, and education" },
 ];
 
 const showcaseProjects = [
@@ -68,6 +71,25 @@ const showcaseProjects = [
     accentClassName: "from-rose-50 via-white to-amber-50",
   },
   {
+    name: "Blade & Comb",
+    subtitle: "Barbershop website and booking flow",
+    category: "Service business website",
+    url: "https://ioannisbekas.github.io/Barber/",
+    description:
+      "A barbershop landing page built around service discovery, bilingual navigation, and a fast appointment-booking flow tailored for both walk-ins and scheduled visits.",
+    highlights: [
+      "Editorial service list with hover-driven video previews",
+      "Booking modal with service, barber, date, and time selection",
+      "English and Greek language toggle for local-market accessibility",
+    ],
+    techStack: ["HTML", "CSS", "JavaScript", "GSAP"],
+    results: ["Booking-first UX", "Bilingual toggle", "Mobile responsive"],
+    previewVideo: barberShowcase,
+    posterImage: barberPreview,
+    videoClassName: "object-cover object-center",
+    accentClassName: "from-stone-100 via-white to-zinc-200",
+  },
+  {
     name: "Mathimatikos.xyz",
     subtitle: "AI math learning platform",
     category: "Education web app",
@@ -107,7 +129,7 @@ const portfolioFaqs = [
   {
     question: "Can you build something similar for my business or project?",
     answer:
-      "Absolutely. Each build shown here solved a different communication problem \u2014 personal positioning, local organization visibility, or product-led learning. We adapt the same delivery discipline to your specific context and audience.",
+      "Absolutely. Each build shown here solved a different communication problem \u2014 personal positioning, local organization visibility, service-business bookings, or product-led learning. We adapt the same delivery discipline to your specific context and audience.",
   },
 ];
 
@@ -498,8 +520,9 @@ export default function WebsiteAppPortfolioPage() {
                 </h1>
                 <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
                   This portfolio page groups live BI Solutions website and app
-                  work into one place, spanning personal branding, organization
-                  websites, and AI-native education product experiences.
+                  work into one place, spanning personal branding, service
+                  businesses, organization websites, and AI-native education
+                  product experiences.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-4">
@@ -509,7 +532,7 @@ export default function WebsiteAppPortfolioPage() {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
-                  <a href="/contact">
+                  <a href={withSiteBase("/contact")}>
                     <Button
                       variant="outline"
                       className="rounded-full border-gray-300 px-8"
@@ -546,12 +569,13 @@ export default function WebsiteAppPortfolioPage() {
                 Featured launches
               </div>
               <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight md:text-5xl">
-                Three live builds, each solving a different communication problem.
+                Four live builds, each tuned to a different audience and workflow.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-600">
                 The same delivery discipline adapts to different contexts:
-                personal positioning, local organization visibility, and a
-                product-led learning application.
+                personal positioning, local organization visibility,
+                appointment-led service businesses, and a product-led learning
+                application.
               </p>
             </div>
           </ScrollReveal>
@@ -584,13 +608,13 @@ export default function WebsiteAppPortfolioPage() {
                 or a product-style web application, we can scope and deliver it.
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <a href="/contact">
+                <a href={withSiteBase("/contact")}>
                   <Button className="rounded-full bg-white px-8 text-gray-900 hover:bg-gray-100">
                     Start a conversation
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </a>
-                <a href="/services">
+                <a href={withSiteBase("/services")}>
                   <Button
                     variant="outline"
                     className="rounded-full border-gray-500 px-8 text-gray-300 hover:bg-white/10 hover:text-white"

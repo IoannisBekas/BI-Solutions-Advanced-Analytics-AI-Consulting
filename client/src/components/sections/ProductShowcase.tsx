@@ -10,12 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
+import { withSiteBase } from "@/lib/site";
 
 const products = [
   {
     name: "Quantus Investing",
     href: PRODUCT_ROUTE_ALIASES.quantus,
-    appHref: "/quantus/workspace/",
+    appHref: withSiteBase("/quantus/workspace/"),
     description:
       "AI-native quantitative research, signal generation, report automation, and institutional-style deep dives across multiple asset classes.",
     bullets: [
@@ -27,7 +28,7 @@ const products = [
   {
     name: "Power BI Solutions",
     href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-    appHref: "/power-bi-solutions/",
+    appHref: withSiteBase("/power-bi-solutions/"),
     description:
       "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
     bullets: [
@@ -39,7 +40,7 @@ const products = [
   {
     name: "Greek AI Professional Advisor",
     href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
-    appHref: PRODUCT_ROUTE_ALIASES.aiAdvisor,
+    appHref: withSiteBase(PRODUCT_ROUTE_ALIASES.aiAdvisor),
     description:
       "AI-powered professional guidance across accounting, legal, and consulting domains — trained on Greek law and business practices.",
     bullets: [
@@ -51,7 +52,9 @@ const products = [
   {
     name: "Website & App Portfolio",
     href: PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
-    appHref: `${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}#featured-sites`,
+    appHref: withSiteBase(
+      `${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}#featured-sites`,
+    ),
     description:
       "A curated showcase of BI Solutions web builds across personal branding, local organizations, and AI-native education products.",
     bullets: [

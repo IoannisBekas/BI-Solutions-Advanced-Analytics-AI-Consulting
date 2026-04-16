@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
+import { SITE_BASE_PATH } from "@/lib/site";
 import {
   PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
@@ -65,7 +66,7 @@ function useDecodedBrowserLocation() {
 
 function Router() {
   return (
-    <WouterRouter hook={useDecodedBrowserLocation}>
+    <WouterRouter hook={useDecodedBrowserLocation} base={SITE_BASE_PATH}>
       <Suspense fallback={<PageFallback />}>
         <Switch>
           <Route path="/" component={Home} />

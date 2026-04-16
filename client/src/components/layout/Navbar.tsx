@@ -8,6 +8,7 @@ import {
   PRODUCT_ROUTE_ALIASES,
   pathMatches,
 } from "@/lib/routes";
+import { withAssetBase } from "@/lib/site";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -118,7 +119,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <img
-              src="/bi-solutions-logo.png"
+              src={withAssetBase("bi-solutions-logo.png")}
               alt="BI Solutions"
               className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
             />
@@ -265,7 +266,7 @@ export function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <img
-                  src="/bi-solutions-logo.png"
+                  src={withAssetBase("bi-solutions-logo.png")}
                   alt="BI Solutions"
                   className="w-10 h-10"
                 />

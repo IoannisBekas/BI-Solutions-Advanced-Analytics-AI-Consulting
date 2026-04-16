@@ -16,6 +16,7 @@ export interface BlogPost {
 // Import blog images
 import geminiImage from "@/assets/blog/gemini-import-feature.png";
 import powerBISolutionsImage from "@/assets/blog/power-bi-solutions-semantic-model-review.svg";
+import { withSiteBase } from "@/lib/site";
 
 export const blogPosts: BlogPost[] = [
     {
@@ -96,7 +97,7 @@ Power BI Solutions adds AI-assisted guidance inside the analysis workflow itself
 
 Another important design decision is the authentication boundary. Power BI Solutions lives under the BI Solutions brand and domain, but it keeps its own product-specific access flow. That separation matters for roadmap flexibility, user management, and product state.
 
-In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="/power-bi-solutions/" class="text-blue-600 hover:underline">/power-bi-solutions/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
+In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="${withSiteBase("/power-bi-solutions/")}" class="text-blue-600 hover:underline">/power-bi-solutions/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
 
 ## From review service to scalable product workflow
 

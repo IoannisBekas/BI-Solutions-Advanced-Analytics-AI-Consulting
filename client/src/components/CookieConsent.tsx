@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "wouter";
+import { withSiteBase } from "@/lib/site";
 
 const COOKIE_CONSENT_KEY = "cookie-consent";
 const GA_ID = "G-M1276CBX6M";
@@ -55,12 +55,12 @@ export function CookieConsent() {
             <p className="text-sm text-gray-300 leading-relaxed flex-1">
               Αυτός ο ιστότοπος χρησιμοποιεί cookies για τη βελτίωση της εμπειρίας σας.
               Διαβάστε την{" "}
-              <Link
-                href="/privacy-policy"
+              <a
+                href={withSiteBase("/privacy-policy")}
                 className="underline text-white hover:text-gray-300 transition-colors"
               >
                 Πολιτική Απορρήτου
-              </Link>{" "}
+              </a>{" "}
               μας για περισσότερες πληροφορίες.
             </p>
             <div className="flex gap-3 shrink-0">
