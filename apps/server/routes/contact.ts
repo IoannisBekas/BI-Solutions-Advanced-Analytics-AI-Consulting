@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import { z } from "zod";
 
 function getResendApiKey() {
   return (process.env.RESEND_API_KEY || "").trim();
@@ -8,7 +9,6 @@ function getContactRecipient() {
   return (process.env.CONTACT_RECIPIENT_EMAIL || "ibekas@ihu.gr").trim();
 }
 
-/** Escape HTML special characters to prevent injection in email bodies */
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -17,6 +17,13 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
+
+const contactBodySchema = z.object({
+  name: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().max(254),
+  subject: z.string().trim().min(1).max(200),
+  message: z.string().trim().min(1).max(5000),
+});
 
 export function registerContactRoute(app: Express) {
   app.post("/api/contact", async (req, res) => {
@@ -28,11 +35,12 @@ export function registerContactRoute(app: Express) {
       return;
     }
 
-    const { name, email, subject, message } = req.body;
-    if (!name || !email || !subject || !message) {
-      res.status(400).json({ message: "All fields (name, email, subject, message) are required." });
+    const parsed = contactBodySchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ message: "Invalid contact submission." });
       return;
     }
+    const { name, email, subject, message } = parsed.data;
 
     try {
       const { Resend } = await import("resend");

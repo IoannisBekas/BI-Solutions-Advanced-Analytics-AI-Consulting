@@ -5,11 +5,42 @@ import { copyProxyResponseHeaders, forwardRequestHeader } from "./_shared";
 const QUANTUS_API_PREFIX = "/quantus/api";
 const DEFAULT_QUANTUS_API_TARGET = "http://127.0.0.1:3001";
 
+const PRIVATE_HOST_RE =
+  /^(localhost|127\.|10\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[0-1])\.|::1$|fc|fd|fe80)/i;
+
+function parseQuantusApiTarget() {
+  const raw = (process.env.QUANTUS_API_TARGET || DEFAULT_QUANTUS_API_TARGET).replace(/\/$/, "");
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    throw new Error(`QUANTUS_API_TARGET is not a valid URL: ${raw}`);
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    throw new Error(`QUANTUS_API_TARGET must be http(s): ${raw}`);
+  }
+  return { raw, parsed };
+}
+
+const quantusTargetCache = parseQuantusApiTarget();
+const isSameOriginAsMain =
+  quantusTargetCache.parsed.hostname === "127.0.0.1" ||
+  quantusTargetCache.parsed.hostname === "localhost" ||
+  PRIVATE_HOST_RE.test(quantusTargetCache.parsed.hostname);
+
+// In production, refuse non-private targets unless QUANTUS_ALLOW_REMOTE is set.
+if (
+  process.env.NODE_ENV === "production" &&
+  !isSameOriginAsMain &&
+  process.env.QUANTUS_ALLOW_REMOTE !== "true"
+) {
+  throw new Error(
+    `QUANTUS_API_TARGET must point at a loopback/private host in production (got ${quantusTargetCache.parsed.hostname}). Set QUANTUS_ALLOW_REMOTE=true to override.`,
+  );
+}
+
 function getQuantusApiTarget() {
-  return (
-    process.env.QUANTUS_API_TARGET ||
-    DEFAULT_QUANTUS_API_TARGET
-  ).replace(/\/$/, "");
+  return quantusTargetCache.raw;
 }
 
 export function registerQuantusProxyRoute(app: Express) {
@@ -22,8 +53,12 @@ export function registerQuantusProxyRoute(app: Express) {
       forwardRequestHeader(req, headers, "authorization");
       forwardRequestHeader(req, headers, "cache-control");
       forwardRequestHeader(req, headers, "content-type");
-      forwardRequestHeader(req, headers, "cookie");
       forwardRequestHeader(req, headers, "last-event-id");
+      // Forward cookies only when the upstream is loopback/private to avoid
+      // leaking session cookies to a remote host if env is misconfigured.
+      if (isSameOriginAsMain) {
+        forwardRequestHeader(req, headers, "cookie");
+      }
 
       const hasBody = req.method !== "GET" && req.method !== "HEAD";
       const body =
@@ -55,11 +90,9 @@ export function registerQuantusProxyRoute(app: Express) {
       Readable.fromWeb(upstream.body as never).pipe(res);
     } catch (error) {
       console.error("Quantus API proxy failed:", error);
-      const detail = error instanceof Error ? error.message : String(error);
       res.status(502).json({
         message:
           "Unable to reach the Quantus API target from the BI Solutions server.",
-        detail,
         code: "quantus_api_proxy_unavailable",
       });
     }

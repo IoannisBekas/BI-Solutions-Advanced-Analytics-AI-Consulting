@@ -1,5 +1,4 @@
 export const QUANTUS_INTERNAL_HEADER = "x-quantus-internal-key";
-const QUANTUS_DEFAULT_INTERNAL_KEY = "quantus-dev-secret";
 const QUANTUS_TICKER_RE = /^[A-Z0-9.=^_-]{1,20}$/;
 
 export const QUANTUS_ASSET_CLASSES = [
@@ -29,12 +28,18 @@ export const QUANTUS_TIER_RANK: Record<QuantusTier, number> = {
 
 export function readQuantusInternalKey(
   env: Record<string, string | undefined> = process.env,
-) {
-  return (
-    env.QUANTUS_INTERNAL_KEY?.trim() ||
-    env.JWT_SECRET?.trim() ||
-    QUANTUS_DEFAULT_INTERNAL_KEY
-  );
+): string | null {
+  const key = env.QUANTUS_INTERNAL_KEY?.trim();
+  if (key && key.length >= 32) {
+    return key;
+  }
+
+  if (env.NODE_ENV === "production") {
+    return null;
+  }
+
+  // Dev-only: allow a weaker key so local dev works without ceremony.
+  return key || null;
 }
 
 export function sanitizeQuantusTicker(value: unknown) {

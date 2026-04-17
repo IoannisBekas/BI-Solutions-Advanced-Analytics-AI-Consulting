@@ -1,4 +1,5 @@
 import type { Express, Request } from "express";
+import { requireAuth } from "../auth";
 import {
   ANTHROPIC_MESSAGES_URL,
   DEFAULT_ANTHROPIC_VERSION,
@@ -234,7 +235,7 @@ export function registerPowerBiProxyRoutes(app: Express) {
     res.json({ ok: true, enabled: isPowerBiAnthropicProxyEnabled() });
   });
 
-  app.post(`${POWERBI_SOLUTIONS_API_PREFIX}/anthropic/v1/messages`, async (req, res) => {
+  app.post(`${POWERBI_SOLUTIONS_API_PREFIX}/anthropic/v1/messages`, requireAuth, async (req, res) => {
     if (!isPowerBiAnthropicProxyEnabled()) {
       res.status(503).json({
         message:

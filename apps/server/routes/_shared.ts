@@ -49,10 +49,17 @@ export function copyProxyResponseHeaders(res: Response, upstream: globalThis.Res
     "content-length",
     "keep-alive",
     "transfer-encoding",
+    "set-cookie",
+    "access-control-allow-origin",
+    "access-control-allow-credentials",
+    "access-control-allow-headers",
+    "access-control-allow-methods",
+    "access-control-expose-headers",
+    "strict-transport-security",
   ]);
 
   upstream.headers.forEach((value, key) => {
-    if (!blockedHeaders.has(key)) {
+    if (!blockedHeaders.has(key.toLowerCase())) {
       res.setHeader(key, value);
     }
   });

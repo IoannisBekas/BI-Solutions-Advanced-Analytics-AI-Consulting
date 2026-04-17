@@ -28,6 +28,9 @@ dotenv.config();
 // the database.
 const AUTH_API_TARGET = process.env.AUTH_API_TARGET || 'http://localhost:5001';
 const QUANTUS_INTERNAL_KEY = readQuantusInternalKey();
+if (process.env.NODE_ENV === 'production' && !QUANTUS_INTERNAL_KEY) {
+    throw new Error('QUANTUS_INTERNAL_KEY env var (min 32 chars) is required in production');
+}
 
 const app = express();
 const API_PREFIX = '/quantus/api';
@@ -40,7 +43,7 @@ const PYTHON_PIPELINE_TIMEOUT_MS = Number.parseInt(process.env.QUANTUS_PYTHON_TI
 if (isProduction && !process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET env var is required in production');
 }
-const JWT_SECRET = process.env.JWT_SECRET || 'quantus-dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-local-only-never-use-in-prod';
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────────────────────
@@ -120,6 +123,14 @@ function optionalAuth(req: AuthenticatedRequest, _res: express.Response, next: e
             const decoded = jwt.verify(authHeader.slice(7), JWT_SECRET) as JWTPayload;
             req.user = decoded;
         } catch { /* invalid token — proceed as anonymous */ }
+    }
+    next();
+}
+
+function requireAuth(req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) {
+    if (!req.user) {
+        res.status(401).json({ error: 'Authentication required.' });
+        return;
     }
     next();
 }
@@ -412,7 +423,9 @@ async function persistReportSnapshot(response: ReportResponse) {
     const benchmarkTicker = getBenchmarkTicker(response.report.asset_class);
     const benchmarkAsset = getAssetByTicker(benchmarkTicker);
 
-    try {
+    if (!QUANTUS_INTERNAL_KEY) {
+        console.warn('Skipping snapshot persistence: QUANTUS_INTERNAL_KEY not set.');
+    } else try {
         await fetch(`${AUTH_API_TARGET}/api/quantus/internal/snapshots`, {
             method: 'POST',
             headers: {
@@ -929,7 +942,7 @@ app.get(`${API_PREFIX}/assets/:ticker`, (req, res) => {
 });
 
 // ─── GENERATE REPORT (STREAMING NARRATIVE) ──────────────────────────────────
-app.post(`${API_PREFIX}/generate`, async (req, res) => {
+app.post(`${API_PREFIX}/generate`, requireAuth, async (req, res) => {
     try {
         const ticker = sanitizeQuantusTicker(req.body.ticker);
         const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
@@ -976,7 +989,7 @@ app.post(`${API_PREFIX}/generate`, async (req, res) => {
 });
 
 // ─── STREAMING INSIGHT FEED ───────────────────────────────────────────────────
-app.post(`${API_PREFIX}/insights`, async (req, res) => {
+app.post(`${API_PREFIX}/insights`, requireAuth, async (req, res) => {
     try {
         const ticker = sanitizeQuantusTicker(req.body.ticker);
         const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
@@ -1006,7 +1019,7 @@ app.post(`${API_PREFIX}/insights`, async (req, res) => {
 });
 
 // ─── DEEP DIVE ────────────────────────────────────────────────────────────────
-app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
+app.post(`${API_PREFIX}/deepdive/prefetch`, requireAuth, async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
@@ -1058,7 +1071,7 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
     }
 });
 
-app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
+app.post(`${API_PREFIX}/deepdive`, requireAuth, async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {

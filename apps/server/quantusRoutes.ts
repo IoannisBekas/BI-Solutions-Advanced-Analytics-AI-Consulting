@@ -1,4 +1,5 @@
 import type { Express, Request, Response } from "express";
+import { timingSafeEqual } from "crypto";
 import { requireAuth, type AuthenticatedRequest } from "./auth";
 import {
   deleteQuantusAlertSubscription,
@@ -244,13 +245,18 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     }
 
     const userId = req.user!.userId;
+    const currentUser = findUserById(userId);
+    if (!currentUser) {
+      res.status(401).json({ error: "User not found." });
+      return;
+    }
     const existing = findQuantusWatchlistEntry(userId, ticker);
-    const limit = getQuantusWatchlistLimitForTier(req.user!.tier);
+    const limit = getQuantusWatchlistLimitForTier(currentUser.tier);
     const currentItems = listQuantusWatchlistEntries(userId);
 
     if (!existing && limit >= 0 && currentItems.length >= limit) {
       res.status(403).json({
-        error: `Your ${req.user!.tier} tier allows up to ${limit} watchlist tickers.`,
+        error: `Your ${currentUser.tier} tier allows up to ${limit} watchlist tickers.`,
         code: "watchlist_limit_reached",
       });
       return;
@@ -433,7 +439,18 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.post("/api/quantus/internal/snapshots", (req: Request, res: Response) => {
-    if (req.header(QUANTUS_INTERNAL_HEADER) !== readQuantusInternalKey()) {
+    const expected = readQuantusInternalKey();
+    const provided = req.header(QUANTUS_INTERNAL_HEADER);
+    if (!expected || !provided) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+    const expectedBuf = Buffer.from(expected);
+    const providedBuf = Buffer.from(provided);
+    if (
+      expectedBuf.length !== providedBuf.length ||
+      !timingSafeEqual(expectedBuf, providedBuf)
+    ) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }

@@ -1,4 +1,6 @@
 import type { Express } from "express";
+import { z } from "zod";
+import { requireAuth } from "../auth";
 import {
   ANTHROPIC_MESSAGES_URL,
   DEFAULT_ANTHROPIC_VERSION,
@@ -145,16 +147,49 @@ function isOfficialSourceHost(hostname: string, role: AdvisorRole) {
   );
 }
 
-async function resolveAdvisorSourceUri(uri: string) {
+function isPrivateHost(hostname: string) {
+  if (/^(localhost|0\.0\.0\.0)$/i.test(hostname)) return true;
+  if (/^127\./.test(hostname)) return true;
+  if (/^10\./.test(hostname)) return true;
+  if (/^192\.168\./.test(hostname)) return true;
+  if (/^169\.254\./.test(hostname)) return true;
+  if (/^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname)) return true;
+  if (/^::1$|^fc|^fd|^fe80/i.test(hostname)) return true;
+  return false;
+}
+
+function isSafeAdvisorUri(uri: string, role: AdvisorRole): boolean {
+  try {
+    const parsed = new URL(uri);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+    if (isPrivateHost(parsed.hostname)) return false;
+    return isOfficialSourceHost(parsed.hostname, role);
+  } catch {
+    return false;
+  }
+}
+
+async function resolveAdvisorSourceUri(uri: string, role: AdvisorRole) {
+  if (!isSafeAdvisorUri(uri, role)) {
+    return uri;
+  }
+
   const attempts: Array<() => Promise<globalThis.Response>> = [
-    () => fetch(uri, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(8_000) }),
-    () => fetch(uri, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(8_000) }),
+    () => fetch(uri, { method: "HEAD", redirect: "manual", signal: AbortSignal.timeout(8_000) }),
+    () => fetch(uri, { method: "GET", redirect: "manual", signal: AbortSignal.timeout(8_000) }),
   ];
 
   for (const attempt of attempts) {
     try {
       const response = await attempt();
-      if (response.url) {
+      const location = response.headers.get("location");
+      if (location) {
+        const resolved = new URL(location, uri).toString();
+        if (isSafeAdvisorUri(resolved, role)) {
+          return resolved;
+        }
+      }
+      if (response.url && isSafeAdvisorUri(response.url, role)) {
         return response.url;
       }
     } catch {
@@ -172,7 +207,7 @@ async function filterOfficialAdvisorSources(
   const candidates = rawSources.slice(0, 6);
   const resolvedSources = await Promise.all(
     candidates.map(async (source) => {
-      const resolvedUri = await resolveAdvisorSourceUri(source.uri);
+      const resolvedUri = await resolveAdvisorSourceUri(source.uri, role);
       let hostname = "";
 
       try {
@@ -504,7 +539,13 @@ export function registerAdvisorRoutes(app: Express) {
     });
   });
 
-  app.post("/api/ai-advisor", async (req, res) => {
+  const advisorBodySchema = z.object({
+    role: z.enum(ADVISOR_ROLES),
+    question: z.string().min(1).max(2000),
+    language: z.string().optional(),
+  });
+
+  app.post("/api/ai-advisor", requireAuth, async (req, res) => {
     if (!isAdvisorConfigured()) {
       res.status(503).json({
         success: false,
@@ -514,18 +555,14 @@ export function registerAdvisorRoutes(app: Express) {
       return;
     }
 
-    const { role, question } = req.body;
-    const language = parseAdvisorLanguage(req.body?.language);
-    const trimmedQuestion = typeof question === "string" ? question.slice(0, 2000) : "";
-    if (!role || !question || typeof question !== "string") {
-      res.status(400).json({ success: false, error: "Role and question are required." });
+    const parsed = advisorBodySchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ success: false, error: "Invalid request." });
       return;
     }
-
-    if (!ADVISOR_ROLES.includes(role)) {
-      res.status(400).json({ success: false, error: "Invalid role." });
-      return;
-    }
+    const { role, question } = parsed.data;
+    const language = parseAdvisorLanguage(parsed.data.language);
+    const trimmedQuestion = question.trim();
 
     const highRisk = isHighRiskAdvisorQuestion(role, trimmedQuestion);
 

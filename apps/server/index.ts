@@ -122,6 +122,22 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) =>
 if (isProduction && allowedOrigins.length === 0) {
   throw new Error("ALLOWED_ORIGINS env var must be set in production");
 }
+for (const origin of allowedOrigins) {
+  if (origin === "*") {
+    throw new Error("ALLOWED_ORIGINS must not contain wildcard '*' when credentials are enabled");
+  }
+  try {
+    const parsed = new URL(origin);
+    if (isProduction && parsed.protocol !== "https:") {
+      throw new Error(`ALLOWED_ORIGINS entry "${origin}" must use https:// in production`);
+    }
+    if (!parsed.hostname || parsed.hostname.includes("*")) {
+      throw new Error(`ALLOWED_ORIGINS entry "${origin}" must be a concrete https origin`);
+    }
+  } catch (err) {
+    throw new Error(`Invalid ALLOWED_ORIGINS entry "${origin}": ${(err as Error).message}`);
+  }
+}
 
 app.use(
   cors({
@@ -155,8 +171,25 @@ const powerBiAnthropicLimiter = rateLimit({
   message: { message: "Preview AI rate limit reached â€” try again later." },
 });
 
+const advisorLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "AI advisor rate limit reached — try again later." },
+});
+
+const contactLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Too many contact submissions — try again later." },
+});
+
 app.use("/api/", globalLimiter);
-app.use("/api/contact", strictLimiter);
+app.use("/api/contact", contactLimiter);
+app.use("/api/ai-advisor", advisorLimiter);
 app.use("/api/auth", strictLimiter);
 app.use("/power-bi-solutions/api/anthropic", powerBiAnthropicLimiter);
 
