@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import crypto from 'crypto';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import helmet from 'helmet';
@@ -44,7 +45,12 @@ if (isProduction && !process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET env var is required in production');
 }
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-local-only-never-use-in-prod';
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
+const TOKEN_COOKIE_NAME = 'auth_token';
+const REQUEST_ID_HEADER = 'x-request-id';
+const ALLOWED_ORIGINS = validateAllowedOrigins(
+    (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5001,http://127.0.0.1:5001,http://127.0.0.1:3000')
+        .split(','),
+);
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────────────────────
 app.disable('x-powered-by');
@@ -67,6 +73,26 @@ app.use(
 );
 app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
+app.use((req, res, next) => {
+    const requestId = req.header(REQUEST_ID_HEADER)?.trim()
+        || req.header('request-id')?.trim()
+        || crypto.randomUUID();
+
+    req.requestId = requestId;
+    res.setHeader(REQUEST_ID_HEADER, requestId);
+
+    const start = Date.now();
+    res.on('finish', () => {
+        process.stdout.write(`[${requestId}] ${req.method} ${req.path} ${res.statusCode} in ${Date.now() - start}ms\n`);
+    });
+
+    next();
+});
+
+const missingEnv = readMissingQuantusEnv();
+if (missingEnv.length > 0) {
+    console.warn(`Quantus optional env vars missing: ${missingEnv.join(', ')}`);
+}
 
 // ─── RATE LIMITING ──────────────────────────────────────────────────────────
 const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 200, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Too many requests — try again later.' } });
@@ -116,11 +142,182 @@ interface AuthenticatedRequest extends express.Request {
     user?: JWTPayload;
 }
 
-function optionalAuth(req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction) {
-    const authHeader = req.headers.authorization;
-    if (authHeader?.startsWith('Bearer ')) {
+declare module 'express-serve-static-core' {
+    interface Request {
+        requestId?: string;
+    }
+}
+
+interface RootAuthContext {
+    authorization?: string;
+    cookie?: string;
+    requestId?: string;
+}
+
+function getRequestId(req: express.Request) {
+    return req.requestId || 'unknown';
+}
+
+function getRequestLogLabel(req: express.Request) {
+    return `[${getRequestId(req)}] ${req.method} ${req.path}`;
+}
+
+function validateAllowedOrigins(rawOrigins: string[]) {
+    const origins = rawOrigins.map((origin) => origin.trim()).filter(Boolean);
+
+    if (isProduction && origins.length === 0) {
+        throw new Error('ALLOWED_ORIGINS env var must be set in production');
+    }
+
+    for (const origin of origins) {
+        if (origin === '*') {
+            throw new Error("ALLOWED_ORIGINS must not contain wildcard '*' when credentials are enabled");
+        }
         try {
-            const decoded = jwt.verify(authHeader.slice(7), JWT_SECRET) as JWTPayload;
+            const parsed = new URL(origin);
+            if (isProduction && parsed.protocol !== 'https:') {
+                throw new Error(`ALLOWED_ORIGINS entry "${origin}" must use https:// in production`);
+            }
+            if (!parsed.hostname || parsed.hostname.includes('*')) {
+                throw new Error(`ALLOWED_ORIGINS entry "${origin}" must be a concrete origin`);
+            }
+        } catch (error) {
+            throw new Error(`Invalid ALLOWED_ORIGINS entry "${origin}": ${(error as Error).message}`);
+        }
+    }
+
+    return origins;
+}
+
+function readMissingQuantusEnv() {
+    const hasAnthropicKey = Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+    const hasGeminiKey = Boolean(process.env.GEMINI_API_KEY?.trim());
+    const hasNewsKey = Boolean(process.env.FMP_API_KEY?.trim());
+    const hasGoogleClientId = Boolean(process.env.GOOGLE_CLIENT_ID?.trim());
+    const hasCustomEdgarUserAgent = Boolean(process.env.SEC_EDGAR_USER_AGENT?.trim());
+
+    const missing: string[] = [];
+    if (!hasAnthropicKey && !hasGeminiKey) {
+        missing.push('ANTHROPIC_API_KEY or GEMINI_API_KEY');
+    }
+    if (!hasNewsKey) {
+        missing.push('FMP_API_KEY');
+    }
+    if (!hasGoogleClientId) {
+        missing.push('GOOGLE_CLIENT_ID');
+    }
+    if (!hasCustomEdgarUserAgent) {
+        missing.push('SEC_EDGAR_USER_AGENT');
+    }
+
+    return missing;
+}
+
+function getRequestCookieHeader(req: express.Request) {
+    const rawCookie = req.headers.cookie;
+    if (Array.isArray(rawCookie)) {
+        return rawCookie.join('; ');
+    }
+    return typeof rawCookie === 'string' && rawCookie.trim() ? rawCookie : undefined;
+}
+
+function getCookieValue(cookieHeader: string | undefined, name: string) {
+    if (!cookieHeader) {
+        return undefined;
+    }
+
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${escapedName}=([^;]+)`));
+    if (!match?.[1]) {
+        return undefined;
+    }
+
+    try {
+        return decodeURIComponent(match[1]);
+    } catch {
+        return match[1];
+    }
+}
+
+function getRequestToken(req: express.Request) {
+    const authHeader = req.headers.authorization;
+    if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+        return authHeader.slice(7);
+    }
+
+    return getCookieValue(getRequestCookieHeader(req), TOKEN_COOKIE_NAME);
+}
+
+function getRequestAuthContext(req: express.Request): RootAuthContext {
+    return {
+        authorization: typeof req.headers.authorization === 'string' ? req.headers.authorization : undefined,
+        cookie: getRequestCookieHeader(req),
+        requestId: getRequestId(req),
+    };
+}
+
+function hasAuthContext(auth: RootAuthContext) {
+    return Boolean(auth.authorization || auth.cookie);
+}
+
+function applyRootAuthHeaders(headers: Headers, auth: RootAuthContext) {
+    if (auth.authorization) {
+        headers.set('authorization', auth.authorization);
+    }
+    if (auth.cookie) {
+        headers.set('cookie', auth.cookie);
+    }
+    if (auth.requestId) {
+        headers.set(REQUEST_ID_HEADER, auth.requestId);
+    }
+}
+
+function buildRootAuthHeaderRecord(auth: RootAuthContext, includeJsonContentType = false) {
+    const headers: Record<string, string> = {};
+    if (auth.authorization) {
+        headers.authorization = auth.authorization;
+    }
+    if (auth.cookie) {
+        headers.cookie = auth.cookie;
+    }
+    if (auth.requestId) {
+        headers[REQUEST_ID_HEADER] = auth.requestId;
+    }
+    if (includeJsonContentType) {
+        headers['content-type'] = 'application/json';
+    }
+    return headers;
+}
+
+function buildPythonHeaders(req: express.Request, baseHeaders?: Record<string, string>) {
+    return {
+        ...(baseHeaders ?? {}),
+        [REQUEST_ID_HEADER]: getRequestId(req),
+    };
+}
+
+function getUpstreamSetCookies(upstream: globalThis.Response) {
+    const headersWithSetCookie = upstream.headers as Headers & { getSetCookie?: () => string[] };
+    if (typeof headersWithSetCookie.getSetCookie === 'function') {
+        return headersWithSetCookie.getSetCookie().filter(Boolean);
+    }
+
+    const header = upstream.headers.get('set-cookie');
+    return header ? [header] : [];
+}
+
+function forwardUpstreamSetCookies(res: express.Response, upstream: globalThis.Response) {
+    const cookies = getUpstreamSetCookies(upstream);
+    if (cookies.length > 0) {
+        res.setHeader('set-cookie', cookies);
+    }
+}
+
+function optionalAuth(req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction) {
+    const token = getRequestToken(req);
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
             req.user = decoded;
         } catch { /* invalid token — proceed as anonymous */ }
     }
@@ -148,9 +345,7 @@ async function proxyAuthRequest(
     res: express.Response,
 ) {
     try {
-        const headers: Record<string, string> = { 'content-type': 'application/json' };
-        const authHeader = req.headers.authorization;
-        if (authHeader) headers['authorization'] = authHeader;
+        const headers = buildRootAuthHeaderRecord(getRequestAuthContext(req), method !== 'GET');
 
         const upstream = await fetch(`${AUTH_API_TARGET}${path}`, {
             method,
@@ -160,9 +355,13 @@ async function proxyAuthRequest(
         });
 
         const text = await upstream.text();
-        res.status(upstream.status).setHeader('content-type', 'application/json').send(text);
+        forwardUpstreamSetCookies(res, upstream);
+        res
+            .status(upstream.status)
+            .setHeader('content-type', upstream.headers.get('content-type') || 'application/json')
+            .send(text);
     } catch (error) {
-        console.error(`Auth proxy error (${path}):`, error);
+        console.error(`${getRequestLogLabel(req)} auth proxy error (${path}):`, error);
         res.status(502).json({ error: 'Auth service temporarily unavailable.' });
     }
 }
@@ -187,6 +386,10 @@ app.get(`${API_PREFIX}/auth/me`, (req, res) => {
     proxyAuthRequest('GET', '/api/auth/me', req, res);
 });
 
+app.post(`${API_PREFIX}/auth/logout`, (req, res) => {
+    proxyAuthRequest('POST', '/api/auth/logout', req, res);
+});
+
 app.delete(`${API_PREFIX}/auth/account`, (req, res) => {
     proxyAuthRequest('DELETE', '/api/auth/account', req, res);
 });
@@ -194,12 +397,10 @@ app.delete(`${API_PREFIX}/auth/account`, (req, res) => {
 async function fetchRootJson(
     path: string,
     init: RequestInit = {},
-    authHeader?: string,
+    auth: RootAuthContext = {},
 ): Promise<{ ok: boolean; status: number; data: any; text: string }> {
     const headers = new Headers(init.headers);
-    if (authHeader) {
-        headers.set('authorization', authHeader);
-    }
+    applyRootAuthHeaders(headers, auth);
     if (init.body && !headers.has('content-type')) {
         headers.set('content-type', 'application/json');
     }
@@ -229,33 +430,33 @@ async function fetchRootJson(
     };
 }
 
-async function fetchFreshAuthenticatedUser(authHeader?: string): Promise<{ ok: boolean; status: number; data: any; text: string; user: QuantusSafeUser | null }> {
-    const upstream = await fetchRootJson('/api/auth/me', { method: 'GET' }, authHeader);
+async function fetchFreshAuthenticatedUser(auth: RootAuthContext = {}): Promise<{ ok: boolean; status: number; data: any; text: string; user: QuantusSafeUser | null }> {
+    const upstream = await fetchRootJson('/api/auth/me', { method: 'GET' }, auth);
     return {
         ...upstream,
         user: upstream.ok ? upstream.data as QuantusSafeUser : null,
     };
 }
 
-async function consumeReportAllowance(authHeader: string) {
+async function consumeReportAllowance(auth: RootAuthContext) {
     return fetchRootJson(
         '/api/quantus/usage/report',
         {
             method: 'POST',
             body: JSON.stringify({}),
         },
-        authHeader,
+        auth,
     );
 }
 
-async function assertDeepDiveAccess(authHeader: string, moduleIndex: number) {
+async function assertDeepDiveAccess(auth: RootAuthContext, moduleIndex: number) {
     return fetchRootJson(
         '/api/quantus/usage/deep-dive-access',
         {
             method: 'POST',
             body: JSON.stringify({ module: moduleIndex }),
         },
-        authHeader,
+        auth,
     );
 }
 
@@ -266,14 +467,7 @@ async function proxyRootRequest(
     res: express.Response,
 ) {
     try {
-        const headers: Record<string, string> = {};
-        const authHeader = req.headers.authorization;
-        if (authHeader) {
-            headers.authorization = authHeader;
-        }
-        if (method !== 'GET') {
-            headers['content-type'] = 'application/json';
-        }
+        const headers = buildRootAuthHeaderRecord(getRequestAuthContext(req), method !== 'GET');
 
         const upstream = await fetch(`${AUTH_API_TARGET}${path}`, {
             method,
@@ -283,9 +477,13 @@ async function proxyRootRequest(
         });
 
         const text = await upstream.text();
-        res.status(upstream.status).setHeader('content-type', 'application/json').send(text);
+        forwardUpstreamSetCookies(res, upstream);
+        res
+            .status(upstream.status)
+            .setHeader('content-type', upstream.headers.get('content-type') || 'application/json')
+            .send(text);
     } catch (error) {
-        console.error(`Root proxy error (${path}):`, error);
+        console.error(`${getRequestLogLabel(req)} root proxy error (${path}):`, error);
         res.status(502).json({ error: 'Quantus persistence service temporarily unavailable.' });
     }
 }
@@ -415,7 +613,7 @@ function getMarketCapBucket(report: ReportData) {
     return 'SMALL';
 }
 
-async function persistReportSnapshot(response: ReportResponse) {
+async function persistReportSnapshot(response: ReportResponse, requestId?: string) {
     if (response.source !== 'live') {
         return;
     }
@@ -431,6 +629,7 @@ async function persistReportSnapshot(response: ReportResponse) {
             headers: {
                 'content-type': 'application/json',
                 [QUANTUS_INTERNAL_HEADER]: QUANTUS_INTERNAL_KEY,
+                ...(requestId ? { [REQUEST_ID_HEADER]: requestId } : {}),
             },
             body: JSON.stringify({
                 snapshot: {
@@ -455,13 +654,13 @@ async function persistReportSnapshot(response: ReportResponse) {
             signal: AbortSignal.timeout(5_000),
         });
     } catch (error) {
-        console.error(`Snapshot persistence failed for ${response.report.report_id}:`, error);
+        console.error(`[${requestId || 'unknown'}] Snapshot persistence failed for ${response.report.report_id}:`, error);
     }
 }
 
 app.get(`${API_PREFIX}/watchlist`, async (req, res) => {
     try {
-        const upstream = await fetchRootJson('/api/quantus/watchlist', { method: 'GET' }, req.headers.authorization);
+        const upstream = await fetchRootJson('/api/quantus/watchlist', { method: 'GET' }, getRequestAuthContext(req));
         if (!upstream.ok) {
             res.status(upstream.status).json(upstream.data);
             return;
@@ -574,7 +773,10 @@ function getAI() {
 // ─── PYTHON PIPELINE PROXY ──────────────────────────────────────────────────
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
-async function callPythonPipeline(ticker: string, options: { forceRefresh?: boolean; userTier?: string } = {}): Promise<{ success: boolean; data?: any; error?: string }> {
+async function callPythonPipeline(
+    ticker: string,
+    options: { forceRefresh?: boolean; userTier?: string; requestId?: string } = {},
+): Promise<{ success: boolean; data?: any; error?: string }> {
     try {
         const params = new URLSearchParams({
             force_refresh: String(options.forceRefresh ?? false),
@@ -586,7 +788,10 @@ async function callPythonPipeline(ticker: string, options: { forceRefresh?: bool
 
         const response = await fetch(url, {
             signal: controller.signal,
-            headers: { 'Accept': 'application/json' },
+            headers: {
+                Accept: 'application/json',
+                ...(options.requestId ? { [REQUEST_ID_HEADER]: options.requestId } : {}),
+            },
         });
         clearTimeout(timeout);
 
@@ -605,7 +810,12 @@ async function callPythonPipeline(ticker: string, options: { forceRefresh?: bool
     }
 }
 
-async function callPythonDeepDive(ticker: string, moduleIndex: number, assetClass: string): Promise<{ success: boolean; text?: string; error?: string }> {
+async function callPythonDeepDive(
+    ticker: string,
+    moduleIndex: number,
+    assetClass: string,
+    requestId?: string,
+): Promise<{ success: boolean; text?: string; error?: string }> {
     try {
         const url = `${PYTHON_API_URL}/api/v1/report/${encodeURIComponent(ticker)}/deepdive`;
         const controller = new AbortController();
@@ -614,7 +824,10 @@ async function callPythonDeepDive(ticker: string, moduleIndex: number, assetClas
         const response = await fetch(url, {
             method: 'POST',
             signal: controller.signal,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...(requestId ? { [REQUEST_ID_HEADER]: requestId } : {}),
+            },
             body: JSON.stringify({ module: moduleIndex, assetClass }),
         });
         clearTimeout(timeout);
@@ -730,8 +943,8 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
   try {
     const ticker = sanitizeQuantusTicker(req.params.ticker);
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker format' }); return; }
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    const authContext = getRequestAuthContext(req);
+    if (!hasAuthContext(authContext)) {
         res.status(401).json({
             error: 'Sign in is required to generate a full Quantus report.',
             code: 'auth_required',
@@ -739,7 +952,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
         return;
     }
 
-    const authState = await fetchFreshAuthenticatedUser(authHeader);
+    const authState = await fetchFreshAuthenticatedUser(authContext);
     if (!authState.ok || !authState.user) {
         res.status(authState.status || 401).json(authState.data?.error ? authState.data : {
             error: 'Authentication is required to generate a full Quantus report.',
@@ -778,7 +991,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
 
     const finalizeReportResponse = async (response: ReportResponse) => {
         if (response.source !== 'starter') {
-            const usageResult = await consumeReportAllowance(authHeader);
+            const usageResult = await consumeReportAllowance(authContext);
             if (!usageResult.ok) {
                 res.status(usageResult.status).json(usageResult.data);
                 return;
@@ -792,6 +1005,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
     const liveResult = await callPythonPipeline(ticker, {
         forceRefresh,
         userTier,
+        requestId: getRequestId(req),
     });
     if (liveResult.success && liveResult.data?.report) {
         const source = normalizeReportSource(liveResult.data.source);
@@ -825,7 +1039,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
                 : getWorkspaceStatus(),
         };
         if (source === 'live') {
-            void persistReportSnapshot(response);
+            void persistReportSnapshot(response, getRequestId(req));
         }
         await finalizeReportResponse(response);
         return;
@@ -833,7 +1047,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
 
     // 2. Log the pipeline failure and fall back to mocks
     if (liveResult.error) {
-        console.warn(`[Pipeline fallback] ${ticker}: ${liveResult.error}`);
+        console.warn(`${getRequestLogLabel(req)} pipeline fallback for ${ticker}: ${liveResult.error}`);
     }
 
     if (isProduction && !ALLOW_DEMO_DATA) {
@@ -879,7 +1093,7 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
     };
     await finalizeReportResponse(response);
   } catch (err) {
-    console.error(`[Report endpoint crash] ${req.params.ticker}:`, err);
+    console.error(`${getRequestLogLabel(req)} report endpoint crash for ${req.params.ticker}:`, err);
     res.status(500).json({ error: 'Internal server error generating report' });
   }
 });
@@ -899,7 +1113,8 @@ app.get(`${API_PREFIX}/assets/search`, async (req, res) => {
     if (query.trim().length > 0) {
         try {
             const pyRes = await fetch(`${PYTHON_API_URL}/api/v1/search?q=${encodeURIComponent(query)}&limit=${limit}`, {
-                signal: AbortSignal.timeout(2000)
+                signal: AbortSignal.timeout(2000),
+                headers: buildPythonHeaders(req),
             });
             if (pyRes.ok) {
                 const pyAssets = await pyRes.json();
@@ -1019,10 +1234,10 @@ app.post(`${API_PREFIX}/insights`, requireAuth, async (req, res) => {
 });
 
 // ─── DEEP DIVE ────────────────────────────────────────────────────────────────
-app.post(`${API_PREFIX}/deepdive/prefetch`, requireAuth, async (req, res) => {
+app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
+        const authContext = getRequestAuthContext(req);
+        if (!hasAuthContext(authContext)) {
             res.status(401).json({
                 error: 'Sign in is required to prefetch Quantus Deep Dive modules.',
                 code: 'auth_required',
@@ -1043,7 +1258,7 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, requireAuth, async (req, res) => {
         }
 
         for (const moduleIndex of modules) {
-            const access = await assertDeepDiveAccess(authHeader, moduleIndex);
+            const access = await assertDeepDiveAccess(authContext, moduleIndex);
             if (!access.ok) {
                 res.status(access.status).json(access.data);
                 return;
@@ -1071,10 +1286,10 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, requireAuth, async (req, res) => {
     }
 });
 
-app.post(`${API_PREFIX}/deepdive`, requireAuth, async (req, res) => {
+app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
+        const authContext = getRequestAuthContext(req);
+        if (!hasAuthContext(authContext)) {
             res.status(401).json({
                 error: 'Sign in is required to open Quantus Deep Dive modules.',
                 code: 'auth_required',
@@ -1090,7 +1305,7 @@ app.post(`${API_PREFIX}/deepdive`, requireAuth, async (req, res) => {
             return;
         }
 
-        const access = await assertDeepDiveAccess(authHeader, moduleIndex);
+        const access = await assertDeepDiveAccess(authContext, moduleIndex);
         if (!access.ok) {
             res.status(access.status).json(access.data);
             return;
@@ -1168,7 +1383,10 @@ app.get(`${API_PREFIX}/v1/sec-edgar/:ticker`, async (req, res) => {
     if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
 
     try {
-        const response = await fetch(`${PYTHON_API_URL}/api/v1/sec-edgar/${encodeURIComponent(ticker)}`);
+        const response = await fetch(
+            `${PYTHON_API_URL}/api/v1/sec-edgar/${encodeURIComponent(ticker)}`,
+            { headers: buildPythonHeaders(req) },
+        );
         if (!response.ok) {
             res.status(response.status).json({ error: `SEC EDGAR API error: ${response.statusText}` });
             return;
@@ -1189,7 +1407,10 @@ app.get(`${API_PREFIX}/v1/news/:ticker`, async (req, res) => {
     try {
         const response = await fetch(
             `${PYTHON_API_URL}/api/v1/news/${encodeURIComponent(ticker)}?limit=${limit}`,
-            { signal: AbortSignal.timeout(15_000) },
+            {
+                signal: AbortSignal.timeout(15_000),
+                headers: buildPythonHeaders(req),
+            },
         );
         if (!response.ok) {
             // Graceful: return empty if Python API unavailable
@@ -1217,7 +1438,10 @@ app.get(`${API_PREFIX}/v1/scanner`, async (req, res) => {
             `${PYTHON_API_URL}/api/v1/screener?limit=${limit}&sort_by=${sortBy}` +
             (signal     ? `&signal=${encodeURIComponent(signal)}` : '') +
             (assetClass ? `&asset_class=${encodeURIComponent(assetClass)}` : ''),
-            { signal: AbortSignal.timeout(10_000) },
+            {
+                signal: AbortSignal.timeout(10_000),
+                headers: buildPythonHeaders(req),
+            },
         );
         if (!pyRes.ok) { res.status(502).json({ error: 'Scanner unavailable' }); return; }
         const data = await pyRes.json();
@@ -1238,9 +1462,11 @@ app.get(`${API_PREFIX}/v1/scanner`, async (req, res) => {
 });
 
 // ─── PYTHON HEALTH CHECK ─────────────────────────────────────────────────────
-app.get(`${API_PREFIX}/v1/python/health`, async (_req, res) => {
+app.get(`${API_PREFIX}/v1/python/health`, async (req, res) => {
     try {
-        const response = await fetch(`${PYTHON_API_URL}/health`);
+        const response = await fetch(`${PYTHON_API_URL}/health`, {
+            headers: buildPythonHeaders(req),
+        });
         if (!response.ok) {
             res.status(503).json({ status: 'down', error: response.statusText });
             return;
@@ -1711,7 +1937,7 @@ function getMockPortfolioAnalysis(holdings: Array<{ ticker: string; weight: numb
 
 // ─── GLOBAL ERROR HANDLER ────────────────────────────────────────────────────
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error(`[Express Error] ${req.method} ${req.url}:`, err);
+    console.error(`[${getRequestId(req)}] Express error ${req.method} ${req.url}:`, err);
     res.status(500).json({
         error: true,
         message: "Quantus Engine encountered an unexpected error.",

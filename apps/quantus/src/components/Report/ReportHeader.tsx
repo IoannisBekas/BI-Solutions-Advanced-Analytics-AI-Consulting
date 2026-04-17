@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Share2, Download, Bell, Bookmark, ChevronDown, ChevronUp, AlertTriangle, Users } from 'lucide-react';
-import type { ReportData } from '../../types';
+import type { ReportData, ReportSource } from '../../types';
 import { signalClass, regimeClass, themeColors } from './helpers';
 import { Feedback } from './SharedWidgets';
 
@@ -11,11 +11,36 @@ interface Props {
     onSubscribe?: () => void;
     onToggleWatchlist?: () => void;
     isWatchlisted?: boolean;
+    reportSource?: ReportSource;
+    reportMessage?: string;
+    reportDetail?: string;
 }
 
-export function ReportHeader({ report, lightMode, onSubscribe, onToggleWatchlist, isWatchlisted = false }: Props) {
+export function ReportHeader({
+    report,
+    lightMode,
+    onSubscribe,
+    onToggleWatchlist,
+    isWatchlisted = false,
+    reportSource = 'cached',
+    reportMessage,
+    reportDetail,
+}: Props) {
     const [showConfBreakdown, setShowConfBreakdown] = useState(false);
     const { textPrimary, textSecondary, dimBg, borderColor } = themeColors(lightMode);
+    const isStarter = reportSource === 'starter';
+    const isLive = reportSource === 'live';
+    const sourceLabel = isStarter ? 'Starter shell' : isLive ? 'Live pipeline' : 'Cached report';
+    const sourceMessage = reportMessage ?? (isStarter
+        ? 'No cached Quantus coverage yet.'
+        : isLive
+            ? 'Live Quantus coverage loaded.'
+            : 'Shared Quantus coverage loaded.');
+    const sourceDetail = reportDetail ?? (isStarter
+        ? 'Quantus is showing the starter shell while live coverage is generated.'
+        : isLive
+            ? 'This report was generated from the live Quantus research pipeline.'
+            : 'This report was loaded from cached Quantus coverage.');
     const copyShareLink = async () => {
         const url = window.location.href;
 
@@ -71,6 +96,27 @@ export function ReportHeader({ report, lightMode, onSubscribe, onToggleWatchlist
             <div className="flex flex-wrap items-center gap-3 mb-4">
                 <span className={`regime-badge ${regimeClass(report.regime?.label ?? 'Mean-Reverting')}`}>{report.regime?.label ?? 'Unknown'}</span>
                 <span className="text-xs" style={{ color: textSecondary }}>{report.regime?.implication ?? ''}</span>
+            </div>
+
+            <div
+                className="mb-4 flex flex-wrap items-center gap-2 rounded-xl px-3 py-2 text-xs"
+                style={{ background: dimBg, border: `1px solid ${borderColor}` }}
+            >
+                <span
+                    className="rounded-full px-2.5 py-1 font-semibold"
+                    style={{
+                        background: isStarter
+                            ? 'rgba(245,158,11,0.10)'
+                            : isLive
+                                ? 'rgba(59,130,246,0.10)'
+                                : 'rgba(16,185,129,0.10)',
+                        color: isStarter ? '#F59E0B' : isLive ? '#3B82F6' : '#10B981',
+                    }}
+                >
+                    {sourceLabel}
+                </span>
+                <span style={{ color: textPrimary }}>{sourceMessage}</span>
+                <span style={{ color: textSecondary }}>{sourceDetail}</span>
             </div>
 
             {report.week_52_high != null && report.week_52_low != null && report.current_price != null && (

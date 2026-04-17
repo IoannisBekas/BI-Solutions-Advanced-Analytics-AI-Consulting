@@ -77,6 +77,14 @@ declare module "http" {
   }
 }
 
+declare module "express-serve-static-core" {
+  interface Request {
+    requestId?: string;
+  }
+}
+
+const REQUEST_ID_HEADER = "x-request-id";
+
 app.disable("x-powered-by");
 
 // Generate a per-request CSP nonce for inline <script> tags.
@@ -130,6 +138,17 @@ app.use(
 
 app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  const requestId =
+    req.header(REQUEST_ID_HEADER)?.trim() ||
+    req.header("request-id")?.trim() ||
+    crypto.randomUUID();
+
+  req.requestId = requestId;
+  res.setHeader(REQUEST_ID_HEADER, requestId);
+  next();
+});
 
 // ─── CORS ──────────────────────────────────────────────────────────────────
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -215,6 +234,9 @@ if (isProduction && !process.env.JWT_SECRET) {
 if (!process.env.GEMINI_API_KEY && !process.env.ANTHROPIC_API_KEY && !process.env.POWERBI_SOLUTIONS_ANTHROPIC_API_KEY) {
   console.warn("WARNING: No AI provider env vars are set — AI Advisor will remain unavailable until configured");
 }
+if (!process.env.GOOGLE_CLIENT_ID?.trim()) {
+  console.warn("WARNING: GOOGLE_CLIENT_ID not set — Google sign-in will remain disabled");
+}
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -285,7 +307,7 @@ app.use((req, res, next) => {
       path.startsWith("/power-bi-solutions/api");
 
     if (isApiRequest) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      let logLine = `[${req.requestId || "unknown"}] ${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       const responseSummary =
         path.startsWith("/api/auth")
           ? null

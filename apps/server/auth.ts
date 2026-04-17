@@ -23,7 +23,7 @@ const SALT_ROUNDS = 12;
 const TOKEN_EXPIRY = "7d";
 const TOKEN_COOKIE_NAME = "auth_token";
 const TOKEN_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-const EPHEMERAL_JWT_SECRET = crypto.randomBytes(32).toString("hex");
+const DEV_JWT_SECRET = "dev-insecure-local-only-never-use-in-prod";
 const MONTHLY_RESET_META_KEY = "reports.last_reset_month";
 
 function setAuthCookie(res: Response, token: string) {
@@ -57,8 +57,8 @@ function getJwtSecret(): string {
     throw new Error("JWT_SECRET env var is required in production");
   }
 
-  console.warn("JWT_SECRET not set — using an ephemeral development secret for this process.");
-  return EPHEMERAL_JWT_SECRET;
+  console.warn("JWT_SECRET not set — using the shared development secret for this process.");
+  return DEV_JWT_SECRET;
 }
 
 function getGoogleClientId(): string {

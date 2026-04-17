@@ -25,11 +25,9 @@ from typing import AsyncGenerator
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse, StreamingResponse
 
-from pipelines.cache import (
-    MockReportCache,
-    ReportCache,
-)
+from pipelines.cache import ReportCache
 from pipelines.data_architecture import QuantusPayload
+from pipelines.runtime_state import get_shared_cache, get_shared_ticker_index, set_shared_cache
 
 logger = logging.getLogger(__name__)
 
@@ -38,25 +36,12 @@ router = APIRouter(prefix="/api/v1/report", tags=["reports"])
 # ---------------------------------------------------------------------------
 # Shared cache (override with SQLite in production)
 # ---------------------------------------------------------------------------
-_cache: ReportCache | None = None
-
-
 def get_cache() -> ReportCache:
-    global _cache
-    if _cache is None:
-        try:
-            from pipelines.sqlite_cache import SQLiteReportCache
-            _cache = SQLiteReportCache()
-            logger.info("Using SQLiteReportCache")
-        except Exception as exc:
-            logger.warning("SQLite cache failed (%s), falling back to MockReportCache", exc)
-            _cache = MockReportCache()
-    return _cache
+    return get_shared_cache()
 
 
 def set_cache(c: ReportCache) -> None:
-    global _cache
-    _cache = c
+    set_shared_cache(c)
 
 
 # ---------------------------------------------------------------------------
@@ -160,6 +145,7 @@ async def get_report(
         cached = cache.get_report(ticker, section=section, user_tier=user_tier)
         if cached:
             logger.info("report | %s | CACHE HIT", ticker)
+            get_shared_ticker_index().register(ticker)
             normalized_cached = _normalize_report_shape(cached, ticker)
             if normalized_cached != cached:
                 cache.set_report(ticker, normalized_cached, section=section, user_tier=user_tier)
@@ -188,6 +174,7 @@ async def get_report(
         # Return pipeline data without narrative as fallback
         fallback_report = _build_pipeline_only_report(payload_dict, ticker)
         cache.set_report(ticker, fallback_report, section=section, user_tier=user_tier)
+        get_shared_ticker_index().register(ticker)
         return JSONResponse({
             "cached": False,
             "source": "pipeline_only",
@@ -200,6 +187,7 @@ async def get_report(
         # Still return pipeline data
         fallback_report = _build_pipeline_only_report(payload_dict, ticker)
         cache.set_report(ticker, fallback_report, section=section, user_tier=user_tier)
+        get_shared_ticker_index().register(ticker)
         return JSONResponse({
             "cached": False,
             "source": "pipeline_only",
@@ -222,11 +210,7 @@ async def get_report(
     logger.info("report | %s | cached (96h TTL)", ticker)
 
     # Register in screener index so the market scanner picks it up
-    try:
-        from api.screener import get_index
-        get_index().register(ticker)
-    except Exception:
-        pass
+    get_shared_ticker_index().register(ticker)
 
     # 6. Return
     return JSONResponse({"cached": False, "source": "live", "report": report})

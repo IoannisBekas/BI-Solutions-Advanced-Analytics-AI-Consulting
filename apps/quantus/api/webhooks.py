@@ -24,12 +24,12 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from pipelines.cache import (
-    MockReportCache,
     ReportCache,
     INVALIDATION_TRIGGERS,
     check_price_move_trigger,
     invalidate_report,
 )
+from pipelines.runtime_state import get_shared_cache, set_shared_cache
 
 logger = logging.getLogger(__name__)
 
@@ -38,16 +38,20 @@ router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 # ---------------------------------------------------------------------------
 # Shared cache (same instance as api/report.py — wired at app startup)
 # ---------------------------------------------------------------------------
-_cache: ReportCache = MockReportCache()
+_cache: ReportCache | None = None
 
 
 def get_cache() -> ReportCache:
+    global _cache
+    if _cache is None:
+        _cache = get_shared_cache()
     return _cache
 
 
 def set_cache(c: ReportCache) -> None:
     global _cache
     _cache = c
+    set_shared_cache(c)
 
 # ---------------------------------------------------------------------------
 # Pydantic event models

@@ -55,6 +55,19 @@ function isPowerBiAnthropicProxyEnabled() {
   return process.env.NODE_ENV !== "production" || readEnv("POWERBI_SOLUTIONS_ENABLE_ANTHROPIC_PROXY") === "true";
 }
 
+const DEFAULT_TRUSTED_BROWSER_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5000",
+  "http://127.0.0.1:5000",
+  "http://localhost:5001",
+  "http://127.0.0.1:5001",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:4173",
+  "http://127.0.0.1:4173",
+];
+
 function getTrustedBrowserOrigins() {
   const configuredOrigins = (process.env.ALLOWED_ORIGINS || "")
     .split(",")
@@ -62,15 +75,14 @@ function getTrustedBrowserOrigins() {
     .filter(Boolean);
 
   if (configuredOrigins.length > 0) {
-    return configuredOrigins;
+    if (process.env.NODE_ENV === "production") {
+      return configuredOrigins;
+    }
+
+    return Array.from(new Set([...configuredOrigins, ...DEFAULT_TRUSTED_BROWSER_ORIGINS]));
   }
 
-  return [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5000",
-    "http://127.0.0.1:5000",
-  ];
+  return DEFAULT_TRUSTED_BROWSER_ORIGINS;
 }
 
 function readRequestOrigin(req: Request) {

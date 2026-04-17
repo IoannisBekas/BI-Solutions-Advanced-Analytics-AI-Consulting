@@ -50,7 +50,10 @@ async function buildRequestError(response: Response, input: RequestInfo | URL) {
 }
 
 async function readJson<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
-    const response = await fetch(input, init);
+    const response = await fetch(input, {
+        credentials: 'include',
+        ...init,
+    });
 
     if (!response.ok) {
         throw await buildRequestError(response, input);
@@ -111,6 +114,7 @@ export async function fetchWorkspaceDeepDive(
     const response = await fetch(requestUrl, {
         method: 'POST',
         signal,
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },

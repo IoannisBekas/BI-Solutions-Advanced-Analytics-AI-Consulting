@@ -1,6 +1,5 @@
 import type { Express } from "express";
 import { z } from "zod";
-import { requireAuth } from "../auth";
 import {
   ANTHROPIC_MESSAGES_URL,
   DEFAULT_ANTHROPIC_VERSION,
@@ -545,7 +544,7 @@ export function registerAdvisorRoutes(app: Express) {
     language: z.string().optional(),
   });
 
-  app.post("/api/ai-advisor", requireAuth, async (req, res) => {
+  app.post("/api/ai-advisor", async (req, res) => {
     if (!isAdvisorConfigured()) {
       res.status(503).json({
         success: false,

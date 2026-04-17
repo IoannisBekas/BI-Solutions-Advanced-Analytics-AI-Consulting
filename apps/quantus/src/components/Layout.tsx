@@ -21,6 +21,7 @@ interface LayoutProps {
     onNavigate?: (view: string) => void;
     onQuickSearch?: (ticker: string) => void;
     currentView?: string;
+    minimalHeader?: boolean;
     lightMode?: boolean;
     onToggleLight?: () => void;
     onOpenAuth?: (mode?: 'signin' | 'signup') => void;
@@ -35,6 +36,7 @@ export function Layout({
     onNavigate,
     onQuickSearch,
     currentView,
+    minimalHeader = false,
     lightMode,
     onToggleLight,
     onOpenAuth,
@@ -53,6 +55,12 @@ export function Layout({
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    useEffect(() => {
+        if (minimalHeader) {
+            setMobileMenuOpen(false);
+        }
+    }, [minimalHeader]);
 
     useEffect(() => {
         if (lightMode) {
@@ -113,6 +121,7 @@ export function Layout({
     const productsOverviewUrl = 'https://bisolutions.group/products';
     const contactUrl = 'https://bisolutions.group/contact';
     const bisolutionsHomeUrl = 'https://bisolutions.group/';
+    const showExpandedHeader = !minimalHeader;
 
     return (
         <div
@@ -179,7 +188,7 @@ export function Layout({
                         </div>
                     </button>
 
-                    <nav className="hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0">
+                    <nav className={showExpandedHeader ? 'hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0' : 'hidden'}>
                         {navLinks.map((link) => {
                             const isActive = currentView === link.view;
 
@@ -205,7 +214,7 @@ export function Layout({
 
                     {/* ── Compact nav search ──────────────────────────── */}
                     <form
-                        className="hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[260px] rounded-full px-3 py-1.5 transition-all duration-200"
+                        className={showExpandedHeader ? 'hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[260px] rounded-full px-3 py-1.5 transition-all duration-200' : 'hidden'}
                         style={{
                             background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
                             border: `1px solid ${borderColor}`,
@@ -247,7 +256,7 @@ export function Layout({
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <div
-                            className="hidden xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs"
+                            className={showExpandedHeader ? 'hidden xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs' : 'hidden'}
                             style={{
                                 background: statusColors.bg,
                                 border: `1px solid ${statusColors.border}`,
@@ -273,7 +282,7 @@ export function Layout({
 
                         <a
                             href={quantusOverviewUrl}
-                            className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all"
+                            className={showExpandedHeader ? 'hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all' : 'hidden'}
                             style={{
                                 background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.06)',
                                 color: textColor,
@@ -320,23 +329,25 @@ export function Layout({
                             </button>
                         )}
 
-                        <button
-                            onClick={() => setMobileMenuOpen((value) => !value)}
-                            className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center transition-all"
-                            aria-label="Toggle navigation menu"
-                            aria-expanded={mobileMenuOpen}
-                            style={{
-                                background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
-                                color: muted,
-                            }}
-                        >
-                            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-                        </button>
+                        {showExpandedHeader && (
+                            <button
+                                onClick={() => setMobileMenuOpen((value) => !value)}
+                                className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center transition-all"
+                                aria-label="Toggle navigation menu"
+                                aria-expanded={mobileMenuOpen}
+                                style={{
+                                    background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                                    color: muted,
+                                }}
+                            >
+                                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                            </button>
+                        )}
                     </div>
                 </div>
 
                 <AnimatePresence>
-                    {mobileMenuOpen && (
+                    {showExpandedHeader && mobileMenuOpen && (
                         <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}

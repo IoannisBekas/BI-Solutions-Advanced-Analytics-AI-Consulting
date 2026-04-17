@@ -64,3 +64,26 @@ export function copyProxyResponseHeaders(res: Response, upstream: globalThis.Res
     }
   });
 }
+
+export function getUpstreamSetCookies(upstream: globalThis.Response) {
+  const headersWithSetCookie = upstream.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
+
+  if (typeof headersWithSetCookie.getSetCookie === "function") {
+    return headersWithSetCookie.getSetCookie().filter(Boolean);
+  }
+
+  const header = upstream.headers.get("set-cookie");
+  return header ? [header] : [];
+}
+
+export function copyUpstreamSetCookieHeaders(
+  res: Response,
+  upstream: globalThis.Response,
+) {
+  const cookies = getUpstreamSetCookies(upstream);
+  if (cookies.length > 0) {
+    res.setHeader("set-cookie", cookies);
+  }
+}

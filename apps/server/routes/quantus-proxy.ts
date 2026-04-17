@@ -1,6 +1,10 @@
 import type { Express } from "express";
 import { Readable } from "stream";
-import { copyProxyResponseHeaders, forwardRequestHeader } from "./_shared";
+import {
+  copyProxyResponseHeaders,
+  copyUpstreamSetCookieHeaders,
+  forwardRequestHeader,
+} from "./_shared";
 
 const QUANTUS_API_PREFIX = "/quantus/api";
 const DEFAULT_QUANTUS_API_TARGET = "http://127.0.0.1:3001";
@@ -54,6 +58,7 @@ export function registerQuantusProxyRoute(app: Express) {
       forwardRequestHeader(req, headers, "cache-control");
       forwardRequestHeader(req, headers, "content-type");
       forwardRequestHeader(req, headers, "last-event-id");
+      forwardRequestHeader(req, headers, "x-request-id");
       // Forward cookies only when the upstream is loopback/private to avoid
       // leaking session cookies to a remote host if env is misconfigured.
       if (isSameOriginAsMain) {
@@ -80,6 +85,9 @@ export function registerQuantusProxyRoute(app: Express) {
       });
 
       copyProxyResponseHeaders(res, upstream);
+      if (isSameOriginAsMain) {
+        copyUpstreamSetCookieHeaders(res, upstream);
+      }
       res.status(upstream.status);
 
       if (!upstream.body) {

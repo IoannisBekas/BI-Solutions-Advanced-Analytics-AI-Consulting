@@ -1,103 +1,219 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 
 export interface User {
+  id: string;
   name: string;
   email: string;
+  authProvider?: string;
+  tier?: string;
+}
+
+interface AuthResult {
+  success: boolean;
+  error?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  signIn: (email: string, password: string) => { success: boolean; error?: string };
-  signUp: (name: string, email: string, password: string) => { success: boolean; error?: string };
-  signInWithGoogle: () => void;
-  signOut: () => void;
+  isLoading: boolean;
+  signIn: (email: string, password: string) => Promise<AuthResult>;
+  signUp: (name: string, email: string, password: string) => Promise<AuthResult>;
+  signOut: () => Promise<void>;
+  refreshSession: () => Promise<void>;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (open: boolean) => void;
 }
 
-const STORAGE_KEY = 'powerbi_solutions_user';
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+type AuthPayload = {
+  id?: unknown;
+  name?: unknown;
+  email?: unknown;
+  authProvider?: unknown;
+  tier?: unknown;
+};
 
-function isValidStoredUser(data: unknown): data is User {
-  return (
-    typeof data === 'object' &&
-    data !== null &&
-    typeof (data as User).name === 'string' &&
-    typeof (data as User).email === 'string' &&
-    (data as User).name.length > 0 &&
-    EMAIL_REGEX.test((data as User).email)
-  );
-}
-
+const AUTH_API_BASE = '/api/auth';
 const AuthContext = createContext<AuthContextType | null>(null);
 
+function buildUser(data: AuthPayload): User | null {
+  if (typeof data.id !== 'string' || typeof data.name !== 'string' || typeof data.email !== 'string') {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    authProvider: typeof data.authProvider === 'string' ? data.authProvider : undefined,
+    tier: typeof data.tier === 'string' ? data.tier : undefined,
+  };
+}
+
+async function readJson(response: Response) {
+  return response.json().catch(() => ({})) as Promise<Record<string, unknown>>;
+}
+
+function getErrorMessage(payload: Record<string, unknown>, fallback: string) {
+  const message = typeof payload.error === 'string'
+    ? payload.error
+    : typeof payload.message === 'string'
+      ? payload.message
+      : fallback;
+
+  return message.trim() || fallback;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) return null;
-      const parsed: unknown = JSON.parse(stored);
-      return isValidStoredUser(parsed) ? parsed : null;
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
 
+  const refreshSession = useCallback(async () => {
+    try {
+      const response = await fetch(`${AUTH_API_BASE}/me`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        setUser(null);
+        return;
+      }
+
+      const payload = await readJson(response);
+      setUser(buildUser(payload));
+    } catch {
+      setUser(null);
+    }
+  }, []);
+
   useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, [user]);
+    let cancelled = false;
 
-  const signIn = (email: string, password: string) => {
-    if (!EMAIL_REGEX.test(email)) {
-      return { success: false, error: 'Please enter a valid email address.' };
-    }
-    if (password.length < 6) {
-      return { success: false, error: 'Password must be at least 6 characters.' };
-    }
-    // NOTE: This is a client-side demo auth. A production app should validate
-    // credentials against a backend server with proper password hashing.
-    const newUser: User = { name: email.split('@')[0], email };
-    setUser(newUser);
-    setAuthDialogOpen(false);
-    return { success: true };
-  };
+    void (async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${AUTH_API_BASE}/me`, {
+          credentials: 'include',
+        });
 
-  const signUp = (name: string, email: string, password: string) => {
-    if (!name.trim()) {
-      return { success: false, error: 'Please enter your name.' };
-    }
-    if (!EMAIL_REGEX.test(email)) {
-      return { success: false, error: 'Please enter a valid email address.' };
-    }
-    if (password.length < 6) {
-      return { success: false, error: 'Password must be at least 6 characters.' };
-    }
-    const newUser: User = { name: name.trim(), email };
-    setUser(newUser);
-    setAuthDialogOpen(false);
-    return { success: true };
-  };
+        if (!response.ok) {
+          if (!cancelled) {
+            setUser(null);
+          }
+          return;
+        }
 
-  const signInWithGoogle = () => {
-    // TODO: Implement real OAuth 2.0 flow with Google.
-    // For now, this is a demo placeholder that creates a local session.
-    const newUser: User = { name: 'Demo User', email: 'demo@powerbi-solutions.app' };
-    setUser(newUser);
-    setAuthDialogOpen(false);
-  };
+        const payload = await readJson(response);
+        if (!cancelled) {
+          setUser(buildUser(payload));
+        }
+      } catch {
+        if (!cancelled) {
+          setUser(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    })();
 
-  const signOut = () => {
-    setUser(null);
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const signIn = useCallback(async (email: string, password: string): Promise<AuthResult> => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${AUTH_API_BASE}/login`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const payload = await readJson(response);
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(payload, 'Unable to sign in right now.') };
+      }
+
+      const nextUser = buildUser(payload.user as AuthPayload);
+      if (!nextUser) {
+        return { success: false, error: 'The server returned an invalid session response.' };
+      }
+
+      setUser(nextUser);
+      setAuthDialogOpen(false);
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Unable to reach the sign-in service right now.' };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const signUp = useCallback(async (name: string, email: string, password: string): Promise<AuthResult> => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${AUTH_API_BASE}/register`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const payload = await readJson(response);
+      if (!response.ok) {
+        return { success: false, error: getErrorMessage(payload, 'Unable to create your account right now.') };
+      }
+
+      const nextUser = buildUser(payload.user as AuthPayload);
+      if (!nextUser) {
+        return { success: false, error: 'The server returned an invalid session response.' };
+      }
+
+      setUser(nextUser);
+      setAuthDialogOpen(false);
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Unable to reach the sign-up service right now.' };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const signOut = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await fetch(`${AUTH_API_BASE}/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+      // Clear local session state even when the network call fails.
+    } finally {
+      setUser(null);
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, signIn, signUp, signInWithGoogle, signOut, isAuthDialogOpen, setAuthDialogOpen }}
+      value={{
+        user,
+        isLoading,
+        signIn,
+        signUp,
+        signOut,
+        refreshSession,
+        isAuthDialogOpen,
+        setAuthDialogOpen,
+      }}
     >
       {children}
     </AuthContext.Provider>

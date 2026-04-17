@@ -14,7 +14,10 @@ interface ProductRequestError extends Error {
 }
 
 async function readJson<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
-    const response = await fetch(input, init);
+    const response = await fetch(input, {
+        credentials: 'include',
+        ...init,
+    });
 
     if (!response.ok) {
         const errorText = await response.text();

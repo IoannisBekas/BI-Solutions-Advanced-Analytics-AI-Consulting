@@ -6,6 +6,52 @@ const POWERBI_SOLUTIONS_API_BASE =
 const REQUEST_TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 1;
 
+class PowerBiProxyError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = 'PowerBiProxyError';
+    this.status = status;
+  }
+}
+
+async function readProxyErrorMessage(response: Response) {
+  const responseText = await response.text();
+  if (!responseText) {
+    return '';
+  }
+
+  try {
+    const parsed = JSON.parse(responseText) as { message?: unknown; error?: unknown };
+    if (typeof parsed.message === 'string' && parsed.message.trim()) {
+      return parsed.message.trim();
+    }
+    if (typeof parsed.error === 'string' && parsed.error.trim()) {
+      return parsed.error.trim();
+    }
+  } catch {
+    return responseText.trim();
+  }
+
+  return responseText.trim();
+}
+
+function getProxyStatusMessage(status: number, fallback: string) {
+  switch (status) {
+    case 401:
+      return 'Please sign in to use the Power BI AI features.';
+    case 403:
+      return 'This Power BI AI proxy only accepts requests from trusted browser origins.';
+    case 429:
+      return 'Rate limit exceeded. Please wait a moment and try again.';
+    case 503:
+      return 'This deployment has the preview AI proxy disabled until server-side access control is configured.';
+    default:
+      return fallback;
+  }
+}
+
 export async function askClaude(
     question: string,
     model: TMDLModel | null,
@@ -48,23 +94,19 @@ export async function askClaude(
 
         if (!response.ok) {
             const status = response.status;
-            if (status === 401) {
-                return "Authentication failed. Please check your API key configuration.";
-            }
-            if (status === 403) {
-                return "This preview AI proxy only accepts requests from trusted browser origins.";
-            }
-            if (status === 429) {
-                return "Rate limit exceeded. Please wait a moment and try again.";
-            }
-            if (status === 503) {
-                return "This deployment has the preview AI proxy disabled until server-side access control is configured.";
+            const fallbackMessage = await readProxyErrorMessage(response);
+            const message = getProxyStatusMessage(
+                status,
+                fallbackMessage || `API error (${status}). Please try again.`,
+            );
+            if (status === 401 || status === 403 || status === 429 || status === 503) {
+                return message;
             }
             // Throw on 5xx to trigger retry
             if (status >= 500) {
-                throw new Error(`Server error: ${status}`);
+                throw new Error(message);
             }
-            return `API error (${status}). Please try again.`;
+            return message;
         }
 
         const data = await response.json();
@@ -239,8 +281,12 @@ Return ONLY the JSON object, no other text.`;
 
     if (!response.ok) {
       const status = response.status;
-      if (status >= 500) throw new Error(`Server error: ${status}`);
-      throw new Error(`API error (${status})`);
+      const fallbackMessage = await readProxyErrorMessage(response);
+      const message = getProxyStatusMessage(
+        status,
+        fallbackMessage || `API error (${status}). Please try again.`,
+      );
+      throw new PowerBiProxyError(status, message);
     }
 
     const data = await response.json();
@@ -264,6 +310,9 @@ Return ONLY the JSON object, no other text.`;
       const text = await makeRequest(controller.signal);
       return parseVisualReviewResponse(text);
     } catch (error) {
+      if (error instanceof PowerBiProxyError && error.status < 500) {
+        throw error;
+      }
       if (error instanceof DOMException && error.name === 'AbortError') {
         if (externalSignal?.aborted) throw error;
         if (attempt >= MAX_RETRIES) throw new Error('Request timed out');

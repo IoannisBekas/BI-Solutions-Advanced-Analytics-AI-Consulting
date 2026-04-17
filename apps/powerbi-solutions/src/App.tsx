@@ -48,7 +48,7 @@ function LazySection({ children }: { children: ReactNode }) {
 function AppContent() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [dashboardReview, setDashboardReview] = useState<DashboardReviewResult | null>(null);
-  const { user, setAuthDialogOpen } = useAuth();
+  const { user, isLoading, setAuthDialogOpen } = useAuth();
 
   const inputRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -99,15 +99,18 @@ function AppContent() {
                   <span className="hidden sm:inline">Model Analyzed</span>
                 </div>
               )}
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 text-amber-800 text-xs border border-amber-200">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>Demo auth</span>
-              </div>
+              {isLoading && (
+                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 text-slate-700 text-xs border border-slate-200">
+                  <span className="h-2 w-2 rounded-full bg-slate-400" />
+                  <span>Checking session</span>
+                </div>
+              )}
               {user ? (
                 <UserMenu />
               ) : (
                 <button
                   onClick={() => setAuthDialogOpen(true)}
+                  disabled={isLoading}
                   className="btn-secondary text-sm py-2 px-4 min-h-[44px] flex items-center gap-2"
                   aria-label="Sign in"
                 >

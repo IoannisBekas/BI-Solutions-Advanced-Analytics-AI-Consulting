@@ -23,8 +23,9 @@ export function UserMenu() {
     .slice(0, 2);
 
   const handleSignOut = () => {
-    signOut();
-    toast.success('Demo session ended.');
+    void signOut().finally(() => {
+      toast.success('Signed out successfully.');
+    });
   };
 
   return (
@@ -43,9 +44,6 @@ export function UserMenu() {
         <DropdownMenuLabel>
           <div className="font-medium">{user.name}</div>
           <div className="text-xs text-muted-foreground font-normal">{user.email}</div>
-          <div className="mt-2 inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-800">
-            Local demo session
-          </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">

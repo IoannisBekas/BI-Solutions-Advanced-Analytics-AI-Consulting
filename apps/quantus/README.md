@@ -21,14 +21,19 @@ View your app in AI Studio: https://ai.studio/apps/c7df1ca4-1417-4918-b88b-4fe75
    `APP_URL`, `AUTH_API_TARGET`, `PYTHON_API_URL`, `ALLOWED_ORIGINS`, `JWT_SECRET`, and either `ANTHROPIC_API_KEY` or `GEMINI_API_KEY`
    Optional: set `ANTHROPIC_MODEL` to pin the Claude model snapshot used for report narratives.
    Optional: set `QUANTUS_PYTHON_TIMEOUT_MS` to allow longer live-pipeline runs for slower tickers.
+   Optional but recommended for production: `FMP_API_KEY`, `SEC_EDGAR_USER_AGENT`, `DATA_DIR`, and `SCREENER_SEED_TICKERS`.
 4. Run the app:
    `npm run dev`
 
 ## Production Notes
 
 - Set `JWT_SECRET` explicitly in production. Do not rely on local defaults.
+- Set `ALLOWED_ORIGINS` explicitly in production and include every browser origin that will hit the app. For the live site, include both `https://bisolutions.group` and `https://www.bisolutions.group` if both hostnames are in use.
 - Quantus proxies auth to the root BI Solutions server via `AUTH_API_TARGET`.
 - The Python API must be reachable at `PYTHON_API_URL`.
+- Quantus cache persistence is SQLite-backed. On Railway, mount a volume and point `DATA_DIR` at that mount so reports and the scanner index survive restarts.
+- The scanner seed list is controlled by `SCREENER_SEED_TICKERS` and merged with every ticker that already has a cached report.
+- `SEC_EDGAR_USER_AGENT` is optional locally but should be set in production to a real contact string for SEC requests.
 - Demo/mock data is disabled in production by default unless `QUANTUS_ALLOW_DEMO_DATA=true`.
 - Push subscriptions are disabled unless `QUANTUS_ENABLE_PUSH=true` and a valid `VITE_VAPID_PUBLIC_KEY` is configured.
 

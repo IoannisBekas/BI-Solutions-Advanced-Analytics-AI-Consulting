@@ -3,7 +3,7 @@ api/screener.py
 ================
 Screener API — Quantus Research Solutions.
 
-Queries the Redis cache index — ZERO new Claude API calls.
+Queries the shared Quantus cache index — ZERO new Claude API calls.
 All filtering and ranking is pure Python on cached QuantusPayload data.
 
 Filters: signal, confidence_min, regime, asset_class, sector,
@@ -13,14 +13,19 @@ Returns: ranked result cards sorted by confidence_score desc.
 
 from __future__ import annotations
 
-import json
 import logging
-from typing import Any
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
-from pipelines.cache import MockReportCache, ReportCache
+from pipelines.cache import ReportCache
+from pipelines.runtime_state import (
+    PersistentTickerIndex,
+    get_shared_cache,
+    get_shared_ticker_index,
+    set_shared_cache,
+    set_shared_ticker_index,
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/screener", tags=["screener"])
@@ -28,46 +33,46 @@ router = APIRouter(prefix="/api/v1/screener", tags=["screener"])
 # ---------------------------------------------------------------------------
 # Shared cache (injected at startup)
 # ---------------------------------------------------------------------------
-_cache: ReportCache = MockReportCache()
+_cache: ReportCache | None = None
 
-def get_cache() -> ReportCache:  return _cache
+def get_cache() -> ReportCache:
+    global _cache
+    if _cache is None:
+        _cache = get_shared_cache()
+    return _cache
+
 def set_cache(c: ReportCache) -> None:
-    global _cache; _cache = c
+    global _cache
+    _cache = c
+    set_shared_cache(c)
 
 # ---------------------------------------------------------------------------
-# In-memory ticker index
+# Shared ticker index
 # ---------------------------------------------------------------------------
 
-class TickerIndex:
-    """Lightweight in-memory index of cached report metadata."""
-
-    def __init__(self, cache: ReportCache):
-        self._cache = cache
-        self._tickers: list[str] = []
-
-    def register(self, ticker: str) -> None:
-        if ticker not in self._tickers:
-            self._tickers.append(ticker)
-
-    def all_tickers(self) -> list[str]:
-        return list(self._tickers)
-
-    def get_report(self, ticker: str) -> dict | None:
-        return self._cache.get_report(ticker)
+class TickerIndex(PersistentTickerIndex):
+    """Persistent index of cached report metadata backed by the shared cache."""
+    pass
 
 
-_index = TickerIndex(_cache)
-
-# Seed with well-known demo tickers so the scanner shows results
-# without requiring prior report generation. Reports are registered
-# lazily when actually loaded; this just ensures the index isn't empty.
-for _t in ["NVDA", "TSLA", "BTC", "SPY", "GLD", "ASST", "AAPL", "MSFT", "AMZN", "GOOGL"]:
-    _index.register(_t)
+_index: TickerIndex | None = None
 
 
-def get_index() -> TickerIndex:   return _index
+def get_index() -> TickerIndex:
+    global _index
+    if _index is None:
+        shared_index = get_shared_ticker_index()
+        if isinstance(shared_index, TickerIndex):
+            _index = shared_index
+        else:
+            _index = TickerIndex(get_cache())
+            set_shared_ticker_index(_index)
+    return _index
+
 def set_index(i: TickerIndex) -> None:
-    global _index; _index = i
+    global _index
+    _index = i
+    set_shared_ticker_index(i)
 
 # ---------------------------------------------------------------------------
 # Filter + rank logic

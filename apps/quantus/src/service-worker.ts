@@ -33,11 +33,11 @@ if (isLocalQuantusHost) {
     cleanupOutdatedCaches();
     precacheAndRoute(self.__WB_MANIFEST);
 
-    const STATIC_CACHE = 'quantus-static-v1';
-    const API_CACHE = 'quantus-public-api-v2';
-    const REPORT_CACHE = 'quantus-public-reports-v2';
-    const FONT_CACHE = 'quantus-fonts-v1';
-    const PAGE_CACHE = 'quantus-pages-v2';
+    const STATIC_CACHE = 'quantus-static-v2';
+    const API_CACHE = 'quantus-public-api-v3';
+    const REPORT_CACHE = 'quantus-public-reports-v3';
+    const FONT_CACHE = 'quantus-fonts-v2';
+    const PAGE_CACHE = 'quantus-pages-v3';
 
     const hasAuthorizationHeader = (request: Request) => request.headers.has('authorization');
 

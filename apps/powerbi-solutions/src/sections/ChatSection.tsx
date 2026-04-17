@@ -21,16 +21,6 @@ const suggestedQuestions = [
   'Give me a model summary'
 ];
 
-/** Sanitize text to prevent XSS when rendering API responses */
-function sanitizeText(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
-}
-
 export function ChatSection({ result, chatRef }: ChatSectionProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -123,7 +113,7 @@ export function ChatSection({ result, chatRef }: ChatSectionProps) {
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: sanitizeText(answer),
+        content: answer,
         timestamp: new Date()
       };
 

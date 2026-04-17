@@ -8,7 +8,7 @@
     "server": "tsx server/index.ts",
     "client": "vite --port=3000 --host=0.0.0.0",
     "python": "python main.py",
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "tsc --noEmit && eslint .",

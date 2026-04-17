@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isLoading, setIsLoading] = useState(false);
     const [googleClientId, setGoogleClientId] = useState<string | null>(null);
     const clearSession = useCallback(() => {
-        void fetch('/quantus/api/auth/logout', { method: 'POST' }).catch(() => undefined);
+        void fetch('/quantus/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => undefined);
         void clearQuantusSessionArtifacts().catch(() => undefined);
         setUser(null);
     }, []);
@@ -136,16 +136,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [user]);
 
     useEffect(() => {
-        // Only attempt session restore if we have a cached user record — avoids
-        // a 401 round-trip for fully logged-out visitors.
-        if (typeof window === 'undefined' || !localStorage.getItem(USER_STORAGE_KEY)) {
+        // Always ask the server for the current Quantus session so cookie-backed
+        // logins survive reloads even when local state is empty.
+        if (typeof window === 'undefined') {
             return;
         }
 
         let cancelled = false;
         setIsLoading(true);
 
-        void fetch('/quantus/api/auth/me')
+        void fetch('/quantus/api/auth/me', { credentials: 'include' })
             .then(async (res) => {
                 if (!res.ok) {
                     const error = new Error('Unable to restore Quantus session') as Error & { status?: number };
@@ -203,6 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             const res = await fetch('/quantus/api/auth/login', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
@@ -219,6 +220,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             const res = await fetch('/quantus/api/auth/register', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, name, password, referralToken }),
             });
@@ -235,6 +237,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             const res = await fetch('/quantus/api/auth/google', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ credential, referralToken }),
             });
@@ -265,7 +268,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const refreshCredits = useCallback(async () => {
         try {
-            const res = await fetch('/quantus/api/auth/me');
+            const res = await fetch('/quantus/api/auth/me', { credentials: 'include' });
             if (res.ok) {
                 const data = await res.json();
                 setUser((current) => current ? buildUserFromPayload(data, current) : current);

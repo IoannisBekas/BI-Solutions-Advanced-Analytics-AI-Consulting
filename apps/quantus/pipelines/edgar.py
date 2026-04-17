@@ -18,13 +18,14 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from datetime import datetime, timezone
 
 import httpx
 
 logger = logging.getLogger(__name__)
 
-_EDGAR_UA = "QuantusResearchSolutions/2.4 contact@bisolutions.group"
+_DEFAULT_EDGAR_UA = "QuantusResearchSolutions/2.4 contact@bisolutions.group"
 _TICKER_CIK_URL = "https://www.sec.gov/files/company_tickers.json"
 _SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik}.json"
 
@@ -34,6 +35,10 @@ _MATERIAL_FORMS = {"8-K", "10-K", "10-Q", "S-1", "DEF 14A"}
 
 # In-memory CIK cache (reset on each server restart — acceptable for a pipeline)
 _cik_cache: dict[str, str | None] = {}
+
+
+def _get_edgar_user_agent() -> str:
+    return os.getenv("SEC_EDGAR_USER_AGENT", "").strip() or _DEFAULT_EDGAR_UA
 
 
 # ---------------------------------------------------------------------------
@@ -48,7 +53,7 @@ async def ticker_to_cik(ticker: str) -> str | None:
 
     try:
         async with httpx.AsyncClient(
-            headers={"User-Agent": _EDGAR_UA},
+            headers={"User-Agent": _get_edgar_user_agent()},
             timeout=10,
         ) as client:
             resp = await client.get(_TICKER_CIK_URL)
@@ -82,7 +87,7 @@ async def _fetch_submissions(cik: str) -> dict:
     url = _SUBMISSIONS_URL.format(cik=cik)
     try:
         async with httpx.AsyncClient(
-            headers={"User-Agent": _EDGAR_UA},
+            headers={"User-Agent": _get_edgar_user_agent()},
             timeout=15,
         ) as client:
             resp = await client.get(url)

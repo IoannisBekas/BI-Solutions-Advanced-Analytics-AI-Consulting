@@ -27,7 +27,8 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from pipelines.cache import MockReportCache, ReportCache, REPORT_TTL_SECONDS
+from pipelines.cache import ReportCache, REPORT_TTL_SECONDS
+from pipelines.runtime_state import get_shared_cache, set_shared_cache
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/portfolio", tags=["portfolio"])
@@ -35,10 +36,17 @@ router = APIRouter(prefix="/api/v1/portfolio", tags=["portfolio"])
 # ---------------------------------------------------------------------------
 # Shared cache
 # ---------------------------------------------------------------------------
-_cache: ReportCache = MockReportCache()
-def get_cache() -> ReportCache:  return _cache
+_cache: ReportCache | None = None
+def get_cache() -> ReportCache:
+    global _cache
+    if _cache is None:
+        _cache = get_shared_cache()
+    return _cache
+
 def set_cache(c: ReportCache) -> None:
-    global _cache; _cache = c
+    global _cache
+    _cache = c
+    set_shared_cache(c)
 
 # ---------------------------------------------------------------------------
 # Request models

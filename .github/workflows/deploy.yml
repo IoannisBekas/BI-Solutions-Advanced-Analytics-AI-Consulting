@@ -21,6 +21,11 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Install dependencies
         run: npm ci
 
@@ -29,6 +34,22 @@ jobs:
 
       - name: Install Power BI Solutions dependencies
         run: cd apps/powerbi-solutions && npm ci
+
+      - name: Typecheck root app
+        run: npm run check
+
+      - name: Lint and test Quantus
+        run: |
+          cd apps/quantus
+          npm run lint
+          npm run test
+          python -m pytest -q
+
+      - name: Lint and test Power BI Solutions
+        run: |
+          cd apps/powerbi-solutions
+          npm run lint
+          npm test
 
       - name: Build
         run: npm run build

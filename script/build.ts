@@ -112,6 +112,9 @@ async function buildNestedApp(
   cwd: string,
   targetSubdirectory: string,
 ) {
+  console.log(`linting ${label}...`);
+  await runCommand("npm", ["run", "lint"], cwd);
+
   console.log(`building ${label}...`);
   await runCommand("npm", ["run", "build"], cwd);
 

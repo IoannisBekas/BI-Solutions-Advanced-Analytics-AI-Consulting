@@ -167,7 +167,7 @@ export function DashboardReviewSection({ result, onReviewComplete, sectionRef }:
       }
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
-      toast.error('Failed to review dashboard. Please try again.');
+      toast.error(error instanceof Error ? error.message : 'Failed to review dashboard. Please try again.');
     } finally {
       if (!controller.signal.aborted) {
         setIsReviewing(false);

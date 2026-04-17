@@ -376,10 +376,10 @@ export function ScannerPage({ onSelectTicker, lightMode, apiBase = '/quantus/api
                                                 {result.asset_class}
                                             </span>
                                             {result.has_news && (
-                                                <Newspaper className="h-3 w-3 text-blue-400 flex-shrink-0" title="Has news" />
+                                                <Newspaper className="h-3 w-3 text-blue-400 flex-shrink-0" />
                                             )}
                                             {result.has_filings && (
-                                                <ShieldAlert className="h-3 w-3 text-violet-400 flex-shrink-0" title="Has SEC filings" />
+                                                <ShieldAlert className="h-3 w-3 text-violet-400 flex-shrink-0" />
                                             )}
                                         </div>
                                         <p className="text-[11px] truncate mt-0.5" style={{ color: textSecondary }}>

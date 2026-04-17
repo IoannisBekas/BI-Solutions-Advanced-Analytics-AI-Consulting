@@ -25,9 +25,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
-from pipelines.cache import MockReportCache, ReportCache
+from pipelines.cache import ReportCache
 from pipelines.claude_engine import ENGINE_VERSION, MODEL, MAX_TOKENS, TEMPERATURE, STATIC_EQUITY_PROMPT, validate_report_json
 from pipelines.equity import run_equity_pipeline
+from pipelines.runtime_state import get_shared_cache, set_shared_cache
 import anthropic
 
 logger = logging.getLogger(__name__)
@@ -36,10 +37,17 @@ router = APIRouter(prefix="/api/v1/compare", tags=["comparison"])
 # ---------------------------------------------------------------------------
 # Shared cache
 # ---------------------------------------------------------------------------
-_cache: ReportCache = MockReportCache()
-def get_cache() -> ReportCache: return _cache
+_cache: ReportCache | None = None
+def get_cache() -> ReportCache:
+    global _cache
+    if _cache is None:
+        _cache = get_shared_cache()
+    return _cache
+
 def set_cache(c: ReportCache) -> None:
-    global _cache; _cache = c
+    global _cache
+    _cache = c
+    set_shared_cache(c)
 
 # ---------------------------------------------------------------------------
 # Comparison result schema
