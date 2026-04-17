@@ -1180,6 +1180,63 @@ app.get(`${API_PREFIX}/v1/sec-edgar/:ticker`, async (req, res) => {
     }
 });
 
+// ─── NEWS PROXY ──────────────────────────────────────────────────────────────
+app.get(`${API_PREFIX}/v1/news/:ticker`, async (req, res) => {
+    const ticker = sanitizeQuantusTicker(req.params.ticker);
+    if (!ticker) { res.status(400).json({ error: 'Invalid ticker' }); return; }
+
+    const limit = Math.min(Number(req.query.limit) || 20, 50);
+    try {
+        const response = await fetch(
+            `${PYTHON_API_URL}/api/v1/news/${encodeURIComponent(ticker)}?limit=${limit}`,
+            { signal: AbortSignal.timeout(15_000) },
+        );
+        if (!response.ok) {
+            // Graceful: return empty if Python API unavailable
+            res.json({ ticker, articles: [], avg_sentiment: 0, count: 0 });
+            return;
+        }
+        const data = await response.json();
+        res.json(data);
+    } catch {
+        res.json({ ticker, articles: [], avg_sentiment: 0, count: 0 });
+    }
+});
+
+// ─── SCANNER ─────────────────────────────────────────────────────────────────
+app.get(`${API_PREFIX}/v1/scanner`, async (req, res) => {
+    const signal      = typeof req.query.signal === 'string'      ? req.query.signal      : undefined;
+    const assetClass  = typeof req.query.asset_class === 'string' ? req.query.asset_class : undefined;
+    const hasNews     = req.query.has_news === 'true';
+    const hasFilings  = req.query.has_filings === 'true';
+    const sortBy      = typeof req.query.sort_by === 'string'     ? req.query.sort_by     : 'confidence_score';
+    const limit       = Math.min(Number(req.query.limit) || 50, 100);
+
+    try {
+        const pyRes = await fetch(
+            `${PYTHON_API_URL}/api/v1/screener?limit=${limit}&sort_by=${sortBy}` +
+            (signal     ? `&signal=${encodeURIComponent(signal)}` : '') +
+            (assetClass ? `&asset_class=${encodeURIComponent(assetClass)}` : ''),
+            { signal: AbortSignal.timeout(10_000) },
+        );
+        if (!pyRes.ok) { res.status(502).json({ error: 'Scanner unavailable' }); return; }
+        const data = await pyRes.json();
+        let results = (data.results || []) as Record<string, unknown>[];
+
+        // Post-filter by news/filings flags using report cache metadata
+        if (hasNews || hasFilings) {
+            results = results.filter((r) => {
+                if (hasNews    && !r.has_news)    return false;
+                if (hasFilings && !r.has_filings) return false;
+                return true;
+            });
+        }
+        res.json({ results, total: results.length });
+    } catch (err: any) {
+        res.status(503).json({ error: `Scanner unavailable: ${err.message}` });
+    }
+});
+
 // ─── PYTHON HEALTH CHECK ─────────────────────────────────────────────────────
 app.get(`${API_PREFIX}/v1/python/health`, async (_req, res) => {
     try {

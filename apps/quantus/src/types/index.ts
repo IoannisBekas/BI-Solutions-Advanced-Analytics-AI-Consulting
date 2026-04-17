@@ -245,6 +245,47 @@ export interface ScenarioTargets {
     time_horizon?: string;
 }
 
+// ─── News ────────────────────────────────────────────────────────────────────
+
+export type NewsImpactTag =
+    | 'earnings-risk'
+    | 'regulatory'
+    | 'partnership'
+    | 'product'
+    | 'macro'
+    | 'guidance'
+    | 'insider'
+    | 'merger'
+    | 'general';
+
+export interface NewsArticle {
+    title: string;
+    url: string;
+    summary: string;
+    sentiment: number;       // -1.0 (very bearish) to +1.0 (very bullish)
+    published_at: string;    // ISO-8601
+    source?: string;
+    impact_tag?: NewsImpactTag;
+}
+
+// ─── SEC Filings ─────────────────────────────────────────────────────────────
+
+export interface SecFiling {
+    form_type: string;       // '8-K' | '10-K' | '10-Q' | 'S-1' | 'DEF 14A'
+    title: string;
+    filed_at: string;        // YYYY-MM-DD
+    url: string;
+}
+
+export interface SecFilingsData {
+    recent_filings: SecFiling[];
+    form4_count: number;
+    latest_form4_date: string | null;
+    insider_activity: 'ACTIVE' | 'NEUTRAL';
+    cik: string | null;
+    edgar_url: string;
+}
+
 // ─── Strategy ────────────────────────────────────────────────────────────────
 
 export interface PairsTrade {
@@ -354,6 +395,8 @@ export interface ReportData {
     momentum?: MomentumData;
     fundamentals?: FundamentalsData;
     analyst_consensus?: AnalystConsensus;
+    news_articles?: NewsArticle[];
+    sec_filings?: SecFilingsData;
 
     // Narrative
     narrative_executive_summary: string;

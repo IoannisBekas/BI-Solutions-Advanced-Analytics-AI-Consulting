@@ -540,6 +540,12 @@ def _build_pipeline_only_report(payload_dict: dict, ticker: str) -> dict:
         # Analyst consensus (from asset_specific populated by equity pipeline)
         "analyst_consensus": _build_analyst_consensus_from_payload(p),
 
+        # News articles (from FMP + Claude summaries)
+        "news_articles": p.get("news_articles") or [],
+
+        # SEC Filings (from EDGAR)
+        "sec_filings": p.get("sec_filings") or {},
+
         # Meta
         "researcher_count": 0,
         "generated_at": datetime.now(timezone.utc).isoformat(),

@@ -57,9 +57,11 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 # Mount routers
 # ---------------------------------------------------------------------------
-from api.report import router as report_router  # noqa: E402
+from api.report import router as report_router          # noqa: E402
+from api.sec_edgar import router as market_intel_router  # noqa: E402
 
 app.include_router(report_router)
+app.include_router(market_intel_router)
 
 @app.get("/api/v1/search")
 async def search_tickers(q: str = "", limit: int = 5):
@@ -80,23 +82,6 @@ async def health():
         "anthropic_key_set": bool(os.getenv("ANTHROPIC_API_KEY")),
         "gemini_key_set": bool(os.getenv("GEMINI_API_KEY")),
         "llm_provider": os.getenv("LLM_PROVIDER", "auto"),
-    }
-
-
-@app.get("/api/v1/sec-edgar/{ticker}")
-async def sec_edgar(ticker: str):
-    """Proxy SEC EDGAR analysis through the Python service."""
-    from services.sec_edgar import SECEdgarService
-    svc = SECEdgarService()
-    result = svc.analyze_ticker(ticker.upper().strip())
-    return {
-        "ticker": result.ticker,
-        "form_type": result.form_type,
-        "filing_date": result.filing_date,
-        "prior_filing_date": result.prior_filing_date,
-        "delta_score": result.delta_score,
-        "summary_plain": result.summary_plain,
-        "is_cached_fallback": result.is_cached_fallback,
     }
 
 

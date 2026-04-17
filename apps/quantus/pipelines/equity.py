@@ -688,32 +688,49 @@ async def run_equity_pipeline(
     # Step 9 — Sentiment (parallel async)                                  #
     # ------------------------------------------------------------------ #
     logger.info("equity | %s | step 9 — sentiment (async parallel)", ticker)
-    grok_result, reddit_score, news_score = await asyncio.gather(
+    from pipelines.news import fetch_news_for_ticker
+
+    (grok_result, reddit_score, (news_articles, news_score)) = await asyncio.gather(
         fetch_grok_sentiment(ticker, company_name),
         fetch_reddit_sentiment(ticker),
-        fetch_news_sentiment(ticker, company_name),
+        fetch_news_for_ticker(ticker, company_name),
     )
     grok_raw_score  = float(grok_result.get("score", 0.0)) if isinstance(grok_result, dict) else 0.0
     comp_sentiment  = composite_sentiment(grok_raw_score, float(reddit_score), float(news_score))
+    logger.info("equity | %s | news articles=%d avg_sentiment=%.3f", ticker, len(news_articles), news_score)
 
     # ------------------------------------------------------------------ #
-    # Step 10 — Alternative data stubs + SEC EDGAR                          #
+    # Step 10 — Alternative data: EDGAR + stubs                            #
     # ------------------------------------------------------------------ #
+    from pipelines.edgar import fetch_sec_filings
+
     inst_flow    = fetch_institutional_flow(ticker)
     insider_act  = fetch_insider_activity(ticker)
     short_int    = fetch_short_interest(ticker)
 
-    # SEC EDGAR NLP delta (graceful — None if service unavailable)
+    # Live SEC EDGAR filings (free, no API key required)
+    sec_filings_data: dict = {}
     sec_delta: float | None = None
     try:
-        from services.sec_edgar import SECEdgarService
-        sec_svc = SECEdgarService()
-        sec_result = sec_svc.analyze_ticker(ticker)
-        sec_delta = sec_result.delta_score
-        logger.info("equity | %s | SEC EDGAR delta_score=%.2f", ticker, sec_delta)
+        sec_filings_data = await fetch_sec_filings(ticker)
+        form4_count = sec_filings_data.get("form4_count", 0)
+        if form4_count > 0:
+            insider_act = float(form4_count)   # proxy: Form 4 count as activity signal
+        logger.info("equity | %s | EDGAR filings=%d Form4s=%d",
+                    ticker, len(sec_filings_data.get("recent_filings", [])), form4_count)
     except Exception as exc:
         logger.warning("equity | %s | SEC EDGAR failed (non-fatal): %s", ticker, exc)
-        sec_delta = None
+        sec_filings_data = {}
+
+    # Legacy NLP delta — kept for backward compat, ignored if EDGAR succeeded
+    if not sec_filings_data:
+        try:
+            from services.sec_edgar import SECEdgarService
+            sec_svc = SECEdgarService()
+            sec_result = sec_svc.analyze_ticker(ticker)
+            sec_delta = sec_result.delta_score
+        except Exception:
+            sec_delta = None
 
     # ------------------------------------------------------------------ #
     # Step 11 — Kelly criterion (INSTITUTIONAL tier only)                  #
@@ -800,6 +817,10 @@ async def run_equity_pipeline(
         news_sentiment=float(news_score),
         composite_sentiment=comp_sentiment,
 
+        # Real news articles + SEC filings
+        news_articles=news_articles,
+        sec_filings=sec_filings_data,
+
         # Optional fields
         sec_language_delta=sec_delta,
         institutional_flow_delta=inst_flow,
@@ -851,8 +872,17 @@ async def run_equity_pipeline(
         python_model_versions={
             "arima": "0.14", "prophet": "stub", "lstm": "stub", "regime": "stub"
         },
-        data_sources_used=["yfinance", "sec_edgar", "grok_api_stub", "reddit_stub", "newsapi_stub"],
-        data_caveats=["prophet: stub", "lstm: stub", "regime: stub"] + (["sec_edgar: mock_nlp"] if sec_delta is None else []),
+        data_sources_used=[
+            "yfinance",
+            "sec_edgar_live" if sec_filings_data.get("recent_filings") else "sec_edgar_unavailable",
+            "fmp_news" if news_articles else "fmp_news_unavailable",
+            "grok_api_stub", "reddit_stub",
+        ],
+        data_caveats=(
+            ["prophet: stub", "lstm: stub", "regime: stub"]
+            + ([] if news_articles else ["fmp_news: FMP_API_KEY not set"])
+            + ([] if sec_filings_data.get("cik") else ["sec_edgar: CIK lookup failed"])
+        ),
         circuit_breaker_activations=circuit_breaker_activations,
         fallbacks_used=fallbacks_used,
         user_tier=user_tier,

@@ -259,6 +259,10 @@ class QuantusPayload:
     # Optional / conditional fields
     # ------------------------------------------------------------------
     bollinger_percentile: float | None = field(default=None)   # 0–100 position within band
+    # News articles (from FMP + Claude summaries) — populated by Step 9
+    news_articles: list[dict] = field(default_factory=list)
+    # SEC filings (from EDGAR) — populated by Step 10
+    sec_filings: dict = field(default_factory=dict)
     sec_language_delta: str | None = field(default=None)
     institutional_flow_delta: float | None = field(default=None)
     insider_net_activity: float | None = field(default=None)

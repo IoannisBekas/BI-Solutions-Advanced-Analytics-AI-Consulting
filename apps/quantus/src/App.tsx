@@ -47,6 +47,10 @@ const Methodology = lazy(async () => {
     const module = await import('./pages/Methodology');
     return { default: module.Methodology };
 });
+const ScannerPage = lazy(async () => {
+    const module = await import('./pages/ScannerPage');
+    return { default: module.ScannerPage };
+});
 
 function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
     return (
@@ -313,6 +317,17 @@ function App() {
                                 onOpenAlerts={handleManageAlerts}
                                 onSelectTicker={(ticker) => openReportRoute(ticker)}
                                 onRemove={handleRemovePinnedAsset}
+                            />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'scanner' && (
+                    <motion.div key="scanner" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <ScannerPage
+                                lightMode={lightMode}
+                                onSelectTicker={(ticker: string) => openReportRoute(ticker)}
                             />
                         </Suspense>
                     </motion.div>
