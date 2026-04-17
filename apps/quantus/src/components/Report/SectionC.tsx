@@ -11,21 +11,21 @@ export function SectionC({ report, lightMode }: Props) {
 
     return (
         <SectionCard title="C — Risk" id="section-3" lightMode={lightMode}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
                 {[
                     { label: 'Fed Funds Rate', value: report.risk?.macro_context?.fed_rate ?? 'N/A' },
                     { label: 'Yield Curve', value: report.risk?.macro_context?.yield_curve ?? 'N/A' },
                     { label: 'VIX', value: report.risk?.macro_context?.vix ?? 'N/A' },
                     { label: 'IG Spreads', value: report.risk?.macro_context?.credit_spreads ?? 'N/A' },
                 ].map(m => (
-                    <div key={m.label} className="rounded-lg p-3 text-center" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
+                    <div key={m.label} className="rounded-lg p-4 text-center" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                         <div className="text-xs mb-1 text-gray-500">{m.label}</div>
                         <div className="font-mono text-sm font-semibold" style={{ color: textPrimary }}>{m.value}</div>
                     </div>
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
                 <MetricCard label="Daily VaR (99%)" value={`${report.risk?.var_dollar ?? 'N/A'} / $10K`} note="Monte Carlo · 10,000 paths" freshness="Daily" lightMode={lightMode} />
                 <MetricCard label="Expected Shortfall" value={report.risk?.expected_shortfall ?? 'N/A'} lightMode={lightMode} />
                 <MetricCard label="Max Drawdown" value={report.risk?.max_drawdown ?? 'N/A'} lightMode={lightMode} />
@@ -46,7 +46,7 @@ export function SectionC({ report, lightMode }: Props) {
                 ))}
             </div>
 
-            <div className="flex items-center gap-3 text-xs p-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.15)' }}>
+            <div className="flex items-center gap-3 text-xs p-4 rounded-xl" style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.15)' }}>
                 <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
                 <span style={{ color: textSecondary }}>Volatility vs. peers: <strong style={{ color: '#F9FAFB' }}>{report.risk?.volatility_vs_peers ?? 'N/A'}</strong> · Options-implied move: {report.risk?.implied_move ?? 'N/A'}</span>
             </div>

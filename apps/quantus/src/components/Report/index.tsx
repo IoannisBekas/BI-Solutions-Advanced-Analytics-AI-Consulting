@@ -41,7 +41,7 @@ export function ReportDashboard({
     const jurisdiction = detectJurisdiction();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <ReportHeader
                 report={report}
                 lightMode={lightMode}

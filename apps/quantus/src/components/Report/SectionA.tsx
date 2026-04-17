@@ -19,7 +19,7 @@ export function SectionA({ report, lightMode }: Props) {
             <div className="mb-6">
                 {/* Key takeaway highlight */}
                 {keyTakeaway && paragraphs.length > 1 && (
-                    <div className="p-3 rounded-xl mb-4 text-sm font-medium leading-relaxed"
+                    <div className="p-4 rounded-xl mb-4 text-sm font-medium leading-relaxed"
                         style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)', color: textPrimary }}>
                         {keyTakeaway}
                     </div>
@@ -35,7 +35,7 @@ export function SectionA({ report, lightMode }: Props) {
             </div>
 
             {report.earnings_flag && (
-                <div className="flex items-center gap-3 p-3 rounded-xl mb-5 text-xs"
+                <div className="flex items-center gap-3 p-4 rounded-xl mb-5 text-xs"
                     style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)' }}>
                     <span className="text-lg">🗓</span>
                     <div>
@@ -45,7 +45,7 @@ export function SectionA({ report, lightMode }: Props) {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
                 {(report.signal_cards ?? []).map((card) => (
                     <div key={card.label} className="rounded-xl p-4" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                         <div className="flex items-center justify-between mb-2">
@@ -61,7 +61,7 @@ export function SectionA({ report, lightMode }: Props) {
             </div>
 
             {report.vs_consensus && (
-                <div className="p-3 rounded-xl text-xs" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
+                <div className="p-4 rounded-xl text-xs" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                     <div className="flex items-center gap-3 mb-1">
                         <span className="font-semibold" style={{ color: textSecondary }}>Quantus vs. Consensus:</span>
                         <span className={`badge ${signalClass(report.vs_consensus.quantus)}`} style={{ fontSize: '10px' }}>Quantus: {report.vs_consensus.quantus}</span>

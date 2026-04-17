@@ -369,7 +369,7 @@ export function SectionD({ report, lightMode }: Props) {
                             )}
                         </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-4">
                         {[
                             { key: 'bear' as const, label: 'Bear Case', color: '#EF4444', bg: 'rgba(239,68,68,0.06)', border: 'rgba(239,68,68,0.18)' },
                             { key: 'base' as const, label: 'Base Case', color: textSecondary, bg: dimBg, border: borderColor },
@@ -444,14 +444,14 @@ export function SectionD({ report, lightMode }: Props) {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-4">
                             {[
                                 { label: 'Long', value: report.strategy.pairs_trade.long },
                                 { label: 'Short', value: report.strategy.pairs_trade.short },
                                 { label: 'Half-life', value: `${report.strategy.pairs_trade.half_life_days}d` },
                                 { label: 'Cointegration', value: report.strategy.pairs_trade.cointegration ? report.strategy.pairs_trade.cointegration.toFixed(2) : 'N/A' },
                             ].map((item) => (
-                                <div key={item.label} className="rounded-xl p-3" style={{ background: lightMode ? 'rgba(255,255,255,0.78)' : 'rgba(15,23,42,0.38)', border: `1px solid ${borderColor}` }}>
+                                <div key={item.label} className="rounded-xl p-4" style={{ background: lightMode ? 'rgba(255,255,255,0.78)' : 'rgba(15,23,42,0.38)', border: `1px solid ${borderColor}` }}>
                                     <div className="text-[11px] uppercase tracking-[0.2em] mb-1" style={{ color: textSecondary }}>{item.label}</div>
                                     <div className="font-semibold" style={{ color: textPrimary }}>{item.value}</div>
                                 </div>

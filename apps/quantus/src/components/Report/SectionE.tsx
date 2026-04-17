@@ -84,15 +84,24 @@ function splitDeepDiveParagraphs(text: string) {
         .filter(Boolean);
 }
 
+function relativeTime(ts: number): string {
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    return `${Math.floor(diff / 3600)}h ago`;
+}
+
 function ModuleDetail({
     content,
     error,
     loading,
+    loadedAt,
     lightMode,
 }: {
     content: string | null;
     error: string | null;
     loading: boolean;
+    loadedAt: number | null;
     lightMode?: boolean;
 }) {
     const textPrimary = lightMode ? '#0F172A' : '#F9FAFB';
@@ -100,6 +109,15 @@ function ModuleDetail({
     const borderColor = lightMode ? '#E2E8F0' : '#1A1A1A';
     const dimBg = lightMode ? 'rgba(15,23,42,0.03)' : 'rgba(255,255,255,0.03)';
     const paragraphs = useMemo(() => splitDeepDiveParagraphs(content ?? ''), [content]);
+    const [tick, setTick] = useState(0);
+
+    useEffect(() => {
+        if (!loadedAt) return;
+        const id = setInterval(() => setTick(t => t + 1), 60_000);
+        return () => clearInterval(id);
+    }, [loadedAt]);
+
+    void tick; // consumed only to trigger re-render
 
     return (
         <div className="border-t px-5 py-4" style={{ borderColor }}>
@@ -110,9 +128,18 @@ function ModuleDetail({
                 >
                     Live module
                 </span>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: textSecondary }}>
-                    Generated on demand
-                </span>
+                {loadedAt ? (
+                    <span
+                        className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]"
+                        style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}
+                    >
+                        Updated {relativeTime(loadedAt)}
+                    </span>
+                ) : (
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: textSecondary }}>
+                        Generated on demand
+                    </span>
+                )}
             </div>
 
             {loading && (
@@ -162,6 +189,7 @@ function ModuleRow({
     const [content, setContent] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [loadedAt, setLoadedAt] = useState<number | null>(null);
     const Icon = module.icon;
     const textPrimary = lightMode ? '#0F172A' : '#F9FAFB';
     const textSecondary = lightMode ? '#475569' : '#9CA3AF';
@@ -184,6 +212,7 @@ function ModuleRow({
             .then((text) => {
                 if (!controller.signal.aborted) {
                     setContent(text);
+                    setLoadedAt(Date.now());
                 }
             })
             .catch((fetchError: unknown) => {
@@ -292,7 +321,7 @@ function ModuleRow({
                         transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                         style={{ overflow: 'hidden' }}
                     >
-                        <ModuleDetail content={content} error={error} loading={loading} lightMode={lightMode} />
+                        <ModuleDetail content={content} error={error} loading={loading} loadedAt={loadedAt} lightMode={lightMode} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -323,7 +352,7 @@ export function SectionE({
                 </p>
             </div>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-6 space-y-4">
                 {MODULES.map((module) => (
                     <ModuleRow
                         key={module.id}
