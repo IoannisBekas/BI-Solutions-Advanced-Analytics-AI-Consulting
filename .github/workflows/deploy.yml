@@ -30,7 +30,10 @@ jobs:
         run: npm ci
 
       - name: Install Quantus dependencies
-        run: cd apps/quantus && npm ci
+        run: |
+          cd apps/quantus
+          npm ci
+          python -m pip install -r pipelines/requirements.txt
 
       - name: Install Power BI Solutions dependencies
         run: cd apps/powerbi-solutions && npm ci
