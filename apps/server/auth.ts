@@ -2,6 +2,7 @@ import { Router, type Request, type Response, type NextFunction } from "express"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { OAuth2Client } from "google-auth-library";
 import {
   findUserByEmail,
   findUserById,
@@ -20,8 +21,31 @@ import {
 // ─── Config ──────────────────────────────────────────────────────────────────
 const SALT_ROUNDS = 12;
 const TOKEN_EXPIRY = "7d";
+const TOKEN_COOKIE_NAME = "auth_token";
+const TOKEN_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const EPHEMERAL_JWT_SECRET = crypto.randomBytes(32).toString("hex");
 const MONTHLY_RESET_META_KEY = "reports.last_reset_month";
+
+function setAuthCookie(res: Response, token: string) {
+  const isProduction = process.env.NODE_ENV === "production";
+  res.cookie(TOKEN_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: "lax",
+    path: "/",
+    maxAge: TOKEN_COOKIE_MAX_AGE_MS,
+  });
+}
+
+function clearAuthCookie(res: Response) {
+  const isProduction = process.env.NODE_ENV === "production";
+  res.clearCookie(TOKEN_COOKIE_NAME, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: "lax",
+    path: "/",
+  });
+}
 
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET?.trim();
@@ -75,13 +99,17 @@ export function optionalAuth(
   _res: Response,
   next: NextFunction
 ) {
+  const cookies = (req as Request & { cookies?: Record<string, string> }).cookies;
+  const cookieToken = cookies?.[TOKEN_COOKIE_NAME];
   const authHeader = req.headers.authorization;
-  if (authHeader?.startsWith("Bearer ")) {
+  const headerToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : undefined;
+  const token = cookieToken || headerToken;
+
+  if (token) {
     try {
-      const decoded = jwt.verify(
-        authHeader.slice(7),
-        getJwtSecret()
-      ) as JWTPayload;
+      const decoded = jwt.verify(token, getJwtSecret()) as JWTPayload;
       req.user = decoded;
     } catch {
       /* invalid/expired token — proceed as anonymous */
@@ -233,30 +261,46 @@ interface GoogleTokenInfo {
   name?: string;
 }
 
+let cachedGoogleOAuthClient: OAuth2Client | null = null;
+let cachedGoogleOAuthClientId = "";
+
+function getGoogleOAuthClient(clientId: string): OAuth2Client {
+  if (!cachedGoogleOAuthClient || cachedGoogleOAuthClientId !== clientId) {
+    cachedGoogleOAuthClient = new OAuth2Client(clientId);
+    cachedGoogleOAuthClientId = clientId;
+  }
+  return cachedGoogleOAuthClient;
+}
+
 async function verifyGoogleCredential(idToken: string): Promise<GoogleTokenInfo> {
   const clientId = getGoogleClientId();
   if (!clientId) {
     throw new Error("Google sign-in is not configured");
   }
 
-  const response = await fetch(
-    `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`,
-    { signal: AbortSignal.timeout(10_000) }
-  );
+  const client = getGoogleOAuthClient(clientId);
+  const ticket = await client.verifyIdToken({
+    idToken,
+    audience: clientId,
+  });
 
-  if (!response.ok) {
-    throw new Error("Google rejected the credential");
+  const payload = ticket.getPayload();
+  if (!payload) {
+    throw new Error("Google credential has no payload");
   }
-
-  const tokenInfo = (await response.json()) as GoogleTokenInfo;
-  if (tokenInfo.aud !== clientId) {
+  if (payload.aud !== clientId) {
     throw new Error("Google client ID mismatch");
   }
-  if (!tokenInfo.email || `${tokenInfo.email_verified}` !== "true") {
+  if (!payload.email || payload.email_verified !== true) {
     throw new Error("Google account email is missing or unverified");
   }
 
-  return tokenInfo;
+  return {
+    aud: payload.aud,
+    email: payload.email,
+    email_verified: payload.email_verified,
+    name: payload.name,
+  };
 }
 
 // ─── Router ──────────────────────────────────────────────────────────────────
@@ -302,7 +346,8 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     });
 
     const token = signToken(user);
-    res.status(201).json({ token, user: toSafeUser(user) });
+    setAuthCookie(res, token);
+    res.status(201).json({ user: toSafeUser(user) });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ error: "Registration failed. Please try again." });
@@ -332,7 +377,8 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     }
 
     const token = signToken(user);
-    res.json({ token, user: toSafeUser(user) });
+    setAuthCookie(res, token);
+    res.json({ user: toSafeUser(user) });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Login failed. Please try again." });
@@ -386,11 +432,18 @@ authRouter.post("/google", async (req: Request, res: Response) => {
     }
 
     const token = signToken(user);
-    res.json({ token, user: toSafeUser(user) });
+    setAuthCookie(res, token);
+    res.json({ user: toSafeUser(user) });
   } catch (error) {
     console.error("Google auth error:", error);
     res.status(401).json({ error: "Google authentication failed" });
   }
+});
+
+// ── POST /api/auth/logout ───────────────────────────────────────────────────
+authRouter.post("/logout", (_req: Request, res: Response) => {
+  clearAuthCookie(res);
+  res.json({ success: true });
 });
 
 // ── GET /api/auth/me ─────────────────────────────────────────────────────────
@@ -435,6 +488,7 @@ authRouter.delete(
         return;
       }
 
+      clearAuthCookie(res);
       res.json({ success: true, message: "Account permanently deleted" });
     } catch (error) {
       console.error("Account deletion error:", error);

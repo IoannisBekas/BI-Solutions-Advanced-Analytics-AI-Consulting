@@ -1,7 +1,5 @@
 import type { AssetClass, AssetEntry, ReportResponse, WorkspaceSummary } from '../types';
 
-const TOKEN_STORAGE_KEY = 'quantus-token';
-
 export interface WorkspaceRequestError extends Error {
     status: number;
     code?: string;
@@ -11,15 +9,6 @@ export interface WorkspaceRequestError extends Error {
 
 export function isWorkspaceRequestError(error: unknown): error is WorkspaceRequestError {
     return error instanceof Error && typeof (error as Partial<WorkspaceRequestError>).status === 'number';
-}
-
-function buildAuthHeaders() {
-    if (typeof window === 'undefined') {
-        return {};
-    }
-
-    const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-    return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 async function buildRequestError(response: Response, input: RequestInfo | URL) {
@@ -109,7 +98,6 @@ export async function fetchWorkspaceReport(
     const suffix = params.toString() ? `?${params.toString()}` : '';
     return readJson<ReportResponse>(`/quantus/api/report/${encodeURIComponent(ticker)}${suffix}`, {
         signal,
-        headers: buildAuthHeaders(),
     });
 }
 
@@ -125,7 +113,6 @@ export async function fetchWorkspaceDeepDive(
         signal,
         headers: {
             'Content-Type': 'application/json',
-            ...buildAuthHeaders(),
         },
         body: JSON.stringify({
             ticker,

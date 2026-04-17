@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { registerSW } from 'virtual:pwa-register';
-import { TOKEN_STORAGE_KEY } from '../utils/sessionArtifacts';
+import { USER_STORAGE_KEY } from '../utils/sessionArtifacts';
 
 const VISIT_KEY = 'quantus_visit_count';
 const DISMISS_KEY = 'quantus_pwa_dismissed';
@@ -111,7 +111,7 @@ export function cacheReportForOffline(ticker: string): void {
     }
 
     // Protected reports are account-scoped and should not be written into a shared offline cache.
-    if (localStorage.getItem(TOKEN_STORAGE_KEY)) {
+    if (localStorage.getItem(USER_STORAGE_KEY)) {
         return;
     }
 

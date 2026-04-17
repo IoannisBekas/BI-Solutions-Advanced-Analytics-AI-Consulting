@@ -7,28 +7,10 @@ import type {
     ReportResponse,
 } from '../types';
 
-const TOKEN_STORAGE_KEY = 'quantus-token';
-
 interface ProductRequestError extends Error {
     status: number;
     code?: string;
     detail?: string;
-}
-
-function getAuthToken() {
-    return typeof window !== 'undefined' ? localStorage.getItem(TOKEN_STORAGE_KEY) : null;
-}
-
-function buildAuthHeaders(contentType?: string) {
-    const headers: Record<string, string> = {};
-    const token = getAuthToken();
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-    if (contentType) {
-        headers['Content-Type'] = contentType;
-    }
-    return headers;
 }
 
 async function readJson<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
@@ -79,7 +61,6 @@ export async function fetchUserWatchlist(signal?: AbortSignal) {
         '/quantus/api/watchlist',
         {
             signal,
-            headers: buildAuthHeaders(),
         },
     );
 }
@@ -90,7 +71,7 @@ export async function addWatchlistAsset(ticker: string, assetClass: AssetClass, 
         {
             method: 'POST',
             signal,
-            headers: buildAuthHeaders('application/json'),
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ticker, assetClass }),
         },
     );
@@ -102,7 +83,6 @@ export async function removeWatchlistAsset(ticker: string, signal?: AbortSignal)
         {
             method: 'DELETE',
             signal,
-            headers: buildAuthHeaders(),
         },
     );
 }
@@ -112,7 +92,6 @@ export async function fetchAlertSubscriptions(signal?: AbortSignal) {
         '/quantus/api/alerts',
         {
             signal,
-            headers: buildAuthHeaders(),
         },
     );
     return data.items ?? [];
@@ -128,7 +107,7 @@ export async function upsertAlertSubscription(
         {
             method: 'PUT',
             signal,
-            headers: buildAuthHeaders('application/json'),
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ assetClass }),
         },
     );
@@ -141,7 +120,6 @@ export async function deleteAlertSubscription(ticker: string, signal?: AbortSign
         {
             method: 'DELETE',
             signal,
-            headers: buildAuthHeaders(),
         },
     );
 }

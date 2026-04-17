@@ -1,6 +1,6 @@
 const LEGACY_REPORT_CACHE_STORAGE_PREFIX = 'quantus-last-report:';
 export const REPORT_CACHE_STORAGE_PREFIX = 'quantus-last-report:v2:';
-export const TOKEN_STORAGE_KEY = 'quantus-token';
+const LEGACY_TOKEN_STORAGE_KEY = 'quantus-token';
 export const USER_STORAGE_KEY = 'quantus-user';
 
 const AUTH_SENSITIVE_CACHE_PREFIXES = [
@@ -65,7 +65,7 @@ export async function clearAuthSensitiveBrowserCaches() {
 export async function clearQuantusSessionArtifacts() {
     const storage = getStorageSafe();
     if (storage) {
-        storage.removeItem(TOKEN_STORAGE_KEY);
+        storage.removeItem(LEGACY_TOKEN_STORAGE_KEY);
         storage.removeItem(USER_STORAGE_KEY);
     }
 

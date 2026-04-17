@@ -1,6 +1,17 @@
-import express, { type Express } from "express";
+import express, { type Express, type Response } from "express";
 import fs from "fs";
 import path from "path";
+
+function injectScriptNonce(html: string, nonce: string): string {
+  // Add nonce="..." to every <script tag that doesn't already have one.
+  return html.replace(/<script(?![^>]*\snonce=)([^>]*)>/gi, `<script nonce="${nonce}"$1>`);
+}
+
+function sendHtmlWithNonce(res: Response, html: string) {
+  const nonce = (res.locals.cspNonce as string) || "";
+  const output = nonce ? injectScriptNonce(html, nonce) : html;
+  res.type("html").send(output);
+}
 
 // Blog post meta — keep in sync with client/src/data/blogData.ts
 const blogPostMeta: Record<string, { title: string; description: string }> = {
@@ -30,9 +41,12 @@ function serveProductSpa(app: Express, mountPath: string, productDistPath: strin
     return;
   }
 
-  app.use(mountPath, express.static(productDistPath));
+  const indexPath = path.resolve(productDistPath, "index.html");
+  const indexHtml = fs.existsSync(indexPath) ? fs.readFileSync(indexPath, "utf-8") : "";
+
+  app.use(mountPath, express.static(productDistPath, { index: false }));
   app.use(`${mountPath}/*`, (_req, res) => {
-    res.sendFile(path.resolve(productDistPath, "index.html"));
+    sendHtmlWithNonce(res, indexHtml);
   });
 }
 
@@ -218,6 +232,6 @@ export function serveStatic(app: Express) {
       }
     }
 
-    res.type("html").send(injectMeta(indexHtml, meta || routeMetaMap["/"]));
+    sendHtmlWithNonce(res, injectMeta(indexHtml, meta || routeMetaMap["/"]));
   });
 }

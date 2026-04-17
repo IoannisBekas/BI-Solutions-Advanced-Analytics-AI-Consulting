@@ -32,11 +32,6 @@ export async function fetchWithRetry(
   throw lastError ?? new Error('Fetch failed after retries');
 }
 
-export function getAuthHeaders(): Record<string, string> {
-  const token = localStorage.getItem('quantus-token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
 export async function apiFetch(
   path: string,
   init?: RequestInit,
@@ -44,7 +39,6 @@ export async function apiFetch(
 ): Promise<Response> {
   const headers = {
     'Content-Type': 'application/json',
-    ...getAuthHeaders(),
     ...(init?.headers ?? {}),
   };
   return fetchWithRetry(path, { ...init, headers }, retryOptions);

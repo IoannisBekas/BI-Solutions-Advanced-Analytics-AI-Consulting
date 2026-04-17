@@ -1,8 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import fs from "fs";
+import crypto from "crypto";
 import path from "path";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
@@ -77,6 +79,12 @@ declare module "http" {
 
 app.disable("x-powered-by");
 
+// Generate a per-request CSP nonce for inline <script> tags.
+app.use((_req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(16).toString("base64");
+  next();
+});
+
 app.use(
   helmet({
     contentSecurityPolicy: isProduction
@@ -86,10 +94,15 @@ app.use(
             "img-src": ["'self'", "data:", "https:"],
             "script-src": [
               "'self'",
-              "'unsafe-inline'",
+              (_req: unknown, res: unknown) => {
+                const locals = (res as { locals?: { cspNonce?: string } }).locals;
+                return `'nonce-${locals?.cspNonce || ""}'`;
+              },
+              "'strict-dynamic'",
               "https://www.googletagmanager.com",
               "https://www.google-analytics.com",
             ],
+            // React/CSS-in-JS inject runtime <style> tags, so inline styles must remain allowed.
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
             "connect-src": [
@@ -116,6 +129,7 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false, limit: "2mb" }));
+app.use(cookieParser());
 
 // ─── CORS ──────────────────────────────────────────────────────────────────
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);

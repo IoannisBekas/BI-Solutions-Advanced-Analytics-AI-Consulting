@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
-import { clearQuantusSessionArtifacts, TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../utils/sessionArtifacts';
+import { clearQuantusSessionArtifacts, USER_STORAGE_KEY } from '../utils/sessionArtifacts';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -122,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isLoading, setIsLoading] = useState(false);
     const [googleClientId, setGoogleClientId] = useState<string | null>(null);
     const clearSession = useCallback(() => {
+        void fetch('/quantus/api/auth/logout', { method: 'POST' }).catch(() => undefined);
         void clearQuantusSessionArtifacts().catch(() => undefined);
         setUser(null);
     }, []);
@@ -135,15 +136,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [user]);
 
     useEffect(() => {
-        const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-        if (!token) return;
+        // Only attempt session restore if we have a cached user record — avoids
+        // a 401 round-trip for fully logged-out visitors.
+        if (typeof window === 'undefined' || !localStorage.getItem(USER_STORAGE_KEY)) {
+            return;
+        }
 
         let cancelled = false;
         setIsLoading(true);
 
-        void fetch('/quantus/api/auth/me', {
-            headers: { Authorization: `Bearer ${token}` },
-        })
+        void fetch('/quantus/api/auth/me')
             .then(async (res) => {
                 if (!res.ok) {
                     const error = new Error('Unable to restore Quantus session') as Error & { status?: number };
@@ -157,7 +159,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             })
             .catch((error: Error & { status?: number }) => {
                 if (!cancelled && (error.status === 401 || error.status === 403)) {
-                    clearSession();
+                    setUser(null);
+                    void clearQuantusSessionArtifacts().catch(() => undefined);
                 }
             })
             .finally(() => {
@@ -169,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return () => {
             cancelled = true;
         };
-    }, [clearSession]);
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
@@ -205,7 +208,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
             if (!res.ok) { setIsLoading(false); return false; }
             const data = await res.json();
-            localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
             setUser(buildUserFromPayload(data.user, user));
             return true;
         } catch { return false; }
@@ -222,7 +224,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
             if (!res.ok) { setIsLoading(false); return false; }
             const data = await res.json();
-            localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
             setUser(buildUserFromPayload(data.user, user));
             return true;
         } catch { return false; }
@@ -239,7 +240,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
             if (!res.ok) { setIsLoading(false); return false; }
             const data = await res.json();
-            localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
             setUser(buildUserFromPayload(data.user, user));
             return true;
         } catch { return false; }
@@ -264,10 +264,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const refreshCredits = useCallback(async () => {
-        const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-        if (!token) return;
         try {
-            const res = await fetch('/quantus/api/auth/me', { headers: { Authorization: `Bearer ${token}` } });
+            const res = await fetch('/quantus/api/auth/me');
             if (res.ok) {
                 const data = await res.json();
                 setUser((current) => current ? buildUserFromPayload(data, current) : current);
