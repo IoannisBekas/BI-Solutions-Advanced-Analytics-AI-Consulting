@@ -154,6 +154,38 @@ interface RootAuthContext {
     requestId?: string;
 }
 
+interface RootJsonMap {
+    [key: string]: unknown;
+}
+
+interface PersistedWatchlistSnapshot {
+    priceAtGen?: number;
+    signal?: string;
+    confidence?: number;
+    regime?: string;
+    generatedAt?: string;
+}
+
+interface PersistedWatchlistEntry {
+    ticker?: string;
+    assetClass?: string;
+    updatedAt?: string;
+    latestSnapshot?: PersistedWatchlistSnapshot | null;
+}
+
+interface PythonReportPayload extends RootJsonMap {
+    report?: ReportData;
+    source?: unknown;
+    warning?: string;
+}
+
+function getErrorMessage(error: unknown) {
+    if (error instanceof Error) {
+        return error.message;
+    }
+    return String(error);
+}
+
 function getRequestId(req: express.Request) {
     return req.requestId || 'unknown';
 }
@@ -398,7 +430,7 @@ async function fetchRootJson(
     path: string,
     init: RequestInit = {},
     auth: RootAuthContext = {},
-): Promise<{ ok: boolean; status: number; data: any; text: string }> {
+): Promise<{ ok: boolean; status: number; data: RootJsonMap; text: string }> {
     const headers = new Headers(init.headers);
     applyRootAuthHeaders(headers, auth);
     if (init.body && !headers.has('content-type')) {
@@ -412,11 +444,12 @@ async function fetchRootJson(
     });
 
     const text = await upstream.text();
-    let data: any = {};
+    let data: RootJsonMap = {};
 
     if (text) {
         try {
-            data = JSON.parse(text);
+            const parsed = JSON.parse(text);
+            data = typeof parsed === 'object' && parsed !== null ? parsed as RootJsonMap : { message: text };
         } catch {
             data = { message: text };
         }
@@ -430,11 +463,11 @@ async function fetchRootJson(
     };
 }
 
-async function fetchFreshAuthenticatedUser(auth: RootAuthContext = {}): Promise<{ ok: boolean; status: number; data: any; text: string; user: QuantusSafeUser | null }> {
+async function fetchFreshAuthenticatedUser(auth: RootAuthContext = {}): Promise<{ ok: boolean; status: number; data: RootJsonMap; text: string; user: QuantusSafeUser | null }> {
     const upstream = await fetchRootJson('/api/auth/me', { method: 'GET' }, auth);
     return {
         ...upstream,
-        user: upstream.ok ? upstream.data as QuantusSafeUser : null,
+        user: upstream.ok ? upstream.data as unknown as QuantusSafeUser : null,
     };
 }
 
@@ -536,7 +569,7 @@ function buildWatchlistBias(signal: string) {
     }
 }
 
-function buildWatchlistItem(entry: any) {
+function buildWatchlistItem(entry: PersistedWatchlistEntry) {
     const latestSnapshot = entry?.latestSnapshot ?? null;
     const ticker = sanitizeQuantusTicker(entry?.ticker) ?? 'UNKNOWN';
     const assetClass = sanitizeQuantusAssetClass(entry?.assetClass) as AssetEntry['assetClass'];
@@ -667,7 +700,9 @@ app.get(`${API_PREFIX}/watchlist`, async (req, res) => {
         }
 
         const items = Array.isArray(upstream.data?.items)
-            ? upstream.data.items.map((entry: any) => buildWatchlistItem(entry))
+            ? upstream.data.items
+                .filter((entry): entry is PersistedWatchlistEntry => typeof entry === 'object' && entry !== null)
+                .map((entry) => buildWatchlistItem(entry))
             : [];
 
         res.json({
@@ -776,7 +811,7 @@ const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://localhost:8000';
 async function callPythonPipeline(
     ticker: string,
     options: { forceRefresh?: boolean; userTier?: string; requestId?: string } = {},
-): Promise<{ success: boolean; data?: any; error?: string }> {
+): Promise<{ success: boolean; data?: PythonReportPayload; error?: string }> {
     try {
         const params = new URLSearchParams({
             force_refresh: String(options.forceRefresh ?? false),
@@ -800,46 +835,13 @@ async function callPythonPipeline(
             return { success: false, error: `Python API returned ${response.status}: ${errorBody}` };
         }
 
-        const data = await response.json();
+        const data = await response.json() as PythonReportPayload;
         return { success: true, data };
-    } catch (err: any) {
-        if (err.name === 'AbortError') {
+    } catch (error: unknown) {
+        if (error instanceof Error && error.name === 'AbortError') {
             return { success: false, error: `Python pipeline timeout (${Math.round(PYTHON_PIPELINE_TIMEOUT_MS / 1000)}s)` };
         }
-        return { success: false, error: `Python API unavailable: ${err.message}` };
-    }
-}
-
-async function callPythonDeepDive(
-    ticker: string,
-    moduleIndex: number,
-    assetClass: string,
-    requestId?: string,
-): Promise<{ success: boolean; text?: string; error?: string }> {
-    try {
-        const url = `${PYTHON_API_URL}/api/v1/report/${encodeURIComponent(ticker)}/deepdive`;
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 20000);
-
-        const response = await fetch(url, {
-            method: 'POST',
-            signal: controller.signal,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(requestId ? { [REQUEST_ID_HEADER]: requestId } : {}),
-            },
-            body: JSON.stringify({ module: moduleIndex, assetClass }),
-        });
-        clearTimeout(timeout);
-
-        if (!response.ok) {
-            return { success: false, error: `Python API returned ${response.status}` };
-        }
-
-        const data = await response.json();
-        return { success: true, text: data.text };
-    } catch (err: any) {
-        return { success: false, error: `Python API unavailable: ${err.message}` };
+        return { success: false, error: `Python API unavailable: ${getErrorMessage(error)}` };
     }
 }
 
@@ -1393,8 +1395,8 @@ app.get(`${API_PREFIX}/v1/sec-edgar/:ticker`, async (req, res) => {
         }
         const data = await response.json();
         res.json(data);
-    } catch (err: any) {
-        res.status(503).json({ error: `SEC EDGAR service unavailable: ${err.message}` });
+    } catch (error: unknown) {
+        res.status(503).json({ error: `SEC EDGAR service unavailable: ${getErrorMessage(error)}` });
     }
 });
 
@@ -1456,8 +1458,8 @@ app.get(`${API_PREFIX}/v1/scanner`, async (req, res) => {
             });
         }
         res.json({ results, total: results.length });
-    } catch (err: any) {
-        res.status(503).json({ error: `Scanner unavailable: ${err.message}` });
+    } catch (error: unknown) {
+        res.status(503).json({ error: `Scanner unavailable: ${getErrorMessage(error)}` });
     }
 });
 
@@ -1473,8 +1475,8 @@ app.get(`${API_PREFIX}/v1/python/health`, async (req, res) => {
         }
         const data = await response.json();
         res.json({ status: 'up', ...data });
-    } catch (err: any) {
-        res.json({ status: 'down', error: err.message });
+    } catch (error: unknown) {
+        res.json({ status: 'down', error: getErrorMessage(error) });
     }
 });
 
@@ -1522,40 +1524,6 @@ Topic: ${moduleName}
 Write 4–6 paragraphs of expert-level analysis. Include specific metrics, model behavior, risk implications, and actionable takeaways.
 Reference regime context throughout. No code, no tables — institutional prose narrative only.
 Conclude with a 1-sentence "Bottom line for portfolio managers:" statement.`;
-}
-
-function getInsightCards(ticker: string, assetClass: string) {
-    const isEquity = assetClass === 'EQUITY';
-    const isCrypto = assetClass === 'CRYPTO';
-    const isCommodity = assetClass === 'COMMODITY';
-
-    const cards = [
-        { id: '1', category: 'momentum', text: `${ticker}: Fetching OHLCV data — 180 trading days loaded. Technical indicators computing.` },
-        { id: '2', category: 'model', text: `Regime detection running — HMM analysis on daily returns. Volatility clustering in progress.` },
-        { id: '3', category: 'sentiment', text: `X sentiment via Grok API: query dispatched. Credibility weighting and bot filter active.` },
-        { id: '4', category: 'risk', text: `Monte Carlo VaR: 10,000 simulation paths generated. 99% confidence interval computing.` },
-        { id: '5', category: 'model', text: `LSTM, Prophet, ARIMA ensemble running. Regime-adjusted weights calculating.` },
-        ...(isEquity ? [
-            { id: '6', category: 'institutional', text: `13F institutional holdings: latest quarter loaded. Net flow delta computing.` },
-            { id: '7', category: 'altdata', text: `Earnings call NLP: transcript scoring against Quantus corpus of 8,400+ calls.` },
-            { id: '8', category: 'event', text: `Earnings calendar: checking options-implied move for upcoming event risk.` },
-        ] : []),
-        ...(isCrypto ? [
-            { id: '6', category: 'altdata', text: `On-chain data: exchange net flows and MVRV Z-score loading from Glassnode.` },
-            { id: '7', category: 'altdata', text: `Fear & Greed Index: ${Math.floor(55 + Math.random() * 30)} — Greed territory. Funding rate: checking perpetuals.` },
-            { id: '8', category: 'risk', text: `Liquidation clusters: Coinglass data loaded. Major levels identified.` },
-        ] : []),
-        ...(isCommodity ? [
-            { id: '6', category: 'altdata', text: `CFTC COT Report: commercial vs speculative positioning loaded. Weekly release.` },
-            { id: '7', category: 'momentum', text: `Futures curve structure: contango/backwardation analysis. Front-month spread computing.` },
-            { id: '8', category: 'altdata', text: `Seasonal pattern overlay: historical Q1 performance and supply/demand cycle loading.` },
-        ] : []),
-        { id: '9', category: 'knowledge', text: `Knowledge graph: cross-ticker relationships mapped. Supply chain alerts checked.` },
-        { id: '10', category: 'model', text: `Data quality scoring: all inputs validated. Confidence score compositing.` },
-        { id: '11', category: 'model', text: `Coverage check complete — preparing the workspace handoff for ${ticker}.` },
-    ];
-
-    return cards;
 }
 
 function getHonestInsightCards(ticker: string, assetClass: string) {
