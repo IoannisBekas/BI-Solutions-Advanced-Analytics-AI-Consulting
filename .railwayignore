@@ -2,9 +2,9 @@
 node_modules/
 
 # Nested node_modules (explicit paths)
-Quantus/node_modules/
-PowerBI_Solutions/app/node_modules/
-client/node_modules/
+apps/quantus/node_modules/
+apps/powerbi-solutions/node_modules/
+apps/client/node_modules/
 
 # Catch-all for any other nested node_modules
 **/node_modules/
@@ -12,8 +12,8 @@ client/node_modules/
 # Build output
 dist/
 **/dist/
-Quantus/dist/
-PowerBI_Solutions/app/dist/
+apps/quantus/dist/
+apps/powerbi-solutions/dist/
 
 # Database files (cause file locks)
 *.db

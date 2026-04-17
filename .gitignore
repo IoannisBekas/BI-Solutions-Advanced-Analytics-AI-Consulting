@@ -1,20 +1,20 @@
 # Dependencies
 node_modules
-Quantus/node_modules/
-PowerBI_Solutions/app/node_modules/
+apps/quantus/node_modules/
+apps/powerbi-solutions/node_modules/
 
 # Build output
 dist
-Quantus/dist/
-Quantus/dev-dist/
-PowerBI_Solutions/app/dist/
-server/public
-client/public/quantus-app/
+apps/quantus/dist/
+apps/quantus/dev-dist/
+apps/powerbi-solutions/dist/
+apps/server/public
+apps/client/public/quantus-app/
 
 # Runtime data & caches
 data/
 attached_assets/
-Quantus/models/saved/
+apps/quantus/models/saved/
 **/__pycache__/
 **/*.pyc
 .pytest_cache/
@@ -24,10 +24,10 @@ Quantus/models/saved/
 .env.local
 .env.*.local
 !.env.example
-PowerBI_Solutions/app/.env
-PowerBI_Solutions/app/.env.local
-PowerBI_Solutions/app/.env.*
-!PowerBI_Solutions/app/.env.example
+apps/powerbi-solutions/.env
+apps/powerbi-solutions/.env.local
+apps/powerbi-solutions/.env.*
+!apps/powerbi-solutions/.env.example
 
 # Logs & test artifacts
 *.log

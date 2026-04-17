@@ -15,7 +15,7 @@ const path = require("path");
 const fs = require("fs");
 
 const ROOT = path.resolve(__dirname, "..");
-const QUANTUS_DIR = path.join(ROOT, "Quantus");
+const QUANTUS_DIR = path.join(ROOT, "apps", "quantus");
 
 // Railway sets PORT; default to 8080.
 const MAIN_PORT = process.env.PORT || "8080";

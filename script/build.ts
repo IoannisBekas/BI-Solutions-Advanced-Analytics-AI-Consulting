@@ -25,10 +25,10 @@ async function buildAll() {
   await viteBuild();
   await cp("dist/public/index.html", "dist/public/404.html");
 
-  await buildNestedApp("Quantus", path.resolve("Quantus"), path.join("quantus", "workspace"));
+  await buildNestedApp("Quantus", path.resolve("apps", "quantus"), path.join("quantus", "workspace"));
   await buildNestedApp(
     "Power BI Solutions",
-    path.resolve("PowerBI_Solutions", "app"),
+    path.resolve("apps", "powerbi-solutions"),
     "power-bi-solutions",
   );
 
@@ -41,7 +41,7 @@ async function buildAll() {
   const externals = allDeps.filter((dep) => !allowlist.includes(dep));
 
   await esbuild({
-    entryPoints: ["server/index.ts"],
+    entryPoints: ["apps/server/index.ts"],
     platform: "node",
     bundle: true,
     format: "cjs",
@@ -58,14 +58,14 @@ async function buildAll() {
   // plain `node` in production instead of tsx (which has ESM resolution issues).
   console.log("building Quantus server (with resolveExtensions + .ts imports)...");
   const quantusPkg = JSON.parse(
-    await readFile(path.resolve("Quantus", "package.json"), "utf-8"),
+    await readFile(path.resolve("apps", "quantus", "package.json"), "utf-8"),
   );
   const quantusDeps = [
     ...Object.keys(quantusPkg.dependencies || {}),
     ...Object.keys(quantusPkg.devDependencies || {}),
   ];
   await esbuild({
-    entryPoints: [path.resolve("Quantus", "server", "index.ts")],
+    entryPoints: [path.resolve("apps", "quantus", "server", "index.ts")],
     platform: "node",
     bundle: true,
     format: "cjs",

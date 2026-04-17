@@ -1,8 +1,8 @@
 {
   "include": [
-    "client/src/**/*",
+    "apps/client/src/**/*",
     "shared/**/*",
-    "server/**/*"
+    "apps/server/**/*"
   ],
   "exclude": [
     "node_modules",
@@ -33,13 +33,13 @@
     ],
     "paths": {
       "@/*": [
-        "./client/src/*"
+        "./apps/client/src/*"
       ],
       "@shared/*": [
         "./shared/*"
       ],
       "@assets/*": [
-        "./client/src/assets/*"
+        "./apps/client/src/assets/*"
       ]
     }
   }

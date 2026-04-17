@@ -1,6 +1,6 @@
 node_modules
-Quantus/node_modules
-PowerBI_Solutions/app/node_modules
+apps/quantus/node_modules
+apps/powerbi-solutions/node_modules
 dist
 data
 .env

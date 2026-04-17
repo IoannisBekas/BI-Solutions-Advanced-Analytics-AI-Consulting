@@ -2,7 +2,7 @@ import { type Express, type NextFunction, type Response } from "express";
 import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
 import express from "express";
-import viteConfig from "../vite.config";
+import viteConfig from "../../vite.config";
 import fs from "fs";
 import path from "path";
 import { nanoid } from "nanoid";
@@ -89,7 +89,7 @@ export async function setupVite(server: Server, app: Express) {
 
   // Serve pre-built product SPAs (Quantus, Power BI Solutions) in dev mode
   // These must be mounted BEFORE the Vite catch-all so they take precedence
-  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
   app.use((req, res, next) => {
     if (req.method === "GET" && req.originalUrl === "/quantus/") {
       res.redirect(308, "/quantus/workspace/");

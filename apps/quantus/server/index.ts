@@ -17,7 +17,7 @@ import {
     sanitizeQuantusAssetClass,
     sanitizeQuantusTicker,
     sanitizeQuantusUserTier,
-} from '../../shared/quantus.ts';
+} from '../../../shared/quantus.ts';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();

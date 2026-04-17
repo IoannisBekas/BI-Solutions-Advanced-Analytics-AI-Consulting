@@ -4,7 +4,7 @@
     {
       "name": "dev",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["--import", "tsx", "server/index.ts"],
+      "runtimeArgs": ["--import", "tsx", "apps/server/index.ts"],
       "port": 5001,
       "env": {
         "PORT": "5001",
@@ -14,7 +14,7 @@
     {
       "name": "quantus-api",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["--import", "tsx", "Quantus/server/index.ts"],
+      "runtimeArgs": ["--import", "tsx", "apps/quantus/server/index.ts"],
       "port": 3001,
       "env": {
         "PORT": "3001",
@@ -24,7 +24,7 @@
     {
       "name": "quantus-vite",
       "runtimeExecutable": "cmd",
-      "runtimeArgs": ["/c", "cd Quantus && npx vite --port 4500"],
+      "runtimeArgs": ["/c", "cd apps/quantus && npx vite --port 4500"],
       "port": 4500
     }
   ]

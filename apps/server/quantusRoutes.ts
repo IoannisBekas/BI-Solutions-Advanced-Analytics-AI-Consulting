@@ -33,7 +33,7 @@ import {
   readQuantusInternalKey,
   sanitizeQuantusAssetClass,
   sanitizeQuantusTicker,
-} from "../shared/quantus";
+} from "../../shared/quantus";
 
 function sanitizeBoolean(value: unknown, fallback: boolean) {
   if (typeof value === "boolean") {

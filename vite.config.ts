@@ -16,12 +16,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "client", "src"),
+      "@": path.resolve(__dirname, "apps", "client", "src"),
       "@shared": path.resolve(__dirname, "shared"),
     },
   },
 
-  root: path.resolve(__dirname, "client"),
+  root: path.resolve(__dirname, "apps", "client"),
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
