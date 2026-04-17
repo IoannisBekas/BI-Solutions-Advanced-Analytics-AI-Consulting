@@ -120,19 +120,32 @@ def _matches(
 
 
 def _to_result_card(ticker: str, report: dict) -> dict:
-    regime = report.get("regime", {})
+    regime  = report.get("regime", {})
+    momentum = report.get("momentum", {}) or {}
+    # has_news: True if report contains at least one news article
+    has_news = bool(report.get("news_articles"))
+    # has_filings: True if EDGAR returned at least one material filing
+    sec = report.get("sec_filings", {}) or {}
+    has_filings = bool(sec.get("recent_filings")) or (sec.get("form4_count", 0) > 0)
     return {
-        "ticker":           ticker,
-        "company_name":     report.get("company_name", ticker),
-        "asset_class":      report.get("asset_class", "EQUITY"),
-        "overall_signal":   report.get("overall_signal", "NEUTRAL"),
-        "confidence_score": report.get("confidence_score", 0),
-        "regime_label":     regime.get("label", "UNKNOWN"),
-        "regime_implication": regime.get("implication", ""),
-        "early_insight":    report.get("early_insight", ""),
-        "key_metrics":      report.get("key_metrics", [])[:3],
-        "report_id":        report.get("report_id", ""),
-        "report_url":       f"/api/v1/report/{ticker}",
+        "ticker":              ticker,
+        "company_name":        report.get("company_name", ticker),
+        "asset_class":         report.get("asset_class", "EQUITY"),
+        "sector":              report.get("sector", ""),
+        "overall_signal":      report.get("overall_signal", "NEUTRAL"),
+        "confidence_score":    report.get("confidence_score", 0),
+        "regime_label":        regime.get("label", "UNKNOWN"),
+        "regime_implication":  regime.get("implication", ""),
+        "early_insight":       report.get("early_insight", ""),
+        "key_metrics":         report.get("key_metrics", [])[:3],
+        "report_id":           report.get("report_id", ""),
+        "report_url":          f"/api/v1/report/{ticker}",
+        # Enrichment flags for the scanner UI
+        "has_news":            has_news,
+        "has_filings":         has_filings,
+        "rsi":                 momentum.get("rsi"),
+        "news_count":          len(report.get("news_articles") or []),
+        "filings_count":       len(sec.get("recent_filings") or []),
     }
 
 # ---------------------------------------------------------------------------
