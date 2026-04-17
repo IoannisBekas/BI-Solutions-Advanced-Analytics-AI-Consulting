@@ -43,7 +43,6 @@ class TickerIndex:
 
     def __init__(self, cache: ReportCache):
         self._cache = cache
-        # Seed with well-known tickers for demo
         self._tickers: list[str] = []
 
     def register(self, ticker: str) -> None:
@@ -58,6 +57,12 @@ class TickerIndex:
 
 
 _index = TickerIndex(_cache)
+
+# Seed with well-known demo tickers so the scanner shows results
+# without requiring prior report generation. Reports are registered
+# lazily when actually loaded; this just ensures the index isn't empty.
+for _t in ["NVDA", "TSLA", "BTC", "SPY", "GLD", "ASST", "AAPL", "MSFT", "AMZN", "GOOGL"]:
+    _index.register(_t)
 
 
 def get_index() -> TickerIndex:   return _index

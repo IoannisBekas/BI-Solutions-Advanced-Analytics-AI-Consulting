@@ -59,9 +59,11 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 from api.report import router as report_router          # noqa: E402
 from api.sec_edgar import router as market_intel_router  # noqa: E402
+from api.screener import router as screener_router       # noqa: E402
 
 app.include_router(report_router)
 app.include_router(market_intel_router)
+app.include_router(screener_router)
 
 @app.get("/api/v1/search")
 async def search_tickers(q: str = "", limit: int = 5):

@@ -221,6 +221,13 @@ async def get_report(
     }, section=section, user_tier=user_tier)
     logger.info("report | %s | cached (96h TTL)", ticker)
 
+    # Register in screener index so the market scanner picks it up
+    try:
+        from api.screener import get_index
+        get_index().register(ticker)
+    except Exception:
+        pass
+
     # 6. Return
     return JSONResponse({"cached": False, "source": "live", "report": report})
 
