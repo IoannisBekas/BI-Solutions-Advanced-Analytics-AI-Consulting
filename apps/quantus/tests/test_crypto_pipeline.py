@@ -257,7 +257,7 @@ class TestCryptoRegime:
         """50% 30d gain → STRONG_UPTREND for crypto."""
         df   = _make_ohlcv(n=60, base_price=100)
         # Manually set last price much higher
-        df["close"].iloc[-1] = df["close"].iloc[-31] * 1.55
+        df.loc[df.index[-1], "close"] = df["close"].iloc[-31] * 1.55
         r = detect_crypto_regime(df)
         assert r["label"] == "STRONG_UPTREND"
 
