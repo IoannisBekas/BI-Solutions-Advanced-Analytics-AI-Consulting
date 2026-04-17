@@ -1,17 +1,13 @@
-import type { Express, Request, Response } from "express";
-import type { Server } from "http";
-import { Readable } from "stream";
-import { authRouter, checkMonthlyReset } from "./auth";
-import { registerQuantusPersistenceRoutes } from "./quantusRoutes";
+import type { Express } from "express";
+import {
+  ANTHROPIC_MESSAGES_URL,
+  DEFAULT_ANTHROPIC_VERSION,
+  getAnthropicModel,
+  readEnv,
+} from "./_shared";
 
-const QUANTUS_API_PREFIX = "/quantus/api";
-const POWERBI_SOLUTIONS_API_PREFIX = "/power-bi-solutions/api";
-const DEFAULT_ANTHROPIC_VERSION = "2023-06-01";
-const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
 const DEFAULT_ADVISOR_GEMINI_MODEL = "gemini-2.5-flash";
-const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 const GEMINI_MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models";
-const DEFAULT_QUANTUS_API_TARGET = "http://127.0.0.1:3001";
 const ADVISOR_ROLES = ["accountant", "lawyer", "consultant"] as const;
 
 type AdvisorRole = typeof ADVISOR_ROLES[number];
@@ -31,28 +27,6 @@ type AdvisorAnswer = {
   requiresReview: boolean;
   refusalReason: string | null;
 };
-
-type PowerBiAnthropicMessage = {
-  role: "user" | "assistant";
-  content:
-    | string
-    | Array<
-        | { type: "text"; text: string }
-        | {
-            type: "image";
-            source: {
-              type: "base64";
-              media_type: "image/png" | "image/jpeg" | "image/webp";
-              data: string;
-            };
-          }
-      >;
-};
-
-type PowerBiAnthropicContentBlock = Exclude<
-  PowerBiAnthropicMessage["content"],
-  string
->[number];
 
 const COMMON_OFFICIAL_HOST_SUFFIXES = [
   "gov.gr",
@@ -111,22 +85,6 @@ const HIGH_RISK_CONSULTANT_PATTERNS = [
   /συμμόρφω/i,
 ];
 
-const POWERBI_PROXY_MAX_TOKENS = 2048;
-const POWERBI_PROXY_MAX_MESSAGES = 12;
-const POWERBI_PROXY_MAX_TEXT_CHARS = 8_000;
-const POWERBI_PROXY_MAX_SYSTEM_CHARS = 12_000;
-const POWERBI_PROXY_MAX_IMAGE_BLOCKS = 4;
-const POWERBI_PROXY_MAX_IMAGE_BASE64_CHARS = 1_600_000;
-const POWERBI_PROXY_ALLOWED_IMAGE_MEDIA_TYPES = new Set([
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-]);
-
-function readEnv(key: string) {
-  return (process.env[key] || "").trim();
-}
-
 function getAdvisorAnthropicApiKey() {
   return (
     readEnv("ANTHROPIC_API_KEY") ||
@@ -136,192 +94,6 @@ function getAdvisorAnthropicApiKey() {
 
 function getGeminiApiKey() {
   return readEnv("GEMINI_API_KEY");
-}
-
-function getPowerBiAnthropicApiKey() {
-  return (
-    readEnv("POWERBI_SOLUTIONS_ANTHROPIC_API_KEY") ||
-    readEnv("ANTHROPIC_API_KEY")
-  );
-}
-
-function isPowerBiAnthropicProxyEnabled() {
-  return process.env.NODE_ENV !== "production" || readEnv("POWERBI_SOLUTIONS_ENABLE_ANTHROPIC_PROXY") === "true";
-}
-
-function getTrustedBrowserOrigins() {
-  const configuredOrigins = (process.env.ALLOWED_ORIGINS || "")
-    .split(",")
-    .map((value) => value.trim())
-    .filter(Boolean);
-
-  if (configuredOrigins.length > 0) {
-    return configuredOrigins;
-  }
-
-  return [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5000",
-    "http://127.0.0.1:5000",
-  ];
-}
-
-function readRequestOrigin(req: Request) {
-  const originHeader = req.header("origin");
-  if (originHeader) {
-    return originHeader.trim();
-  }
-
-  const refererHeader = req.header("referer");
-  if (!refererHeader) {
-    return "";
-  }
-
-  try {
-    return new URL(refererHeader).origin;
-  } catch {
-    return "";
-  }
-}
-
-function isTrustedPowerBiOrigin(req: Request) {
-  const requestOrigin = readRequestOrigin(req);
-  return requestOrigin ? getTrustedBrowserOrigins().includes(requestOrigin) : false;
-}
-
-function sanitizePowerBiText(value: unknown, maxLength: number) {
-  return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
-}
-
-function sanitizePowerBiMessageContent(
-  value: unknown,
-): PowerBiAnthropicMessage["content"] | null {
-  if (typeof value === "string") {
-    const text = sanitizePowerBiText(value, POWERBI_PROXY_MAX_TEXT_CHARS);
-    return text ? text : null;
-  }
-
-  if (!Array.isArray(value)) {
-    return null;
-  }
-
-  let imageCount = 0;
-  const blocks: PowerBiAnthropicContentBlock[] = [];
-
-  for (const entry of value) {
-    if (typeof entry !== "object" || entry === null) {
-      continue;
-    }
-
-    const type = (entry as { type?: unknown }).type;
-    if (type === "text") {
-      const text = sanitizePowerBiText((entry as { text?: unknown }).text, POWERBI_PROXY_MAX_TEXT_CHARS);
-      if (text) {
-        blocks.push({ type: "text", text });
-      }
-      continue;
-    }
-
-    if (type !== "image" || imageCount >= POWERBI_PROXY_MAX_IMAGE_BLOCKS) {
-      continue;
-    }
-
-    const source = (entry as {
-      source?: {
-        type?: unknown;
-        media_type?: unknown;
-        data?: unknown;
-      };
-    }).source;
-
-    if (
-      !source
-      || source.type !== "base64"
-      || typeof source.data !== "string"
-      || typeof source.media_type !== "string"
-      || !POWERBI_PROXY_ALLOWED_IMAGE_MEDIA_TYPES.has(source.media_type)
-    ) {
-      continue;
-    }
-
-    const data = source.data.trim();
-    if (!data || data.length > POWERBI_PROXY_MAX_IMAGE_BASE64_CHARS) {
-      continue;
-    }
-
-    imageCount += 1;
-    blocks.push({
-      type: "image",
-      source: {
-        type: "base64",
-        media_type: source.media_type as "image/png" | "image/jpeg" | "image/webp",
-        data,
-      },
-    });
-  }
-
-  return blocks.length > 0 ? blocks : null;
-}
-
-function sanitizePowerBiMessages(value: unknown): PowerBiAnthropicMessage[] | null {
-  if (!Array.isArray(value) || value.length === 0 || value.length > POWERBI_PROXY_MAX_MESSAGES) {
-    return null;
-  }
-
-  const messages: PowerBiAnthropicMessage[] = [];
-
-  for (const entry of value) {
-    if (
-      typeof entry !== "object" ||
-      entry === null ||
-      !["user", "assistant"].includes(String((entry as { role?: unknown }).role))
-    ) {
-      continue;
-    }
-
-    const content = sanitizePowerBiMessageContent((entry as { content?: unknown }).content);
-    if (!content) {
-      continue;
-    }
-
-    messages.push({
-      role: (entry as { role: "user" | "assistant" }).role,
-      content,
-    });
-  }
-
-  return messages.length > 0 ? messages : null;
-}
-
-function buildPowerBiAnthropicPayload(body: Record<string, unknown> | undefined) {
-  const messages = sanitizePowerBiMessages(body?.messages);
-  if (!messages) {
-    return null;
-  }
-
-  const maxTokensValue = Number(body?.max_tokens);
-  const maxTokens = Number.isFinite(maxTokensValue)
-    ? Math.min(Math.max(Math.trunc(maxTokensValue), 1), POWERBI_PROXY_MAX_TOKENS)
-    : POWERBI_PROXY_MAX_TOKENS;
-
-  const payload: Record<string, unknown> = {
-    model: getAnthropicModel(),
-    max_tokens: maxTokens,
-    messages,
-  };
-
-  const system = sanitizePowerBiText(body?.system, POWERBI_PROXY_MAX_SYSTEM_CHARS);
-  if (system) {
-    payload.system = system;
-  }
-
-  const temperatureValue = Number(body?.temperature);
-  if (Number.isFinite(temperatureValue)) {
-    payload.temperature = Math.min(Math.max(temperatureValue, 0), 1);
-  }
-
-  return payload;
 }
 
 function isAdvisorAnthropicConfigured() {
@@ -334,13 +106,6 @@ function isAdvisorGroundingConfigured() {
 
 function isAdvisorConfigured() {
   return isAdvisorGroundingConfigured() || isAdvisorAnthropicConfigured();
-}
-
-function getAnthropicModel() {
-  return (
-    process.env.ANTHROPIC_MODEL ||
-    DEFAULT_ANTHROPIC_MODEL
-  ).trim() || DEFAULT_ANTHROPIC_MODEL;
 }
 
 function getAdvisorGeminiModel() {
@@ -729,132 +494,7 @@ async function generateFallbackAdvisorAnswer(
   };
 }
 
-function getQuantusApiTarget() {
-  return (
-    process.env.QUANTUS_API_TARGET ||
-    DEFAULT_QUANTUS_API_TARGET
-  ).replace(/\/$/, "");
-}
-
-function applyUpstreamHeaders(req: Request, res: Response, upstream: globalThis.Response) {
-  const contentType = upstream.headers.get("content-type");
-  if (contentType) {
-    res.setHeader("content-type", contentType);
-  }
-
-  const requestId = upstream.headers.get("request-id");
-  if (requestId) {
-    res.setHeader("request-id", requestId);
-  }
-
-  const retryAfter = upstream.headers.get("retry-after");
-  if (retryAfter) {
-    res.setHeader("retry-after", retryAfter);
-  }
-
-  const anthropicVersion =
-    req.header("anthropic-version") || DEFAULT_ANTHROPIC_VERSION;
-  res.setHeader("anthropic-version", anthropicVersion);
-}
-
-function forwardRequestHeader(req: Request, headers: Headers, name: string) {
-  const value = req.header(name);
-  if (value) {
-    headers.set(name, value);
-  }
-}
-
-function copyProxyResponseHeaders(res: Response, upstream: globalThis.Response) {
-  const blockedHeaders = new Set([
-    "connection",
-    "content-length",
-    "keep-alive",
-    "transfer-encoding",
-  ]);
-
-  upstream.headers.forEach((value, key) => {
-    if (!blockedHeaders.has(key)) {
-      res.setHeader(key, value);
-    }
-  });
-}
-
-function getResendApiKey() {
-  return (process.env.RESEND_API_KEY || "").trim();
-}
-
-function getContactRecipient() {
-  return (process.env.CONTACT_RECIPIENT_EMAIL || "ibekas@ihu.gr").trim();
-}
-
-/** Escape HTML special characters to prevent injection in email bodies */
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-export async function registerRoutes(
-  httpServer: Server,
-  app: Express
-): Promise<Server> {
-  // ─── Monthly reports reset (lazy, on first request per month) ───────────
-  checkMonthlyReset();
-
-  // ─── Health check ────────────────────────────────────────────────────────
-  app.get("/api/health", (_req, res) => {
-    checkMonthlyReset();
-    res.json({ status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
-  });
-
-  // ─── Auth routes (/api/auth/*) ─────────────────────────────────────────────
-  app.use("/api/auth", authRouter);
-  registerQuantusPersistenceRoutes(app);
-
-  // ─── Contact form proxy ──────────────────────────────────────────────────
-  app.post("/api/contact", async (req, res) => {
-    const apiKey = getResendApiKey();
-    const recipient = getContactRecipient();
-
-    if (!apiKey) {
-      res.status(500).json({ message: "Contact form is not configured on the server." });
-      return;
-    }
-
-    const { name, email, subject, message } = req.body;
-    if (!name || !email || !subject || !message) {
-      res.status(400).json({ message: "All fields (name, email, subject, message) are required." });
-      return;
-    }
-
-    try {
-      const { Resend } = await import("resend");
-      const resend = new Resend(apiKey);
-
-      const { error } = await resend.emails.send({
-        from: "BI Solutions Contact <onboarding@resend.dev>",
-        to: recipient,
-        replyTo: email,
-        subject: `[Contact] ${subject}`,
-        html: `<p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p><p><strong>Subject:</strong> ${escapeHtml(subject)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`,
-      });
-
-      if (error) {
-        console.error("Resend error:", error);
-        res.status(502).json({ message: "Failed to deliver message. Please try again." });
-      } else {
-        res.json({ success: true });
-      }
-    } catch (error) {
-      console.error("Contact form proxy failed:", error);
-      res.status(502).json({ message: "Failed to deliver message. Please try again." });
-    }
-  });
-
-  // ─── AI Advisor (grounded web retrieval + fallback model) ───────────────────
+export function registerAdvisorRoutes(app: Express) {
   app.get("/api/ai-advisor/health", (_req, res) => {
     res.json({
       ok: true,
@@ -980,131 +620,4 @@ export async function registerRoutes(
       res.status(502).json({ success: false, error: "AI service temporarily unavailable." });
     }
   });
-
-  app.all(`${QUANTUS_API_PREFIX}/*`, async (req, res) => {
-    try {
-      const upstreamUrl = new URL(req.originalUrl, `${getQuantusApiTarget()}/`);
-      const headers = new Headers();
-
-      forwardRequestHeader(req, headers, "accept");
-      forwardRequestHeader(req, headers, "authorization");
-      forwardRequestHeader(req, headers, "cache-control");
-      forwardRequestHeader(req, headers, "content-type");
-      forwardRequestHeader(req, headers, "cookie");
-      forwardRequestHeader(req, headers, "last-event-id");
-
-      const hasBody = req.method !== "GET" && req.method !== "HEAD";
-      const body =
-        hasBody && req.rawBody instanceof Buffer
-          ? req.rawBody
-          : hasBody && req.body
-            ? JSON.stringify(req.body)
-            : undefined;
-
-      if (body && !headers.has("content-type")) {
-        headers.set("content-type", "application/json");
-      }
-
-      const upstream = await fetch(upstreamUrl, {
-        method: req.method,
-        headers,
-        body,
-        signal: AbortSignal.timeout(180_000),
-      });
-
-      copyProxyResponseHeaders(res, upstream);
-      res.status(upstream.status);
-
-      if (!upstream.body) {
-        res.end();
-        return;
-      }
-
-      Readable.fromWeb(upstream.body as never).pipe(res);
-    } catch (error) {
-      console.error("Quantus API proxy failed:", error);
-      const detail = error instanceof Error ? error.message : String(error);
-      res.status(502).json({
-        message:
-          "Unable to reach the Quantus API target from the BI Solutions server.",
-        detail,
-        code: "quantus_api_proxy_unavailable",
-      });
-    }
-  });
-
-  app.get(`${POWERBI_SOLUTIONS_API_PREFIX}/health`, (_req, res) => {
-    res.json({ ok: true, enabled: isPowerBiAnthropicProxyEnabled() });
-  });
-
-  app.post(`${POWERBI_SOLUTIONS_API_PREFIX}/anthropic/v1/messages`, async (req, res) => {
-    if (!isPowerBiAnthropicProxyEnabled()) {
-      res.status(503).json({
-        message:
-          "The preview Anthropic proxy is disabled until server-side access control is configured.",
-      });
-      return;
-    }
-
-    if (!isTrustedPowerBiOrigin(req)) {
-      res.status(403).json({
-        message:
-          "The preview Anthropic proxy only accepts requests from trusted browser origins.",
-      });
-      return;
-    }
-
-    const apiKey = getPowerBiAnthropicApiKey();
-
-    if (!apiKey) {
-      res.status(500).json({
-        message:
-          "Anthropic API key is not configured on the BI Solutions server.",
-      });
-      return;
-    }
-
-    const payload = buildPowerBiAnthropicPayload(req.body as Record<string, unknown> | undefined);
-    if (!payload) {
-      res.status(400).json({
-        message: "Invalid Anthropic request payload.",
-      });
-      return;
-    }
-
-    try {
-      const anthropicVersion =
-        req.header("anthropic-version") || DEFAULT_ANTHROPIC_VERSION;
-
-      const headers = new Headers({
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": anthropicVersion,
-      });
-
-      const betaHeader = req.header("anthropic-beta");
-      if (betaHeader) {
-        headers.set("anthropic-beta", betaHeader);
-      }
-
-      const upstream = await fetch(ANTHROPIC_MESSAGES_URL, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(30_000),
-      });
-
-      const responseText = await upstream.text();
-      applyUpstreamHeaders(req, res, upstream);
-      res.status(upstream.status).send(responseText);
-    } catch (error) {
-      console.error("Power BI Solutions Anthropic proxy failed:", error);
-      res.status(502).json({
-        message:
-          "Unable to reach Anthropic from the BI Solutions server. Please try again.",
-      });
-    }
-  });
-
-  return httpServer;
 }

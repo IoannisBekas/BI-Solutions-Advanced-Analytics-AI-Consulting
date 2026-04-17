@@ -1,31 +1,42 @@
+# Dependencies
 node_modules
+Quantus/node_modules/
+PowerBI_Solutions/app/node_modules/
+
+# Build output
 dist
-data/
-.DS_Store
+Quantus/dist/
+Quantus/dev-dist/
+PowerBI_Solutions/app/dist/
 server/public
-vite.config.ts.*
-*.tar.gz
+client/public/quantus-app/
+
+# Runtime data & caches
+data/
+attached_assets/
+Quantus/models/saved/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+
+# Env files
 .env
 .env.local
 .env.*.local
 !.env.example
-codex-*.log
-codex-*.err.log
-Quantus/node_modules/
-Quantus/dist/
-Quantus/dev-dist/
-Quantus/**/__pycache__/
-Quantus/**/*.pyc
-Quantus/models/saved/
-PowerBI_Solutions/app/node_modules/
-PowerBI_Solutions/app/dist/
-PowerBI_Solutions/app/.env.*
-!PowerBI_Solutions/app/.env.example
 PowerBI_Solutions/app/.env
 PowerBI_Solutions/app/.env.local
-root-dev.log
-error.log
-build_log.txt
+PowerBI_Solutions/app/.env.*
+!PowerBI_Solutions/app/.env.example
+
+# Logs & test artifacts
 *.log
-attached_assets/
-client/public/quantus-app/
+*.tar.gz
+.local/
+test-results/
+build_log.txt
+
+# Editor / OS
+.DS_Store
+desktop.ini
+vite.config.ts.*

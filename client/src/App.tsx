@@ -28,13 +28,13 @@ const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const About = lazy(() => import("@/pages/About"));
 const Products = lazy(() => import("@/pages/Products"));
-const AIAdvisorPage = lazy(() => import("@/pages/AIAdvisorPage"));
-const QuantusPage = lazy(() => import("@/pages/QuantusPage"));
-const PowerBISolutionsPage = lazy(() => import("@/pages/PowerBISolutionsPage"));
-const WebsiteAppPortfolioPage = lazy(() => import("@/pages/WebsiteAppPortfolioPage"));
-const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
-const TermsOfService = lazy(() => import("@/pages/TermsOfService"));
-const NotFound = lazy(() => import("@/pages/not-found"));
+const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
+const QuantusPage = lazy(() => import("@/pages/products/QuantusPage"));
+const PowerBISolutionsPage = lazy(() => import("@/pages/products/PowerBISolutionsPage"));
+const WebsiteAppPortfolioPage = lazy(() => import("@/pages/products/WebsiteAppPortfolioPage"));
+const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function App() {
   return (
