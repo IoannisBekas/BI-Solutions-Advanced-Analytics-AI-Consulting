@@ -5,6 +5,48 @@ import {
   resolveWorkspaceRoute,
 } from "../lib/workspaceRoutes";
 
+const BUILD_BASE_PREFIX = (() => {
+  const baseUrl = import.meta.env.BASE_URL || QUANTUS_WORKSPACE_ROUTE;
+  const workspaceIndex = baseUrl.lastIndexOf(QUANTUS_WORKSPACE_ROUTE);
+
+  if (workspaceIndex <= 0) {
+    return "";
+  }
+
+  return baseUrl.slice(0, workspaceIndex).replace(/\/+$/, "");
+})();
+
+function getBrowserBasePrefix(pathname?: string) {
+  const runtimePath =
+    pathname ?? (typeof window !== "undefined" ? window.location.pathname : "");
+  const workspaceIndex = runtimePath.lastIndexOf(QUANTUS_WORKSPACE_ROUTE);
+
+  if (workspaceIndex > 0) {
+    return runtimePath.slice(0, workspaceIndex).replace(/\/+$/, "");
+  }
+
+  return BUILD_BASE_PREFIX;
+}
+
+function toAppPath(pathname: string) {
+  const browserBasePrefix = getBrowserBasePrefix(pathname);
+
+  if (!browserBasePrefix || !pathname.startsWith(browserBasePrefix)) {
+    return pathname;
+  }
+
+  const strippedPath = pathname.slice(browserBasePrefix.length);
+  return strippedPath.startsWith("/") ? strippedPath : `/${strippedPath}`;
+}
+
+function toBrowserPath(pathname: string) {
+  const normalizedPath = normalizeQuantusPath(pathname);
+  const browserBasePrefix = getBrowserBasePrefix();
+  return browserBasePrefix
+    ? `${browserBasePrefix}${normalizedPath}`
+    : normalizedPath;
+}
+
 function readBrowserLocation() {
   if (typeof window === "undefined") {
     return {
@@ -14,7 +56,7 @@ function readBrowserLocation() {
   }
 
   return {
-    path: normalizeQuantusPath(window.location.pathname),
+    path: normalizeQuantusPath(toAppPath(window.location.pathname)),
     search: window.location.search,
   };
 }
@@ -47,7 +89,7 @@ export function useWorkspaceLocation() {
 
       const normalizedPath = normalizeQuantusPath(nextPath);
       const normalizedSearch = normalizeSearch(search);
-      const targetLocation = `${normalizedPath}${normalizedSearch}`;
+      const targetLocation = `${toBrowserPath(normalizedPath)}${normalizedSearch}`;
 
       if (
         `${window.location.pathname}${window.location.search}` !==
@@ -71,13 +113,14 @@ export function useWorkspaceLocation() {
       return;
     }
 
-    const normalizedPath = normalizeQuantusPath(window.location.pathname);
+    const normalizedPath = normalizeQuantusPath(toAppPath(window.location.pathname));
+    const browserPath = toBrowserPath(normalizedPath);
 
-    if (normalizedPath !== window.location.pathname) {
+    if (browserPath !== window.location.pathname) {
       window.history.replaceState(
         window.history.state,
         "",
-        `${normalizedPath}${window.location.search}`,
+        `${browserPath}${window.location.search}`,
       );
     }
 
@@ -85,7 +128,7 @@ export function useWorkspaceLocation() {
     setCurrentSearch(window.location.search);
 
     const handlePopState = () => {
-      setCurrentPath(normalizeQuantusPath(window.location.pathname));
+      setCurrentPath(normalizeQuantusPath(toAppPath(window.location.pathname)));
       setCurrentSearch(window.location.search);
     };
 
