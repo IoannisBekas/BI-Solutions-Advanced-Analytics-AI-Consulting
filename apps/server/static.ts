@@ -199,6 +199,7 @@ export function serveStatic(app: Express) {
   const indexHtml = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
 
   // Quantus workspace sub-paths
+  redirectLegacyProductPath(app, "/quantus", "/quantus/workspace/");
   redirectLegacyProductPath(app, "/quantus/", "/quantus/workspace/");
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
 

@@ -91,7 +91,7 @@ export async function setupVite(server: Server, app: Express) {
   // These must be mounted BEFORE the Vite catch-all so they take precedence
   const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
   app.use((req, res, next) => {
-    if (req.method === "GET" && req.originalUrl === "/quantus/") {
+    if (req.method === "GET" && (req.path === "/quantus" || req.path === "/quantus/")) {
       res.redirect(308, "/quantus/workspace/");
       return;
     }
