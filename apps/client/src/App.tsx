@@ -1,5 +1,5 @@
-import { lazy, Suspense } from "react";
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { lazy, Suspense, useEffect } from "react";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { useBrowserLocation } from "wouter/use-browser-location";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -59,6 +59,15 @@ function PageFallback() {
   );
 }
 
+/** Redirect to a canonical path using history.replaceState so the old URL is removed from history. */
+function CanonicalRedirect({ to }: { to: string }) {
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    navigate(to, { replace: true });
+  }, [navigate, to]);
+  return null;
+}
+
 function useDecodedBrowserLocation() {
   const [location, navigate] = useBrowserLocation();
   return [decodeRoutePath(location), navigate] as [string, typeof navigate];
@@ -77,18 +86,41 @@ function Router() {
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/contact" component={Contact} />
           <Route path="/about" component={About} />
-          <Route path={PRODUCT_ROUTES.aiAdvisor} component={AIAdvisorPage} />
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.aiAdvisor} component={AIAdvisorPage} />
+          {/* Non-canonical product paths → 308 to the clean alias.
+              The server handles direct navigation; these handle in-app SPA links. */}
+          <Route path={PRODUCT_ROUTES.aiAdvisor}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.aiAdvisor} />}
+          </Route>
+          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.aiAdvisor}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.aiAdvisor} />}
+          </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.aiAdvisor} component={AIAdvisorPage} />
-          <Route path={PRODUCT_ROUTES.quantus} component={QuantusPage} />
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.quantus} component={QuantusPage} />
-          <Route path={PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus} component={QuantusPage} />
+
+          <Route path={PRODUCT_ROUTES.quantus}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
+          </Route>
+          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.quantus}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
+          </Route>
+          <Route path={PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
+          </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.quantus} component={QuantusPage} />
-          <Route path={PRODUCT_ROUTES.powerBiSolutions} component={PowerBISolutionsPage} />
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.powerBiSolutions} component={PowerBISolutionsPage} />
+
+          <Route path={PRODUCT_ROUTES.powerBiSolutions}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}
+          </Route>
+          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.powerBiSolutions}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}
+          </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.powerBiSolutions} component={PowerBISolutionsPage} />
-          <Route path={PRODUCT_ROUTES.websiteAppPortfolio} component={WebsiteAppPortfolioPage} />
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.websiteAppPortfolio} component={WebsiteAppPortfolioPage} />
+
+          <Route path={PRODUCT_ROUTES.websiteAppPortfolio}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} />}
+          </Route>
+          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.websiteAppPortfolio}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} />}
+          </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} component={WebsiteAppPortfolioPage} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />

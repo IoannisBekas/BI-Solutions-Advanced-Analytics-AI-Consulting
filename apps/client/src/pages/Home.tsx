@@ -17,17 +17,25 @@ export default function Home() {
         title="Advanced Analytics, AI Products & BI Consulting"
         description="BI Solutions Group delivers enterprise analytics, AI-powered products, and business intelligence consulting. Explore Quantus Investing, Power BI Solutions, and custom AI tools built for data-driven organizations."
         path="/"
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "BI Solutions Group",
-          url: "https://bisolutions.group/",
-          logo: "https://bisolutions.group/bi-solutions-logo.png",
-          sameAs: [
-            "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
-            "https://github.com/IoannisBekas",
-          ],
-        }}
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "BI Solutions Group",
+            url: "https://bisolutions.group/",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "BI Solutions Group",
+            url: "https://bisolutions.group/",
+            logo: "https://bisolutions.group/bi-solutions-logo.png",
+            sameAs: [
+              "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
+              "https://github.com/IoannisBekas",
+            ],
+          },
+        ]}
       />
       <Navbar />
       <main>

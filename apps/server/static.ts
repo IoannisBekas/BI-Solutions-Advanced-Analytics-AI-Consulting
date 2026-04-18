@@ -26,12 +26,18 @@ const blogPostMeta: Record<string, { title: string; description: string }> = {
 };
 
 function redirectLegacyProductPath(app: Express, fromPath: string, toPath: string) {
+  // Compare against the decoded path so URL-encoded variants ("/Power%20BI%20Solutions")
+  // and their decoded equivalents ("/Power BI Solutions") both match.
+  // Query strings are preserved in the redirect destination.
+  const decodedFrom = decodeURIComponent(fromPath);
   app.use((req, res, next) => {
-    if (req.method === "GET" && req.originalUrl === fromPath) {
-      res.redirect(308, toPath);
+    if (req.method === "GET" && req.path === decodedFrom) {
+      const qs = req.originalUrl.includes("?")
+        ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
+        : "";
+      res.redirect(308, `${toPath}${qs}`);
       return;
     }
-
     next();
   });
 }
@@ -192,8 +198,18 @@ export function serveStatic(app: Express) {
   // Cache index.html in memory for meta injection
   const indexHtml = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
 
+  // Quantus workspace sub-paths
   redirectLegacyProductPath(app, "/quantus/", "/quantus/workspace/");
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
+
+  // Old capitalized / URL-encoded product marketing pages → canonical kebab-case URLs.
+  // 308 is permanent: browsers and crawlers update their records and pass link equity.
+  redirectLegacyProductPath(app, "/Quantus-Investing",              "/quantus");
+  redirectLegacyProductPath(app, "/Quantus%20Investing",            "/quantus");
+  redirectLegacyProductPath(app, "/Quantus",                        "/quantus");
+  redirectLegacyProductPath(app, "/Power%20BI%20Solutions",         "/power-bi-solutions");
+  redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
+  redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/website-app-portfolio");
 
   const quantusDirCandidates = [
     path.resolve(distPath, "quantus", "workspace"),
