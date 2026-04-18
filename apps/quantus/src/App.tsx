@@ -301,7 +301,11 @@ function App() {
                 {route.view === 'sectors' && (
                     <motion.div key="sectors" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
-                            <SectorPacksDashboard onSelectTicker={(ticker: string) => openReportRoute(ticker)} onUpgrade={() => openAuthModal('signup')} />
+                            <SectorPacksDashboard
+                                lightMode={lightMode}
+                                onSelectTicker={(ticker: string) => openReportRoute(ticker)}
+                                onUpgrade={() => openAuthModal('signup')}
+                            />
                         </Suspense>
                     </motion.div>
                 )}

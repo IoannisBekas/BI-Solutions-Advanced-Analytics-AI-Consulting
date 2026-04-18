@@ -17,17 +17,29 @@ const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
 // ─── Diff row ─────────────────────────────────────────────────────────────────
-function DiffRow({ label, oldVal, newVal }: { label: string; oldVal: string | number; newVal: string | number }) {
+function DiffRow({
+    label,
+    oldVal,
+    newVal,
+    lightMode,
+}: {
+    label: string;
+    oldVal: string | number;
+    newVal: string | number;
+    lightMode?: boolean;
+}) {
     const changed = String(oldVal) !== String(newVal);
+    const muted = lightMode ? '#64748B' : '#9CA3AF';
+    const quiet = lightMode ? '#94A3B8' : '#6B7280';
     return (
         <div className="flex items-center gap-3 text-xs py-1">
-            <span className="w-28 flex-shrink-0 text-gray-500">{label}</span>
-            <span className="font-mono" style={{ color: changed ? '#EF4444' : '#9CA3AF', textDecoration: changed ? 'line-through' : 'none' }}>
+            <span className="w-28 flex-shrink-0" style={{ color: muted }}>{label}</span>
+            <span className="font-mono" style={{ color: changed ? '#EF4444' : quiet, textDecoration: changed ? 'line-through' : 'none' }}>
                 {oldVal}
             </span>
             {changed && (
                 <>
-                    <ChevronRight className="w-3 h-3 flex-shrink-0 text-gray-600" />
+                    <ChevronRight className="w-3 h-3 flex-shrink-0" style={{ color: muted }} />
                     <span className="font-mono font-semibold" style={{ color: '#10B981' }}>{newVal}</span>
                 </>
             )}
@@ -36,7 +48,18 @@ function DiffRow({ label, oldVal, newVal }: { label: string; oldVal: string | nu
 }
 
 // ─── Compare panel ────────────────────────────────────────────────────────────
-function ComparePanel({ old: o, cur: c, onClose }: { old: Snapshot; cur: Snapshot; onClose(): void }) {
+function ComparePanel({
+    old: o,
+    cur: c,
+    onClose,
+    lightMode,
+}: {
+    old: Snapshot;
+    cur: Snapshot;
+    onClose(): void;
+    lightMode?: boolean;
+}) {
+    const muted = lightMode ? '#64748B' : '#9CA3AF';
     return (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
             className="rounded-xl p-5 mb-6"
@@ -45,13 +68,13 @@ function ComparePanel({ old: o, cur: c, onClose }: { old: Snapshot; cur: Snapsho
                 <span className="font-semibold text-sm text-indigo-400">
                     Comparing {fmtDate(o.generatedAt)} → Current
                 </span>
-                <button onClick={onClose} className="text-xs cursor-pointer text-gray-500">✕</button>
+                <button onClick={onClose} className="text-xs cursor-pointer" style={{ color: muted }}>✕</button>
             </div>
-            <DiffRow label="Signal" oldVal={o.signal} newVal={c.signal} />
-            <DiffRow label="Confidence" oldVal={`${o.confidence}%`} newVal={`${c.confidence}%`} />
-            <DiffRow label="Regime" oldVal={o.regime} newVal={c.regime} />
-            <DiffRow label="Engine" oldVal={o.engineVersion} newVal={c.engineVersion} />
-            <DiffRow label="Price" oldVal={`$${o.priceAtGen.toFixed(2)}`} newVal={`$${c.priceAtGen.toFixed(2)}`} />
+            <DiffRow label="Signal" oldVal={o.signal} newVal={c.signal} lightMode={lightMode} />
+            <DiffRow label="Confidence" oldVal={`${o.confidence}%`} newVal={`${c.confidence}%`} lightMode={lightMode} />
+            <DiffRow label="Regime" oldVal={o.regime} newVal={c.regime} lightMode={lightMode} />
+            <DiffRow label="Engine" oldVal={o.engineVersion} newVal={c.engineVersion} lightMode={lightMode} />
+            <DiffRow label="Price" oldVal={`$${o.priceAtGen.toFixed(2)}`} newVal={`$${c.priceAtGen.toFixed(2)}`} lightMode={lightMode} />
         </motion.div>
     );
 }
@@ -64,6 +87,18 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
     const cFill = sigColor[snap.signal];
     const border = isSelected ? `${cFill}50` : lightMode ? '#E5E7EB' : '#1A1A1A';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
+    const iconMuted = lightMode ? '#94A3B8' : '#6B7280';
+    const actionStyles = lightMode
+        ? {
+            background: '#FFFFFF',
+            border: '1px solid #D1D5DB',
+            color: '#374151',
+        }
+        : {
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid #1F2937',
+            color: '#D1D5DB',
+        };
 
     return (
         <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} className="flex gap-4">
@@ -90,30 +125,30 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                             <span className="font-bold text-xs font-mono" style={{ color: cFill }}>{snap.signal}</span>
                             <span className="text-xs" style={{ color: ts }}>{snap.confidence}% conf</span>
-                            <span className="text-xs text-gray-500">{snap.regime}</span>
+                            <span className="text-xs" style={{ color: ts }}>{snap.regime}</span>
                             <span className="text-xs px-1.5 py-0.5 rounded font-mono"
                                 style={{ background: 'rgba(59,130,246,0.08)', color: '#60A5FA' }}>
                                 {snap.engineVersion}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-2 text-xs" style={{ color: ts }}>
                             <Clock className="w-3 h-3" />
                             {fmtDate(snap.generatedAt)} · {snap.reportId} · ${snap.priceAtGen.toFixed(2)}
                         </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <button onClick={e => { e.stopPropagation(); onCompare(); }}
-                            className="flex items-center gap-1 rounded-full border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition-all hover:-translate-y-0.5 hover:shadow-sm"
-                            style={lightMode ? undefined : { background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937', color: '#D1D5DB' }}>
+                            className="flex items-center gap-1 rounded-full px-3 py-2 text-xs font-medium transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                            style={actionStyles}>
                             <GitCompare className="w-3 h-3" />vs Current
                         </button>
                         <a href={snap.url} target="_blank" rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="flex items-center gap-1 rounded-full border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition-all hover:-translate-y-0.5 hover:shadow-sm"
-                            style={lightMode ? undefined : { background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937', color: '#D1D5DB' }}>
+                            className="flex items-center gap-1 rounded-full px-3 py-2 text-xs font-medium transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                            style={actionStyles}>
                             <ExternalLink className="w-3 h-3" />Share
                         </a>
-                        <ChevronRight className="w-4 h-4 text-gray-500" />
+                        <ChevronRight className="w-4 h-4" style={{ color: iconMuted }} />
                     </div>
                 </div>
             </div>
@@ -122,11 +157,22 @@ function TimelineRow({ snap, isLast, isSelected, onView, onCompare, lightMode }:
 }
 
 // ─── Slider ───────────────────────────────────────────────────────────────────
-function TimelineSlider({ total, value, onChange }: { total: number; value: number; onChange(v: number): void }) {
+function TimelineSlider({
+    total,
+    value,
+    onChange,
+    lightMode,
+}: {
+    total: number;
+    value: number;
+    onChange(v: number): void;
+    lightMode?: boolean;
+}) {
+    const muted = lightMode ? '#64748B' : '#9CA3AF';
     if (total <= 0) {
         return (
-            <div className="flex items-center gap-3 text-xs text-gray-500">
-                <SlidersHorizontal className="w-4 h-4 flex-shrink-0 text-gray-500" />
+            <div className="flex items-center gap-3 text-xs" style={{ color: muted }}>
+                <SlidersHorizontal className="w-4 h-4 flex-shrink-0" style={{ color: muted }} />
                 No snapshots available yet
             </div>
         );
@@ -134,11 +180,11 @@ function TimelineSlider({ total, value, onChange }: { total: number; value: numb
 
     return (
         <div className="flex items-center gap-3">
-            <SlidersHorizontal className="w-4 h-4 flex-shrink-0 text-gray-500" />
+            <SlidersHorizontal className="w-4 h-4 flex-shrink-0" style={{ color: muted }} />
             <input type="range" min={0} max={total - 1} value={value}
                 onChange={e => onChange(Number(e.target.value))}
                 className="flex-1 h-1.5 rounded-full accent-indigo-500" />
-            <span className="text-xs w-20 text-right font-mono text-gray-500">
+            <span className="text-xs w-20 text-right font-mono" style={{ color: muted }}>
                 Showing {total - value} of {total}
             </span>
         </div>
@@ -199,6 +245,13 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
 
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
+    const iconMuted = lightMode ? '#94A3B8' : '#9CA3AF';
+    const primaryActionStyles = {
+        background: lightMode ? 'rgba(37,99,235,0.10)' : 'rgba(96,165,250,0.16)',
+        border: `1px solid ${lightMode ? 'rgba(37,99,235,0.18)' : 'rgba(147,197,253,0.24)'}`,
+        color: lightMode ? '#1D4ED8' : '#BFDBFE',
+        boxShadow: lightMode ? '0 12px 24px -16px rgba(37,99,235,0.35)' : '0 12px 24px -18px rgba(96,165,250,0.45)',
+    };
 
     return (
         <div className="mx-auto max-w-5xl">
@@ -227,7 +280,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
                         </div>
                         {/* Semantic search */}
                         <div className="bis-input flex items-center gap-2 px-4 py-3 flex-1 min-w-56">
-                            <Search className="w-4 h-4 flex-shrink-0 text-gray-400" />
+                            <Search className="w-4 h-4 flex-shrink-0" style={{ color: iconMuted }} />
                             <input value={query} onChange={e => setQuery(e.target.value)}
                                 placeholder='"regime change from uptrend…" or "Meridian v2.4"'
                                 className="flex-1 bg-transparent text-sm focus:outline-none"
@@ -235,7 +288,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
                         </div>
                     </div>
                     {/* Timeline slider */}
-                    <TimelineSlider total={all.length} value={sliderVal} onChange={setSlider} />
+                    <TimelineSlider total={all.length} value={sliderVal} onChange={setSlider} lightMode={lightMode} />
                 </div>
 
                 {error && (
@@ -246,7 +299,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
 
                 {/* Compare panel */}
                 <AnimatePresence>
-                    {compare && current && <ComparePanel old={compare} cur={current} onClose={() => setCompare(null)} />}
+                    {compare && current && <ComparePanel old={compare} cur={current} onClose={() => setCompare(null)} lightMode={lightMode} />}
                 </AnimatePresence>
 
                 {/* Timeline */}
@@ -270,7 +323,12 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
                     <div className="bis-section-card mt-8 p-5 text-center">
                         <p className="text-sm font-semibold mb-1" style={{ color: tp }}>Full archive with Unlocked tier</p>
                         <p className="text-xs mb-3" style={{ color: ts }}>PDF export, unlimited history, compare any two snapshots.</p>
-                        <button onClick={onUpgrade} className="rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800">
+                        <button
+                            type="button"
+                            onClick={onUpgrade}
+                            className="rounded-full px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
+                            style={primaryActionStyles}
+                        >
                             Create Free Account →
                         </button>
                     </div>

@@ -98,7 +98,6 @@ function WatchlistCard({
     const border = lightMode ? '#E5E7EB' : '#1A1A1A';
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
-
     const assetBadgeCls: Record<AssetClass, string> = {
         EQUITY: 'badge badge-equity', CRYPTO: 'badge badge-crypto',
         COMMODITY: 'badge badge-commodity', ETF: 'badge badge-etf',
@@ -331,6 +330,16 @@ export function Watchlist({
 
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
+    const controlBg = lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)';
+    const controlBorder = lightMode ? '#D1D5DB' : '#1F2937';
+    const controlText = lightMode ? '#475569' : '#D1D5DB';
+    const iconMuted = lightMode ? '#94A3B8' : '#9CA3AF';
+    const primaryActionStyles = {
+        background: lightMode ? 'rgba(37,99,235,0.10)' : 'rgba(96,165,250,0.16)',
+        border: `1px solid ${lightMode ? 'rgba(37,99,235,0.18)' : 'rgba(147,197,253,0.24)'}`,
+        color: lightMode ? '#1D4ED8' : '#BFDBFE',
+        boxShadow: lightMode ? '0 12px 24px -16px rgba(37,99,235,0.35)' : '0 12px 24px -18px rgba(96,165,250,0.45)',
+    };
 
     return (
         <div className="mx-auto max-w-7xl">
@@ -353,7 +362,8 @@ export function Watchlist({
                         <button
                             onClick={handleRefreshAll}
                             disabled={!isAuthenticated || refreshing}
-                            className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 transition-all hover:-translate-y-0.5 hover:shadow-sm disabled:opacity-40"
+                            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-sm disabled:opacity-40"
+                            style={{ background: controlBg, border: `1px solid ${controlBorder}`, color: controlText }}
                             title={isAuthenticated ? '' : 'Sign in to refresh the persisted watchlist'}
                         >
                             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
@@ -362,7 +372,8 @@ export function Watchlist({
                         <button
                             type="button"
                             onClick={onOpenAlerts}
-                            className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-gray-800"
+                            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
+                            style={primaryActionStyles}
                         >
                             <Bell className="w-4 h-4" />
                             Alerts{activeAlertCount > 0 ? ` (${activeAlertCount})` : ''}
@@ -380,7 +391,10 @@ export function Watchlist({
                 <div className="mb-8 space-y-3">
                     {/* Search input */}
                     <div className="relative max-w-sm">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                        <Search
+                            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                            style={{ color: iconMuted }}
+                        />
                         <input
                             type="text"
                             value={searchQuery}
@@ -395,7 +409,8 @@ export function Watchlist({
                         {searchQuery && (
                             <button
                                 onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+                                style={{ color: iconMuted }}
                             >
                                 <X className="w-3.5 h-3.5" />
                             </button>
@@ -403,7 +418,7 @@ export function Watchlist({
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                        <Filter className="w-4 h-4 text-gray-400" />
+                        <Filter className="w-4 h-4" style={{ color: iconMuted }} />
                         {['ALL', 'EQUITY', 'CRYPTO', 'COMMODITY', 'ETF'].map(f => (
                             <button
                                 key={f}
@@ -414,9 +429,9 @@ export function Watchlist({
                             </button>
                         ))}
 
-                        <div className="w-px h-5 bg-slate-700 mx-1" />
+                        <div className="w-px h-5 mx-1" style={{ background: lightMode ? '#E5E7EB' : '#334155' }} />
 
-                        <ArrowUpDown className="w-3.5 h-3.5 text-gray-400" />
+                        <ArrowUpDown className="w-3.5 h-3.5" style={{ color: iconMuted }} />
                         {(['name', 'signal', 'confidence', 'change'] as WatchlistSortKey[]).map(key => (
                             <button
                                 key={key}

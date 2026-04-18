@@ -21,6 +21,7 @@ function AccordionSection({ section, lightMode }: { section: Section; lightMode?
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
     const border = lightMode ? '#E5E7EB' : '#1A1A1A';
+    const iconColor = lightMode ? '#94A3B8' : '#6B7280';
 
     return (
         <div className="bis-section-card mb-3 overflow-hidden rounded-[24px]" style={{ borderColor: border }}>
@@ -31,7 +32,9 @@ function AccordionSection({ section, lightMode }: { section: Section; lightMode?
                 }`}
             >
                 <span className="font-semibold text-sm" style={{ color: tp }}>{section.title}</span>
-                {open ? <ChevronUp className="w-4 h-4 flex-shrink-0 text-gray-500" /> : <ChevronDown className="w-4 h-4 flex-shrink-0 text-gray-500" />}
+                {open
+                    ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} />
+                    : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} />}
             </button>
             {open && (
                 <motion.div

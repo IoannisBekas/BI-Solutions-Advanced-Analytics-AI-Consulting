@@ -39,7 +39,7 @@ function ReturnChip({ pct }: { pct: number }) {
 }
 
 // ─── Bar visual ───────────────────────────────────────────────────────────────
-function ReturnBar({ pct, maxAbs }: { pct: number; maxAbs: number }) {
+function ReturnBar({ pct, maxAbs, lightMode }: { pct: number; maxAbs: number; lightMode?: boolean }) {
     const pctNorm = Math.abs(pct) / maxAbs;
     const pos = pct >= 0;
     return (
@@ -52,7 +52,7 @@ function ReturnBar({ pct, maxAbs }: { pct: number; maxAbs: number }) {
                         style={{ width: `${pctNorm * 100}%`, background: '#EF4444' }} />
                 )}
             </div>
-            <div className="w-px h-3" style={{ background: '#374151' }} />
+            <div className="w-px h-3" style={{ background: lightMode ? '#CBD5E1' : '#374151' }} />
             {/* positive side */}
             <div className="flex-1 h-1.5 rounded-r overflow-hidden"
                 style={{ background: 'rgba(16,185,129,0.08)' }}>
@@ -71,6 +71,7 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
     const border = lightMode ? '#E5E7EB' : '#1A1A1A';
+    const muted = lightMode ? '#94A3B8' : '#6B7280';
 
     return (
         <div className="bis-section-card rounded-[24px] overflow-hidden" style={{ borderColor: border }}>
@@ -90,13 +91,13 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
                     className="grid gap-2 px-4 py-3 items-center text-sm"
                     style={{ gridTemplateColumns: showWinRate ? '1fr 48px 80px 80px 120px' : '1fr 48px 80px 80px', borderBottom: i < rows.length - 1 ? `1px solid ${border}` : 'none' }}>
                     <div className="flex items-center gap-2">
-                        <ReturnBar pct={r.avgExcessPct ?? r.avgReturnPct} maxAbs={maxAbs} />
+                        <ReturnBar pct={r.avgExcessPct ?? r.avgReturnPct} maxAbs={maxAbs} lightMode={lightMode} />
                         <span className="font-semibold text-xs whitespace-nowrap" style={{ color: tp }}>{r.label}</span>
                     </div>
-                    <span className="text-right text-xs font-mono text-gray-500">{r.count}</span>
+                    <span className="text-right text-xs font-mono" style={{ color: ts }}>{r.count}</span>
                     <span className="text-right"><ReturnChip pct={r.avgReturnPct} /></span>
                     <span className="text-right">
-                        {r.avgExcessPct == null ? <span className="text-xs text-gray-400">N/A</span> : <ReturnChip pct={r.avgExcessPct} />}
+                        {r.avgExcessPct == null ? <span className="text-xs" style={{ color: muted }}>N/A</span> : <ReturnChip pct={r.avgExcessPct} />}
                     </span>
                     {showWinRate && r.winRate != null && (
                         <span className="text-right text-xs font-semibold"
@@ -154,6 +155,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
 
     const tp = lightMode ? '#111827' : '#F9FAFB';
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
+    const muted = lightMode ? '#94A3B8' : '#6B7280';
 
     if (loading) {
         return (
@@ -198,7 +200,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                         <div className="h-full rounded-full"
                             style={{ width: `${Math.min(100, (summary.resolvedCount / Math.max(1, summary.unlockThreshold)) * 100)}%`, background: 'linear-gradient(90deg,#6366F1,#8B5CF6)' }} />
                     </div>
-                    <p className="text-xs mt-2 text-gray-500">{summary.resolvedCount} / {summary.unlockThreshold} resolved · {summary.pendingCount} pending</p>
+                    <p className="text-xs mt-2" style={{ color: ts }}>{summary.resolvedCount} / {summary.unlockThreshold} resolved · {summary.pendingCount} pending</p>
                 </div>
                 </div>
             </div>
@@ -240,7 +242,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                             ].map(k => (
                                 <div key={k.label} className="bis-section-card min-w-[140px] px-5 py-4 text-center">
                                     <div className="font-bold text-lg" style={{ color: k.color }}>{k.val}</div>
-                                    <div className="mt-1 text-xs text-gray-500">{k.label}</div>
+                                    <div className="mt-1 text-xs" style={{ color: ts }}>{k.label}</div>
                                 </div>
                             ))}
                         </div>
@@ -257,7 +259,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
 
                 {/* Segment tabs */}
                 <div className="flex items-center gap-2 mb-5 flex-wrap">
-                    <Filter className="w-4 h-4 text-gray-500" />
+                    <Filter className="w-4 h-4" style={{ color: muted }} />
                     {SEGMENT_OPTIONS.map(o => (
                         <button key={o.value} onClick={() => setSegment(o.value)}
                             className={`tab-btn rounded-full border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${segment === o.value ? 'active' : ''}`}>
@@ -267,7 +269,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 </div>
 
                 {/* Column headers legend */}
-                <div className="flex items-center gap-2 text-xs mb-3 text-gray-500">
+                <div className="flex items-center gap-2 text-xs mb-3" style={{ color: ts }}>
                     <span>Avg Return = 30-day price change %</span>
                     <span>·</span>
                     <span>Excess = vs benchmark (%)</span>
@@ -278,7 +280,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 <AccuracyTable rows={rows} showWinRate={showWinRate} lightMode={lightMode} />
 
                 {/* Footer disclaimer */}
-                <p className="mt-8 text-center text-xs text-gray-500">
+                <p className="mt-8 text-center text-xs" style={{ color: ts }}>
                     Quantus Research Solutions · Not investment advice · bisolutions.group/methodology for full model documentation
                 </p>
             </section>
