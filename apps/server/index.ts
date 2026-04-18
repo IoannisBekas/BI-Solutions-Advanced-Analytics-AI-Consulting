@@ -87,18 +87,9 @@ const REQUEST_ID_HEADER = "x-request-id";
 
 app.disable("x-powered-by");
 
-// ─── www → non-www canonical redirect ────────────────────────────────────────
-// Railway routes both www.bisolutions.group and bisolutions.group to this app.
-// Permanently redirect every www request to the bare domain so Google only
-// indexes one canonical host.  Uses 308 (Permanent Redirect) so browsers and
-// crawlers replay the original HTTP method.
-app.use((req, res, next) => {
-  if (req.hostname === "www.bisolutions.group") {
-    res.redirect(308, `https://bisolutions.group${req.originalUrl}`);
-    return;
-  }
-  next();
-});
+// Keep requests on the host that received them. The live apex and www domains
+// are currently backed by different stacks, so forcing www traffic to the bare
+// domain breaks product routes served by Railway.
 
 // Generate a per-request CSP nonce for inline <script> tags.
 app.use((_req, res, next) => {

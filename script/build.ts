@@ -1,8 +1,9 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { cp, readFile, rm } from "fs/promises";
+import { cp, readFile, rm, writeFile } from "fs/promises";
 import path from "path";
 import { spawn } from "child_process";
+import { getDeployBasePath, joinBasePath } from "./deployBase";
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -23,7 +24,7 @@ async function buildAll() {
 
   console.log("building client...");
   await viteBuild();
-  await cp("dist/public/index.html", "dist/public/404.html");
+  await writeGitHubPages404();
 
   await buildNestedApp("Quantus", path.resolve("apps", "quantus"), path.join("quantus", "workspace"));
   await buildNestedApp(
@@ -78,6 +79,65 @@ async function buildAll() {
     resolveExtensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
     logLevel: "info",
   });
+}
+
+async function writeGitHubPages404() {
+  const rootBase = getDeployBasePath();
+  const quantusBase = joinBasePath(rootBase, "quantus/workspace");
+  const powerBIBase = joinBasePath(rootBase, "power-bi-solutions");
+  const outputPath = path.resolve("dist", "public", "404.html");
+
+  const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting…</title>
+    <script>
+      (function () {
+        var redirectKey = "__bisolutions_redirect__";
+        var currentUrl = window.location.pathname + window.location.search + window.location.hash;
+        var repoBase = ${JSON.stringify(rootBase)};
+        var quantusBase = ${JSON.stringify(quantusBase)};
+        var powerBIBase = ${JSON.stringify(powerBIBase)};
+
+        function normalize(value) {
+          if (!value) return "/";
+          return value.endsWith("/") ? value : value + "/";
+        }
+
+        function pickTarget(pathname) {
+          var normalizedRoot = normalize(repoBase);
+          var relativePath = pathname.indexOf(normalizedRoot) === 0
+            ? pathname.slice(normalizedRoot.length)
+            : pathname.replace(/^\\/+/, "");
+
+          if (relativePath.indexOf("quantus/workspace/") === 0) {
+            return quantusBase;
+          }
+
+          if (relativePath.indexOf("power-bi-solutions/") === 0) {
+            return powerBIBase;
+          }
+
+          return rootBase;
+        }
+
+        try {
+          sessionStorage.setItem(redirectKey, currentUrl);
+        } catch (error) {
+          console.warn("Unable to persist GitHub Pages redirect target.", error);
+        }
+
+        window.location.replace(pickTarget(window.location.pathname));
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
+`;
+
+  await writeFile(outputPath, html, "utf-8");
 }
 
 function runCommand(command: string, args: string[], cwd: string) {

@@ -5,6 +5,8 @@ import { AuthProvider } from './auth/AuthContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
 
+restoreGitHubPagesRoute();
+
 if (import.meta.env.DEV && 'serviceWorker' in navigator) {
   void navigator.serviceWorker.getRegistrations().then((registrations) => {
     registrations
@@ -22,6 +24,30 @@ if (import.meta.env.DEV && 'serviceWorker' in navigator) {
           void caches.delete(key);
         });
     });
+  }
+}
+
+function restoreGitHubPagesRoute() {
+  const redirectKey = '__bisolutions_redirect__';
+
+  try {
+    const pendingRoute = sessionStorage.getItem(redirectKey);
+    if (!pendingRoute) {
+      return;
+    }
+
+    sessionStorage.removeItem(redirectKey);
+    const redirectUrl = new URL(pendingRoute, window.location.origin);
+    if (redirectUrl.origin !== window.location.origin) {
+      return;
+    }
+
+    const restoredRoute = `${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`;
+    if (restoredRoute !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.history.replaceState(null, '', restoredRoute);
+    }
+  } catch (error) {
+    console.warn('Unable to restore GitHub Pages route for Quantus.', error);
   }
 }
 
