@@ -426,20 +426,14 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
     const resumeAsset = recentAssets[0] ?? pinnedAssets[0] ?? null;
 
     return (
-        <section className="relative">
+        <section className="relative space-y-16">
             {/* ── Main hero card ──────────────────────────────────────────────── */}
             <div
-                className="relative overflow-hidden rounded-[2.5rem] border"
-                style={{
-                    background: lightMode
-                        ? 'rgba(255,255,255,0.95)'
-                        : 'linear-gradient(180deg, rgba(12,18,28,0.96) 0%, rgba(9,13,21,0.98) 100%)',
+                className={lightMode ? 'bis-page-shell' : 'relative overflow-hidden rounded-[2.5rem] border'}
+                style={lightMode ? undefined : {
+                    background: 'linear-gradient(180deg, rgba(12,18,28,0.96) 0%, rgba(9,13,21,0.98) 100%)',
                     borderColor: cardBorder,
-                    boxShadow: lightMode
-                        ? '0 8px 40px rgba(15,23,42,0.06)'
-                        : '0 28px 80px rgba(0,0,0,0.32)',
-                    backdropFilter: lightMode ? 'blur(16px)' : undefined,
-                    WebkitBackdropFilter: lightMode ? 'blur(16px)' : undefined,
+                    boxShadow: '0 28px 80px rgba(0,0,0,0.32)',
                 }}
             >
                 <div className="bis-wave-bg" />
@@ -448,11 +442,11 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                         <div className="max-w-3xl">
                             {/* Label pill */}
                             <div
-                                className="inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-sm font-medium shadow-sm mb-6"
-                                style={{
-                                    background: lightMode ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                    borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
-                                    color: lightMode ? '#6B7280' : '#9CA3AF',
+                                className={lightMode ? 'bis-eyebrow mb-6' : 'inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-sm font-medium shadow-sm mb-6'}
+                                style={lightMode ? undefined : {
+                                    background: 'rgba(255,255,255,0.05)',
+                                    borderColor: '#1A1A1A',
+                                    color: '#9CA3AF',
                                     backdropFilter: 'blur(8px)',
                                     WebkitBackdropFilter: 'blur(8px)',
                                 }}
@@ -509,9 +503,9 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                 {metrics.map((item) => (
                                     <div
                                         key={item.label}
-                                        className="rounded-2xl border px-5 py-4 shadow-sm transition-all duration-300"
-                                        style={{
-                                            background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
+                                        className={lightMode ? 'bis-section-card rounded-2xl px-5 py-4 shadow-none transition-all duration-300' : 'rounded-2xl border px-5 py-4 shadow-sm transition-all duration-300'}
+                                        style={lightMode ? undefined : {
+                                            background: 'rgba(255,255,255,0.03)',
                                             borderColor: cardBorder,
                                             backdropFilter: 'blur(8px)',
                                             WebkitBackdropFilter: 'blur(8px)',
@@ -540,9 +534,9 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                             type="button"
                                             whileHover={{ y: -2, boxShadow: lightMode ? '0 12px 32px rgba(15,23,42,0.08)' : '0 16px 40px rgba(0,0,0,0.3)' }}
                                             onClick={() => onSearch(resumeAsset.ticker, resumeAsset)}
-                                            className="rounded-3xl border px-5 py-5 text-left shadow-sm transition-all duration-300"
-                                            style={{
-                                                background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
+                                            className={lightMode ? 'bis-section-card rounded-3xl px-5 py-5 text-left shadow-none transition-all duration-300' : 'rounded-3xl border px-5 py-5 text-left shadow-sm transition-all duration-300'}
+                                            style={lightMode ? undefined : {
+                                                background: 'rgba(255,255,255,0.03)',
                                                 borderColor: cardBorder,
                                                 backdropFilter: 'blur(8px)',
                                                 WebkitBackdropFilter: 'blur(8px)',
@@ -581,9 +575,9 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                                     )}
 
                                     <div
-                                        className="rounded-3xl border px-5 py-5 shadow-sm"
-                                        style={{
-                                            background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.03)',
+                                        className={lightMode ? 'bis-section-card rounded-3xl px-5 py-5 shadow-none' : 'rounded-3xl border px-5 py-5 shadow-sm'}
+                                        style={lightMode ? undefined : {
+                                            background: 'rgba(255,255,255,0.03)',
                                             borderColor: cardBorder,
                                             backdropFilter: 'blur(8px)',
                                             WebkitBackdropFilter: 'blur(8px)',
@@ -642,15 +636,11 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
                             >
                                 <form onSubmit={handleSubmit}>
                                     <div
-                                        className="rounded-[2rem] border p-5 md:p-6"
-                                        style={{
-                                            background: lightMode ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.03)',
+                                        className={lightMode ? 'bis-section-card rounded-[2rem] p-5 md:p-6' : 'rounded-[2rem] border p-5 md:p-6'}
+                                        style={lightMode ? undefined : {
+                                            background: 'rgba(255,255,255,0.03)',
                                             borderColor: cardBorder,
-                                            boxShadow: lightMode
-                                                ? '0 8px 32px rgba(15,23,42,0.06), inset 0 0 0 1px rgba(255,255,255,0.6)'
-                                                : '0 20px 56px rgba(0,0,0,0.25)',
-                                            backdropFilter: lightMode ? 'blur(12px)' : undefined,
-                                            WebkitBackdropFilter: lightMode ? 'blur(12px)' : undefined,
+                                            boxShadow: '0 20px 56px rgba(0,0,0,0.25)',
                                         }}
                                     >
                                         <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
@@ -862,15 +852,11 @@ export function SearchHero({ onSearch, lightMode, workspaceSummary, recentAssets
 
                         {/* ── Right column: Workspace handoff panel ───────────── */}
                         <div
-                            className="rounded-[2rem] border p-6 md:p-7"
-                            style={{
-                                background: lightMode ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.86)',
+                            className={lightMode ? 'bis-section-card rounded-[2rem] p-6 md:p-7' : 'rounded-[2rem] border p-6 md:p-7'}
+                            style={lightMode ? undefined : {
+                                background: 'rgba(0,0,0,0.86)',
                                 borderColor: cardBorder,
-                                boxShadow: lightMode
-                                    ? '0 8px 32px rgba(15,23,42,0.06)'
-                                    : '0 24px 72px rgba(0,0,0,0.30)',
-                                backdropFilter: lightMode ? 'blur(12px)' : undefined,
-                                WebkitBackdropFilter: lightMode ? 'blur(12px)' : undefined,
+                                boxShadow: '0 24px 72px rgba(0,0,0,0.30)',
                             }}
                         >
                             <div className="flex items-start justify-between gap-4">

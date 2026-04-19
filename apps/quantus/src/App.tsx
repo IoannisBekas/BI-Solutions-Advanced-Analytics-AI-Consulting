@@ -6,6 +6,7 @@ import { SearchHero } from './components/SearchHero';
 import { ProgressInsightFeed } from './components/IndustryIndicator';
 import { NotFoundView } from './components/NotFoundView';
 import { PWAInstallBanner, SWUpdateBanner } from './components/PWAInstallBanner';
+import { WorkspaceSkeleton } from './components/workspace/WorkspaceStates';
 import { AuthModal } from './auth/AuthModal';
 import { useAuth } from './auth/AuthContext';
 import { useAuthModal } from './hooks/useAuthModal';
@@ -54,16 +55,16 @@ const ScannerPage = lazy(async () => {
 
 function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
     return (
-        <div
-            className="rounded-3xl border px-6 py-8 text-sm"
-            style={{
-                background: lightMode ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.03)',
-                borderColor: lightMode ? '#E5E7EB' : '#1A1A1A',
-                color: lightMode ? '#6B7280' : '#9CA3AF',
-            }}
-        >
-            Loading Quantus workspace panel...
-        </div>
+        <section className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
+            <div className="space-y-6">
+                <div className="space-y-3">
+                    <div className="h-4 w-32 skeleton" />
+                    <div className="h-8 w-72 skeleton" />
+                    <div className="h-3 w-full max-w-2xl skeleton" />
+                </div>
+                <WorkspaceSkeleton rows={3} lightMode={lightMode} />
+            </div>
+        </section>
     );
 }
 

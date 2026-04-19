@@ -1,18 +1,22 @@
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { Database, Github, Twitter, Linkedin, Heart, ArrowUp } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, Database } from 'lucide-react';
 
-const quickLinks = [
-  { label: 'Documentation', href: 'https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview' },
-  { label: 'API Reference', href: 'https://learn.microsoft.com/en-us/rest/api/power-bi/' },
-  { label: 'Examples', href: 'https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-how-to' },
-  { label: 'Changelog', href: '#changelog' },
+const workspaceLinks = [
+  { label: 'Overview', href: '#overview' },
+  { label: 'Analyzer', href: '#analyzer' },
+  { label: 'Resources', href: '#resources' },
 ];
 
-const resources = [
-  { label: 'Power BI Docs', href: 'https://learn.microsoft.com/en-us/power-bi/' },
-  { label: 'TMDL Reference', href: 'https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview' },
-  { label: 'DAX Guide', href: 'https://dax.guide/' },
-  { label: 'Best Practices', href: 'https://learn.microsoft.com/en-us/power-bi/guidance/' },
+const resourceLinks = [
+  { label: 'Power BI docs', href: 'https://learn.microsoft.com/en-us/power-bi/' },
+  { label: 'TMDL reference', href: 'https://learn.microsoft.com/en-us/analysis-services/tmdl/tmdl-overview' },
+  { label: 'DAX guidance', href: 'https://dax.guide/' },
+];
+
+const ecosystemLinks = [
+  { label: 'Products overview', href: 'https://bisolutions.group/products' },
+  { label: 'Contact BI Solutions', href: 'https://bisolutions.group/contact' },
+  { label: 'BI Solutions Group', href: 'https://bisolutions.group/' },
 ];
 
 export function FooterSection() {
@@ -24,117 +28,96 @@ export function FooterSection() {
 
   return (
     <footer
+      id="resources"
       ref={ref}
-      className={`scroll-hidden ${isVisible ? 'scroll-visible' : ''} relative py-16 px-4 sm:px-6 lg:px-8 border-t border-border`}
+      className={`scroll-hidden ${isVisible ? 'scroll-visible' : ''} px-4 py-12 sm:px-6 lg:px-8`}
     >
-      {/* Background Shape */}
-      <div className="abstract-bg">
-        <div className="abstract-shape shape-1" style={{ opacity: 0.15, bottom: '-200px', top: 'auto' }} />
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-12 mb-6 md:mb-12">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-black flex items-center justify-center">
-                <Database className="w-5 h-5 text-white" />
+      <div className="mx-auto max-w-7xl">
+        <div className="powerbi-shell px-6 py-8 md:px-8 md:py-10">
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-white">
+                  <Database className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="font-heading text-xl font-bold tracking-tight text-black">
+                    Power BI Solutions
+                  </div>
+                  <p className="text-xs font-medium text-gray-500">
+                    BI Solutions semantic model workspace
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className="text-lg font-semibold text-black">TMDL Analyzer</span>
-                <p className="text-xs text-muted-foreground">Power BI Model Analysis</p>
-              </div>
+              <p className="mt-5 max-w-sm text-sm leading-relaxed text-gray-600">
+                Power BI Solutions keeps TMDL review, model diagnostics, and
+                AI-assisted follow-up inside the broader BI Solutions product
+                family instead of looking like a separate brand.
+              </p>
             </div>
-            <p className="text-muted-foreground max-w-sm mb-6 leading-relaxed">
-              Analyze your Power BI Tabular Model Definition Language (TMDL) files
-              and get intelligent recommendations to optimize your data models.
-            </p>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-black hover:bg-gray-200 transition-colors"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-black hover:bg-gray-200 transition-colors"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-black hover:bg-gray-200 transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-black font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-3">
-              {quickLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    target={link.href.startsWith('http') ? '_blank' : undefined}
-                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="text-muted-foreground hover:text-black transition-colors"
-                  >
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-400">
+                Workspace
+              </h4>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-gray-600">
+                {workspaceLinks.map((link) => (
+                  <a key={link.label} href={link.href} className="transition-colors hover:text-black">
                     {link.label}
                   </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+                ))}
+              </div>
+            </div>
 
-          {/* Resources */}
-          <div>
-            <h4 className="text-black font-semibold mb-4">Resources</h4>
-            <ul className="space-y-3">
-              {resources.map((link) => (
-                <li key={link.label}>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-400">
+                Resources
+              </h4>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-gray-600">
+                {resourceLinks.map((link) => (
                   <a
+                    key={link.label}
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-black transition-colors"
+                    className="inline-flex items-center gap-2 transition-colors hover:text-black"
+                  >
+                    {link.label}
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-400">
+                Ecosystem
+              </h4>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-gray-600">
+                {ecosystemLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="transition-colors hover:text-black"
                   >
                     {link.label}
                   </a>
-                </li>
-              ))}
-            </ul>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} PowerBI Solutions. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6">
-            <p className="text-sm text-muted-foreground flex items-center gap-1">
-              Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for Power BI developers
+          <div className="mt-8 flex flex-col gap-4 border-t border-black/8 pt-6 md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-gray-500">
+              © {new Date().getFullYear()} BI Solutions Group. Power BI Solutions is part of the BI Solutions product suite.
             </p>
             <button
               onClick={scrollToTop}
               aria-label="Scroll to top"
               title="Scroll to top"
-              className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800"
             >
-              <ArrowUp className="w-4 h-4" />
+              <ArrowUp className="h-4 w-4" />
             </button>
           </div>
         </div>

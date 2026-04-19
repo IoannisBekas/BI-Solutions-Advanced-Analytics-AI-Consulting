@@ -23,7 +23,7 @@ import { AuthDialog } from '@/components/AuthDialog';
 import { UserMenu } from '@/components/UserMenu';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { Toaster } from '@/components/ui/sonner';
-import { Database, CheckCircle, LogIn } from 'lucide-react';
+import { CheckCircle, LogIn } from 'lucide-react';
 import type { AnalysisResult, DashboardReviewResult } from '@/types';
 import './App.css';
 
@@ -49,6 +49,11 @@ function AppContent() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [dashboardReview, setDashboardReview] = useState<DashboardReviewResult | null>(null);
   const { user, isLoading, setAuthDialogOpen } = useAuth();
+  const navigationLinks = [
+    { label: 'Overview', href: '#overview' },
+    { label: 'Analyzer', href: '#analyzer' },
+    { label: 'Resources', href: '#resources' },
+  ];
 
   const inputRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -78,29 +83,47 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="powerbi-page min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center">
-                <Database className="w-4 h-4 text-white" />
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-black/5 bg-white/86 backdrop-blur-xl">
+        <div className="mx-auto flex h-[82px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <a
+            href="https://bisolutions.group/"
+            className="flex min-w-0 items-center gap-3 text-left"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black text-xs font-bold tracking-[0.16em] text-white">
+              BI
+            </div>
+            <div className="min-w-0">
+              <div className="truncate font-heading text-[1.05rem] font-bold tracking-tight text-black">
+                BI Solutions Group
               </div>
-              <div className="hidden sm:block">
-                <span className="text-black font-semibold">PowerBI Solutions</span>
+              <div className="hidden text-xs font-medium text-gray-500 sm:block">
+                Advanced Analytics &amp; AI Consulting
               </div>
             </div>
+            <span className="powerbi-brand-pill hidden xl:inline-flex">
+              Power BI Solutions
+            </span>
+          </a>
 
-            <div className="flex items-center gap-2 sm:gap-4">
+          <div className="hidden items-center gap-6 lg:flex">
+            {navigationLinks.map((link) => (
+              <a key={link.href} href={link.href} className="powerbi-nav-link">
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
               {analysisResult && (
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 text-green-700 text-xs border border-green-200">
+                <div className="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs text-emerald-700 md:flex">
                   <CheckCircle className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Model Analyzed</span>
+                  <span>Model analyzed</span>
                 </div>
               )}
               {isLoading && (
-                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 text-slate-700 text-xs border border-slate-200">
+                <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 xl:flex">
                   <span className="h-2 w-2 rounded-full bg-slate-400" />
                   <span>Checking session</span>
                 </div>
@@ -111,7 +134,7 @@ function AppContent() {
                 <button
                   onClick={() => setAuthDialogOpen(true)}
                   disabled={isLoading}
-                  className="btn-secondary text-sm py-2 px-4 min-h-[44px] flex items-center gap-2"
+                  className="btn-secondary flex min-h-[44px] items-center gap-2 px-4 py-2 text-sm"
                   aria-label="Sign in"
                 >
                   <LogIn className="w-4 h-4" />
@@ -120,20 +143,19 @@ function AppContent() {
               )}
               <button
                 onClick={scrollToInput}
-                className="btn-primary text-sm py-2.5 px-5 min-h-[44px]"
+                className="btn-primary min-h-[44px] px-5 py-2.5 text-sm"
               >
                 Get Started
               </button>
-            </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="pt-16">
+      <main className="pt-24 md:pt-28">
         <HeroSection onScrollToInput={scrollToInput} />
 
-        <div className="section-divider mx-auto max-w-4xl" />
+        <div className="section-divider mx-auto max-w-6xl" />
 
         <TMDLInputSection
           onAnalysisComplete={handleAnalysisComplete}
@@ -142,7 +164,7 @@ function AppContent() {
 
         {analysisResult && (
           <>
-            <div className="section-divider mx-auto max-w-4xl" />
+            <div className="section-divider mx-auto max-w-6xl" />
 
             <LazySection>
               <AnalysisResultsSection
@@ -151,7 +173,7 @@ function AppContent() {
               />
             </LazySection>
 
-            <div className="section-divider mx-auto max-w-4xl" />
+            <div className="section-divider mx-auto max-w-6xl" />
 
             <LazySection>
               <RecommendationsSection
@@ -160,7 +182,7 @@ function AppContent() {
               />
             </LazySection>
 
-            <div className="section-divider mx-auto max-w-4xl" />
+            <div className="section-divider mx-auto max-w-6xl" />
 
             <LazySection>
               <ChatSection
@@ -169,7 +191,7 @@ function AppContent() {
               />
             </LazySection>
 
-            <div className="section-divider mx-auto max-w-4xl" />
+            <div className="section-divider mx-auto max-w-6xl" />
 
             <LazySection>
               <DashboardReviewSection
@@ -181,7 +203,7 @@ function AppContent() {
 
             {dashboardReview && (
               <>
-                <div className="section-divider mx-auto max-w-4xl" />
+                <div className="section-divider mx-auto max-w-6xl" />
                 <LazySection>
                   <VisualRecommendationsSection
                     review={dashboardReview}

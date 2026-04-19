@@ -70,6 +70,23 @@ export function Layout({
         }
     }, [lightMode]);
 
+    useEffect(() => {
+        const handleShortcut = (event: KeyboardEvent) => {
+            const activeTag = document.activeElement?.tagName ?? '';
+            if (['INPUT', 'TEXTAREA'].includes(activeTag)) {
+                return;
+            }
+
+            if (event.key === '/' || ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k')) {
+                event.preventDefault();
+                navInputRef.current?.focus();
+            }
+        };
+
+        window.addEventListener('keydown', handleShortcut);
+        return () => window.removeEventListener('keydown', handleShortcut);
+    }, []);
+
     const navLinks = [
         { label: 'Workspace', icon: Search, action: () => onNavigate?.('hero'), view: 'hero' },
         { label: 'Sector Packs', icon: Layers, action: () => onNavigate?.('sectors'), view: 'sectors' },
@@ -80,7 +97,7 @@ export function Layout({
         { label: 'Methodology', icon: BookOpen, action: () => onNavigate?.('methodology'), view: 'methodology' },
     ];
 
-    const pageBg = lightMode ? '#FAFAFA' : '#000000';
+    const pageBg = lightMode ? '#FBFBF8' : '#05070B';
     const textColor = lightMode ? '#09090B' : '#F0F6FF';
     const borderColor = lightMode ? '#E5E7EB' : '#1A1A1A';
     const muted = lightMode ? '#6B7280' : '#8B9DB5';
@@ -132,20 +149,25 @@ export function Layout({
                 className="nav-bar sticky top-0 z-50 transition-all duration-300"
                 style={{
                     background: lightMode
-                        ? scrolled ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.9)'
-                        : scrolled ? 'rgba(0,0,0,0.97)' : 'rgba(0,0,0,0.82)',
+                        ? scrolled ? 'rgba(255,255,255,0.94)' : 'rgba(255,255,255,0.84)'
+                        : scrolled ? 'rgba(5,7,11,0.96)' : 'rgba(5,7,11,0.84)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
                     borderBottom: `1px solid ${scrolled ? borderColor : 'transparent'}`,
+                    boxShadow: scrolled
+                        ? (lightMode
+                            ? '0 16px 42px -34px rgba(15,23,42,0.22)'
+                            : '0 16px 42px -32px rgba(0,0,0,0.45)')
+                        : 'none',
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[78px] flex items-center justify-between gap-3 overflow-x-auto overflow-y-hidden scrollbar-none">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[82px] flex items-center justify-between gap-4 overflow-x-auto overflow-y-hidden scrollbar-none">
                     <button
                         onClick={() => onNavigate?.('hero')}
                         className="flex items-center gap-3 group flex-shrink-0 cursor-pointer text-left"
                     >
                         <div
-                            className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
+                            className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
                             style={{
                                 background: lightMode ? '#09090B' : '#FFFFFF',
                                 color: lightMode ? '#FFFFFF' : '#09090B',
@@ -160,7 +182,7 @@ export function Layout({
                                 className="font-semibold tracking-tight"
                                 style={{
                                     fontFamily: 'var(--font-heading)',
-                                    fontSize: '16px',
+                                    fontSize: '17px',
                                     lineHeight: '1.1',
                                     color: textColor,
                                 }}
@@ -168,7 +190,7 @@ export function Layout({
                                 BI Solutions Group
                             </div>
                             <div
-                                className="hidden xl:block text-xs font-medium"
+                                className="hidden lg:block text-xs font-medium"
                                 style={{
                                     color: muted,
                                 }}
@@ -177,11 +199,13 @@ export function Layout({
                             </div>
                         </div>
                         <div
-                            className="hidden xl:inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold"
+                            className="hidden lg:inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold"
                             style={{
                                 border: `1px solid ${borderColor}`,
-                                background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
+                                background: lightMode ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.05)',
                                 color: muted,
+                                letterSpacing: '0.08em',
+                                textTransform: 'uppercase',
                             }}
                         >
                             Quantus
@@ -196,16 +220,27 @@ export function Layout({
                                 <button
                                     key={link.view}
                                     onClick={link.action}
-                                    className={`group relative pb-1 text-sm font-medium transition-colors after:absolute after:left-0 after:-bottom-2 after:h-px after:w-full after:origin-left after:transition-transform after:duration-200 after:content-[''] ${
-                                        lightMode
-                                            ? isActive
-                                                ? 'text-black after:bg-black after:scale-x-100'
-                                                : 'text-gray-500 hover:text-black after:bg-black after:scale-x-0 hover:after:scale-x-100'
-                                            : isActive
-                                                ? 'text-white after:bg-white after:scale-x-100'
-                                                : 'text-slate-400 hover:text-white after:bg-white after:scale-x-0 hover:after:scale-x-100'
-                                    }`}
+                                    className="group relative rounded-full px-3.5 py-2 text-sm font-medium transition-all"
+                                    style={{
+                                        color: isActive ? textColor : muted,
+                                        background: isActive
+                                            ? (lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.06)')
+                                            : 'transparent',
+                                        border: `1px solid ${isActive
+                                            ? (lightMode ? 'rgba(37,99,235,0.18)' : 'rgba(147,197,253,0.20)')
+                                            : 'transparent'}`,
+                                        boxShadow: isActive && lightMode
+                                            ? '0 12px 24px -22px rgba(37,99,235,0.25)'
+                                            : 'none',
+                                    }}
                                 >
+                                    <span
+                                        className="absolute inset-x-3 -bottom-1.5 h-0.5 rounded-full transition-opacity duration-200"
+                                        style={{
+                                            background: lightMode ? '#2563EB' : '#93C5FD',
+                                            opacity: isActive ? 1 : 0,
+                                        }}
+                                    />
                                     {link.label}
                                 </button>
                             );
@@ -214,10 +249,11 @@ export function Layout({
 
                     {/* ── Compact nav search ──────────────────────────── */}
                     <form
-                        className={showExpandedHeader ? 'hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[260px] rounded-full px-3 py-1.5 transition-all duration-200' : 'hidden'}
+                        className={showExpandedHeader ? 'hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[270px] rounded-full px-3.5 py-2 transition-all duration-200' : 'hidden'}
                         style={{
-                            background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                            background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                             border: `1px solid ${borderColor}`,
+                            boxShadow: lightMode ? '0 10px 24px -22px rgba(15,23,42,0.22)' : 'none',
                         }}
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -241,6 +277,18 @@ export function Layout({
                             autoComplete="off"
                             onKeyDown={(e) => { if (e.key === 'Escape') { setNavQuery(''); navInputRef.current?.blur(); } }}
                         />
+                        {!navQuery && (
+                            <span
+                                className="hidden xl:inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold"
+                                style={{
+                                    background: lightMode ? 'rgba(15,23,42,0.05)' : 'rgba(255,255,255,0.08)',
+                                    color: muted,
+                                }}
+                                title="Press / to focus search"
+                            >
+                                /
+                            </span>
+                        )}
                         {navQuery && (
                             <button
                                 type="button"
@@ -256,7 +304,7 @@ export function Layout({
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <div
-                            className={showExpandedHeader ? 'hidden xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs' : 'hidden'}
+                            className={showExpandedHeader ? 'hidden 2xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs' : 'hidden'}
                             style={{
                                 background: statusColors.bg,
                                 border: `1px solid ${statusColors.border}`,
@@ -273,8 +321,9 @@ export function Layout({
                             className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
                             title={lightMode ? 'Switch to dark mode' : 'Switch to light mode'}
                             style={{
-                                background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                                background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                                 color: muted,
+                                border: `1px solid ${borderColor}`,
                             }}
                         >
                             {lightMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
@@ -284,9 +333,10 @@ export function Layout({
                             href={quantusOverviewUrl}
                             className={showExpandedHeader ? 'hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all' : 'hidden'}
                             style={{
-                                background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.06)',
+                                background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                                 color: textColor,
                                 border: `1px solid ${borderColor}`,
+                                boxShadow: lightMode ? '0 10px 24px -22px rgba(15,23,42,0.22)' : 'none',
                             }}
                         >
                             Overview
@@ -298,7 +348,7 @@ export function Layout({
                                 <div
                                     className="px-3 py-2 rounded-full text-xs font-medium"
                                     style={{
-                                        background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                                        background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                                         color: muted,
                                         border: `1px solid ${borderColor}`,
                                     }}
@@ -336,8 +386,9 @@ export function Layout({
                                 aria-label="Toggle navigation menu"
                                 aria-expanded={mobileMenuOpen}
                                 style={{
-                                    background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)',
+                                    background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                                     color: muted,
+                                    border: `1px solid ${borderColor}`,
                                 }}
                             >
                                 {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -443,7 +494,7 @@ export function Layout({
                         <div>
                             <div className="flex items-center gap-3 mb-4">
                                 <div
-                                    className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm select-none"
+                                    className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm select-none"
                                     style={{
                                         background: lightMode ? '#09090B' : '#FFFFFF',
                                         color: lightMode ? '#FFFFFF' : '#09090B',

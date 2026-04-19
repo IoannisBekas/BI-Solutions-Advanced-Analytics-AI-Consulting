@@ -7,9 +7,8 @@ import {
   findUserByEmail,
   findUserById,
   findUserByReferralToken,
-  createUser,
+  createUserWithReferralCredits,
   getAppMeta,
-  updateUserCredits,
   updateUserAuthProvider,
   deleteUser,
   resetMonthlyReports,
@@ -140,18 +139,29 @@ function isValidEmail(value: unknown): value is string {
   return typeof value === "string" && EMAIL_RE.test(value) && value.length <= 254;
 }
 
-function applyReferralBonus(referralToken: unknown): number {
+function resolveReferralReward(referralToken: unknown) {
   if (typeof referralToken !== "string" || referralToken.length === 0) {
-    return 0;
+    return {
+      referrerId: null,
+      signupCredits: 0,
+      referrerCreditDelta: 0,
+    };
   }
 
   const referrer = findUserByReferralToken(referralToken);
   if (!referrer) {
-    return 0;
+    return {
+      referrerId: null,
+      signupCredits: 0,
+      referrerCreditDelta: 0,
+    };
   }
 
-  updateUserCredits(referrer.id, referrer.credits + 3);
-  return 5;
+  return {
+    referrerId: referrer.id,
+    signupCredits: 5,
+    referrerCreditDelta: 3,
+  };
 }
 
 function buildUserIdentity(name: string | undefined, email: string) {
@@ -171,16 +181,18 @@ async function createAuthUser(params: {
 }): Promise<DbUser> {
   const identity = buildUserIdentity(params.name, params.email);
   const passwordHash = await bcrypt.hash(params.password, SALT_ROUNDS);
-  const credits = applyReferralBonus(params.referralToken);
+  const referralReward = resolveReferralReward(params.referralToken);
 
-  return createUser({
+  return createUserWithReferralCredits({
     id: identity.userId,
     email: params.email,
     name: identity.name,
     passwordHash,
-    credits,
+    signupCredits: referralReward.signupCredits,
     referralToken: identity.referralToken,
     authProvider: params.authProvider ?? "password",
+    referrerId: referralReward.referrerId,
+    referrerCreditDelta: referralReward.referrerCreditDelta,
   });
 }
 

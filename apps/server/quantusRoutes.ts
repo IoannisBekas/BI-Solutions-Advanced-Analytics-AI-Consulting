@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import { timingSafeEqual } from "crypto";
 import { requireAuth, type AuthenticatedRequest } from "./auth";
 import {
+  consumeQuantusAiDailyBudget,
   deleteQuantusAlertSubscription,
   deleteQuantusWatchlistEntry,
   findUserById,
@@ -27,11 +28,13 @@ import {
 } from "./db";
 import {
   QUANTUS_INTERNAL_HEADER,
+  getQuantusAiDailyTokenBudgetForTier,
   getQuantusMonthlyReportLimitForTier,
   getQuantusWatchlistLimitForTier,
   getRequiredQuantusTierForDeepDiveModule,
   hasRequiredQuantusTier,
   readQuantusInternalKey,
+  sanitizeQuantusAiUsageType,
   sanitizeQuantusAssetClass,
   sanitizeQuantusTicker,
 } from "../../shared/quantus";
@@ -434,6 +437,54 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     res.json({
       ok: true,
       requiredTier,
+      user: toSafeUser(user),
+    });
+  });
+
+  app.post("/api/quantus/usage/ai-budget", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+    const user = findUserById(req.user!.userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    const usageType = sanitizeQuantusAiUsageType(req.body?.usageType);
+    const requestedTokens = Number(req.body?.requestedTokens);
+    if (!usageType || !Number.isFinite(requestedTokens) || requestedTokens <= 0) {
+      res.status(400).json({
+        error: "Valid usageType and requestedTokens are required.",
+      });
+      return;
+    }
+
+    const dailyLimit = getQuantusAiDailyTokenBudgetForTier(user.tier);
+    const budgetResult = consumeQuantusAiDailyBudget({
+      userId: user.id,
+      usageType,
+      requestedTokens,
+      dailyLimit,
+    });
+
+    if (!budgetResult.ok) {
+      res.status(403).json({
+        error: `Your ${user.tier} tier reached its daily Quantus AI budget.`,
+        code: "ai_daily_limit_reached",
+        usageType,
+        dailyTokenBudget: budgetResult.dailyLimit,
+        reservedTokens: budgetResult.reservedTokens,
+        remainingTokens: budgetResult.remainingTokens,
+        usageDate: budgetResult.usageDate,
+      });
+      return;
+    }
+
+    res.json({
+      ok: true,
+      usageType,
+      dailyTokenBudget: budgetResult.dailyLimit,
+      reservedTokens: budgetResult.reservedTokens,
+      remainingTokens: budgetResult.remainingTokens,
+      usageDate: budgetResult.usageDate,
       user: toSafeUser(user),
     });
   });

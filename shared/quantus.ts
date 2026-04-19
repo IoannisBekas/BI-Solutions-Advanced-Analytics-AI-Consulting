@@ -14,11 +14,18 @@ export const QUANTUS_TIERS = [
   "INSTITUTIONAL",
 ] as const;
 
+export const QUANTUS_AI_USAGE_TYPES = [
+  "report_generation",
+  "deep_dive",
+] as const;
+
 export type QuantusAssetClass = typeof QUANTUS_ASSET_CLASSES[number];
 export type QuantusTier = typeof QUANTUS_TIERS[number];
+export type QuantusAiUsageType = typeof QUANTUS_AI_USAGE_TYPES[number];
 
 const assetClassSet = new Set<string>(QUANTUS_ASSET_CLASSES);
 const tierSet = new Set<string>(QUANTUS_TIERS);
+const aiUsageTypeSet = new Set<string>(QUANTUS_AI_USAGE_TYPES);
 
 export const QUANTUS_TIER_RANK: Record<QuantusTier, number> = {
   FREE: 0,
@@ -71,6 +78,17 @@ export function sanitizeQuantusUserTier(value: unknown): QuantusTier {
   return tierSet.has(tier) ? (tier as QuantusTier) : "FREE";
 }
 
+export function sanitizeQuantusAiUsageType(value: unknown): QuantusAiUsageType | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const usageType = value.trim().toLowerCase();
+  return aiUsageTypeSet.has(usageType)
+    ? (usageType as QuantusAiUsageType)
+    : null;
+}
+
 export function getQuantusWatchlistLimitForTier(tier: string) {
   switch (sanitizeQuantusUserTier(tier)) {
     case "INSTITUTIONAL":
@@ -117,4 +135,45 @@ export function hasRequiredQuantusTier(
     (QUANTUS_TIER_RANK[sanitizeQuantusUserTier(currentTier)] ?? 0) >=
     (QUANTUS_TIER_RANK[sanitizeQuantusUserTier(requiredTier)] ?? 0)
   );
+}
+
+export function getQuantusAiDailyTokenBudgetForTier(tier: string) {
+  switch (sanitizeQuantusUserTier(tier)) {
+    case "INSTITUTIONAL":
+      return 80_000;
+    case "UNLOCKED":
+      return 24_000;
+    case "FREE":
+    default:
+      return 6_000;
+  }
+}
+
+export function getQuantusAiMaxOutputTokensForTier(
+  tier: string,
+  usageType: QuantusAiUsageType,
+) {
+  const normalizedTier = sanitizeQuantusUserTier(tier);
+
+  if (usageType === "deep_dive") {
+    switch (normalizedTier) {
+      case "INSTITUTIONAL":
+        return 2_048;
+      case "UNLOCKED":
+        return 1_536;
+      case "FREE":
+      default:
+        return 1_024;
+    }
+  }
+
+  switch (normalizedTier) {
+    case "INSTITUTIONAL":
+      return 1_792;
+    case "UNLOCKED":
+      return 1_280;
+    case "FREE":
+    default:
+      return 768;
+  }
 }

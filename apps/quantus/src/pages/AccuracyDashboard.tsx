@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { TrendingUp, TrendingDown, Minus, BarChart3, Award, AlertTriangle, Filter } from 'lucide-react';
 import { fetchAccuracySummary } from '../services/product';
+import { WorkspaceError, WorkspaceSkeleton } from '../components/workspace/WorkspaceStates';
 import type { AccuracyRow, AccuracySummary } from '../types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -117,6 +118,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
     const [summary, setSummary] = useState<AccuracySummary | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [retryKey, setRetryKey] = useState(0);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -139,7 +141,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
             });
 
         return () => controller.abort();
-    }, []);
+    }, [retryKey]);
 
     const rows = useMemo(() => {
         if (!summary) return [] as AccuracyRow[];
@@ -160,14 +162,13 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
     if (loading) {
         return (
             <div className="mx-auto max-w-5xl">
-                <div className="bis-page-shell flex items-center justify-center px-6 py-16 text-center">
-                    <div className="max-w-sm">
-                        <BarChart3 className="w-10 h-10 mx-auto mb-4 text-indigo-400 animate-pulse" />
-                        <h2 className="font-bold text-xl mb-2" style={{ color: tp }}>Loading Quantus track record</h2>
-                        <p className="text-sm" style={{ color: ts }}>
-                            Pulling resolved outcomes from the persisted Quantus snapshot history.
-                        </p>
+                <div className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
+                    <div className="mb-6 space-y-3">
+                        <div className="h-4 w-36 skeleton" />
+                        <div className="h-8 w-72 skeleton" />
+                        <div className="h-3 w-full max-w-xl skeleton" />
                     </div>
+                    <WorkspaceSkeleton rows={3} lightMode={lightMode} />
                 </div>
             </div>
         );
@@ -176,10 +177,13 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
     if (error || !summary) {
         return (
             <div className="mx-auto max-w-5xl">
-                <div className="bis-page-shell flex items-center justify-center px-6 py-16 text-center">
-                    <div className="max-w-md rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-6 text-rose-700">
-                        {error ?? 'Quantus accuracy metrics are unavailable right now.'}
-                    </div>
+                <div className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
+                    <WorkspaceError
+                        title="Accuracy dashboard unavailable"
+                        message={error ?? 'Quantus accuracy metrics are unavailable right now.'}
+                        onRetry={() => setRetryKey((value) => value + 1)}
+                        lightMode={lightMode}
+                    />
                 </div>
             </div>
         );
@@ -198,9 +202,38 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                     </p>
                     <div className="h-2 rounded-full overflow-hidden" style={{ background: lightMode ? 'rgba(15,23,42,0.08)' : 'rgba(255,255,255,0.06)' }}>
                         <div className="h-full rounded-full"
-                            style={{ width: `${Math.min(100, (summary.resolvedCount / Math.max(1, summary.unlockThreshold)) * 100)}%`, background: 'linear-gradient(90deg,#6366F1,#8B5CF6)' }} />
+                            style={{ width: `${Math.min(100, (summary.resolvedCount / Math.max(1, summary.unlockThreshold)) * 100)}%`, background: 'linear-gradient(90deg,#2563EB,#60A5FA)' }} />
                     </div>
                     <p className="text-xs mt-2" style={{ color: ts }}>{summary.resolvedCount} / {summary.unlockThreshold} resolved · {summary.pendingCount} pending</p>
+                    <div
+                        className="mt-5 rounded-[24px] border px-4 py-4 text-left"
+                        style={{
+                            background: lightMode ? 'rgba(255,255,255,0.78)' : 'rgba(255,255,255,0.03)',
+                            borderColor: lightMode ? '#E2E8F0' : '#1A1A1A',
+                        }}
+                    >
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: muted }}>
+                            Preview
+                        </p>
+                        <div className="mt-3 space-y-2">
+                            {[
+                                { ticker: 'N***', outcome: '+6.8%', verdict: 'Resolved buy' },
+                                { ticker: 'T***', outcome: '-4.1%', verdict: 'Resolved sell' },
+                            ].map((row) => (
+                                <div
+                                    key={row.ticker}
+                                    className="flex items-center justify-between gap-3 rounded-2xl px-3 py-2"
+                                    style={{ background: lightMode ? 'rgba(248,250,252,0.9)' : 'rgba(255,255,255,0.04)' }}
+                                >
+                                    <div>
+                                        <div className="font-semibold" style={{ color: tp }}>{row.ticker}</div>
+                                        <div className="text-xs" style={{ color: ts }}>{row.verdict}</div>
+                                    </div>
+                                    <div className="font-mono font-semibold" style={{ color: '#10B981' }}>{row.outcome}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
                 </div>
             </div>

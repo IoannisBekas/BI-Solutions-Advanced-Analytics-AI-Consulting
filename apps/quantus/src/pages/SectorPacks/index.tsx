@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Lock, FileText, Download, AlertTriangle, ArrowUpDown, RefreshCw } from 'lucide-react';
+import { WorkspaceEmpty, WorkspaceSkeleton } from '../../components/workspace/WorkspaceStates';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 interface SectorReport {
@@ -61,18 +62,6 @@ function signalTone(signal: string) {
 }
 
 // ─── Skeleton card ──────────────────────────────────────────────────────────
-function SkeletonCard({ lightMode }: { lightMode?: boolean }) {
-    const { cardBg, border } = useTheme(lightMode);
-    return (
-        <div className="rounded-2xl p-4 h-44" style={{ background: cardBg, border: `1px solid ${border}` }}>
-            <div className="h-4 rounded skeleton mb-3" style={{ width: '40%' }} />
-            <div className="h-2.5 rounded skeleton mb-4" style={{ width: '70%' }} />
-            <div className="h-2.5 rounded skeleton mb-2" style={{ width: '55%' }} />
-            <div className="h-2.5 rounded skeleton" style={{ width: '35%' }} />
-        </div>
-    );
-}
-
 interface Props {
     onSelectTicker?: (ticker: string) => void;
     onUpgrade?: () => void;
@@ -159,7 +148,8 @@ export default function SectorPacksDashboard({ onSelectTicker, onUpgrade, lightM
 
                     <button
                         onClick={() => window.print()}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.02]"
+                        aria-label="Download PDF digest"
+                        className="inline-flex items-center gap-2 self-start px-4 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-[1.02]"
                         style={{
                             background: actionBg,
                             color: actionText,
@@ -168,41 +158,42 @@ export default function SectorPacksDashboard({ onSelectTicker, onUpgrade, lightM
                         }}
                     >
                         <Download className="w-4 h-4" />
-                        Download PDF Digest
+                        <span className="hidden md:inline">Download PDF Digest</span>
                     </button>
                 </div>
 
                 {/* ── Sector selector ─────────────────────────────────── */}
-                <div className="flex flex-wrap gap-2 pb-5" style={{ borderBottom: `1px solid ${border}` }}>
-                    {SECTORS.map(sector => {
-                        const active = selectedSector === sector;
-                        return (
-                            <button
-                                key={sector}
-                                onClick={() => setSelectedSector(sector)}
-                                className="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
-                                style={{
-                                    background: active
-                                        ? (lightMode ? '#09090B' : '#F0F6FF')
-                                        : pillBg,
-                                    color: active
-                                        ? (lightMode ? '#FFFFFF' : '#09090B')
-                                        : textSecondary,
-                                    border: `1px solid ${active ? 'transparent' : border}`,
-                                }}
-                            >
-                                {sector}
-                            </button>
-                        );
-                    })}
+                <div className="overflow-x-auto pb-5 scrollbar-none" style={{ borderBottom: `1px solid ${border}` }}>
+                    <div className="flex w-max flex-nowrap gap-2">
+                        {SECTORS.map(sector => {
+                            const active = selectedSector === sector;
+                            return (
+                                <button
+                                    key={sector}
+                                    onClick={() => setSelectedSector(sector)}
+                                    className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all"
+                                    style={{
+                                        background: active
+                                            ? (lightMode ? '#09090B' : '#F0F6FF')
+                                            : pillBg,
+                                        color: active
+                                            ? (lightMode ? '#FFFFFF' : '#09090B')
+                                            : textSecondary,
+                                        border: `1px solid ${active ? 'transparent' : border}`,
+                                    }}
+                                >
+                                    {sector}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 {/* ── Content ─────────────────────────────────────────── */}
                 <AnimatePresence mode="wait">
                     {loading ? (
-                        <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                            {[...Array(8)].map((_, i) => <SkeletonCard key={i} lightMode={lightMode} />)}
+                        <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                            <WorkspaceSkeleton rows={8} lightMode={lightMode} />
                         </motion.div>
                     ) : error ? (
                         <motion.div key="error" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
@@ -268,7 +259,17 @@ export default function SectorPacksDashboard({ onSelectTicker, onUpgrade, lightM
 
                             {/* Cards grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                {sortedReports.map((report, idx) => {
+                                {sortedReports.length === 0 ? (
+                                    <div className="md:col-span-2 lg:col-span-3 xl:col-span-4">
+                                        <WorkspaceEmpty
+                                            icon={<FileText className="w-6 h-6" />}
+                                            title={`${selectedSector} starter coverage is still warming up`}
+                                            message="This sector has been wired into the workspace, but no seeded reports are available yet. Try another sector or check back after the next batch refresh."
+                                            cta={{ label: 'Try again', onClick: () => setRetryKey((value) => value + 1) }}
+                                            lightMode={lightMode}
+                                        />
+                                    </div>
+                                ) : sortedReports.map((report, idx) => {
                                     const tone = signalTone(report.overall_signal);
                                     const conf = Math.max(0, Math.min(100, report.confidence_score));
                                     return (

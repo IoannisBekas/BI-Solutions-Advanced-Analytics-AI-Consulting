@@ -51,6 +51,26 @@ export const ASSET_REGISTRY: AssetEntry[] = [
     { ticker: 'ARKK', name: 'ARK Innovation ETF', exchange: 'NYSE Arca', assetClass: 'ETF', sector: 'Innovation', hasCachedReport: false, researcherCount: 0, currentPrice: 58.20, dayChange: -1.40, dayChangePct: -2.35 },
     { ticker: 'VTI', name: 'Vanguard Total Mkt ETF', exchange: 'NYSE Arca', assetClass: 'ETF', sector: 'Total Mkt', hasCachedReport: false, researcherCount: 0, currentPrice: 264.80, dayChange: 1.80, dayChangePct: 0.68 },
     { ticker: 'DIA', name: 'SPDR Dow Jones Industrial Average ETF', exchange: 'NYSE Arca', assetClass: 'ETF', sector: 'Large Cap Blend', hasCachedReport: false, researcherCount: 0, currentPrice: 433.20, dayChange: 2.40, dayChangePct: 0.56 },
+    { ticker: 'XOM', name: 'Exxon Mobil Corporation', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Energy', hasCachedReport: false, researcherCount: 0, currentPrice: 121.40, dayChange: 1.90, dayChangePct: 1.59 },
+    { ticker: 'CVX', name: 'Chevron Corporation', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Energy', hasCachedReport: false, researcherCount: 0, currentPrice: 168.80, dayChange: 1.10, dayChangePct: 0.66 },
+    { ticker: 'COP', name: 'ConocoPhillips', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Energy', hasCachedReport: false, researcherCount: 0, currentPrice: 126.70, dayChange: 1.40, dayChangePct: 1.12 },
+    { ticker: 'CAT', name: 'Caterpillar Inc.', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Industrials', hasCachedReport: false, researcherCount: 0, currentPrice: 341.50, dayChange: 2.90, dayChangePct: 0.86 },
+    { ticker: 'HON', name: 'Honeywell International', exchange: 'NASDAQ', assetClass: 'EQUITY', sector: 'Industrials', hasCachedReport: false, researcherCount: 0, currentPrice: 213.20, dayChange: 1.30, dayChangePct: 0.61 },
+    { ticker: 'DE', name: 'Deere & Company', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Industrials', hasCachedReport: false, researcherCount: 0, currentPrice: 411.80, dayChange: -2.10, dayChangePct: -0.51 },
+    { ticker: 'LIN', name: 'Linde plc', exchange: 'NASDAQ', assetClass: 'EQUITY', sector: 'Materials', hasCachedReport: false, researcherCount: 0, currentPrice: 467.40, dayChange: 2.20, dayChangePct: 0.47 },
+    { ticker: 'FCX', name: 'Freeport-McMoRan Inc.', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Materials', hasCachedReport: false, researcherCount: 0, currentPrice: 47.10, dayChange: -0.30, dayChangePct: -0.63 },
+    { ticker: 'NEM', name: 'Newmont Corporation', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Materials', hasCachedReport: false, researcherCount: 0, currentPrice: 44.80, dayChange: 0.50, dayChangePct: 1.13 },
+    { ticker: 'NEE', name: 'NextEra Energy, Inc.', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Utilities', hasCachedReport: false, researcherCount: 0, currentPrice: 67.90, dayChange: 0.60, dayChangePct: 0.89 },
+    { ticker: 'DUK', name: 'Duke Energy Corporation', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Utilities', hasCachedReport: false, researcherCount: 0, currentPrice: 104.60, dayChange: 0.30, dayChangePct: 0.29 },
+    { ticker: 'SO', name: 'The Southern Company', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Utilities', hasCachedReport: false, researcherCount: 0, currentPrice: 72.50, dayChange: 0.20, dayChangePct: 0.28 },
+    { ticker: 'PLD', name: 'Prologis, Inc.', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Real Estate', hasCachedReport: false, researcherCount: 0, currentPrice: 126.40, dayChange: -0.50, dayChangePct: -0.39 },
+    { ticker: 'AMT', name: 'American Tower Corporation', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Real Estate', hasCachedReport: false, researcherCount: 0, currentPrice: 193.50, dayChange: 1.40, dayChangePct: 0.73 },
+    { ticker: 'EQIX', name: 'Equinix, Inc.', exchange: 'NASDAQ', assetClass: 'EQUITY', sector: 'Real Estate', hasCachedReport: false, researcherCount: 0, currentPrice: 823.60, dayChange: 4.90, dayChangePct: 0.60 },
+    { ticker: 'COST', name: 'Costco Wholesale Corporation', exchange: 'NASDAQ', assetClass: 'EQUITY', sector: 'Consumer Defensive', hasCachedReport: false, researcherCount: 0, currentPrice: 742.10, dayChange: 3.20, dayChangePct: 0.43 },
+    { ticker: 'HD', name: 'The Home Depot, Inc.', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Consumer Cyclical', hasCachedReport: false, researcherCount: 0, currentPrice: 368.40, dayChange: 1.80, dayChangePct: 0.49 },
+    { ticker: 'MCD', name: 'McDonald\'s Corporation', exchange: 'NYSE', assetClass: 'EQUITY', sector: 'Consumer Defensive', hasCachedReport: false, researcherCount: 0, currentPrice: 287.60, dayChange: 1.10, dayChangePct: 0.38 },
+    { ticker: 'TMUS', name: 'T-Mobile US, Inc.', exchange: 'NASDAQ', assetClass: 'EQUITY', sector: 'Communication Svcs', hasCachedReport: false, researcherCount: 0, currentPrice: 169.50, dayChange: 0.70, dayChangePct: 0.41 },
+    { ticker: 'CMCSA', name: 'Comcast Corporation', exchange: 'NASDAQ', assetClass: 'EQUITY', sector: 'Communication Svcs', hasCachedReport: false, researcherCount: 0, currentPrice: 42.30, dayChange: -0.10, dayChangePct: -0.24 },
 ];
 
 export const ALIAS_MAP: Record<string, string> = {
@@ -96,6 +116,32 @@ export const ALIAS_MAP: Record<string, string> = {
     xrp: 'XRP-USD',
 };
 
+const SECTOR_PACK_MATCHERS: Record<string, string[]> = {
+    Technology: ['technology'],
+    Healthcare: ['healthcare'],
+    Financials: ['financial services', 'financial'],
+    Energy: ['energy'],
+    Consumer: ['consumer cyclical', 'consumer defensive', 'consumer'],
+    Industrials: ['industrials'],
+    Materials: ['materials', 'precious metals', 'base metals'],
+    Utilities: ['utilities'],
+    'Real Estate': ['real estate'],
+    Communications: ['communication svcs', 'communication'],
+};
+
+const SECTOR_PACK_SEED_TICKERS: Record<string, string[]> = {
+    Technology: ['NVDA', 'MSFT', 'AAPL', 'AVGO', 'AMD', 'INTC', 'TSM', 'ORCL', 'CRM', 'QQQ'],
+    Healthcare: ['UNH', 'JNJ', 'PFE'],
+    Financials: ['JPM', 'GS', 'BAC', 'V', 'MA'],
+    Energy: ['XOM', 'CVX', 'COP', 'CL=F', 'NG=F'],
+    Consumer: ['AMZN', 'TSLA', 'COST', 'HD', 'MCD'],
+    Industrials: ['CAT', 'HON', 'DE', 'DIA'],
+    Materials: ['LIN', 'FCX', 'NEM', 'GC=F', 'SI=F', 'HG=F', 'GLD'],
+    Utilities: ['NEE', 'DUK', 'SO'],
+    'Real Estate': ['PLD', 'AMT', 'EQIX'],
+    Communications: ['GOOGL', 'META', 'NFLX', 'TMUS', 'CMCSA'],
+};
+
 function normalizeQuery(query: string) {
     return query.trim().toLowerCase();
 }
@@ -103,6 +149,22 @@ function normalizeQuery(query: string) {
 function stripVolatileQuoteFields(asset: AssetEntry): AssetEntry {
     const { currentPrice: _currentPrice, dayChange: _dayChange, dayChangePct: _dayChangePct, ...stableAsset } = asset;
     return stableAsset;
+}
+
+function dedupeAssets(assets: AssetEntry[]) {
+    const deduped: AssetEntry[] = [];
+    const seen = new Set<string>();
+
+    for (const asset of assets) {
+        if (seen.has(asset.ticker)) {
+            continue;
+        }
+
+        seen.add(asset.ticker);
+        deduped.push(asset);
+    }
+
+    return deduped;
 }
 
 function scoreAssetMatch(asset: AssetEntry, normalizedQuery: string) {
@@ -134,6 +196,36 @@ export function listFeaturedAssets(limit = 6) {
         .sort((left, right) => (right.researcherCount ?? 0) - (left.researcherCount ?? 0))
         .slice(0, limit)
         .map(stripVolatileQuoteFields);
+}
+
+export function listAssetsForSectorPack(sector: string, limit = 20): AssetEntry[] {
+    const normalizedSector = sector.trim().toLowerCase();
+    const sectorKey = Object.keys(SECTOR_PACK_MATCHERS).find(
+        (candidate) => candidate.toLowerCase() === normalizedSector,
+    );
+    const matchers = SECTOR_PACK_MATCHERS[sectorKey ?? sector] ?? [normalizedSector];
+    const seededAssets = (SECTOR_PACK_SEED_TICKERS[sectorKey ?? sector] ?? [])
+        .map((ticker) => ASSET_REGISTRY.find((asset) => asset.ticker === ticker))
+        .filter((asset): asset is AssetEntry => Boolean(asset));
+    const matchedAssets = ASSET_REGISTRY.filter((asset) => {
+        const assetSector = (asset.sector ?? '').toLowerCase();
+        return matchers.some((matcher) => assetSector.includes(matcher));
+    });
+
+    return dedupeAssets([...seededAssets, ...matchedAssets])
+        .sort((left, right) => {
+            if (left.hasCachedReport !== right.hasCachedReport) {
+                return Number(right.hasCachedReport) - Number(left.hasCachedReport);
+            }
+
+            const researcherDelta = (right.researcherCount ?? 0) - (left.researcherCount ?? 0);
+            if (researcherDelta !== 0) {
+                return researcherDelta;
+            }
+
+            return (right.currentPrice ?? 0) - (left.currentPrice ?? 0);
+        })
+        .slice(0, limit);
 }
 
 export function getPopularTickers(limit = 6) {

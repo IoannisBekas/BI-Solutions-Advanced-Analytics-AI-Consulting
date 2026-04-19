@@ -1,6 +1,10 @@
 import Database from "better-sqlite3";
 import path from "path";
 import fs from "fs";
+import {
+  sanitizeQuantusAiUsageType,
+  type QuantusAiUsageType,
+} from "../../shared/quantus";
 
 // ─── Database location ───────────────────────────────────────────────────────
 // In production (Railway), use a volume-mounted path; otherwise use local ./data
@@ -174,6 +178,27 @@ if (getSchemaVersion() < 3) {
   console.log("DB migration 3 applied: app_meta + auth_provider");
 }
 
+// Migration 4: persistent Quantus AI daily budget accounting
+if (getSchemaVersion() < 4) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS quantus_ai_daily_usage (
+      user_id         TEXT NOT NULL,
+      usage_date      TEXT NOT NULL,
+      usage_type      TEXT NOT NULL,
+      reserved_tokens INTEGER NOT NULL DEFAULT 0,
+      created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at      TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (user_id, usage_date, usage_type),
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_quantus_ai_daily_usage_user_date
+      ON quantus_ai_daily_usage(user_id, usage_date);
+  `);
+  setSchemaVersion(4);
+  console.log("DB migration 4 applied: Quantus AI daily usage");
+}
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 export interface DbUser {
@@ -305,6 +330,15 @@ export interface QuantusSnapshotInput {
   reportJson: string;
 }
 
+export interface QuantusAiBudgetResult {
+  ok: boolean;
+  dailyLimit: number;
+  remainingTokens: number;
+  reservedTokens: number;
+  usageDate: string;
+  usageType: QuantusAiUsageType;
+}
+
 export interface QuantusAccuracyRow {
   label: string;
   count: number;
@@ -349,6 +383,9 @@ const stmts = {
   updateCredits: db.prepare(
     "UPDATE users SET credits = ?, updated_at = datetime('now') WHERE id = ?"
   ),
+  incrementCreditsBy: db.prepare(
+    "UPDATE users SET credits = credits + ?, updated_at = datetime('now') WHERE id = ?"
+  ),
   updateAuthProvider: db.prepare(
     "UPDATE users SET auth_provider = ?, updated_at = datetime('now') WHERE id = ?"
   ),
@@ -378,6 +415,18 @@ const stmts = {
      VALUES (?, ?, datetime('now'))
      ON CONFLICT(key) DO UPDATE SET
        value = excluded.value,
+        updated_at = datetime('now')`
+  ),
+  getQuantusAiReservedTokensForDay: db.prepare(
+    `SELECT COALESCE(SUM(reserved_tokens), 0) AS reserved_tokens
+     FROM quantus_ai_daily_usage
+     WHERE user_id = ? AND usage_date = ?`
+  ),
+  upsertQuantusAiDailyUsage: db.prepare(
+    `INSERT INTO quantus_ai_daily_usage (user_id, usage_date, usage_type, reserved_tokens)
+     VALUES (?, ?, ?, ?)
+     ON CONFLICT(user_id, usage_date, usage_type) DO UPDATE SET
+       reserved_tokens = quantus_ai_daily_usage.reserved_tokens + excluded.reserved_tokens,
        updated_at = datetime('now')`
   ),
 
@@ -666,6 +715,45 @@ export function createUser(params: {
   return stmts.findById.get(params.id) as DbUser;
 }
 
+export function createUserWithReferralCredits(params: {
+  id: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  referralToken: string;
+  authProvider?: string;
+  signupCredits?: number;
+  referrerId?: string | null;
+  referrerCreditDelta?: number;
+}): DbUser {
+  const transaction = db.transaction((input: typeof params) => {
+    const signupCredits = Number.isFinite(input.signupCredits ?? 0)
+      ? Math.max(0, Math.floor(input.signupCredits ?? 0))
+      : 0;
+    const referrerCreditDelta = Number.isFinite(input.referrerCreditDelta ?? 0)
+      ? Math.max(0, Math.floor(input.referrerCreditDelta ?? 0))
+      : 0;
+
+    stmts.insert.run(
+      input.id,
+      input.email,
+      input.name,
+      input.passwordHash,
+      signupCredits,
+      input.referralToken,
+      input.authProvider ?? "password",
+    );
+
+    if (input.referrerId && referrerCreditDelta > 0) {
+      stmts.incrementCreditsBy.run(referrerCreditDelta, input.referrerId);
+    }
+
+    return stmts.findById.get(input.id) as DbUser;
+  });
+
+  return transaction(params);
+}
+
 export function updateUserCredits(userId: string, credits: number): void {
   stmts.updateCredits.run(credits, userId);
 }
@@ -710,6 +798,79 @@ export function getAppMeta(key: string): string | undefined {
 
 export function setAppMeta(key: string, value: string): void {
   stmts.upsertAppMeta.run(key, value);
+}
+
+export function consumeQuantusAiDailyBudget(params: {
+  userId: string;
+  usageType: QuantusAiUsageType;
+  requestedTokens: number;
+  dailyLimit: number;
+  usageDate?: string;
+}): QuantusAiBudgetResult {
+  const usageType = sanitizeQuantusAiUsageType(params.usageType);
+  if (!usageType) {
+    throw new Error("Invalid Quantus AI usage type");
+  }
+
+  const requestedTokens = Number.isFinite(params.requestedTokens)
+    ? Math.max(0, Math.floor(params.requestedTokens))
+    : 0;
+  const dailyLimit = Number.isFinite(params.dailyLimit)
+    ? Math.max(0, Math.floor(params.dailyLimit))
+    : 0;
+  const usageDate = params.usageDate?.trim() || new Date().toISOString().slice(0, 10);
+
+  if (requestedTokens <= 0) {
+    const row = stmts.getQuantusAiReservedTokensForDay.get(params.userId, usageDate) as
+      | { reserved_tokens?: number | null }
+      | undefined;
+    const reservedTokens = Number(row?.reserved_tokens ?? 0);
+    return {
+      ok: true,
+      dailyLimit,
+      reservedTokens,
+      remainingTokens: Math.max(0, dailyLimit - reservedTokens),
+      usageDate,
+      usageType,
+    };
+  }
+
+  const transaction = db.transaction(() => {
+    const row = stmts.getQuantusAiReservedTokensForDay.get(params.userId, usageDate) as
+      | { reserved_tokens?: number | null }
+      | undefined;
+    const reservedTokens = Number(row?.reserved_tokens ?? 0);
+    const nextReservedTokens = reservedTokens + requestedTokens;
+
+    if (nextReservedTokens > dailyLimit) {
+      return {
+        ok: false,
+        dailyLimit,
+        reservedTokens,
+        remainingTokens: Math.max(0, dailyLimit - reservedTokens),
+        usageDate,
+        usageType,
+      } satisfies QuantusAiBudgetResult;
+    }
+
+    stmts.upsertQuantusAiDailyUsage.run(
+      params.userId,
+      usageDate,
+      usageType,
+      requestedTokens,
+    );
+
+    return {
+      ok: true,
+      dailyLimit,
+      reservedTokens: nextReservedTokens,
+      remainingTokens: Math.max(0, dailyLimit - nextReservedTokens),
+      usageDate,
+      usageType,
+    } satisfies QuantusAiBudgetResult;
+  });
+
+  return transaction();
 }
 
 /** Strip password_hash before sending to the client */

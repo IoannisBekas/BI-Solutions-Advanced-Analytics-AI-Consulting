@@ -9,12 +9,14 @@ import rateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
 import { GoogleGenAI } from '@google/genai';
 import { getMockReport } from './data/mockReports.ts';
-import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, searchAssets } from './data/assetUniverse.ts';
+import { getAssetByTicker, getWorkspaceStatus, getWorkspaceSummary, listAssetsForSectorPack, searchAssets } from './data/assetUniverse.ts';
 import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../src/types/index.ts';
 import {
     QUANTUS_INTERNAL_HEADER,
+    getQuantusAiMaxOutputTokensForTier,
     getQuantusMonthlyReportLimitForTier,
     readQuantusInternalKey,
+    type QuantusAiUsageType,
     sanitizeQuantusAssetClass,
     sanitizeQuantusTicker,
     sanitizeQuantusUserTier,
@@ -40,6 +42,7 @@ const ALLOW_DEMO_DATA = process.env.QUANTUS_ALLOW_DEMO_DATA === 'true' || !isPro
 const ENABLE_PUSH_NOTIFICATIONS = process.env.QUANTUS_ENABLE_PUSH === 'true';
 const SHOW_ENGINE_BANNER = process.env.QUANTUS_SHOW_ENGINE_BANNER === 'true' || !isProduction;
 const PYTHON_PIPELINE_TIMEOUT_MS = Number.parseInt(process.env.QUANTUS_PYTHON_TIMEOUT_MS || '90000', 10);
+const AI_STREAM_TIMEOUT_MS = Number.parseInt(process.env.QUANTUS_AI_STREAM_TIMEOUT_MS || '60000', 10);
 
 if (isProduction && !process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET env var is required in production');
@@ -142,6 +145,15 @@ interface AuthenticatedRequest extends express.Request {
     user?: JWTPayload;
 }
 
+interface QuantusAiBudgetResponse extends RootJsonMap {
+    usageType?: QuantusAiUsageType;
+    dailyTokenBudget?: number;
+    reservedTokens?: number;
+    remainingTokens?: number;
+    usageDate?: string;
+    user?: QuantusSafeUser | null;
+}
+
 declare module 'express-serve-static-core' {
     interface Request {
         requestId?: string;
@@ -184,6 +196,35 @@ function getErrorMessage(error: unknown) {
         return error.message;
     }
     return String(error);
+}
+
+function extractQuantusSafeUser(value: unknown): QuantusSafeUser | null {
+    if (!value || typeof value !== 'object') {
+        return null;
+    }
+
+    const candidate = value as Record<string, unknown>;
+    if (
+        typeof candidate.id !== 'string'
+        || typeof candidate.email !== 'string'
+        || typeof candidate.name !== 'string'
+        || typeof candidate.tier !== 'string'
+        || typeof candidate.credits !== 'number'
+        || typeof candidate.reportsThisMonth !== 'number'
+        || typeof candidate.jurisdiction !== 'string'
+    ) {
+        return null;
+    }
+
+    return {
+        id: candidate.id,
+        email: candidate.email,
+        name: candidate.name,
+        tier: candidate.tier,
+        credits: candidate.credits,
+        reportsThisMonth: candidate.reportsThisMonth,
+        jurisdiction: candidate.jurisdiction as QuantusSafeUser['jurisdiction'],
+    };
 }
 
 function getRequestId(req: express.Request) {
@@ -482,6 +523,28 @@ async function consumeReportAllowance(auth: RootAuthContext) {
     );
 }
 
+async function consumeAiBudget(
+    auth: RootAuthContext,
+    usageType: QuantusAiUsageType,
+    requestedTokens: number,
+): Promise<{ ok: boolean; status: number; data: QuantusAiBudgetResponse; user: QuantusSafeUser | null }> {
+    const upstream = await fetchRootJson(
+        '/api/quantus/usage/ai-budget',
+        {
+            method: 'POST',
+            body: JSON.stringify({ usageType, requestedTokens }),
+        },
+        auth,
+    );
+
+    return {
+        ok: upstream.ok,
+        status: upstream.status,
+        data: upstream.data as QuantusAiBudgetResponse,
+        user: extractQuantusSafeUser((upstream.data as QuantusAiBudgetResponse | undefined)?.user),
+    };
+}
+
 async function assertDeepDiveAccess(auth: RootAuthContext, moduleIndex: number) {
     return fetchRootJson(
         '/api/quantus/usage/deep-dive-access',
@@ -490,6 +553,34 @@ async function assertDeepDiveAccess(auth: RootAuthContext, moduleIndex: number) 
             body: JSON.stringify({ module: moduleIndex }),
         },
         auth,
+    );
+}
+
+function createRequestAbortBundle(req: express.Request, timeoutMs: number) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+        controller.abort(new Error(`AI stream timeout after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    const abortOnClose = () => {
+        controller.abort(new Error('Client connection closed'));
+    };
+
+    req.on('close', abortOnClose);
+
+    return {
+        signal: controller.signal,
+        cleanup() {
+            clearTimeout(timeout);
+            req.off('close', abortOnClose);
+        },
+    };
+}
+
+function isAbortLikeError(error: unknown, signal?: AbortSignal) {
+    return Boolean(
+        signal?.aborted
+        || (error instanceof Error && (error.name === 'AbortError' || /aborted|timeout|closed/i.test(error.message))),
     );
 }
 
@@ -873,8 +964,13 @@ interface DeepDiveCacheEntry {
 const deepDiveCache = new Map<string, DeepDiveCacheEntry>();
 const deepDiveInFlight = new Map<string, Promise<string>>();
 
-function getDeepDiveCacheKey(ticker: string, moduleIndex: number, assetClass: string) {
-    return `${ticker}:${assetClass}:${moduleIndex}`;
+function getDeepDiveCacheKey(
+    ticker: string,
+    moduleIndex: number,
+    assetClass: string,
+    maxOutputTokens: number,
+) {
+    return `${ticker}:${assetClass}:${moduleIndex}:${maxOutputTokens}`;
 }
 
 function getCachedDeepDive(key: string) {
@@ -896,11 +992,20 @@ function writeDeepDiveSse(res: express.Response, text: string) {
     res.end();
 }
 
-async function generateDeepDiveText(ticker: string, moduleIndex: number, assetClass: string) {
+async function generateDeepDiveText(
+    ticker: string,
+    moduleIndex: number,
+    assetClass: string,
+    maxOutputTokens: number,
+) {
     const prompt = getDeepDivePrompt(ticker, moduleIndex, assetClass);
     const stream = await getAI().models.generateContentStream({
         model: 'gemini-2.5-flash',
         contents: prompt,
+        config: {
+            maxOutputTokens,
+            httpOptions: { timeout: AI_STREAM_TIMEOUT_MS },
+        },
     });
 
     let text = '';
@@ -913,8 +1018,13 @@ async function generateDeepDiveText(ticker: string, moduleIndex: number, assetCl
     return text || 'Analysis complete.';
 }
 
-function getOrCreateDeepDiveJob(ticker: string, moduleIndex: number, assetClass: string) {
-    const cacheKey = getDeepDiveCacheKey(ticker, moduleIndex, assetClass);
+function getOrCreateDeepDiveJob(
+    ticker: string,
+    moduleIndex: number,
+    assetClass: string,
+    maxOutputTokens: number,
+) {
+    const cacheKey = getDeepDiveCacheKey(ticker, moduleIndex, assetClass, maxOutputTokens);
     const cached = getCachedDeepDive(cacheKey);
     if (cached) {
         return Promise.resolve(cached.text);
@@ -927,7 +1037,7 @@ function getOrCreateDeepDiveJob(ticker: string, moduleIndex: number, assetClass:
 
     const job = (async () => {
         try {
-            const text = await generateDeepDiveText(ticker, moduleIndex, assetClass);
+            const text = await generateDeepDiveText(ticker, moduleIndex, assetClass, maxOutputTokens);
             deepDiveCache.set(cacheKey, { text, updatedAt: Date.now() });
             return text;
         } finally {
@@ -1159,12 +1269,30 @@ app.get(`${API_PREFIX}/assets/:ticker`, (req, res) => {
 });
 
 // ─── GENERATE REPORT (STREAMING NARRATIVE) ──────────────────────────────────
-app.post(`${API_PREFIX}/generate`, requireAuth, async (req, res) => {
+app.post(`${API_PREFIX}/generate`, requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
         const ticker = sanitizeQuantusTicker(req.body.ticker);
         const assetClass = sanitizeQuantusAssetClass(req.body.assetClass);
         if (!ticker) {
             res.status(400).json({ error: 'Valid ticker is required (1-20 alphanumeric chars)' });
+            return;
+        }
+
+        const authContext = getRequestAuthContext(req);
+        const authState = await fetchFreshAuthenticatedUser(authContext);
+        if (!authState.ok || !authState.user) {
+            res.status(authState.status || 401).json(authState.data?.error ? authState.data : {
+                error: 'Authentication is required to generate Quantus narrative sections.',
+                code: 'auth_required',
+            });
+            return;
+        }
+
+        const userTier = sanitizeQuantusUserTier(authState.user.tier);
+        const maxOutputTokens = getQuantusAiMaxOutputTokensForTier(userTier, 'report_generation');
+        const budgetReservation = await consumeAiBudget(authContext, 'report_generation', maxOutputTokens);
+        if (!budgetReservation.ok) {
+            res.status(budgetReservation.status).json(budgetReservation.data);
             return;
         }
 
@@ -1181,24 +1309,58 @@ app.post(`${API_PREFIX}/generate`, requireAuth, async (req, res) => {
         const section = typeof req.body.section === 'string' ? req.body.section.slice(0, 50) : 'executive_summary';
         const systemPrompt = getSystemPromptForClass(assetClass);
         const sectionPrompt = getSectionPrompt(ticker, section);
+        const abortBundle = createRequestAbortBundle(req, AI_STREAM_TIMEOUT_MS);
 
-        const stream = await getAI().models.generateContentStream({
-            model: 'gemini-2.5-flash',
-            contents: `${systemPrompt}\n\n${sectionPrompt}`,
-        });
+        try {
+            const stream = await getAI().models.generateContentStream({
+                model: 'gemini-2.5-flash',
+                contents: `${systemPrompt}\n\n${sectionPrompt}`,
+                config: {
+                    maxOutputTokens,
+                    abortSignal: abortBundle.signal,
+                    httpOptions: { timeout: AI_STREAM_TIMEOUT_MS },
+                },
+            });
 
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
+            res.setHeader('Content-Type', 'text/event-stream');
+            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Connection', 'keep-alive');
 
-        for await (const chunk of stream) {
-            if (chunk.text) {
-                res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
+            for await (const chunk of stream) {
+                if (abortBundle.signal.aborted) {
+                    break;
+                }
+
+                if (chunk.text) {
+                    res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
+                }
             }
-        }
 
-        res.write('data: [DONE]\n\n');
-        res.end();
+            if (!abortBundle.signal.aborted) {
+                res.write('data: [DONE]\n\n');
+                res.end();
+            }
+        } catch (error) {
+            if (isAbortLikeError(error, abortBundle.signal)) {
+                const reason = abortBundle.signal.reason instanceof Error
+                    ? abortBundle.signal.reason.message
+                    : String(abortBundle.signal.reason ?? 'Request aborted');
+                if (!res.headersSent && !res.destroyed) {
+                    res.status(/timeout/i.test(reason) ? 408 : 499).json({
+                        error: /timeout/i.test(reason)
+                            ? 'Quantus generation timed out.'
+                            : 'Client closed the generation request.',
+                    });
+                } else if (!res.writableEnded) {
+                    res.end();
+                }
+                return;
+            }
+
+            throw error;
+        } finally {
+            abortBundle.cleanup();
+        }
     } catch (error) {
         console.error('Error generating report:', error);
         res.status(500).json({ error: 'Failed to generate report' });
@@ -1236,7 +1398,7 @@ app.post(`${API_PREFIX}/insights`, requireAuth, async (req, res) => {
 });
 
 // ─── DEEP DIVE ────────────────────────────────────────────────────────────────
-app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
+app.post(`${API_PREFIX}/deepdive/prefetch`, async (req: AuthenticatedRequest, res) => {
     try {
         const authContext = getRequestAuthContext(req);
         if (!hasAuthContext(authContext)) {
@@ -1252,33 +1414,51 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
         const requestedModules = Array.isArray(req.body.modules) ? req.body.modules : null;
         const modules = (requestedModules ?? Array.from({ length: DEEP_DIVE_MODULE_COUNT }, (_, index) => index))
             .map((value) => typeof value === 'number' ? Math.floor(value) : Number.parseInt(String(value), 10))
-            .filter((value) => Number.isFinite(value) && value >= 0 && value < DEEP_DIVE_MODULE_COUNT);
+            .filter((value): value is number => Number.isFinite(value) && value >= 0 && value < DEEP_DIVE_MODULE_COUNT);
+        const uniqueModules = Array.from(new Set<number>(modules));
 
-        if (!ticker || modules.length === 0) {
+        if (!ticker || uniqueModules.length === 0) {
             res.status(400).json({ error: 'Valid ticker and at least one module index required' });
             return;
         }
 
-        for (const moduleIndex of modules) {
+        const reservedModules: Array<{ moduleIndex: number; maxOutputTokens: number }> = [];
+        for (const moduleIndex of uniqueModules) {
             const access = await assertDeepDiveAccess(authContext, moduleIndex);
             if (!access.ok) {
                 res.status(access.status).json(access.data);
                 return;
             }
+
+            const user = extractQuantusSafeUser(access.data?.user);
+            const userTier = sanitizeQuantusUserTier(user?.tier ?? req.user?.tier);
+            const maxOutputTokens = getQuantusAiMaxOutputTokensForTier(userTier, 'deep_dive');
+            const budgetReservation = await consumeAiBudget(authContext, 'deep_dive', maxOutputTokens);
+            if (!budgetReservation.ok) {
+                res.status(budgetReservation.status).json(budgetReservation.data);
+                return;
+            }
+
+            reservedModules.push({ moduleIndex, maxOutputTokens });
         }
 
         res.status(202).json({
             status: 'warming',
             ticker,
-            queuedModules: modules.length,
+            queuedModules: reservedModules.length,
         });
 
         void (async () => {
-            for (const moduleIndex of modules) {
+            for (const module of reservedModules) {
                 try {
-                    await getOrCreateDeepDiveJob(ticker, moduleIndex, assetClass);
+                    await getOrCreateDeepDiveJob(
+                        ticker,
+                        module.moduleIndex,
+                        assetClass,
+                        module.maxOutputTokens,
+                    );
                 } catch (error) {
-                    console.error(`Deep dive prefetch failed for ${ticker} module ${moduleIndex}:`, error);
+                    console.error(`Deep dive prefetch failed for ${ticker} module ${module.moduleIndex}:`, error);
                 }
             }
         })();
@@ -1288,7 +1468,7 @@ app.post(`${API_PREFIX}/deepdive/prefetch`, async (req, res) => {
     }
 });
 
-app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
+app.post(`${API_PREFIX}/deepdive`, async (req: AuthenticatedRequest, res) => {
     try {
         const authContext = getRequestAuthContext(req);
         if (!hasAuthContext(authContext)) {
@@ -1313,8 +1493,30 @@ app.post(`${API_PREFIX}/deepdive`, async (req, res) => {
             return;
         }
 
-        const text = await getOrCreateDeepDiveJob(ticker, moduleIndex, assetClass);
-        writeDeepDiveSse(res, text);
+        const user = extractQuantusSafeUser(access.data?.user);
+        const userTier = sanitizeQuantusUserTier(user?.tier ?? req.user?.tier);
+        const maxOutputTokens = getQuantusAiMaxOutputTokensForTier(userTier, 'deep_dive');
+        const budgetReservation = await consumeAiBudget(authContext, 'deep_dive', maxOutputTokens);
+        if (!budgetReservation.ok) {
+            res.status(budgetReservation.status).json(budgetReservation.data);
+            return;
+        }
+
+        let clientClosed = false;
+        const markClosed = () => {
+            clientClosed = true;
+        };
+        req.on('close', markClosed);
+
+        try {
+            const text = await getOrCreateDeepDiveJob(ticker, moduleIndex, assetClass, maxOutputTokens);
+            if (clientClosed || res.destroyed) {
+                return;
+            }
+            writeDeepDiveSse(res, text);
+        } finally {
+            req.off('close', markClosed);
+        }
     } catch (error) {
         console.error('Error generating deep dive:', error);
         res.status(500).json({ error: 'Failed to generate deep dive' });
@@ -1651,6 +1853,22 @@ function buildStarterReport(asset: AssetEntry): ReportData {
     };
 }
 
+function buildSectorPackPreview(asset: AssetEntry) {
+    const report = getMockReport(asset.ticker) ?? buildStarterReport(asset);
+
+    return {
+        ticker: report.ticker,
+        company_name: report.company_name,
+        overall_signal: report.overall_signal,
+        confidence_score: report.confidence_score,
+        regime: report.regime,
+        executive_summary: {
+            narrative_plain: report.narrative_plain,
+            narrative_technical: report.narrative_executive_summary ?? report.narrative_plain,
+        },
+    };
+}
+
 function getMockScreenerResults(filters: Record<string, unknown>) {
     return [
         { ticker: 'NVDA', name: 'NVIDIA Corporation', assetClass: 'EQUITY', signal: 'STRONG BUY', confidence: 82, regime: 'Strong Uptrend', forecast: '+8.3%', sector: 'Technology' },
@@ -1742,25 +1960,22 @@ app.get(`${API_PREFIX}/v1/app-status`, (req, res) => {
 
 // ─── SECTOR PACKS ────────────────────────────────────────────────────────────
 app.get(`${API_PREFIX}/v1/sectors/:sector/reports`, (req, res) => {
-    if (isProduction && !ALLOW_DEMO_DATA) {
-        sendFeatureUnavailable(res, 'Sector packs');
+    const { sector } = req.params;
+    const reports = listAssetsForSectorPack(sector, 20).map(buildSectorPackPreview);
+
+    if (reports.length === 0) {
+        res.status(404).json({
+            error: `No sector starter coverage is configured yet for ${sector}.`,
+            code: 'sector_not_seeded',
+        });
         return;
     }
-    // In production, user auth middleware determines if they have a subscription
-    // to `req.params.sector` via PostgreSQL `user_sector_subscriptions`.
-    const { sector } = req.params;
-
-    // Simulate Top 20 tickers for that sector, grabbing mock reports
-    const mockTickers = ['AAPL', 'MSFT', 'NVDA', 'AVGO', 'ORCL', 'ADBE', 'CRM', 'AMD', 'INTC', 'QCOM',
-        'TXN', 'IBM', 'NOW', 'AMAT', 'UBER', 'PANW', 'MU', 'LRCX', 'SNPS', 'KLAC'];
-    // Convert them using our random report generator
-    const reports = mockTickers.map(t => getMockReport(t));
 
     res.json({
         sector,
-        tier_access: "authorized",
+        tier_access: 'authorized',
         generated_at: new Date().toISOString(),
-        reports
+        reports,
     });
 });
 

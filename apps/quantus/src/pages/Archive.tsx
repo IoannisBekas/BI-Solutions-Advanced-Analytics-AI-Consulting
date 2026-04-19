@@ -5,6 +5,7 @@ import {
     Flag, SlidersHorizontal,
 } from 'lucide-react';
 import { fetchArchiveSnapshots } from '../services/product';
+import { WorkspaceEmpty, WorkspaceError, WorkspaceSkeleton } from '../components/workspace/WorkspaceStates';
 import type { ArchiveSnapshot as Snapshot, SignalType } from '../types';
 
 interface ArchiveProps { userTier?: 'FREE' | 'UNLOCKED' | 'INSTITUTIONAL'; lightMode?: boolean; onViewReport?(s: Snapshot): void; onUpgrade?: () => void; }
@@ -201,6 +202,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
     const [all, setAll] = useState<Snapshot[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [retryKey, setRetryKey] = useState(0);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -227,7 +229,7 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
             });
 
         return () => controller.abort();
-    }, [ticker]);
+    }, [ticker, retryKey]);
 
     const current = all[0];
 
@@ -292,8 +294,13 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
                 </div>
 
                 {error && (
-                    <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                        {error}
+                    <div className="mb-6">
+                        <WorkspaceError
+                            title="Archive unavailable"
+                            message={error}
+                            onRetry={() => setRetryKey((value) => value + 1)}
+                            lightMode={lightMode}
+                        />
                     </div>
                 )}
 
@@ -303,9 +310,9 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
                 </AnimatePresence>
 
                 {/* Timeline */}
-                {loading ? Array.from({ length: 4 }, (_, i) => (
-                    <div key={i} className="mb-3 h-28 rounded-[24px] border border-gray-200 bg-white/70 animate-pulse" />
-                )) : filtered.map((snap, i) => (
+                {loading ? (
+                    <WorkspaceSkeleton rows={4} lightMode={lightMode} variant="list" />
+                ) : filtered.map((snap, i) => (
                     <TimelineRow key={snap.reportId} snap={snap}
                         isLast={i === filtered.length - 1}
                         isSelected={snap.reportId === selectedId}
@@ -314,8 +321,13 @@ export function Archive({ userTier = 'FREE', lightMode, onViewReport, onUpgrade 
                         lightMode={lightMode} />
                 ))}
 
-                {!loading && filtered.length === 0 && (
-                    <div className="text-center py-12" style={{ color: ts }}>No snapshots match.</div>
+                {!loading && !error && filtered.length === 0 && (
+                    <WorkspaceEmpty
+                        icon={<Clock className="w-6 h-6" />}
+                        title="No archive snapshots match"
+                        message="Try a different ticker or search phrase. Archive results populate as Quantus report snapshots are persisted."
+                        lightMode={lightMode}
+                    />
                 )}
 
                 {/* FREE tier CTA */}

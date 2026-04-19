@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Root type check
+        run: npm run check
+
+      - name: Install Quantus dependencies
+        working-directory: apps/quantus
+        run: npm ci
+
+      - name: Quantus lint
+        working-directory: apps/quantus
+        run: npm run lint
+
+      - name: Quantus tests
+        working-directory: apps/quantus
+        run: npm run test
+
+      - name: Quantus Python tests
+        working-directory: apps/quantus
+        run: python -m pytest -q
+
+      - name: Root build
+        run: npm run build

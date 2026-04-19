@@ -1,13 +1,23 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { Upload, FileCode, X, Check, Sparkles, ChevronDown, ChevronUp, Download, Monitor, FolderOpen, FileText } from 'lucide-react';
+import {
+  Check,
+  Download,
+  FileCode,
+  FileText,
+  FolderOpen,
+  Monitor,
+  Sparkles,
+  Upload,
+  X,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { analyzeTMDL } from '@/utils/tmdlParser';
 import { toast } from 'sonner';
 import type { AnalysisResult } from '@/types';
 
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const ANALYZE_COOLDOWN_SECONDS = 5;
 
 interface TMDLInputSectionProps {
@@ -27,7 +37,7 @@ const sampleTMDL = `model SalesModel
       isHidden: true
     column Region
       dataType: string
-  
+
   table Orders
     column OrderID
       dataType: int64
@@ -39,7 +49,7 @@ const sampleTMDL = `model SalesModel
       dataType: double
     column Quantity
       dataType: int64
-  
+
   table Products
     column ProductID
       dataType: int64
@@ -49,30 +59,30 @@ const sampleTMDL = `model SalesModel
       dataType: string
     column Price
       dataType: double
-  
+
   relationship Rel_Customers_Orders
     fromTable: Orders
     fromColumn: CustomerID
     toTable: Customers
     toColumn: CustomerID
     cardinality: manyToOne
-  
+
   relationship Rel_Products_Orders
     fromTable: Orders
     fromColumn: ProductID
     toTable: Products
     toColumn: ProductID
     cardinality: manyToOne
-  
+
   measure TotalSales
     table: Orders
     expression: "SUM(Orders[Amount])"
     formatString: "$#,##0.00"
-  
+
   measure OrderCount
     table: Orders
     expression: "COUNTROWS(Orders)"
-  
+
   measure AverageOrderValue
     table: Orders
     expression: "DIVIDE([TotalSales], [OrderCount], 0)"
@@ -82,22 +92,26 @@ const guideSteps = [
   {
     icon: Monitor,
     title: 'Open Power BI Desktop',
-    description: 'Launch Power BI Desktop and open the report containing the model you want to analyze.',
+    description:
+      'Launch Power BI Desktop and open the report containing the model you want to analyze.',
   },
   {
     icon: Download,
-    title: 'Export the Model',
-    description: 'Go to File → Export → Power BI template. This creates a .pbit file with your model structure.',
+    title: 'Export the template',
+    description:
+      'Use File > Export > Power BI template to create a .pbit package containing the model structure.',
   },
   {
     icon: FolderOpen,
-    title: 'Extract the Template',
-    description: 'Rename the .pbit file to .zip and extract it. Inside, you\'ll find a "Model" folder.',
+    title: 'Extract the model folder',
+    description:
+      'Rename the .pbit file to .zip and extract it so you can access the model definition assets.',
   },
   {
     icon: FileText,
-    title: 'Find the TMDL File',
-    description: 'In the Model folder, locate the .tmdl file. This contains your complete model definition.',
+    title: 'Locate the TMDL',
+    description:
+      'Inside the extracted Model folder, use the .tmdl file as the input for this workspace.',
   },
 ];
 
@@ -107,13 +121,10 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzeCooldown, setAnalyzeCooldown] = useState(0);
   const [fileNames, setFileNames] = useState<string[]>([]);
-  const [showGuide, setShowGuide] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation<HTMLDivElement>();
-  const { ref: uploadRef, isVisible: uploadVisible } = useScrollAnimation<HTMLDivElement>();
-  const { ref: textareaRef, isVisible: textareaVisible } = useScrollAnimation<HTMLDivElement>();
-  const { ref: guideRef, isVisible: guideVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: shellsRef, isVisible: shellsVisible } = useScrollAnimation<HTMLDivElement>();
 
   useEffect(() => {
     if (analyzeCooldown === 0) {
@@ -128,102 +139,100 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
   }, [analyzeCooldown]);
 
   const readFiles = useCallback(async (files: File[]) => {
-    const tmdlFiles = files.filter(f => f.name.endsWith('.tmdl') || f.name.endsWith('.txt'));
+    const tmdlFiles = files.filter((file) => file.name.endsWith('.tmdl') || file.name.endsWith('.txt'));
 
     if (tmdlFiles.length === 0) {
       toast.error('Please select .tmdl or .txt files.');
       return;
     }
 
-    // Check file sizes
-    const oversized = tmdlFiles.filter(f => f.size > MAX_FILE_SIZE_BYTES);
+    const oversized = tmdlFiles.filter((file) => file.size > MAX_FILE_SIZE_BYTES);
     if (oversized.length > 0) {
-      toast.error(`File too large: ${oversized.map(f => f.name).join(', ')}. Max 10 MB.`);
+      toast.error(`File too large: ${oversized.map((file) => file.name).join(', ')}. Max 10 MB.`);
       return;
     }
 
-    setFileNames(tmdlFiles.map(f => f.name));
+    setFileNames(tmdlFiles.map((file) => file.name));
 
-    const filePromises = tmdlFiles.map(file => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const buffer = e.target?.result;
-          if (!(buffer instanceof ArrayBuffer)) {
-            reject(new Error(`Failed to read ${file.name}: unexpected result type`));
-            return;
-          }
-          const uint8Array = new Uint8Array(buffer);
+    const filePromises = tmdlFiles.map((file) => new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const buffer = event.target?.result;
+        if (!(buffer instanceof ArrayBuffer)) {
+          reject(new Error(`Failed to read ${file.name}: unexpected result type`));
+          return;
+        }
 
-          // Detect UTF-16LE BOM (FF FE)
-          let encoding = 'utf-8';
-          if (uint8Array.length >= 2) {
-            if (uint8Array[0] === 0xFF && uint8Array[1] === 0xFE) {
-              encoding = 'utf-16le';
-            } else if (uint8Array[0] === 0xFE && uint8Array[1] === 0xFF) {
-              encoding = 'utf-16be';
-            } else {
-              // Check for null bytes which indicate UTF-16 in ASCII range
-              let nullCount = 0;
-              for (let i = 0; i < Math.min(uint8Array.length, 100); i++) {
-                if (uint8Array[i] === 0) nullCount++;
+        const bytes = new Uint8Array(buffer);
+        let encoding = 'utf-8';
+
+        if (bytes.length >= 2) {
+          if (bytes[0] === 0xff && bytes[1] === 0xfe) {
+            encoding = 'utf-16le';
+          } else if (bytes[0] === 0xfe && bytes[1] === 0xff) {
+            encoding = 'utf-16be';
+          } else {
+            let nullCount = 0;
+            for (let index = 0; index < Math.min(bytes.length, 100); index += 1) {
+              if (bytes[index] === 0) {
+                nullCount += 1;
               }
-              if (nullCount > 0) encoding = 'utf-16le'; // Assume LE for safety on Windows
+            }
+            if (nullCount > 0) {
+              encoding = 'utf-16le';
             }
           }
+        }
 
-          const decoder = new TextDecoder(encoding);
-          const text = decoder.decode(buffer);
-          resolve(text);
-        };
-        reader.onerror = () => {
-          reject(new Error(`Failed to read file: ${file.name}`));
-        };
-        reader.readAsArrayBuffer(file);
-      });
-    });
+        const decoder = new TextDecoder(encoding);
+        resolve(decoder.decode(buffer));
+      };
+      reader.onerror = () => reject(new Error(`Failed to read file: ${file.name}`));
+      reader.readAsArrayBuffer(file);
+    }));
 
     try {
       const contents = await Promise.all(filePromises);
       setTmdlText(contents.join('\n\n'));
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to read files.');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to read files.');
     }
   }, []);
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
     setIsDragging(true);
   }, []);
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragLeave = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDrop = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
     setIsDragging(false);
 
-    const files = Array.from(e.dataTransfer.files);
+    const files = Array.from(event.dataTransfer.files);
     if (files.length > 0) {
-      readFiles(files);
+      void readFiles(files);
     }
   }, [readFiles]);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
+  const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files ? Array.from(event.target.files) : [];
     if (files.length > 0) {
-      readFiles(files);
+      void readFiles(files);
     }
   }, [readFiles]);
 
   const handleAnalyze = () => {
-    if (!tmdlText.trim() || isAnalyzing || analyzeCooldown > 0) return;
+    if (!tmdlText.trim() || isAnalyzing || analyzeCooldown > 0) {
+      return;
+    }
 
     setIsAnalyzing(true);
-    // Small delay for UX feedback (parsing is synchronous)
-    setTimeout(() => {
+    window.setTimeout(() => {
       try {
         const result = analyzeTMDL(tmdlText);
         onAnalysisComplete(result);
@@ -251,223 +260,181 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
 
   return (
     <section
+      id="analyzer"
       ref={inputRef}
-      className="relative py-12 sm:py-24 px-4 sm:px-6 lg:px-8"
+      className="relative px-4 py-12 sm:px-6 sm:py-20 lg:px-8"
     >
-      {/* Background Shape */}
-      <div className="abstract-bg">
-        <div className="abstract-shape shape-2" style={{ opacity: 0.3 }} />
-      </div>
-
-      <div className="relative z-10 max-w-4xl mx-auto">
-        {/* Section Header */}
+      <div className="mx-auto max-w-7xl">
         <div
           ref={sectionRef}
-          className={`scroll-hidden ${sectionVisible ? 'scroll-visible' : ''} text-center mb-12`}
+          className={`scroll-hidden ${sectionVisible ? 'scroll-visible' : ''} mb-10 max-w-3xl`}
         >
-          <div className="badge mb-4">
-            <FileCode className="w-4 h-4" />
-            <span>Input Your TMDL</span>
+          <div className="powerbi-eyebrow mb-4">
+            <FileCode className="h-4 w-4" />
+            Model intake
           </div>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-black mb-4">
-            Upload or Paste Your TMDL Code
+          <h2 className="font-heading text-4xl font-bold tracking-tight text-black md:text-5xl">
+            Upload or paste the TMDL behind your semantic model.
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            Drag and drop your .tmdl file, paste the code directly, or try our sample model to see how it works.
+          <p className="mt-4 text-lg leading-relaxed text-gray-600">
+            Keep the first pass explicit: bring structure in, parse it once, and
+            move into recommendations and chat from the same workspace.
           </p>
         </div>
 
-        {/* Upload Area */}
         <div
-          ref={uploadRef}
-          className={`scroll-hidden-left stagger-1 ${uploadVisible ? 'scroll-visible-left' : ''} mb-6`}
+          ref={shellsRef}
+          className="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)]"
         >
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`
-              relative p-5 sm:p-10 rounded-2xl border-2 border-dashed cursor-pointer
-              transition-all duration-300 bg-white
-              ${isDragging
-                ? 'border-black bg-secondary'
-                : 'border-border hover:border-gray-400 hover:bg-secondary/50'
-              }
-            `}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".tmdl,.txt"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-            <div className="flex flex-col items-center text-center">
-              <div className={`
-                w-16 h-16 rounded-2xl flex items-center justify-center mb-4
-                transition-all duration-300
-                ${isDragging ? 'bg-black scale-110' : 'bg-secondary'}
-              `}>
-                <Upload className={`w-7 h-7 ${isDragging ? 'text-white' : 'text-muted-foreground'}`} />
+          <div className={`scroll-hidden-left ${shellsVisible ? 'scroll-visible-left' : ''} powerbi-shell p-6 md:p-8`}>
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`powerbi-upload-area ${isDragging ? 'is-dragging' : ''}`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".tmdl,.txt"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <div className="mx-auto max-w-xl text-center">
+                <div className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl ${isDragging ? 'bg-black text-white' : 'bg-black/5 text-black'}`}>
+                  <Upload className="h-7 w-7" />
+                </div>
+                <p className="text-lg font-semibold text-black">
+                  {isDragging ? 'Drop your TMDL file here' : 'Drag and drop a TMDL file'}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                  Or click to browse for `.tmdl` or `.txt` files exported from your
+                  Power BI model workflow.
+                </p>
               </div>
-              <p className="text-black font-medium mb-1">
-                {isDragging ? 'Drop your file here' : 'Drag & drop your TMDL file'}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                or click to browse (.tmdl, .txt)
-              </p>
             </div>
-          </div>
-        </div>
 
-        {/* Textarea */}
-        <div
-          ref={textareaRef}
-          className={`scroll-hidden-right stagger-2 ${textareaVisible ? 'scroll-visible-right' : ''}`}
-        >
-          <div className="relative">
-            <Textarea
-              value={tmdlText}
-              onChange={(e) => setTmdlText(e.target.value)}
-              placeholder="Or paste your TMDL code here..."
-              className="min-h-[160px] sm:min-h-[280px] code-block text-sm resize-none input-focus bg-white"
-            />
+            <div className="relative mt-6">
+              <Textarea
+                value={tmdlText}
+                onChange={(event) => setTmdlText(event.target.value)}
+                placeholder="Paste your TMDL here if you prefer working directly from the exported model file..."
+                className="powerbi-code-area min-h-[220px] resize-none text-sm md:min-h-[320px]"
+              />
 
-            {/* File Badge */}
-            {fileNames.length > 0 && (
-              <div className="absolute top-3 right-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-white text-xs">
-                <Check className="w-3 h-3" />
-                <span>
-                  {fileNames.length === 1
-                    ? fileNames[0]
-                    : `${fileNames.length} files selected`}
-                </span>
-                <button
-                  onClick={handleClear}
-                  aria-label="Clear selected file"
-                  className="ml-1 hover:text-gray-300 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-          </div>
+              {fileNames.length > 0 && (
+                <div className="absolute right-3 top-3 flex items-center gap-2 rounded-full bg-black px-3 py-1.5 text-xs text-white">
+                  <Check className="h-3 w-3" />
+                  <span>
+                    {fileNames.length === 1 ? fileNames[0] : `${fileNames.length} files selected`}
+                  </span>
+                  <button
+                    onClick={handleClear}
+                    aria-label="Clear selected file"
+                    className="transition-colors hover:text-gray-300"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+            </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                onClick={handleLoadSample}
-                className="rounded-full border-border hover:bg-secondary"
-              >
-                Load Sample
-              </Button>
-              {tmdlText && (
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-3">
                 <Button
-                  variant="ghost"
-                  onClick={handleClear}
-                  className="text-muted-foreground hover:text-black"
+                  variant="outline"
+                  onClick={handleLoadSample}
+                  className="rounded-full border-gray-300 bg-white hover:bg-gray-50"
                 >
-                  <X className="w-4 h-4 mr-2" />
-                  Clear
+                  Load sample
                 </Button>
-              )}
+                {tmdlText && (
+                  <Button
+                    variant="ghost"
+                    onClick={handleClear}
+                    className="text-gray-500 hover:text-black"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Clear
+                  </Button>
+                )}
+              </div>
+
+              <Button
+                onClick={handleAnalyze}
+                disabled={!tmdlText.trim() || isAnalyzing || analyzeCooldown > 0}
+                className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Analyzing...
+                  </>
+                ) : analyzeCooldown > 0 ? (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Wait {analyzeCooldown}s
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Analyze model
+                  </>
+                )}
+              </Button>
             </div>
 
-            <Button
-              onClick={handleAnalyze}
-              disabled={!tmdlText.trim() || isAnalyzing || analyzeCooldown > 0}
-              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isAnalyzing ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                  Analyzing...
-                </>
-              ) : analyzeCooldown > 0 ? (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Wait {analyzeCooldown}s
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Analyze Model
-                </>
-              )}
-            </Button>
-          </div>
-          {analyzeCooldown > 0 && (
-            <p className="mt-3 text-sm text-muted-foreground">
-              Cooldown active to prevent repeated runs. You can analyze again in {analyzeCooldown}s.
-            </p>
-          )}
-        </div>
-
-        {/* How to Get TMDL Guide */}
-        <div
-          ref={guideRef}
-          className={`scroll-hidden stagger-3 ${guideVisible ? 'scroll-visible' : ''} mt-12`}
-        >
-          <div className="card-light overflow-hidden">
-            <button
-              onClick={() => setShowGuide(!showGuide)}
-              className="w-full p-5 flex items-center justify-between hover:bg-secondary/30 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-black flex items-center justify-center">
-                  <Download className="w-5 h-5 text-white" />
-                </div>
-                <div className="text-left">
-                  <h3 className="text-black font-semibold">How to Get Your TMDL File</h3>
-                  <p className="text-sm text-muted-foreground">Learn how to extract TMDL from Power BI Desktop</p>
-                </div>
-              </div>
-              {showGuide ? (
-                <ChevronUp className="w-5 h-5 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-muted-foreground" />
-              )}
-            </button>
-
-            {showGuide && (
-              <div className="px-5 pb-6 border-t border-border">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
-                  {guideSteps.map((step, index) => (
-                    <div
-                      key={step.title}
-                      className="flex gap-4 p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors"
-                    >
-                      <div className="flex-shrink-0">
-                        <div className="w-10 h-10 rounded-lg bg-white border border-border flex items-center justify-center">
-                          <step.icon className="w-5 h-5 text-black" />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="w-5 h-5 rounded-full bg-black text-white text-xs flex items-center justify-center font-medium">
-                            {index + 1}
-                          </span>
-                          <h4 className="text-black font-medium text-sm">{step.title}</h4>
-                        </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {step.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-5 p-4 rounded-xl bg-blue-50 border border-blue-100">
-                  <p className="text-sm text-blue-800">
-                    <strong>Tip:</strong> You can also use Tabular Editor 3 or SQL Server Management Studio (SSMS) to script out your model as TMDL.
-                    In Tabular Editor, go to File → Save As → TMDL Script.
-                  </p>
-                </div>
-              </div>
+            {analyzeCooldown > 0 && (
+              <p className="mt-3 text-sm text-gray-500">
+                Cooldown active to avoid repeated runs. You can analyze again in {analyzeCooldown}s.
+              </p>
             )}
+          </div>
+
+          <div className={`scroll-hidden-right ${shellsVisible ? 'scroll-visible-right' : ''} powerbi-shell p-6 md:p-8`}>
+            <div className="powerbi-eyebrow mb-4">
+              <Download className="h-4 w-4" />
+              Export workflow
+            </div>
+            <h3 className="font-heading text-3xl font-bold tracking-tight text-black">
+              How to get a clean TMDL file from Power BI Desktop.
+            </h3>
+            <p className="mt-4 text-sm leading-relaxed text-gray-600">
+              The analyzer works best when the exported model definition is intact
+              and easy to inspect before you ask for recommendations.
+            </p>
+
+            <div className="mt-6 space-y-4">
+              {guideSteps.map((step, index) => (
+                <div key={step.title} className="powerbi-step-card">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black text-white">
+                      <step.icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-[11px] font-semibold text-white">
+                          {index + 1}
+                        </span>
+                        <h4 className="text-sm font-semibold text-black">{step.title}</h4>
+                      </div>
+                      <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="powerbi-note mt-6">
+              <p className="text-sm leading-relaxed text-amber-900">
+                <strong>Tip:</strong> Tabular Editor 3 and SSMS can also script a
+                model as TMDL. Use whichever export path gives you the cleanest
+                semantic model definition.
+              </p>
+            </div>
           </div>
         </div>
       </div>

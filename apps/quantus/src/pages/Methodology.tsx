@@ -14,6 +14,8 @@ interface Section {
     content: React.ReactNode;
 }
 
+const BRAND_BLUE = '#2563EB';
+
 // ─── Accordion section ────────────────────────────────────────────────────────
 
 function AccordionSection({ section, lightMode }: { section: Section; lightMode?: boolean }) {
@@ -69,7 +71,7 @@ const SECTIONS: Section[] = [
                         ['High Volatility (annualised vol >30%)', 'Regime-agnostic. Position sizing reduced by 40%. All risk metrics take precedence.'],
                     ].map(([label, desc]) => (
                         <li key={label}>
-                            <span className="font-semibold text-blue-400">{label}:</span> {desc}
+                            <span className="font-semibold" style={{ color: BRAND_BLUE }}>{label}:</span> {desc}
                         </li>
                     ))}
                 </ul>
@@ -96,7 +98,7 @@ const SECTIONS: Section[] = [
                     { n: '11. Reinforcement Learning Agent', d: 'PPO (Proximal Policy Optimisation) agent trained on 10 years of historical data with transaction cost simulation. Outputs current allocation recommendation. Not used as primary signal — advisory only.', t: 'AI agent' },
                     { n: '12. Factor Investing (Barra-style)', d: 'Decomposes returns into Value, Momentum, Quality, Low-Volatility, and Size factors. Shows which factors explain recent performance and whether the current regime favours each.', t: 'Factor analysis' },
                 ].map(m => (
-                    <div key={m.n} className="border-l-2 pl-3" style={{ borderColor: '#2D3748' }}>
+                    <div key={m.n} className="border-l-2 pl-3" style={{ borderColor: 'rgba(37,99,235,0.28)' }}>
                         <div className="font-semibold text-xs mb-0.5">{m.n}</div>
                         <div className="text-xs opacity-70 mb-1 uppercase tracking-wider">{m.t}</div>
                         <div>{m.d}</div>
@@ -135,7 +137,7 @@ const SECTIONS: Section[] = [
             <div className="space-y-3">
                 <table className="w-full text-xs">
                     <thead>
-                        <tr className="text-left border-b" style={{ borderColor: '#374151' }}>
+                        <tr className="text-left border-b" style={{ borderColor: 'rgba(148,163,184,0.28)' }}>
                             <th className="pb-2 font-semibold">Tier</th>
                             <th className="pb-2 font-semibold">Sources</th>
                             <th className="pb-2 font-semibold">Credibility</th>
@@ -148,8 +150,8 @@ const SECTIONS: Section[] = [
                             ['B', 'Yahoo Finance / yfinance, Financial Modeling Prep', 'High', 'Price, earnings, fundamentals'],
                             ['C', 'Grok/X, Reddit, NewsAPI', 'Medium', 'Sentiment only — never standalone signal'],
                         ].map(([tier, sources, cred, use]) => (
-                            <tr key={tier} className="border-b" style={{ borderColor: '#1A1A1A' }}>
-                                <td className="py-2 font-bold" style={{ color: tier === 'A' ? '#10B981' : tier === 'B' ? '#3B82F6' : '#9CA3AF' }}>Tier {tier}</td>
+                            <tr key={tier} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
+                                <td className="py-2 font-bold" style={{ color: tier === 'A' ? '#10B981' : tier === 'B' ? BRAND_BLUE : '#9CA3AF' }}>Tier {tier}</td>
                                 <td className="py-2">{sources}</td>
                                 <td className="py-2">{cred}</td>
                                 <td className="py-2">{use}</td>
@@ -179,7 +181,7 @@ const SECTIONS: Section[] = [
                     ].map(([label, weight]) => (
                         <div key={label} className="flex items-start justify-between gap-4">
                             <span className="flex-1">{label}</span>
-                            <span className="font-mono font-bold flex-shrink-0" style={{ color: '#6366F1' }}>{weight}</span>
+                            <span className="font-mono font-bold flex-shrink-0" style={{ color: BRAND_BLUE }}>{weight}</span>
                         </div>
                     ))}
                 </div>
@@ -227,7 +229,7 @@ const SECTIONS: Section[] = [
             <div className="space-y-3">
                 <table className="w-full text-xs">
                     <thead>
-                        <tr className="text-left border-b" style={{ borderColor: '#374151' }}>
+                        <tr className="text-left border-b" style={{ borderColor: 'rgba(148,163,184,0.28)' }}>
                             <th className="pb-2 font-semibold">Jurisdiction</th>
                             <th className="pb-2 font-semibold">Disclaimer Standard</th>
                             <th className="pb-2 font-semibold">Notes</th>
@@ -240,7 +242,7 @@ const SECTIONS: Section[] = [
                             ['European Union', 'MiFID II Article 24 disclosure. Not PRIIP-compliant for retail.', 'Available to elective professional clients under MiFID II.'],
                             ['Global / Other', 'For informational purposes only. Not investment advice.', 'Institutional use presumed outside above jurisdictions.'],
                         ].map(([j, d, n]) => (
-                            <tr key={j} className="border-b" style={{ borderColor: '#1A1A1A' }}>
+                            <tr key={j} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
                                 <td className="py-2 font-semibold">{j}</td>
                                 <td className="py-2">{d}</td>
                                 <td className="py-2 opacity-60">{n}</td>

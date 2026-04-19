@@ -5,6 +5,7 @@ import {
     Users, Clock, Filter, Calendar, X, Search, ArrowUpDown,
 } from 'lucide-react';
 import { fetchUserWatchlist } from '../services/product';
+import { WorkspaceEmpty, WorkspaceError, WorkspaceSkeleton } from '../components/workspace/WorkspaceStates';
 import type { AssetClass, AssetEntry, QuantusWatchlistItem as WatchlistItem, SignalType } from '../types';
 
 type WatchlistSortKey = 'name' | 'signal' | 'confidence' | 'change';
@@ -74,16 +75,6 @@ function savedAssetToWatchlistItem(asset: AssetEntry): WatchlistItem {
 }
 
 // ─── Skeleton card ────────────────────────────────────────────────────────────
-
-function SkeletonCard() {
-    return (
-        <div className="bis-section-card rounded-[24px] p-4">
-            {[80, 60, 48, 36, 52].map((w, i) => (
-                <div key={i} className={`h-${i === 0 ? 4 : 2.5} rounded skeleton mb-${i === 0 ? 3 : 2}`} style={{ width: `${w}%` }} />
-            ))}
-        </div>
-    );
-}
 
 // ─── Watchlist ticker card ────────────────────────────────────────────────────
 
@@ -382,8 +373,13 @@ export function Watchlist({
                 </div>
 
                 {error && (
-                    <div className="mb-6 rounded-[20px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                        {error}
+                    <div className="mb-6">
+                        <WorkspaceError
+                            title="Watchlist unavailable"
+                            message={error}
+                            onRetry={() => { void handleRefreshAll(); }}
+                            lightMode={lightMode}
+                        />
                     </div>
                 )}
 
@@ -448,7 +444,11 @@ export function Watchlist({
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <AnimatePresence mode="popLayout">
                         {refreshing || loading
-                            ? Array.from({ length: 5 }, (_, i) => <SkeletonCard key={i} />)
+                            ? (
+                                <div className="sm:col-span-2 xl:col-span-4">
+                                    <WorkspaceSkeleton rows={5} lightMode={lightMode} />
+                                </div>
+                            )
                             : filtered.map((item, i) => (
                                 <motion.div
                                     key={item.ticker}
@@ -469,12 +469,15 @@ export function Watchlist({
                     </AnimatePresence>
                 </div>
 
-                {!refreshing && !loading && filtered.length === 0 && (
-                    <div className="mt-6 rounded-[24px] border border-dashed border-gray-300 bg-white px-5 py-6 text-sm text-gray-600">
-                        {isAuthenticated
+                {!refreshing && !loading && !error && filtered.length === 0 && (
+                    <WorkspaceEmpty
+                        icon={<Bell className="w-6 h-6" />}
+                        title="Watchlist is empty"
+                        message={isAuthenticated
                             ? 'No persisted watchlist assets yet. Save a ticker from the workspace or subscribe from a report to start building the list.'
                             : 'No local watchlist assets yet. Save a ticker from search or sign in to persist your watchlist.'}
-                    </div>
+                        lightMode={lightMode}
+                    />
                 )}
 
                 {/* FREE tier cap notice */}

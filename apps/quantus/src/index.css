@@ -17,9 +17,9 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* ── Light mode colors (default — BI Solutions style) ────────────────── */
-  --color-bg-base: #FFFFFF;
-  --color-surface: #F9FAFB;
-  --color-surface-2: #F3F4F6;
+  --color-bg-base: #FBFBF8;
+  --color-surface: #FCFCFA;
+  --color-surface-2: #F5F5F2;
   --color-border: #E5E7EB;
   --color-border-light: #D1D5DB;
 
@@ -39,7 +39,7 @@
   --radius-pill: 9999px;
 
   /* ── Shadows ───────────────────────────────────────────────────────────── */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 24px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 14px 48px rgba(15, 23, 42, 0.08);
   --shadow-glow-blue: 0 0 40px rgba(37, 99, 235, 0.15);
   --shadow-glow-emerald: 0 0 40px rgba(16, 185, 129, 0.15);
 }
@@ -239,6 +239,7 @@ body.dark-mode .section-divider {
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
+  box-shadow: 0 16px 40px -34px rgba(15, 23, 42, 0.18);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -249,7 +250,7 @@ body.dark-mode .section-divider {
 
 /* Glassmorphism — light style */
 .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -285,6 +286,7 @@ body.dark-mode .section-divider {
   color: #FFFFFF;
   border: none;
   cursor: pointer;
+  box-shadow: 0 12px 24px -18px rgba(15, 23, 42, 0.32);
   transition: all 0.2s ease;
 }
 
@@ -307,21 +309,21 @@ body.dark-mode .btn-nav-cta:hover {
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(229, 231, 235, 0.9);
-  border-radius: 32px;
+  border-radius: 40px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(249, 250, 251, 0.94) 100%);
-  box-shadow: 0 24px 80px -52px rgba(15, 23, 42, 0.34);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(249, 250, 251, 0.96) 100%);
+  box-shadow: 0 28px 88px -58px rgba(15, 23, 42, 0.28);
 }
 
 .bis-page-shell::before {
   content: "";
   position: absolute;
-  top: -15%;
-  right: -10%;
-  width: 340px;
-  height: 340px;
+  top: -14%;
+  right: -8%;
+  width: 380px;
+  height: 380px;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(229, 231, 235, 0.55) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(229, 231, 235, 0.72) 0%, transparent 72%);
   pointer-events: none;
 }
 
@@ -331,10 +333,10 @@ body.dark-mode .btn-nav-cta:hover {
 }
 
 .bis-section-card {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.985);
   border: 1px solid rgba(229, 231, 235, 0.9);
-  border-radius: 24px;
-  box-shadow: 0 14px 40px -34px rgba(15, 23, 42, 0.28);
+  border-radius: 28px;
+  box-shadow: 0 18px 48px -36px rgba(15, 23, 42, 0.18);
 }
 
 .bis-eyebrow {
@@ -343,10 +345,12 @@ body.dark-mode .btn-nav-cta:hover {
   gap: 8px;
   border-radius: 999px;
   border: 1px solid #D1D5DB;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: #6B7280;
 }
 
