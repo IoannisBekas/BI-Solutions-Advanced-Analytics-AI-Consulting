@@ -88,7 +88,7 @@ function AppContent() {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-black/5 bg-white/86 backdrop-blur-xl">
         <div className="mx-auto flex h-[82px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <a
-            href="https://bisolutions.group/"
+            href="https://www.bisolutions.group/"
             className="flex min-w-0 items-center gap-3 text-left"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black text-xs font-bold tracking-[0.16em] text-white">

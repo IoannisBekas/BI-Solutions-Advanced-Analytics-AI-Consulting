@@ -5,7 +5,7 @@ import { fetchAccuracySummary } from '../services/product';
 import { WorkspaceError, WorkspaceSkeleton } from '../components/workspace/WorkspaceStates';
 import type { AccuracyRow, AccuracySummary } from '../types';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 type Segment = 'signal' | 'engine' | 'regime' | 'sector' | 'market_cap';
 
 interface AccuracyDashboardProps { lightMode?: boolean; }
@@ -26,7 +26,7 @@ function formatDateLabel(value: string | null) {
 }
 
 
-// ─── Return chip ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ Return chip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ReturnChip({ pct }: { pct: number }) {
     const pos = pct > 0;
     const neu = Math.abs(pct) < 0.5;
@@ -39,7 +39,7 @@ function ReturnChip({ pct }: { pct: number }) {
     );
 }
 
-// ─── Bar visual ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Bar visual â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ReturnBar({ pct, maxAbs, lightMode }: { pct: number; maxAbs: number; lightMode?: boolean }) {
     const pctNorm = Math.abs(pct) / maxAbs;
     const pos = pct >= 0;
@@ -66,7 +66,7 @@ function ReturnBar({ pct, maxAbs, lightMode }: { pct: number; maxAbs: number; li
     );
 }
 
-// ─── Accuracy table ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Accuracy table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; showWinRate?: boolean; lightMode?: boolean }) {
     const maxAbs = Math.max(1, ...rows.map((row) => Math.abs(row.avgExcessPct ?? row.avgReturnPct)));
     const tp = lightMode ? '#111827' : '#F9FAFB';
@@ -112,7 +112,7 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
     );
 }
 
-// ─── Main dashboard ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Main dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
     const [segment, setSegment] = useState<Segment>('signal');
     const [summary, setSummary] = useState<AccuracySummary | null>(null);
@@ -204,7 +204,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                         <div className="h-full rounded-full"
                             style={{ width: `${Math.min(100, (summary.resolvedCount / Math.max(1, summary.unlockThreshold)) * 100)}%`, background: 'linear-gradient(90deg,#2563EB,#60A5FA)' }} />
                     </div>
-                    <p className="text-xs mt-2" style={{ color: ts }}>{summary.resolvedCount} / {summary.unlockThreshold} resolved · {summary.pendingCount} pending</p>
+                    <p className="text-xs mt-2" style={{ color: ts }}>{summary.resolvedCount} / {summary.unlockThreshold} resolved Â· {summary.pendingCount} pending</p>
                     <div
                         className="mt-5 rounded-[24px] border px-4 py-4 text-left"
                         style={{
@@ -250,12 +250,12 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                             <div className="bis-eyebrow mb-4">
                                 <Award className="w-3.5 h-3.5" />
                                 <span>
-                                    Public Signal Track Record · Since {formatDateLabel(summary.engineInception) ?? 'first stored snapshot'}
+                                    Public Signal Track Record Â· Since {formatDateLabel(summary.engineInception) ?? 'first stored snapshot'}
                                 </span>
                             </div>
                             <h1 className="text-3xl font-bold tracking-tight md:text-4xl" style={{ color: tp }}>Quantus Signal Performance</h1>
                             <p className="mt-2 text-sm md:text-base" style={{ color: ts }}>
-                                {summary.resolvedCount} resolved outcomes · {summary.pendingCount} pending · Last updated {formatDateLabel(summary.lastUpdated) ?? 'not yet available'}
+                                {summary.resolvedCount} resolved outcomes Â· {summary.pendingCount} pending Â· Last updated {formatDateLabel(summary.lastUpdated) ?? 'not yet available'}
                             </p>
                         </div>
                         {/* Summary KPIs */}
@@ -304,9 +304,9 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 {/* Column headers legend */}
                 <div className="flex items-center gap-2 text-xs mb-3" style={{ color: ts }}>
                     <span>Avg Return = 30-day price change %</span>
-                    <span>·</span>
+                    <span>Â·</span>
                     <span>Excess = vs benchmark (%)</span>
-                    {showWinRate && <><span>·</span><span>Win Rate = % of signals beating benchmark</span></>}
+                    {showWinRate && <><span>Â·</span><span>Win Rate = % of signals beating benchmark</span></>}
                 </div>
 
                 {/* Table */}
@@ -314,7 +314,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
 
                 {/* Footer disclaimer */}
                 <p className="mt-8 text-center text-xs" style={{ color: ts }}>
-                    Quantus Research Solutions · Not investment advice · bisolutions.group/methodology for full model documentation
+                    Quantus Research Solutions Â· Not investment advice Â· www.bisolutions.group/methodology for full model documentation
                 </p>
             </section>
         </div>

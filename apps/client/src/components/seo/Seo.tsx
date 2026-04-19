@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 const SITE_NAME = "BI Solutions Group";
-const SITE_URL = "https://bisolutions.group";
+const SITE_URL = "https://www.bisolutions.group";
 const DEFAULT_IMAGE = "/bi-solutions-logo.png";
 
 type StructuredData = Record<string, unknown> | Array<Record<string, unknown>>;

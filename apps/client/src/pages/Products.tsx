@@ -20,12 +20,12 @@ export default function Products() {
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "BI Solutions Products",
-          url: "https://bisolutions.group/products",
+          url: "https://www.bisolutions.group/products",
           hasPart: [
-            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
-            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
-            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}`,
-            `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
+            `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+            `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+            `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}`,
+            `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
           ],
         }}
       />

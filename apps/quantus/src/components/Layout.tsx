@@ -134,10 +134,10 @@ export function Layout({
         appearance: 'none' as const,
         WebkitAppearance: 'none' as const,
     };
-    const quantusOverviewUrl = 'https://bisolutions.group/quantus';
-    const productsOverviewUrl = 'https://bisolutions.group/products';
-    const contactUrl = 'https://bisolutions.group/contact';
-    const bisolutionsHomeUrl = 'https://bisolutions.group/';
+    const quantusOverviewUrl = 'https://www.bisolutions.group/quantus';
+    const productsOverviewUrl = 'https://www.bisolutions.group/products';
+    const contactUrl = 'https://www.bisolutions.group/contact';
+    const bisolutionsHomeUrl = 'https://www.bisolutions.group/';
     const showExpandedHeader = !minimalHeader;
 
     return (
@@ -247,7 +247,7 @@ export function Layout({
                         })}
                     </nav>
 
-                    {/* ── Compact nav search ──────────────────────────── */}
+                    {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Compact nav search ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
                     <form
                         className={showExpandedHeader ? 'hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[270px] rounded-full px-3.5 py-2 transition-all duration-200' : 'hidden'}
                         style={{
@@ -271,7 +271,7 @@ export function Layout({
                             type="text"
                             value={navQuery}
                             onChange={(e) => setNavQuery(e.target.value)}
-                            placeholder="Ticker…"
+                            placeholder="TickerÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦"
                             className="flex-1 bg-transparent text-xs outline-none placeholder:text-gray-500"
                             style={{ color: textColor, minWidth: 0 }}
                             autoComplete="off"
@@ -353,7 +353,7 @@ export function Layout({
                                         border: `1px solid ${borderColor}`,
                                     }}
                                 >
-                                    {userTier ?? 'FREE'} · {userName}
+                                    {userTier ?? 'FREE'} Ãƒâ€šÃ‚Â· {userName}
                                 </div>
                                 <button
                                     onClick={onSignOut}
@@ -613,7 +613,7 @@ export function Layout({
                                 Past performance does not guarantee future results, and all investments involve risk.
                             </p>
                             <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
-                                <span>© 2026 BI Solutions Group · Quantus Investing · bisolutions.group</span>
+                                <span>Ãƒâ€šÃ‚Â© 2026 BI Solutions Group Ãƒâ€šÃ‚Â· Quantus Investing Ãƒâ€šÃ‚Â· www.bisolutions.group</span>
                                 <span>Research workspace under the BI Solutions product suite</span>
                             </div>
                         </div>

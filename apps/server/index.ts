@@ -70,6 +70,8 @@ loadLocalEnvFiles();
 const app = express();
 const httpServer = createServer(app);
 const isProduction = process.env.NODE_ENV === "production";
+const APEX_HOST = "bisolutions.group";
+const CANONICAL_HOST = process.env.CANONICAL_HOST?.trim() || "www.bisolutions.group";
 
 declare module "http" {
   interface IncomingMessage {
@@ -87,9 +89,22 @@ const REQUEST_ID_HEADER = "x-request-id";
 
 app.disable("x-powered-by");
 
-// Keep requests on the host that received them. The live apex and www domains
-// are currently backed by different stacks, so forcing www traffic to the bare
-// domain breaks product routes served by Railway.
+// If the app ever receives traffic on the bare domain, preserve the full path
+// and move users onto the canonical host instead of serving duplicate origins.
+app.use((req, res, next) => {
+  if (!isProduction) {
+    next();
+    return;
+  }
+
+  const host = req.hostname?.toLowerCase();
+  if (host !== APEX_HOST || !CANONICAL_HOST) {
+    next();
+    return;
+  }
+
+  res.redirect(308, `https://${CANONICAL_HOST}${req.originalUrl}`);
+});
 
 // Generate a per-request CSP nonce for inline <script> tags.
 app.use((_req, res, next) => {

@@ -35,7 +35,7 @@ export default function BlogPost() {
         );
     }
 
-    // Render inline bold (**text**) as React elements — no dangerouslySetInnerHTML
+    // Render inline bold (**text**) as React elements â€” no dangerouslySetInnerHTML
     const renderInline = (text: string, boldClass = "font-semibold") => {
         const parts = text.split(/\*\*(.*?)\*\*/g);
         return parts.map((part, i) =>
@@ -93,24 +93,24 @@ export default function BlogPost() {
                     "@type": "BlogPosting",
                     headline: post.title,
                     description: post.excerpt,
-                    image: `https://bisolutions.group${post.featuredImage}`,
+                    image: `https://www.bisolutions.group${post.featuredImage}`,
                     author: {
                         "@type": "Organization",
                         name: "BI Solutions",
-                        url: "https://bisolutions.group",
+                        url: "https://www.bisolutions.group",
                     },
                     publisher: {
                         "@type": "Organization",
                         name: "BI Solutions",
                         logo: {
                             "@type": "ImageObject",
-                            url: "https://bisolutions.group/bi-solutions-logo.png",
+                            url: "https://www.bisolutions.group/bi-solutions-logo.png",
                         },
                     },
                     datePublished: new Date(post.date).toISOString(),
                     mainEntityOfPage: {
                         "@type": "WebPage",
-                        "@id": `https://bisolutions.group/blog/${post.slug}`,
+                        "@id": `https://www.bisolutions.group/blog/${post.slug}`,
                     },
                 }}
             />

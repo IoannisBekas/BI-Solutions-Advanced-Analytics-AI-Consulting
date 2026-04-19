@@ -212,7 +212,7 @@ export default function QuantusPage() {
             {
               "@type": "WebPage",
               name: "Quantus Investing",
-              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+              url: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
               description:
                 "7-section research reports powered by a 12-model ML ensemble with public backtested accuracy.",
             },
@@ -221,7 +221,7 @@ export default function QuantusPage() {
               name: "Quantus Investing",
               applicationCategory: "FinanceApplication",
               operatingSystem: "Web",
-              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+              url: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
               offers: {
                 "@type": "Offer",
                 price: "0",
@@ -250,19 +250,19 @@ export default function QuantusPage() {
                   "@type": "ListItem",
                   position: 1,
                   name: "Home",
-                  item: "https://bisolutions.group/",
+                  item: "https://www.bisolutions.group/",
                 },
                 {
                   "@type": "ListItem",
                   position: 2,
                   name: "Products",
-                  item: "https://bisolutions.group/products",
+                  item: "https://www.bisolutions.group/products",
                 },
                 {
                   "@type": "ListItem",
                   position: 3,
                   name: "Quantus Investing",
-                  item: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
+                  item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
                 },
               ],
             },
@@ -283,7 +283,7 @@ export default function QuantusPage() {
             <ScrollReveal className="mb-16 text-center" width="100%">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
                 <Sparkles className="h-4 w-4" />
-                Quantus Investing on bisolutions.group
+                Quantus Investing on www.bisolutions.group
               </div>
               <h1 className="text-5xl font-bold font-heading tracking-tight md:text-7xl">
                 Quantus Investing

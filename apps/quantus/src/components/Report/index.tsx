@@ -77,7 +77,7 @@ export function ReportDashboard({
                     ))}
                 </div>
                 <p className="mt-3 text-gray-500">
-                    For educational research purposes only. Not financial advice. Quantus Research Solutions - {report.engine} - bisolutions.group
+                    For educational research purposes only. Not financial advice. Quantus Research Solutions - {report.engine} - www.bisolutions.group
                 </p>
             </div>
             <div className="mt-4">

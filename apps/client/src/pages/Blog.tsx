@@ -33,7 +33,7 @@ export default function Blog() {
                     "@context": "https://schema.org",
                     "@type": "Blog",
                     name: "BI Solutions Blog",
-                    url: "https://bisolutions.group/blog",
+                    url: "https://www.bisolutions.group/blog",
                 }}
             />
             <Navbar />

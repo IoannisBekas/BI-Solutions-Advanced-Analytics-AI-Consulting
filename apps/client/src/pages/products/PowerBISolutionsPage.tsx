@@ -111,7 +111,7 @@ export default function PowerBISolutionsPage() {
             {
               "@type": "WebPage",
               name: "Power BI Solutions",
-              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+              url: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
               description:
                 "Semantic model analysis and AI-assisted optimization workflows for Power BI.",
             },
@@ -120,7 +120,7 @@ export default function PowerBISolutionsPage() {
               name: "Power BI Solutions",
               applicationCategory: "BusinessApplication",
               operatingSystem: "Web",
-              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+              url: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
               publisher: {
                 "@type": "Organization",
                 name: "BI Solutions Group",
@@ -140,9 +140,9 @@ export default function PowerBISolutionsPage() {
             {
               "@type": "BreadcrumbList",
               itemListElement: [
-                { "@type": "ListItem", position: 1, name: "Home", item: "https://bisolutions.group/" },
-                { "@type": "ListItem", position: 2, name: "Products", item: "https://bisolutions.group/products" },
-                { "@type": "ListItem", position: 3, name: "Power BI Solutions", item: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}` },
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
+                { "@type": "ListItem", position: 2, name: "Products", item: "https://www.bisolutions.group/products" },
+                { "@type": "ListItem", position: 3, name: "Power BI Solutions", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}` },
               ],
             },
           ],
@@ -162,7 +162,7 @@ export default function PowerBISolutionsPage() {
             <ScrollReveal className="mb-16 text-center" width="100%">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
                 <Sparkles className="h-4 w-4" />
-                Native product on bisolutions.group
+                Native product on www.bisolutions.group
               </div>
               <h1 className="text-5xl md:text-7xl font-bold font-heading tracking-tight">
                 Power BI Solutions

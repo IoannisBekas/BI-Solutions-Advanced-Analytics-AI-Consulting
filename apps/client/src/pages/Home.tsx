@@ -22,14 +22,14 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: "BI Solutions Group",
-            url: "https://bisolutions.group/",
+            url: "https://www.bisolutions.group/",
           },
           {
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "BI Solutions Group",
-            url: "https://bisolutions.group/",
-            logo: "https://bisolutions.group/bi-solutions-logo.png",
+            url: "https://www.bisolutions.group/",
+            logo: "https://www.bisolutions.group/bi-solutions-logo.png",
             sameAs: [
               "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
               "https://github.com/IoannisBekas",
@@ -45,7 +45,7 @@ export default function Home() {
           badge="Product Studio"
           id="products"
           heading="Four products, each purpose-built for a specific workflow."
-          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio — ready to explore."
+          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio â€” ready to explore."
         />
 
         {/* Selected Works Preview */}

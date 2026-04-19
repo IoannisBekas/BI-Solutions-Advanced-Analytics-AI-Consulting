@@ -42,7 +42,7 @@ const products = [
     href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
     appHref: withSiteBase(PRODUCT_ROUTE_ALIASES.aiAdvisor),
     description:
-      "AI-powered professional guidance across accounting, legal, and consulting domains — trained on Greek law and business practices.",
+      "AI-powered professional guidance across accounting, legal, and consulting domains â€” trained on Greek law and business practices.",
     bullets: [
       "Role-based AI advisors: Accountant, Lawyer, and Consultant",
       "Powered by Claude with domain-specific Greek expertise",
@@ -109,7 +109,7 @@ export function ProductShowcase({
             {heading}
           </h2>
           <p className="mt-4 max-w-3xl text-lg text-gray-600 leading-relaxed">
-            <span className="font-mono text-gray-800">bisolutions.group</span>{" "}
+            <span className="font-mono text-gray-800">www.bisolutions.group</span>{" "}
             {description}
           </p>
         </ScrollReveal>

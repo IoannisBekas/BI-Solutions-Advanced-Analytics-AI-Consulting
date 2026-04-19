@@ -54,7 +54,7 @@ const showcaseProjects = [
     accentClassName: "from-sky-50 via-white to-stone-100",
   },
   {
-    name: "Ρυθμική Δραπετσώνας",
+    name: "Î¡Ï…Î¸Î¼Î¹ÎºÎ® Î”ÏÎ±Ï€ÎµÏ„ÏƒÏŽÎ½Î±Ï‚",
     subtitle: "Club website for rhythmic gymnastics",
     category: "Organization website",
     url: "https://ioannisbekas.github.io/Rythm-Drap/",
@@ -647,7 +647,7 @@ export default function WebsiteAppPortfolioPage() {
             {
               "@type": "CollectionPage",
               name: "BI Solutions Website & App Portfolio",
-              url: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
+              url: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
               hasPart: showcaseProjects.map((project) => project.url),
             },
             {
@@ -664,9 +664,9 @@ export default function WebsiteAppPortfolioPage() {
             {
               "@type": "BreadcrumbList",
               itemListElement: [
-                { "@type": "ListItem", position: 1, name: "Home", item: "https://bisolutions.group/" },
-                { "@type": "ListItem", position: 2, name: "Products", item: "https://bisolutions.group/products" },
-                { "@type": "ListItem", position: 3, name: "Website & App Portfolio", item: `https://bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}` },
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
+                { "@type": "ListItem", position: 2, name: "Products", item: "https://www.bisolutions.group/products" },
+                { "@type": "ListItem", position: 3, name: "Website & App Portfolio", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}` },
               ],
             },
           ],
@@ -745,7 +745,7 @@ export default function WebsiteAppPortfolioPage() {
           </div>
         </section>
 
-        {/* Featured projects — stacked layout */}
+        {/* Featured projects â€” stacked layout */}
         <section
           id="featured-sites"
           className="mx-auto mb-16 max-w-7xl px-6 md:px-12"

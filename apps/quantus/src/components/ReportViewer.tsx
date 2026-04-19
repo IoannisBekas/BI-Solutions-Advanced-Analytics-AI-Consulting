@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Share2, Download, Bell, Bookmark, ThumbsUp, ThumbsDown, ChevronDown, ChevronUp, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Minus, Sparkles, X } from 'lucide-react';
 import type { ReportData, SignalType, RegimeLabel } from '../types';
 
-// ── Helper Components ────────────────────────────────────────────────────────
+// â”€â”€ Helper Components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function regimeClass(label: RegimeLabel) {
     const map: Record<string, string> = {
@@ -156,7 +156,7 @@ function MetricCard({ label, value, sub, trend, note, freshness, lightMode }: {
                 <div className="metric-value text-xl font-bold mb-1" style={{ color: textPrimary }}>{value}</div>
                 {sub && <div className="text-xs" style={{ color: textSecondary }}>{sub}</div>}
                 {note && <div className="text-xs mt-2 leading-relaxed" style={{ color: textSecondary }}>{note}</div>}
-                {freshness && <div className="text-xs mt-2 text-gray-500">🕒 {freshness}</div>}
+                {freshness && <div className="text-xs mt-2 text-gray-500">ðŸ•’ {freshness}</div>}
             </div>
 
             <div className="mt-auto pt-2 border-t mt-3" style={{ borderColor: lightMode ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
@@ -166,7 +166,7 @@ function MetricCard({ label, value, sub, trend, note, freshness, lightMode }: {
     );
 }
 
-// ── MAIN REPORT DASHBOARD ────────────────────────────────────────────────────
+// â”€â”€ MAIN REPORT DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface ReportDashboardProps {
     report: ReportData;
@@ -228,16 +228,16 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     }
                 }
             }
-            setDiveContent(c => ({ ...c, [idx]: text || 'Analysis complete — see narrative above for key insights.' }));
+            setDiveContent(c => ({ ...c, [idx]: text || 'Analysis complete â€” see narrative above for key insights.' }));
         } catch {
-            setDiveContent(c => ({ ...c, [idx]: 'Deep dive generation unavailable — check API connection.' }));
+            setDiveContent(c => ({ ...c, [idx]: 'Deep dive generation unavailable â€” check API connection.' }));
         } finally {
             setDiveLoading(l => ({ ...l, [idx]: false }));
         }
     };
 
     const DEEP_DIVE_MODULES = [
-        'Time Series Forecasting — Model Ensemble',
+        'Time Series Forecasting â€” Model Ensemble',
         'Mean Reversion Strategy',
         'Sentiment Analysis',
         'Portfolio Optimization & Efficient Frontier',
@@ -253,7 +253,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
 
     return (
         <div>
-            {/* ── REPORT HEADER ──────────────────────────────────────── */}
+            {/* â”€â”€ REPORT HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <motion.div
                 initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -273,12 +273,12 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                 <span className={`badge badge-${report.asset_class.toLowerCase()}`}>{report.asset_class}</span>
                             </div>
                             <div className="text-sm" style={{ color: textSecondary }}>
-                                {report.ticker} · {report.exchange} · {report.sector} · {report.market_cap}
+                                {report.ticker} Â· {report.exchange} Â· {report.sector} Â· {report.market_cap}
                             </div>
                             <div className="text-xs mt-1 text-gray-500">
-                                {report.report_id} · {report.engine} · {report.researcher_count} researchers
+                                {report.report_id} Â· {report.engine} Â· {report.researcher_count} researchers
                                 {report.community_interest_spike && (
-                                    <span className="ml-3 text-blue-400">🔥 Interest ↑{report.community_interest_spike}% (48h)</span>
+                                    <span className="ml-3 text-blue-400">ðŸ”¥ Interest â†‘{report.community_interest_spike}% (48h)</span>
                                 )}
                             </div>
                         </div>
@@ -305,8 +305,8 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg mb-3 text-xs"
                         style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.18)' }}>
                         <AlertTriangle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                        <span className="text-amber-400 font-semibold">{alert.related_ticker} — {alert.event}</span>
-                        <span className="text-gray-400">· {alert.impact}</span>
+                        <span className="text-amber-400 font-semibold">{alert.related_ticker} â€” {alert.event}</span>
+                        <span className="text-gray-400">Â· {alert.impact}</span>
                     </div>
                 ))}
 
@@ -316,7 +316,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     className="flex items-center gap-2 text-xs cursor-pointer mb-2 text-gray-500"
                 >
                     {showConfBreakdown ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    Confidence breakdown — {report.confidence_score}% overall
+                    Confidence breakdown â€” {report.confidence_score}% overall
                 </button>
                 <AnimatePresence>
                     {showConfBreakdown && (
@@ -362,15 +362,15 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 </div>
             </motion.div>
 
-            {/* ── SECTION A: EXECUTIVE SUMMARY ────────────────────────── */}
-            <SectionCard title="A — Executive Summary" id="section-1" lightMode={lightMode}>
+            {/* â”€â”€ SECTION A: EXECUTIVE SUMMARY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <SectionCard title="A â€” Executive Summary" id="section-1" lightMode={lightMode}>
                 {/* Narrative */}
                 <div className="mb-6">
                     <p className="text-sm leading-relaxed mb-3" style={{ color: textSecondary }}>
                         {plainEnglish['exec'] ? report.narrative_plain : report.narrative_executive_summary}
                     </p>
                     <button onClick={() => togglePlain('exec')} className="text-xs text-blue-400 hover:underline cursor-pointer">
-                        {plainEnglish['exec'] ? 'Show full analysis' : 'What does this mean for me? →'}
+                        {plainEnglish['exec'] ? 'Show full analysis' : 'What does this mean for me? â†’'}
                     </button>
                 </div>
 
@@ -378,10 +378,10 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 {report.earnings_flag && (
                     <div className="flex items-center gap-3 p-3 rounded-xl mb-5 text-xs"
                         style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)' }}>
-                        <span className="text-lg">🗓</span>
+                        <span className="text-lg">ðŸ—“</span>
                         <div>
                             <span className="font-semibold text-amber-400">Earnings in {report.earnings_flag.days_to_earnings} days</span>
-                            <span className="ml-2" style={{ color: textSecondary }}>{report.earnings_flag.implied_move} implied move · {report.earnings_flag.strategy_adjustment}</span>
+                            <span className="ml-2" style={{ color: textSecondary }}>{report.earnings_flag.implied_move} implied move Â· {report.earnings_flag.strategy_adjustment}</span>
                         </div>
                     </div>
                 )}
@@ -397,7 +397,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                             <div className="text-xs uppercase tracking-wider mb-1 text-gray-500">{card.label}</div>
                             <div className="font-bold text-sm mb-1" style={{ color: textPrimary }}>{card.value}</div>
                             <div className="text-xs mb-2" style={{ color: textSecondary }}>{card.plain_note}</div>
-                            <div className="text-xs text-gray-500">🕒 {card.freshness}</div>
+                            <div className="text-xs text-gray-500">ðŸ•’ {card.freshness}</div>
                         </div>
                     ))}
                 </div>
@@ -417,7 +417,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 {/* Accuracy Tracker */}
                 {report.historical_signals && report.historical_signals.length >= 3 && (
                     <div className="mt-5">
-                        <div className="text-xs font-semibold uppercase tracking-wider mb-3 text-gray-500">Quantus Accuracy Tracker — {report.ticker}</div>
+                        <div className="text-xs font-semibold uppercase tracking-wider mb-3 text-gray-500">Quantus Accuracy Tracker â€” {report.ticker}</div>
                         <div className="space-y-2">
                             {report.historical_signals.map((sig, i) => (
                                 <div key={i} className="flex items-center gap-3 text-xs rounded-lg px-3 py-2" style={{ background: dimBg }}>
@@ -425,7 +425,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                     <span className={`badge ${signalClass(sig.signal)}`} style={{ fontSize: '10px' }}>{sig.signal}</span>
                                     <span style={{ color: textSecondary }}>{sig.outcome}</span>
                                     <span className="ml-auto font-mono text-xs text-gray-500">{sig.engine}</span>
-                                    <span>{sig.correct ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> : <span className="text-red-400">✗</span>}</span>
+                                    <span>{sig.correct ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> : <span className="text-red-400">âœ—</span>}</span>
                                 </div>
                             ))}
                         </div>
@@ -434,8 +434,8 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 )}
             </SectionCard>
 
-            {/* ── SECTION B: OPPORTUNITY ──────────────────────────────── */}
-            <SectionCard title="B — Opportunity" id="section-2" lightMode={lightMode}>
+            {/* â”€â”€ SECTION B: OPPORTUNITY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <SectionCard title="B â€” Opportunity" id="section-2" lightMode={lightMode}>
                 {/* Tab nav */}
                 <div className="flex gap-1 mb-5 overflow-x-auto pb-1">
                     {(['forecast', 'momentum', 'sentiment', 'altdata'] as const).map(tab => (
@@ -454,7 +454,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                     {report.model_ensemble.ensemble_forecast}
                                 </div>
                                 <div className="text-xs" style={{ color: textSecondary }}>
-                                    Ensemble forecast · 30 days · Band: {report.model_ensemble.confidence_band.low} to {report.model_ensemble.confidence_band.high}
+                                    Ensemble forecast Â· 30 days Â· Band: {report.model_ensemble.confidence_band.low} to {report.model_ensemble.confidence_band.high}
                                 </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
@@ -482,7 +482,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     {activeTab === 'momentum' && (
                         <motion.div key="momentum" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                             <div className="p-3 rounded-xl mb-4 text-xs font-semibold" style={{ background: dimBg, border: `1px solid ${borderColor}`, color: textSecondary }}>
-                                Regime: <span style={{ color: '#F9FAFB' }}>{report.regime?.label ?? 'Unknown'}</span> — {report.regime?.implication ?? ''}
+                                Regime: <span style={{ color: '#F9FAFB' }}>{report.regime?.label ?? 'Unknown'}</span> â€” {report.regime?.implication ?? ''}
                             </div>
                             <div className="grid grid-cols-3 gap-3 mb-4">
                                 {[
@@ -499,7 +499,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                 ))}
                             </div>
                             <p className="text-xs leading-relaxed" style={{ color: textSecondary }}>
-                                Z-score vs. 90-day mean: +1.6 standard deviations — elevated but within Strong Uptrend norms.
+                                Z-score vs. 90-day mean: +1.6 standard deviations â€” elevated but within Strong Uptrend norms.
                                 Mean reversion is suppressed in this regime. Momentum continuation is the primary strategy.
                             </p>
                             <div className="flex justify-end mt-3"><Feedback /></div>
@@ -510,9 +510,9 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                         <motion.div key="sentiment" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                             <div className="space-y-3 mb-4">
                                 {[
-                                    { label: 'X Sentiment (Grok API)', score: report.alternative_data?.grok_x_sentiment?.score ?? 0, note: `Volume: ${(report.alternative_data?.grok_x_sentiment?.volume ?? 0).toLocaleString()} posts · ${report.alternative_data?.grok_x_sentiment?.campaign_detected ? '⚠️ Campaign detected — downweighted' : 'No coordinated campaign — signal reliable'}`, freshness: 'Daily', color: '#3B82F6' },
+                                    { label: 'X Sentiment (Grok API)', score: report.alternative_data?.grok_x_sentiment?.score ?? 0, note: `Volume: ${(report.alternative_data?.grok_x_sentiment?.volume ?? 0).toLocaleString()} posts Â· ${report.alternative_data?.grok_x_sentiment?.campaign_detected ? 'âš ï¸ Campaign detected â€” downweighted' : 'No coordinated campaign â€” signal reliable'}`, freshness: 'Daily', color: '#3B82F6' },
                                     { label: 'Reddit Sentiment', score: report.alternative_data?.reddit_score ?? 0, note: 'r/investing, r/stocks, r/wallstreetbets weighted by credibility', freshness: 'Daily', color: '#F97316' },
-                                    { label: 'News Sentiment', score: report.alternative_data?.news_score ?? 0, note: 'NewsAPI · FinBERT scoring · 47 articles analyzed', freshness: 'Daily', color: '#8B5CF6' },
+                                    { label: 'News Sentiment', score: report.alternative_data?.news_score ?? 0, note: 'NewsAPI Â· FinBERT scoring Â· 47 articles analyzed', freshness: 'Daily', color: '#8B5CF6' },
                                     { label: 'Composite', score: report.alternative_data?.composite_sentiment ?? 0, note: 'Volume-weighted composite across all sources', freshness: 'Daily', color: '#10B981' },
                                 ].map(s => (
                                     <div key={s.label} className="rounded-xl p-3" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
@@ -526,7 +526,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                             <div className="progress-fill" style={{ width: `${((s.score ?? 0) + 1) / 2 * 100}%`, background: s.color }} />
                                         </div>
                                         <div className="text-xs" style={{ color: textSecondary }}>{s.note}</div>
-                                        <div className="text-xs mt-1 text-gray-500">🕒 {s.freshness}</div>
+                                        <div className="text-xs mt-1 text-gray-500">ðŸ•’ {s.freshness}</div>
                                     </div>
                                 ))}
                             </div>
@@ -538,12 +538,12 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                         <motion.div key="altdata" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {[
-                                    { label: 'Institutional Flow (13F)', value: report.alternative_data.institutional_flow, sub: 'Last quarter · SEC fillings' },
-                                    { label: 'Insider Activity', value: report.alternative_data.insider_activity, sub: 'SEC Form 4 · recent' },
+                                    { label: 'Institutional Flow (13F)', value: report.alternative_data.institutional_flow, sub: 'Last quarter Â· SEC fillings' },
+                                    { label: 'Insider Activity', value: report.alternative_data.insider_activity, sub: 'SEC Form 4 Â· recent' },
                                     { label: 'Short Interest', value: report.alternative_data.short_interest, sub: 'Bi-weekly reporting' },
                                     { label: 'IV Rank', value: report.alternative_data.iv_rank, sub: 'vs. 52-week range' },
                                     { label: 'Options Implied Move', value: report.alternative_data.implied_move, sub: 'Market-priced risk' },
-                                    { label: 'Earnings Call NLP', value: report.alternative_data.transcript_score, sub: 'Quantus corpus · management confidence' },
+                                    { label: 'Earnings Call NLP', value: report.alternative_data.transcript_score, sub: 'Quantus corpus Â· management confidence' },
                                 ].map(item => (
                                     <div key={item.label} className="rounded-xl p-3" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                                         <div className="text-xs mb-1 text-gray-500">{item.label}</div>
@@ -558,8 +558,8 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 </AnimatePresence>
             </SectionCard>
 
-            {/* ── SECTION C: RISK ─────────────────────────────────────── */}
-            <SectionCard title="C — Risk" id="section-3" lightMode={lightMode}>
+            {/* â”€â”€ SECTION C: RISK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <SectionCard title="C â€” Risk" id="section-3" lightMode={lightMode}>
                 {/* Macro context */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
                     {[
@@ -577,7 +577,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
 
                 {/* Risk metrics */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-                    <MetricCard label="Daily VaR (99%)" value={`${report.risk?.var_dollar ?? 'N/A'} / $10K`} note="Monte Carlo · 10,000 paths" freshness="Daily" lightMode={lightMode} />
+                    <MetricCard label="Daily VaR (99%)" value={`${report.risk?.var_dollar ?? 'N/A'} / $10K`} note="Monte Carlo Â· 10,000 paths" freshness="Daily" lightMode={lightMode} />
                     <MetricCard label="Expected Shortfall" value={report.risk?.expected_shortfall ?? 'N/A'} note="Avg loss in worst 1% of scenarios" lightMode={lightMode} />
                     <MetricCard label="Max Drawdown" value={report.risk?.max_drawdown ?? 'N/A'} lightMode={lightMode} />
                     <MetricCard label="Sharpe Ratio" value={typeof report.risk?.sharpe_ratio === 'number' ? report.risk.sharpe_ratio.toFixed(2) : String(report.risk?.sharpe_ratio ?? 'N/A')} note={`vs. peer avg: 0.91`} lightMode={lightMode} />
@@ -601,13 +601,13 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 {/* Volatility vs peers */}
                 <div className="flex items-center gap-3 text-xs p-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.15)' }}>
                     <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
-                    <span style={{ color: textSecondary }}>Volatility vs. peers: <strong style={{ color: '#F9FAFB' }}>{report.risk?.volatility_vs_peers ?? 'N/A'}</strong> · Options-implied move: {report.risk?.implied_move ?? 'N/A'}</span>
+                    <span style={{ color: textSecondary }}>Volatility vs. peers: <strong style={{ color: '#F9FAFB' }}>{report.risk?.volatility_vs_peers ?? 'N/A'}</strong> Â· Options-implied move: {report.risk?.implied_move ?? 'N/A'}</span>
                 </div>
                 <div className="flex justify-end mt-3"><Feedback /></div>
             </SectionCard>
 
-            {/* ── SECTION D: STRATEGY ─────────────────────────────────── */}
-            <SectionCard title="D — Strategy Recommendation" id="section-4" lightMode={lightMode}>
+            {/* â”€â”€ SECTION D: STRATEGY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <SectionCard title="D â€” Strategy Recommendation" id="section-4" lightMode={lightMode}>
                 {/* Action card */}
                 <div className="rounded-xl p-5 mb-5" style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.2)' }}>
                     <div className="flex items-start justify-between flex-wrap gap-4">
@@ -642,7 +642,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                     {[
                         { label: 'Position Size', value: report.strategy.position_size_pct },
                         { label: 'Kelly Max', value: report.strategy.kelly_derived_max },
-                        ...(report.strategy.portfolio_sharpe_improvement ? [{ label: 'Portfolio Sharpe ΔΔ', value: report.strategy.portfolio_sharpe_improvement }] : []),
+                        ...(report.strategy.portfolio_sharpe_improvement ? [{ label: 'Portfolio Sharpe Î”Î”', value: report.strategy.portfolio_sharpe_improvement }] : []),
                     ].map(item => (
                         <div key={item.label} className="rounded-lg px-3 py-2 flex items-center gap-2" style={{ background: dimBg, border: `1px solid ${borderColor}` }}>
                             <span className="text-gray-500">{item.label}:</span>
@@ -681,10 +681,10 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 )}
             </SectionCard>
 
-            {/* ── SECTION E: DEEP DIVES ───────────────────────────────── */}
-            <SectionCard title="E — Deep Dives (On-Demand)" id="section-5" lightMode={lightMode}>
+            {/* â”€â”€ SECTION E: DEEP DIVES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <SectionCard title="E â€” Deep Dives (On-Demand)" id="section-5" lightMode={lightMode}>
                 <p className="text-xs mb-5" style={{ color: textSecondary }}>
-                    Each analysis generated on-demand · cached immediately for all researchers · ~8 seconds first load
+                    Each analysis generated on-demand Â· cached immediately for all researchers Â· ~8 seconds first load
                 </p>
                 <div className="space-y-2">
                     {DEEP_DIVE_MODULES.map((title, i) => (
@@ -721,7 +721,7 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                                                     transition={{ duration: 1.2, repeat: Infinity, delay: j * 0.2 }} />
                                                             ))}
                                                         </div>
-                                                        <span className="text-xs text-gray-500">Generating deep analysis — ~8 seconds</span>
+                                                        <span className="text-xs text-gray-500">Generating deep analysis â€” ~8 seconds</span>
                                                     </div>
                                                     <div className="space-y-2">
                                                         {[1, 0.9, 0.7, 0.6].map((w, k) => (
@@ -732,10 +732,10 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                                             ) : (
                                                 <div className="py-4">
                                                     <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: textSecondary }}>
-                                                        {diveContent[i] || 'Loading…'}
+                                                        {diveContent[i] || 'Loadingâ€¦'}
                                                     </p>
                                                     <div className="flex justify-between items-center mt-4">
-                                                        <div className="text-xs text-gray-500">Powered by Meridian v2.4 · Cached for all researchers</div>
+                                                        <div className="text-xs text-gray-500">Powered by Meridian v2.4 Â· Cached for all researchers</div>
                                                         <Feedback />
                                                     </div>
                                                 </div>
@@ -755,12 +755,12 @@ export function ReportDashboard({ report, lightMode }: ReportDashboardProps) {
                 <div className="flex flex-wrap gap-3">
                     {(report.data_sources ?? []).map(ds => (
                         <span key={ds.name} className="px-2 py-1 rounded-md" style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${borderColor}` }}>
-                            Tier {ds.tier} · {ds.name} · {ds.freshness}
+                            Tier {ds.tier} Â· {ds.name} Â· {ds.freshness}
                         </span>
                     ))}
                 </div>
                 <p className="mt-3 text-gray-500">
-                    For educational research purposes only. Not financial advice. Quantus Research Solutions · {report.engine} · bisolutions.group
+                    For educational research purposes only. Not financial advice. Quantus Research Solutions Â· {report.engine} Â· www.bisolutions.group
                 </p>
             </div>
         </div>
