@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 
 const products = [
   {
     name: "Quantus Investing",
     href: PRODUCT_ROUTE_ALIASES.quantus,
-    appHref: withSiteBase("/quantus/workspace/"),
+    appHref: withPublicSiteOrigin("/quantus/workspace/"),
     description:
       "AI-native quantitative research, signal generation, report automation, and institutional-style deep dives across multiple asset classes.",
     bullets: [
@@ -28,7 +28,7 @@ const products = [
   {
     name: "Power BI Solutions",
     href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-    appHref: withSiteBase("/power-bi-solutions/"),
+    appHref: withPublicSiteOrigin("/power-bi-solutions/"),
     description:
       "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
     bullets: [

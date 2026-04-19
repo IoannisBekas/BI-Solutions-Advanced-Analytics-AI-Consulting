@@ -17,11 +17,11 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 
 const POWERBI_SOLUTIONS_APP_URL =
   import.meta.env.VITE_POWERBI_SOLUTIONS_URL ||
-  withSiteBase("/power-bi-solutions/");
+  withPublicSiteOrigin("/power-bi-solutions/");
 
 const features = [
   {

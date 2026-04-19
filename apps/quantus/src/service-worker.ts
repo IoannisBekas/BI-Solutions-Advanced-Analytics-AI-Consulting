@@ -33,23 +33,30 @@ if (isLocalQuantusHost) {
     cleanupOutdatedCaches();
     precacheAndRoute(self.__WB_MANIFEST);
 
-    const STATIC_CACHE = 'quantus-static-v2';
-    const API_CACHE = 'quantus-public-api-v3';
-    const REPORT_CACHE = 'quantus-public-reports-v3';
-    const FONT_CACHE = 'quantus-fonts-v2';
-    const PAGE_CACHE = 'quantus-pages-v3';
+    const STATIC_CACHE = 'quantus-static-v3';
+    const API_CACHE = 'quantus-public-api-v4';
+    const REPORT_CACHE = 'quantus-public-reports-v4';
+    const FONT_CACHE = 'quantus-fonts-v3';
+    const PAGE_CACHE = 'quantus-pages-v4';
 
     const hasAuthorizationHeader = (request: Request) => request.headers.has('authorization');
 
     self.addEventListener('activate', (event: ExtendableEvent) => {
         event.waitUntil((async () => {
             const cacheKeys = await caches.keys();
-            const staleSensitiveCaches = cacheKeys.filter((key) => (
-                key.startsWith('quantus-api-')
-                || key.startsWith('quantus-reports-')
+            const activeCaches = new Set([
+                STATIC_CACHE,
+                API_CACHE,
+                REPORT_CACHE,
+                FONT_CACHE,
+                PAGE_CACHE,
+            ]);
+            const staleQuantusCaches = cacheKeys.filter((key) => (
+                (key.startsWith('quantus-') || key.startsWith('workbox'))
+                && !activeCaches.has(key)
             ));
 
-            await Promise.all(staleSensitiveCaches.map((key) => caches.delete(key)));
+            await Promise.all(staleQuantusCaches.map((key) => caches.delete(key)));
         })());
     });
 

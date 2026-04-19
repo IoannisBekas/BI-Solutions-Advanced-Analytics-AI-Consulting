@@ -7,7 +7,7 @@ import { ProductShowcase } from "@/components/sections/ProductShowcase";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin } from "@/lib/site";
 
 export default function Products() {
   return (
@@ -53,7 +53,7 @@ export default function Products() {
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <a href={withSiteBase("/quantus/workspace/")}>
+                  <a href={withPublicSiteOrigin("/quantus/workspace/")}>
                     <Button
                       variant="outline"
                       className="rounded-full border-gray-300 px-8"

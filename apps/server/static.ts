@@ -1,4 +1,4 @@
-import express, { type Express, type Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import fs from "fs";
 import path from "path";
 
@@ -11,6 +11,36 @@ function sendHtmlWithNonce(res: Response, html: string) {
   const nonce = (res.locals.cspNonce as string) || "";
   const output = nonce ? injectScriptNonce(html, nonce) : html;
   res.type("html").send(output);
+}
+
+function sendUncachedHtml(res: Response, html: string) {
+  res.setHeader("Cache-Control", "no-cache, must-revalidate");
+  sendHtmlWithNonce(res, html);
+}
+
+function isStaticAssetRequest(requestPath: string) {
+  const normalizedPath = requestPath.split("?")[0];
+  return path.posix.extname(normalizedPath) !== "";
+}
+
+function setStaticCacheHeaders(res: Response, filePath: string) {
+  const normalizedPath = filePath.replace(/\\/g, "/");
+  const baseName = path.basename(normalizedPath);
+  const ext = path.extname(normalizedPath).toLowerCase();
+
+  if (
+    ext === ".html" ||
+    baseName === "service-worker.js" ||
+    baseName === "manifest.json" ||
+    baseName === "manifest.webmanifest"
+  ) {
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    return;
+  }
+
+  if (normalizedPath.includes("/assets/")) {
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+  }
 }
 
 // Blog post meta â€” keep in sync with client/src/data/blogData.ts
@@ -50,9 +80,23 @@ function serveProductSpa(app: Express, mountPath: string, productDistPath: strin
   const indexPath = path.resolve(productDistPath, "index.html");
   const indexHtml = fs.existsSync(indexPath) ? fs.readFileSync(indexPath, "utf-8") : "";
 
-  app.use(mountPath, express.static(productDistPath, { index: false }));
-  app.use(`${mountPath}/*`, (_req, res) => {
-    sendHtmlWithNonce(res, indexHtml);
+  app.use(mountPath, express.static(productDistPath, {
+    index: false,
+    redirect: false,
+    setHeaders: setStaticCacheHeaders,
+  }));
+  app.use(mountPath, (req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      next();
+      return;
+    }
+
+    if (req.path !== "/" && isStaticAssetRequest(req.path)) {
+      res.status(404).type("text/plain").send("Not found");
+      return;
+    }
+
+    sendUncachedHtml(res, indexHtml);
   });
 }
 
@@ -230,10 +274,19 @@ export function serveStatic(app: Express) {
     serveProductSpa(app, "/power-bi-solutions", powerBiDir);
   }
 
-  app.use(express.static(distPath, { index: false, redirect: false }));
+  app.use(express.static(distPath, {
+    index: false,
+    redirect: false,
+    setHeaders: setStaticCacheHeaders,
+  }));
 
   // fall through to index.html with route-specific meta tags
-  app.use("*", (req, res) => {
+  app.use("*", (req: Request, res: Response) => {
+    if (isStaticAssetRequest(req.path)) {
+      res.status(404).type("text/plain").send("Not found");
+      return;
+    }
+
     const routePath = req.originalUrl.split("?")[0].replace(/\/$/, "") || "/";
 
     let meta = routeMetaMap[routePath];
@@ -249,6 +302,6 @@ export function serveStatic(app: Express) {
       }
     }
 
-    sendHtmlWithNonce(res, injectMeta(indexHtml, meta || routeMetaMap["/"]));
+    sendUncachedHtml(res, injectMeta(indexHtml, meta || routeMetaMap["/"]));
   });
 }

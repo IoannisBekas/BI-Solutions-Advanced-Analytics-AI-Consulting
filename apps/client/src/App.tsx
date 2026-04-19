@@ -8,7 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
-import { SITE_BASE_PATH, withSiteBase } from "@/lib/site";
+import { SITE_BASE_PATH, withPublicSiteOrigin } from "@/lib/site";
 import {
   PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
@@ -103,16 +103,16 @@ function Router() {
           <Route path={PRODUCT_ROUTE_ALIASES.aiAdvisor} component={AIAdvisorPage} />
 
           <Route path={PRODUCT_ROUTES.quantus}>
-            {() => <FullPageRedirect to={withSiteBase("/quantus/workspace/")} />}
+            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
           </Route>
           <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.quantus}>
-            {() => <FullPageRedirect to={withSiteBase("/quantus/workspace/")} />}
+            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
           </Route>
           <Route path={PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus}>
-            {() => <FullPageRedirect to={withSiteBase("/quantus/workspace/")} />}
+            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
           </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.quantus}>
-            {() => <FullPageRedirect to={withSiteBase("/quantus/workspace/")} />}
+            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
           </Route>
 
           <Route path={PRODUCT_ROUTES.powerBiSolutions}>

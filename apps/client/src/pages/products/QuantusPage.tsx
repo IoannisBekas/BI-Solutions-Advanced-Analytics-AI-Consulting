@@ -19,10 +19,10 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 
 const QUANTUS_APP_URL =
-  import.meta.env.VITE_QUANTUS_URL || withSiteBase("/quantus/workspace/");
+  import.meta.env.VITE_QUANTUS_URL || withPublicSiteOrigin("/quantus/workspace/");
 
 const heroMetrics = [
   { label: "ML/Statistical models", value: "12", icon: Brain },
