@@ -97,7 +97,7 @@ Power BI Solutions adds AI-assisted guidance inside the analysis workflow itself
 
 Another important design decision is the authentication boundary. Power BI Solutions lives under the BI Solutions brand and domain, but it keeps its own product-specific access flow. That separation matters for roadmap flexibility, user management, and product state.
 
-In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="${withPublicSiteOrigin("/power-bi-solutions/")}" class="text-blue-600 hover:underline">/power-bi-solutions/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
+In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="${withPublicSiteOrigin("/power-bi-solutions/workspace/")}" class="text-blue-600 hover:underline">/power-bi-solutions/workspace/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
 
 ## From review service to scalable product workflow
 

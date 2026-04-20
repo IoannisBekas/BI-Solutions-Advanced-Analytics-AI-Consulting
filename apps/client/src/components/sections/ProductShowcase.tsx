@@ -24,11 +24,12 @@ const products = [
       "Reports, sector packs, and ongoing research operations",
       "Cross-asset coverage: equities, ETFs, crypto, commodities",
     ],
+    secondaryLabel: "Open workspace",
   },
   {
     name: "Power BI Solutions",
     href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-    appHref: withPublicSiteOrigin("/power-bi-solutions/"),
+    appHref: withPublicSiteOrigin("/power-bi-solutions/workspace/"),
     description:
       "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
     bullets: [
@@ -36,6 +37,7 @@ const products = [
       "AI-powered recommendations to optimize your data architecture",
       "Interactive chat workflow for guided improvements",
     ],
+    secondaryLabel: "Open workspace",
   },
   {
     name: "Greek AI Professional Advisor",

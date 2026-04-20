@@ -91,11 +91,6 @@ export async function setupVite(server: Server, app: Express) {
   // These must be mounted BEFORE the Vite catch-all so they take precedence
   const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
   app.use((req, res, next) => {
-    if (req.method === "GET" && (req.path === "/quantus" || req.path === "/quantus/")) {
-      res.redirect(308, "/quantus/workspace/");
-      return;
-    }
-
     if (req.method === "GET" && req.originalUrl === "/quantus/sectors") {
       res.redirect(308, "/quantus/workspace/sectors");
       return;
@@ -113,7 +108,12 @@ export async function setupVite(server: Server, app: Express) {
           ? path.resolve(distPath, "quantus")
           : "",
     ],
-    ["/power-bi-solutions", fs.existsSync(path.resolve(distPath, "power-bi-solutions")) ? path.resolve(distPath, "power-bi-solutions") : ""],
+    [
+      "/power-bi-solutions/workspace",
+      fs.existsSync(path.resolve(distPath, "power-bi-solutions", "workspace"))
+        ? path.resolve(distPath, "power-bi-solutions", "workspace")
+        : "",
+    ],
   ];
   for (const [mount, dir] of productDirs) {
     if (dir && fs.existsSync(dir)) {

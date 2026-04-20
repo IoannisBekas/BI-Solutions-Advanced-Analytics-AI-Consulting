@@ -30,7 +30,7 @@ async function buildAll() {
   await buildNestedApp(
     "Power BI Solutions",
     path.resolve("apps", "powerbi-solutions"),
-    "power-bi-solutions",
+    path.join("power-bi-solutions", "workspace"),
   );
 
   console.log("building server...");
@@ -84,7 +84,7 @@ async function buildAll() {
 async function writeGitHubPages404() {
   const rootBase = getDeployBasePath();
   const quantusBase = joinBasePath(rootBase, "quantus/workspace");
-  const powerBIBase = joinBasePath(rootBase, "power-bi-solutions");
+  const powerBIBase = joinBasePath(rootBase, "power-bi-solutions/workspace");
   const outputPath = path.resolve("dist", "public", "404.html");
 
   const html = `<!doctype html>
@@ -106,17 +106,21 @@ async function writeGitHubPages404() {
           return value.endsWith("/") ? value : value + "/";
         }
 
+        function matchesProductPath(value, prefix) {
+          return value === prefix || value.indexOf(prefix + "/") === 0;
+        }
+
         function pickTarget(pathname) {
           var normalizedRoot = normalize(repoBase);
           var relativePath = pathname.indexOf(normalizedRoot) === 0
             ? pathname.slice(normalizedRoot.length)
             : pathname.replace(/^\\/+/, "");
 
-          if (relativePath.indexOf("quantus/workspace/") === 0) {
+          if (matchesProductPath(relativePath, "quantus/workspace")) {
             return quantusBase;
           }
 
-          if (relativePath.indexOf("power-bi-solutions/") === 0) {
+          if (matchesProductPath(relativePath, "power-bi-solutions/workspace")) {
             return powerBIBase;
           }
 

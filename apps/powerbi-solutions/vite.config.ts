@@ -5,7 +5,7 @@ import { getDeployBasePath, joinBasePath } from '../../script/deployBase';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const powerBiBase = joinBasePath(getDeployBasePath(), 'power-bi-solutions');
+  const powerBiBase = joinBasePath(getDeployBasePath(), 'power-bi-solutions/workspace');
   const backendTarget =
     (env.VITE_POWERBI_SOLUTIONS_BACKEND_TARGET || process.env.VITE_POWERBI_SOLUTIONS_BACKEND_TARGET || 'http://127.0.0.1:5001').trim();
 

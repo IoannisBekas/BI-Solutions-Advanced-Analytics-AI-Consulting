@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ProductPageHero } from "@/components/sections/ProductPageHero";
 import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -273,82 +274,61 @@ export default function QuantusPage() {
 
       <main className="pt-32 pb-20">
         <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-gray-200/30 blur-3xl" />
-            <div className="absolute -left-12 bottom-0 h-72 w-72 rounded-full bg-gray-100 blur-3xl" />
-            <div className="absolute -right-10 top-20 h-80 w-80 rounded-full bg-slate-100/70 blur-3xl" />
-          </div>
+          <ScrollReveal width="100%">
+            <ProductPageHero
+              icon={Sparkles}
+              eyebrow="Quantitative research workspace"
+              title="Quantus Investing"
+              description="Quantus runs each ticker through regime detection, a 12-model ensemble, tiered data validation, and a 7-part confidence score. The result is research that stays explainable, backtested, and usable inside one BI Solutions workflow."
+              actions={(
+                <>
+                  <Button
+                    asChild
+                    className="rounded-full bg-black px-8 text-white hover:bg-gray-800"
+                  >
+                    <a href={QUANTUS_APP_URL}>
+                      Open Quantus workspace
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="rounded-full border-gray-300 px-8"
+                  >
+                    <a href={withSiteBase("/contact")}>
+                      Talk to BI Solutions
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </>
+              )}
+              footer={(
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  {heroMetrics.map((item) => {
+                    const Icon = item.icon;
 
-          <div className="relative z-10 mx-auto max-w-6xl px-6">
-            <ScrollReveal className="mb-16 text-center" width="100%">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
-                <Sparkles className="h-4 w-4" />
-                Quantus Investing on www.bisolutions.group
-              </div>
-              <h1 className="text-5xl font-bold font-heading tracking-tight md:text-7xl">
-                Quantus Investing
-                <span className="mt-2 block text-3xl font-normal text-gray-400 md:text-4xl">
-                  AI-native quantitative research with public accuracy proof
-                </span>
-              </h1>
-              <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
-                Quantus runs each ticker through regime detection, a 12-model
-                ensemble, tiered data validation, and a 7-part confidence score.
-                The product then surfaces the backtested track record so the
-                research remains auditable, not ornamental.
-              </p>
-
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-                <Button
-                  asChild
-                  className="rounded-full bg-black px-8 py-6 text-lg text-white hover:bg-gray-800"
-                >
-                  <a href={QUANTUS_APP_URL}>
-                    Open Quantus Investing
-                    <ArrowRight className="h-5 w-5" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-full border-gray-300 px-8 py-6 text-lg"
-                >
-                  <a href={withSiteBase("/contact")}>
-                    Talk to BI Solutions
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        <section className="mx-auto mb-20 max-w-6xl px-6">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {heroMetrics.map((item, index) => {
-              const Icon = item.icon;
-
-              return (
-                <ScrollReveal
-                  key={item.label}
-                  delay={index * 0.08}
-                  width="100%"
-                >
-                  <Card className="rounded-2xl border-gray-100 bg-white/85 p-6 backdrop-blur-sm transition-all duration-300 hover:border-gray-200 hover:shadow-lg">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-black text-white">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                      {item.label}
-                    </p>
-                    <p className="mt-3 text-3xl font-bold font-heading tracking-tight text-gray-900">
-                      {item.value}
-                    </p>
-                  </Card>
-                </ScrollReveal>
-              );
-            })}
-          </div>
+                    return (
+                      <div
+                        key={item.label}
+                        className="rounded-2xl border border-gray-200 bg-gray-50/80 px-5 py-5"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                          {item.label}
+                        </p>
+                        <p className="mt-3 text-2xl font-bold font-heading tracking-tight text-gray-900">
+                          {item.value}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            />
+          </ScrollReveal>
         </section>
 
         <section className="mx-auto mb-20 max-w-7xl px-6">

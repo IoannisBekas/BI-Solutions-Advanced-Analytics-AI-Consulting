@@ -43,7 +43,7 @@ function setStaticCacheHeaders(res: Response, filePath: string) {
   }
 }
 
-// Blog post meta â€” keep in sync with client/src/data/blogData.ts
+// Blog post meta - keep in sync with client/src/data/blogData.ts
 const blogPostMeta: Record<string, { title: string; description: string }> = {
   "google-gemini-import-ai-chats": {
     title: "Google Gemini is Making it Easy to Quit ChatGPT, Claude and other LLMs",
@@ -112,67 +112,67 @@ const DEFAULT_OG_IMAGE = `${BASE_URL}/bi-solutions-logo.png`;
 
 const routeMetaMap: Record<string, RouteMeta> = {
   "/": {
-    title: "BI Solutions Group â€” Advanced Analytics & AI Consulting",
+    title: "BI Solutions Group - Advanced Analytics & AI Consulting",
     description: "Digital transformation, advanced analytics, and AI delivery for enterprise data platforms and intelligent organizations.",
     path: "/",
   },
   "/products": {
-    title: "Products â€” BI Solutions Group",
+    title: "Products - BI Solutions Group",
     description: "Purpose-built analytics products: Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio.",
     path: "/products",
   },
   "/quantus": {
-    title: "Quantus Investing â€” Institutional-Grade Quantitative Research",
+    title: "Quantus Investing - Institutional-Grade Quantitative Research",
     description: "Search markets, load research faster, and surface signals across equities, ETFs, crypto, and commodities with Quantus Investing.",
     path: "/quantus",
   },
   "/power-bi-solutions": {
-    title: "Power BI Solutions â€” Semantic Model Analysis & AI Optimization",
+    title: "Power BI Solutions - Semantic Model Analysis & AI Optimization",
     description: "Upload TMDL files, review semantic models, and get AI-powered guidance to optimize your Power BI data architecture.",
     path: "/power-bi-solutions",
   },
   "/ai-advisor": {
-    title: "Greek AI Professional Advisor â€” AI for Accountants, Lawyers & Consultants",
+    title: "Greek AI Professional Advisor - AI for Accountants, Lawyers & Consultants",
     description: "AI-powered professional guidance trained on Greek law and business practices for accountants, lawyers, and consultants.",
     path: "/ai-advisor",
   },
   "/website-app-portfolio": {
-    title: "Website & App Portfolio â€” BI Solutions Group",
+    title: "Website & App Portfolio - BI Solutions Group",
     description: "Full-stack web development portfolio: personal brand websites, organization sites, and education platforms.",
     path: "/website-app-portfolio",
   },
   "/services": {
-    title: "Services â€” BI Solutions Group",
+    title: "Services - BI Solutions Group",
     description: "Digital transformation, cloud migration, advanced analytics, statistical modeling, and business intelligence services.",
     path: "/services",
   },
   "/about": {
-    title: "About â€” BI Solutions Group",
-    description: "Ioannis Bekas â€” Data Scientist & AI Developer with 9+ years delivering analytics, customer insight, and product innovation.",
+    title: "About - BI Solutions Group",
+    description: "Ioannis Bekas - Data Scientist & AI Developer with 9+ years delivering analytics, customer insight, and product innovation.",
     path: "/about",
   },
   "/contact": {
-    title: "Contact â€” BI Solutions Group",
+    title: "Contact - BI Solutions Group",
     description: "Book a consultation, find us on Google Maps, or send a message to discuss your analytics and AI project.",
     path: "/contact",
   },
   "/blog": {
-    title: "Blog â€” BI Solutions Group",
+    title: "Blog - BI Solutions Group",
     description: "Insights on analytics, AI, data engineering, and digital transformation from BI Solutions Group.",
     path: "/blog",
   },
   "/portfolio": {
-    title: "Portfolio and Selected Analytics Work â€” BI Solutions Group",
+    title: "Portfolio and Selected Analytics Work - BI Solutions Group",
     description: "See BI Solutions portfolio work across UNICEF, IAEA, IFC, and strategic partnerships delivering analytics, dashboards, and digital transformation.",
     path: "/portfolio",
   },
   "/privacy-policy": {
-    title: "Privacy Policy â€” BI Solutions Group",
-    description: "Privacy policy for bisolutions.group â€” how we collect, use, and protect your data.",
+    title: "Privacy Policy - BI Solutions Group",
+    description: "Privacy policy for bisolutions.group - how we collect, use, and protect your data.",
     path: "/privacy-policy",
   },
   "/terms-of-service": {
-    title: "Terms of Service â€” BI Solutions Group",
+    title: "Terms of Service - BI Solutions Group",
     description: "Terms of service for bisolutions.group.",
     path: "/terms-of-service",
   },
@@ -222,7 +222,7 @@ function injectMeta(html: string, meta: RouteMeta): string {
     `<meta name="twitter:image" content="${ogImage}" />`,
   );
 
-  // Canonical link â€” inject before </head>
+  // Canonical link - inject before </head>
   html = html.replace(
     "</head>",
     `  <link rel="canonical" href="${fullUrl}" />\n</head>`,
@@ -242,17 +242,15 @@ export function serveStatic(app: Express) {
   // Cache index.html in memory for meta injection
   const indexHtml = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
 
-  // Quantus workspace sub-paths
-  redirectLegacyProductPath(app, "/quantus", "/quantus/workspace/");
-  redirectLegacyProductPath(app, "/quantus/", "/quantus/workspace/");
+  // Quantus workspace sub-paths remain mounted below the public product page.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
 
-  // Old capitalized / URL-encoded product marketing pages â†’ canonical kebab-case URLs.
+  // Old capitalized / URL-encoded product marketing pages -> canonical kebab-case URLs.
   // 308 is permanent: browsers and crawlers update their records and pass link equity.
-  redirectLegacyProductPath(app, "/Quantus-Investing",              "/quantus");
-  redirectLegacyProductPath(app, "/Quantus%20Investing",            "/quantus");
-  redirectLegacyProductPath(app, "/Quantus",                        "/quantus");
-  redirectLegacyProductPath(app, "/Power%20BI%20Solutions",         "/power-bi-solutions");
+  redirectLegacyProductPath(app, "/Quantus-Investing", "/quantus");
+  redirectLegacyProductPath(app, "/Quantus%20Investing", "/quantus");
+  redirectLegacyProductPath(app, "/Quantus", "/quantus");
+  redirectLegacyProductPath(app, "/Power%20BI%20Solutions", "/power-bi-solutions");
   redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
   redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/website-app-portfolio");
 
@@ -262,8 +260,8 @@ export function serveStatic(app: Express) {
   ];
   const quantusDir =
     quantusDirCandidates.find((candidate) => fs.existsSync(candidate)) || null;
-  const powerBiDir = fs.existsSync(path.resolve(distPath, "power-bi-solutions"))
-    ? path.resolve(distPath, "power-bi-solutions")
+  const powerBiDir = fs.existsSync(path.resolve(distPath, "power-bi-solutions", "workspace"))
+    ? path.resolve(distPath, "power-bi-solutions", "workspace")
     : null;
 
   if (quantusDir) {
@@ -271,7 +269,7 @@ export function serveStatic(app: Express) {
   }
 
   if (powerBiDir) {
-    serveProductSpa(app, "/power-bi-solutions", powerBiDir);
+    serveProductSpa(app, "/power-bi-solutions/workspace", powerBiDir);
   }
 
   app.use(express.static(distPath, {

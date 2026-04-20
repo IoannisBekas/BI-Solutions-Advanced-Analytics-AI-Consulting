@@ -8,12 +8,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
-import { SITE_BASE_PATH, withPublicSiteOrigin } from "@/lib/site";
+import { SITE_BASE_PATH } from "@/lib/site";
 import {
   PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
   PRODUCT_ROUTE_DISPLAY_PATHS,
-  PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS,
   decodeRoutePath,
 } from "@/lib/routes";
 // Eagerly load the landing page for instant first paint
@@ -28,6 +27,7 @@ const Contact = lazy(() => import("@/pages/Contact"));
 const About = lazy(() => import("@/pages/About"));
 const Products = lazy(() => import("@/pages/Products"));
 const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
+const QuantusPage = lazy(() => import("@/pages/products/QuantusPage"));
 const PowerBISolutionsPage = lazy(() => import("@/pages/products/PowerBISolutionsPage"));
 const WebsiteAppPortfolioPage = lazy(() => import("@/pages/products/WebsiteAppPortfolioPage"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
@@ -66,14 +66,6 @@ function CanonicalRedirect({ to }: { to: string }) {
   return null;
 }
 
-function FullPageRedirect({ to }: { to: string }) {
-  useEffect(() => {
-    window.location.replace(to);
-  }, [to]);
-
-  return <PageFallback />;
-}
-
 function useDecodedBrowserLocation() {
   const [location, navigate] = useBrowserLocation();
   return [decodeRoutePath(location), navigate] as [string, typeof navigate];
@@ -103,17 +95,12 @@ function Router() {
           <Route path={PRODUCT_ROUTE_ALIASES.aiAdvisor} component={AIAdvisorPage} />
 
           <Route path={PRODUCT_ROUTES.quantus}>
-            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
           </Route>
           <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.quantus}>
-            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
           </Route>
-          <Route path={PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus}>
-            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_ALIASES.quantus}>
-            {() => <FullPageRedirect to={withPublicSiteOrigin("/quantus/workspace/")} />}
-          </Route>
+          <Route path={PRODUCT_ROUTE_ALIASES.quantus} component={QuantusPage} />
 
           <Route path={PRODUCT_ROUTES.powerBiSolutions}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}

@@ -7,11 +7,11 @@ import {
   MessageSquare,
   Search,
   Shield,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ProductPageHero } from "@/components/sections/ProductPageHero";
 import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -21,7 +21,25 @@ import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 
 const POWERBI_SOLUTIONS_APP_URL =
   import.meta.env.VITE_POWERBI_SOLUTIONS_URL ||
-  withPublicSiteOrigin("/power-bi-solutions/");
+  withPublicSiteOrigin("/power-bi-solutions/workspace/");
+
+const heroHighlights = [
+  {
+    label: "Primary input",
+    value: "Upload TMDL model definitions for structured semantic-model review.",
+    icon: FileText,
+  },
+  {
+    label: "Guided workflow",
+    value: "Run diagnostics, recommendations, and AI follow-up in one workspace.",
+    icon: MessageSquare,
+  },
+  {
+    label: "Access model",
+    value: "Keep product-specific authentication inside the BI Solutions domain.",
+    icon: Shield,
+  },
+];
 
 const features = [
   {
@@ -63,7 +81,7 @@ const features = [
 ];
 
 const launchChecklist = [
-  "Open the native Power BI Solutions app on the BI Solutions domain.",
+  "Open the Power BI Solutions workspace on the BI Solutions domain.",
   "Authenticate with the product-specific sign-in flow.",
   "Upload TMDL files, review model diagnostics, and continue with AI-assisted analysis.",
 ];
@@ -152,47 +170,61 @@ export default function PowerBISolutionsPage() {
 
       <main className="pt-32 pb-20">
         <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -right-16 top-20 h-96 w-96 rounded-full bg-emerald-200/25 blur-3xl" />
-            <div className="absolute -left-10 bottom-10 h-80 w-80 rounded-full bg-blue-200/20 blur-3xl" />
-            <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-200/20 blur-3xl" />
-          </div>
-
-          <div className="relative z-10 mx-auto max-w-6xl px-6">
-            <ScrollReveal className="mb-16 text-center" width="100%">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
-                <Sparkles className="h-4 w-4" />
-                Native product on www.bisolutions.group
-              </div>
-              <h1 className="text-5xl md:text-7xl font-bold font-heading tracking-tight">
-                Power BI Solutions
-                <span className="mt-2 block text-3xl md:text-4xl font-normal text-gray-400">
-                  Semantic model analysis and AI-assisted optimization
-                </span>
-              </h1>
-              <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
-                Bring TMDL review, model diagnostics, AI guidance, and product-specific authentication into a dedicated workspace hosted under the BI Solutions domain.
-              </p>
-
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-                <a href={POWERBI_SOLUTIONS_APP_URL}>
-                  <Button className="rounded-full bg-black px-8 py-6 text-lg text-white hover:bg-gray-800">
-                    Open Power BI Solutions
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </a>
-                <a href={withSiteBase("/contact")}>
+          <ScrollReveal width="100%">
+            <ProductPageHero
+              icon={Bot}
+              eyebrow="Semantic model review workspace"
+              title="Power BI Solutions"
+              description="Bring TMDL review, semantic-model diagnostics, recommendation workflows, and AI-guided follow-up into a dedicated Power BI workspace on the BI Solutions domain."
+              actions={(
+                <>
                   <Button
-                    variant="outline"
-                    className="rounded-full border-gray-300 px-8 py-6 text-lg"
+                    asChild
+                    className="rounded-full bg-black px-8 text-white hover:bg-gray-800"
                   >
-                    Talk to BI Solutions
-                    <ExternalLink className="ml-2 h-4 w-4" />
+                    <a href={POWERBI_SOLUTIONS_APP_URL}>
+                      Open Power BI workspace
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
                   </Button>
-                </a>
-              </div>
-            </ScrollReveal>
-          </div>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="rounded-full border-gray-300 px-8"
+                  >
+                    <a href={withSiteBase("/contact")}>
+                      Talk to BI Solutions
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </>
+              )}
+              footer={(
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  {heroHighlights.map((item) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <div
+                        key={item.label}
+                        className="rounded-2xl border border-gray-200 bg-gray-50/80 px-5 py-5"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                          {item.label}
+                        </p>
+                        <p className="mt-3 text-sm leading-relaxed text-gray-700">
+                          {item.value}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            />
+          </ScrollReveal>
         </section>
 
         <section className="mx-auto mb-20 max-w-6xl px-6">
@@ -236,14 +268,14 @@ export default function PowerBISolutionsPage() {
                     Launch a dedicated Power BI workflow without leaving the BI Solutions ecosystem
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
-                    The BI Solutions site becomes the product shell and discovery layer, while the native Power BI Solutions app handles uploads, analysis, recommendations, chat, and product-specific sessions at `/power-bi-solutions/`.
+                    The BI Solutions site becomes the product shell and discovery layer, while the native Power BI Solutions app handles uploads, analysis, recommendations, chat, and product-specific sessions at `/power-bi-solutions/workspace/`.
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
                     <p className="mb-2 text-sm font-semibold text-gray-900">
-                      Recommended product URL
+                      Workspace URL
                     </p>
                     <p className="break-all font-mono text-sm text-gray-500">
                       {powerBiWorkspaceDisplayUrl}
@@ -270,12 +302,15 @@ export default function PowerBISolutionsPage() {
                     </ul>
                   </div>
 
-                  <a href={POWERBI_SOLUTIONS_APP_URL} className="block">
-                    <Button className="w-full rounded-full bg-black py-6 text-lg text-white hover:bg-gray-800">
-                      Enter Power BI Solutions
+                  <Button
+                    asChild
+                    className="w-full rounded-full bg-black py-6 text-lg text-white hover:bg-gray-800"
+                  >
+                    <a href={POWERBI_SOLUTIONS_APP_URL}>
+                      Enter Power BI Solutions workspace
                       <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </div>
               </div>
             </Card>
