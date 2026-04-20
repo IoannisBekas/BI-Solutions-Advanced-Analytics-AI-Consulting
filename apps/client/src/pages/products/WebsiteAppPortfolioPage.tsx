@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ProductPageHero } from "@/components/sections/ProductPageHero";
 import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -688,62 +689,44 @@ export default function WebsiteAppPortfolioPage() {
           <Navbar />
 
       <main className="pt-32 pb-20">
-        {/* Hero */}
-        <section className="relative overflow-hidden px-6 pb-10 md:px-12">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -left-20 top-12 h-72 w-72 rounded-full bg-amber-200/30 blur-3xl" />
-            <div className="absolute right-0 top-20 h-80 w-80 rounded-full bg-sky-200/20 blur-3xl" />
-            <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-rose-200/15 blur-3xl" />
-          </div>
-
-          <div className="relative z-10 mx-auto max-w-7xl">
-            <ScrollReveal width="100%">
-              <div className="rounded-[2rem] border border-gray-200 bg-white/90 px-8 py-12 shadow-xl shadow-black/5 md:px-12 md:py-16">
-                <div className="inline-flex items-center gap-2 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
-                  <MonitorSmartphone className="h-4 w-4" />
-                  Website & App Portfolio
-                </div>
-                <h1 className="mt-6 max-w-5xl text-5xl font-bold font-heading leading-tight tracking-tight md:text-6xl">
-                  Selected web experiences designed and shipped by BI Solutions.
-                </h1>
-                <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                  This portfolio page groups live BI Solutions website and app
-                  work into one place, spanning personal branding, service
-                  businesses, organization websites, and AI-native education
-                  product experiences.
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <a href="#featured-sites">
-                    <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
-                      View featured sites
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </a>
-                  <a href={withSiteBase("/contact")}>
-                    <Button
-                      variant="outline"
-                      className="rounded-full border-gray-300 px-8"
-                    >
-                      Discuss a website or app build
-                    </Button>
-                  </a>
-                </div>
-
-                <div className="mt-10 grid gap-4 md:grid-cols-3">
-                  {portfolioMetrics.map((item, index) => (
-                    <PortfolioMetricCard
-                      key={item.label}
-                      label={item.label}
-                      value={item.value}
-                      delay={index * 0.08}
-                    />
-                  ))}
-                </div>
+        <ScrollReveal width="100%">
+          <ProductPageHero
+            icon={MonitorSmartphone}
+            eyebrow="Websites and web apps by BI Solutions"
+            title="Selected web experiences designed and shipped by BI Solutions."
+            description="This portfolio page groups live BI Solutions website and app work into one place, spanning personal branding, service businesses, organization websites, and AI-native education product experiences."
+            actions={(
+              <>
+                <a href="#featured-sites">
+                  <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                    View featured sites
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
+                <a href={withSiteBase("/contact")}>
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-gray-300 px-8"
+                  >
+                    Discuss a website or app build
+                  </Button>
+                </a>
+              </>
+            )}
+            footer={(
+              <div className="grid gap-4 md:grid-cols-3">
+                {portfolioMetrics.map((item, index) => (
+                  <PortfolioMetricCard
+                    key={item.label}
+                    label={item.label}
+                    value={item.value}
+                    delay={index * 0.08}
+                  />
+                ))}
               </div>
-            </ScrollReveal>
-          </div>
-        </section>
+            )}
+          />
+        </ScrollReveal>
 
         {/* Featured projects â€” stacked layout */}
         <section

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
+import { ProductPageHero } from "@/components/sections/ProductPageHero";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -133,6 +134,21 @@ const advisorFaqs = [
     question: "How is this different from a generic AI chat?",
     answer:
       "It uses role-specific prompts and domain framing for Greek professional contexts instead of a broad one-size-fits-all assistant.",
+  },
+];
+
+const advisorHeroDetails = [
+  {
+    label: "Professional roles",
+    value: "Accounting, legal, and consulting workflows",
+  },
+  {
+    label: "Response modes",
+    value: "Greek and English guidance in one interface",
+  },
+  {
+    label: "Output style",
+    value: "Structured first-pass answers with source awareness",
   },
 ];
 
@@ -344,25 +360,35 @@ export default function AIAdvisorPage() {
       <Navbar />
       <main className="pt-32 pb-20">
         <section className="relative overflow-hidden">
-          {/* Decorative background elements */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute top-20 -left-20 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 -right-20 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl" />
-          </div>
+          <ScrollReveal width="100%">
+            <ProductPageHero
+              icon={Bot}
+              eyebrow="Greek professional AI guidance"
+              title="Greek AI Professional Advisor"
+              description="Select a professional role and ask a question. The advisor delivers a structured first-pass response for Greek accounting, legal, and consulting workflows."
+              footer={(
+                <div className="grid gap-4 md:grid-cols-3">
+                  {advisorHeroDetails.map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-2xl border border-gray-200 bg-gray-50/80 px-5 py-5"
+                    >
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                        {item.label}
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-gray-700">
+                        {item.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            />
+          </ScrollReveal>
 
-          <div className="max-w-4xl mx-auto px-6 relative z-10">
-            <ScrollReveal className="text-center mb-12" width="100%">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-black text-white mb-6 shadow-lg shadow-black/20">
-                <Bot className="w-6 h-6" />
-              </div>
-              <h2 className="text-4xl font-bold font-heading mb-4">Greek AI Professional Advisor</h2>
-              <p className="text-gray-600 max-w-xl mx-auto">
-                Select a professional role and ask a question. Our AI, trained on Greek law and business practices, will provide an initial guidance.
-              </p>
-            </ScrollReveal>
-
+          <div className="relative z-10 mx-auto max-w-5xl px-6">
             <ScrollReveal direction="up" delay={0.2} width="100%">
-              <Card className="bg-white/80 backdrop-blur-xl border-white/50 shadow-xl p-2 md:p-8 rounded-2xl overflow-hidden">
+              <Card className="overflow-hidden rounded-2xl bg-white/80 p-2 shadow-xl backdrop-blur-xl border-white/50 md:p-8">
                 
                 {/* Role Selection */}
                 <div className="grid grid-cols-3 gap-2 md:gap-4 mb-8 bg-gray-100/50 p-1.5 rounded-xl">
