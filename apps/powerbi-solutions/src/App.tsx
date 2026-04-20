@@ -49,6 +49,7 @@ function AppContent() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [dashboardReview, setDashboardReview] = useState<DashboardReviewResult | null>(null);
   const { user, isLoading, setAuthDialogOpen } = useAuth();
+  const brandLogoSrc = `${import.meta.env.BASE_URL}bi-solutions-logo.png`;
   const navigationLinks = [
     { label: 'Overview', href: '#overview' },
     { label: 'Workspace', href: '#workspace' },
@@ -91,9 +92,11 @@ function AppContent() {
             href="https://www.bisolutions.group/"
             className="flex min-w-0 items-center gap-3 text-left"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-black text-xs font-bold tracking-[0.16em] text-white">
-              BI
-            </div>
+            <img
+              src={brandLogoSrc}
+              alt="BI Solutions"
+              className="h-10 w-10 shrink-0 mix-blend-multiply"
+            />
             <div className="min-w-0">
               <div className="truncate font-heading text-[1.05rem] font-bold tracking-tight text-black">
                 BI Solutions Group

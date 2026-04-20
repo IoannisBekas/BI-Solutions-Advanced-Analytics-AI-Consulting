@@ -128,6 +128,7 @@ export function Layout({
     const productsOverviewUrl = 'https://www.bisolutions.group/products';
     const contactUrl = 'https://www.bisolutions.group/contact';
     const bisolutionsHomeUrl = 'https://www.bisolutions.group/';
+    const brandLogoSrc = `${import.meta.env.BASE_URL}bi-solutions-logo.png`;
     const showExpandedHeader = !minimalHeader;
     const isResourcesScope = currentView === 'methodology';
     const isWorkspaceScope = !isResourcesScope;
@@ -170,17 +171,12 @@ export function Layout({
                         href={bisolutionsHomeUrl}
                         className="flex items-center gap-3 flex-shrink-0 text-left min-w-0"
                     >
-                        <div
-                            className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
-                            style={{
-                                background: lightMode ? '#09090B' : '#FFFFFF',
-                                color: lightMode ? '#FFFFFF' : '#09090B',
-                                fontFamily: 'var(--font-heading)',
-                                letterSpacing: '0.08em',
-                            }}
-                        >
-                            BI
-                        </div>
+                        <img
+                            src={brandLogoSrc}
+                            alt="BI Solutions"
+                            className="w-10 h-10 flex-shrink-0 select-none"
+                            style={{ filter: lightMode ? 'none' : 'brightness(0) invert(1)' }}
+                        />
                         <div className="flex flex-col items-start select-none min-w-0">
                             <div
                                 className="font-semibold tracking-tight"
