@@ -260,7 +260,7 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
 
   return (
     <section
-      id="analyzer"
+      id="workspace"
       ref={inputRef}
       className="relative px-4 py-12 sm:px-6 sm:py-20 lg:px-8"
     >
@@ -401,7 +401,7 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
               How to get a clean TMDL file from Power BI Desktop.
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-gray-600">
-              The analyzer works best when the exported model definition is intact
+              The workspace works best when the exported model definition is intact
               and easy to inspect before you ask for recommendations.
             </p>
 

@@ -51,7 +51,7 @@ function AppContent() {
   const { user, isLoading, setAuthDialogOpen } = useAuth();
   const navigationLinks = [
     { label: 'Overview', href: '#overview' },
-    { label: 'Analyzer', href: '#analyzer' },
+    { label: 'Workspace', href: '#workspace' },
     { label: 'Resources', href: '#resources' },
   ];
 
@@ -102,7 +102,7 @@ function AppContent() {
                 Advanced Analytics &amp; AI Consulting
               </div>
             </div>
-            <span className="powerbi-brand-pill hidden xl:inline-flex">
+            <span className="powerbi-brand-pill hidden lg:inline-flex">
               Power BI Solutions
             </span>
           </a>

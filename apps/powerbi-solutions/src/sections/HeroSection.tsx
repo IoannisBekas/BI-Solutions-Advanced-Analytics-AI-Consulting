@@ -106,8 +106,8 @@ export function HeroSection({ onScrollToInput }: HeroSectionProps) {
                   Start analyzing
                   <ArrowRight className="h-4 w-4" />
                 </button>
-                <a href="#analyzer" className="btn-secondary inline-flex items-center gap-2">
-                  See the analyzer
+                <a href="#workspace" className="btn-secondary inline-flex items-center gap-2">
+                  See the workspace
                 </a>
               </div>
             </div>

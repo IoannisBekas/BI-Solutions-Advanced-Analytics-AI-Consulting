@@ -3,7 +3,7 @@ import { ArrowUp, ArrowUpRight, Database } from 'lucide-react';
 
 const workspaceLinks = [
   { label: 'Overview', href: '#overview' },
-  { label: 'Analyzer', href: '#analyzer' },
+  { label: 'Workspace', href: '#workspace' },
   { label: 'Resources', href: '#resources' },
 ];
 

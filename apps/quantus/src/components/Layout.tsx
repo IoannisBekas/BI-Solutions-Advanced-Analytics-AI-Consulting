@@ -87,16 +87,6 @@ export function Layout({
         return () => window.removeEventListener('keydown', handleShortcut);
     }, []);
 
-    const navLinks = [
-        { label: 'Workspace', icon: Search, action: () => onNavigate?.('hero'), view: 'hero' },
-        { label: 'Sector Packs', icon: Layers, action: () => onNavigate?.('sectors'), view: 'sectors' },
-        { label: 'Watchlist', icon: List, action: () => onNavigate?.('watchlist'), view: 'watchlist' },
-        { label: 'Scanner', icon: ScanLine, action: () => onNavigate?.('scanner'), view: 'scanner' },
-        { label: 'Archive', icon: Archive, action: () => onNavigate?.('archive'), view: 'archive' },
-        { label: 'Accuracy', icon: BarChart3, action: () => onNavigate?.('accuracy'), view: 'accuracy' },
-        { label: 'Methodology', icon: BookOpen, action: () => onNavigate?.('methodology'), view: 'methodology' },
-    ];
-
     const pageBg = lightMode ? '#FBFBF8' : '#05070B';
     const textColor = lightMode ? '#09090B' : '#F0F6FF';
     const borderColor = lightMode ? '#E5E7EB' : '#1A1A1A';
@@ -139,6 +129,20 @@ export function Layout({
     const contactUrl = 'https://www.bisolutions.group/contact';
     const bisolutionsHomeUrl = 'https://www.bisolutions.group/';
     const showExpandedHeader = !minimalHeader;
+    const isResourcesScope = currentView === 'methodology';
+    const isWorkspaceScope = !isResourcesScope;
+    const primaryLinks = [
+        { label: 'Overview', icon: ArrowUpRight, kind: 'external' as const, href: quantusOverviewUrl },
+        { label: 'Workspace', icon: Search, kind: 'scope' as const, scope: 'workspace' as const, action: () => onNavigate?.('hero') },
+        { label: 'Resources', icon: BookOpen, kind: 'scope' as const, scope: 'resources' as const, action: () => onNavigate?.('methodology') },
+    ];
+    const workspaceLinks = [
+        { label: 'Sector Packs', icon: Layers, action: () => onNavigate?.('sectors'), view: 'sectors' },
+        { label: 'Watchlist', icon: List, action: () => onNavigate?.('watchlist'), view: 'watchlist' },
+        { label: 'Scanner', icon: ScanLine, action: () => onNavigate?.('scanner'), view: 'scanner' },
+        { label: 'Archive', icon: Archive, action: () => onNavigate?.('archive'), view: 'archive' },
+        { label: 'Accuracy', icon: BarChart3, action: () => onNavigate?.('accuracy'), view: 'accuracy' },
+    ];
 
     return (
         <div
@@ -161,10 +165,10 @@ export function Layout({
                         : 'none',
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[82px] flex items-center justify-between gap-4 overflow-x-auto overflow-y-hidden scrollbar-none">
-                    <button
-                        onClick={() => onNavigate?.('hero')}
-                        className="flex items-center gap-3 group flex-shrink-0 cursor-pointer text-left"
+                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[82px] flex items-center justify-between gap-4">
+                    <a
+                        href={bisolutionsHomeUrl}
+                        className="flex items-center gap-3 flex-shrink-0 text-left min-w-0"
                     >
                         <div
                             className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-xs flex-shrink-0 select-none"
@@ -177,7 +181,7 @@ export function Layout({
                         >
                             BI
                         </div>
-                        <div className="flex flex-col items-start select-none">
+                        <div className="flex flex-col items-start select-none min-w-0">
                             <div
                                 className="font-semibold tracking-tight"
                                 style={{
@@ -210,38 +214,48 @@ export function Layout({
                         >
                             Quantus
                         </div>
-                    </button>
+                    </a>
 
-                    <nav className={showExpandedHeader ? 'hidden lg:flex items-center gap-4 xl:gap-6 flex-shrink-0' : 'hidden'}>
-                        {navLinks.map((link) => {
-                            const isActive = currentView === link.view;
+                    <nav className={showExpandedHeader ? 'hidden lg:flex items-center gap-6 xl:gap-8 flex-shrink-0' : 'hidden'}>
+                        {primaryLinks.map((link) => {
+                            const isActive = link.kind === 'scope'
+                                ? (link.scope === 'workspace' ? isWorkspaceScope : isResourcesScope)
+                                : false;
+
+                            if (link.kind === 'external') {
+                                return (
+                                    <a
+                                        key={link.label}
+                                        href={link.href}
+                                        className="relative py-2 text-sm font-medium transition-colors"
+                                        style={{ color: muted }}
+                                    >
+                                        {link.label}
+                                    </a>
+                                );
+                            }
 
                             return (
                                 <button
-                                    key={link.view}
+                                    key={link.label}
                                     onClick={link.action}
-                                    className="group relative rounded-full px-3.5 py-2 text-sm font-medium transition-all"
+                                    className="group relative py-2 text-sm font-medium transition-colors"
                                     style={{
                                         color: isActive ? textColor : muted,
-                                        background: isActive
-                                            ? (lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.06)')
-                                            : 'transparent',
-                                        border: `1px solid ${isActive
-                                            ? (lightMode ? 'rgba(37,99,235,0.18)' : 'rgba(147,197,253,0.20)')
-                                            : 'transparent'}`,
-                                        boxShadow: isActive && lightMode
-                                            ? '0 12px 24px -22px rgba(37,99,235,0.25)'
-                                            : 'none',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        paddingLeft: 0,
+                                        paddingRight: 0,
                                     }}
                                 >
+                                    {link.label}
                                     <span
-                                        className="absolute inset-x-3 -bottom-1.5 h-0.5 rounded-full transition-opacity duration-200"
+                                        className="absolute inset-x-0 -bottom-2 h-0.5 rounded-full transition-opacity duration-200"
                                         style={{
-                                            background: lightMode ? '#2563EB' : '#93C5FD',
+                                            background: lightMode ? '#09090B' : '#FFFFFF',
                                             opacity: isActive ? 1 : 0,
                                         }}
                                     />
-                                    {link.label}
                                 </button>
                             );
                         })}
@@ -249,7 +263,7 @@ export function Layout({
 
                     {/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Compact nav search ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */}
                     <form
-                        className={showExpandedHeader ? 'hidden md:flex items-center gap-2 flex-1 max-w-[220px] xl:max-w-[270px] rounded-full px-3.5 py-2 transition-all duration-200' : 'hidden'}
+                        className="hidden"
                         style={{
                             background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                             border: `1px solid ${borderColor}`,
@@ -279,7 +293,7 @@ export function Layout({
                         />
                         {!navQuery && (
                             <span
-                                className="hidden xl:inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold"
+                                className="hidden 2xl:inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold"
                                 style={{
                                     background: lightMode ? 'rgba(15,23,42,0.05)' : 'rgba(255,255,255,0.08)',
                                     color: muted,
@@ -318,7 +332,7 @@ export function Layout({
 
                         <button
                             onClick={onToggleLight}
-                            className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
+                            className="hidden md:flex w-10 h-10 rounded-full items-center justify-center transition-all"
                             title={lightMode ? 'Switch to dark mode' : 'Switch to light mode'}
                             style={{
                                 background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
@@ -328,20 +342,6 @@ export function Layout({
                         >
                             {lightMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
                         </button>
-
-                        <a
-                            href={quantusOverviewUrl}
-                            className={showExpandedHeader ? 'hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all' : 'hidden'}
-                            style={{
-                                background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
-                                color: textColor,
-                                border: `1px solid ${borderColor}`,
-                                boxShadow: lightMode ? '0 10px 24px -22px rgba(15,23,42,0.22)' : 'none',
-                            }}
-                        >
-                            Overview
-                            <ArrowUpRight className="w-4 h-4" />
-                        </a>
 
                         {userName ? (
                             <div className="hidden sm:flex items-center gap-2">
@@ -369,15 +369,28 @@ export function Layout({
                         ) : (
                             <button
                                 onClick={() => onOpenAuth?.('signin')}
-                                className="hidden sm:inline-flex btn-nav-cta"
+                                className="hidden sm:inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium transition-all"
                                 style={{
-                                    background: lightMode ? '#09090B' : '#FFFFFF',
-                                    color: lightMode ? '#FFFFFF' : '#09090B',
+                                    background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
+                                    color: textColor,
+                                    borderColor,
+                                    boxShadow: lightMode ? '0 10px 24px -22px rgba(15,23,42,0.22)' : 'none',
                                 }}
                             >
                                 Sign In
                             </button>
                         )}
+
+                        <button
+                            onClick={() => onNavigate?.('hero')}
+                            className="btn-nav-cta"
+                            style={{
+                                background: lightMode ? '#09090B' : '#FFFFFF',
+                                color: lightMode ? '#FFFFFF' : '#09090B',
+                            }}
+                        >
+                            Get Started
+                        </button>
 
                         {showExpandedHeader && (
                             <button
@@ -397,6 +410,43 @@ export function Layout({
                     </div>
                 </div>
 
+                {showExpandedHeader && (
+                    <div
+                        className="hidden lg:block"
+                        style={{ borderTop: `1px solid ${scrolled ? borderColor : 'transparent'}` }}
+                    >
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-6">
+                            <nav className="flex items-center gap-2 xl:gap-3 flex-wrap">
+                                {workspaceLinks.map((link) => {
+                                    const isActive = currentView === link.view;
+
+                                    return (
+                                        <button
+                                            key={link.view}
+                                            onClick={link.action}
+                                            className="rounded-full px-3.5 py-2 text-sm font-medium transition-all"
+                                            style={{
+                                                color: isActive ? textColor : muted,
+                                                background: isActive
+                                                    ? (lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.06)')
+                                                    : 'transparent',
+                                                border: `1px solid ${isActive
+                                                    ? (lightMode ? 'rgba(37,99,235,0.18)' : 'rgba(147,197,253,0.20)')
+                                                    : 'transparent'}`,
+                                                boxShadow: isActive && lightMode
+                                                    ? '0 12px 24px -22px rgba(37,99,235,0.25)'
+                                                    : 'none',
+                                            }}
+                                        >
+                                            {link.label}
+                                        </button>
+                                    );
+                                })}
+                            </nav>
+                        </div>
+                    </div>
+                )}
+
                 <AnimatePresence>
                     {showExpandedHeader && mobileMenuOpen && (
                         <motion.div
@@ -407,10 +457,60 @@ export function Layout({
                             style={{ borderTop: `1px solid ${borderColor}` }}
                         >
                             <div
-                                className="px-4 py-4 flex flex-col gap-2"
+                                className="px-4 py-4 flex flex-col gap-3"
                                 style={{ background: lightMode ? '#FFFFFF' : '#000000' }}
                             >
-                                {navLinks.map((link) => (
+                                <div className="text-[11px] font-semibold uppercase tracking-[0.22em]" style={{ color: muted }}>
+                                    Product
+                                </div>
+                                {primaryLinks.map((link) => {
+                                    const isActive = link.kind === 'scope'
+                                        ? (link.scope === 'workspace' ? isWorkspaceScope : isResourcesScope)
+                                        : false;
+
+                                    if (link.kind === 'external') {
+                                        return (
+                                            <a
+                                                key={link.label}
+                                                href={link.href}
+                                                className="flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium"
+                                                style={{
+                                                    background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
+                                                    border: `1px solid ${borderColor}`,
+                                                    color: textColor,
+                                                }}
+                                            >
+                                                <span>{link.label}</span>
+                                                <link.icon className="w-4 h-4" />
+                                            </a>
+                                        );
+                                    }
+
+                                    return (
+                                        <button
+                                            key={link.label}
+                                            onClick={() => {
+                                                link.action();
+                                                setMobileMenuOpen(false);
+                                            }}
+                                            className="flex items-center gap-2 px-4 py-3 rounded-2xl text-sm font-medium text-left transition-all"
+                                            style={{
+                                                color: isActive ? textColor : muted,
+                                                background: isActive
+                                                    ? (lightMode ? 'rgba(9,9,11,0.05)' : 'rgba(255,255,255,0.05)')
+                                                    : 'transparent',
+                                            }}
+                                        >
+                                            <link.icon className="w-4 h-4" />
+                                            {link.label}
+                                        </button>
+                                    );
+                                })}
+
+                                <div className="pt-2 text-[11px] font-semibold uppercase tracking-[0.22em]" style={{ color: muted }}>
+                                    Workspace
+                                </div>
+                                {workspaceLinks.map((link) => (
                                     <button
                                         key={link.view}
                                         onClick={() => {
@@ -429,18 +529,6 @@ export function Layout({
                                         {link.label}
                                     </button>
                                 ))}
-                                <a
-                                    href={quantusOverviewUrl}
-                                    className="flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium"
-                                    style={{
-                                        background: lightMode ? '#FFFFFF' : 'rgba(255,255,255,0.04)',
-                                        border: `1px solid ${borderColor}`,
-                                        color: textColor,
-                                    }}
-                                >
-                                    Overview
-                                    <ArrowUpRight className="w-4 h-4" />
-                                </a>
                                 {userName ? (
                                     <button
                                         onClick={() => {
