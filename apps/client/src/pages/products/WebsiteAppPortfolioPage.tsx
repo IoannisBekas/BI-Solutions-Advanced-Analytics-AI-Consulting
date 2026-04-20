@@ -55,7 +55,7 @@ const showcaseProjects = [
     accentClassName: "from-sky-50 via-white to-stone-100",
   },
   {
-    name: "Î¡Ï…Î¸Î¼Î¹ÎºÎ® Î”ÏÎ±Ï€ÎµÏ„ÏƒÏŽÎ½Î±Ï‚",
+    name: "Ρυθμική Δραπετσώνας",
     subtitle: "Club website for rhythmic gymnastics",
     category: "Organization website",
     url: "https://ioannisbekas.github.io/Rythm-Drap/",
@@ -728,7 +728,7 @@ export default function WebsiteAppPortfolioPage() {
           />
         </ScrollReveal>
 
-        {/* Featured projects â€” stacked layout */}
+        {/* Featured projects - stacked layout */}
         <section
           id="featured-sites"
           className="mx-auto mb-16 max-w-7xl px-6 md:px-12"

@@ -42,7 +42,7 @@ const products = [
     href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
     appHref: withSiteBase(PRODUCT_ROUTE_ALIASES.aiAdvisor),
     description:
-      "AI-powered professional guidance across accounting, legal, and consulting domains â€” trained on Greek law and business practices.",
+      "AI-powered professional guidance across accounting, legal, and consulting domains, trained on Greek law and business practices.",
     bullets: [
       "Role-based AI advisors: Accountant, Lawyer, and Consultant",
       "Powered by Claude with domain-specific Greek expertise",

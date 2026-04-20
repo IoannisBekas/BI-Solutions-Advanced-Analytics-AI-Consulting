@@ -24,7 +24,7 @@ const roles = [
   {
     id: "accountant",
     label: {
-      greek: "Î›Î¿Î³Î¹ÏƒÏ„Î®Ï‚",
+      greek: "Λογιστής",
       english: "Accountant",
     },
     icon: Calculator,
@@ -33,7 +33,7 @@ const roles = [
   {
     id: "lawyer",
     label: {
-      greek: "Î”Î¹ÎºÎ·Î³ÏŒÏÎ¿Ï‚",
+      greek: "Δικηγόρος",
       english: "Lawyer",
     },
     icon: Scale,
@@ -42,7 +42,7 @@ const roles = [
   {
     id: "consultant",
     label: {
-      greek: "Î£ÏÎ¼Î²Î¿Ï…Î»Î¿Ï‚",
+      greek: "Σύμβουλος",
       english: "Consultant",
     },
     icon: Briefcase,
@@ -51,7 +51,7 @@ const roles = [
 ];
 
 const languageOptions: Array<{ id: AdvisorLanguage; label: string }> = [
-  { id: "greek", label: "Î•Î»Î»Î·Î½Î¹ÎºÎ¬" },
+  { id: "greek", label: "Ελληνικά" },
   { id: "english", label: "English" },
 ];
 
@@ -76,24 +76,24 @@ const languageCopy: Record<
   }
 > = {
   greek: {
-    languageLabel: "Î“Î»ÏŽÏƒÏƒÎ± Î‘Ï€Î¬Î½Ï„Î·ÏƒÎ·Ï‚",
-    checkingAvailability: "ÎˆÎ»ÎµÎ³Ï‡Î¿Ï‚ Î´Î¹Î±Î¸ÎµÏƒÎ¹Î¼ÏŒÏ„Î·Ï„Î±Ï‚ advisor...",
-    advisorUnavailable: "ÎŸ advisor Î´ÎµÎ½ ÎµÎ¯Î½Î±Î¹ Î´Î¹Î±Î¸Î­ÏƒÎ¹Î¼Î¿Ï‚ Î±Ï…Ï„Î® Ï„Î· ÏƒÏ„Î¹Î³Î¼Î®. Î”Î¿ÎºÎ¹Î¼Î¬ÏƒÏ„Îµ Î¾Î±Î½Î¬ Î±ÏÎ³ÏŒÏ„ÎµÏÎ±.",
-    askRole: (roleLabel) => `Î¡Ï‰Ï„Î®ÏƒÏ„Îµ Ï„Î¿Î½ ${roleLabel}...`,
-    retry: "Î•Ï€Î±Î½Î¬Î»Î·ÏˆÎ·",
-    responseLabel: "AI Î‘Ï€Î¬Î½Ï„Î·ÏƒÎ·",
-    generating: "Î”Î·Î¼Î¹Î¿Ï…ÏÎ³Î¯Î± Î±Ï€Î¬Î½Ï„Î·ÏƒÎ·Ï‚â€¦",
-    networkError: "Î£Ï†Î¬Î»Î¼Î± Î´Î¹ÎºÏ„ÏÎ¿Ï…. Î•Î»Î­Î³Î¾Ï„Îµ Ï„Î· ÏƒÏÎ½Î´ÎµÏƒÎ® ÏƒÎ±Ï‚ ÎºÎ±Î¹ Î´Î¿ÎºÎ¹Î¼Î¬ÏƒÏ„Îµ Î¾Î±Î½Î¬.",
-    sourcesLabel: "Î Î·Î³Î­Ï‚",
-    groundedLabel: "Î•Ï€Î±Î»Î·Î¸ÎµÏÏ„Î·ÎºÎµ Î¼Îµ Ï„ÏÎ­Ï‡Î¿Ï…ÏƒÎµÏ‚ Î´Î¹Î±Î´Î¹ÎºÏ„Ï…Î±ÎºÎ­Ï‚ Ï€Î·Î³Î­Ï‚.",
-    unverifiedLabel: "Î”ÎµÎ½ Î®Ï„Î±Î½ Î´Ï…Î½Î±Ï„Î® Î· Ï€Î»Î®ÏÎ·Ï‚ ÎµÏ€Î±Î»Î®Î¸ÎµÏ…ÏƒÎ· Ï„ÏÎµÏ‡Î¿Ï…ÏƒÏŽÎ½ Ï€Î·Î³ÏŽÎ½ Î³Î¹Î± Î±Ï…Ï„Î® Ï„Î·Î½ Î±Ï€Î¬Î½Ï„Î·ÏƒÎ·.",
-    asOfLabel: "Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± Î‘Î½Î±Ï†Î¿ÏÎ¬Ï‚",
-    confidenceLabel: "Î•Ï€Î¯Ï€ÎµÎ´Î¿ Î•Î¼Ï€Î¹ÏƒÏ„Î¿ÏƒÏÎ½Î·Ï‚",
-    requiresReviewLabel: "Î‘Ï€Î±Î¹Ï„ÎµÎ¯Ï„Î±Î¹ ÎµÏ€Î±Î³Î³ÎµÎ»Î¼Î±Ï„Î¹ÎºÏŒÏ‚ Î­Î»ÎµÎ³Ï‡Î¿Ï‚ Ï€ÏÎ¹Î½ Î±Ï€ÏŒ Ï‡ÏÎ®ÏƒÎ·.",
+    languageLabel: "Γλώσσα απάντησης",
+    checkingAvailability: "Έλεγχος διαθεσιμότητας συμβούλου...",
+    advisorUnavailable: "Ο σύμβουλος AI δεν είναι διαθέσιμος αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.",
+    askRole: (roleLabel) => `Ρωτήστε τον ${roleLabel}...`,
+    retry: "Επανάληψη",
+    responseLabel: "Απάντηση AI",
+    generating: "Δημιουργία απάντησης...",
+    networkError: "Σφάλμα δικτύου. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.",
+    sourcesLabel: "Πηγές",
+    groundedLabel: "Επαληθεύτηκε με τρέχουσες διαδικτυακές πηγές.",
+    unverifiedLabel: "Δεν ήταν δυνατή η πλήρης επαλήθευση τρεχουσών πηγών για αυτή την απάντηση.",
+    asOfLabel: "Ημερομηνία αναφοράς",
+    confidenceLabel: "Επίπεδο εμπιστοσύνης",
+    requiresReviewLabel: "Απαιτείται επαγγελματικός έλεγχος πριν από χρήση.",
     confidenceValues: {
-      high: "Î¥ÏˆÎ·Î»ÏŒ",
-      medium: "ÎœÎµÏƒÎ±Î¯Î¿",
-      low: "Î§Î±Î¼Î·Î»ÏŒ",
+      high: "Υψηλό",
+      medium: "Μεσαίο",
+      low: "Χαμηλό",
     },
   },
   english: {
@@ -103,7 +103,7 @@ const languageCopy: Record<
     askRole: (roleLabel) => `Ask the ${roleLabel}...`,
     retry: "Retry",
     responseLabel: "AI Response",
-    generating: "Generating responseâ€¦",
+    generating: "Generating response...",
     networkError: "Network error. Please check your connection and try again.",
     sourcesLabel: "Sources",
     groundedLabel: "Verified with current web sources.",

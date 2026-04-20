@@ -121,7 +121,7 @@ export function Navbar() {
             <img
               src={withAssetBase("bi-solutions-logo.png")}
               alt="BI Solutions"
-              className="w-10 h-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply"
+              className="h-10 w-10 shrink-0 object-contain transition-transform duration-300 group-hover:scale-110"
             />
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-tight font-heading group-hover:text-gray-700 transition-colors">BI Solutions Group</span>
@@ -268,7 +268,7 @@ export function Navbar() {
                 <img
                   src={withAssetBase("bi-solutions-logo.png")}
                   alt="BI Solutions"
-                  className="w-10 h-10"
+                  className="h-10 w-10 shrink-0 object-contain"
                 />
                 <div className="flex flex-col">
                   <span className="text-lg font-bold tracking-tight font-heading">BI Solutions Group</span>
