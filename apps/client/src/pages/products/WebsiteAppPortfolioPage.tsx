@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ExternalLink,
@@ -25,8 +25,6 @@ import karnasShowcase from "@/assets/portfolio/karnas-showcase.mp4";
 import mathShowcase from "@/assets/portfolio/math-showcase.mp4";
 import rythdrapShowcase from "@/assets/portfolio/rythdrap-showcase.mp4";
 import barberShowcase from "@/assets/portfolio/barber-showcase.mp4";
-
-const PORTFOLIO_INTRO_DURATION_MS = 3000;
 
 const portfolioMetrics = [
   { label: "Live launches", value: "4" },
@@ -55,7 +53,7 @@ const showcaseProjects = [
     accentClassName: "from-sky-50 via-white to-stone-100",
   },
   {
-    name: "Ρυθμική Δραπετσώνας",
+    name: "\u03a1\u03c5\u03b8\u03bc\u03b9\u03ba\u03ae \u0394\u03c1\u03b1\u03c0\u03b5\u03c4\u03c3\u03ce\u03bd\u03b1\u03c2",
     subtitle: "Club website for rhythmic gymnastics",
     category: "Organization website",
     url: "https://ioannisbekas.github.io/Rythm-Drap/",
@@ -126,7 +124,7 @@ const portfolioFaqs = [
   {
     question: "How long does a typical website or app project take?",
     answer:
-      "A focused portfolio or organization website typically ships in 2\u20134 weeks. Product-style web applications with AI features or complex workflows take 4\u20138 weeks depending on scope. We scope every project with a clear timeline before starting.",
+      "A focused portfolio or organization website typically ships in 2-4 weeks. Product-style web applications with AI features or complex workflows take 4-8 weeks depending on scope. We scope every project with a clear timeline before starting.",
   },
   {
     question: "Do you offer ongoing maintenance and support?",
@@ -136,7 +134,7 @@ const portfolioFaqs = [
   {
     question: "Can you build something similar for my business or project?",
     answer:
-      "Absolutely. Each build shown here solved a different communication problem \u2014 personal positioning, local organization visibility, service-business bookings, or product-led learning. We adapt the same delivery discipline to your specific context and audience.",
+      "Absolutely. Each build shown here solved a different communication problem - personal positioning, local organization visibility, service-business bookings, or product-led learning. We adapt the same delivery discipline to your specific context and audience.",
   },
 ];
 
@@ -218,7 +216,7 @@ function LazyPreviewVideo({
           >
             <source src={src} type="video/mp4" />
           </video>
-          {!isPlaying && (
+          {!isPlaying ? (
             <button
               onClick={handlePlayClick}
               className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors hover:bg-black/20"
@@ -228,7 +226,7 @@ function LazyPreviewVideo({
                 <Play className="h-5 w-5 fill-gray-900 text-gray-900" />
               </div>
             </button>
-          )}
+          ) : null}
         </>
       ) : (
         <img
@@ -239,146 +237,6 @@ function LazyPreviewVideo({
         />
       )}
     </div>
-  );
-}
-
-function PortfolioIntroLoader() {
-  const shouldReduceMotion = useReducedMotion();
-
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 1 }}
-      exit={{
-        opacity: 0,
-        transition: {
-          duration: shouldReduceMotion ? 0.16 : 0.38,
-          ease: "easeOut",
-        },
-      }}
-      className="fixed inset-0 z-[80] overflow-hidden bg-[#fafaf7]"
-      role="status"
-      aria-live="polite"
-      aria-label="Loading website and app portfolio"
-    >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : { x: [0, 24, -12, 0], y: [0, -18, 12, 0] }
-          }
-          transition={{
-            duration: 10,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          className="absolute -left-12 top-16 h-56 w-56 rounded-full bg-amber-200/45 blur-3xl"
-        />
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : { x: [0, -28, 18, 0], y: [0, 16, -10, 0] }
-          }
-          transition={{
-            duration: 12,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          className="absolute right-0 top-20 h-72 w-72 rounded-full bg-sky-200/35 blur-3xl"
-        />
-        <motion.div
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : { scale: [1, 1.08, 0.98, 1], opacity: [0.22, 0.32, 0.22] }
-          }
-          transition={{
-            duration: 8,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-10 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-rose-200/30 blur-3xl"
-        />
-      </div>
-
-      <div className="relative flex min-h-screen items-center justify-center px-6">
-        <motion.div
-          initial={
-            shouldReduceMotion ? undefined : { opacity: 0, y: 18, scale: 0.98 }
-          }
-          animate={
-            shouldReduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }
-          }
-          transition={{ duration: 0.45, ease: "easeOut" }}
-          className="w-full max-w-xl rounded-[2rem] border border-black/10 bg-white/82 p-8 shadow-2xl shadow-black/10 backdrop-blur-xl md:p-10"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-gray-500">
-            <MonitorSmartphone className="h-4 w-4" />
-            BI Solutions
-          </div>
-
-          <div className="mt-6 flex items-start gap-4">
-            <motion.div
-              animate={
-                shouldReduceMotion
-                  ? undefined
-                  : { rotate: 360, scale: [1, 1.06, 1] }
-              }
-              transition={{
-                rotate: {
-                  duration: 6,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "linear",
-                },
-                scale: {
-                  duration: 2.4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                },
-              }}
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black text-white shadow-lg shadow-black/15"
-            >
-              <Globe className="h-6 w-6" />
-            </motion.div>
-
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-gray-400">
-                Preparing showcase
-              </p>
-              <h2 className="mt-2 text-3xl font-bold font-heading tracking-tight text-gray-950 md:text-4xl">
-                Loading videos before reveal.
-              </h2>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-gray-600 md:text-base">
-                The page is warming up preview media so the first portfolio
-                interactions feel smoother.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8">
-            <div className="h-2 overflow-hidden rounded-full bg-black/8">
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{
-                  duration: shouldReduceMotion
-                    ? 0.01
-                    : PORTFOLIO_INTRO_DURATION_MS / 1000,
-                  ease: "easeInOut",
-                }}
-                className="h-full origin-left bg-gradient-to-r from-black via-gray-700 to-sky-500"
-              />
-            </div>
-            <div className="mt-4 flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-              <span>Portfolio route</span>
-              <span>3 sec intro</span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
   );
 }
 
@@ -411,9 +269,7 @@ function PortfolioMetricCard({
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
         {label}
       </p>
-      <p className="mt-3 text-lg font-semibold text-gray-900">
-        {value}
-      </p>
+      <p className="mt-3 text-lg font-semibold text-gray-900">{value}</p>
     </motion.div>
   );
 }
@@ -485,11 +341,8 @@ function PortfolioProjectCard({
         <div
           className={`flex flex-col ${reversed ? "lg:flex-row-reverse" : "lg:flex-row"}`}
         >
-          {/* Media side */}
           <motion.div variants={itemVariants} className="lg:w-[55%]">
-            <div
-              className={`h-full rounded-[2rem] bg-gradient-to-br ${project.accentClassName}`}
-            >
+            <div className={`h-full rounded-[2rem] bg-gradient-to-br ${project.accentClassName}`}>
               <div className="flex items-center justify-between px-5 pt-5">
                 <motion.span
                   variants={itemVariants}
@@ -525,14 +378,11 @@ function PortfolioProjectCard({
             </div>
           </motion.div>
 
-          {/* Content side */}
           <motion.div
             variants={itemVariants}
             className="flex flex-col justify-center px-6 py-8 lg:w-[45%] lg:px-10 lg:py-10"
           >
-            <p className="text-sm font-medium text-gray-500">
-              {project.subtitle}
-            </p>
+            <p className="text-sm font-medium text-gray-500">{project.subtitle}</p>
             <h3 className="mt-2 text-3xl font-bold font-heading tracking-tight text-gray-950 lg:text-4xl">
               {project.name}
             </h3>
@@ -557,7 +407,6 @@ function PortfolioProjectCard({
               ))}
             </div>
 
-            {/* Tech stack badges */}
             <motion.div variants={itemVariants} className="mt-6 flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
                 <span
@@ -569,11 +418,7 @@ function PortfolioProjectCard({
               ))}
             </motion.div>
 
-            {/* Results */}
-            <motion.div
-              variants={itemVariants}
-              className="mt-5 flex flex-wrap gap-3"
-            >
+            <motion.div variants={itemVariants} className="mt-5 flex flex-wrap gap-3">
               {project.results.map((result) => (
                 <span
                   key={result}
@@ -601,14 +446,8 @@ function PortfolioProjectCard({
 
 export default function WebsiteAppPortfolioPage() {
   const shouldReduceMotion = useReducedMotion();
-  const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(
-      () => setShowIntro(false),
-      PORTFOLIO_INTRO_DURATION_MS,
-    );
-
     const preloadVideos = portfolioPreviewSources.map((src) => {
       const video = document.createElement("video");
       video.preload = "auto";
@@ -620,7 +459,6 @@ export default function WebsiteAppPortfolioPage() {
     });
 
     return () => {
-      window.clearTimeout(timeoutId);
       preloadVideos.forEach((video) => {
         video.pause();
         video.removeAttribute("src");
@@ -665,162 +503,177 @@ export default function WebsiteAppPortfolioPage() {
             {
               "@type": "BreadcrumbList",
               itemListElement: [
-                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
-                { "@type": "ListItem", position: 2, name: "Products", item: "https://www.bisolutions.group/products" },
-                { "@type": "ListItem", position: 3, name: "Website & App Portfolio", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}` },
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: "https://www.bisolutions.group/",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Products",
+                  item: "https://www.bisolutions.group/products",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: "Website & App Portfolio",
+                  item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
+                },
               ],
             },
           ],
         }}
       />
-      <AnimatePresence>
-        {showIntro && <PortfolioIntroLoader />}
-      </AnimatePresence>
 
-      {!showIntro && (
-        <motion.div
-          initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: shouldReduceMotion ? 0 : 0.42,
-            ease: "easeOut",
-          }}
-        >
-          <Navbar />
+      <motion.div
+        initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: shouldReduceMotion ? 0 : 0.42,
+          ease: "easeOut",
+        }}
+      >
+        <Navbar />
 
-      <main className="pt-32 pb-20">
-        <ScrollReveal width="100%">
-          <ProductPageHero
-            icon={MonitorSmartphone}
-            eyebrow="Websites and web apps by BI Solutions"
-            title="Selected web experiences designed and shipped by BI Solutions."
-            description="This portfolio page groups live BI Solutions website and app work into one place, spanning personal branding, service businesses, organization websites, and AI-native education product experiences."
-            actions={(
-              <>
-                <a href="#featured-sites">
-                  <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
-                    View featured sites
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </a>
-                <a href={withSiteBase("/contact")}>
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-gray-300 px-8"
-                  >
-                    Discuss a website or app build
-                  </Button>
-                </a>
-              </>
-            )}
-            footer={(
-              <div className="grid gap-4 md:grid-cols-3">
-                {portfolioMetrics.map((item, index) => (
-                  <PortfolioMetricCard
-                    key={item.label}
-                    label={item.label}
-                    value={item.value}
-                    delay={index * 0.08}
+        <main className="pt-32 pb-20">
+          <ScrollReveal width="100%">
+            <ProductPageHero
+              icon={MonitorSmartphone}
+              eyebrow="Websites and web apps by BI Solutions"
+              title="Selected web experiences designed and shipped by BI Solutions."
+              description="This portfolio page groups live BI Solutions website and app work into one place, spanning personal branding, service businesses, organization websites, and AI-native education product experiences."
+              actions={
+                <>
+                  <a href="#featured-sites">
+                    <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                      View featured sites
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a href={withSiteBase("/contact")}>
+                    <Button
+                      variant="outline"
+                      className="rounded-full border-gray-300 px-8"
+                    >
+                      Discuss a website or app build
+                    </Button>
+                  </a>
+                </>
+              }
+              footer={
+                <div className="grid gap-4 md:grid-cols-3">
+                  {portfolioMetrics.map((item, index) => (
+                    <PortfolioMetricCard
+                      key={item.label}
+                      label={item.label}
+                      value={item.value}
+                      delay={index * 0.08}
+                    />
+                  ))}
+                </div>
+              }
+            />
+          </ScrollReveal>
+
+          <section
+            id="featured-sites"
+            className="mx-auto mb-16 max-w-7xl px-6 md:px-12"
+          >
+            <ScrollReveal className="mb-10" width="100%">
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600">
+                  <Globe className="h-4 w-4" />
+                  Featured launches
+                </div>
+                <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight md:text-5xl">
+                  Four live builds, each tuned to a different audience and workflow.
+                </h2>
+                <p className="mt-4 text-lg leading-relaxed text-gray-600">
+                  The same delivery discipline adapts to different contexts:
+                  personal positioning, local organization visibility,
+                  appointment-led service businesses, and a product-led learning
+                  application.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <div className="space-y-10">
+              {showcaseProjects.map((project, index) => (
+                <ScrollReveal
+                  key={project.name}
+                  delay={index * 0.08}
+                  width="100%"
+                >
+                  <PortfolioProjectCard
+                    project={project}
+                    reversed={index % 2 === 1}
                   />
-                ))}
-              </div>
-            )}
-          />
-        </ScrollReveal>
-
-        {/* Featured projects - stacked layout */}
-        <section
-          id="featured-sites"
-          className="mx-auto mb-16 max-w-7xl px-6 md:px-12"
-        >
-          <ScrollReveal className="mb-10" width="100%">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600">
-                <Globe className="h-4 w-4" />
-                Featured launches
-              </div>
-              <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight md:text-5xl">
-                Four live builds, each tuned to a different audience and workflow.
-              </h2>
-              <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                The same delivery discipline adapts to different contexts:
-                personal positioning, local organization visibility,
-                appointment-led service businesses, and a product-led learning
-                application.
-              </p>
+                </ScrollReveal>
+              ))}
             </div>
-          </ScrollReveal>
+          </section>
 
-          <div className="space-y-10">
-            {showcaseProjects.map((project, index) => (
-              <ScrollReveal
-                key={project.name}
-                delay={index * 0.08}
-                width="100%"
-              >
-                <PortfolioProjectCard
-                  project={project}
-                  reversed={index % 2 === 1}
-                />
-              </ScrollReveal>
-            ))}
-          </div>
-        </section>
+          <section className="mx-auto mb-16 max-w-7xl px-6 md:px-12">
+            <ScrollReveal width="100%">
+              <Card className="rounded-3xl border-gray-200 bg-gradient-to-br from-gray-950 to-gray-800 p-10 text-center shadow-2xl md:p-14">
+                <h2 className="text-3xl font-bold font-heading tracking-tight text-white md:text-4xl">
+                  Have a similar project in mind?
+                </h2>
+                <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-300">
+                  Whether you need a personal portfolio, an organization
+                  website, or a product-style web application, we can scope and
+                  deliver it.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                  <a href={withSiteBase("/contact")}>
+                    <Button className="rounded-full bg-white px-8 text-gray-900 hover:bg-gray-100">
+                      Start a conversation
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a href={withSiteBase("/services")}>
+                    <Button
+                      variant="outline"
+                      className="rounded-full border-gray-500 px-8 text-gray-300 hover:bg-white/10 hover:text-white"
+                    >
+                      View all services
+                    </Button>
+                  </a>
+                </div>
+              </Card>
+            </ScrollReveal>
+          </section>
 
-        {/* Mid-page CTA */}
-        <section className="mx-auto mb-16 max-w-7xl px-6 md:px-12">
-          <ScrollReveal width="100%">
-            <Card className="rounded-3xl border-gray-200 bg-gradient-to-br from-gray-950 to-gray-800 p-10 text-center shadow-2xl md:p-14">
-              <h2 className="text-3xl font-bold font-heading tracking-tight text-white md:text-4xl">
-                Have a similar project in mind?
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-300">
-                Whether you need a personal portfolio, an organization website,
-                or a product-style web application, we can scope and deliver it.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <a href={withSiteBase("/contact")}>
-                  <Button className="rounded-full bg-white px-8 text-gray-900 hover:bg-gray-100">
-                    Start a conversation
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </a>
-                <a href={withSiteBase("/services")}>
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-gray-500 px-8 text-gray-300 hover:bg-white/10 hover:text-white"
-                  >
-                    View all services
-                  </Button>
-                </a>
-              </div>
-            </Card>
-          </ScrollReveal>
-        </section>
+          <section className="mx-auto mb-20 max-w-7xl px-6 md:px-12">
+            <ScrollReveal width="100%">
+              <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.08] md:p-10">
+                <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                  Website & App Portfolio FAQ
+                </h2>
+                <div className="mt-6 space-y-4">
+                  {portfolioFaqs.map((faq) => (
+                    <div
+                      key={faq.question}
+                      className="rounded-2xl border border-gray-200 bg-gray-50 p-5"
+                    >
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {faq.question}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </ScrollReveal>
+          </section>
+        </main>
 
-        {/* FAQ */}
-        <section className="mx-auto mb-20 max-w-7xl px-6 md:px-12">
-          <ScrollReveal width="100%">
-            <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.08] md:p-10">
-              <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
-                Website & App Portfolio FAQ
-              </h2>
-              <div className="mt-6 space-y-4">
-                {portfolioFaqs.map((faq) => (
-                  <div key={faq.question} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-                    <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{faq.answer}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </ScrollReveal>
-        </section>
-      </main>
-
-          <Footer />
-        </motion.div>
-      )}
+        <Footer />
+      </motion.div>
     </div>
   );
 }

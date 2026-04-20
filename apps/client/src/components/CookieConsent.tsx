@@ -1,18 +1,33 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { withSiteBase } from "@/lib/site";
 
 const COOKIE_CONSENT_KEY = "cookie-consent";
 const GA_ID = "G-M1276CBX6M";
+const COOKIE_BODY =
+  "\u0391\u03c5\u03c4\u03cc\u03c2 \u03bf \u03b9\u03c3\u03c4\u03cc\u03c4\u03bf\u03c0\u03bf\u03c2 \u03c7\u03c1\u03b7\u03c3\u03b9\u03bc\u03bf\u03c0\u03bf\u03b9\u03b5\u03af cookies \u03b3\u03b9\u03b1 \u03b2\u03b1\u03c3\u03b9\u03ba\u03ac analytics \u03ba\u03b1\u03b9 \u03b3\u03b9\u03b1 \u03bd\u03b1 \u03b2\u03b5\u03bb\u03c4\u03b9\u03ce\u03bd\u03bf\u03c5\u03bc\u03b5 \u03c4\u03b7\u03bd \u03b5\u03bc\u03c0\u03b5\u03b9\u03c1\u03af\u03b1 \u03c3\u03b1\u03c2.";
+const COOKIE_LINK_LABEL =
+  "\u03a0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03ae \u0391\u03c0\u03bf\u03c1\u03c1\u03ae\u03c4\u03bf\u03c5";
+const COOKIE_DECLINE_LABEL = "\u0391\u03c0\u03cc\u03c1\u03c1\u03b9\u03c8\u03b7";
+const COOKIE_ACCEPT_LABEL = "\u0391\u03c0\u03bf\u03b4\u03bf\u03c7\u03ae";
 
 function loadGA() {
   if (document.querySelector(`script[src*="gtag/js?id=${GA_ID}"]`)) return;
+
   const script = document.createElement("script");
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
   document.head.appendChild(script);
-  (window as any).dataLayer = (window as any).dataLayer || [];
-  function gtag(...args: any[]) { (window as any).dataLayer.push(args); }
+
+  (window as Window & { dataLayer?: unknown[][] }).dataLayer =
+    (window as Window & { dataLayer?: unknown[][] }).dataLayer || [];
+
+  function gtag(...args: unknown[]) {
+    (window as Window & { dataLayer?: unknown[][] }).dataLayer?.push(
+      args as unknown[],
+    );
+  }
+
   gtag("js", new Date());
   gtag("config", GA_ID);
 }
@@ -22,10 +37,13 @@ export function CookieConsent() {
 
   useEffect(() => {
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+
     if (!consent) {
-      const timer = setTimeout(() => setVisible(true), 1000);
-      return () => clearTimeout(timer);
-    } else if (consent === "accepted") {
+      const timer = window.setTimeout(() => setVisible(true), 1000);
+      return () => window.clearTimeout(timer);
+    }
+
+    if (consent === "accepted") {
       loadGA();
     }
   }, []);
@@ -43,43 +61,45 @@ export function CookieConsent() {
 
   return (
     <AnimatePresence>
-      {visible && (
+      {visible ? (
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
+          initial={{ y: 32, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6"
+          exit={{ y: 24, opacity: 0 }}
+          transition={{ type: "spring", damping: 24, stiffness: 220 }}
+          className="fixed inset-x-4 bottom-4 z-50 sm:left-auto sm:right-6 sm:max-w-sm"
         >
-          <div className="max-w-4xl mx-auto bg-black text-white rounded-2xl border border-white/10 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-2xl">
-            <p className="text-sm text-gray-300 leading-relaxed flex-1">
-              Αυτός ο ιστότοπος χρησιμοποιεί cookies για τη βελτίωση της εμπειρίας σας.
-              Διαβάστε την{" "}
+          <div className="rounded-3xl border border-white/10 bg-black/95 px-5 py-4 text-white shadow-2xl shadow-black/30 backdrop-blur-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+              Cookies
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-gray-300">
+              {COOKIE_BODY}{" "}
               <a
                 href={withSiteBase("/privacy-policy")}
-                className="underline text-white hover:text-gray-300 transition-colors"
+                className="underline decoration-white/30 underline-offset-4 transition-colors hover:text-white"
               >
-                Πολιτική Απορρήτου
-              </a>{" "}
-              μας για περισσότερες πληροφορίες.
+                {COOKIE_LINK_LABEL}
+              </a>
+              .
             </p>
-            <div className="flex gap-3 shrink-0">
+            <div className="mt-4 flex gap-3">
               <button
                 onClick={handleDecline}
-                className="px-5 py-2 text-sm text-gray-400 hover:text-white border border-white/20 hover:border-white/40 rounded-full transition-colors"
+                className="flex-1 rounded-full border border-white/15 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-white/35 hover:text-white"
               >
-                Απόρριψη
+                {COOKIE_DECLINE_LABEL}
               </button>
               <button
                 onClick={handleAccept}
-                className="px-5 py-2 text-sm bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors"
+                className="flex-1 rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-gray-200"
               >
-                Αποδοχή
+                {COOKIE_ACCEPT_LABEL}
               </button>
             </div>
           </div>
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 }

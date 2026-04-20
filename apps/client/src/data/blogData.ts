@@ -1,33 +1,32 @@
-// Blog post data types and content for BI Solutions blog
-
-export interface BlogPost {
-    slug: string;
-    title: string;
-    excerpt: string;
-    content: string;
-    author: string;
-    date: string;
-    readTime: string;
-    category: string;
-    tags: string[];
-    featuredImage: string;
-}
-
-// Import blog images
 import geminiImage from "@/assets/blog/gemini-import-feature.png";
 import powerBISolutionsImage from "@/assets/blog/power-bi-solutions-semantic-model-review.svg";
 import { withPublicSiteOrigin } from "@/lib/site";
 
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  readTime: string;
+  category: string;
+  tags: string[];
+  featuredImage: string;
+}
+
 export const blogPosts: BlogPost[] = [
-    {
-        slug: "google-gemini-import-ai-chats",
-        title: "Google Gemini is Making it Easy to Quit ChatGPT, Claude and other LLMs",
-        excerpt: "Google is testing a breakthrough 'Import AI chats' feature that allows users to migrate their entire conversation histories from rival platforms directly into Gemini.",
-        content: `For over a year, many power users have felt "stuck." Whether you're a ChatGPT Plus subscriber, a Claude enthusiast, or a Copilot advocate, your AI assistant isn't just a tool anymore—it's a repository. It holds your workflows, your creative history, and months of personalized context.
+  {
+    slug: "google-gemini-import-ai-chats",
+    title:
+      "Google Gemini is Making it Easy to Quit ChatGPT, Claude and other LLMs",
+    excerpt:
+      "Google is testing a breakthrough 'Import AI chats' feature that allows users to migrate their entire conversation histories from rival platforms directly into Gemini.",
+    content: `For over a year, many power users have felt "stuck." Whether you are a ChatGPT Plus subscriber, a Claude enthusiast, or a Copilot advocate, your AI assistant is not just a tool anymore - it is a repository. It holds your workflows, your creative history, and months of personalized context.
 
 Switching meant starting from zero. Until now.
 
-Google is currently testing a breakthrough feature: "Import AI chats." This tool, spotted in early beta builds, allows users to migrate their entire conversation histories from rival platforms directly into Gemini. It's a bold move that directly attacks the "ecosystem lock-in" that has defined the AI wars so far.
+Google is currently testing a breakthrough feature: "Import AI chats." This tool, spotted in early beta builds, allows users to migrate their entire conversation histories from rival platforms directly into Gemini. It is a bold move that directly attacks the "ecosystem lock-in" that has defined the AI wars so far.
 
 ## How It Works
 
@@ -35,41 +34,43 @@ According to early reports from PCMag and TestingCatalog, the process is surpris
 
 **The Entry Point:** A new option in Gemini's attachment menu (the + icon).
 
-**The Process:** You download your data export from a rival service (like ChatGPT's .zip or .json files) and upload it to Gemini.
+**The Process:** You download your data export from a rival service, such as ChatGPT zip or json files, and upload it to Gemini.
 
-**The Result:** Your past threads are ingested, potentially allowing Gemini to maintain the context of your previous work without a "cold start."
+**The Result:** Your past threads are ingested, potentially allowing Gemini to maintain the context of your previous work without a cold start.
 
 ## Nano Banana Pro Model
 
-Google is also supercharging its creative capabilities with the Nano Banana Pro model:
+Google is also expanding its creative capabilities with the Nano Banana Pro model:
 
 **Print-Ready Quality:** Users have spotted new 2K and 4K resolution download options.
 
-**Professional Focus:** The 4K setting is specifically labeled "Best for print," signaling that Gemini is moving from "casual AI sketches" to professional asset production.
+**Professional Focus:** The 4K setting is specifically labeled "Best for print," signaling that Gemini is moving from casual AI sketches to professional asset production.
 
 ## The Likeness Feature
 
-With great data comes great responsibility. Google is simultaneously testing a "Likeness" feature. While details are still emerging, it appears linked to video verification tools—likely a proactive step to help users identify and report unauthorized AI-generated content using their face or voice.
+With great data comes great responsibility. Google is simultaneously testing a "Likeness" feature. While details are still emerging, it appears linked to video verification tools, likely a proactive step to help users identify and report unauthorized AI-generated content using their face or voice.
 
 ## How We See Google's Move
 
-In the early days of the web, we fought for email portability. Then it was phone numbers. Now, it's Context Portability. By removing the "tedium barrier," Google isn't just offering a better model; they are offering a better on-ramp.
+In the early days of the web, we fought for email portability. Then it was phone numbers. Now, it is context portability. By removing the tedium barrier, Google is not just offering a better model; it is offering a better on-ramp.
 
-If users can take their "AI brain" with them, the platform with the best integrations (Google Workspace, Android, etc.) wins. (Check <a href="https://www.linkedin.com/posts/george-soloupis_develop-an-on-device-rag-system-powered-by-activity-7386649277466415104-zyjk?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAABUEkeIBHVtmjVCuKFACyiq532vpscSqTdI" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Georgios Soloupis work in on-device RAG systems here</a>).
+If users can take their AI brain with them, the platform with the best integrations wins. Check <a href="https://www.linkedin.com/posts/george-soloupis_develop-an-on-device-rag-system-powered-by-activity-7386649277466415104-zyjk?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAABUEkeIBHVtmjVCuKFACyiq532vpscSqTdI" target="_blank" rel="noopener noreferrer" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Georgios Soloupis work in on-device RAG systems here</a>.
 
 > **Privacy Note:** If you do test this, remember that imported data is recorded in your Gemini Activity. Always scrub sensitive API keys or personal identifiers before migrating large datasets!`,
-        author: "BI Solutions",
-        date: "February 3, 2026",
-        readTime: "4 min read",
-        category: "AI & Technology",
-        tags: ["Google Gemini", "ChatGPT", "Claude", "AI", "LLM", "Machine Learning"],
-        featuredImage: geminiImage,
-    },
-    {
-        slug: "power-bi-solutions-semantic-model-analysis-workspace",
-        title: "Why Power BI Solutions Deserves a Dedicated Semantic Model Workspace",
-        excerpt: "Power BI Solutions brings TMDL review, semantic model diagnostics, AI guidance, and product-specific authentication into a focused workspace hosted directly on the BI Solutions domain.",
-        content: `Most Power BI model reviews still happen in fragments. A consultant opens a file in one tool, documents issues in another, sends optimization notes over email, and then jumps into a separate chat window to explain what should change. The result is usually slower feedback, inconsistent recommendations, and too much context switching for teams that just want a reliable path from model definition to production readiness.
+    author: "BI Solutions",
+    date: "February 3, 2026",
+    readTime: "4 min read",
+    category: "AI & Technology",
+    tags: ["Google Gemini", "ChatGPT", "Claude", "AI", "LLM", "Machine Learning"],
+    featuredImage: geminiImage,
+  },
+  {
+    slug: "power-bi-solutions-semantic-model-analysis-workspace",
+    title:
+      "Why Power BI Solutions Deserves a Dedicated Semantic Model Workspace",
+    excerpt:
+      "Power BI Solutions brings TMDL review, semantic model diagnostics, AI guidance, and product-specific authentication into a focused workspace hosted directly on the BI Solutions domain.",
+    content: `Most Power BI model reviews still happen in fragments. A consultant opens a file in one tool, documents issues in another, sends optimization notes over email, and then jumps into a separate chat window to explain what should change. The result is usually slower feedback, inconsistent recommendations, and too much context switching for teams that just want a reliable path from model definition to production readiness.
 
 Power BI Solutions was built to close that gap. Instead of treating semantic model analysis as an add-on service bolted onto a marketing site, the product creates a dedicated workspace where TMDL review, model diagnostics, AI-assisted guidance, and product-specific authentication all live under the BI Solutions domain.
 
@@ -97,7 +98,9 @@ Power BI Solutions adds AI-assisted guidance inside the analysis workflow itself
 
 Another important design decision is the authentication boundary. Power BI Solutions lives under the BI Solutions brand and domain, but it keeps its own product-specific access flow. That separation matters for roadmap flexibility, user management, and product state.
 
-In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="${withPublicSiteOrigin("/power-bi-solutions/workspace/")}" class="text-blue-600 hover:underline">/power-bi-solutions/workspace/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
+In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="${withPublicSiteOrigin(
+      "/power-bi-solutions/workspace/",
+    )}" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">/power-bi-solutions/workspace/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
 
 ## From review service to scalable product workflow
 
@@ -106,26 +109,38 @@ This is the real shift behind Power BI Solutions. The product is not just descri
 For BI leaders, that means faster feedback loops. For analysts and developers, it means fewer handoffs and less ambiguity. And for organizations trying to raise the quality of their Power BI estate, it creates a clear home for semantic model analysis inside the broader BI Solutions ecosystem.
 
 Power BI models do not fail because teams lack opinions. They fail because review, optimization, and decision-making are scattered. Power BI Solutions brings those steps together into one workspace and gives semantic model analysis the dedicated product surface it has been missing.`,
-        author: "BI Solutions",
-        date: "March 15, 2026",
-        readTime: "5 min read",
-        category: "Power BI & Analytics",
-        tags: ["Power BI", "Semantic Models", "TMDL", "Analytics Engineering", "AI", "Business Intelligence"],
-        featuredImage: powerBISolutionsImage,
-    },
+    author: "BI Solutions",
+    date: "March 15, 2026",
+    readTime: "5 min read",
+    category: "Power BI & Analytics",
+    tags: [
+      "Power BI",
+      "Semantic Models",
+      "TMDL",
+      "Analytics Engineering",
+      "AI",
+      "Business Intelligence",
+    ],
+    featuredImage: powerBISolutionsImage,
+  },
 ];
 
-// Helper function to get a blog post by slug
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
-    return blogPosts.find((post) => post.slug === slug);
+  return blogPosts.find((post) => post.slug === slug);
 }
 
-// Helper function to get related posts (same category, excluding current)
-export function getRelatedPosts(currentSlug: string, limit: number = 3): BlogPost[] {
-    const currentPost = getBlogPostBySlug(currentSlug);
-    if (!currentPost) return [];
+export function getRelatedPosts(
+  currentSlug: string,
+  limit: number = 3,
+): BlogPost[] {
+  const currentPost = getBlogPostBySlug(currentSlug);
 
-    return blogPosts
-        .filter((post) => post.slug !== currentSlug && post.category === currentPost.category)
-        .slice(0, limit);
+  if (!currentPost) return [];
+
+  return blogPosts
+    .filter(
+      (post) =>
+        post.slug !== currentSlug && post.category === currentPost.category,
+    )
+    .slice(0, limit);
 }

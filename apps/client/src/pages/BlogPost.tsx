@@ -1,275 +1,291 @@
-import { useRoute, Link, useLocation } from "wouter";
+import { Link, useRoute } from "wouter";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Newspaper,
+  Share2,
+  Linkedin,
+  Twitter,
+  Tag,
+} from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { PublicPageHero } from "@/components/sections/PublicPageHero";
+import { Button } from "@/components/ui/button";
 import { getBlogPostBySlug, getRelatedPosts } from "@/data/blogData";
-import { ArrowLeft, Calendar, Clock, Tag, Share2, Linkedin, Twitter } from "lucide-react";
 
-export default function BlogPost() {
-    const [, params] = useRoute("/blog/:slug");
-    const [, setLocation] = useLocation();
-    const slug = params?.slug || "";
-    const post = getBlogPostBySlug(slug);
-    const relatedPosts = getRelatedPosts(slug, 2);
+function renderRichText(line: string) {
+  return line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+}
 
-    // Handle 404
-    if (!post) {
-        return (
-            <div className="min-h-screen bg-background font-sans text-foreground">
-                <Navbar />
-                <main className="pt-32 pb-24">
-                    <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
-                        <h1 className="text-4xl font-bold font-heading mb-4">Article Not Found</h1>
-                        <p className="text-gray-600 mb-8">The article you're looking for doesn't exist.</p>
-                        <Link
-                            href="/blog"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
-                        >
-                            <ArrowLeft className="w-4 h-4" /> Back to Blog
-                        </Link>
-                    </div>
-                </main>
-                <Footer />
-            </div>
-        );
+function renderContent(content: string) {
+  const sections = content.split("\n\n");
+
+  return sections.map((section, index) => {
+    if (section.startsWith("## ")) {
+      return (
+        <h2
+          key={index}
+          className="mt-10 text-2xl font-bold font-heading tracking-tight text-gray-950"
+        >
+          {section.replace("## ", "")}
+        </h2>
+      );
     }
 
-    // Render inline bold (**text**) as React elements â€” no dangerouslySetInnerHTML
-    const renderInline = (text: string, boldClass = "font-semibold") => {
-        const parts = text.split(/\*\*(.*?)\*\*/g);
-        return parts.map((part, i) =>
-            i % 2 === 1 ? <strong key={i} className={boldClass}>{part}</strong> : part
-        );
-    };
-
-    // Parse content into paragraphs and headings
-    const renderContent = (content: string) => {
-        const lines = content.split("\n\n");
-        return lines.map((line, index) => {
-            // Check for headings
-            if (line.startsWith("## ")) {
-                return (
-                    <h2 key={index} className="text-2xl font-bold font-heading mt-10 mb-4">
-                        {line.replace("## ", "")}
-                    </h2>
-                );
-            }
-            // Check for blockquotes
-            if (line.startsWith("> ")) {
-                return (
-                    <blockquote
-                        key={index}
-                        className="border-l-4 border-black pl-6 py-2 my-6 bg-gray-50 rounded-r-lg"
-                    >
-                        <p className="text-gray-700 italic">
-                            {renderInline(line.replace("> ", ""))}
-                        </p>
-                    </blockquote>
-                );
-            }
-            // Regular paragraphs with bold support
-            return (
-                <p key={index} className="text-gray-700 leading-relaxed mb-4">
-                    {renderInline(line, "font-semibold text-black")}
-                </p>
-            );
-        });
-    };
-
-    const shareUrl = window.location.href;
-    const shareText = encodeURIComponent(post.title);
+    if (section.startsWith("> ")) {
+      return (
+        <blockquote
+          key={index}
+          className="my-8 rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-5"
+        >
+          <p
+            className="text-base leading-relaxed text-gray-700"
+            dangerouslySetInnerHTML={{ __html: renderRichText(section.replace("> ", "")) }}
+          />
+        </blockquote>
+      );
+    }
 
     return (
-        <div className="min-h-screen bg-background font-sans text-foreground">
-            <Seo
-                title={post.title}
-                description={post.excerpt}
-                path={`/blog/${post.slug}`}
-                image={post.featuredImage}
-                type="article"
-                structuredData={{
-                    "@context": "https://schema.org",
-                    "@type": "BlogPosting",
-                    headline: post.title,
-                    description: post.excerpt,
-                    image: `https://www.bisolutions.group${post.featuredImage}`,
-                    author: {
-                        "@type": "Organization",
-                        name: "BI Solutions",
-                        url: "https://www.bisolutions.group",
-                    },
-                    publisher: {
-                        "@type": "Organization",
-                        name: "BI Solutions",
-                        logo: {
-                            "@type": "ImageObject",
-                            url: "https://www.bisolutions.group/bi-solutions-logo.png",
-                        },
-                    },
-                    datePublished: new Date(post.date).toISOString(),
-                    mainEntityOfPage: {
-                        "@type": "WebPage",
-                        "@id": `https://www.bisolutions.group/blog/${post.slug}`,
-                    },
-                }}
-            />
-            <Navbar />
-            <main>
-                {/* Hero */}
-                <section className="pt-32 pb-12 md:pt-40 md:pb-16 bg-gradient-to-b from-gray-50 to-white">
-                    <div className="max-w-4xl mx-auto px-6 md:px-12">
-                        <ScrollReveal>
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center gap-2 text-gray-500 hover:text-black transition-colors mb-8"
-                            >
-                                <ArrowLeft className="w-4 h-4" /> Back to Blog
-                            </Link>
-
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6">
-                                <span className="px-3 py-1 bg-black text-white rounded-full text-xs font-medium">
-                                    {post.category}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                    <Calendar className="w-4 h-4" />
-                                    {post.date}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                    <Clock className="w-4 h-4" />
-                                    {post.readTime}
-                                </span>
-                            </div>
-
-                            <h1 className="text-3xl md:text-5xl font-bold font-heading mb-6 leading-tight">
-                                {post.title}
-                            </h1>
-
-                            <p className="text-xl text-gray-600 leading-relaxed">
-                                {post.excerpt}
-                            </p>
-                        </ScrollReveal>
-                    </div>
-                </section>
-
-                {/* Featured Image */}
-                <section className="pb-12">
-                    <div className="max-w-5xl mx-auto px-6 md:px-12">
-                        <ScrollReveal>
-                            <div className="aspect-[16/9] overflow-hidden rounded-2xl bg-gray-100">
-                                <img
-                                    src={post.featuredImage}
-                                    alt={post.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        </ScrollReveal>
-                    </div>
-                </section>
-
-                {/* Content */}
-                <section className="pb-16">
-                    <div className="max-w-3xl mx-auto px-6 md:px-12">
-                        <ScrollReveal>
-                            <article className="prose prose-lg max-w-none">
-                                {renderContent(post.content)}
-                            </article>
-
-                            {/* Tags */}
-                            <div className="flex flex-wrap items-center justify-center gap-2 mt-12 pt-8 border-t border-gray-200">
-                                <Tag className="w-4 h-4 text-gray-400" />
-                                {post.tags.map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-
-                            {/* Share */}
-                            <div className="flex items-center justify-center gap-4 mt-8">
-                                <span className="text-gray-500 text-sm flex items-center gap-2">
-                                    <Share2 className="w-4 h-4" /> Share:
-                                </span>
-                                <a
-                                    href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-black hover:text-white transition-all"
-                                >
-                                    <Twitter className="w-4 h-4" />
-                                </a>
-                                <a
-                                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-black hover:text-white transition-all"
-                                >
-                                    <Linkedin className="w-4 h-4" />
-                                </a>
-                            </div>
-                        </ScrollReveal>
-                    </div>
-                </section>
-
-
-                {/* Related Posts */}
-                {relatedPosts.length > 0 && (
-                    <section className="py-16 bg-gray-50">
-                        <div className="max-w-5xl mx-auto px-6 md:px-12">
-                            <ScrollReveal className="mb-8">
-                                <h2 className="text-2xl font-bold font-heading">Related Articles</h2>
-                            </ScrollReveal>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {relatedPosts.map((relatedPost, index) => (
-                                    <ScrollReveal key={relatedPost.slug} delay={index * 0.1}>
-                                        <Link
-                                            href={`/blog/${relatedPost.slug}`}
-                                            className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all"
-                                        >
-                                            <div className="aspect-[16/10] overflow-hidden">
-                                                <img
-                                                    src={relatedPost.featuredImage}
-                                                    alt={relatedPost.title}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                                />
-                                            </div>
-                                            <div className="p-6">
-                                                <h3 className="text-xl font-bold font-heading group-hover:text-gray-600 transition-colors">
-                                                    {relatedPost.title}
-                                                </h3>
-                                            </div>
-                                        </Link>
-                                    </ScrollReveal>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* CTA */}
-                <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen py-24 bg-black text-white">
-                    <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
-                        <ScrollReveal>
-                            <h2 className="text-3xl md:text-4xl font-bold font-heading mb-6">
-                                Need Help With Your AI Strategy?
-                            </h2>
-                            <p className="text-gray-400 max-w-xl mx-auto mb-8">
-                                Let's discuss how we can help you leverage AI and analytics to drive business growth.
-                            </p>
-                            <Link
-                                href="/contact"
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-medium rounded-full hover:bg-gray-100 transition-colors"
-                            >
-                                Get in Touch
-                            </Link>
-                        </ScrollReveal>
-                    </div>
-                </section>
-            </main>
-            <Footer />
-        </div>
+      <p
+        key={index}
+        className="mt-5 text-base leading-relaxed text-gray-700"
+        dangerouslySetInnerHTML={{ __html: renderRichText(section) }}
+      />
     );
+  });
+}
+
+export default function BlogPost() {
+  const [, params] = useRoute("/blog/:slug");
+  const slug = params?.slug || "";
+  const post = getBlogPostBySlug(slug);
+  const relatedPosts = getRelatedPosts(slug, 2);
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-background font-sans text-foreground">
+        <Navbar />
+        <main className="pt-32 pb-20">
+          <PublicPageHero
+            icon={Newspaper}
+            eyebrow="Blog"
+            title="Article not found."
+            description="The article you are looking for is not available at this route."
+            actions={
+              <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                <Link href="/blog">Back to blog</Link>
+              </Button>
+            }
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const shareUrl = window.location.href;
+  const shareText = encodeURIComponent(post.title);
+
+  return (
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <Seo
+        title={post.title}
+        description={post.excerpt}
+        path={`/blog/${post.slug}`}
+        image={post.featuredImage}
+        type="article"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt,
+          image: `https://www.bisolutions.group${post.featuredImage}`,
+          author: {
+            "@type": "Organization",
+            name: "BI Solutions",
+            url: "https://www.bisolutions.group",
+          },
+          publisher: {
+            "@type": "Organization",
+            name: "BI Solutions",
+            logo: {
+              "@type": "ImageObject",
+              url: "https://www.bisolutions.group/bi-solutions-logo.png",
+            },
+          },
+          datePublished: new Date(post.date).toISOString(),
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://www.bisolutions.group/blog/${post.slug}`,
+          },
+        }}
+      />
+      <Navbar />
+
+      <main className="pt-32 pb-20">
+        <PublicPageHero
+          icon={Newspaper}
+          eyebrow={post.category}
+          title={post.title}
+          description={post.excerpt}
+          actions={
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-black"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to blog
+            </Link>
+          }
+          footer={
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+              <span className="inline-flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                {post.date}
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Clock className="h-4 w-4" />
+                {post.readTime}
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Tag className="h-4 w-4" />
+                {post.author}
+              </span>
+            </div>
+          }
+        />
+
+        <section className="mx-auto max-w-5xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
+              <div className="aspect-[16/9] bg-gray-100">
+                <img
+                  src={post.featuredImage}
+                  alt={post.title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+          </ScrollReveal>
+        </section>
+
+        <section className="mx-auto mt-12 max-w-4xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <article className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-8">
+              <div className="prose prose-gray max-w-none">
+                {renderContent(post.content)}
+              </div>
+
+              <div className="mt-10 border-t border-gray-100 pt-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-wrap items-center gap-4">
+                  <span className="inline-flex items-center gap-2 text-sm text-gray-500">
+                    <Share2 className="h-4 w-4" />
+                    Share article
+                  </span>
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white"
+                  >
+                    <Twitter className="h-4 w-4" />
+                  </a>
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white"
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+            </article>
+          </ScrollReveal>
+        </section>
+
+        {relatedPosts.length > 0 ? (
+          <section className="mx-auto mt-16 max-w-5xl px-6 md:px-12">
+            <ScrollReveal className="max-w-3xl" width="100%">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                Related articles
+              </p>
+              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                Continue with adjacent reads.
+              </h2>
+            </ScrollReveal>
+
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
+              {relatedPosts.map((relatedPost, index) => (
+                <ScrollReveal key={relatedPost.slug} delay={index * 0.08} width="100%">
+                  <Link href={`/blog/${relatedPost.slug}`} className="group block h-full">
+                    <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
+                      <div className="aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img
+                          src={relatedPost.featuredImage}
+                          alt={relatedPost.title}
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="px-6 py-6">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                          {relatedPost.category}
+                        </p>
+                        <h3 className="mt-3 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
+                          {relatedPost.title}
+                        </h3>
+                      </div>
+                    </article>
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                Need help applying this?
+              </p>
+              <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                    Move from the article into a scoped analytics or AI engagement.
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    We can turn the idea into architecture, a reporting workflow,
+                    a product surface, or an implementation plan tailored to
+                    your operating environment.
+                  </p>
+                </div>
+                <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
+                  <Link href="/contact">Get in touch</Link>
+                </Button>
+              </div>
+            </div>
+          </ScrollReveal>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
 }
