@@ -40,6 +40,10 @@ jobs:
         working-directory: apps/quantus
         run: npm ci
 
+      - name: Install Quantus Python dependencies
+        working-directory: apps/quantus
+        run: python -m pip install -r pipelines/requirements.txt
+
       - name: Quantus lint
         working-directory: apps/quantus
         run: npm run lint
