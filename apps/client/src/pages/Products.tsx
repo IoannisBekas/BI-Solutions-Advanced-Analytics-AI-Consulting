@@ -35,11 +35,11 @@ export default function Products() {
         <section className="px-6 pb-8 md:px-12">
           <div className="max-w-7xl mx-auto">
             <ScrollReveal width="100%">
-              <div className="rounded-[2rem] border border-gray-200 bg-white/90 px-8 py-12 shadow-xl shadow-black/5 md:px-12 md:py-16">
+              <div className="rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/5 sm:px-8 sm:py-12 md:px-12 md:py-16">
                 <div className="inline-flex items-center gap-2 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
                   Products
                 </div>
-                <h1 className="mt-6 text-5xl md:text-6xl font-bold font-heading tracking-tight leading-tight">
+                <h1 className="mt-6 text-[2.55rem] sm:text-5xl md:text-6xl font-bold font-heading tracking-tight leading-[1.05] sm:leading-tight">
                 Purpose-built analytics products.
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">

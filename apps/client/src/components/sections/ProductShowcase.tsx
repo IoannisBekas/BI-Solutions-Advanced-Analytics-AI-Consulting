@@ -111,7 +111,6 @@ export function ProductShowcase({
             {heading}
           </h2>
           <p className="mt-4 max-w-3xl text-lg text-gray-600 leading-relaxed">
-            <span className="font-mono text-gray-800">www.bisolutions.group</span>{" "}
             {description}
           </p>
         </ScrollReveal>

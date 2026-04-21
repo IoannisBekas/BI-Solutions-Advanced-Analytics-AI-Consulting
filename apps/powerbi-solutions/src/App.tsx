@@ -87,21 +87,21 @@ function AppContent() {
     <div className="powerbi-page min-h-screen bg-background">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-black/5 bg-white/86 backdrop-blur-xl">
-        <div className="mx-auto flex h-[82px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-2 px-3 sm:h-[82px] sm:gap-4 sm:px-6 lg:px-8">
           <a
             href="https://www.bisolutions.group/"
-            className="flex min-w-0 items-center gap-3 text-left"
+            className="flex min-w-0 max-w-[12rem] items-center gap-2 text-left sm:max-w-none sm:gap-3"
           >
             <img
               src={brandLogoSrc}
               alt="BI Solutions"
-              className="h-10 w-10 shrink-0 mix-blend-multiply"
+              className="h-9 w-9 shrink-0 mix-blend-multiply sm:h-10 sm:w-10"
             />
             <div className="min-w-0">
-              <div className="truncate font-heading text-[1.05rem] font-bold tracking-tight text-black">
+              <div className="truncate font-heading text-[0.95rem] font-bold tracking-tight text-black sm:text-[1.05rem]">
                 BI Solutions Group
               </div>
-              <div className="hidden text-xs font-medium text-gray-500 sm:block">
+              <div className="hidden text-xs font-medium text-gray-500 md:block">
                 Advanced Analytics &amp; AI Consulting
               </div>
             </div>
@@ -137,7 +137,7 @@ function AppContent() {
                 <button
                   onClick={() => setAuthDialogOpen(true)}
                   disabled={isLoading}
-                  className="btn-secondary flex min-h-[44px] items-center gap-2 px-4 py-2 text-sm"
+                  className="btn-secondary flex h-11 w-11 min-h-[44px] items-center justify-center gap-2 px-0 py-2 text-sm sm:w-auto sm:px-4"
                   aria-label="Sign in"
                 >
                   <LogIn className="w-4 h-4" />
@@ -146,7 +146,7 @@ function AppContent() {
               )}
               <button
                 onClick={scrollToInput}
-                className="btn-primary min-h-[44px] px-5 py-2.5 text-sm"
+                className="btn-primary min-h-[44px] px-4 py-2.5 text-sm sm:px-5"
               >
                 Get Started
               </button>
@@ -155,7 +155,7 @@ function AppContent() {
       </nav>
 
       {/* Main Content */}
-      <main className="pt-24 md:pt-28">
+      <main className="pt-[7.5rem] sm:pt-24 md:pt-28">
         <HeroSection onScrollToInput={scrollToInput} />
 
         <div className="section-divider mx-auto max-w-6xl" />

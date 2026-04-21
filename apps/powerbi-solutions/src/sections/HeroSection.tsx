@@ -60,7 +60,7 @@ export function HeroSection({ onScrollToInput }: HeroSectionProps) {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id="overview" className="relative px-4 pb-10 pt-6 sm:px-6 lg:px-8 lg:pb-14">
+    <section id="overview" className="relative px-4 pb-10 pt-3 sm:px-6 sm:pt-6 lg:px-8 lg:pb-14">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="powerbi-ambient-orb powerbi-ambient-orb-one" />
         <div className="powerbi-ambient-orb powerbi-ambient-orb-two" />
@@ -68,7 +68,7 @@ export function HeroSection({ onScrollToInput }: HeroSectionProps) {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="powerbi-shell powerbi-hero-shell px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-14">
+        <div className="powerbi-shell powerbi-hero-shell px-5 py-7 sm:px-8 sm:py-10 lg:px-12 lg:py-14">
           <div className="grid gap-10 xl:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)] xl:items-end">
             <div>
               <div
@@ -85,7 +85,7 @@ export function HeroSection({ onScrollToInput }: HeroSectionProps) {
                 ref={titleRef}
                 className={`scroll-hidden stagger-1 ${titleVisible ? 'scroll-visible' : ''}`}
               >
-                <h1 className="max-w-4xl font-heading text-5xl font-bold leading-[0.98] tracking-tight text-black md:text-6xl lg:text-7xl">
+                <h1 className="max-w-4xl font-heading text-[2.65rem] font-bold leading-[1.02] tracking-tight text-black sm:text-5xl sm:leading-[0.98] md:text-6xl lg:text-7xl">
                   Audit Power BI models
                   <span className="mt-2 block text-gray-400">
                     with a cleaner first-pass workflow.

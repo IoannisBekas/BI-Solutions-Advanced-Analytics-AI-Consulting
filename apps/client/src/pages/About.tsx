@@ -176,7 +176,7 @@ export default function About() {
                 className="grid md:grid-cols-[1fr_350px] gap-12 items-start"
               >
                 <div>
-                  <h1 className="text-5xl md:text-7xl font-bold font-heading mb-8 tracking-tight">
+                  <h1 className="text-[2.75rem] sm:text-5xl md:text-7xl font-bold font-heading mb-8 tracking-tight leading-[1.05]">
                     Ioannis Bekas
                   </h1>
                   <h2 className="text-2xl font-medium text-gray-800 mb-6">Data Scientist & AI Developer</h2>

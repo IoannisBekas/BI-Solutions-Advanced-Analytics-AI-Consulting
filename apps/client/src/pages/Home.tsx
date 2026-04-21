@@ -45,10 +45,9 @@ export default function Home() {
           badge="Product Studio"
           id="products"
           heading="Four products, each purpose-built for a specific workflow."
-          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio â€” ready to explore."
+          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio - ready to explore."
         />
 
-        {/* Selected Works Preview */}
         <section className="py-24 bg-black text-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <ScrollReveal className="mb-16">

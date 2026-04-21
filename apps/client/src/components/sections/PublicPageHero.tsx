@@ -38,7 +38,7 @@ export function PublicPageHero({
       <div className="relative z-10 mx-auto max-w-7xl">
         <div
           className={cn(
-            "rounded-[2rem] border border-gray-200 bg-white/90 px-8 py-12 shadow-xl shadow-black/[0.06] md:px-12 md:py-16",
+            "rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/[0.06] sm:px-8 sm:py-12 md:px-12 md:py-16",
             className,
           )}
         >
@@ -62,7 +62,7 @@ export function PublicPageHero({
 
               <h1
                 className={cn(
-                  "mt-6 max-w-5xl text-5xl font-bold font-heading leading-tight tracking-tight text-gray-950 md:text-6xl",
+                  "mt-6 max-w-5xl text-[2.55rem] font-bold font-heading leading-[1.05] tracking-tight text-gray-950 sm:text-5xl sm:leading-tight md:text-6xl",
                   titleClassName,
                 )}
               >

@@ -32,7 +32,7 @@ export function ProductPageHero({
       <div className="relative z-10 mx-auto max-w-7xl">
         <div
           className={cn(
-            "rounded-[2rem] border border-gray-200 bg-white/90 px-8 py-12 shadow-xl shadow-black/5 md:px-12 md:py-16",
+            "rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/5 sm:px-8 sm:py-12 md:px-12 md:py-16",
             className,
           )}
         >
@@ -43,7 +43,7 @@ export function ProductPageHero({
             <span>{eyebrow}</span>
           </div>
 
-          <h1 className="mt-6 max-w-5xl text-5xl font-bold font-heading leading-tight tracking-tight md:text-6xl">
+          <h1 className="mt-6 max-w-5xl text-[2.55rem] font-bold font-heading leading-[1.05] tracking-tight sm:text-5xl sm:leading-tight md:text-6xl">
             {title}
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">

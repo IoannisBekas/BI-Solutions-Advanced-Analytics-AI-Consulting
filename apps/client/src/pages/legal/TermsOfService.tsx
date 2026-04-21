@@ -16,7 +16,7 @@ export default function TermsOfService() {
       <main className="pt-32 pb-20">
         <div className="max-w-4xl mx-auto px-6 md:px-12">
           <ScrollReveal>
-            <h1 className="text-5xl md:text-7xl font-bold font-heading mb-4">
+            <h1 className="text-[2.65rem] sm:text-5xl md:text-7xl font-bold font-heading mb-4 leading-[1.05]">
               Όροι Χρήσης
             </h1>
             <p className="text-sm text-gray-400 mb-12">

@@ -65,9 +65,9 @@ const SECTIONS: Section[] = [
                 <ul className="space-y-2 pl-4">
                     {[
                         ['Strong Uptrend (>15% 30d gain)', 'Momentum dominant. Mean reversion suppressed. Trend-following strategies active.'],
-                        ['Uptrend (5Ã¢â‚¬â€œ15% 30d gain)', 'Moderate momentum. Some reversion opportunity. Both momentum and value signals active.'],
-                        ['Sideways (Ã‚Â±5% 30d)', 'Range-bound. Mean reversion active. Options strategies gain priority.'],
-                        ['Downtrend (<Ã¢Ë†â€™15% 30d)', 'Bearish momentum. Defensive posture. Pairs trading and short considerations.'],
+                        ['Uptrend (5-15% 30d gain)', 'Moderate momentum. Some reversion opportunity. Both momentum and value signals active.'],
+                        ['Sideways (+/-5% 30d)', 'Range-bound. Mean reversion active. Options strategies gain priority.'],
+                        ['Downtrend (<-15% 30d)', 'Bearish momentum. Defensive posture. Pairs trading and short considerations.'],
                         ['High Volatility (annualised vol >30%)', 'Regime-agnostic. Position sizing reduced by 40%. All risk metrics take precedence.'],
                     ].map(([label, desc]) => (
                         <li key={label}>
@@ -85,17 +85,17 @@ const SECTIONS: Section[] = [
         content: (
             <div className="space-y-4">
                 {[
-                    { n: '1. ARIMA (AutoRegressive Integrated Moving Average)', d: 'Captures linear time-series dependencies. Weight: 20% in ensemble. Best suited for stable, mean-reverting price series. Limitation: assumes stationarity Ã¢â‚¬â€ degrades in trending regimes.', t: 'Time series analysis' },
+                    { n: '1. ARIMA (AutoRegressive Integrated Moving Average)', d: 'Captures linear time-series dependencies. Weight: 20% in ensemble. Best suited for stable, mean-reverting price series. Limitation: assumes stationarity - degrades in trending regimes.', t: 'Time series analysis' },
                     { n: '2. Prophet (Facebook/Meta)', d: 'Handles seasonality and calendar effects automatically. Weight: 35%. Best suited for assets with strong weekly or annual seasonality (e.g. commodities, retail equities). Limitation: struggles with structural breaks.', t: 'Seasonality-aware forecasting' },
-                    { n: '3. LSTM (Long Short-Term Memory)', d: 'Learns non-linear temporal relationships. Weight: 45% Ã¢â‚¬â€ highest due to superior regime adaptability. Trained on 10 years of daily OHLCV data. Limitation: computationally intensive; requires GPU inference for real-time use.', t: 'Deep learning' },
+                    { n: '3. LSTM (Long Short-Term Memory)', d: 'Learns non-linear temporal relationships. Weight: 45% - highest due to superior regime adaptability. Trained on 10 years of daily OHLCV data. Limitation: computationally intensive; requires GPU inference for real-time use.', t: 'Deep learning' },
                     { n: '4. Mean Reversion (Ornstein-Uhlenbeck)', d: 'Models the speed and magnitude of reversion to a long-run mean. Outputs: half-life in days, Z-score, entry and exit levels. Calibrated on 252-day rolling window.', t: 'Statistical arbitrage' },
                     { n: '5. Sentiment Composite', d: 'Credibility-weighted combination of Grok/X firehose (50%), Reddit NLP (25%), NewsAPI (25%). Campaign detection algorithm down-weights coordinated inauthentic activity.', t: 'Alternative data' },
                     { n: '6. Portfolio Optimization (Mean-Variance)', d: 'Computes efficient frontier allocation given current holdings. Outputs: optimal weight, Sharpe improvement, correlation impact. Relies on 60-day covariance matrix.', t: 'Portfolio theory' },
                     { n: '7. SHAP Feature Importance', d: 'Explains which sub-signals contributed most to the final recommendation using SHapley Additive exPlanations. Presented as a ranked waterfall chart. Auditable by design.', t: 'Model explainability' },
                     { n: '8. High-Frequency Signal', d: 'Intraday momentum derived from VWAP deviation, bid-ask spread dynamics, and tick-level volume divergence. Useful for timing entry/exit within a day.', t: 'Microstructure' },
-                    { n: '9. VaR & Risk Management', d: 'Historical Simulation VaR (99%, 1-day), Expected Shortfall, and three macro stress scenarios (2008 GFC Ã¢Ë†â€™45%, COVID Ã¢Ë†â€™30%, Inflation 2022 Ã¢Ë†â€™35%). All figures beta-scaled to the specific ticker.', t: 'Risk management' },
+                    { n: '9. VaR & Risk Management', d: 'Historical Simulation VaR (99%, 1-day), Expected Shortfall, and three macro stress scenarios (2008 GFC -45%, COVID -30%, Inflation 2022 -35%). All figures beta-scaled to the specific ticker.', t: 'Risk management' },
                     { n: '10. Options Pricing & Greeks', d: 'Black-Scholes pricing, full Greeks surface (Delta, Gamma, Vega, Theta, Rho), IV Rank vs 52-week range, and implied 30-day move. Available for liquid equity options.', t: 'Derivatives' },
-                    { n: '11. Reinforcement Learning Agent', d: 'PPO (Proximal Policy Optimisation) agent trained on 10 years of historical data with transaction cost simulation. Outputs current allocation recommendation. Not used as primary signal Ã¢â‚¬â€ advisory only.', t: 'AI agent' },
+                    { n: '11. Reinforcement Learning Agent', d: 'PPO (Proximal Policy Optimisation) agent trained on 10 years of historical data with transaction cost simulation. Outputs current allocation recommendation. Not used as primary signal - advisory only.', t: 'AI agent' },
                     { n: '12. Factor Investing (Barra-style)', d: 'Decomposes returns into Value, Momentum, Quality, Low-Volatility, and Size factors. Shows which factors explain recent performance and whether the current regime favours each.', t: 'Factor analysis' },
                 ].map(m => (
                     <div key={m.n} className="border-l-2 pl-3" style={{ borderColor: 'rgba(37,99,235,0.28)' }}>
@@ -112,7 +112,7 @@ const SECTIONS: Section[] = [
         title: '3. Model Ensemble Weighting',
         content: (
             <div className="space-y-3">
-                <p>Meridian v2.4 weights the three core forecasting models as follows: LSTM 45%, Prophet 35%, ARIMA 20%. Weights were determined by walk-forward backtesting across 2018Ã¢â‚¬â€œ2024 on 400+ equities, 15 crypto assets, and 8 commodity futures.</p>
+                <p>Meridian v2.4 weights the three core forecasting models as follows: LSTM 45%, Prophet 35%, ARIMA 20%. Weights were determined by walk-forward backtesting across 2018-2024 on 400+ equities, 15 crypto assets, and 8 commodity futures.</p>
                 <p>When all three models agree directionally, the confidence score's "model ensemble agreement" sub-component receives its full 15 points. When two of three agree, it receives 10. Full disagreement contributes 5, and a data_caveat is appended noting the divergence.</p>
                 <p>Regime context modulates weights in real time: LSTM weight increases to 55% in trending regimes (where non-linearity adds more signal); ARIMA weight increases to 30% in sideways regimes where linear AR structure is more appropriate.</p>
             </div>
@@ -123,10 +123,10 @@ const SECTIONS: Section[] = [
         title: '4. Grok API Privileged Firehose Access',
         content: (
             <div className="space-y-3">
-                <p>Quantus accesses the Grok API's full-fidelity X (Twitter) firehose Ã¢â‚¬â€ not the Standard API's filtered, sampled subset. This means every public post is processed in real time, including posts from verified institutional accounts that are most predictive of market direction.</p>
-                <p><strong>Credibility weighting:</strong> Posts from accounts with "Verified Organisation" status contribute 3Ãƒâ€” the weight of unverified accounts. Accounts with a finance-industry bio verified by Grok contribute 2Ãƒâ€”. Anonymous accounts contribute 1Ãƒâ€”.</p>
+                <p>Quantus accesses the Grok API's full-fidelity X (Twitter) firehose - not the Standard API's filtered, sampled subset. This means every public post is processed in real time, including posts from verified institutional accounts that are most predictive of market direction.</p>
+                <p><strong>Credibility weighting:</strong> Posts from accounts with "Verified Organisation" status contribute 3x the weight of unverified accounts. Accounts with a finance-industry bio verified by Grok contribute 2x. Anonymous accounts contribute 1x.</p>
                 <p><strong>Campaign detection:</strong> Quantus uses coordinated pattern detection (post timing, cross-account linguistic similarity) to identify and down-weight potential market manipulation campaigns. When detected, a data_caveat is appended.</p>
-                <p className="text-xs opacity-60">Limitation: Grok API is a Tier C data source (medium credibility) for final signal construction. Sentiment is advisory Ã¢â‚¬â€ it cannot override Tier A sources (SEC EDGAR, FRED).</p>
+                <p className="text-xs opacity-60">Limitation: Grok API is a Tier C data source (medium credibility) for final signal construction. Sentiment is advisory - it cannot override Tier A sources (SEC EDGAR, FRED).</p>
             </div>
         ),
     },
@@ -146,9 +146,9 @@ const SECTIONS: Section[] = [
                     </thead>
                     <tbody className="space-y-2">
                         {[
-                            ['A', 'SEC EDGAR, FRED, CBOE', 'Highest', 'Fundamental anchors Ã¢â‚¬â€ override lower tiers'],
+                            ['A', 'SEC EDGAR, FRED, CBOE', 'Highest', 'Fundamental anchors - override lower tiers'],
                             ['B', 'Yahoo Finance / yfinance, Financial Modeling Prep', 'High', 'Price, earnings, fundamentals'],
-                            ['C', 'Grok/X, Reddit, NewsAPI', 'Medium', 'Sentiment only Ã¢â‚¬â€ never standalone signal'],
+                            ['C', 'Grok/X, Reddit, NewsAPI', 'Medium', 'Sentiment only - never standalone signal'],
                         ].map(([tier, sources, cred, use]) => (
                             <tr key={tier} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
                                 <td className="py-2 font-bold" style={{ color: tier === 'A' ? '#10B981' : tier === 'B' ? BRAND_BLUE : '#9CA3AF' }}>Tier {tier}</td>
@@ -168,7 +168,7 @@ const SECTIONS: Section[] = [
         title: '6. Confidence Score Composition',
         content: (
             <div className="space-y-3">
-                <p>The confidence score (0Ã¢â‚¬â€œ100) is a weighted composite of seven sub-signals, each calibrated to their maximum attainable value:</p>
+                <p>The confidence score (0-100) is a weighted composite of seven sub-signals, each calibrated to their maximum attainable value:</p>
                 <div className="space-y-2">
                     {[
                         ['Momentum (RSI, MACD, regime alignment)', '20%'],
@@ -195,8 +195,8 @@ const SECTIONS: Section[] = [
         content: (
             <div className="space-y-3">
                 <p>Quantus maintains a supply chain and competitive relationship graph across the equity universe. When a material event affects one node (e.g. a TSMC capacity constraint), all downstream nodes (NVIDIA, Apple, Qualcomm) receive a cross-ticker alert within the same report cycle.</p>
-                <p>The graph is constructed from SEC EDGAR supplier disclosures, earnings call transcript NLP, and 13F institutional holding overlaps. Relationships are weighted by revenue exposure Ã¢â‚¬â€ a company where Supplier X represents 40% of COGS receives a higher-priority alert than one at 5%.</p>
-                <p>Cross-ticker alerts appear as amber banners on the Welcome Card and are included in the daily digest email. They do not automatically change the primary signal Ã¢â‚¬â€ they are advisory context.</p>
+                <p>The graph is constructed from SEC EDGAR supplier disclosures, earnings call transcript NLP, and 13F institutional holding overlaps. Relationships are weighted by revenue exposure - a company where Supplier X represents 40% of COGS receives a higher-priority alert than one at 5%.</p>
+                <p>Cross-ticker alerts appear as amber banners on the Welcome Card and are included in the daily digest email. They do not automatically change the primary signal - they are advisory context.</p>
             </div>
         ),
     },
@@ -205,7 +205,7 @@ const SECTIONS: Section[] = [
         title: '8. Shared Report Model & Meridian Versioning',
         content: (
             <div className="space-y-3">
-                <p>Every report generated by Quantus is stored in Redis with a 96-hour TTL and immediately available to all researchers requesting the same ticker. This is the Shared Intelligence Model Ã¢â‚¬â€ one expensive computation, shared across the entire community.</p>
+                <p>Every report generated by Quantus is stored in Redis with a 96-hour TTL and immediately available to all researchers requesting the same ticker. This is the Shared Intelligence Model - one expensive computation, shared across the entire community.</p>
                 <p><strong>Meridian v2.4</strong> is the current production prompt version. Meridian v2.3 is available in the Historical Archive for comparison. Earlier versions (Atlas) had lower directional accuracy (61% vs Meridian's 67%) and are marked in the archive. Version identifiers are immutable and cryptographically bound to each report_id.</p>
                 <p><strong>Cache invalidation triggers:</strong> Equity price move {'>'}5%, crypto price move {'>'}8%, FRED macro data update, FMP earnings release, or Polygon options flow spike. Manual invalidation available to Institutional clients.</p>
             </div>
@@ -216,8 +216,8 @@ const SECTIONS: Section[] = [
         title: '9. User Feedback & Signal Quality Improvement',
         content: (
             <div className="space-y-3">
-                <p>Every Deep Dive module and narrative section includes Ã°Å¸â€˜Â / Ã°Å¸â€˜Å½ feedback buttons. Feedback is anonymised and aggregated Ã¢â‚¬â€ your individual rating is never exposed to other users.</p>
-                <p>Feedback signals feed into two improvement loops: (1) prompt weighting Ã¢â‚¬â€ sections receiving systematic Ã°Å¸â€˜Å½ are flagged for human review and prompt refinement in the next Meridian version; (2) confidence calibration Ã¢â‚¬â€ when Ã°Å¸â€˜Â/Ã°Å¸â€˜Å½ patterns diverge from actual price outcomes, the corresponding sub-signal weights are adjusted in the next calibration cycle.</p>
+                <p>Every Deep Dive module and narrative section includes positive / negative feedback buttons. Feedback is anonymised and aggregated - your individual rating is never exposed to other users.</p>
+                <p>Feedback signals feed into two improvement loops: (1) prompt weighting - sections receiving systematic negative are flagged for human review and prompt refinement in the next Meridian version; (2) confidence calibration - when positive/negative patterns diverge from actual price outcomes, the corresponding sub-signal weights are adjusted in the next calibration cycle.</p>
                 <p>Institutional clients can annotate reports with private notes. These annotations are never shared with other users or used in aggregate feedback loops.</p>
             </div>
         ),
@@ -260,7 +260,7 @@ const SECTIONS: Section[] = [
         content: (
             <div className="space-y-3">
                 <p>Every report carries a full audit object containing: prompt version (Meridian v2.4), Python model versions for each of the 12 modules, data quality scores per source, circuit breakers activated during generation, and fallbacks used.</p>
-                <p>Data lineage is traceable from the final signal back to every raw data point used. The audit object is accessible via the API and displayed in the report footer. Report IDs are UUID4-based, globally unique, and bound to the specific payload that generated them Ã¢â‚¬â€ re-running with the same payload but a different Claude temperature would produce a new report_id.</p>
+                <p>Data lineage is traceable from the final signal back to every raw data point used. The audit object is accessible via the API and displayed in the report footer. Report IDs are UUID4-based, globally unique, and bound to the specific payload that generated them - re-running with the same payload but a different Claude temperature would produce a new report_id.</p>
                 <p>Historical audit records are retained for 7 years for Institutional clients in compliance with MiFID II record-keeping requirements.</p>
             </div>
         ),
@@ -279,7 +279,7 @@ export function Methodology({ lightMode }: MethodologyProps) {
                 {/* Header */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
                     <div className="bis-eyebrow mb-4">
-                        Methodology Documentation Ã‚Â· Meridian v2.4
+                        Methodology Documentation - Meridian v2.4
                     </div>
                     <h1 className="text-4xl font-bold tracking-tight mb-4" style={{ color: tp }}>How Quantus Works</h1>
                     <p className="text-lg leading-relaxed" style={{ color: ts }}>
@@ -301,8 +301,8 @@ export function Methodology({ lightMode }: MethodologyProps) {
 
                 {/* Footer */}
                 <div className="mt-12 border-t pt-8 text-center text-xs" style={{ borderColor: lightMode ? '#E5E7EB' : '#1A1A1A', color: '#6B7280' }}>
-                    <p>Quantus Research Solutions Ã‚Â· BI Solutions Group (www.bisolutions.group)</p>
-                    <p className="mt-1">Powered by Meridian v2.4 Ã‚Â· Model accuracy audited quarterly Ã‚Â· Last updated Feb 2026</p>
+                    <p>Quantus Research Solutions - BI Solutions Group (www.bisolutions.group)</p>
+                    <p className="mt-1">Powered by Meridian v2.4 - Model accuracy audited quarterly - Last updated Feb 2026</p>
                 </div>
             </section>
         </div>

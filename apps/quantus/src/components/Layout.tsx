@@ -281,7 +281,7 @@ export function Layout({
                             type="text"
                             value={navQuery}
                             onChange={(e) => setNavQuery(e.target.value)}
-                            placeholder="TickerÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦"
+                            placeholder="Ticker..."
                             className="flex-1 bg-transparent text-xs outline-none placeholder:text-gray-500"
                             style={{ color: textColor, minWidth: 0 }}
                             autoComplete="off"
@@ -349,7 +349,7 @@ export function Layout({
                                         border: `1px solid ${borderColor}`,
                                     }}
                                 >
-                                    {userTier ?? 'FREE'} Ãƒâ€šÃ‚Â· {userName}
+                                    {userTier ?? 'FREE'} - {userName}
                                 </div>
                                 <button
                                     onClick={onSignOut}
@@ -697,7 +697,7 @@ export function Layout({
                                 Past performance does not guarantee future results, and all investments involve risk.
                             </p>
                             <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
-                                <span>Ãƒâ€šÃ‚Â© 2026 BI Solutions Group Ãƒâ€šÃ‚Â· Quantus Investing Ãƒâ€šÃ‚Â· www.bisolutions.group</span>
+                                <span>(c) 2026 BI Solutions Group - Quantus Investing - www.bisolutions.group</span>
                                 <span>Research workspace under the BI Solutions product suite</span>
                             </div>
                         </div>
