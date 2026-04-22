@@ -11,6 +11,7 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
+import { ArticleVisual } from "@/components/blog/ArticleVisual";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
@@ -91,10 +92,9 @@ export default function Blog() {
                     <article className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
                       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
                         <div className="aspect-[16/10] overflow-hidden bg-gray-100">
-                          <img
-                            src={featuredPost.featuredImage}
-                            alt={featuredPost.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          <ArticleVisual
+                            post={featuredPost}
+                            className="transition-transform duration-700 group-hover:scale-105"
                           />
                         </div>
 
@@ -150,10 +150,9 @@ export default function Blog() {
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
                         <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
                           <div className="aspect-[16/10] overflow-hidden bg-gray-100">
-                            <img
-                              src={post.featuredImage}
-                              alt={post.title}
-                              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            <ArticleVisual
+                              post={post}
+                              className="transition-transform duration-700 group-hover:scale-105"
                             />
                           </div>
                           <div className="flex flex-1 flex-col px-6 py-6">
@@ -201,10 +200,9 @@ export default function Blog() {
                     <Link href={`/blog/${post.slug}`} className="group block h-full">
                       <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
                         <div className="aspect-[16/10] overflow-hidden bg-gray-100">
-                          <img
-                            src={post.featuredImage}
-                            alt={post.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          <ArticleVisual
+                            post={post}
+                            className="transition-transform duration-700 group-hover:scale-105"
                           />
                         </div>
                         <div className="flex flex-1 flex-col px-6 py-6">

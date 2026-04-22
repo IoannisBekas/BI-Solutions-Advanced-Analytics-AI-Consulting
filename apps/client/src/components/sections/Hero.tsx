@@ -10,7 +10,7 @@ export function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative h-screen min-h-[700px] w-full overflow-hidden flex items-center justify-center">
+    <section className="relative flex min-h-[100svh] w-full items-start justify-center overflow-hidden px-0 pb-16 pt-32 sm:pt-36 md:h-screen md:min-h-[700px] md:items-center md:py-0">
       <motion.div style={{ y: y1, opacity }} className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
@@ -19,7 +19,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-white/30" />
       </motion.div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full pt-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full md:pt-20">
         <div className="max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

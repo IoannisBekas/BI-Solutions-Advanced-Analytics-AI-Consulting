@@ -76,14 +76,19 @@ export function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 24, opacity: 0 }}
           transition={{ type: "spring", damping: 24, stiffness: 220 }}
-          className="fixed inset-x-4 bottom-4 z-50 sm:left-auto sm:right-5 sm:w-[18rem]"
+          className="fixed inset-x-3 bottom-3 z-50 sm:left-auto sm:right-5 sm:w-[18rem]"
         >
-          <div className="rounded-[1.4rem] border border-white/10 bg-black/95 px-4 py-3 text-white shadow-2xl shadow-black/30 backdrop-blur-xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+          <div className="rounded-2xl border border-white/10 bg-black/95 px-3 py-2.5 text-white shadow-2xl shadow-black/30 backdrop-blur-xl sm:rounded-[1.4rem] sm:px-4 sm:py-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400 sm:text-[11px]">
               {COOKIE_TITLE}
             </p>
-            <p className="mt-2 text-[13px] leading-relaxed text-gray-300">
-              {COOKIE_BODY}{" "}
+            <p className="mt-1.5 text-xs leading-snug text-gray-300 sm:mt-2 sm:text-[13px] sm:leading-relaxed">
+              <span className="sm:hidden">
+                Απαραίτητα cookies και βασικά analytics.
+              </span>
+              <span className="hidden sm:inline">
+                {COOKIE_BODY}
+              </span>{" "}
               <a
                 href={withSiteBase("/privacy-policy")}
                 className="underline decoration-white/30 underline-offset-4 transition-colors hover:text-white"
@@ -92,16 +97,16 @@ export function CookieConsent() {
               </a>
               .
             </p>
-            <div className="mt-3 flex gap-2">
+            <div className="mt-2 flex gap-2 sm:mt-3">
               <button
                 onClick={handleDecline}
-                className="flex-1 rounded-full border border-white/15 px-3 py-2 text-xs text-gray-300 transition-colors hover:border-white/35 hover:text-white"
+                className="flex-1 rounded-full border border-white/15 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:border-white/35 hover:text-white sm:py-2"
               >
                 {COOKIE_DECLINE_LABEL}
               </button>
               <button
                 onClick={handleAccept}
-                className="flex-1 rounded-full bg-white px-3 py-2 text-xs font-medium text-black transition-colors hover:bg-gray-200"
+                className="flex-1 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-black transition-colors hover:bg-gray-200 sm:py-2"
               >
                 {COOKIE_ACCEPT_LABEL}
               </button>

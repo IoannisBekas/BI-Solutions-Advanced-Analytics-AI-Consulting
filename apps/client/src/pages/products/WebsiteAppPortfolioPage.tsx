@@ -18,7 +18,7 @@ import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withSiteBase } from "@/lib/site";
 import michailKarnasPreview from "@/assets/portfolio/michail-karnas-preview.svg";
-import rythmikiDrapetsonaPreview from "@/assets/portfolio/rythmiki-drapetsona-preview.jpg";
+import rythmikiDrapetsonaPreview from "@/assets/portfolio/rythmiki-drapetsona-preview.svg";
 import mathimatikosIcon from "@/assets/portfolio/mathimatikos-icon.png";
 import barberPreview from "@/assets/portfolio/barber-preview.png";
 import karnasShowcase from "@/assets/portfolio/karnas-showcase.mp4";

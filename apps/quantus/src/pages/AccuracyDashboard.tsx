@@ -165,6 +165,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 <div className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
                     <div className="mb-6 space-y-3">
                         <div className="h-4 w-36 skeleton" />
+                        <h1 className="sr-only">Quantus Signal Performance</h1>
                         <div className="h-8 w-72 skeleton" />
                         <div className="h-3 w-full max-w-xl skeleton" />
                     </div>
@@ -178,6 +179,15 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
         return (
             <div className="mx-auto max-w-5xl">
                 <div className="bis-page-shell px-6 py-8 md:px-10 md:py-10">
+                    <div className="mb-6">
+                        <div className="bis-eyebrow mb-4">
+                            <Award className="w-3.5 h-3.5" />
+                            Accuracy
+                        </div>
+                        <h1 className="text-3xl font-bold tracking-tight md:text-4xl" style={{ color: tp }}>
+                            Quantus Signal Performance
+                        </h1>
+                    </div>
                     <WorkspaceError
                         title="Accuracy dashboard unavailable"
                         message={error ?? 'Quantus accuracy metrics are unavailable right now.'}
@@ -196,7 +206,7 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
                 <div className="bis-page-shell flex items-center justify-center px-6 py-16 text-center">
                     <div className="max-w-sm">
                     <BarChart3 className="w-10 h-10 mx-auto mb-4 text-indigo-400" />
-                    <h2 className="font-bold text-xl mb-2" style={{ color: tp }}>Track Record Accumulating</h2>
+                    <h1 className="font-bold text-xl mb-2" style={{ color: tp }}>Track Record Accumulating</h1>
                     <p className="text-sm mb-4" style={{ color: ts }}>
                         Accuracy Dashboard opens when {summary.unlockThreshold} persisted Quantus snapshots have resolved outcomes.
                     </p>
@@ -320,4 +330,3 @@ export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
         </div>
     );
 }
-

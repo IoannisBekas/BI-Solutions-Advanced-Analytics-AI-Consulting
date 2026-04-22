@@ -22,7 +22,7 @@ export function ProductPageHero({
   className,
 }: ProductPageHeroProps) {
   return (
-    <section className="relative overflow-hidden px-6 pb-10 md:px-12">
+    <section className="relative max-w-full overflow-hidden px-6 pb-10 md:px-12">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-20 top-12 h-72 w-72 rounded-full bg-amber-200/25 blur-3xl" />
         <div className="absolute right-0 top-20 h-80 w-80 rounded-full bg-sky-200/20 blur-3xl" />
@@ -43,7 +43,7 @@ export function ProductPageHero({
             <span>{eyebrow}</span>
           </div>
 
-          <h1 className="mt-6 max-w-5xl text-[2.55rem] font-bold font-heading leading-[1.05] tracking-tight sm:text-5xl sm:leading-tight md:text-6xl">
+          <h1 className="mt-6 max-w-5xl break-words text-[2.55rem] font-bold font-heading leading-[1.05] tracking-tight sm:text-5xl sm:leading-tight md:text-6xl">
             {title}
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
@@ -51,7 +51,7 @@ export function ProductPageHero({
           </p>
 
           {actions ? (
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-wrap gap-4 [&>a]:min-w-0 [&>button]:min-w-0">
               {actions}
             </div>
           ) : null}

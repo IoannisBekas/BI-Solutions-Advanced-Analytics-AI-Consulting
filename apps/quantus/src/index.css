@@ -295,6 +295,13 @@ body.dark-mode .section-divider {
   transform: scale(1.02);
 }
 
+@media (max-width: 430px) {
+  .btn-nav-cta {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
+
 body.dark-mode .btn-nav-cta {
   background: #FFFFFF;
   color: #09090B;

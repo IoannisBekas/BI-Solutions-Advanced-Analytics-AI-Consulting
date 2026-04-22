@@ -256,37 +256,41 @@ export function ScannerPage({ onSelectTicker, lightMode, apiBase = '/quantus/api
                     />
 
                     {/* Signal chips */}
-                    <div className="flex flex-wrap gap-1.5">
-                        {signalOptions.map(s => {
-                            const active = filters.signal === s;
-                            const cfg = s ? signalCfg(s) : null;
-                            return (
-                                <button key={s || 'all'} onClick={() => setFilter('signal', s)}
-                                        className="px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all"
-                                        style={{
-                                            background: active ? (cfg?.bg ?? 'rgba(148,163,184,0.15)') : 'transparent',
-                                            color: active ? (cfg?.color ?? textPrimary) : textSecondary,
-                                            border: `1px solid ${active ? (cfg?.color ?? borderColor) : borderColor}`,
-                                        }}>
-                                    {s || 'All signals'}
-                                </button>
-                            );
-                        })}
+                    <div className="min-w-0 w-full overflow-x-auto pb-1 scrollbar-none sm:w-auto">
+                        <div className="flex w-max gap-1.5 sm:w-auto sm:flex-wrap">
+                            {signalOptions.map(s => {
+                                const active = filters.signal === s;
+                                const cfg = s ? signalCfg(s) : null;
+                                return (
+                                    <button key={s || 'all'} onClick={() => setFilter('signal', s)}
+                                            className="whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all"
+                                            style={{
+                                                background: active ? (cfg?.bg ?? 'rgba(148,163,184,0.15)') : 'transparent',
+                                                color: active ? (cfg?.color ?? textPrimary) : textSecondary,
+                                                border: `1px solid ${active ? (cfg?.color ?? borderColor) : borderColor}`,
+                                            }}>
+                                        {s || 'All signals'}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
                     {/* Asset class */}
-                    <div className="flex gap-1.5">
-                        {assetOptions.map(a => (
-                            <button key={a || 'all'} onClick={() => setFilter('assetClass', a)}
-                                    className="px-2.5 py-1 rounded-full text-[11px] font-medium transition-all"
-                                    style={{
-                                        background: filters.assetClass === a ? 'rgba(59,130,246,0.15)' : 'transparent',
-                                        color: filters.assetClass === a ? '#60A5FA' : textSecondary,
-                                        border: `1px solid ${filters.assetClass === a ? 'rgba(59,130,246,0.4)' : borderColor}`,
-                                    }}>
-                                {a || 'All classes'}
-                            </button>
-                        ))}
+                    <div className="min-w-0 w-full overflow-x-auto pb-1 scrollbar-none sm:w-auto">
+                        <div className="flex w-max gap-1.5 sm:w-auto sm:flex-wrap">
+                            {assetOptions.map(a => (
+                                <button key={a || 'all'} onClick={() => setFilter('assetClass', a)}
+                                        className="whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-medium transition-all"
+                                        style={{
+                                            background: filters.assetClass === a ? 'rgba(59,130,246,0.15)' : 'transparent',
+                                            color: filters.assetClass === a ? '#60A5FA' : textSecondary,
+                                            border: `1px solid ${filters.assetClass === a ? 'rgba(59,130,246,0.4)' : borderColor}`,
+                                        }}>
+                                    {a || 'All classes'}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Has news / filings toggles */}

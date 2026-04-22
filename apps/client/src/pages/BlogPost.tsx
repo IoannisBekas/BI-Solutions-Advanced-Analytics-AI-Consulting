@@ -12,6 +12,7 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
+import { ArticleVisual } from "@/components/blog/ArticleVisual";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
@@ -242,11 +243,7 @@ export default function BlogPost() {
           <ScrollReveal width="100%">
             <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
               <div className="aspect-[16/9] bg-gray-100">
-                <img
-                  src={post.featuredImage}
-                  alt={post.title}
-                  className="h-full w-full object-cover"
-                />
+                <ArticleVisual post={post} />
               </div>
             </div>
           </ScrollReveal>
@@ -315,10 +312,9 @@ export default function BlogPost() {
                   <Link href={`/blog/${relatedPost.slug}`} className="group block h-full">
                     <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
                       <div className="aspect-[16/10] overflow-hidden bg-gray-100">
-                        <img
-                          src={relatedPost.featuredImage}
-                          alt={relatedPost.title}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        <ArticleVisual
+                          post={relatedPost}
+                          className="transition-transform duration-700 group-hover:scale-105"
                         />
                       </div>
                       <div className="px-6 py-6">

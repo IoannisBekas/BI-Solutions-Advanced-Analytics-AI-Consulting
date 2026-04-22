@@ -168,7 +168,7 @@ export function Layout({
                         : 'none',
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[82px] flex items-center justify-between gap-4">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[82px] flex items-center justify-between gap-2 sm:gap-4">
                     <a
                         href={bisolutionsHomeUrl}
                         className="flex items-center gap-3 flex-shrink-0 text-left min-w-0"

@@ -334,8 +334,8 @@ export default function QuantusPage() {
         <section className="mx-auto mb-20 max-w-7xl px-6">
           <ScrollReveal width="100%">
             <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-2xl shadow-black/[0.05] md:p-10">
-              <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-                <div>
+              <div className="grid min-w-0 gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+                <div className="min-w-0">
                   <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white">
                     <Brain className="h-4 w-4" />
                     Research workflow
@@ -368,7 +368,7 @@ export default function QuantusPage() {
                   </div>
                 </div>
 
-                <div className="rounded-3xl border border-gray-200 bg-gray-50 p-5 md:p-6">
+                <div className="min-w-0 rounded-3xl border border-gray-200 bg-gray-50 p-5 md:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
@@ -553,8 +553,8 @@ export default function QuantusPage() {
         <section className="mx-auto mb-16 max-w-7xl px-6">
           <ScrollReveal width="100%">
             <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-2xl md:p-10">
-              <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-                <div>
+              <div className="grid min-w-0 gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+                <div className="min-w-0">
                   <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white">
                     <Shield className="h-4 w-4" />
                     Public methodology, clear launch path
@@ -580,7 +580,7 @@ export default function QuantusPage() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="min-w-0 space-y-4">
                   <div className="rounded-2xl border border-gray-200 bg-white p-5">
                     <p className="mb-3 text-sm font-semibold text-gray-900">
                       Suggested research flow
