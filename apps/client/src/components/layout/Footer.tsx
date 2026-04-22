@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Instagram, Linkedin, ArrowUp, Github } from "lucide-react";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withAssetBase } from "@/lib/site";
+import { servicePages } from "@/lib/servicePages";
 
 const PRIVACY_LABEL =
   "\u03a0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03ae \u0391\u03c0\u03bf\u03c1\u03c1\u03ae\u03c4\u03bf\u03c5";
@@ -99,12 +100,17 @@ export function Footer() {
 
           <div className="space-y-6 md:col-span-2">
             <h4 className="text-lg font-bold font-heading">Capabilities</h4>
-            <ul className="space-y-4 text-sm text-gray-400">
-              <li>Cloud Migration</li>
-              <li>Advanced Analytics</li>
-              <li>Business Intelligence</li>
-              <li>MLOps & AI</li>
-              <li>Data Governance</li>
+            <ul className="space-y-4 text-sm">
+              {servicePages.map((service) => (
+                <li key={service.slug}>
+                  <Link
+                    href={service.path}
+                    className="text-gray-400 transition-colors hover:text-white"
+                  >
+                    {service.shortTitle}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

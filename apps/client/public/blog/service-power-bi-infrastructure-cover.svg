@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Power BI infrastructure cover</title>
+  <desc id="desc">Dashboards connected to a governed reporting layer.</desc>
+  <rect width="1200" height="675" fill="#f9fafb"/>
+  <rect x="82" y="86" width="1036" height="503" rx="34" fill="#ffffff" stroke="#d1d5db" stroke-width="3"/>
+  <rect x="150" y="152" width="320" height="180" rx="24" fill="#111827"/>
+  <rect x="188" y="196" width="96" height="92" rx="12" fill="#f59e0b"/>
+  <rect x="308" y="236" width="96" height="52" rx="12" fill="#38bdf8"/>
+  <rect x="188" y="360" width="320" height="98" rx="20" fill="#f1f5f9" stroke="#d1d5db" stroke-width="3"/>
+  <path d="M220 416h244" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+  <path d="M220 388h156" stroke="#cbd5e1" stroke-width="10" stroke-linecap="round"/>
+  <rect x="664" y="146" width="330" height="330" rx="30" fill="#f8fafc" stroke="#d1d5db" stroke-width="3"/>
+  <circle cx="830" cy="310" r="96" fill="#fff7ed" stroke="#f59e0b" stroke-width="18"/>
+  <path d="M830 214a96 96 0 0 1 92 124" fill="none" stroke="#0f766e" stroke-width="18" stroke-linecap="round"/>
+  <path d="M830 310l62-46" stroke="#111827" stroke-width="12" stroke-linecap="round"/>
+  <rect x="706" y="512" width="252" height="42" rx="21" fill="#111827"/>
+  <path d="M470 242h104c46 0 50 68 90 68" fill="none" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M508 410h72c54 0 58-74 114-74" fill="none" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="600" cy="310" r="18" fill="#e11d48"/>
+  <circle cx="600" cy="410" r="18" fill="#0284c7"/>
+</svg>

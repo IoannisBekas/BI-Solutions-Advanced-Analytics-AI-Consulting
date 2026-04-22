@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Semantic model cover</title>
+  <desc id="desc">A clean star schema and report cards.</desc>
+  <rect width="1200" height="675" fill="#f8fafc"/>
+  <rect x="105" y="95" width="990" height="485" rx="34" fill="#ffffff" stroke="#d1d5db" stroke-width="3"/>
+  <rect x="470" y="242" width="260" height="162" rx="26" fill="#111827"/>
+  <text x="600" y="316" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">Model</text>
+  <text x="600" y="352" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" fill="#cbd5e1">Measures + KPIs</text>
+  <g fill="#f1f5f9" stroke="#cbd5e1" stroke-width="3">
+    <rect x="168" y="168" width="210" height="102" rx="20"/>
+    <rect x="822" y="168" width="210" height="102" rx="20"/>
+    <rect x="168" y="406" width="210" height="102" rx="20"/>
+    <rect x="822" y="406" width="210" height="102" rx="20"/>
+  </g>
+  <g stroke="#64748b" stroke-width="8" stroke-linecap="round">
+    <path d="M378 219h92"/>
+    <path d="M730 219h92"/>
+    <path d="M378 457h92"/>
+    <path d="M730 457h92"/>
+  </g>
+  <g font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#111827">
+    <text x="273" y="228" text-anchor="middle">Sales</text>
+    <text x="927" y="228" text-anchor="middle">Finance</text>
+    <text x="273" y="466" text-anchor="middle">Customers</text>
+    <text x="927" y="466" text-anchor="middle">Operations</text>
+  </g>
+  <rect x="500" y="468" width="200" height="52" rx="26" fill="#0f766e"/>
+  <text x="600" y="501" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#ffffff">Trusted layer</text>
+  <circle cx="600" cy="164" r="42" fill="#fef3c7" stroke="#f59e0b" stroke-width="8"/>
+  <path d="M584 164l12 12 24-28" fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

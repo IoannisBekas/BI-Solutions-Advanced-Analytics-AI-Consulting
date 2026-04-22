@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">AI literacy and change management cover</title>
+  <desc id="desc">Team learning path for responsible AI adoption.</desc>
+  <rect width="1200" height="675" fill="#fafaf9"/>
+  <rect x="96" y="92" width="1008" height="491" rx="34" fill="#ffffff" stroke="#d1d5db" stroke-width="3"/>
+  <rect x="166" y="166" width="286" height="342" rx="28" fill="#f8fafc" stroke="#d1d5db" stroke-width="3"/>
+  <circle cx="250" cy="250" r="42" fill="#0f766e"/>
+  <circle cx="340" cy="250" r="42" fill="#0284c7"/>
+  <circle cx="295" cy="328" r="42" fill="#f59e0b"/>
+  <path d="M224 420h142M224 456h102" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+  <rect x="564" y="168" width="450" height="86" rx="22" fill="#111827"/>
+  <text x="789" y="223" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#ffffff">AI literacy path</text>
+  <g fill="#f1f5f9" stroke="#cbd5e1" stroke-width="3">
+    <rect x="564" y="302" width="124" height="92" rx="20"/>
+    <rect x="728" y="302" width="124" height="92" rx="20"/>
+    <rect x="892" y="302" width="124" height="92" rx="20"/>
+  </g>
+  <g font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827">
+    <text x="626" y="355" text-anchor="middle">Prompt</text>
+    <text x="790" y="355" text-anchor="middle">Verify</text>
+    <text x="954" y="355" text-anchor="middle">Protect</text>
+  </g>
+  <path d="M688 348h40M852 348h40" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+  <rect x="632" y="448" width="314" height="44" rx="22" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+  <text x="789" y="477" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#111827">Responsible adoption</text>
+</svg>

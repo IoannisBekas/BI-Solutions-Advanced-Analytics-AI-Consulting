@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Website and web app development cover</title>
+  <desc id="desc">A browser, mobile screen, conversion path, and analytics panel.</desc>
+  <rect width="1200" height="675" fill="#f8fafc"/>
+  <rect x="72" y="72" width="1056" height="531" rx="32" fill="#ffffff" stroke="#d1d5db" stroke-width="3"/>
+  <rect x="72" y="72" width="1056" height="72" rx="32" fill="#111827"/>
+  <circle cx="122" cy="108" r="10" fill="#fb7185"/>
+  <circle cx="156" cy="108" r="10" fill="#fbbf24"/>
+  <circle cx="190" cy="108" r="10" fill="#34d399"/>
+  <rect x="248" y="96" width="420" height="24" rx="12" fill="#374151"/>
+  <rect x="132" y="196" width="480" height="70" rx="18" fill="#0f766e"/>
+  <rect x="132" y="292" width="320" height="22" rx="11" fill="#cbd5e1"/>
+  <rect x="132" y="334" width="390" height="22" rx="11" fill="#e5e7eb"/>
+  <rect x="132" y="410" width="156" height="48" rx="24" fill="#111827"/>
+  <rect x="660" y="192" width="292" height="230" rx="24" fill="#f1f5f9" stroke="#d1d5db" stroke-width="3"/>
+  <path d="M702 366c34-64 70-94 108-88 38 6 62-18 100-62" fill="none" stroke="#0284c7" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="704" cy="366" r="10" fill="#0284c7"/>
+  <circle cx="810" cy="278" r="10" fill="#0284c7"/>
+  <circle cx="910" cy="216" r="10" fill="#0284c7"/>
+  <rect x="840" y="276" width="168" height="268" rx="28" fill="#111827"/>
+  <rect x="862" y="318" width="124" height="34" rx="12" fill="#ffffff"/>
+  <rect x="862" y="378" width="88" height="16" rx="8" fill="#94a3b8"/>
+  <rect x="862" y="414" width="104" height="16" rx="8" fill="#64748b"/>
+  <rect x="862" y="472" width="78" height="34" rx="17" fill="#f59e0b"/>
+  <path d="M330 520h148c78 0 96-62 166-62h82" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round"/>
+  <path d="M712 442l34 16-34 16z" fill="#10b981"/>
+</svg>

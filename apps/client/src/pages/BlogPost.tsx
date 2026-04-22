@@ -21,6 +21,37 @@ function renderRichText(line: string) {
   return line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 }
 
+function stripRichText(value: string) {
+  return value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\*\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractFaqItems(content: string) {
+  const faqIndex = content.indexOf("## FAQ");
+  if (faqIndex === -1) return [];
+
+  const faqBlocks = content.slice(faqIndex).split("\n\n").slice(1);
+  const nextHeadingIndex = faqBlocks.findIndex((block) => block.startsWith("## "));
+  const candidateBlocks =
+    nextHeadingIndex === -1 ? faqBlocks : faqBlocks.slice(0, nextHeadingIndex);
+
+  return candidateBlocks
+    .map((block) => {
+      const match = block.match(/^\*\*([\s\S]+?)\*\*\s*([\s\S]+)$/);
+      if (!match) return null;
+
+      const question = stripRichText(match[1]);
+      const answer = stripRichText(match[2]);
+
+      if (!question || !answer) return null;
+      return { question, answer };
+    })
+    .filter((item): item is { question: string; answer: string } => Boolean(item));
+}
+
 function renderContent(content: string) {
   const sections = content.split("\n\n");
 
@@ -90,6 +121,77 @@ export default function BlogPost() {
 
   const shareUrl = window.location.href;
   const shareText = encodeURIComponent(post.title);
+  const articleWordCount = post.content
+    .replace(/<[^>]+>/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  const structuredImageUrl = post.featuredImage.startsWith("data:")
+    ? "https://www.bisolutions.group/bi-solutions-logo.png"
+    : post.featuredImage.startsWith("http")
+      ? post.featuredImage
+      : `https://www.bisolutions.group${
+          post.featuredImage.startsWith("/") ? post.featuredImage : `/${post.featuredImage}`
+        }`;
+  const faqItems = extractFaqItems(post.content);
+  const authorSchema = {
+    "@type": "Person",
+    "@id": "https://www.bisolutions.group/about#ioannis-bekas",
+    name: "Ioannis Bekas",
+    jobTitle: "Data Scientist & AI Developer",
+    url: "https://www.bisolutions.group/about",
+    worksFor: {
+      "@id": "https://www.bisolutions.group/#organization",
+    },
+    sameAs: [
+      "https://linkedin.com/in/ioannisbekas",
+      "https://github.com/IoannisBekas",
+    ],
+  };
+  const publisherSchema = {
+    "@type": "Organization",
+    "@id": "https://www.bisolutions.group/#organization",
+    name: "BI Solutions Group",
+    url: "https://www.bisolutions.group",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.bisolutions.group/bi-solutions-logo.png",
+    },
+  };
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: structuredImageUrl,
+    author: authorSchema,
+    publisher: publisherSchema,
+    datePublished: new Date(post.date).toISOString(),
+    dateModified: new Date(post.updatedDate || post.date).toISOString(),
+    articleSection: post.category,
+    keywords: post.tags.join(", "),
+    wordCount: articleWordCount,
+    inLanguage: "en",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://www.bisolutions.group/blog/${post.slug}`,
+    },
+  };
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+  const structuredData =
+    faqItems.length > 0
+      ? [articleStructuredData, faqStructuredData]
+      : articleStructuredData;
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
@@ -99,31 +201,7 @@ export default function BlogPost() {
         path={`/blog/${post.slug}`}
         image={post.featuredImage}
         type="article"
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "BlogPosting",
-          headline: post.title,
-          description: post.excerpt,
-          image: `https://www.bisolutions.group${post.featuredImage}`,
-          author: {
-            "@type": "Organization",
-            name: "BI Solutions",
-            url: "https://www.bisolutions.group",
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "BI Solutions",
-            logo: {
-              "@type": "ImageObject",
-              url: "https://www.bisolutions.group/bi-solutions-logo.png",
-            },
-          },
-          datePublished: new Date(post.date).toISOString(),
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": `https://www.bisolutions.group/blog/${post.slug}`,
-          },
-        }}
+        structuredData={structuredData}
       />
       <Navbar />
 
@@ -160,7 +238,7 @@ export default function BlogPost() {
           }
         />
 
-        <section className="mx-auto max-w-5xl px-6 md:px-12">
+        <section className="mx-auto max-w-7xl px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
               <div className="aspect-[16/9] bg-gray-100">
@@ -174,7 +252,7 @@ export default function BlogPost() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-12 max-w-4xl px-6 md:px-12">
+        <section className="mx-auto mt-12 max-w-7xl px-6 md:px-12">
           <ScrollReveal width="100%">
             <article className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-8">
               <div className="prose prose-gray max-w-none">

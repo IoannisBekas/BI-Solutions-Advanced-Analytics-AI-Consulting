@@ -1,14 +1,7 @@
 import { Link } from "wouter";
 import {
   ArrowRight,
-  BarChart3,
-  BrainCircuit,
   CheckCircle2,
-  Cloud,
-  GitBranch,
-  GraduationCap,
-  MonitorSmartphone,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
@@ -17,6 +10,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
+import { servicePages } from "@/lib/servicePages";
 
 const serviceHighlights = [
   {
@@ -32,93 +26,6 @@ const serviceHighlights = [
     value: "Strategy, implementation, and enablement in one team",
   },
 ];
-
-const servicesList = [
-  {
-    icon: Cloud,
-    title: "Digital transformation and cloud migration",
-    description:
-      "Modernize data foundations, migrate reporting stacks, and design cloud-native architecture that can scale beyond one-off dashboard work.",
-    items: [
-      "Azure, AWS, and GCP migration planning",
-      "Snowflake, BigQuery, and Databricks delivery",
-      "Data platform architecture and environment design",
-      "Operational reporting modernization",
-    ],
-  },
-  {
-    icon: BrainCircuit,
-    title: "Advanced analytics and AI",
-    description:
-      "Build predictive, analytical, and AI-assisted workflows that move from exploration into repeatable operating tools.",
-    items: [
-      "Predictive modeling and statistical analysis",
-      "Python, R, and SQL analytical delivery",
-      "AI use-case framing and prompt workflow design",
-      "Decision-support models for business teams",
-    ],
-  },
-  {
-    icon: GitBranch,
-    title: "MLOps and productionization",
-    description:
-      "Turn models, pipelines, and AI experiments into maintainable systems with versioning, orchestration, and delivery controls.",
-    items: [
-      "Feature stores and model registries",
-      "CI/CD for analytics and ML workflows",
-      "Airflow and dbt orchestration patterns",
-      "Production-readiness and handoff design",
-    ],
-  },
-  {
-    icon: BarChart3,
-    title: "Business intelligence and semantic modeling",
-    description:
-      "Design reporting layers, semantic models, and governance structures that make dashboards easier to trust and maintain.",
-    items: [
-      "Power BI, Tableau, and Looker delivery",
-      "Semantic model review and optimization",
-      "Metric design and KPI structure",
-      "Governance for reporting consistency",
-    ],
-  },
-  {
-    icon: MonitorSmartphone,
-    title: "Website and app development",
-    description:
-      "Ship modern marketing sites and focused web apps that connect positioning, workflow, and analytics into one product surface.",
-    items: [
-      "Corporate websites and launch pages",
-      "Web applications and internal tools",
-      "Product landing pages with shared brand systems",
-      "Frontend implementation with analytics-aware UX",
-    ],
-  },
-  {
-    icon: ShieldCheck,
-    title: "Data strategy and governance",
-    description:
-      "Set the operating rules around quality, access, and compliance so teams can scale analytics without losing control.",
-    items: [
-      "Data quality and lineage design",
-      "Access controls and governance workflows",
-      "GDPR-aware process design",
-      "Documentation and stewardship frameworks",
-    ],
-  },
-  {
-    icon: GraduationCap,
-    title: "AI literacy and change management",
-    description:
-      "Help teams adopt AI and analytics responsibly with practical enablement, not abstract transformation language.",
-    items: [
-      "Executive briefings and AI rollout support",
-      "Company-wide training and team workshops",
-      "Responsible AI playbooks",
-      "Operating guidance for new delivery habits",
-    ],
-  },
-] as const;
 
 const deliveryFlow = [
   {
@@ -206,7 +113,7 @@ export default function Services() {
           </ScrollReveal>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {servicesList.map((service, index) => {
+            {servicePages.map((service, index) => {
               const Icon = service.icon;
 
               return (
@@ -229,6 +136,16 @@ export default function Services() {
                         </li>
                       ))}
                     </ul>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="mt-7 rounded-full border-gray-300 px-5"
+                    >
+                      <Link href={service.path}>
+                        Open service room
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
                   </article>
                 </ScrollReveal>
               );

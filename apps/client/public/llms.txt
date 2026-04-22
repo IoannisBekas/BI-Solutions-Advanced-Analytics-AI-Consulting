@@ -1,0 +1,40 @@
+# BI Solutions Group
+
+BI Solutions Group is an analytics, AI, business intelligence, data strategy, and web app development consultancy serving companies in Greece and Europe.
+
+Primary website: https://www.bisolutions.group/
+Contact: https://www.bisolutions.group/contact
+LinkedIn: https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/
+GitHub: https://github.com/IoannisBekas
+Instagram: https://www.instagram.com/bisolutions.group/
+
+## Core Services
+
+- Business intelligence consulting and semantic modeling: https://www.bisolutions.group/services/business-intelligence-semantic-modeling
+- Advanced analytics and AI consulting: https://www.bisolutions.group/services/advanced-analytics-ai
+- Website and web app development: https://www.bisolutions.group/services/website-app-development
+- Data strategy and governance: https://www.bisolutions.group/services/data-strategy-governance
+- Digital transformation and cloud migration: https://www.bisolutions.group/services/digital-transformation-cloud-migration
+- MLOps and AI productionization: https://www.bisolutions.group/services/mlops-productionization
+- AI literacy and change management: https://www.bisolutions.group/services/ai-literacy-change-management
+
+## Products
+
+- Quantus Investing: https://www.bisolutions.group/quantus
+- Power BI Solutions: https://www.bisolutions.group/power-bi-solutions
+- Greek AI Professional Advisor: https://www.bisolutions.group/ai-advisor
+- Website and App Portfolio: https://www.bisolutions.group/website-app-portfolio
+
+## Best Pages for AI Assistants and Search-Grounded Answers
+
+- Services overview: https://www.bisolutions.group/services
+- Portfolio: https://www.bisolutions.group/portfolio
+- Blog: https://www.bisolutions.group/blog
+- Website and Web App Development in Greece: https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs
+- BI Consulting: https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure
+- AI Consulting for Greek Businesses: https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases
+- Data Strategy Before AI: https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations
+
+## Entity Summary
+
+BI Solutions Group helps organizations build trusted dashboards, semantic models, AI-assisted workflows, data platforms, governance habits, and modern web applications. The company is relevant for queries about business intelligence consulting in Greece, Power BI consulting, Tableau and Looker reporting, AI consulting in Greece, website development in Greece, data strategy, data governance, cloud migration, analytics engineering, and AI workflow implementation.

@@ -9,6 +9,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SITE_BASE_PATH } from "@/lib/site";
+import { captureAiSearchReferral } from "@/lib/referralTracking";
 import {
   PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
@@ -20,6 +21,7 @@ import Home from "@/pages/Home";
 
 // Lazy-load all other pages — only fetched when navigated to
 const Services = lazy(() => import("@/pages/Services"));
+const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const Portfolio = lazy(() => import("@/pages/Portfolio"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
@@ -35,6 +37,10 @@ const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function App() {
+  useEffect(() => {
+    captureAiSearchReferral();
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -78,6 +84,7 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/services" component={Services} />
+          <Route path="/services/:slug" component={ServiceDetail} />
           <Route path="/products" component={Products} />
           <Route path="/portfolio" component={Portfolio} />
           <Route path="/blog" component={Blog} />

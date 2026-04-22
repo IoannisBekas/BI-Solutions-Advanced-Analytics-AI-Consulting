@@ -18,7 +18,7 @@ interface SeoProps {
 }
 
 function toAbsoluteUrl(pathOrUrl: string) {
-  if (/^https?:\/\//i.test(pathOrUrl)) {
+  if (/^(https?:\/\/|data:|blob:)/i.test(pathOrUrl)) {
     return pathOrUrl;
   }
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { withSiteBase } from "@/lib/site";
+import { getStoredAiSearchReferral } from "@/lib/referralTracking";
 
 const COOKIE_CONSENT_KEY = "cookie-consent";
 const GA_ID = "G-M1276CBX6M";
@@ -20,17 +21,24 @@ function loadGA() {
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
   document.head.appendChild(script);
 
-  (window as Window & { dataLayer?: unknown[][] }).dataLayer =
-    (window as Window & { dataLayer?: unknown[][] }).dataLayer || [];
+  (window as Window & { dataLayer?: unknown[] }).dataLayer =
+    (window as Window & { dataLayer?: unknown[] }).dataLayer || [];
 
   function gtag(...args: unknown[]) {
-    (window as Window & { dataLayer?: unknown[][] }).dataLayer?.push(
-      args as unknown[],
-    );
+    (window as Window & { dataLayer?: unknown[] }).dataLayer?.push(args);
   }
 
   gtag("js", new Date());
   gtag("config", GA_ID);
+
+  const referral = getStoredAiSearchReferral();
+  if (referral) {
+    gtag("event", "ai_search_referral", {
+      ai_source: referral.source,
+      referrer_domain: referral.referrerDomain,
+      landing_path: referral.landingPath,
+    });
+  }
 }
 
 export function CookieConsent() {

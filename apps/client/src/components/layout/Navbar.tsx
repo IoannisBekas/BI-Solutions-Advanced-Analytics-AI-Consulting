@@ -212,6 +212,7 @@ export function Navbar() {
                   className={cn(
                     "text-sm font-medium transition-colors hover:text-black relative group",
                     location === link.href ||
+                      (link.href === "/services" && location.startsWith("/services/")) ||
                       (link.href === "/blog" && location.startsWith("/blog/"))
                       ? "text-black"
                       : "text-gray-500"
@@ -222,6 +223,7 @@ export function Navbar() {
                     className={cn(
                       "absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full",
                       location === link.href ||
+                        (link.href === "/services" && location.startsWith("/services/")) ||
                         (link.href === "/blog" && location.startsWith("/blog/"))
                         ? "w-full"
                         : ""

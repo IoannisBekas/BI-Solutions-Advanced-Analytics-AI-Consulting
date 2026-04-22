@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">AI consulting cover</title>
+  <desc id="desc">AI workflow cards with human review and business use cases.</desc>
+  <rect width="1200" height="675" fill="#fafaf9"/>
+  <rect x="92" y="82" width="1016" height="511" rx="34" fill="#ffffff" stroke="#d1d5db" stroke-width="3"/>
+  <rect x="160" y="150" width="250" height="130" rx="26" fill="#111827"/>
+  <text x="285" y="206" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#ffffff">Use case</text>
+  <text x="285" y="242" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" fill="#cbd5e1">Define workflow</text>
+  <rect x="475" y="150" width="250" height="130" rx="26" fill="#f1f5f9" stroke="#d1d5db" stroke-width="3"/>
+  <text x="600" y="206" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#111827">AI assist</text>
+  <text x="600" y="242" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" fill="#475569">Draft + classify</text>
+  <rect x="790" y="150" width="250" height="130" rx="26" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+  <text x="915" y="206" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#111827">Review</text>
+  <text x="915" y="242" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" fill="#047857">Human approval</text>
+  <path d="M410 215h65M725 215h65" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M460 198l18 17-18 17M775 198l18 17-18 17" fill="none" stroke="#64748b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="600" cy="420" r="94" fill="#f5f3ff" stroke="#7c3aed" stroke-width="10"/>
+  <path d="M550 420h100M600 370v100M565 385l70 70M635 385l-70 70" stroke="#7c3aed" stroke-width="10" stroke-linecap="round"/>
+  <g fill="#fff7ed" stroke="#f59e0b" stroke-width="3">
+    <rect x="184" y="378" width="210" height="82" rx="20"/>
+    <rect x="806" y="378" width="210" height="82" rx="20"/>
+  </g>
+  <text x="289" y="429" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#111827">Local context</text>
+  <text x="911" y="429" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#111827">Risk control</text>
+</svg>
