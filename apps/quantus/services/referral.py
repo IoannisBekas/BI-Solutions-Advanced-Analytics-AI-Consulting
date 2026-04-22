@@ -4,7 +4,7 @@ services/referral.py
 Referral program — Quantus Research Solutions.
 
 Every shared report URL embeds a referral token:
-  bisolutions.group/report/{report_id}?ref={token}
+  www.bisolutions.group/report/{report_id}?ref={token}
 
 When a new user signs up via that URL:
   - Referral is attributed to the token owner
@@ -43,7 +43,11 @@ def generate_referral_token(user_id: str) -> str:
     _tokens[token] = user_id
     return token
 
-def make_referral_url(report_id: str, token: str, base: str = "https://bisolutions.group/report") -> str:
+def make_referral_url(
+    report_id: str,
+    token: str,
+    base: str = "https://www.bisolutions.group/report",
+) -> str:
     return f"{base}/{report_id}?ref={token}"
 
 # ─── Attribution ──────────────────────────────────────────────────────────────

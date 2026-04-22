@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  QUANTUS_CALENDAR_ROUTE,
   QUANTUS_WORKSPACE_ROUTE,
   getQuantusReportRoute,
   normalizeQuantusPath,
@@ -32,5 +33,9 @@ describe("workspaceRoutes", () => {
     expect(resolveWorkspaceRoute("/quantus/workspace/accuracy").view).toBe(
       "accuracy",
     );
+    expect(resolveWorkspaceRoute(QUANTUS_CALENDAR_ROUTE)).toEqual({
+      view: "calendar",
+      path: QUANTUS_CALENDAR_ROUTE,
+    });
   });
 });

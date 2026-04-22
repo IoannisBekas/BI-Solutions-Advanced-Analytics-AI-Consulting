@@ -4,6 +4,7 @@ import {
     ArrowUpRight,
     BarChart3,
     BookOpen,
+    CalendarDays,
     Layers,
     List,
     Menu,
@@ -141,6 +142,7 @@ export function Layout({
         { label: 'Sector Packs', icon: Layers, action: () => onNavigate?.('sectors'), view: 'sectors' },
         { label: 'Watchlist', icon: List, action: () => onNavigate?.('watchlist'), view: 'watchlist' },
         { label: 'Scanner', icon: ScanLine, action: () => onNavigate?.('scanner'), view: 'scanner' },
+        { label: 'Macro Calendar', icon: CalendarDays, action: () => onNavigate?.('calendar'), view: 'calendar' },
         { label: 'Archive', icon: Archive, action: () => onNavigate?.('archive'), view: 'archive' },
         { label: 'Accuracy', icon: BarChart3, action: () => onNavigate?.('accuracy'), view: 'accuracy' },
     ];
@@ -646,6 +648,14 @@ export function Layout({
                                         onClick={() => onNavigate?.('archive')}
                                     >
                                         Archive
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="w-fit text-left transition-colors duration-200 hover:underline hover:underline-offset-4"
+                                        style={footerLinkButtonStyle}
+                                        onClick={() => onNavigate?.('calendar')}
+                                    >
+                                        Macro Calendar
                                     </button>
                                     <button
                                         type="button"

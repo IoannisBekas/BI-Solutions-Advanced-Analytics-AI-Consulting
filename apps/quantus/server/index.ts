@@ -67,6 +67,8 @@ app.use(
                     "script-src": ["'self'", "'unsafe-inline'"],
                     "style-src": ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
                     "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
+                    "frame-src": ["'self'", 'https://sslecal2.investing.com', 'https://sslecal2.forexprostools.com'],
+                    "child-src": ["'self'", 'https://sslecal2.investing.com', 'https://sslecal2.forexprostools.com'],
                     "connect-src": ["'self'", ...ALLOWED_ORIGINS],
                 },
             }

@@ -52,6 +52,10 @@ const ScannerPage = lazy(async () => {
     const module = await import('./pages/ScannerPage');
     return { default: module.ScannerPage };
 });
+const MacroCalendar = lazy(async () => {
+    const module = await import('./pages/MacroCalendar');
+    return { default: module.MacroCalendar };
+});
 
 function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
     return (
@@ -334,6 +338,14 @@ function App() {
                                 lightMode={lightMode}
                                 onSelectTicker={(ticker: string) => openReportRoute(ticker)}
                             />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'calendar' && (
+                    <motion.div key="calendar" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <MacroCalendar lightMode={lightMode} />
                         </Suspense>
                     </motion.div>
                 )}

@@ -4,6 +4,7 @@ export type RouteView =
   | "sectors"
   | "watchlist"
   | "scanner"
+  | "calendar"
   | "archive"
   | "accuracy"
   | "methodology"
@@ -24,6 +25,7 @@ export const QUANTUS_REPORT_ROUTE_PREFIX = "/quantus/workspace/report";
 export const QUANTUS_SECTORS_ROUTE = "/quantus/workspace/sectors";
 export const QUANTUS_WATCHLIST_ROUTE = "/quantus/workspace/watchlist";
 export const QUANTUS_SCANNER_ROUTE = "/quantus/workspace/scanner";
+export const QUANTUS_CALENDAR_ROUTE = "/quantus/workspace/calendar";
 export const QUANTUS_ARCHIVE_ROUTE = "/quantus/workspace/archive";
 export const QUANTUS_ACCURACY_ROUTE = "/quantus/workspace/accuracy";
 export const QUANTUS_METHODOLOGY_ROUTE = "/quantus/workspace/methodology";
@@ -34,6 +36,7 @@ const WORKSPACE_VIEW_ROUTES: Record<WorkspaceNavigationView, string> = {
   sectors: QUANTUS_SECTORS_ROUTE,
   watchlist: QUANTUS_WATCHLIST_ROUTE,
   scanner: QUANTUS_SCANNER_ROUTE,
+  calendar: QUANTUS_CALENDAR_ROUTE,
   archive: QUANTUS_ARCHIVE_ROUTE,
   accuracy: QUANTUS_ACCURACY_ROUTE,
   methodology: QUANTUS_METHODOLOGY_ROUTE,
@@ -95,6 +98,7 @@ export function normalizeQuantusPath(pathname: string) {
   if (trimmed === QUANTUS_SECTORS_ROUTE) return QUANTUS_SECTORS_ROUTE;
   if (trimmed === QUANTUS_WATCHLIST_ROUTE) return QUANTUS_WATCHLIST_ROUTE;
   if (trimmed === QUANTUS_SCANNER_ROUTE) return QUANTUS_SCANNER_ROUTE;
+  if (trimmed === QUANTUS_CALENDAR_ROUTE) return QUANTUS_CALENDAR_ROUTE;
   if (trimmed === QUANTUS_ARCHIVE_ROUTE) return QUANTUS_ARCHIVE_ROUTE;
   if (trimmed === QUANTUS_ACCURACY_ROUTE) return QUANTUS_ACCURACY_ROUTE;
   if (trimmed === QUANTUS_METHODOLOGY_ROUTE) return QUANTUS_METHODOLOGY_ROUTE;
@@ -119,6 +123,10 @@ export function resolveWorkspaceRoute(pathname: string): RouteState {
 
   if (normalized === QUANTUS_SCANNER_ROUTE) {
     return { view: "scanner", path: QUANTUS_SCANNER_ROUTE };
+  }
+
+  if (normalized === QUANTUS_CALENDAR_ROUTE) {
+    return { view: "calendar", path: QUANTUS_CALENDAR_ROUTE };
   }
 
   if (normalized === QUANTUS_ARCHIVE_ROUTE) {
