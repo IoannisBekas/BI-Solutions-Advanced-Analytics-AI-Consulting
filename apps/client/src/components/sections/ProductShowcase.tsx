@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { trackEvent } from "@/lib/analytics";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 
@@ -31,10 +32,10 @@ const products = [
     href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
     appHref: withPublicSiteOrigin("/power-bi-solutions/workspace/"),
     description:
-      "A dedicated Power BI workspace for TMDL analysis, semantic model review, AI-guided recommendations, and faster optimization cycles.",
+      "A focused workspace for TMDL intake, semantic model review, AI-guided optimization, and faster Power BI cleanup cycles.",
     bullets: [
       "Upload TMDL files and get instant model diagnostics",
-      "AI-powered recommendations to optimize your data architecture",
+      "Review measures, relationships, and dashboard screenshots in one flow",
       "Interactive chat workflow for guided improvements",
     ],
     secondaryLabel: "Open workspace",
@@ -44,11 +45,11 @@ const products = [
     href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
     appHref: withSiteBase(PRODUCT_ROUTE_ALIASES.aiAdvisor),
     description:
-      "AI-powered professional guidance across accounting, legal, and consulting domains, trained on Greek law and business practices.",
+      "AI-assisted Greek professional guidance with official-source grounding first and cautious fallback handling when current verification is unavailable.",
     bullets: [
       "Role-based AI advisors: Accountant, Lawyer, and Consultant",
-      "Powered by Claude with domain-specific Greek expertise",
-      "Instant professional guidance for tax, legal, and strategic questions",
+      "Prefers official Greek and EU sources for current tax, legal, and business questions",
+      "Flags answers that require professional review before action",
     ],
   },
   {
@@ -152,13 +153,31 @@ export function ProductShowcase({
                   </div>
 
                   <div className="mt-8 flex flex-wrap gap-4">
-                    <Link href={product.href}>
+                    <Link
+                      href={product.href}
+                      onClick={() =>
+                        trackEvent("product_card_click", {
+                          product: product.name,
+                          action: "view_product_page",
+                          target: product.href,
+                        })
+                      }
+                    >
                       <Button className="rounded-full bg-black px-6 text-white hover:bg-gray-800">
                         {product.primaryLabel ?? "View product page"}
                         <ArrowRight className="h-4 w-4" />
                       </Button>
                     </Link>
-                    <a href={product.appHref}>
+                    <a
+                      href={product.appHref}
+                      onClick={() =>
+                        trackEvent("product_card_click", {
+                          product: product.name,
+                          action: product.secondaryLabel ?? "Open app",
+                          target: product.appHref,
+                        })
+                      }
+                    >
                       <Button
                         variant="outline"
                         className="rounded-full border-gray-300 px-6"

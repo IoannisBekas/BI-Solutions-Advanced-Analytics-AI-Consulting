@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
+import { trackEvent } from "@/lib/analytics";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -90,6 +91,7 @@ export default function Contact() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+    trackEvent("contact_form_submit", { status: "attempt" });
 
     try {
       const response = await fetch("/api/contact", {
@@ -101,13 +103,19 @@ export default function Contact() {
       const result = await response.json();
 
       if (response.ok && result.success) {
+        trackEvent("contact_form_submit", { status: "success" });
         toast.success("Message sent successfully. We will be in touch soon.");
         reset();
       } else {
+        trackEvent("contact_form_submit", {
+          status: "server_error",
+          httpStatus: response.status,
+        });
         toast.error(result.message || "Failed to send message. Please try again.");
       }
     } catch (error) {
       console.error("Form submission error:", error);
+      trackEvent("contact_form_submit", { status: "network_error" });
       toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -160,6 +168,11 @@ export default function Contact() {
                       href={method.href}
                       target={method.external ? "_blank" : undefined}
                       rel={method.external ? "noopener noreferrer" : undefined}
+                      onClick={() =>
+                        trackEvent("contact_method_click", {
+                          method: method.title,
+                        })
+                      }
                       className="block rounded-[2rem] border border-gray-200 bg-white px-6 py-6 shadow-xl shadow-black/[0.04] transition-transform hover:-translate-y-1"
                     >
                       <div className="flex items-start gap-4">

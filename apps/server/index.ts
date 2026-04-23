@@ -220,7 +220,7 @@ const powerBiAnthropicLimiter = rateLimit({
   limit: 12,
   standardHeaders: "draft-8",
   legacyHeaders: false,
-  message: { message: "Preview AI rate limit reached â€” try again later." },
+  message: { message: "Preview AI rate limit reached - try again later." },
 });
 
 const advisorLimiter = rateLimit({

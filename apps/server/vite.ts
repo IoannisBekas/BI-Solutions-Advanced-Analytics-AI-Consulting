@@ -85,10 +85,9 @@ export async function setupVite(server: Server, app: Express) {
     void renderClientApp(req.originalUrl, res, next);
   });
 
-  app.use(vite.middlewares);
-
   // Serve pre-built product SPAs (Quantus, Power BI Solutions) in dev mode
-  // These must be mounted BEFORE the Vite catch-all so they take precedence
+  // These must be mounted before Vite middleware and the root catch-all so
+  // product workspace routes do not render the marketing app during local QA.
   const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
   app.use((req, res, next) => {
     if (req.method === "GET" && req.originalUrl === "/quantus/sectors") {
@@ -128,6 +127,8 @@ export async function setupVite(server: Server, app: Express) {
       });
     }
   }
+
+  app.use(vite.middlewares);
 
   app.use("*", (req, res, next) => {
     void renderClientApp(req.originalUrl, res, next);

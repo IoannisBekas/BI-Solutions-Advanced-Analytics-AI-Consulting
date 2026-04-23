@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { trackEvent } from "@/lib/analytics";
 import heroBg from "@/assets/generated_images/hero_bg_3d.png";
 
 export function Hero() {
@@ -10,7 +11,7 @@ export function Hero() {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section className="relative flex min-h-[100svh] w-full items-start justify-center overflow-hidden px-0 pb-16 pt-32 sm:pt-36 md:h-screen md:min-h-[700px] md:items-center md:py-0">
+    <section className="relative flex min-h-[100svh] w-full items-start justify-center overflow-hidden px-0 pb-20 pt-32 sm:pt-36 md:h-screen md:min-h-[760px] md:items-center md:pb-20 md:pt-36">
       <motion.div style={{ y: y1, opacity }} className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
@@ -19,7 +20,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-white/30" />
       </motion.div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full md:pt-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full">
         <div className="max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -35,7 +36,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading tracking-tight leading-[1.1] mb-8 text-balance"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold font-heading tracking-tight leading-[1.08] mb-7 md:mb-8 text-balance"
           >
             AI, analytics, and web apps for <br />
             <span className="text-gray-400">data-driven businesses.</span>
@@ -45,7 +46,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg md:text-xl text-gray-600 max-w-2xl mb-10 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mb-8 md:mb-10 leading-relaxed"
           >
             BI Solutions helps companies in Greece and Europe build dashboards,
             analytics systems, AI workflows, and modern web applications that
@@ -56,25 +57,45 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap gap-4"
+            className="flex flex-wrap gap-3 sm:gap-4"
           >
             <Link href="/services/business-intelligence-semantic-modeling">
-              <Button className="rounded-full h-14 px-8 text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group">
+              <Button
+                onClick={() =>
+                  trackEvent("hero_cta_click", {
+                    cta: "BI Consulting",
+                    target: "/services/business-intelligence-semantic-modeling",
+                  })
+                }
+                className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group"
+              >
                 BI Consulting
               </Button>
             </Link>
             <Link href="/services/advanced-analytics-ai">
               <Button
+                onClick={() =>
+                  trackEvent("hero_cta_click", {
+                    cta: "AI Consulting",
+                    target: "/services/advanced-analytics-ai",
+                  })
+                }
                 variant="outline"
-                className="rounded-full h-14 px-8 text-lg border-gray-300 hover:bg-gray-50 transition-all"
+                className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg border-gray-300 hover:bg-gray-50 transition-all"
               >
                 AI Consulting
               </Button>
             </Link>
             <Link href="/services/website-app-development">
               <Button
+                onClick={() =>
+                  trackEvent("hero_cta_click", {
+                    cta: "Web Development",
+                    target: "/services/website-app-development",
+                  })
+                }
                 variant="outline"
-                className="rounded-full h-14 px-8 text-lg border-gray-300 hover:bg-gray-50 transition-all"
+                className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg border-gray-300 hover:bg-gray-50 transition-all"
               >
                 Web Development
               </Button>
@@ -89,14 +110,14 @@ export function Hero() {
           >
             {[
               "BI dashboards",
-              "AI workflows",
               "Web apps",
+              "5-star reviews",
               "Data strategy",
-              "5-star client reviews",
+              "AI workflows",
             ].map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-gray-200 bg-white/70 px-3 py-1.5 shadow-sm shadow-black/[0.03]"
+                className="rounded-full border border-gray-200 bg-white/70 px-2.5 py-1 text-xs shadow-sm shadow-black/[0.03] sm:px-3 sm:py-1.5 sm:text-sm"
               >
                 {item}
               </span>

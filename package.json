@@ -10,7 +10,8 @@
     "start": "npm run start:all",
     "start:all": "node script/start-all.cjs",
     "start:main": "node ./node_modules/cross-env/dist/bin/cross-env.js PORT=5001 NODE_ENV=production node dist/index.cjs",
-    "check": "node ./node_modules/typescript/bin/tsc"
+    "check": "node ./node_modules/typescript/bin/tsc",
+    "smoke:routes": "node script/smoke-routes.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

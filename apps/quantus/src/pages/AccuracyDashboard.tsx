@@ -4,8 +4,7 @@ import { TrendingUp, TrendingDown, Minus, BarChart3, Award, AlertTriangle, Filte
 import { fetchAccuracySummary } from '../services/product';
 import { WorkspaceError, WorkspaceSkeleton } from '../components/workspace/WorkspaceStates';
 import type { AccuracyRow, AccuracySummary } from '../types';
-
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Types
 type Segment = 'signal' | 'engine' | 'regime' | 'sector' | 'market_cap';
 
 interface AccuracyDashboardProps { lightMode?: boolean; }
@@ -24,9 +23,7 @@ function formatDateLabel(value: string | null) {
     if (Number.isNaN(date.getTime())) return value;
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
-
-
-// â”€â”€â”€ Return chip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Return chip
 function ReturnChip({ pct }: { pct: number }) {
     const pos = pct > 0;
     const neu = Math.abs(pct) < 0.5;
@@ -38,8 +35,7 @@ function ReturnChip({ pct }: { pct: number }) {
         </span>
     );
 }
-
-// â”€â”€â”€ Bar visual â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Bar visual
 function ReturnBar({ pct, maxAbs, lightMode }: { pct: number; maxAbs: number; lightMode?: boolean }) {
     const pctNorm = Math.abs(pct) / maxAbs;
     const pos = pct >= 0;
@@ -65,8 +61,7 @@ function ReturnBar({ pct, maxAbs, lightMode }: { pct: number; maxAbs: number; li
         </div>
     );
 }
-
-// â”€â”€â”€ Accuracy table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Accuracy table
 function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; showWinRate?: boolean; lightMode?: boolean }) {
     const maxAbs = Math.max(1, ...rows.map((row) => Math.abs(row.avgExcessPct ?? row.avgReturnPct)));
     const tp = lightMode ? '#111827' : '#F9FAFB';
@@ -111,8 +106,7 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
         </div>
     );
 }
-
-// â”€â”€â”€ Main dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Main dashboard
 export function AccuracyDashboard({ lightMode }: AccuracyDashboardProps) {
     const [segment, setSegment] = useState<Segment>('signal');
     const [summary, setSummary] = useState<AccuracySummary | null>(null);

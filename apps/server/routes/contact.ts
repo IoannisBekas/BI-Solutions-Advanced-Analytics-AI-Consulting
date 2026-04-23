@@ -6,7 +6,11 @@ function getResendApiKey() {
 }
 
 function getContactRecipient() {
-  return (process.env.CONTACT_RECIPIENT_EMAIL || "ibekas@ihu.gr").trim();
+  return (process.env.CONTACT_RECIPIENT_EMAIL || "BekasYannis@gmail.com").trim();
+}
+
+function getContactFromEmail() {
+  return (process.env.CONTACT_FROM_EMAIL || "BI Solutions Contact <onboarding@resend.dev>").trim();
 }
 
 function escapeHtml(str: string): string {
@@ -29,6 +33,7 @@ export function registerContactRoute(app: Express) {
   app.post("/api/contact", async (req, res) => {
     const apiKey = getResendApiKey();
     const recipient = getContactRecipient();
+    const fromEmail = getContactFromEmail();
 
     if (!apiKey) {
       res.status(500).json({ message: "Contact form is not configured on the server." });
@@ -47,7 +52,7 @@ export function registerContactRoute(app: Express) {
       const resend = new Resend(apiKey);
 
       const { error } = await resend.emails.send({
-        from: "BI Solutions Contact <onboarding@resend.dev>",
+        from: fromEmail,
         to: recipient,
         replyTo: email,
         subject: `[Contact] ${subject}`,
