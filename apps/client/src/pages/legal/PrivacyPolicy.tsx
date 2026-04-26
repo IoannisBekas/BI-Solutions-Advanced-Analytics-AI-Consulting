@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
+const CONTACT_EMAIL = "BekasYannis@gmail.com";
+
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-background">
@@ -16,43 +18,26 @@ export default function PrivacyPolicy() {
         <div className="max-w-4xl mx-auto px-6 md:px-12">
           <ScrollReveal>
             <h1 className="text-[2.65rem] sm:text-5xl md:text-7xl font-bold font-heading mb-4 leading-[1.05]">
-              Πολιτική Απορρήτου
+              Privacy Policy
             </h1>
-            <p className="text-sm text-gray-400 mb-12">
-              Τελευταία ενημέρωση: Μάρτιος 2026
-            </p>
+            <p className="text-sm text-gray-400 mb-12">Last updated: March 2026</p>
           </ScrollReveal>
 
-          {/* English Summary */}
-          <ScrollReveal delay={0.05}>
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 mb-16">
-              <h2 className="text-lg font-bold font-heading mb-4">English Summary</h2>
-              <p className="text-gray-600 text-sm leading-relaxed mb-3">
-                BI Solutions Group, based in Greece, processes personal data (name, email, hashed
-                passwords, usage data) under GDPR. We rely on consent, legitimate interest, and
-                contract performance as legal bases. You have the right to access, rectify, erase,
-                port, restrict, and object to processing of your data. We use third-party services
-                including Anthropic AI, Resend (email delivery), and analytics tools. To exercise your
-                rights or request account deletion, contact us at{" "}
-                <a href="mailto:ibekas@ihu.gr" className="underline text-black">ibekas@ihu.gr</a>.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          {/* Main Content in Greek */}
           <div className="space-y-12 text-gray-700 leading-relaxed">
-            <ScrollReveal delay={0.1}>
+            <ScrollReveal delay={0.05}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  1. Υπεύθυνος Επεξεργασίας Δεδομένων
+                  1. Data Controller
                 </h2>
                 <p>
-                  Υπεύθυνος επεξεργασίας των προσωπικών σας δεδομένων είναι η εταιρεία{" "}
-                  <strong>BI Solutions Group</strong>, με έδρα την Ελλάδα.
+                  BI Solutions Group, based in Greece, is the controller of the
+                  personal data processed through this website and our services.
                 </p>
                 <p className="mt-2">
-                  Email επικοινωνίας:{" "}
-                  <a href="mailto:ibekas@ihu.gr" className="underline text-black">ibekas@ihu.gr</a>
+                  Contact email:{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
+                    {CONTACT_EMAIL}
+                  </a>
                 </p>
               </section>
             </ScrollReveal>
@@ -60,25 +45,38 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  2. Δεδομένα που Συλλέγουμε
+                  2. Personal Data We Collect
                 </h2>
-                <p className="mb-3">Συλλέγουμε τα ακόλουθα δεδομένα:</p>
+                <p className="mb-3">We may collect the following categories of data:</p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Στοιχεία λογαριασμού:</strong> Όνομα, διεύθυνση email, κωδικός πρόσβασης (αποθηκευμένος σε κρυπτογραφημένη μορφή / hash)</span>
+                    <span>
+                      <strong>Account data:</strong> Name, email address, and
+                      password stored in hashed form.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δεδομένα χρήσης:</strong> Πληροφορίες σχετικά με τον τρόπο χρήσης των υπηρεσιών μας, συμπεριλαμβανομένων των αλληλεπιδράσεων με τον AI Advisor και το Quantus</span>
+                    <span>
+                      <strong>Usage data:</strong> Information about how you use
+                      our services, including interactions with AI Advisor and
+                      Quantus.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Τεχνικά δεδομένα:</strong> Διεύθυνση IP, τύπος προγράμματος περιήγησης, λειτουργικό σύστημα, cookies</span>
+                    <span>
+                      <strong>Technical data:</strong> IP address, browser type,
+                      operating system, device information, and cookies.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δεδομένα επικοινωνίας:</strong> Πληροφορίες που παρέχετε μέσω της φόρμας επικοινωνίας</span>
+                    <span>
+                      <strong>Contact data:</strong> Information you provide
+                      through contact forms or direct email.
+                    </span>
                   </li>
                 </ul>
               </section>
@@ -87,23 +85,39 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  3. Νομική Βάση Επεξεργασίας
+                  3. Legal Bases for Processing
                 </h2>
                 <p className="mb-3">
-                  Επεξεργαζόμαστε τα δεδομένα σας βάσει των ακόλουθων νομικών βάσεων σύμφωνα με τον ΓΚΠΔ (GDPR):
+                  We process personal data under the GDPR on the following legal bases:
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Συγκατάθεση (Άρθρο 6(1)(α)):</strong> Για cookies, newsletters, και προαιρετικές υπηρεσίες</span>
+                    <span>
+                      <strong>Consent:</strong> For cookies, newsletters, and
+                      optional services where consent is required.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Εκτέλεση σύμβασης (Άρθρο 6(1)(β)):</strong> Για την παροχή των υπηρεσιών που ζητήσατε</span>
+                    <span>
+                      <strong>Contract performance:</strong> To provide services
+                      you request or use.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Έννομο συμφέρον (Άρθρο 6(1)(στ)):</strong> Για τη βελτίωση των υπηρεσιών μας και την ασφάλεια του ιστότοπου</span>
+                    <span>
+                      <strong>Legitimate interests:</strong> To improve our
+                      services, protect our platform, and communicate with users.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
+                      <strong>Legal obligation:</strong> Where processing is
+                      required by applicable law.
+                    </span>
                   </li>
                 </ul>
               </section>
@@ -112,13 +126,14 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  4. Διατήρηση Δεδομένων
+                  4. Data Retention
                 </h2>
                 <p>
-                  Τα δεδομένα του λογαριασμού σας διατηρούνται για όσο διάστημα διατηρείτε ενεργό λογαριασμό
-                  στις υπηρεσίες μας. Μπορείτε να ζητήσετε τη διαγραφή του λογαριασμού σας ανά πάσα στιγμή.
-                  Μετά τη διαγραφή, τα δεδομένα σας διαγράφονται εντός 30 ημερών, εκτός εάν η διατήρησή
-                  τους απαιτείται από το νόμο.
+                  Account data is retained while your account remains active.
+                  You may request account deletion at any time. After deletion,
+                  personal data is deleted within 30 days unless a longer
+                  retention period is required by law or necessary to resolve a
+                  dispute.
                 </p>
               </section>
             </ScrollReveal>
@@ -126,41 +141,43 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  5. Τα Δικαιώματά σας (ΓΚΠΔ)
+                  5. Your GDPR Rights
                 </h2>
                 <p className="mb-3">
-                  Σύμφωνα με τον Γενικό Κανονισμό Προστασίας Δεδομένων (ΓΚΠΔ), έχετε τα ακόλουθα δικαιώματα:
+                  Subject to applicable law, you may have the right to:
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δικαίωμα πρόσβασης:</strong> Να ζητήσετε αντίγραφο των δεδομένων σας</span>
+                    <span>Request access to your personal data.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δικαίωμα διόρθωσης:</strong> Να ζητήσετε τη διόρθωση ανακριβών δεδομένων</span>
+                    <span>Request correction of inaccurate or incomplete data.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δικαίωμα διαγραφής (Άρθρο 17):</strong> Να ζητήσετε τη διαγραφή των δεδομένων σας ("δικαίωμα στη λήθη")</span>
+                    <span>Request deletion of your personal data.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δικαίωμα φορητότητας:</strong> Να λάβετε τα δεδομένα σας σε δομημένη, κοινώς χρησιμοποιούμενη μορφή</span>
+                    <span>Request restriction of processing.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δικαίωμα περιορισμού:</strong> Να ζητήσετε τον περιορισμό της επεξεργασίας</span>
+                    <span>Object to processing based on legitimate interests.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Δικαίωμα εναντίωσης:</strong> Να αντιταχθείτε στην επεξεργασία των δεδομένων σας</span>
+                    <span>Request data portability.</span>
                   </li>
                 </ul>
                 <p className="mt-4">
-                  Για να ασκήσετε τα δικαιώματά σας, στείλτε email στο{" "}
-                  <a href="mailto:ibekas@ihu.gr" className="underline text-black">ibekas@ihu.gr</a>{" "}
-                  ή χρησιμοποιήστε τη λειτουργία διαγραφής λογαριασμού στις ρυθμίσεις σας.
+                  To exercise your rights, email{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
+                    {CONTACT_EMAIL}
+                  </a>
+                  .
                 </p>
               </section>
             </ScrollReveal>
@@ -171,50 +188,64 @@ export default function PrivacyPolicy() {
                   6. Cookies
                 </h2>
                 <p className="mb-3">
-                  Ο ιστότοπός μας χρησιμοποιεί cookies για τη βελτίωση της εμπειρίας σας. Τα cookies
-                  χωρίζονται στις ακόλουθες κατηγορίες:
+                  We use cookies to operate the website, improve the user
+                  experience, and understand service usage.
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Απαραίτητα cookies:</strong> Απαιτούνται για τη λειτουργία του ιστότοπου (π.χ. αυθεντικοποίηση, ασφάλεια)</span>
+                    <span>
+                      <strong>Essential cookies:</strong> Required for core
+                      website functionality, authentication, and security.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Cookies ανάλυσης:</strong> Μας βοηθούν να κατανοήσουμε πώς χρησιμοποιείτε τον ιστότοπο</span>
+                    <span>
+                      <strong>Analytics cookies:</strong> Help us understand how
+                      visitors use the website.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Cookies λειτουργικότητας:</strong> Αποθηκεύουν τις προτιμήσεις σας</span>
+                    <span>
+                      <strong>Preference cookies:</strong> Store user preferences
+                      where supported.
+                    </span>
                   </li>
                 </ul>
-                <p className="mt-3">
-                  Μπορείτε να διαχειριστείτε τις προτιμήσεις cookies σας μέσω του banner cookies που
-                  εμφανίζεται κατά την πρώτη επίσκεψη ή μέσω των ρυθμίσεων του προγράμματος περιήγησής σας.
-                </p>
               </section>
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  7. Υπηρεσίες Τρίτων
+                  7. Third-Party Services
                 </h2>
                 <p className="mb-3">
-                  Χρησιμοποιούμε τις ακόλουθες υπηρεσίες τρίτων που ενδέχεται να επεξεργάζονται δεδομένα:
+                  We may use third-party providers that process data on our behalf:
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Anthropic AI:</strong> Για τη λειτουργία του AI Advisor. Τα ερωτήματά σας υποβάλλονται σε επεξεργασία μέσω του API της Anthropic.</span>
+                    <span>
+                      <strong>Anthropic AI:</strong> Used to power AI Advisor
+                      responses.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Resend:</strong> Για την αποστολή email (φόρμα επικοινωνίας, ειδοποιήσεις)</span>
+                    <span>
+                      <strong>Resend:</strong> Used for email delivery, including
+                      contact form submissions and notifications.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Google Analytics:</strong> Για την ανάλυση της επισκεψιμότητας του ιστότοπου (εφόσον είναι ενεργοποιημένο)</span>
+                    <span>
+                      <strong>Google Analytics:</strong> Used for website
+                      analytics if enabled.
+                    </span>
                   </li>
                 </ul>
               </section>
@@ -223,12 +254,12 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  8. Ασφάλεια Δεδομένων
+                  8. Data Security
                 </h2>
                 <p>
-                  Λαμβάνουμε τεχνικά και οργανωτικά μέτρα για την προστασία των δεδομένων σας,
-                  συμπεριλαμβανομένης της κρυπτογράφησης κωδικών πρόσβασης, της χρήσης HTTPS και
-                  του περιορισμού πρόσβασης στα δεδομένα μόνο σε εξουσιοδοτημένο προσωπικό.
+                  We use technical and organizational safeguards designed to
+                  protect personal data, including password hashing, HTTPS, and
+                  access controls limiting data access to authorized personnel.
                 </p>
               </section>
             </ScrollReveal>
@@ -236,12 +267,11 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  9. Αλλαγές στην Πολιτική
+                  9. Changes to This Policy
                 </h2>
                 <p>
-                  Ενδέχεται να ενημερώσουμε αυτήν την πολιτική απορρήτου κατά καιρούς. Οι αλλαγές θα
-                  δημοσιεύονται σε αυτήν τη σελίδα με ενημερωμένη ημερομηνία. Σας ενθαρρύνουμε να
-                  ελέγχετε τακτικά αυτήν τη σελίδα.
+                  We may update this privacy policy from time to time. Updates
+                  will be posted on this page with the revised update date.
                 </p>
               </section>
             </ScrollReveal>
@@ -249,21 +279,23 @@ export default function PrivacyPolicy() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  10. Επικοινωνία
+                  10. Contact
                 </h2>
                 <p>
-                  Για οποιαδήποτε ερώτηση σχετικά με την πολιτική απορρήτου ή τα δεδομένα σας,
-                  επικοινωνήστε μαζί μας:
+                  For questions about this privacy policy or your personal data,
+                  contact us:
                 </p>
                 <p className="mt-3">
-                  <strong>BI Solutions Group</strong><br />
+                  <strong>BI Solutions Group</strong>
+                  <br />
                   Email:{" "}
-                  <a href="mailto:ibekas@ihu.gr" className="underline text-black">ibekas@ihu.gr</a>
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
+                    {CONTACT_EMAIL}
+                  </a>
                 </p>
                 <p className="mt-3">
-                  Εάν θεωρείτε ότι τα δικαιώματά σας δεν γίνονται σεβαστά, έχετε το δικαίωμα να
-                  υποβάλετε καταγγελία στην Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα (ΑΠΔΠΧ)
-                  στο{" "}
+                  If you believe your rights have not been respected, you may
+                  lodge a complaint with the Hellenic Data Protection Authority at{" "}
                   <a
                     href="https://www.dpa.gr"
                     target="_blank"
@@ -271,7 +303,8 @@ export default function PrivacyPolicy() {
                     className="underline text-black"
                   >
                     www.dpa.gr
-                  </a>.
+                  </a>
+                  .
                 </p>
               </section>
             </ScrollReveal>

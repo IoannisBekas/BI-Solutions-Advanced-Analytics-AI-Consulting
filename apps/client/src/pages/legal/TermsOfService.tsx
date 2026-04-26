@@ -4,6 +4,8 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Link } from "wouter";
 
+const CONTACT_EMAIL = "BekasYannis@gmail.com";
+
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-background">
@@ -17,68 +19,23 @@ export default function TermsOfService() {
         <div className="max-w-4xl mx-auto px-6 md:px-12">
           <ScrollReveal>
             <h1 className="text-[2.65rem] sm:text-5xl md:text-7xl font-bold font-heading mb-4 leading-[1.05]">
-              Όροι Χρήσης
+              Terms of Service
             </h1>
-            <p className="text-sm text-gray-400 mb-12">
-              Τελευταία ενημέρωση: Μάρτιος 2026
-            </p>
+            <p className="text-sm text-gray-400 mb-12">Last updated: March 2026</p>
           </ScrollReveal>
 
-          {/* English Summary */}
-          <ScrollReveal delay={0.05}>
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 mb-16">
-              <h2 className="text-lg font-bold font-heading mb-4">English Summary</h2>
-              <p className="text-gray-600 text-sm leading-relaxed mb-3">
-                By using BI Solutions Group services, you agree to these terms. Our AI Advisor provides
-                general business guidance and should not replace professional advice. Quantus provides
-                research analysis for informational purposes only and does not constitute investment
-                advice. AI-generated content may contain inaccuracies. We retain intellectual property
-                rights over our platform. Liability is limited to the maximum extent permitted by law.
-                These terms are governed by Greek law with disputes resolved in the courts of
-                Thessaloniki, Greece.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          {/* Main Content in Greek */}
           <div className="space-y-12 text-gray-700 leading-relaxed">
-            <ScrollReveal delay={0.1}>
+            <ScrollReveal delay={0.05}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  1. Περιγραφή Υπηρεσιών
+                  1. Services
                 </h2>
                 <p>
-                  Η <strong>BI Solutions Group</strong> παρέχει υπηρεσίες συμβουλευτικής επιχειρήσεων,
-                  ανάλυσης δεδομένων, τεχνητής νοημοσύνης και ψηφιακού μετασχηματισμού. Τα προϊόντα
-                  μας περιλαμβάνουν:
-                </p>
-                <ul className="space-y-2 ml-4 mt-3">
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>AI Advisor:</strong> Σύμβουλος τεχνητής νοημοσύνης που παρέχει γενικές επιχειρηματικές κατευθύνσεις</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Quantus:</strong> Πλατφόρμα ανάλυσης αγορών και έρευνας μετοχών</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span><strong>Power BI Solutions:</strong> Εργαλεία και λύσεις Business Intelligence</span>
-                  </li>
-                </ul>
-              </section>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.1}>
-              <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  2. Λογαριασμοί Χρηστών
-                </h2>
-                <p>
-                  Για τη χρήση ορισμένων υπηρεσιών απαιτείται η δημιουργία λογαριασμού. Είστε υπεύθυνοι
-                  για τη διατήρηση της εμπιστευτικότητας των στοιχείων σύνδεσής σας και για όλες τις
-                  δραστηριότητες που πραγματοποιούνται μέσω του λογαριασμού σας. Πρέπει να μας
-                  ενημερώσετε αμέσως για οποιαδήποτε μη εξουσιοδοτημένη χρήση του λογαριασμού σας.
+                  BI Solutions Group provides business consulting, data
+                  analytics, artificial intelligence, business intelligence, and
+                  digital transformation services. Our products and services may
+                  include AI Advisor, Quantus, Power BI Solutions, and website
+                  or application portfolio services.
                 </p>
               </section>
             </ScrollReveal>
@@ -86,29 +43,43 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  3. Αποδεκτή Χρήση
+                  2. User Accounts
                 </h2>
-                <p className="mb-3">Κατά τη χρήση των υπηρεσιών μας, συμφωνείτε να μην:</p>
+                <p>
+                  Some services may require an account. You are responsible for
+                  keeping your login credentials confidential and for activity
+                  under your account. Notify us promptly if you suspect
+                  unauthorized use of your account.
+                </p>
+              </section>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.1}>
+              <section>
+                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                  3. Acceptable Use
+                </h2>
+                <p className="mb-3">When using our services, you agree not to:</p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span>Παραβιάζετε νόμους ή κανονισμούς</span>
+                    <span>Violate applicable laws or regulations.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span>Παρεμβαίνετε στη λειτουργία ή την ασφάλεια της πλατφόρμας</span>
+                    <span>Interfere with platform operation, security, or availability.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span>Χρησιμοποιείτε αυτοματοποιημένα εργαλεία για πρόσβαση στις υπηρεσίες χωρίς άδεια</span>
+                    <span>Use automated access tools without permission.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span>Μεταδίδετε κακόβουλο λογισμικό ή επιβλαβές περιεχόμενο</span>
+                    <span>Transmit malicious code or harmful content.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
-                    <span>Αναπαράγετε ή μεταπωλείτε τις υπηρεσίες μας χωρίς γραπτή συγκατάθεση</span>
+                    <span>Copy, resell, or redistribute our services without written permission.</span>
                   </li>
                 </ul>
               </section>
@@ -117,22 +88,24 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  4. Περιεχόμενο Τεχνητής Νοημοσύνης
+                  4. AI-Generated Content
                 </h2>
                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-4">
-                  <p className="text-sm font-medium text-black mb-2">Σημαντική Αποποίηση Ευθύνης</p>
+                  <p className="text-sm font-medium text-black mb-2">
+                    Important Disclaimer
+                  </p>
                   <p className="text-sm text-gray-600">
-                    Ο <strong>AI Advisor</strong> παρέχει γενικές επιχειρηματικές κατευθύνσεις και δεν
-                    αντικαθιστά επαγγελματικές συμβουλές (νομικές, λογιστικές, φορολογικές ή άλλες).
-                    Το <strong>Quantus</strong> παρέχει αναλύσεις αγορών και έρευνα για ενημερωτικούς
-                    σκοπούς μόνο και δεν αποτελεί επενδυτική συμβουλή.
+                    AI Advisor provides general business guidance and does not
+                    replace professional legal, accounting, tax, investment, or
+                    other specialist advice. Quantus provides market analysis and
+                    research for informational purposes only and does not
+                    constitute investment advice.
                   </p>
                 </div>
                 <p>
-                  Το περιεχόμενο που παράγεται από τεχνητή νοημοσύνη ενδέχεται να περιέχει ανακρίβειες
-                  ή σφάλματα. Οι χρήστες πρέπει να επαληθεύουν ανεξάρτητα τις πληροφορίες πριν λάβουν
-                  σημαντικές αποφάσεις. Η BI Solutions Group δεν φέρει ευθύνη για αποφάσεις που
-                  βασίζονται αποκλειστικά σε περιεχόμενο που παράγεται από AI.
+                  AI-generated content may contain inaccuracies or omissions.
+                  Users should independently verify information before making
+                  important business, financial, legal, or technical decisions.
                 </p>
               </section>
             </ScrollReveal>
@@ -140,13 +113,14 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  5. Πνευματική Ιδιοκτησία
+                  5. Intellectual Property
                 </h2>
                 <p>
-                  Όλο το περιεχόμενο, ο σχεδιασμός, ο κώδικας, τα εμπορικά σήματα και τα λοιπά στοιχεία
-                  πνευματικής ιδιοκτησίας του ιστότοπου και των υπηρεσιών μας ανήκουν στην BI Solutions Group
-                  ή στους αδειοδότες μας. Απαγορεύεται η αντιγραφή, αναπαραγωγή, διανομή ή τροποποίηση
-                  οποιουδήποτε στοιχείου χωρίς προηγούμενη γραπτή συγκατάθεση.
+                  The website, platform, code, design, trademarks, content, and
+                  related materials are owned by BI Solutions Group or its
+                  licensors. You may not copy, reproduce, distribute, modify, or
+                  create derivative works from our materials without prior
+                  written consent.
                 </p>
               </section>
             </ScrollReveal>
@@ -154,13 +128,14 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  6. Περιορισμός Ευθύνης
+                  6. Limitation of Liability
                 </h2>
                 <p>
-                  Στο μέγιστο βαθμό που επιτρέπεται από τον νόμο, η BI Solutions Group δεν ευθύνεται
-                  για τυχόν έμμεσες, αποθετικές, ειδικές ή παρεπόμενες ζημίες που προκύπτουν από τη
-                  χρήση ή την αδυναμία χρήσης των υπηρεσιών μας. Οι υπηρεσίες παρέχονται "ως έχουν"
-                  χωρίς καμία εγγύηση, ρητή ή σιωπηρή.
+                  To the maximum extent permitted by law, BI Solutions Group is
+                  not liable for indirect, incidental, special, consequential, or
+                  punitive damages arising from use of, or inability to use, our
+                  services. Services are provided "as is" without warranties of
+                  any kind, whether express or implied.
                 </p>
               </section>
             </ScrollReveal>
@@ -168,13 +143,13 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  7. Τερματισμός
+                  7. Termination
                 </h2>
                 <p>
-                  Διατηρούμε το δικαίωμα να αναστείλουμε ή να τερματίσουμε την πρόσβασή σας στις
-                  υπηρεσίες μας σε περίπτωση παραβίασης αυτών των όρων χρήσης, χωρίς προηγούμενη
-                  ειδοποίηση. Μπορείτε να τερματίσετε τη χρήση των υπηρεσιών μας ανά πάσα στιγμή
-                  διαγράφοντας τον λογαριασμό σας.
+                  We may suspend or terminate access to our services if these
+                  terms are violated or if doing so is necessary to protect our
+                  platform, users, or legal interests. You may stop using the
+                  services at any time.
                 </p>
               </section>
             </ScrollReveal>
@@ -182,14 +157,17 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  8. Εφαρμοστέο Δίκαιο & Επίλυση Διαφορών
+                  8. Governing Law and Disputes
                 </h2>
                 <p>
-                  Οι παρόντες όροι διέπονται και ερμηνεύονται σύμφωνα με το <strong>Ελληνικό Δίκαιο</strong>.
-                  Για οποιαδήποτε διαφορά προκύψει από τη χρήση των υπηρεσιών μας, αρμόδια είναι τα
-                  δικαστήρια της <strong>Θεσσαλονίκης, Ελλάδα</strong>. Πριν την προσφυγή σε δικαστική
-                  οδό, ενθαρρύνουμε τον φιλικό διακανονισμό μέσω email στο{" "}
-                  <a href="mailto:ibekas@ihu.gr" className="underline text-black">ibekas@ihu.gr</a>.
+                  These terms are governed by Greek law. Any dispute arising from
+                  use of our services will be subject to the competent courts of
+                  Thessaloniki, Greece. Before starting legal proceedings, we
+                  encourage good-faith resolution by contacting{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
+                    {CONTACT_EMAIL}
+                  </a>
+                  .
                 </p>
               </section>
             </ScrollReveal>
@@ -197,12 +175,12 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  9. Τροποποιήσεις Όρων
+                  9. Changes to These Terms
                 </h2>
                 <p>
-                  Διατηρούμε το δικαίωμα να τροποποιούμε τους παρόντες όρους χρήσης ανά πάσα στιγμή.
-                  Οι ενημερωμένοι όροι θα δημοσιεύονται σε αυτήν τη σελίδα. Η συνεχιζόμενη χρήση
-                  των υπηρεσιών μας μετά τις αλλαγές συνιστά αποδοχή των νέων όρων.
+                  We may update these terms from time to time. Updated terms will
+                  be posted on this page. Continued use of the services after an
+                  update means you accept the revised terms.
                 </p>
               </section>
             </ScrollReveal>
@@ -210,22 +188,23 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  10. Επικοινωνία
+                  10. Contact
                 </h2>
-                <p>
-                  Για ερωτήσεις σχετικά με τους όρους χρήσης, επικοινωνήστε μαζί μας:
-                </p>
+                <p>For questions about these terms, contact us:</p>
                 <p className="mt-3">
-                  <strong>BI Solutions Group</strong><br />
+                  <strong>BI Solutions Group</strong>
+                  <br />
                   Email:{" "}
-                  <a href="mailto:ibekas@ihu.gr" className="underline text-black">ibekas@ihu.gr</a>
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
+                    {CONTACT_EMAIL}
+                  </a>
                 </p>
                 <p className="mt-4">
-                  Δείτε επίσης την{" "}
+                  See our{" "}
                   <Link href="/privacy-policy" className="underline text-black">
-                    Πολιτική Απορρήτου
-                  </Link>{" "}
-                  μας.
+                    Privacy Policy
+                  </Link>
+                  .
                 </p>
               </section>
             </ScrollReveal>

@@ -4,10 +4,8 @@ import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withAssetBase } from "@/lib/site";
 import { servicePages } from "@/lib/servicePages";
 
-const PRIVACY_LABEL =
-  "\u03a0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03ae \u0391\u03c0\u03bf\u03c1\u03c1\u03ae\u03c4\u03bf\u03c5";
-const TERMS_LABEL =
-  "\u038c\u03c1\u03bf\u03b9 \u03a7\u03c1\u03ae\u03c3\u03b7\u03c2";
+const PRIVACY_LABEL = "Privacy Policy";
+const TERMS_LABEL = "Terms of Service";
 
 export function Footer() {
   const scrollToTop = () => {

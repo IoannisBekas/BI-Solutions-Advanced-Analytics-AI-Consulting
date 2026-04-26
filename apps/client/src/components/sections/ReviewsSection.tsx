@@ -1,5 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+    type CarouselApi,
+} from "@/components/ui/carousel";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Star } from "lucide-react";
 
@@ -79,7 +87,29 @@ const reviews: Review[] = [
     }
 ];
 
+const REVIEW_ROTATION_INTERVAL_MS = 4500;
+
 export function ReviewsSection() {
+    const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+    const [isPaused, setIsPaused] = useState(false);
+
+    useEffect(() => {
+        if (!carouselApi || isPaused) {
+            return;
+        }
+
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) {
+            return;
+        }
+
+        const rotationTimer = window.setInterval(() => {
+            carouselApi.scrollNext();
+        }, REVIEW_ROTATION_INTERVAL_MS);
+
+        return () => window.clearInterval(rotationTimer);
+    }, [carouselApi, isPaused]);
+
     return (
         <section className="py-24 bg-background">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -92,12 +122,19 @@ export function ReviewsSection() {
                     </p>
                 </ScrollReveal>
 
-                <div className="relative px-8 md:px-12">
+                <div
+                    className="relative px-8 md:px-12"
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
+                    onFocus={() => setIsPaused(true)}
+                    onBlur={() => setIsPaused(false)}
+                >
                     <Carousel
                         opts={{
                             align: "start",
-                            loop: false,
+                            loop: true,
                         }}
+                        setApi={setCarouselApi}
                         className="w-full"
                     >
                         <CarouselContent>
