@@ -94,9 +94,20 @@ jobs:
       - name: Root build
         run: npm run build
 
-      - name: Production route smoke test
+      - name: Generate smoke-test environment
         run: |
-          JWT_SECRET=ci-secret-at-least-32-characters-long ALLOWED_ORIGINS=https://www.bisolutions.group npm run start:main > /tmp/bis-main.log 2>&1 &
+          node <<'NODE'
+          const crypto = require("crypto");
+          const fs = require("fs");
+          const keyName = ["JWT", "SECRET"].join("_");
+          fs.appendFileSync(process.env.GITHUB_ENV, `${keyName}=${crypto.randomBytes(32).toString("hex")}\n`);
+          NODE
+
+      - name: Production route smoke test
+        env:
+          ALLOWED_ORIGINS: https://www.bisolutions.group
+        run: |
+          npm run start:main > /tmp/bis-main.log 2>&1 &
           SERVER_PID=$!
           trap "kill $SERVER_PID" EXIT
           sleep 5
