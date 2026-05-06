@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import fs from "fs";
 import crypto from "crypto";
 import path from "path";
@@ -86,8 +86,25 @@ declare module "express-serve-static-core" {
 }
 
 const REQUEST_ID_HEADER = "x-request-id";
+const REQUEST_ID_RE = /^[A-Za-z0-9._:-]{1,128}$/;
 
 app.disable("x-powered-by");
+
+function readTrustProxyHops() {
+  const rawValue = process.env.TRUST_PROXY_HOPS?.trim() || (isProduction ? "1" : "0");
+  const hops = Number.parseInt(rawValue, 10);
+
+  if (!Number.isInteger(hops) || hops < 0 || hops > 5) {
+    throw new Error("TRUST_PROXY_HOPS must be an integer from 0 to 5");
+  }
+
+  return hops;
+}
+
+const trustProxyHops = readTrustProxyHops();
+if (trustProxyHops > 0) {
+  app.set("trust proxy", trustProxyHops);
+}
 
 // If the app ever receives traffic on the bare domain, preserve the full path
 // and move users onto the canonical host instead of serving duplicate origins.
@@ -126,14 +143,17 @@ app.use(
                 return `'nonce-${locals?.cspNonce || ""}'`;
               },
               "'strict-dynamic'",
+              "https://accounts.google.com",
               "https://www.googletagmanager.com",
               "https://www.google-analytics.com",
             ],
             // React/CSS-in-JS inject runtime <style> tags, so inline styles must remain allowed.
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
+            "frame-src": ["'self'", "https://accounts.google.com"],
             "connect-src": [
               "'self'",
+              "https://accounts.google.com",
               "https://api.anthropic.com",
               "https://generativelanguage.googleapis.com",
               "https://www.google-analytics.com",
@@ -158,11 +178,29 @@ app.use(
 app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 app.use(cookieParser());
 
+const privateApiPrefixes = [
+  "/api/auth",
+  "/api/quantus/watchlist",
+  "/api/quantus/alerts",
+  "/api/quantus/usage",
+  "/power-bi-solutions/api/anthropic",
+];
+
 app.use((req, res, next) => {
-  const requestId =
+  if (privateApiPrefixes.some((prefix) => req.path.startsWith(prefix))) {
+    res.setHeader("Cache-Control", "no-store");
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  const candidateRequestId =
     req.header(REQUEST_ID_HEADER)?.trim() ||
     req.header("request-id")?.trim() ||
-    crypto.randomUUID();
+    "";
+  const requestId = REQUEST_ID_RE.test(candidateRequestId)
+    ? candidateRequestId
+    : crypto.randomUUID();
 
   req.requestId = requestId;
   res.setHeader(REQUEST_ID_HEADER, requestId);
@@ -198,6 +236,52 @@ app.use(
   }),
 );
 
+const stateChangingMethods = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+const csrfExemptPrefixes = ["/api/quantus/internal/"];
+const sameOriginAllowlist = new Set([
+  ...allowedOrigins,
+  process.env.APP_URL?.trim() || "",
+  `https://${CANONICAL_HOST}`,
+  `https://${APEX_HOST}`,
+].filter(Boolean));
+
+function readRequestOrigin(req: Request) {
+  const origin = req.header("origin")?.trim();
+  if (origin) {
+    return origin;
+  }
+
+  const referer = req.header("referer")?.trim();
+  if (!referer) {
+    return "";
+  }
+
+  try {
+    return new URL(referer).origin;
+  } catch {
+    return "";
+  }
+}
+
+app.use((req, res, next) => {
+  if (
+    !isProduction ||
+    !stateChangingMethods.has(req.method) ||
+    csrfExemptPrefixes.some((prefix) => req.path.startsWith(prefix))
+  ) {
+    next();
+    return;
+  }
+
+  const requestOrigin = readRequestOrigin(req);
+  if (!requestOrigin || !sameOriginAllowlist.has(requestOrigin)) {
+    res.status(403).json({ message: "Invalid request origin." });
+    return;
+  }
+
+  next();
+});
+
 // ─── Rate Limiting ─────────────────────────────────────────────────────────
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -218,6 +302,7 @@ const strictLimiter = rateLimit({
 const powerBiAnthropicLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 12,
+  keyGenerator: (req) => ipKeyGenerator(req.ip || ""),
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { message: "Preview AI rate limit reached - try again later." },
@@ -226,6 +311,7 @@ const powerBiAnthropicLimiter = rateLimit({
 const advisorLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
+  keyGenerator: (req) => ipKeyGenerator(req.ip || ""),
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { message: "AI advisor rate limit reached — try again later." },
@@ -347,7 +433,10 @@ app.use((req, res, next) => {
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    const message =
+      isProduction && status >= 500
+        ? "Internal Server Error"
+        : err.message || "Internal Server Error";
 
     res.status(status).json({ message });
     console.error(err);
@@ -398,6 +487,9 @@ app.use((req, res, next) => {
   // ─── Crash safety — log & exit instead of silent death ────────────────────
   process.on("unhandledRejection", (reason) => {
     console.error("Unhandled Promise rejection:", reason);
+    if (isProduction) {
+      process.exit(1);
+    }
   });
   process.on("uncaughtException", (err) => {
     console.error("Uncaught exception:", err);

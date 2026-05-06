@@ -58,6 +58,8 @@ export function registerQuantusProxyRoute(app: Express) {
       forwardRequestHeader(req, headers, "cache-control");
       forwardRequestHeader(req, headers, "content-type");
       forwardRequestHeader(req, headers, "last-event-id");
+      forwardRequestHeader(req, headers, "origin");
+      forwardRequestHeader(req, headers, "referer");
       forwardRequestHeader(req, headers, "x-request-id");
       // Forward cookies only when the upstream is loopback/private to avoid
       // leaking session cookies to a remote host if env is misconfigured.

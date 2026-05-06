@@ -179,9 +179,9 @@ export default function AIAdvisorPage() {
           throw new Error("Unable to load advisor status.");
         }
 
-        const data = await res.json() as { configured?: boolean };
+        const data = await res.json() as { ok?: boolean };
         if (!cancelled) {
-          setAdvisorStatus(data.configured ? "ready" : "unavailable");
+          setAdvisorStatus(data.ok ? "ready" : "unavailable");
         }
       } catch (error) {
         console.error("AI Advisor status error:", error);

@@ -1,4 +1,5 @@
 import { Link, useRoute } from "wouter";
+import type { ReactNode } from "react";
 import {
   ArrowLeft,
   Calendar,
@@ -19,7 +20,67 @@ import { Button } from "@/components/ui/button";
 import { getBlogPostBySlug, getRelatedPosts } from "@/data/blogData";
 
 function renderRichText(line: string) {
-  return line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  const nodes: ReactNode[] = [];
+  const anchorPattern = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = anchorPattern.exec(line)) !== null) {
+    if (match.index > cursor) {
+      nodes.push(...renderBoldText(line.slice(cursor, match.index), nodes.length));
+    }
+
+    const href = sanitizeHref(match[1]);
+    const label = stripRichText(match[2]) || href;
+    if (href) {
+      nodes.push(
+        <a
+          key={`link-${nodes.length}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600"
+        >
+          {label}
+        </a>,
+      );
+    } else {
+      nodes.push(label);
+    }
+
+    cursor = anchorPattern.lastIndex;
+  }
+
+  if (cursor < line.length) {
+    nodes.push(...renderBoldText(line.slice(cursor), nodes.length));
+  }
+
+  return nodes;
+}
+
+function renderBoldText(value: string, keyOffset: number): ReactNode[] {
+  const parts = value.split(/(\*\*[\s\S]+?\*\*)/g);
+  return parts
+    .filter(Boolean)
+    .map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={`strong-${keyOffset}-${index}`}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+}
+
+function sanitizeHref(value: string) {
+  try {
+    const parsed = new URL(value, window.location.origin);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:" || parsed.protocol === "mailto:") {
+      return parsed.toString();
+    }
+  } catch {
+    return "";
+  }
+
+  return "";
 }
 
 function stripRichText(value: string) {
@@ -76,8 +137,9 @@ function renderContent(content: string) {
         >
           <p
             className="text-base leading-relaxed text-gray-700"
-            dangerouslySetInnerHTML={{ __html: renderRichText(section.replace("> ", "")) }}
-          />
+          >
+            {renderRichText(section.replace("> ", ""))}
+          </p>
         </blockquote>
       );
     }
@@ -86,8 +148,9 @@ function renderContent(content: string) {
       <p
         key={index}
         className="mt-5 text-base leading-relaxed text-gray-700"
-        dangerouslySetInnerHTML={{ __html: renderRichText(section) }}
-      />
+      >
+        {renderRichText(section)}
+      </p>
     );
   });
 }

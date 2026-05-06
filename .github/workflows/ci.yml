@@ -33,6 +33,15 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
+      - name: Env name scan
+        run: npm run scan:env
+
+      - name: Encoding scan
+        run: npm run check:encoding
+
+      - name: Root dependency audit
+        run: npm audit --audit-level=moderate
+
       - name: Root type check
         run: npm run check
 
@@ -40,13 +49,27 @@ jobs:
         working-directory: apps/quantus
         run: npm ci
 
+      - name: Quantus dependency audit
+        working-directory: apps/quantus
+        run: npm audit --audit-level=moderate
+
       - name: Install Quantus Python dependencies
         working-directory: apps/quantus
-        run: python -m pip install -r pipelines/requirements.txt
+        run: |
+          python -m pip install -r pipelines/requirements.txt
+          python -m pip install pip-audit
+
+      - name: Quantus Python dependency audit
+        working-directory: apps/quantus
+        run: python -m pip_audit -r pipelines/requirements.txt
 
       - name: Install Power BI Solutions dependencies
         working-directory: apps/powerbi-solutions
         run: npm ci
+
+      - name: Power BI Solutions dependency audit
+        working-directory: apps/powerbi-solutions
+        run: npm audit --audit-level=moderate
 
       - name: Quantus lint
         working-directory: apps/quantus
@@ -60,5 +83,21 @@ jobs:
         working-directory: apps/quantus
         run: python -m pytest -q
 
+      - name: Power BI Solutions lint
+        working-directory: apps/powerbi-solutions
+        run: npm run lint
+
+      - name: Power BI Solutions tests
+        working-directory: apps/powerbi-solutions
+        run: npm run test
+
       - name: Root build
         run: npm run build
+
+      - name: Production route smoke test
+        run: |
+          JWT_SECRET=ci-secret-at-least-32-characters-long ALLOWED_ORIGINS=https://www.bisolutions.group npm run start:main > /tmp/bis-main.log 2>&1 &
+          SERVER_PID=$!
+          trap "kill $SERVER_PID" EXIT
+          sleep 5
+          npm run smoke:routes -- http://127.0.0.1:5001
