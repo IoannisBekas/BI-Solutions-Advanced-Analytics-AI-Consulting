@@ -244,7 +244,7 @@ function buildPowerBiAnthropicPayload(body: Record<string, unknown> | undefined)
 
 export function registerPowerBiProxyRoutes(app: Express) {
   app.get(`${POWERBI_SOLUTIONS_API_PREFIX}/health`, (_req, res) => {
-    res.json({ ok: true, enabled: isPowerBiAnthropicProxyEnabled() });
+    res.json({ ok: true, status: "ok" });
   });
 
   app.post(`${POWERBI_SOLUTIONS_API_PREFIX}/anthropic/v1/messages`, requireAuth, async (req, res) => {

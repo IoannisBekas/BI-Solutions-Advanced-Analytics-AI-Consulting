@@ -24,6 +24,13 @@ data/
 # Git history
 .git/
 
+# Env files and local secrets
+.env
+.env.*
+**/.env
+**/.env.*
+!**/.env.example
+
 # Logs and large assets
 root-dev.log
 attached_assets/

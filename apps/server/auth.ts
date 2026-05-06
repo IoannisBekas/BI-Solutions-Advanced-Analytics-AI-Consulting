@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
+import { z } from "zod";
 import {
   findUserByEmail,
   findUserById,
@@ -138,6 +139,33 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function isValidEmail(value: unknown): value is string {
   return typeof value === "string" && EMAIL_RE.test(value) && value.length <= 254;
 }
+
+const authEmailSchema = z.string().trim().email().max(254).transform((value) => value.toLowerCase());
+const authNameSchema = z.string().trim().min(1).max(120);
+const authPasswordSchema = z.string().min(12).max(128);
+const authReferralTokenSchema = z.string().trim().max(80).optional();
+
+const registerBodySchema = z.object({
+  email: authEmailSchema,
+  name: authNameSchema,
+  password: authPasswordSchema,
+  referralToken: authReferralTokenSchema,
+});
+
+const loginBodySchema = z.object({
+  email: authEmailSchema,
+  password: z.string().min(1).max(128),
+});
+
+const googleAuthBodySchema = z.object({
+  credential: z.string().trim().min(1).max(4096),
+  referralToken: authReferralTokenSchema,
+});
+
+const deleteAccountBodySchema = z.object({
+  password: z.string().max(128).optional(),
+  googleCredential: z.string().trim().max(4096).optional(),
+}).optional();
 
 function resolveReferralReward(referralToken: unknown) {
   if (typeof referralToken !== "string" || referralToken.length === 0) {
@@ -321,26 +349,12 @@ export const authRouter = Router();
 // ── POST /api/auth/register ──────────────────────────────────────────────────
 authRouter.post("/register", async (req: Request, res: Response) => {
   try {
-    const { email, name, password, referralToken } = req.body;
-
-    if (!email || !name || !password) {
-      res
-        .status(400)
-        .json({ error: "Email, name, and password are required" });
+    const parsed = registerBodySchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Invalid registration request." });
       return;
     }
-
-    if (!isValidEmail(email)) {
-      res.status(400).json({ error: "Invalid email address" });
-      return;
-    }
-
-    if (typeof password !== "string" || password.length < 8) {
-      res
-        .status(400)
-        .json({ error: "Password must be at least 8 characters" });
-      return;
-    }
+    const { email, name, password, referralToken } = parsed.data;
 
     // Check for existing user
     const existing = findUserByEmail(email);
@@ -369,12 +383,12 @@ authRouter.post("/register", async (req: Request, res: Response) => {
 // ── POST /api/auth/login ─────────────────────────────────────────────────────
 authRouter.post("/login", async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      res.status(400).json({ error: "Email and password are required" });
+    const parsed = loginBodySchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Invalid login request." });
       return;
     }
+    const { email, password } = parsed.data;
 
     const user = findUserByEmail(email);
     if (!user) {
@@ -409,14 +423,12 @@ authRouter.get("/google/config", (_req: Request, res: Response) => {
 // ── POST /api/auth/google ───────────────────────────────────────────────────
 authRouter.post("/google", async (req: Request, res: Response) => {
   try {
-    const credential =
-      typeof req.body?.credential === "string" ? req.body.credential.trim() : "";
-    const referralToken = req.body?.referralToken;
-
-    if (!credential) {
-      res.status(400).json({ error: "Google credential is required" });
+    const parsed = googleAuthBodySchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Invalid Google authentication request." });
       return;
     }
+    const { credential, referralToken } = parsed.data;
 
     if (!getGoogleClientId()) {
       res.status(503).json({ error: "Google sign-in is not configured" });
@@ -424,12 +436,13 @@ authRouter.post("/google", async (req: Request, res: Response) => {
     }
 
     const tokenInfo = await verifyGoogleCredential(credential);
-    let user = findUserByEmail(tokenInfo.email!);
+    const email = tokenInfo.email!.toLowerCase();
+    let user = findUserByEmail(email);
 
     if (!user) {
       const generatedPassword = crypto.randomBytes(24).toString("hex");
       user = await createAuthUser({
-        email: tokenInfo.email!,
+        email,
         name: tokenInfo.name,
         password: generatedPassword,
         referralToken,
@@ -485,9 +498,15 @@ authRouter.delete(
         return;
       }
 
+      const parsedBody = deleteAccountBodySchema.safeParse(req.body);
+      if (!parsedBody.success) {
+        res.status(400).json({ error: "Invalid account deletion request." });
+        return;
+      }
+
       const challengeError = await verifyDeletionChallenge(
         user,
-        req.body as Record<string, unknown> | undefined,
+        parsedBody.data as Record<string, unknown> | undefined,
       );
       if (challengeError) {
         res.status(challengeError.status).json({ error: challengeError.error });

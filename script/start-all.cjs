@@ -19,6 +19,7 @@ const QUANTUS_DIR = path.join(ROOT, "apps", "quantus");
 
 // Railway sets PORT; default to 8080.
 const MAIN_PORT = process.env.PORT || "8080";
+const PYTHON_API_HOST = process.env.PYTHON_API_HOST || "127.0.0.1";
 
 function launch(label, command, args, opts = {}) {
   const child = spawn(command, args, {
@@ -62,14 +63,14 @@ launch("quantus-api", pythonBin, [
   "uvicorn",
   "main:app",
   "--host",
-  "0.0.0.0",
+  PYTHON_API_HOST,
   "--port",
   "8000",
   "--log-level",
   "info",
 ], {
   cwd: QUANTUS_DIR,
-  env: { PORT: "8000" },
+  env: { PORT: "8000", PYTHON_API_HOST },
 });
 
 // 2. Quantus Express (Node) - run the esbuild-compiled CJS bundle.

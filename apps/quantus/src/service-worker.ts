@@ -33,21 +33,15 @@ if (isLocalQuantusHost) {
     cleanupOutdatedCaches();
     precacheAndRoute(self.__WB_MANIFEST);
 
-    const STATIC_CACHE = 'quantus-static-v3';
-    const API_CACHE = 'quantus-public-api-v4';
-    const REPORT_CACHE = 'quantus-public-reports-v4';
+    const STATIC_CACHE = 'quantus-static-v4';
     const FONT_CACHE = 'quantus-fonts-v3';
     const PAGE_CACHE = 'quantus-pages-v4';
-
-    const hasAuthorizationHeader = (request: Request) => request.headers.has('authorization');
 
     self.addEventListener('activate', (event: ExtendableEvent) => {
         event.waitUntil((async () => {
             const cacheKeys = await caches.keys();
             const activeCaches = new Set([
                 STATIC_CACHE,
-                API_CACHE,
-                REPORT_CACHE,
                 FONT_CACHE,
                 PAGE_CACHE,
             ]);
@@ -89,39 +83,6 @@ if (isLocalQuantusHost) {
     registerRoute(
         ({ url }) => url.origin === 'https://fonts.googleapis.com',
         new StaleWhileRevalidate({ cacheName: FONT_CACHE }),
-    );
-
-    registerRoute(
-        ({ request, url }) => (
-            request.method === 'GET'
-            && url.pathname.startsWith('/quantus/api/report/')
-            && !hasAuthorizationHeader(request)
-        ),
-        new NetworkFirst({
-            cacheName: REPORT_CACHE,
-            networkTimeoutSeconds: 20,
-            plugins: [
-                new CacheableResponsePlugin({ statuses: [200] }),
-                new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 96 * 60 * 60 }),
-            ],
-        }),
-    );
-
-    registerRoute(
-        ({ request, url }) => (
-            request.method === 'GET'
-            && url.pathname.startsWith('/quantus/api/')
-            && !url.pathname.startsWith('/quantus/api/report/')
-            && !hasAuthorizationHeader(request)
-        ),
-        new NetworkFirst({
-            cacheName: API_CACHE,
-            networkTimeoutSeconds: 8,
-            plugins: [
-                new CacheableResponsePlugin({ statuses: [200] }),
-                new ExpirationPlugin({ maxEntries: 60, maxAgeSeconds: 4 * 60 * 60 }),
-            ],
-        }),
     );
 
     registerRoute(

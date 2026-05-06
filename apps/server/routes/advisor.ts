@@ -285,16 +285,17 @@ function buildVerificationRequiredAnswer(
 }
 
 function buildAdvisorPrompt(role: AdvisorRole, language: AdvisorLanguage, grounded: boolean) {
+  const currentDate = getAdvisorAsOfDate();
   const responseLanguage =
     language === "english"
       ? "Respond in English."
       : "Respond in Greek.";
   const dateInstruction = language === "english"
     ? grounded
-      ? "For time-sensitive answers, begin with a natural English date phrase such as 'Based on sources available as of March 28, 2026,'."
+      ? `For time-sensitive answers, begin with a natural English date phrase such as 'Based on sources available as of ${currentDate},'.`
       : "Do not present the answer as current or source-verified. If you mention timing, use cautious wording such as 'Based on general information available to the model'."
     : grounded
-      ? "Για απαντήσεις με χρονική ευαισθησία, ξεκίνα με φυσική ελληνική διατύπωση όπως 'Με βάση διαθέσιμες πηγές έως 28 Μαρτίου 2026,'. Μην χρησιμοποιείς την αγγλική φράση 'As of'."
+      ? `Για απαντήσεις με χρονική ευαισθησία, ξεκίνα με φυσική ελληνική διατύπωση όπως 'Με βάση διαθέσιμες πηγές έως ${currentDate},'. Μην χρησιμοποιείς την αγγλική φράση 'As of'.`
       : "Μην παρουσιάζεις την απάντηση ως τρέχουσα ή επαληθευμένη από πηγές. Αν αναφέρεις χρόνο, χρησιμοποίησε προσεκτική διατύπωση όπως 'Με βάση γενικές πληροφορίες που διαθέτει το μοντέλο'. Μην χρησιμοποιείς την αγγλική φράση 'As of'.";
 
   const groundingInstructions = grounded
@@ -532,9 +533,7 @@ export function registerAdvisorRoutes(app: Express) {
   app.get("/api/ai-advisor/health", (_req, res) => {
     res.json({
       ok: true,
-      configured: isAdvisorConfigured(),
-      grounding: isAdvisorGroundingConfigured(),
-      fallback: isAdvisorAnthropicConfigured(),
+      status: "ok",
     });
   });
 

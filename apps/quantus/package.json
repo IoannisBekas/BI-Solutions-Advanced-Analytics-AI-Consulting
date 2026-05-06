@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"tsx server/index.ts\" \"vite --port=3000 --host=0.0.0.0\" \"python main.py\"",
+    "dev": "concurrently \"tsx server/index.ts\" \"vite --port=3000 --host=127.0.0.1\" \"python main.py\"",
     "server": "tsx server/index.ts",
-    "client": "vite --port=3000 --host=0.0.0.0",
+    "client": "vite --port=3000 --host=127.0.0.1",
     "python": "python main.py",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
@@ -28,7 +28,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
-    "express-rate-limit": "^8.3.1",
+    "express-rate-limit": "^8.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.546.0",
@@ -62,6 +62,7 @@
     "workbox-window": "^7.4.0"
   },
   "overrides": {
+    "ip-address": "^10.2.0",
     "serialize-javascript": "^7.0.3"
   }
 }

@@ -29,14 +29,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Env name scan
+        run: npm run scan:env
+
+      - name: Encoding scan
+        run: npm run check:encoding
+
+      - name: Root dependency audit
+        run: npm audit --audit-level=moderate
+
       - name: Install Quantus dependencies
         run: |
           cd apps/quantus
           npm ci
           python -m pip install -r pipelines/requirements.txt
+          python -m pip install pip-audit
+
+      - name: Quantus dependency audit
+        run: |
+          cd apps/quantus
+          npm audit --audit-level=moderate
+          python -m pip_audit -r pipelines/requirements.txt
 
       - name: Install Power BI Solutions dependencies
         run: cd apps/powerbi-solutions && npm ci
+
+      - name: Power BI Solutions dependency audit
+        run: cd apps/powerbi-solutions && npm audit --audit-level=moderate
 
       - name: Typecheck root app
         run: npm run check

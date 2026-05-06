@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import helmet from 'helmet';
 import path from 'path';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
 import { GoogleGenAI } from '@google/genai';
 import { getMockReport } from './data/mockReports.ts';
@@ -50,6 +50,7 @@ if (isProduction && !process.env.JWT_SECRET) {
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-local-only-never-use-in-prod';
 const TOKEN_COOKIE_NAME = 'auth_token';
 const REQUEST_ID_HEADER = 'x-request-id';
+const REQUEST_ID_RE = /^[A-Za-z0-9._:-]{1,128}$/;
 const ALLOWED_ORIGINS = validateAllowedOrigins(
     (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5001,http://127.0.0.1:5001,http://127.0.0.1:3000')
         .split(','),
@@ -57,6 +58,22 @@ const ALLOWED_ORIGINS = validateAllowedOrigins(
 
 // ─── SECURITY MIDDLEWARE ────────────────────────────────────────────────────
 app.disable('x-powered-by');
+
+function readTrustProxyHops() {
+    const rawValue = process.env.TRUST_PROXY_HOPS?.trim() || (isProduction ? '1' : '0');
+    const hops = Number.parseInt(rawValue, 10);
+
+    if (!Number.isInteger(hops) || hops < 0 || hops > 5) {
+        throw new Error('TRUST_PROXY_HOPS must be an integer from 0 to 5');
+    }
+
+    return hops;
+}
+
+const trustProxyHops = readTrustProxyHops();
+if (trustProxyHops > 0) {
+    app.set('trust proxy', trustProxyHops);
+}
 app.use(
     helmet({
         contentSecurityPolicy: isProduction
@@ -64,11 +81,11 @@ app.use(
                 useDefaults: true,
                 directives: {
                     "img-src": ["'self'", 'data:', 'https:'],
-                    "script-src": ["'self'", "'unsafe-inline'"],
+                    "script-src": ["'self'", 'https://accounts.google.com'],
                     "style-src": ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
                     "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
-                    "frame-src": ["'self'", 'https://sslecal2.investing.com', 'https://sslecal2.forexprostools.com'],
-                    "child-src": ["'self'", 'https://sslecal2.investing.com', 'https://sslecal2.forexprostools.com'],
+                    "frame-src": ["'self'", 'https://accounts.google.com', 'https://sslecal2.investing.com', 'https://sslecal2.forexprostools.com'],
+                    "child-src": ["'self'", 'https://accounts.google.com', 'https://sslecal2.investing.com', 'https://sslecal2.forexprostools.com'],
                     "connect-src": ["'self'", ...ALLOWED_ORIGINS],
                 },
             }
@@ -78,10 +95,72 @@ app.use(
 );
 app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
+
+const stateChangingMethods = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+const sameOriginAllowlist = new Set([
+    ...ALLOWED_ORIGINS,
+    process.env.APP_URL?.trim() || '',
+].filter(Boolean));
+
+function readRequestOrigin(req: express.Request) {
+    const origin = req.header('origin')?.trim();
+    if (origin) {
+        return origin;
+    }
+
+    const referer = req.header('referer')?.trim();
+    if (!referer) {
+        return '';
+    }
+
+    try {
+        return new URL(referer).origin;
+    } catch {
+        return '';
+    }
+}
+
 app.use((req, res, next) => {
-    const requestId = req.header(REQUEST_ID_HEADER)?.trim()
+    if (!isProduction || !stateChangingMethods.has(req.method)) {
+        next();
+        return;
+    }
+
+    const requestOrigin = readRequestOrigin(req);
+    if (!requestOrigin || !sameOriginAllowlist.has(requestOrigin)) {
+        res.status(403).json({ error: 'Invalid request origin.' });
+        return;
+    }
+
+    next();
+});
+
+const privateApiPrefixes = [
+    `${API_PREFIX}/auth`,
+    `${API_PREFIX}/watchlist`,
+    `${API_PREFIX}/alerts`,
+    `${API_PREFIX}/report`,
+    `${API_PREFIX}/generate`,
+    `${API_PREFIX}/insights`,
+    `${API_PREFIX}/deepdive`,
+    `${API_PREFIX}/v1/push`,
+    `${API_PREFIX}/v1/track`,
+];
+
+app.use((req, res, next) => {
+    if (privateApiPrefixes.some((prefix) => req.path.startsWith(prefix))) {
+        res.setHeader('Cache-Control', 'no-store');
+    }
+    next();
+});
+
+app.use((req, res, next) => {
+    const candidateRequestId = req.header(REQUEST_ID_HEADER)?.trim()
         || req.header('request-id')?.trim()
-        || crypto.randomUUID();
+        || '';
+    const requestId = REQUEST_ID_RE.test(candidateRequestId)
+        ? candidateRequestId
+        : crypto.randomUUID();
 
     req.requestId = requestId;
     res.setHeader(REQUEST_ID_HEADER, requestId);
@@ -365,10 +444,16 @@ function buildRootAuthHeaderRecord(auth: RootAuthContext, includeJsonContentType
 }
 
 function buildPythonHeaders(req: express.Request, baseHeaders?: Record<string, string>) {
-    return {
+    const headers: Record<string, string> = {
         ...(baseHeaders ?? {}),
         [REQUEST_ID_HEADER]: getRequestId(req),
     };
+
+    if (QUANTUS_INTERNAL_KEY) {
+        headers[QUANTUS_INTERNAL_HEADER] = QUANTUS_INTERNAL_KEY;
+    }
+
+    return headers;
 }
 
 function getUpstreamSetCookies(upstream: globalThis.Response) {
@@ -408,6 +493,34 @@ function requireAuth(req: AuthenticatedRequest, res: express.Response, next: exp
 }
 
 app.use(optionalAuth);
+
+function authenticatedRateLimitKey(req: express.Request) {
+    const userId = (req as AuthenticatedRequest).user?.userId;
+    return userId ? `user:${userId}` : ipKeyGenerator(req.ip || '');
+}
+
+const authenticatedAiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 60,
+    keyGenerator: authenticatedRateLimitKey,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    message: { error: 'Account AI rate limit reached - try again in a few minutes.' },
+});
+
+const authenticatedReportLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 30,
+    keyGenerator: authenticatedRateLimitKey,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    message: { error: 'Account report rate limit reached - try again later.' },
+});
+
+app.use(`${API_PREFIX}/generate`, authenticatedAiLimiter);
+app.use(`${API_PREFIX}/insights`, authenticatedAiLimiter);
+app.use(`${API_PREFIX}/deepdive`, authenticatedAiLimiter);
+app.use(`${API_PREFIX}/report`, authenticatedReportLimiter);
 
 // ─── AUTH ENDPOINTS (proxy to root server — single DB writer) ───────────────
 // All auth mutations go through the root BI Solutions server at AUTH_API_TARGET
@@ -919,6 +1032,7 @@ async function callPythonPipeline(
             headers: {
                 Accept: 'application/json',
                 ...(options.requestId ? { [REQUEST_ID_HEADER]: options.requestId } : {}),
+                ...(QUANTUS_INTERNAL_KEY ? { [QUANTUS_INTERNAL_HEADER]: QUANTUS_INTERNAL_KEY } : {}),
             },
         });
         clearTimeout(timeout);
@@ -1290,20 +1404,20 @@ app.post(`${API_PREFIX}/generate`, requireAuth, async (req: AuthenticatedRequest
             return;
         }
 
-        const userTier = sanitizeQuantusUserTier(authState.user.tier);
-        const maxOutputTokens = getQuantusAiMaxOutputTokensForTier(userTier, 'report_generation');
-        const budgetReservation = await consumeAiBudget(authContext, 'report_generation', maxOutputTokens);
-        if (!budgetReservation.ok) {
-            res.status(budgetReservation.status).json(budgetReservation.data);
-            return;
-        }
-
         // Check for cached mock report
         const mockReport = getMockReport(ticker);
 
         if (mockReport) {
             // Return the full cached report immediately
             res.json({ cached: true, report: mockReport });
+            return;
+        }
+
+        const userTier = sanitizeQuantusUserTier(authState.user.tier);
+        const maxOutputTokens = getQuantusAiMaxOutputTokensForTier(userTier, 'report_generation');
+        const budgetReservation = await consumeAiBudget(authContext, 'report_generation', maxOutputTokens);
+        if (!budgetReservation.ok) {
+            res.status(budgetReservation.status).json(budgetReservation.data);
             return;
         }
 
@@ -1674,13 +1788,17 @@ app.get(`${API_PREFIX}/v1/python/health`, async (req, res) => {
             headers: buildPythonHeaders(req),
         });
         if (!response.ok) {
-            res.status(503).json({ status: 'down', error: response.statusText });
+            res.status(503).json({ status: 'down', requestId: getRequestId(req) });
             return;
         }
         const data = await response.json();
-        res.json({ status: 'up', ...data });
-    } catch (error: unknown) {
-        res.json({ status: 'down', error: getErrorMessage(error) });
+        res.json({
+            status: 'up',
+            timestamp: typeof data?.timestamp === 'string' ? data.timestamp : new Date().toISOString(),
+            requestId: getRequestId(req),
+        });
+    } catch {
+        res.status(503).json({ status: 'down', requestId: getRequestId(req) });
     }
 });
 

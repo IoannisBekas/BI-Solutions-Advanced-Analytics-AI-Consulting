@@ -12,10 +12,13 @@ Usage:
 from __future__ import annotations
 
 import logging
+import hmac
 import os
+import re
 import sys
 import time
 import uuid
+from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
@@ -33,10 +36,43 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 REQUEST_ID_HEADER = "x-request-id"
+REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
+QUANTUS_INTERNAL_HEADER = "x-quantus-internal-key"
+IS_PRODUCTION = os.getenv("NODE_ENV") == "production"
 
 
 def _read_env(name: str) -> str:
     return os.getenv(name, "").strip()
+
+
+def _read_internal_key() -> str:
+    key = _read_env("QUANTUS_INTERNAL_KEY")
+    if IS_PRODUCTION and len(key) < 32:
+        raise RuntimeError("QUANTUS_INTERNAL_KEY env var (min 32 chars) is required in production")
+    return key
+
+
+def _validate_allowed_origins(raw_origins: str) -> list[str]:
+    origins = [origin.strip() for origin in raw_origins.split(",") if origin.strip()]
+    if IS_PRODUCTION and not origins:
+        raise RuntimeError("ALLOWED_ORIGINS env var must be set in production")
+
+    for origin in origins:
+        if origin == "*":
+            raise RuntimeError("ALLOWED_ORIGINS must not contain wildcard '*' when credentials are enabled")
+        try:
+            from urllib.parse import urlparse
+            parsed = urlparse(origin)
+            if not parsed.scheme or not parsed.netloc:
+                raise ValueError("origin must include scheme and host")
+            if IS_PRODUCTION and parsed.scheme != "https":
+                raise ValueError("production origins must use https://")
+            if not parsed.hostname or "*" in parsed.hostname:
+                raise ValueError("origin host must be concrete")
+        except Exception as exc:
+            raise RuntimeError(f"Invalid ALLOWED_ORIGINS entry {origin!r}: {exc}") from exc
+
+    return origins
 
 
 def _build_runtime_config() -> dict[str, object]:
@@ -71,22 +107,30 @@ app = FastAPI(
     title="Quantus Research Solutions API",
     version="2.4.0",
     description="Python-side API for live quant pipeline execution and Claude narrative generation.",
+    docs_url=None if IS_PRODUCTION else "/docs",
+    redoc_url=None if IS_PRODUCTION else "/redoc",
+    openapi_url=None if IS_PRODUCTION else "/openapi.json",
 )
 
-_allowed_origins = [
-    origin.strip()
-    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:5001,http://localhost:3000").split(",")
-    if origin.strip()
-]
-if os.getenv("NODE_ENV") == "production" and not _allowed_origins:
-    raise RuntimeError("ALLOWED_ORIGINS env var must be set in production")
+_internal_key = _read_internal_key()
+_allowed_origins = _validate_allowed_origins(
+    os.getenv("ALLOWED_ORIGINS", "" if IS_PRODUCTION else "http://localhost:5001,http://localhost:3000")
+)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept", "Cache-Control", "Last-Event-Id", REQUEST_ID_HEADER],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Cache-Control",
+        "Last-Event-Id",
+        REQUEST_ID_HEADER,
+        QUANTUS_INTERNAL_HEADER,
+    ],
 )
 
 _runtime_config = _build_runtime_config()
@@ -99,11 +143,11 @@ if _runtime_config["missing_recommended_env"]:
 
 @app.middleware("http")
 async def attach_request_id(request: Request, call_next):
-    request_id = (
+    candidate_request_id = (
         request.headers.get(REQUEST_ID_HEADER, "").strip()
         or request.headers.get("request-id", "").strip()
-        or uuid.uuid4().hex
     )
+    request_id = candidate_request_id if REQUEST_ID_RE.fullmatch(candidate_request_id) else uuid.uuid4().hex
     request.state.request_id = request_id
     start = time.perf_counter()
 
@@ -118,6 +162,21 @@ async def attach_request_id(request: Request, call_next):
     response.headers[REQUEST_ID_HEADER] = request_id
     logger.info("[%s] %s %s %s in %sms", request_id, request.method, request.url.path, response.status_code, duration_ms)
     return response
+
+
+@app.middleware("http")
+async def require_internal_key(request: Request, call_next):
+    protected_path = request.url.path.startswith("/api/") or request.url.path.startswith("/webhooks/")
+    if protected_path and _internal_key:
+        provided = request.headers.get(QUANTUS_INTERNAL_HEADER, "")
+        if not hmac.compare_digest(provided, _internal_key):
+            from fastapi.responses import JSONResponse
+            return JSONResponse(status_code=403, content={"error": "Forbidden"})
+    elif protected_path and IS_PRODUCTION:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=403, content={"error": "Forbidden"})
+
+    return await call_next(request)
 
 # ---------------------------------------------------------------------------
 # Mount routers
@@ -147,14 +206,11 @@ async def search_tickers(q: str = "", limit: int = 5):
 # Health / status
 # ---------------------------------------------------------------------------
 @app.get("/health")
-async def health():
-    runtime_config = _build_runtime_config()
+async def health(request: Request):
     return {
         "status": "ok",
-        "engine": "Meridian v2.4",
-        "python_version": sys.version,
-        "allowed_origins": _allowed_origins,
-        **runtime_config,
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "requestId": getattr(request.state, "request_id", ""),
     }
 
 
@@ -165,5 +221,6 @@ if __name__ == "__main__":
     import uvicorn
 
     port = int(os.getenv("PYTHON_API_PORT", "8000"))
-    logger.info("Starting Quantus Python API on port %d", port)
-    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+    host = os.getenv("PYTHON_API_HOST") or ("127.0.0.1" if IS_PRODUCTION else "0.0.0.0")
+    logger.info("Starting Quantus Python API on %s:%d", host, port)
+    uvicorn.run(app, host=host, port=port, log_level="info")
