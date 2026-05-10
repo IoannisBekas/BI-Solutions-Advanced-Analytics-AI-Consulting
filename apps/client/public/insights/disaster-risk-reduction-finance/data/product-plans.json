@@ -1,0 +1,89 @@
+{
+  "billing": {
+    "status": "configuration_required",
+    "provider": "stripe_checkout",
+    "checkoutEndpoint": "",
+    "premiumApiBase": "",
+    "entitlementEndpoint": "",
+    "successPath": "./?checkout=success#premium-plans",
+    "cancelPath": "./?checkout=cancelled#premium-plans",
+    "securityNote": "Premium data must be served from an authenticated API. Do not commit restricted datasets into the static GitHub Pages bundle."
+  },
+  "plans": [
+    {
+      "id": "free",
+      "name": "Free",
+      "price": "$0",
+      "period": "",
+      "label": "Public edition",
+      "cta": "Use public dashboard",
+      "checkoutUrl": "",
+      "features": [
+        "Country risk, readiness, hazard, loss, and public finance indicators",
+        "Reported DRR-related ODA donor view from OECD CRS",
+        "World Bank, GCF, and OCHA public finance signals",
+        "Weekly automated refresh of public datasets"
+      ]
+    },
+    {
+      "id": "pro",
+      "name": "Pro",
+      "price": "$29",
+      "period": "per month",
+      "label": "Individual analyst",
+      "cta": "Request Pro access",
+      "checkoutUrl": "",
+      "features": [
+        "Country-level premium finance evidence pack",
+        "IATI activity and transaction ledger after de-duplication",
+        "Domestic budget and disaster-fund evidence links where available",
+        "CSV exports and saved country briefs"
+      ]
+    },
+    {
+      "id": "institution",
+      "name": "Institution",
+      "price": "$199",
+      "period": "per month",
+      "label": "Teams and research groups",
+      "cta": "Request institution access",
+      "checkoutUrl": "",
+      "features": [
+        "Team access for project and country screening",
+        "Premium API access for internal dashboards",
+        "Methodology notes for donor, budget, private, and mainstreamed DRR finance",
+        "Priority ingestion requests for country case studies"
+      ]
+    }
+  ],
+  "premiumModules": [
+    {
+      "id": "iati-ledger",
+      "title": "IATI activity ledger",
+      "tier": "Pro",
+      "description": "Activity-level finance records linked to recipient countries, donors, implementers, sectors, policy markers, and DRR/resilience keyword evidence.",
+      "caveat": "Requires de-duplication because publishers report at different transaction and activity levels."
+    },
+    {
+      "id": "domestic-budgets",
+      "title": "Domestic budget evidence",
+      "tier": "Pro",
+      "description": "Country evidence for national disaster funds, climate budget tagging, DRR budget lines, contingency funds, and Sendai-aligned expenditure documents.",
+      "caveat": "No single global dataset exists; coverage is country-by-country and confidence scored."
+    },
+    {
+      "id": "private-finance",
+      "title": "Private and co-finance signals",
+      "tier": "Pro",
+      "description": "Project document signals for private-sector resilience finance, insurer/reinsurer disclosures, GCF private-sector projects, and disclosed co-finance.",
+      "caveat": "This is evidence-linked project intelligence, not a complete private DRR finance total."
+    },
+    {
+      "id": "exports-api",
+      "title": "Exports and API",
+      "tier": "Institution",
+      "description": "Authenticated CSV exports and API responses for country profiles, donor breakdowns, project evidence, and source audit trails.",
+      "caveat": "Restricted records stay behind an entitlement-checked API, not in public static files."
+    }
+  ]
+}

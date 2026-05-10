@@ -1,0 +1,182 @@
+[
+  {
+    "id": "inform_risk_index",
+    "name": "INFORM Risk Index",
+    "publisher": "European Commission Joint Research Centre",
+    "url": "https://drmkc.jrc.ec.europa.eu/inform-index",
+    "access": "public_api",
+    "automation_status": "automated",
+    "geography": "country",
+    "role": "Country risk score, hazard and exposure, vulnerability, and lack of coping capacity."
+  },
+  {
+    "id": "world_risk_index",
+    "name": "WorldRiskIndex",
+    "publisher": "Buendnis Entwicklung Hilft / IFHV Ruhr University Bochum",
+    "url": "https://weltrisikobericht.de/worldriskreport/",
+    "access": "public_csv",
+    "automation_status": "automated",
+    "geography": "country-year",
+    "role": "Independent disaster risk index with exposure, vulnerability, susceptibility, coping, and adaptation dimensions."
+  },
+  {
+    "id": "oecd_crs_drr_related_oda",
+    "name": "OECD CRS DRR-related ODA",
+    "publisher": "Organisation for Economic Co-operation and Development",
+    "url": "https://data-explorer.oecd.org/",
+    "access": "public_sdmx_api",
+    "automation_status": "automated",
+    "geography": "donor-recipient country-year",
+    "role": "Official development assistance commitments and disbursements for CRS purpose codes 74010, 41050, and 41010."
+  },
+  {
+    "id": "world_bank_drm_projects",
+    "name": "World Bank Projects & Operations DRM project search",
+    "publisher": "World Bank",
+    "url": "https://datacatalog.worldbank.org/search/dataset/0037800",
+    "access": "public_api",
+    "automation_status": "automated",
+    "geography": "project and country",
+    "role": "Project-level examples and full commitment amounts for World Bank projects tagged or described around disaster risk management."
+  },
+  {
+    "id": "gcf_open_data_drr_resilience_projects",
+    "name": "Green Climate Fund Open Data Library DRR/resilience project screen",
+    "publisher": "Green Climate Fund",
+    "url": "https://data.greenclimate.fund/",
+    "access": "public_data_library",
+    "automation_status": "automated",
+    "geography": "project and country",
+    "role": "Country-linked GCF project signals selected by DRR/resilience tags and text, including GCF funding, co-finance, public/private sector, entities, and beneficiaries."
+  },
+  {
+    "id": "ocha_fts_humanitarian_response_funding",
+    "name": "OCHA Financial Tracking Service humanitarian response funding",
+    "publisher": "United Nations OCHA",
+    "url": "https://api.hpc.tools/docs/v1/",
+    "access": "public_api",
+    "automation_status": "automated",
+    "geography": "destination country-year",
+    "role": "Current-year humanitarian response funding by destination country, shown as response context rather than DRR prevention/preparedness spending."
+  },
+  {
+    "id": "thinkhazard",
+    "name": "ThinkHazard",
+    "publisher": "GFDRR / World Bank",
+    "url": "https://thinkhazard.org/",
+    "access": "public_api",
+    "automation_status": "automated",
+    "geography": "country and subnational",
+    "role": "Screening-level hazard classifications for flood, earthquake, cyclone, heat, wildfire, tsunami, water scarcity, landslide, volcano, and related hazards."
+  },
+  {
+    "id": "world_bank_idmc_disaster_displacement",
+    "name": "World Bank indicator VC.IDP.NWDS",
+    "publisher": "World Bank / IDMC",
+    "url": "https://data.worldbank.org/indicator/VC.IDP.NWDS",
+    "access": "public_api",
+    "automation_status": "automated",
+    "geography": "country",
+    "role": "New internal displacements associated with disasters."
+  },
+  {
+    "id": "nd_gain_country_index",
+    "name": "ND-GAIN Country Index",
+    "publisher": "University of Notre Dame",
+    "url": "https://gain-new.crc.nd.edu/about/download",
+    "access": "public_zip",
+    "automation_status": "automated",
+    "geography": "country",
+    "role": "Climate adaptation score, vulnerability, and readiness."
+  },
+  {
+    "id": "aqueduct_country_rankings",
+    "name": "Aqueduct 4.0 Country Rankings",
+    "publisher": "World Resources Institute",
+    "url": "https://www.wri.org/data/aqueduct-40-country-rankings",
+    "access": "public_zip",
+    "automation_status": "automated",
+    "geography": "country and province",
+    "role": "Baseline water stress, river flood risk, drought risk, and future water-stress projections."
+  },
+  {
+    "id": "owid_emdat_disaster_counts",
+    "name": "Our World in Data / EM-DAT disaster counts",
+    "publisher": "Our World in Data / EM-DAT",
+    "url": "https://ourworldindata.org/grapher/natural-disasters-by-type",
+    "access": "public_csv",
+    "automation_status": "automated",
+    "geography": "global time series",
+    "role": "Reported disaster counts by hazard type."
+  },
+  {
+    "id": "owid_emdat_economic_damage",
+    "name": "Our World in Data / EM-DAT economic damages",
+    "publisher": "Our World in Data / EM-DAT",
+    "url": "https://ourworldindata.org/grapher/economic-damage-from-natural-disasters",
+    "access": "public_csv",
+    "automation_status": "automated",
+    "geography": "global time series",
+    "role": "Global economic damage by disaster type."
+  },
+  {
+    "id": "owid_undrr_sendai_indicators",
+    "name": "Our World in Data / UNDRR Sendai indicators",
+    "publisher": "Our World in Data / UNDRR",
+    "url": "https://ourworldindata.org/grapher/legislative-provisions-for-managing-disaster-risk",
+    "access": "public_csv",
+    "automation_status": "automated",
+    "geography": "country",
+    "role": "Direct losses, national DRR strategy scores, and local government DRR strategy coverage."
+  },
+  {
+    "id": "emdat_full_export",
+    "name": "EM-DAT official event export",
+    "publisher": "CRED",
+    "url": "https://www.emdat.be/",
+    "access": "registration_required",
+    "automation_status": "manual_or_credentials_required",
+    "geography": "event and country",
+    "role": "Official event-level disaster loss records."
+  },
+  {
+    "id": "desinventar_delta",
+    "name": "DesInventar / DELTA Resilience",
+    "publisher": "UNDRR",
+    "url": "https://www.desinventar.net/",
+    "access": "fragmented_public_and_national_systems",
+    "automation_status": "manual_case_study_ingestion",
+    "geography": "subnational",
+    "role": "Subnational disaster loss records where country databases are available."
+  },
+  {
+    "id": "iati_activity_finance",
+    "name": "IATI activity and transaction data",
+    "publisher": "International Aid Transparency Initiative",
+    "url": "https://reference.iatistandard.org/en/iati-tools-and-resources/iati-datastore/how-to-use-the-datastore-api/",
+    "access": "api_key_required_for_supported_v3",
+    "automation_status": "methodology_backlog",
+    "geography": "activity, transaction, and recipient country",
+    "role": "Potential activity-level view of mainstreamed DRR and humanitarian/development finance after de-duplication across reporting organisations and transaction hierarchies."
+  },
+  {
+    "id": "domestic_drr_budgets",
+    "name": "Domestic public DRR budgets",
+    "publisher": "National governments and budget portals",
+    "url": "https://sendaimonitor.undrr.org/",
+    "access": "country_by_country_publication",
+    "automation_status": "manual_case_study_ingestion",
+    "geography": "country and administrative budget unit",
+    "role": "Domestic DRR spending where governments publish budget tags, disaster funds, climate budget tagging, or Sendai-linked expenditure documents."
+  },
+  {
+    "id": "private_drr_finance",
+    "name": "Private DRR and resilience finance",
+    "publisher": "Climate funds, insurers, companies, banks, and project sponsors",
+    "url": "https://data.greenclimate.fund/",
+    "access": "fragmented_public_disclosures",
+    "automation_status": "methodology_backlog",
+    "geography": "project and country",
+    "role": "Private-sector project and co-finance signals where public documents disclose resilience or DRR investment, not a complete total private finance measure."
+  }
+]

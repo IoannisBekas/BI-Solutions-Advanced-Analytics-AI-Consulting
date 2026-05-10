@@ -624,6 +624,12 @@ export function serveStatic(app: Express) {
     serveProductSpa(app, "/power-bi-solutions/workspace", powerBiDir);
   }
 
+  serveProductSpa(
+    app,
+    "/insights/disaster-risk-reduction-finance",
+    path.resolve(distPath, "insights", "disaster-risk-reduction-finance"),
+  );
+
   app.use(express.static(distPath, {
     index: false,
     redirect: false,

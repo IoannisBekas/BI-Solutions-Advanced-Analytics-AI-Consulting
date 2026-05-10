@@ -13,6 +13,10 @@ apps/client/public/quantus-app/
 
 # Runtime data & caches
 data/
+!apps/client/public/insights/
+!apps/client/public/insights/**/
+!apps/client/public/insights/**/data/
+!apps/client/public/insights/**/data/**
 attached_assets/
 apps/quantus/models/saved/
 **/__pycache__/
