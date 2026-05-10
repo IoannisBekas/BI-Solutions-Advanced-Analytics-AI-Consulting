@@ -13,6 +13,13 @@ import { Link } from "wouter";
 
 const latestInsights = [
   {
+    slug: "disaster-risk-reduction-finance-dashboard-launch",
+    title: "Launching the Disaster Risk Reduction Finance Dashboard",
+    excerpt:
+      "A new BI Solutions dashboard brings together country risk, readiness, loss, hazard, and public finance signals for DRR analysis.",
+    category: "Data Strategy",
+  },
+  {
     slug: "website-web-app-development-greece-business-needs",
     title: "Website & Web App Development in Greece: What Businesses Actually Need",
     excerpt:
@@ -32,13 +39,6 @@ const latestInsights = [
     excerpt:
       "Useful AI consulting starts with controlled workflows, practical use cases, data boundaries, and adoption habits.",
     category: "AI & Technology",
-  },
-  {
-    slug: "data-strategy-before-ai-better-foundations",
-    title: "Data Strategy Before AI: Why Companies Need Better Foundations First",
-    excerpt:
-      "AI projects depend on data foundations. Ownership, quality, access rules, and governance make AI easier to trust.",
-    category: "Data Strategy",
   },
 ];
 

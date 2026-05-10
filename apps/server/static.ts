@@ -45,6 +45,10 @@ function setStaticCacheHeaders(res: Response, filePath: string) {
 
 // Blog post meta - keep in sync with client/src/data/blogData.ts
 const blogPostMeta: Record<string, { title: string; description: string }> = {
+  "disaster-risk-reduction-finance-dashboard-launch": {
+    title: "Launching the Disaster Risk Reduction Finance Dashboard",
+    description: "BI Solutions has launched an interactive DRR finance dashboard combining country risk, readiness, loss, hazard, and public finance signals from open global datasets.",
+  },
   "website-web-app-development-greece-business-needs": {
     title: "Website & Web App Development in Greece: What Businesses Actually Need",
     description: "A practical view of what Greek businesses should expect from modern website and web app development: positioning, speed, conversion paths, analytics, and maintainable delivery.",
