@@ -1,48 +1,84 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, Loader2, User, Briefcase, Scale, Calculator } from "lucide-react";
+import { Send, Bot, Loader2, Briefcase, Scale, Calculator, Languages, ShieldCheck, TriangleAlert, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-const roles = [
-  { id: "accountant", label: "Λογιστής", icon: Calculator, color: "bg-blue-100 text-blue-600" },
-  { id: "lawyer", label: "Δικηγόρος", icon: Scale, color: "bg-amber-100 text-amber-600" },
-  { id: "consultant", label: "Σύμβουλος", icon: Briefcase, color: "bg-emerald-100 text-emerald-600" },
-];
+type AdvisorRoleId = "accountant" | "lawyer" | "consultant";
+type AdvisorLanguage = "greek" | "english";
+type AdvisorVerification = "grounded" | "unverified";
+type AdvisorConfidence = "high" | "medium" | "low";
 
-const mockResponses: Record<string, string[]> = {
-  accountant: [
-    "Σύμφωνα με τον Κώδικα Φορολογίας Εισοδήματος (Ν. 4172/2013), οι δαπάνες αυτές εκπίπτουν εφόσον πραγματοποιούνται προς το συμφέρον της επιχείρησης.",
-    "Για την έναρξη ατομικής επιχείρησης απαιτείται εγγραφή στο ΓΕΜΗ και απόδοση ΑΦΜ από την αρμόδια ΔΟΥ.",
-    "Ο συντελεστής ΦΠΑ για την κατηγορία αυτή ανέρχεται στο 24%, εκτός αν υπάγεται στις εξαιρέσεις του άρθρου 21."
-  ],
-  lawyer: [
-    "Βάσει του Αστικού Κώδικα, η σύμβαση αυτή απαιτεί έγγραφο τύπο για να είναι έγκυρη.",
-    "Η προθεσμία για την άσκηση του ενδίκου μέσου είναι 30 ημέρες από την επίδοση της απόφασης.",
-    "Το άρθρο 57 του ΑΚ προστατεύει την προσωπικότητα από προσβολές, παρέχοντας δικαίωμα για άρση της προσβολής και αποζημίωση."
-  ],
-  consultant: [
-    "Για την βελτιστοποίηση της ροής εργασιών, προτείνουμε την εφαρμογή της μεθοδολογίας Lean Management.",
-    "Η ανάλυση SWOT δείχνει ότι υπάρχει σημαντική ευκαιρία ανάπτυξης στις νέες αγορές της Νοτιοανατολικής Ευρώπης.",
-    "Η στρατηγική τοποθέτηση του προϊόντος απαιτεί επαναξιολόγηση της τιμολογιακής πολιτικής βάσει του ανταγωνισμού."
-  ]
+type AdvisorSource = {
+  title: string;
+  uri: string;
 };
 
+type AdvisorResponse = {
+  success?: boolean;
+  answer?: string;
+  sources?: AdvisorSource[];
+  verification?: AdvisorVerification;
+  asOf?: string | null;
+  confidence?: AdvisorConfidence;
+  requiresReview?: boolean;
+  refusalReason?: string | null;
+  error?: string;
+  message?: string;
+};
+
+const roles: Array<{ id: AdvisorRoleId; label: string; englishLabel: string; icon: typeof Calculator }> = [
+  { id: "accountant", label: "Λογιστής", englishLabel: "accountant", icon: Calculator },
+  { id: "lawyer", label: "Δικηγόρος", englishLabel: "lawyer", icon: Scale },
+  { id: "consultant", label: "Σύμβουλος", englishLabel: "consultant", icon: Briefcase },
+];
+
+const languages: Array<{ id: AdvisorLanguage; label: string }> = [
+  { id: "greek", label: "EL" },
+  { id: "english", label: "EN" },
+];
+
+function getAdvisorError(data: AdvisorResponse, status: number) {
+  if (typeof data.error === "string" && data.error.trim()) {
+    return data.error;
+  }
+  if (typeof data.message === "string" && data.message.trim()) {
+    return data.message;
+  }
+  if (status === 429) {
+    return "Rate limit reached. Please wait a moment and try again.";
+  }
+  return "Unable to process your request. Please try again.";
+}
+
 export function AIAdvisor() {
-  const [selectedRole, setSelectedRole] = useState(roles[0].id);
+  const [selectedRole, setSelectedRole] = useState<AdvisorRoleId>(roles[0].id);
+  const [language, setLanguage] = useState<AdvisorLanguage>("greek");
   const [question, setQuestion] = useState("");
-  const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<AdvisorResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+  const selectedRoleMeta = roles.find(r => r.id === selectedRole) || roles[0];
+
+  useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
 
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setIsLoading(true);
     setResponse(null);
+    setError(null);
 
     try {
       const res = await fetch("/api/ai-advisor", {
@@ -53,21 +89,33 @@ export function AIAdvisor() {
         body: JSON.stringify({
           role: selectedRole,
           question: question.trim(),
+          language,
         }),
+        signal: controller.signal,
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({})) as AdvisorResponse;
 
-      if (data.success) {
-        setResponse(data.answer);
-      } else {
-        setResponse("Unable to process your request. Please try again.");
+      if (!res.ok || !data.success || typeof data.answer !== "string") {
+        setError(getAdvisorError(data, res.status));
+        return;
       }
+
+      setResponse({
+        ...data,
+        sources: Array.isArray(data.sources) ? data.sources : [],
+      });
     } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
       console.error("AI Advisor error:", error);
-      setResponse("Network error. Please check your connection and try again.");
+      setError("Network error. Please check your connection and try again.");
     } finally {
-      setIsLoading(false);
+      if (abortRef.current === controller) {
+        abortRef.current = null;
+        setIsLoading(false);
+      }
     }
   };
 
@@ -104,6 +152,7 @@ export function AIAdvisor() {
                     onClick={() => {
                       setSelectedRole(role.id);
                       setResponse(null);
+                      setError(null);
                     }}
                     className={cn(
                       "flex flex-col md:flex-row items-center justify-center gap-2 py-3 md:py-4 px-2 rounded-lg transition-all duration-300 relative overflow-hidden",
@@ -123,6 +172,36 @@ export function AIAdvisor() {
               })}
             </div>
 
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <Languages className="w-4 h-4" />
+                <span>Response language</span>
+              </div>
+              <div className="inline-flex w-fit rounded-lg bg-gray-100 p-1">
+                {languages.map((item) => {
+                  const isSelected = language === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setLanguage(item.id);
+                        setResponse(null);
+                        setError(null);
+                      }}
+                      className={cn(
+                        "h-8 min-w-12 rounded-md px-3 text-sm font-semibold transition-colors",
+                        isSelected ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-gray-800",
+                      )}
+                      aria-pressed={isSelected}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Chat Interface */}
             <div className="flex flex-col gap-6">
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -130,7 +209,9 @@ export function AIAdvisor() {
                   <Input
                     value={question}
                     onChange={(e) => setQuestion(e.target.value)}
-                    placeholder={`Ask the ${roles.find(r => r.id === selectedRole)?.label}...`}
+                    placeholder={language === "english"
+                      ? `Ask the ${selectedRoleMeta.englishLabel}...`
+                      : `Ρωτήστε τον/την ${selectedRoleMeta.label}...`}
                     className="h-14 pl-4 pr-14 text-lg bg-white border-gray-200 focus:ring-black/10 focus:border-black transition-all rounded-xl shadow-sm"
                   />
                   <Button 
@@ -145,7 +226,7 @@ export function AIAdvisor() {
               </form>
 
               <AnimatePresence mode="wait">
-                {response && (
+                {(response || error) && (
                   <motion.div
                     initial={{ opacity: 0, height: 0, y: 20 }}
                     animate={{ opacity: 1, height: "auto", y: 0 }}
@@ -156,16 +237,76 @@ export function AIAdvisor() {
                     <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 relative">
                       <div className="absolute top-0 left-0 w-1 h-full bg-black/10" />
                       <div className="flex gap-4">
-                        <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mt-1">
-                          <Bot className="w-4 h-4" />
+                        <div className={cn(
+                          "w-8 h-8 rounded-full text-white flex items-center justify-center flex-shrink-0 mt-1",
+                          error ? "bg-red-600" : "bg-black",
+                        )}>
+                          {error ? <TriangleAlert className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-3 min-w-0">
                           <p className="font-semibold text-sm text-gray-500 uppercase tracking-wider">
-                            AI Response ({roles.find(r => r.id === selectedRole)?.label})
+                            AI Response ({selectedRoleMeta.label})
                           </p>
-                          <p className="text-gray-800 leading-relaxed text-lg">
-                            {response}
-                          </p>
+                          {error ? (
+                            <p className="text-gray-800 leading-relaxed text-lg">
+                              {error}
+                            </p>
+                          ) : response && (
+                            <>
+                              <div className="flex flex-wrap items-center gap-2 text-xs">
+                                <span className={cn(
+                                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-medium",
+                                  response.verification === "grounded"
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : "bg-amber-100 text-amber-700",
+                                )}>
+                                  {response.verification === "grounded"
+                                    ? <ShieldCheck className="w-3.5 h-3.5" />
+                                    : <TriangleAlert className="w-3.5 h-3.5" />}
+                                  {response.verification === "grounded" ? "Official sources verified" : "Needs current-source review"}
+                                </span>
+                                {response.asOf && (
+                                  <span className="rounded-full bg-white px-2.5 py-1 font-medium text-gray-600 border border-gray-200">
+                                    As of {response.asOf}
+                                  </span>
+                                )}
+                                {response.confidence && (
+                                  <span className="rounded-full bg-white px-2.5 py-1 font-medium text-gray-600 border border-gray-200">
+                                    Confidence {response.confidence}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-gray-800 leading-relaxed text-lg whitespace-pre-line">
+                                {response.answer}
+                              </p>
+                              {(response.requiresReview || response.refusalReason) && (
+                                <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                                  {response.refusalReason || "Review this answer against current official sources before acting."}
+                                </p>
+                              )}
+                              {response.sources && response.sources.length > 0 && (
+                                <div className="pt-1">
+                                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                    Sources
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {response.sources.map((source) => (
+                                      <a
+                                        key={source.uri}
+                                        href={source.uri}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-flex max-w-full items-center gap-1 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black"
+                                      >
+                                        <span className="truncate">{source.title || source.uri}</span>
+                                        <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>

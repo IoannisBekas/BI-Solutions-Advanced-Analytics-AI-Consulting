@@ -10,6 +10,8 @@ apps/quantus/dev-dist/
 apps/powerbi-solutions/dist/
 apps/server/public
 apps/client/public/quantus-app/
+output/
+output_*
 
 # Runtime data & caches
 data/
@@ -41,6 +43,8 @@ test-results/
 build_log.txt
 
 # Editor / OS
+.claude/
+**/.claude/
 .DS_Store
 desktop.ini
 vite.config.ts.*

@@ -14,6 +14,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import chaniaTax1 from "@/assets/partnerships/chania_tax_1.png";
 import chaniaTax2 from "@/assets/partnerships/chania_tax_2.png";
 import chaniaTax3 from "@/assets/partnerships/chania_tax_3.png";
@@ -42,6 +43,7 @@ const projects = [
     id: 4,
     title: "Chania Tax IKE",
     category: "Strategic partnership",
+    mediaKind: "photo",
     images: [chaniaTax1, chaniaTax2, chaniaTax3, chaniaTax4],
     description:
       "A strategic partnership with the CEO of Chania Tax IKE, Mr Antonakakis, driving digital transformation in the financial sector. The work included secure cloud infrastructure, automated reporting systems, and analytics delivery to improve operational efficiency and decision-making.",
@@ -51,6 +53,7 @@ const projects = [
     id: 1,
     title: "UNICEF Audit Reports Dashboard",
     category: "Risk management and strategy",
+    mediaKind: "dashboard",
     images: [unicefDashboard],
     description:
       "A comprehensive oversight tool for Member States and senior management to track country-office audits and strengthen the visibility of audit activity across the organization.",
@@ -60,6 +63,7 @@ const projects = [
     id: 2,
     title: "IAEA Scientific Analysis",
     category: "Data science and laboratory networks",
+    mediaKind: "dashboard",
     images: [iaeaDashboard],
     description:
       "A global water analysis laboratory network dashboard tracking isotope types, measurement accuracy, and result quality for scientific monitoring and reporting.",
@@ -69,6 +73,7 @@ const projects = [
     id: 3,
     title: "IFC Talent Strategy",
     category: "HR analytics and operations",
+    mediaKind: "dashboard",
     images: [ifcDashboard],
     description:
       "A strategic HR dashboard analyzing global talent acquisition, application sources, and gender distribution to support workforce planning and leadership decisions.",
@@ -221,26 +226,38 @@ function ProjectCard({
   }, [emblaApi, onSelect]);
 
   const hasMultipleImages = project.images.length > 1;
+  const isDashboard = project.mediaKind === "dashboard";
 
   return (
     <ScrollReveal delay={index * 0.08} width="100%">
-      <article className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
+      <article className="overflow-hidden rounded-[1.75rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
         <div className={`flex flex-col ${reversed ? "lg:flex-row-reverse" : "lg:flex-row"}`}>
-          <div className="relative lg:w-[56%]">
-            <div className="absolute left-5 top-5 z-10 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-gray-600 shadow-sm">
-              {project.category}
-            </div>
-            <div className="overflow-hidden bg-gray-100" ref={emblaRef}>
+          <div
+            className={cn(
+              "relative lg:w-[58%]",
+              isDashboard ? "bg-slate-950 p-3 sm:p-4" : "bg-gray-100 p-2 sm:p-3",
+            )}
+          >
+            <div className="overflow-hidden rounded-[1.35rem]" ref={emblaRef}>
               <div className="flex">
                 {project.images.map((image, imageIndex) => (
                   <div
                     key={imageIndex}
-                    className="relative min-w-0 flex-[0_0_100%] aspect-[16/10]"
+                    className={cn(
+                      "relative min-w-0 flex-[0_0_100%]",
+                      isDashboard ? "aspect-[16/9]" : "aspect-[16/10]",
+                    )}
                   >
                     <img
                       src={image}
                       alt={`${project.title} preview ${imageIndex + 1}`}
-                      className="h-full w-full object-cover"
+                      loading={imageIndex === 0 ? "eager" : "lazy"}
+                      className={cn(
+                        "h-full w-full",
+                        isDashboard
+                          ? "bg-slate-950 object-contain shadow-[0_16px_50px_rgba(15,23,42,0.28)] ring-1 ring-white/10"
+                          : "object-cover object-center shadow-[0_16px_45px_rgba(15,23,42,0.14)]",
+                      )}
                     />
                   </div>
                 ))}
@@ -251,19 +268,19 @@ function ProjectCard({
               <>
                 <button
                   onClick={scrollPrev}
-                  className="absolute left-5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lg transition-colors hover:bg-white"
+                  className="absolute left-6 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lg transition-colors hover:bg-white"
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   onClick={scrollNext}
-                  className="absolute right-5 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lg transition-colors hover:bg-white"
+                  className="absolute right-6 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lg transition-colors hover:bg-white"
                   aria-label="Next image"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
-                <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+                <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
                   {project.images.map((_, imageIndex) => (
                     <button
                       key={imageIndex}
@@ -281,10 +298,13 @@ function ProjectCard({
             ) : null}
           </div>
 
-          <div className="flex lg:w-[44%]">
+          <div className="flex lg:w-[42%]">
             <div className="flex flex-1 flex-col justify-between px-6 py-8 md:px-8">
               <div>
-                <h3 className="text-3xl font-bold font-heading tracking-tight text-gray-950 md:text-4xl">
+                <p className="inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                  {project.category}
+                </p>
+                <h3 className="mt-4 text-3xl font-bold font-heading tracking-tight text-gray-950 md:text-4xl">
                   {project.title}
                 </h3>
                 <p className="mt-5 text-base leading-relaxed text-gray-600">

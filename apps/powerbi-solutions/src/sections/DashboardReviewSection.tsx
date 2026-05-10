@@ -43,17 +43,23 @@ export function DashboardReviewSection({ result, onReviewComplete, sectionRef }:
   const [reviewCooldown, setReviewCooldown] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const previewUrlsRef = useRef<Set<string>>(new Set());
+  const isMountedRef = useRef(true);
 
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: uploadRef, isVisible: uploadVisible } = useScrollAnimation<HTMLDivElement>();
 
   // Cleanup object URLs on unmount
   useEffect(() => {
+    isMountedRef.current = true;
+    const previewUrls = previewUrlsRef.current;
+
     return () => {
-      images.forEach(img => URL.revokeObjectURL(img.previewUrl));
+      isMountedRef.current = false;
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+      previewUrls.clear();
       abortRef.current?.abort();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -95,21 +101,60 @@ export function DashboardReviewSection({ result, onReviewComplete, sectionRef }:
       }
 
       // Process files asynchronously then update state
-      Promise.all(
+      Promise.allSettled(
         toAdd.map(async (file): Promise<DashboardImage> => {
           const base64 = await fileToBase64(file);
+          if (!isMountedRef.current) {
+            throw new Error('Upload cancelled');
+          }
+          const previewUrl = URL.createObjectURL(file);
+          previewUrlsRef.current.add(previewUrl);
           return {
             id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             file,
             base64,
             mediaType: ACCEPTED_TYPES[file.type],
-            previewUrl: URL.createObjectURL(file),
+            previewUrl,
           };
         })
-      ).then(newImages => {
-        setImages(current => [...current, ...newImages].slice(0, MAX_IMAGES));
+      ).then(results => {
+        const newImages = results
+          .filter((item): item is PromiseFulfilledResult<DashboardImage> => item.status === 'fulfilled')
+          .map(item => item.value);
+        const failedCount = results.length - newImages.length;
+
+        if (!isMountedRef.current) {
+          newImages.forEach(img => {
+            URL.revokeObjectURL(img.previewUrl);
+            previewUrlsRef.current.delete(img.previewUrl);
+          });
+          return;
+        }
+
+        if (failedCount > 0) {
+          toast.error(`Failed to process ${failedCount} image${failedCount > 1 ? 's' : ''}.`);
+        }
+
+        if (newImages.length === 0) {
+          return;
+        }
+
+        setImages(current => {
+          const remaining = MAX_IMAGES - current.length;
+          const acceptedImages = newImages.slice(0, Math.max(0, remaining));
+          const skippedImages = newImages.slice(acceptedImages.length);
+
+          skippedImages.forEach(img => {
+            URL.revokeObjectURL(img.previewUrl);
+            previewUrlsRef.current.delete(img.previewUrl);
+          });
+
+          return [...current, ...acceptedImages];
+        });
       }).catch(() => {
-        toast.error('Failed to process one or more images.');
+        if (isMountedRef.current) {
+          toast.error('Failed to process one or more images.');
+        }
       });
 
       return prev; // Return prev immediately; async update follows
@@ -119,7 +164,10 @@ export function DashboardReviewSection({ result, onReviewComplete, sectionRef }:
   const removeImage = useCallback((id: string) => {
     setImages(prev => {
       const img = prev.find(i => i.id === id);
-      if (img) URL.revokeObjectURL(img.previewUrl);
+      if (img) {
+        URL.revokeObjectURL(img.previewUrl);
+        previewUrlsRef.current.delete(img.previewUrl);
+      }
       return prev.filter(i => i.id !== id);
     });
   }, []);

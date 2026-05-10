@@ -41,6 +41,13 @@ The repository currently ships three product surfaces:
    - Production URL family:
      - `https://www.bisolutions.group/power-bi-solutions/`
 
+### Canonical public host
+
+- The canonical public host is `https://www.bisolutions.group`.
+- Engineers should not emit new absolute links that target `https://bisolutions.group` for product routes.
+- As of 2026-04-19, the apex host `https://bisolutions.group` is externally forwarded by Squarespace and currently drops subpaths like `/quantus/workspace/` instead of preserving them.
+- Repo-side redirects exist if apex traffic reaches the Express app, but the durable fix for apex path preservation is infrastructure-level, not application-level.
+
 ## Runtime Topology
 
 Production runs as a single Railway deployment that starts three services inside one container.
@@ -403,6 +410,12 @@ Observed non-issues:
 - no Sector Packs `502`
 - no Quantus startup crash
 
+Observed live routing constraint:
+
+- `https://www.bisolutions.group/quantus/workspace/` renders correctly in a clean browser session
+- `https://bisolutions.group/quantus/workspace/` is not a valid product entrypoint today because the current apex-domain forward strips the path and sends users to `https://www.bisolutions.group`
+- If users report a blank page while the address bar still shows the apex host, clear site data/service workers for `bisolutions.group` first, then verify the apex-domain forwarding rule outside the repo
+
 ## Known Engineering Rules
 
 1. Do not bypass root persistence ownership.
@@ -429,6 +442,7 @@ Recent engineering changes already reflected in this repo:
 - Quantus accuracy gate now shows anonymized preview rows
 - Quantus AI usage budgets persisted and enforced
 - referral signup credit flow made transactional
+- Quantus referral links normalized to the `www` canonical host
 - root CI workflow added
 - Power BI frontend refinements shipped alongside the latest release
 
