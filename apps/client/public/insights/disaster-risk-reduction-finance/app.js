@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-11-faq";
+const ASSET_VERSION = "2026-05-11-nav-cleanup";
 
 (async function init() {
   const [data, world, product, validation] = await Promise.all([
@@ -24,10 +24,17 @@ const ASSET_VERSION = "2026-05-11-faq";
 
   populateCountrySelect(state);
   renderAll(state);
+  updateStickyNavOffset();
   attachDashboardActions(state);
   attachQuestionBar(state);
   restoreInitialHashScroll();
-  window.addEventListener("resize", debounce(() => renderCharts(state), 150));
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      renderCharts(state);
+      updateStickyNavOffset();
+    }, 150),
+  );
   window.addEventListener("scroll", hideTooltip, { passive: true });
 })();
 
@@ -240,9 +247,13 @@ function renderHeader(data) {
   const published = data.informWorkflow.publishedAt
     ? formatDate(data.informWorkflow.publishedAt)
     : "latest available";
+  const sourceCount = Array.isArray(data.sources) ? data.sources.length : 0;
+  const countryCount = data.summary?.countryCount || data.countries?.length || 0;
   document.querySelector("#data-edition").textContent = `${data.informWorkflow.name}`;
+  document.querySelector("#header-country-count").textContent = `${fmtNumber(countryCount)} countries`;
+  document.querySelector("#header-source-count").textContent = `${fmtNumber(sourceCount)} public sources`;
   document.querySelector("#data-note").textContent =
-    `INFORM published ${published}. Dashboard generated ${formatDate(data.generatedAt)}.`;
+    `INFORM published ${published}. Generated ${formatDate(data.generatedAt)}.`;
 }
 
 function renderKpis(data) {
@@ -311,7 +322,7 @@ function renderTimeframeNotes(data) {
   );
   setInfoNote(
     "#events-note",
-    `<strong>Timeframe:</strong> annual EM-DAT-derived event counts for ${escapeHtml(disasterRange)}; the headline KPI uses ${latestEvents}. <strong>How to read it:</strong> stacked areas show reported disaster counts by hazard type, so a taller year means more recorded events, not necessarily larger losses.`,
+    `<strong>Timeframe:</strong> annual EM-DAT-derived event counts for ${escapeHtml(disasterRange)}; the headline KPI uses ${latestEvents}. <strong>How to read it:</strong> stacked areas show reported disaster counts by hazard type, so the left axis is the total stacked count. Right-side layer labels identify hazard bands; the numeric callout is the latest total.`,
   );
   setInfoNote(
     "#damage-note",
@@ -480,6 +491,7 @@ function setSelectedCountry(state, iso3, options = {}) {
   hideTooltip();
 
   if (options.scrollToCountry) {
+    updateStickyNavOffset();
     document.querySelector("#country-view")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
@@ -571,9 +583,13 @@ function syncCountryFilterLabel(countryOrLabel) {
 
 function updateCountryDatalist(state, continent = "") {
   const datalist = document.querySelector("#country-options");
-  if (!datalist) return;
   const countries = countriesForContinent(state.data.countries, continent);
-  datalist.innerHTML = countries
+  if (datalist) datalist.innerHTML = countryOptionHtml(countries);
+
+}
+
+function countryOptionHtml(countries) {
+  return countries
     .map(
       (country) =>
         `<option value="${escapeHtml(country.name)}" label="${escapeHtml(`${countryContinent(country)} - ${country.iso3}`)}"></option>`,
@@ -722,6 +738,7 @@ function normalizeSearch(value) {
 }
 
 function restoreInitialHashScroll() {
+  updateStickyNavOffset();
   scrollToInitialHash();
   requestAnimationFrame(() => requestAnimationFrame(scrollToInitialHash));
   window.setTimeout(scrollToInitialHash, 120);
@@ -732,10 +749,19 @@ function scrollToInitialHash() {
   if (!id) return;
   const target = document.getElementById(id);
   if (!target) return;
+  updateStickyNavOffset();
   const previousScrollBehavior = document.documentElement.style.scrollBehavior;
   document.documentElement.style.scrollBehavior = "auto";
   target.scrollIntoView({ block: "start" });
   document.documentElement.style.scrollBehavior = previousScrollBehavior;
+}
+
+function updateStickyNavOffset() {
+  const nav = document.querySelector(".section-nav");
+  if (!nav) return;
+  const position = window.getComputedStyle(nav).position;
+  const offset = position === "sticky" ? Math.ceil(nav.getBoundingClientRect().height + 24) : 24;
+  document.documentElement.style.setProperty("--sticky-nav-offset", `${offset}px`);
 }
 
 function renderTrustStatus(state) {
@@ -2116,22 +2142,35 @@ function drawEvents(selector, series) {
   const margin = { top: 16, right: compact ? 18 : 122, bottom: 36, left: 48 };
   container.selectAll("*").remove();
 
-  const hazardOrder = ["Flood", "Extreme weather", "Earthquake", "Drought", "Extreme temperature", "Wildfire"];
+  const hazardOrder = [
+    "Flood",
+    "Extreme weather",
+    "Earthquake",
+    "Wildfire",
+    "Landslide",
+    "Drought",
+    "Volcanic activity",
+    "Extreme temperature",
+  ];
   const labels = new Map([
     ["Flood", "Floods"],
     ["Extreme weather", "Extreme weather"],
     ["Earthquake", "Earthquakes"],
-    ["Drought", "Droughts"],
-    ["Extreme temperature", "Extreme temperatures"],
     ["Wildfire", "Wildfires"],
+    ["Landslide", "Landslides"],
+    ["Drought", "Droughts"],
+    ["Volcanic activity", "Volcanic activity"],
+    ["Extreme temperature", "Extreme temperatures"],
   ]);
   const colors = new Map([
     ["Flood", THEME.greenDark],
     ["Extreme weather", THEME.greenLight],
     ["Earthquake", THEME.ink],
-    ["Drought", THEME.warm],
-    ["Extreme temperature", THEME.redDark],
-    ["Wildfire", THEME.greenDark],
+    ["Wildfire", THEME.redDark],
+    ["Landslide", THEME.warm],
+    ["Drought", "rgba(191, 141, 113, 0.58)"],
+    ["Volcanic activity", "rgba(17, 17, 17, 0.56)"],
+    ["Extreme temperature", "rgba(64, 6, 6, 0.7)"],
   ]);
   const filtered = series.filter((row) => hazardOrder.includes(row.type));
   const byYear = d3.rollups(
@@ -2177,24 +2216,41 @@ function drawEvents(selector, series) {
         const value = point ? point[1] - point[0] : 0;
         return {
           key: layer.key,
-          label: labels.get(layer.key) || layer.key,
+          text: labels.get(layer.key) || layer.key,
           color: colors.get(layer.key),
           value,
           x: x(point.data.year),
           y: y((point[0] + point[1]) / 2),
+          kind: "layer",
         };
       })
       .filter((item) => item.value > 0)
       .sort((a, b) => b.value - a.value)
       .slice(0, 5);
-    placeVerticalLabels(endLabels, margin.top + 8, height - margin.bottom - 8, 16);
+    const latestRow = table[table.length - 1];
+    const latestTotal = latestRow ? d3.sum(hazardOrder, (key) => latestRow[key] || 0) : 0;
+    const labelsToPlace = [
+      ...endLabels,
+      latestRow && latestTotal > 0
+        ? {
+            key: "Total",
+            text: `Total ${latestRow.year}: ${fmtNumber(latestTotal)}`,
+            color: THEME.ink,
+            value: latestTotal,
+            x: x(latestRow.year),
+            y: y(latestTotal),
+            kind: "total",
+          }
+        : null,
+    ].filter(Boolean);
+    placeVerticalLabels(labelsToPlace, margin.top + 8, height - margin.bottom - 8, 16);
 
     const labelGroup = svg.append("g").attr("class", "chart-labels endpoint-labels");
     labelGroup
       .selectAll("line")
-      .data(endLabels)
+      .data(labelsToPlace)
       .join("line")
-      .attr("class", "label-connector")
+      .attr("class", (item) => `label-connector${item.kind === "total" ? " total-connector" : ""}`)
       .attr("x1", (item) => item.x + 2)
       .attr("y1", (item) => item.y)
       .attr("x2", (item) => item.x + 14)
@@ -2203,13 +2259,13 @@ function drawEvents(selector, series) {
 
     labelGroup
       .selectAll("text")
-      .data(endLabels)
+      .data(labelsToPlace)
       .join("text")
-      .attr("class", "chart-label endpoint-label")
+      .attr("class", (item) => `chart-label endpoint-label${item.kind === "total" ? " total-endpoint-label" : ""}`)
       .attr("x", (item) => item.x + 18)
       .attr("y", (item) => item.labelY + 4)
       .attr("fill", (item) => item.color)
-      .text((item) => `${item.label} ${fmtNumber(item.value)}`);
+      .text((item) => item.text);
   }
 
   svg

@@ -33,7 +33,7 @@
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <meta name="twitter:image:alt" content="Disaster Risk Reduction dashboard preview with country, risk, and finance indicators." />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-11-faq" />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-11-nav-cleanup" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -195,27 +195,34 @@
     <header class="masthead">
       <div class="brand-rule"></div>
       <div class="masthead-grid">
-        <div>
+        <div class="masthead-copy">
           <p class="kicker">Disaster Risk Reduction</p>
-          <h1>Risk is concentrated. Readiness is uneven.</h1>
+          <h1>Closing the data gap in disaster resilience.</h1>
           <p class="dek">
-            A country-level briefing built from open DRR risk, loss, and policy datasets.
+            One dashboard. 10+ global datasets. Instant country-level risk briefings.
           </p>
-        </div>
-        <div class="masthead-side">
-          <div class="author-card" aria-label="Creator">
-            <img src="./assets/bekas-ioannis.jpg" alt="Bekas Ioannis" width="72" height="72" />
-            <div>
-              <span>Created by</span>
-              <strong>Bekas Ioannis</strong>
-              <a href="https://www.linkedin.com/in/ioannisbekas/" target="_blank" rel="noreferrer">LinkedIn profile</a>
+          <div class="masthead-info-bar" aria-label="Dashboard publication details">
+            <div class="info-badge creator-badge">
+              <img src="./assets/bekas-ioannis.jpg" alt="Bekas Ioannis" width="48" height="48" />
+              <div>
+                <span>Created by</span>
+                <strong>Bekas Ioannis</strong>
+                <a href="https://www.linkedin.com/in/ioannisbekas/" target="_blank" rel="noreferrer">LinkedIn</a>
+              </div>
             </div>
-          </div>
-          <div class="source-card" aria-label="Data note">
-            <span>Data edition</span>
-            <strong id="data-edition">Loading</strong>
-            <p id="data-note">Public INFORM, UNDRR, OWID, EM-DAT and WHO-derived data.</p>
-            <a class="source-card-link" href="#premium-plans">Premium data plans</a>
+            <div class="info-badge">
+              <span>Data edition</span>
+              <strong id="data-edition">Loading</strong>
+            </div>
+            <div class="info-badge">
+              <span>Coverage</span>
+              <strong id="header-country-count">191 countries</strong>
+              <small id="header-source-count">10+ source systems</small>
+            </div>
+            <div class="info-badge">
+              <span>Refresh status</span>
+              <p id="data-note">Public INFORM, UNDRR, OWID, EM-DAT and WHO-derived data.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -686,6 +693,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="./app.js?v=2026-05-11-faq" defer></script>
+    <script src="./app.js?v=2026-05-11-nav-cleanup" defer></script>
   </body>
 </html>
