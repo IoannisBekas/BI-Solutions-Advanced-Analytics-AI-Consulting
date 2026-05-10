@@ -274,7 +274,8 @@ main {
 #finance-view,
 #premium-plans,
 #methodology,
-#source-audit {
+#source-audit,
+#faq {
   scroll-margin-top: 86px;
 }
 
@@ -853,16 +854,43 @@ main {
   cursor: pointer;
 }
 
-.country-filter-toggle span:first-child {
+.country-filter-current {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.country-filter-current > span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.country-filter-current small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.country-filter-chevron {
+  flex: 0 0 auto;
+  color: var(--accent-dark);
+  font-size: 0.9rem;
+  transition: transform 160ms ease;
+}
+
 .country-filter-open .country-filter-toggle {
   border-color: var(--accent-dark);
   box-shadow: inset 0 0 0 2px var(--accent-light);
+}
+
+.country-filter-open .country-filter-chevron {
+  transform: rotate(180deg);
 }
 
 .country-filter-panel {
@@ -899,6 +927,57 @@ main {
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.3;
+  text-transform: none;
+}
+
+.country-filter-results {
+  max-height: 292px;
+  overflow-y: auto;
+  border: 1px solid var(--hairline);
+  background: #ffffff;
+}
+
+.country-filter-option {
+  display: grid;
+  gap: 3px;
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+  color: var(--ink);
+  text-transform: none;
+}
+
+.country-filter-option:last-child {
+  border-bottom: 0;
+}
+
+.country-filter-option strong {
+  overflow: hidden;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.country-filter-option span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.country-filter-option.is-active {
+  background: var(--accent-light);
+}
+
+.country-filter-option.is-selected {
+  box-shadow: inset 4px 0 0 var(--accent-dark);
+}
+
+.country-filter-empty {
+  padding: 12px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
   text-transform: none;
 }
 
@@ -988,6 +1067,8 @@ main {
 }
 
 .metric {
+  display: flex;
+  flex-direction: column;
   min-height: 82px;
   padding: 12px;
   background: var(--panel);
@@ -1010,8 +1091,15 @@ main {
 }
 
 .metric-source {
+  display: inline-block;
+  align-self: flex-start;
   margin-top: 8px;
   font-size: 0.72rem;
+}
+
+.metric .metric-source {
+  margin-top: auto;
+  padding-top: 10px;
 }
 
 .metric-details {
@@ -1069,6 +1157,8 @@ main {
 }
 
 .finance-cards article {
+  display: flex;
+  flex-direction: column;
   min-height: 150px;
   padding: 16px;
   background: var(--panel);
@@ -1099,6 +1189,11 @@ main {
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.35;
+}
+
+.finance-cards article .metric-source {
+  margin-top: auto;
+  padding-top: 14px;
 }
 
 .confidence-badge {
@@ -1577,6 +1672,108 @@ main {
   border-bottom: 1px solid currentColor;
 }
 
+.faq-list {
+  padding: 0 22px 6px;
+}
+
+.faq-item {
+  border-top: 1px solid var(--hairline);
+}
+
+.faq-item:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.faq-item summary {
+  min-height: 54px;
+  padding: 15px 34px 15px 0;
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 900;
+  line-height: 1.25;
+  list-style: none;
+  position: relative;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  position: absolute;
+  top: 17px;
+  right: 2px;
+  color: var(--accent-dark);
+  content: "+";
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.faq-item[open] summary::after {
+  content: "-";
+}
+
+.faq-item p {
+  max-width: 940px;
+  margin: -3px 0 16px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.reference-block {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 22px;
+  margin: 12px 22px 22px;
+  padding-top: 18px;
+  border-top: 3px solid var(--accent-dark);
+}
+
+.reference-block h3 {
+  margin: 4px 0 0;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.reference-block p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.reference-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: start;
+}
+
+.reference-links a {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 7px 9px;
+  border: 1px solid var(--hairline);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.reference-links a:hover,
+.reference-links a:focus-visible,
+.faq-item summary:focus-visible {
+  border-color: var(--ink);
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -1618,6 +1815,26 @@ main {
   display: block;
   margin-bottom: 4px;
   font-size: 0.95rem;
+}
+
+.chart-hover-target {
+  cursor: crosshair;
+}
+
+.hover-focus {
+  pointer-events: none;
+}
+
+.hover-focus line {
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.hover-focus circle {
+  fill: var(--ink);
+  stroke: var(--panel);
+  stroke-width: 2;
 }
 
 footer {
@@ -1712,6 +1929,7 @@ footer p {
   .coverage-status,
   .trust-grid,
   .coverage-grid,
+  .reference-block,
   .compare-controls,
   .ask-heading,
   .section-nav {
@@ -1756,7 +1974,8 @@ footer p {
   #finance-view,
   #premium-plans,
   #methodology,
-  #source-audit {
+  #source-audit,
+  #faq {
     scroll-margin-top: 24px;
   }
 

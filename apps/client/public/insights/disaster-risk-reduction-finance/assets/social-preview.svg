@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Disaster Risk Reduction Finance Dashboard</title>
+  <desc id="desc">Social preview showing 191 countries, INFORM Risk 2026, public DRR finance signals, and a stylized dashboard chart.</desc>
+  <rect width="1200" height="630" fill="#fffaf7"/>
+  <rect x="0" y="0" width="1200" height="18" fill="#06402B"/>
+  <rect x="0" y="612" width="1200" height="18" fill="#111111"/>
+  <line x1="56" y1="530" x2="1144" y2="530" stroke="#111111" stroke-width="3"/>
+  <g transform="translate(56 72)">
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="900" fill="#400606" letter-spacing="1.2">DISASTER RISK REDUCTION</text>
+    <text x="0" y="86" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="900" fill="#111111">Risk, readiness</text>
+    <text x="0" y="170" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="900" fill="#111111">and finance gaps</text>
+    <text x="0" y="224" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#06402B">A country-level briefing built from open DRR datasets.</text>
+  </g>
+  <g transform="translate(56 360)">
+    <rect x="0" y="0" width="180" height="112" fill="#111111"/>
+    <rect x="180" y="0" width="180" height="112" fill="#06402B"/>
+    <rect x="360" y="0" width="180" height="112" fill="#400606"/>
+    <rect x="540" y="0" width="180" height="112" fill="#71BFA2"/>
+    <text x="24" y="40" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="900" fill="#71BFA2">COUNTRIES</text>
+    <text x="24" y="84" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="900" fill="#ffffff">191</text>
+    <text x="204" y="40" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="900" fill="#71BFA2">RISK EDITION</text>
+    <text x="204" y="78" font-family="Georgia, 'Times New Roman', serif" font-size="31" font-weight="900" fill="#ffffff">INFORM</text>
+    <text x="204" y="102" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="900" fill="#71BFA2">2026</text>
+    <text x="384" y="40" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="900" fill="#BF8D71">FINANCE</text>
+    <text x="384" y="78" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="900" fill="#ffffff">CRS</text>
+    <text x="384" y="102" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="900" fill="#BF8D71">2024</text>
+    <text x="564" y="40" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="900" fill="#06402B">PUBLIC SOURCES</text>
+    <text x="564" y="84" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="900" fill="#111111">15</text>
+  </g>
+  <g transform="translate(840 92)">
+    <rect x="0" y="0" width="304" height="342" fill="#fffaf7" stroke="#111111" stroke-width="3"/>
+    <rect x="0" y="0" width="304" height="10" fill="#06402B"/>
+    <text x="24" y="52" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="900" fill="#4d4d4d">RISK-FINANCE SCREEN</text>
+    <line x1="34" y1="290" x2="286" y2="290" stroke="#d7c5ba" stroke-width="2"/>
+    <line x1="34" y1="232" x2="286" y2="232" stroke="#d7c5ba" stroke-width="2"/>
+    <line x1="34" y1="174" x2="286" y2="174" stroke="#d7c5ba" stroke-width="2"/>
+    <rect x="34" y="248" width="54" height="42" fill="#06402B"/>
+    <rect x="96" y="214" width="54" height="76" fill="#71BFA2"/>
+    <rect x="158" y="158" width="54" height="132" fill="#BF8D71"/>
+    <rect x="220" y="105" width="54" height="185" fill="#400606"/>
+    <polyline points="34,122 70,146 106,116 142,140 178,82 214,122 250,64 286,92" fill="none" stroke="#111111" stroke-width="5"/>
+    <circle cx="250" cy="64" r="7" fill="#400606"/>
+    <text x="24" y="326" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="900" fill="#111111">Explore donors, risk and gaps</text>
+  </g>
+  <text x="56" y="578" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="900" fill="#111111">bisolutions.group/insights/disaster-risk-reduction-finance</text>
+</svg>

@@ -3,13 +3,192 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Disaster Risk Reduction Dashboard</title>
+    <title>Disaster Risk Reduction Finance Dashboard | Country Risk, Readiness and Donors</title>
     <meta
       name="description"
-      content="Country-level disaster risk, readiness, and impact dashboard using public DRR datasets."
+      content="Explore disaster risk, readiness, losses, donors, and DRR-related finance signals across 191 countries using public DRR datasets."
     />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-11-a11y" />
+    <meta property="og:site_name" content="Disaster Risk Reduction Finance Dashboard" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Disaster Risk Reduction Finance Dashboard" />
+    <meta
+      property="og:description"
+      content="A public country-level dashboard for disaster risk, readiness, losses, donors, and DRR-related finance signals across 191 countries."
+    />
+    <meta property="og:url" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/" />
+    <meta property="og:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
+    <meta property="og:image:secure_url" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Disaster Risk Reduction dashboard preview showing 191 countries, INFORM Risk 2026, and finance gap analysis." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Disaster Risk Reduction Finance Dashboard" />
+    <meta
+      name="twitter:description"
+      content="Explore country-level disaster risk, readiness, donors, and DRR-related finance signals from public datasets."
+    />
+    <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
+    <meta name="twitter:image:alt" content="Disaster Risk Reduction dashboard preview with country, risk, and finance indicators." />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-11-faq" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.bisolutions.group/#organization",
+            "name": "BI Solutions Group",
+            "url": "https://www.bisolutions.group/"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#creator",
+            "name": "Bekas Ioannis",
+            "url": "https://www.linkedin.com/in/ioannisbekas/",
+            "sameAs": ["https://www.linkedin.com/in/ioannisbekas/"]
+          },
+          {
+            "@type": "DataCatalog",
+            "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#catalog",
+            "name": "Disaster Risk Reduction Public Data Catalog",
+            "description": "A catalog of public DRR risk, readiness, loss, finance, donor, and project-signal datasets normalized for country-level exploration.",
+            "url": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/",
+            "creator": { "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#creator" },
+            "publisher": { "@id": "https://www.bisolutions.group/#organization" },
+            "dataset": [{ "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#country-metrics-dataset" }]
+          },
+          {
+            "@type": "Dataset",
+            "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#country-metrics-dataset",
+            "name": "Disaster Risk Reduction Country Metrics",
+            "description": "Country-level DRR dataset combining public risk, hazard, readiness, disaster impact, donor, and DRR-related finance indicators for 191 countries.",
+            "url": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/",
+            "keywords": [
+              "disaster risk reduction",
+              "DRR finance",
+              "climate resilience",
+              "INFORM Risk Index",
+              "OECD CRS",
+              "Sendai Framework",
+              "humanitarian finance",
+              "disaster losses"
+            ],
+            "spatialCoverage": { "@type": "Place", "name": "Global" },
+            "temporalCoverage": "1970/2026",
+            "dateModified": "2026-05-11",
+            "isAccessibleForFree": true,
+            "includedInDataCatalog": { "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#catalog" },
+            "creator": { "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#creator" },
+            "publisher": { "@id": "https://www.bisolutions.group/#organization" },
+            "variableMeasured": [
+              { "@type": "PropertyValue", "name": "INFORM risk score" },
+              { "@type": "PropertyValue", "name": "Hazard and exposure" },
+              { "@type": "PropertyValue", "name": "Vulnerability" },
+              { "@type": "PropertyValue", "name": "Lack of coping capacity" },
+              { "@type": "PropertyValue", "name": "DRR-related ODA disbursements" },
+              { "@type": "PropertyValue", "name": "Top DRR finance donors" },
+              { "@type": "PropertyValue", "name": "Direct disaster economic loss" }
+            ],
+            "distribution": [
+              {
+                "@type": "DataDownload",
+                "name": "Country metrics CSV",
+                "contentUrl": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/data/processed/country_metrics.csv",
+                "encodingFormat": "text/csv"
+              },
+              {
+                "@type": "DataDownload",
+                "name": "Dashboard data JSON",
+                "contentUrl": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/data/processed/dashboard-data.json",
+                "encodingFormat": "application/json"
+              }
+            ]
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#software",
+            "name": "Disaster Risk Reduction Finance Dashboard",
+            "applicationCategory": "DataVisualizationApplication",
+            "operatingSystem": "Web",
+            "url": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/",
+            "description": "Interactive public dashboard for country-level disaster risk, readiness, donor, and DRR-related finance exploration.",
+            "isAccessibleForFree": true,
+            "creator": { "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#creator" },
+            "publisher": { "@id": "https://www.bisolutions.group/#organization" },
+            "image": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png",
+            "softwareVersion": "public-beta"
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Where can I find DRR financing data by country?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The dashboard provides country-level international DRR-related finance signals, including OECD CRS DRR-related ODA, World Bank DRM-tagged project signals, Green Climate Fund resilience project signals, and OCHA FTS humanitarian response context where available."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which countries have high disaster risk and low readiness?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Use the Risk, Country, Compare, and Finance views to screen countries by INFORM Risk, WorldRiskIndex, ND-GAIN readiness, disaster loss, displacement, and reported DRR-related ODA indicators."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between INFORM Risk and the Sendai Framework Monitor?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "INFORM Risk is a composite risk index for humanitarian crises and disasters. The Sendai Framework Monitor tracks official government reporting against Sendai Framework targets. The dashboard brings selected public signals into one country-level view; it does not replace official source systems."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does this dashboard include UNDRR, OCHA, WMO, OECD, World Bank, and GCF data?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The public build includes or references public data from UNDRR-related loss and Sendai indicators via Our World in Data, OCHA FTS, OECD CRS, World Bank Projects and Operations, and GCF open data. WMO is referenced as an important DRR and weather-climate organization, but it is not a direct country metric source in the current public build unless listed in the source audit."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can NGOs and organizations use this dashboard for proposal screening or country risk analysis?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, it can support preliminary country screening, proposal scoping, donor mapping, and risk-finance comparison. Formal funding, policy, or operational decisions should still verify figures in the original source systems and project documents."
+                }
+              }
+            ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#breadcrumbs",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.bisolutions.group/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Disaster Risk Reduction Finance Dashboard",
+                "item": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to dashboard content</a>
@@ -53,6 +232,7 @@
           <a href="#premium-plans">Premium</a>
           <a href="#methodology">Method</a>
           <a href="#source-audit">Sources</a>
+          <a href="#faq">FAQ</a>
         </div>
         <div class="quick-country-picker" aria-label="Country search controls">
           <label>
@@ -60,25 +240,38 @@
             <select id="continent-select"></select>
           </label>
           <div class="country-filter" id="country-filter">
-            <span class="country-filter-label" id="country-filter-label">Search country</span>
+            <span class="country-filter-label" id="country-filter-label">Country</span>
             <button
               class="country-filter-toggle"
               id="country-filter-toggle"
               type="button"
-              aria-haspopup="dialog"
+              aria-haspopup="listbox"
               aria-expanded="false"
               aria-controls="country-filter-panel"
               aria-labelledby="country-filter-label country-filter-current"
             >
-              <span id="country-filter-current">Loading</span>
-              <span aria-hidden="true">▾</span>
+              <span class="country-filter-current">
+                <span id="country-filter-current">Loading</span>
+                <small id="country-filter-meta">Select a country</small>
+              </span>
+              <span class="country-filter-chevron" aria-hidden="true">&#9662;</span>
             </button>
             <div class="country-filter-panel" id="country-filter-panel" hidden>
-              <label>
-                <span>Type country</span>
-                <input id="quick-country-input" type="search" list="country-options" autocomplete="off" placeholder="Start typing a country" />
+              <label for="quick-country-input">
+                <span>Search by country or ISO3</span>
+                <input
+                  id="quick-country-input"
+                  type="search"
+                  autocomplete="off"
+                  placeholder="Start typing, e.g. Philippines or PHL"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  aria-controls="country-filter-results"
+                />
               </label>
-              <p>Type a country name or ISO3 code, then press Enter.</p>
+              <div id="country-filter-results" class="country-filter-results" role="listbox" aria-label="Country results"></div>
+              <p id="country-filter-help">Use arrow keys and Enter, or click a country.</p>
             </div>
           </div>
         </div>
@@ -382,6 +575,90 @@
         </div>
         <div id="sources-list" class="sources-list"></div>
       </section>
+
+      <section class="panel faq-panel" id="faq">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">FAQ</p>
+            <h2>Questions people ask about DRR data</h2>
+          </div>
+          <p>
+            Short answers for researchers, NGOs, donors, and policy teams evaluating whether
+            this dashboard fits their country-screening workflow.
+          </p>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>Where can I find DRR financing data by country?</summary>
+            <p>
+              The dashboard provides country-level international DRR-related finance signals,
+              including OECD CRS DRR-related ODA, World Bank DRM-tagged project signals,
+              Green Climate Fund resilience project signals, and OCHA FTS humanitarian response
+              context where available.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Which countries have high disaster risk and low readiness?</summary>
+            <p>
+              Use the Risk, Country, Compare, and Finance views to screen countries by INFORM
+              Risk, WorldRiskIndex, ND-GAIN readiness, disaster loss, displacement, and reported
+              DRR-related ODA indicators.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>What is the difference between INFORM Risk and the Sendai Framework Monitor?</summary>
+            <p>
+              INFORM Risk is a composite risk index for humanitarian crises and disasters. The
+              Sendai Framework Monitor tracks official government reporting against Sendai
+              Framework targets. This dashboard brings selected public signals into one
+              country-level view; it does not replace official source systems.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Does this dashboard include UNDRR, OCHA, WMO, OECD, World Bank, and GCF data?</summary>
+            <p>
+              The public build includes or references public data from UNDRR-related loss and
+              Sendai indicators via Our World in Data, OCHA FTS, OECD CRS, World Bank Projects
+              and Operations, and GCF open data. WMO is referenced as an important DRR and
+              weather-climate organization, but it is not a direct country metric source in the
+              current public build unless listed in the source audit.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Can NGOs and organizations use this dashboard for proposal screening or country risk analysis?</summary>
+            <p>
+              Yes. It can support preliminary country screening, proposal scoping, donor mapping,
+              and risk-finance comparison. Formal funding, policy, or operational decisions
+              should still verify figures in the original source systems and project documents.
+            </p>
+          </details>
+        </div>
+        <div class="reference-block" aria-labelledby="reference-heading">
+          <div>
+            <p class="kicker">Referenced organizations</p>
+            <h3 id="reference-heading">Public sources and DRR institutions mentioned</h3>
+            <p>
+              These names are used to identify public source systems, datasets, or relevant DRR
+              institutions. This independent dashboard is not affiliated with, sponsored by, or
+              endorsed by these organizations.
+            </p>
+          </div>
+          <div class="reference-links" aria-label="Referenced public organizations and datasets">
+            <a href="https://www.undrr.org/" target="_blank" rel="noreferrer">UNDRR</a>
+            <a href="https://fts.unocha.org/" target="_blank" rel="noreferrer">OCHA FTS</a>
+            <a href="https://wmo.int/" target="_blank" rel="noreferrer">WMO</a>
+            <a href="https://www.oecd.org/en/topics/oda.html" target="_blank" rel="noreferrer">OECD CRS</a>
+            <a href="https://projects.worldbank.org/" target="_blank" rel="noreferrer">World Bank</a>
+            <a href="https://data.greenclimate.fund/" target="_blank" rel="noreferrer">GCF</a>
+            <a href="https://drmkc.jrc.ec.europa.eu/inform-index" target="_blank" rel="noreferrer">INFORM</a>
+            <a href="https://www.emdat.be/" target="_blank" rel="noreferrer">EM-DAT</a>
+            <a href="https://ourworldindata.org/" target="_blank" rel="noreferrer">Our World in Data</a>
+            <a href="https://gain.nd.edu/our-work/country-index/" target="_blank" rel="noreferrer">ND-GAIN</a>
+            <a href="https://www.wri.org/aqueduct" target="_blank" rel="noreferrer">WRI Aqueduct</a>
+            <a href="https://thinkhazard.org/" target="_blank" rel="noreferrer">ThinkHazard</a>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div id="tooltip" class="tooltip" hidden></div>
@@ -400,13 +677,15 @@
       <p>
         Documentation:
         <a class="text-link" href="./documentation.html#methodology">methodology</a>,
+        <a class="text-link" href="./documentation.html#how-built">how it was built</a>,
         <a class="text-link" href="./documentation.html#data-dictionary">data dictionary</a>,
+        <a class="text-link" href="./documentation.html#pending-work">pending work</a>,
         <a class="text-link" href="./documentation.html#accessibility">accessibility checklist</a>,
         <a class="text-link" href="./documentation.html#terms-privacy">terms and privacy</a>.
       </p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="./app.js?v=2026-05-11-a11y" defer></script>
+    <script src="./app.js?v=2026-05-11-faq" defer></script>
   </body>
 </html>

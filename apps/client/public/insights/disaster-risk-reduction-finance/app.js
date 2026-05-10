@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-11-findings";
+const ASSET_VERSION = "2026-05-11-faq";
 
 (async function init() {
   const [data, world, product, validation] = await Promise.all([
@@ -361,6 +361,7 @@ function populateCountrySelect(state) {
           .sort((a, b) => b.risk - a.risk || a.name.localeCompare(b.name))[0];
         if (nextCountry) setSelectedCountry(state, nextCountry.iso3, { preserveContinent: true });
       }
+      renderOpenCountryFilterResults(state);
     });
   }
 
@@ -375,19 +376,32 @@ function populateMainCountryFilter(state, selectedCountry) {
   const toggle = document.querySelector("#country-filter-toggle");
   const panel = document.querySelector("#country-filter-panel");
   const input = document.querySelector("#quick-country-input");
-  if (!filter || !toggle || !panel || !input) return;
+  const results = document.querySelector("#country-filter-results");
+  if (!filter || !toggle || !panel || !input || !results) return;
 
-  input.value = selectedCountry?.name || "";
-  syncCountryFilterLabel(selectedCountry?.name || "");
+  let activeIndex = 0;
+  let visibleCountries = [];
+  input.value = "";
+  syncCountryFilterLabel(selectedCountry || "");
+
+  const refreshResults = (nextActiveIndex = activeIndex) => {
+    visibleCountries = renderCountryFilterResults(state, input.value, {
+      activeIndex: nextActiveIndex,
+      activeIso: state.selectedIso,
+    });
+    activeIndex = visibleCountries.length ? clamp(nextActiveIndex, 0, visibleCountries.length - 1) : -1;
+  };
 
   const openPanel = () => {
     panel.hidden = false;
     filter.classList.add("country-filter-open");
     toggle.setAttribute("aria-expanded", "true");
-    input.value = countryByIso(state, state.selectedIso)?.name || "";
+    input.setAttribute("aria-expanded", "true");
+    input.value = "";
+    activeIndex = 0;
+    refreshResults(0);
     window.requestAnimationFrame(() => {
       input.focus();
-      input.select();
     });
   };
 
@@ -395,8 +409,16 @@ function populateMainCountryFilter(state, selectedCountry) {
     panel.hidden = true;
     filter.classList.remove("country-filter-open");
     toggle.setAttribute("aria-expanded", "false");
-    if (options.restore !== false) input.value = countryByIso(state, state.selectedIso)?.name || "";
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
+    input.value = "";
     if (options.focusToggle) toggle.focus();
+  };
+
+  const chooseCountry = (country) => {
+    if (!country) return;
+    setSelectedCountry(state, country.iso3, { scrollToCountry: true, preserveContinent: true });
+    closePanel({ focusToggle: true });
   };
 
   toggle.addEventListener("click", () => {
@@ -415,22 +437,33 @@ function populateMainCountryFilter(state, selectedCountry) {
   });
 
   input.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter") return;
-    const country = countryFromSearchValue(state, input.value, { allowPartial: true });
-    if (!country) return;
-    event.preventDefault();
-    setSelectedCountry(state, country.iso3, { scrollToCountry: true });
-    closePanel({ focusToggle: true });
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      refreshResults(activeIndex + 1);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      refreshResults(activeIndex - 1);
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      chooseCountry(visibleCountries[activeIndex] || visibleCountries[0]);
+      return;
+    }
+    if (event.key === "Tab") closePanel();
   });
 
-  input.addEventListener("blur", () => {
-    window.setTimeout(() => {
-      if (filter.contains(document.activeElement)) return;
-      const country = countryFromSearchValue(state, input.value, { allowPartial: true });
-      if (country) setSelectedCountry(state, country.iso3);
-      else syncCountryControls(state, { preserveContinent: true });
-      closePanel();
-    }, 0);
+  input.addEventListener("input", () => {
+    refreshResults(0);
+  });
+
+  results.addEventListener("mousedown", (event) => {
+    const option = event.target.closest("[data-country-iso]");
+    if (!option) return;
+    event.preventDefault();
+    chooseCountry(countryByIso(state, option.dataset.countryIso));
   });
 }
 
@@ -510,18 +543,30 @@ function syncCountryControls(state, options = {}) {
     continentSelect.value = countryContinent(country);
   }
   updateCountryDatalist(state, continentSelect?.value || "");
+  renderOpenCountryFilterResults(state);
 
   document.querySelectorAll("#quick-country-input").forEach((input) => {
-    input.value = country.name;
+    input.value = "";
   });
-  syncCountryFilterLabel(country.name);
+  syncCountryFilterLabel(country);
   const compareA = document.querySelector("#compare-country-a");
   if (compareA) compareA.value = country.name;
 }
 
-function syncCountryFilterLabel(label) {
+function syncCountryFilterLabel(countryOrLabel) {
   const current = document.querySelector("#country-filter-current");
-  if (current) current.textContent = label || "Choose country";
+  const meta = document.querySelector("#country-filter-meta");
+  const country =
+    typeof countryOrLabel === "object" && countryOrLabel
+      ? countryOrLabel
+      : null;
+  const label = country?.name || countryOrLabel || "Choose country";
+  if (current) current.textContent = label;
+  if (meta) {
+    meta.textContent = country
+      ? `${countryContinent(country)} - ${country.iso3} - INFORM ${fmtFixed(country.risk, 1)}`
+      : "Select a country";
+  }
 }
 
 function updateCountryDatalist(state, continent = "") {
@@ -534,6 +579,83 @@ function updateCountryDatalist(state, continent = "") {
         `<option value="${escapeHtml(country.name)}" label="${escapeHtml(`${countryContinent(country)} - ${country.iso3}`)}"></option>`,
     )
     .join("");
+}
+
+function renderOpenCountryFilterResults(state) {
+  const panel = document.querySelector("#country-filter-panel");
+  const input = document.querySelector("#quick-country-input");
+  if (!panel || panel.hidden || !input) return;
+  renderCountryFilterResults(state, input.value, { activeIndex: 0, activeIso: state.selectedIso });
+}
+
+function renderCountryFilterResults(state, query = "", options = {}) {
+  const results = document.querySelector("#country-filter-results");
+  const input = document.querySelector("#quick-country-input");
+  if (!results || !input) return [];
+
+  const matches = countryFilterMatches(state, query);
+  const activeIndex = matches.length ? clamp(options.activeIndex ?? 0, 0, matches.length - 1) : -1;
+  const normalized = normalizeSearch(query);
+
+  if (!matches.length) {
+    results.innerHTML = `<div class="country-filter-empty" role="note">No countries match this filter.</div>`;
+    input.removeAttribute("aria-activedescendant");
+    return [];
+  }
+
+  results.innerHTML = matches
+    .map((country, index) => {
+      const selected = country.iso3 === state.selectedIso;
+      const active = index === activeIndex;
+      const label = normalized ? country.name : selected ? `${country.name} (current)` : country.name;
+      return `
+        <div
+          class="country-filter-option${active ? " is-active" : ""}${selected ? " is-selected" : ""}"
+          id="country-filter-option-${escapeHtml(country.iso3)}"
+          data-country-iso="${escapeHtml(country.iso3)}"
+          role="option"
+          aria-selected="${active ? "true" : "false"}"
+        >
+          <strong>${escapeHtml(label)}</strong>
+          <span>${escapeHtml(countryContinent(country))} - ${escapeHtml(country.iso3)} - INFORM ${fmtFixed(country.risk, 1)}</span>
+        </div>
+      `;
+    })
+    .join("");
+
+  input.setAttribute("aria-activedescendant", `country-filter-option-${matches[activeIndex].iso3}`);
+  return matches;
+}
+
+function countryFilterMatches(state, query = "") {
+  const continent = document.querySelector("#continent-select")?.value || "";
+  const pool = countriesForContinent(state.data.countries, continent);
+  const normalized = normalizeSearch(query);
+
+  if (!normalized) {
+    const selected = pool.find((country) => country.iso3 === state.selectedIso);
+    const highRisk = pool
+      .filter((country) => country.iso3 !== selected?.iso3)
+      .sort((a, b) => (Number.isFinite(b.risk) ? b.risk : -1) - (Number.isFinite(a.risk) ? a.risk : -1) || a.name.localeCompare(b.name));
+    return [selected, ...highRisk].filter(Boolean).slice(0, 12);
+  }
+
+  return pool
+    .map((country) => {
+      const name = normalizeSearch(country.name);
+      const iso3 = normalizeSearch(country.iso3);
+      let score = null;
+      if (iso3 === normalized) score = 0;
+      else if (name === normalized) score = 1;
+      else if (iso3.startsWith(normalized)) score = 2;
+      else if (name.startsWith(normalized)) score = 3;
+      else if (name.includes(normalized)) score = 4;
+      return score === null ? null : { country, score };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.score - b.score || a.country.name.localeCompare(b.country.name))
+    .slice(0, 12)
+    .map((item) => item.country);
 }
 
 function countryFromSearchValue(state, value, options = {}) {
@@ -1237,7 +1359,7 @@ function answerDashboardQuestion(state, question) {
   }
 
   const mentionedCountries = countriesMentionedInQuestion(countries, query);
-  if (query.includes("source") || query.includes("method")) return answerSources(state);
+  if (query.includes("source") || query.includes("method") || asksAboutReferenceOrganization(query)) return answerSources(state);
   if (query.includes("missing") || query.includes("no data") || query.includes("coverage")) {
     return answerMissingData(countries, query);
   }
@@ -1375,13 +1497,20 @@ function answerMissingData(countries, query) {
   );
 }
 
+function asksAboutReferenceOrganization(query) {
+  return ["undrr", "ocha", "wmo", "oecd", "world bank", "gcf", "inform", "em dat", "em-dat"].some((term) =>
+    query.includes(term),
+  );
+}
+
 function answerSources(state) {
   const sources = Array.isArray(state.data.sources) ? state.data.sources : [];
   return answerBlock(
     "Public sources in this build",
-    `${fmtNumber(sources.length)} public sources are included, led by INFORM, OECD CRS, WorldRiskIndex, ThinkHazard, GCF, World Bank, OCHA FTS, ND-GAIN, WRI Aqueduct, and OWID/UNDRR series.`,
+    `${fmtNumber(sources.length)} public sources are included, led by INFORM, OECD CRS, WorldRiskIndex, ThinkHazard, GCF, World Bank, OCHA FTS, ND-GAIN, WRI Aqueduct, and OWID/UNDRR series. WMO is referenced as a relevant DRR and weather-climate organization, but it is not a direct country metric source in the current public build. This dashboard is independent and is not endorsed by referenced organizations.`,
     [
       { label: "Open sources", href: "#source-audit" },
+      { label: "Open FAQ", href: "#faq" },
       { label: "Read source caveats", href: "./documentation.html#data-sources" },
     ],
   );
@@ -1835,6 +1964,30 @@ function drawTopRisk(selector, countries) {
 
   svg
     .append("g")
+    .selectAll("rect")
+    .data(top)
+    .join("rect")
+    .attr("class", "chart-hover-target")
+    .attr("x", margin.left)
+    .attr("y", (country) => y(country.iso3))
+    .attr("width", width - margin.left - margin.right)
+    .attr("height", y.bandwidth())
+    .attr("fill", "transparent")
+    .attr("pointer-events", "all")
+    .on("mousemove touchstart", (event, country) => {
+      showTooltip(
+        event,
+        `<strong>${escapeHtml(country.name)}</strong>` +
+          `INFORM risk: ${fmtFixed(country.risk, 1)}<br>` +
+          `Hazard/exposure: ${fmtFixed(country.hazardExposure, 1)}<br>` +
+          `Vulnerability: ${fmtFixed(country.vulnerability, 1)}<br>` +
+          `Lack of coping: ${fmtFixed(country.lackCopingCapacity, 1)}`,
+      );
+    })
+    .on("mouseleave touchend touchcancel", hideTooltip);
+
+  svg
+    .append("g")
     .attr("class", "axis")
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).ticks(5));
@@ -1880,6 +2033,19 @@ function drawHazardSummary(selector, summary) {
   svg.append("g").attr("class", "grid").call(axisGridBottom(x, height - margin.bottom, margin.top));
 
   const groups = svg.append("g").selectAll("g").data(data).join("g");
+  groups
+    .attr("class", "chart-hover-target")
+    .on("mousemove touchstart", (event, row) => {
+      showTooltip(
+        event,
+        `<strong>${escapeHtml(row.name)}</strong>` +
+          `High classification: ${fmtNumber(row.high)} countries<br>` +
+          `Medium classification: ${fmtNumber(row.medium)} countries<br>` +
+          `Countries with records: ${fmtNumber(row.total)}`,
+      );
+    })
+    .on("mouseleave touchend touchcancel", hideTooltip);
+
   groups
     .append("rect")
     .attr("x", x(0))
@@ -2058,6 +2224,49 @@ function drawEvents(selector, series) {
     .call(d3.axisLeft(y).ticks(5))
     .call((group) => group.select(".domain").remove());
 
+  const bisectYear = d3.bisector((row) => row.year).center;
+  const focus = svg.append("g").attr("class", "hover-focus").style("display", "none");
+  focus
+    .append("line")
+    .attr("y1", margin.top)
+    .attr("y2", height - margin.bottom);
+  focus.append("circle").attr("r", 4);
+
+  svg
+    .append("rect")
+    .attr("class", "chart-hover-target")
+    .attr("x", margin.left)
+    .attr("y", margin.top)
+    .attr("width", width - margin.left - margin.right)
+    .attr("height", height - margin.top - margin.bottom)
+    .attr("fill", "transparent")
+    .attr("pointer-events", "all")
+    .on("mousemove touchstart", (event) => {
+      const [mouseX] = d3.pointer(event, svg.node());
+      const index = clamp(bisectYear(table, x.invert(mouseX)), 0, table.length - 1);
+      const row = table[index];
+      if (!row) return;
+      const breakdown = hazardOrder
+        .map((key) => ({ label: labels.get(key) || key, value: row[key] || 0 }))
+        .sort((a, b) => b.value - a.value);
+      const total = d3.sum(breakdown, (item) => item.value);
+      focus.style("display", null).attr("transform", `translate(${x(row.year)},0)`);
+      focus.select("circle").attr("cy", y(total));
+      showTooltip(
+        event,
+        `<strong>${row.year}</strong>` +
+          `Total reported events: ${fmtNumber(total)}<br>` +
+          breakdown
+            .slice(0, 4)
+            .map((item) => `${escapeHtml(item.label)}: ${fmtNumber(item.value)}`)
+            .join("<br>"),
+      );
+    })
+    .on("mouseleave touchend touchcancel", () => {
+      focus.style("display", "none");
+      hideTooltip();
+    });
+
   drawLegend(container, hazardOrder.map((key) => ({ label: labels.get(key), color: colors.get(key) })));
 }
 
@@ -2148,6 +2357,37 @@ function drawDamage(selector, series) {
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(y).ticks(5).tickFormat((value) => `$${value}bn`))
     .call((group) => group.select(".domain").remove());
+
+  const bisectYear = d3.bisector((row) => row.year).center;
+  const focus = svg.append("g").attr("class", "hover-focus").style("display", "none");
+  focus
+    .append("line")
+    .attr("y1", margin.top)
+    .attr("y2", height - margin.bottom);
+  focus.append("circle").attr("r", 4).attr("fill", THEME.redDark);
+
+  svg
+    .append("rect")
+    .attr("class", "chart-hover-target")
+    .attr("x", margin.left)
+    .attr("y", margin.top)
+    .attr("width", width - margin.left - margin.right)
+    .attr("height", height - margin.top - margin.bottom)
+    .attr("fill", "transparent")
+    .attr("pointer-events", "all")
+    .on("mousemove touchstart", (event) => {
+      const [mouseX] = d3.pointer(event, svg.node());
+      const index = clamp(bisectYear(data, x.invert(mouseX)), 0, data.length - 1);
+      const row = data[index];
+      if (!row) return;
+      focus.style("display", null).attr("transform", `translate(${x(row.year)},0)`);
+      focus.select("circle").attr("cy", y(row.value));
+      showTooltip(event, `<strong>${row.year}</strong>Reported damage: ${fmtBillions(row.value)}`);
+    })
+    .on("mouseleave touchend touchcancel", () => {
+      focus.style("display", "none");
+      hideTooltip();
+    });
 }
 
 function drawScatter(selector, countries, selectedIso) {
@@ -2331,6 +2571,29 @@ function drawFinanceGap(selector, countries) {
 
   svg
     .append("g")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+    .attr("class", "chart-hover-target")
+    .attr("x", margin.left)
+    .attr("y", (country) => y(country.iso3))
+    .attr("width", width - margin.left - margin.right)
+    .attr("height", y.bandwidth())
+    .attr("fill", "transparent")
+    .attr("pointer-events", "all")
+    .on("mousemove touchstart", (event, country) => {
+      showTooltip(
+        event,
+        `<strong>${escapeHtml(country.name)}</strong>` +
+          `DRR ODA per risk point: ${fmtMoney(country.financePerRisk)}<br>` +
+          `DRR ODA disbursement: ${fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear)}<br>` +
+          `INFORM risk: ${fmtFixed(country.risk, 1)}`,
+      );
+    })
+    .on("mouseleave touchend touchcancel", hideTooltip);
+
+  svg
+    .append("g")
     .selectAll("text.value")
     .data(data)
     .join("text")
@@ -2431,16 +2694,25 @@ function showTooltip(event, html) {
   tooltip.innerHTML = html;
   const padding = 16;
   const rect = tooltip.getBoundingClientRect();
-  let x = event.clientX + 14;
-  let y = event.clientY + 14;
-  if (x + rect.width + padding > window.innerWidth) x = event.clientX - rect.width - 14;
-  if (y + rect.height + padding > window.innerHeight) y = event.clientY - rect.height - 14;
+  const point = eventClientPoint(event);
+  let x = point.x + 14;
+  let y = point.y + 14;
+  if (x + rect.width + padding > window.innerWidth) x = point.x - rect.width - 14;
+  if (y + rect.height + padding > window.innerHeight) y = point.y - rect.height - 14;
   tooltip.style.left = `${x}px`;
   tooltip.style.top = `${y}px`;
 }
 
 function hideTooltip() {
   document.querySelector("#tooltip").hidden = true;
+}
+
+function eventClientPoint(event) {
+  const touch = event.touches?.[0] || event.changedTouches?.[0];
+  return {
+    x: touch?.clientX ?? event.clientX ?? 0,
+    y: touch?.clientY ?? event.clientY ?? 0,
+  };
 }
 
 function setInfoNote(selector, html) {

@@ -17,6 +17,8 @@ This project collects key databases for Disaster Risk Reduction (DRR) research a
 - `ACCESSIBILITY_CHECKLIST.md` - accessibility and mobile hardening checklist.
 - `TERMS_PRIVACY.md` - public beta terms, privacy, and contact note.
 - `PREMIUM_DATA.md` - paid-plan and premium-data backend contract.
+- `HOW_IT_WAS_BUILT.md` - implementation architecture, data workflow, design choices, and deployment notes.
+- `PENDING_WORK.md` - roadmap of remaining product, data, premium, accessibility, and governance work.
 - `premium-api/` - minimal Stripe Checkout API template for future backend deployment.
 
 To refresh the data:

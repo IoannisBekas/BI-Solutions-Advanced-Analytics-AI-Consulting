@@ -3,12 +3,35 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DRR Dashboard Documentation</title>
+    <title>DRR Dashboard Documentation | Methodology, Build Notes and Roadmap</title>
     <meta
       name="description"
-      content="Methodology, source caveats, data dictionary, accessibility notes, and terms for the Disaster Risk Reduction dashboard."
+      content="Methodology, build notes, source caveats, data dictionary, accessibility notes, roadmap, and terms for the Disaster Risk Reduction dashboard."
     />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/documentation.html" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <meta property="og:site_name" content="Disaster Risk Reduction Finance Dashboard" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="DRR Dashboard Documentation" />
+    <meta
+      property="og:description"
+      content="Methodology, source caveats, build notes, accessibility status, and roadmap for the Disaster Risk Reduction Finance Dashboard."
+    />
+    <meta property="og:url" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/documentation.html" />
+    <meta property="og:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
+    <meta property="og:image:secure_url" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Disaster Risk Reduction dashboard preview showing 191 countries, INFORM Risk 2026, and finance gap analysis." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DRR Dashboard Documentation" />
+    <meta
+      name="twitter:description"
+      content="Methodology, source caveats, build notes, accessibility status, and roadmap for the DRR dashboard."
+    />
+    <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <link rel="stylesheet" href="./styles.css?v=2026-05-11-a11y" />
   </head>
   <body>
@@ -19,7 +42,7 @@
         <div>
           <p class="kicker">Disaster Risk Reduction</p>
           <h1>Documentation and Methodology</h1>
-          <p class="dek">Source scope, caveats, data fields, accessibility status, and public beta terms.</p>
+          <p class="dek">How the dashboard was built, source scope, caveats, data fields, accessibility status, pending work, and public beta terms.</p>
         </div>
         <div class="masthead-side">
           <div class="source-card" aria-label="Documentation navigation">
@@ -37,8 +60,10 @@
         <div class="section-links">
           <a href="./index.html">Dashboard</a>
           <a href="#methodology">Method</a>
+          <a href="#how-built">How built</a>
           <a href="#data-sources">Sources</a>
           <a href="#data-dictionary">Dictionary</a>
+          <a href="#pending-work">Pending</a>
           <a href="#accessibility">Accessibility</a>
           <a href="#terms-privacy">Terms</a>
         </div>
@@ -94,6 +119,31 @@
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section id="how-built" class="doc-section">
+        <p class="kicker">Build documentation</p>
+        <h2>How this dashboard was built</h2>
+        <p>
+          The dashboard is a static GitHub Pages application designed for public research use. It combines a repeatable Node.js data pipeline with a lightweight D3 front end, so the public site can load quickly without a live database server.
+        </p>
+        <h3>Architecture</h3>
+        <ul>
+          <li><strong>Front end:</strong> `index.html`, `styles.css`, and `app.js` render the dashboard, charts, filters, country profiles, exports, premium waitlist messaging, and dataset Q&amp;A.</li>
+          <li><strong>Data pipeline:</strong> `scripts/download-data.mjs` downloads, normalizes, and joins public DRR datasets by ISO3 country code.</li>
+          <li><strong>Processed outputs:</strong> `data/processed/dashboard-data.json` powers the dashboard, while `data/processed/country_metrics.csv` supports public CSV export.</li>
+          <li><strong>Validation:</strong> `scripts/validate-data.mjs` checks source counts, country coverage, schema expectations, missing values, and warning conditions before refreshed data can be committed.</li>
+          <li><strong>Automation:</strong> `.github/workflows/refresh-data.yml` runs the public data refresh weekly and blocks publication when strict validation warnings are present.</li>
+          <li><strong>Hosting:</strong> GitHub Pages serves the static dashboard from the public repository.</li>
+        </ul>
+        <h3>Design and interaction</h3>
+        <p>
+          The visual system uses an Economist-inspired editorial style: strong typography, restrained panels, black rules, a focused color palette, direct data labels, explanatory notes, and source-linked metric cards. The experience is organized around five research actions: scan global risk, ask a dataset question, inspect one country, compare two countries, and review finance signals.
+        </p>
+        <h3>Accessibility and mobile hardening</h3>
+        <p>
+          The dashboard includes skip links, semantic landmarks, visible labels, chart summaries, accessible data tables behind visual charts, focus-visible states, reduced-motion CSS, keyboard-reachable documentation tables, color contrast checks, and mobile overflow checks. The latest local and live axe-core runs returned zero automated violations across the tested dashboard and documentation views.
+        </p>
       </section>
 
       <section id="data-sources" class="doc-section">
@@ -181,6 +231,65 @@
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section id="pending-work" class="doc-section">
+        <p class="kicker">Roadmap</p>
+        <h2>What is still pending</h2>
+        <p>
+          The current public dashboard is suitable for exploration and briefing support. The items below are the main remaining steps before presenting it as an institutional-grade product.
+        </p>
+        <div class="doc-table-scroll" tabindex="0" role="region" aria-label="Pending work roadmap table">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Area</th>
+                <th scope="col">Pending work</th>
+                <th scope="col">Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Premium access</td>
+                <td>Deploy the premium API, connect Stripe, add user authentication, verify entitlements, and keep restricted data outside GitHub Pages.</td>
+                <td>Paid users should receive real protected data, not static files that can be bypassed.</td>
+              </tr>
+              <tr>
+                <td>Domestic and private finance</td>
+                <td>Add country-by-country evidence extraction for national budgets, disaster funds, climate budget tagging, IATI records, private finance, and co-finance signals.</td>
+                <td>Public ODA is useful but incomplete; total DRR finance requires a broader evidence model.</td>
+              </tr>
+              <tr>
+                <td>Data reliability</td>
+                <td>Expand validation to include per-source freshness thresholds, failed-source warnings in the UI, anomaly detection, and versioned data releases.</td>
+                <td>Organizations need to know when values changed, which sources failed, and whether outputs are comparable over time.</td>
+              </tr>
+              <tr>
+                <td>User workflows</td>
+                <td>Add saved country briefs, PDF exports, donor drilldowns, project lists, organization accounts, API keys, and repeatable export audit trails.</td>
+                <td>Institutional users need reusable outputs for screening, reporting, and internal dashboards.</td>
+              </tr>
+              <tr>
+                <td>Accessibility assurance</td>
+                <td>Complete a manual keyboard-only pass and screen-reader smoke test with NVDA, VoiceOver, or JAWS before making formal WCAG claims.</td>
+                <td>Automated checks are strong but do not replace assistive-technology testing with real workflows.</td>
+              </tr>
+              <tr>
+                <td>Governance</td>
+                <td>Add a named support process, correction workflow, source licensing notes, data retention policy for future accounts, and institutional terms.</td>
+                <td>Organizations need clear accountability before relying on the tool in decision processes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Recommended next sequence</h3>
+        <ol>
+          <li>Finish manual accessibility and mobile QA.</li>
+          <li>Deploy the premium API with authentication and Stripe in test mode.</li>
+          <li>Add a first premium country evidence pack for a small pilot group.</li>
+          <li>Introduce versioned data releases and visible failed-source notices.</li>
+          <li>Move to the preferred production subpage when the `bisolutions.group` deployment path is ready.</li>
+        </ol>
       </section>
 
       <section id="accessibility" class="doc-section">
