@@ -1,0 +1,144 @@
+{
+  "generatedAt": "2026-05-10T20:26:36.076Z",
+  "status": "passed",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+    {
+      "name": "Generated timestamp exists",
+      "ok": true,
+      "detail": "2026-05-10T18:27:27.744Z",
+      "severity": "error"
+    },
+    {
+      "name": "Country count threshold",
+      "ok": true,
+      "detail": "191 countries",
+      "severity": "error"
+    },
+    {
+      "name": "Source count threshold",
+      "ok": true,
+      "detail": "15 public sources",
+      "severity": "error"
+    },
+    {
+      "name": "Unique ISO3 codes",
+      "ok": true,
+      "detail": "191 ISO3 rows",
+      "severity": "error"
+    },
+    {
+      "name": "Required country fields",
+      "ok": true,
+      "detail": "all countries have required fields",
+      "severity": "error"
+    },
+    {
+      "name": "INFORM edition freshness",
+      "ok": true,
+      "detail": "INFORM GNA year 2025",
+      "severity": "error"
+    },
+    {
+      "name": "OECD CRS freshness",
+      "ok": true,
+      "detail": "CRS year 2024",
+      "severity": "warning"
+    },
+    {
+      "name": "Disaster event series freshness",
+      "ok": true,
+      "detail": "latest event year 2025",
+      "severity": "warning"
+    },
+    {
+      "name": "Economic damage series exists",
+      "ok": true,
+      "detail": "latest damage year 2025",
+      "severity": "error"
+    },
+    {
+      "name": "Coverage: drrOdaDisbursementUsd",
+      "ok": true,
+      "detail": "135/191 (71%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: worldRiskIndexValue",
+      "ok": true,
+      "detail": "190/191 (99%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: disasterDisplacementValue",
+      "ok": true,
+      "detail": "180/191 (94%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: lossUsdValue",
+      "ok": true,
+      "detail": "155/191 (81%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: nationalStrategyValue",
+      "ok": true,
+      "detail": "135/191 (71%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: thinkHazard",
+      "ok": true,
+      "detail": "191/191 (100%)",
+      "severity": "warning"
+    }
+  ],
+  "coverage": [
+    {
+      "field": "drrOdaDisbursementUsd",
+      "covered": 135,
+      "total": 191,
+      "ratio": 0.7068062827225131
+    },
+    {
+      "field": "worldRiskIndexValue",
+      "covered": 190,
+      "total": 191,
+      "ratio": 0.9947643979057592
+    },
+    {
+      "field": "disasterDisplacementValue",
+      "covered": 180,
+      "total": 191,
+      "ratio": 0.9424083769633508
+    },
+    {
+      "field": "lossUsdValue",
+      "covered": 155,
+      "total": 191,
+      "ratio": 0.8115183246073299
+    },
+    {
+      "field": "nationalStrategyValue",
+      "covered": 135,
+      "total": 191,
+      "ratio": 0.7068062827225131
+    },
+    {
+      "field": "thinkHazard",
+      "covered": 191,
+      "total": 191,
+      "ratio": 1
+    }
+  ],
+  "summary": {
+    "countries": 191,
+    "sources": 15,
+    "informYear": 2025,
+    "crsYear": 2024,
+    "eventYear": 2025,
+    "damageYear": 2025
+  }
+}

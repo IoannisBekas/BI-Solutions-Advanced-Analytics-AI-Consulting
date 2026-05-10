@@ -60,9 +60,11 @@ Run this from the project folder:
 
 ```powershell
 node .\scripts\download-data.mjs
+node .\scripts\validate-data.mjs
 ```
 
 The script writes raw files to `data/raw/` and dashboard-ready files to `data/processed/`.
+The validation step writes `data/processed/validation-report.json` and fails on critical schema or coverage problems before the weekly refresh commits new data.
 
 ## Source Catalog
 

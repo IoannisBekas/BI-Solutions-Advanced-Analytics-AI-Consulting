@@ -36,6 +36,18 @@ For premium access, set either `billing.entitlementEndpoint` or `billing.premium
 
 Premium country data should be served by the backend only after entitlement verification. Do not commit premium records to `data/processed/`.
 
+Optional access-request capture can be wired by setting:
+
+```json
+{
+  "billing": {
+    "requestAccessEndpoint": "https://YOUR-WORKER.example.workers.dev/request-access"
+  }
+}
+```
+
+The API template also exposes `GET /premium/country/:iso3`, which currently returns an authenticated placeholder. Connect this endpoint to a restricted data store before returning premium records.
+
 ## Suggested Premium Datasets
 
 | Module | Data sources | Confidence model |

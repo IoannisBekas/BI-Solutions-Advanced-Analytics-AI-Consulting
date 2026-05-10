@@ -5,6 +5,8 @@
     "checkoutEndpoint": "",
     "premiumApiBase": "",
     "entitlementEndpoint": "",
+    "requestAccessEndpoint": "",
+    "contactEmail": "contact@bisolutions.group",
     "successPath": "./?checkout=success#premium-plans",
     "cancelPath": "./?checkout=cancelled#premium-plans",
     "securityNote": "Premium data must be served from an authenticated API. Do not commit restricted datasets into the static GitHub Pages bundle."
@@ -28,10 +30,10 @@
     {
       "id": "pro",
       "name": "Pro",
-      "price": "$29",
-      "period": "per month",
+      "price": "$59",
+      "period": "per month, billed annually after launch",
       "label": "Individual analyst",
-      "cta": "Request Pro access",
+      "cta": "Join Pro waitlist",
       "checkoutUrl": "",
       "features": [
         "Country-level premium finance evidence pack",
@@ -44,9 +46,9 @@
       "id": "institution",
       "name": "Institution",
       "price": "$199",
-      "period": "per month",
+      "period": "per month, billed annually after launch",
       "label": "Teams and research groups",
-      "cta": "Request institution access",
+      "cta": "Join institution waitlist",
       "checkoutUrl": "",
       "features": [
         "Team access for project and country screening",
