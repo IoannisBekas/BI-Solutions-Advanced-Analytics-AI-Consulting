@@ -22,4 +22,4 @@ Restricted, licensed, manually curated, or paid-only data must not be committed 
 
 ## Contact
 
-For corrections, source suggestions, institutional use, or country evidence requests, contact: contact@bisolutions.group.
+For corrections, source suggestions, institutional use, or country evidence requests, contact Bekas Ioannis through LinkedIn: https://www.linkedin.com/in/ioannisbekas/.

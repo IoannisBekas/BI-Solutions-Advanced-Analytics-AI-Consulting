@@ -6,7 +6,7 @@
     "premiumApiBase": "",
     "entitlementEndpoint": "",
     "requestAccessEndpoint": "",
-    "contactEmail": "contact@bisolutions.group",
+    "contactUrl": "https://www.linkedin.com/in/ioannisbekas/",
     "successPath": "./?checkout=success#premium-plans",
     "cancelPath": "./?checkout=cancelled#premium-plans",
     "securityNote": "Premium data is served from an authenticated API, with restricted datasets kept outside the static GitHub Pages bundle."

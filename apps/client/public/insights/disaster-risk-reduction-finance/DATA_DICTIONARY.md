@@ -1,6 +1,6 @@
 # Data Dictionary
 
-The main public dataset is `data/processed/dashboard-data.json`. A flatter export is available at `data/processed/country_metrics.csv`.
+The main public dataset powering the dashboard is `data/processed/dashboard-data.json`. CSV exports are a Pro access feature and are not published as static public files.
 
 ## Country Identifiers
 

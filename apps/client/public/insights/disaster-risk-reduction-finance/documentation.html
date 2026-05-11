@@ -32,7 +32,7 @@
       content="Methodology, source scope, build notes, accessibility status, and terms for the DRR dashboard."
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-11-a11y" />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-11-anchor-fix" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to documentation</a>
@@ -130,7 +130,7 @@
         <ul>
           <li><strong>Front end:</strong> `index.html`, `styles.css`, and `app.js` render the dashboard, charts, filters, country profiles, exports, premium access messaging, and dataset Q&amp;A.</li>
           <li><strong>Data pipeline:</strong> `scripts/download-data.mjs` downloads, normalizes, and joins public DRR datasets by ISO3 country code.</li>
-          <li><strong>Processed outputs:</strong> `data/processed/dashboard-data.json` powers the dashboard, while `data/processed/country_metrics.csv` supports public CSV export.</li>
+          <li><strong>Processed outputs:</strong> `data/processed/dashboard-data.json` powers the public dashboard. CSV exports are handled as a Pro access feature, not as a public static file.</li>
           <li><strong>Validation:</strong> `scripts/validate-data.mjs` checks source counts, country coverage, schema expectations, missing values, and warning conditions before refreshed data can be committed.</li>
           <li><strong>Automation:</strong> `.github/workflows/refresh-data.yml` runs the public data refresh weekly and blocks publication when strict validation warnings are present.</li>
           <li><strong>Hosting:</strong> GitHub Pages serves the static dashboard from the public repository.</li>
@@ -253,7 +253,7 @@
           The static public site does not require an account. Premium data and restricted exports are handled through protected access for eligible users.
         </p>
         <p>
-          For corrections, source suggestions, institutional pilots, or country evidence requests, contact <a class="text-link" href="mailto:contact@bisolutions.group">contact@bisolutions.group</a>.
+          For corrections, source suggestions, institutional pilots, or country evidence requests, contact <a class="text-link" href="https://www.linkedin.com/in/ioannisbekas/" target="_blank" rel="noreferrer">Bekas Ioannis on LinkedIn</a>.
         </p>
       </section>
     </main>
@@ -261,5 +261,6 @@
     <footer>
       <p><a class="text-link" href="./index.html">Return to dashboard</a></p>
     </footer>
+    <script src="./documentation.js?v=2026-05-11-anchor-fix" defer></script>
   </body>
 </html>

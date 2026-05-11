@@ -33,7 +33,7 @@
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <meta name="twitter:image:alt" content="Disaster Risk Reduction dashboard preview with country, risk, and finance indicators." />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-11-mobile-sticky" />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-11-anchor-fix" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -94,12 +94,6 @@
               { "@type": "PropertyValue", "name": "Direct disaster economic loss" }
             ],
             "distribution": [
-              {
-                "@type": "DataDownload",
-                "name": "Country metrics CSV",
-                "contentUrl": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/data/processed/country_metrics.csv",
-                "encodingFormat": "text/csv"
-              },
               {
                 "@type": "DataDownload",
                 "name": "Dashboard data JSON",
@@ -369,11 +363,12 @@
       <p id="kpi-timeframe-note" class="context-note" role="note"></p>
 
       <section class="action-bar" aria-label="Dashboard actions">
-        <a class="action-button" href="./data/processed/country_metrics.csv" download>Download all country CSV</a>
-        <button class="action-button" id="download-country" type="button">Download selected country</button>
-        <button class="action-button" id="download-donors" type="button">Download donors</button>
-        <button class="action-button" id="download-projects" type="button">Download project signals</button>
-        <button class="action-button" id="copy-country-link" type="button">Copy country link</button>
+        <button class="action-button action-button-premium" id="download-all-countries" type="button" aria-label="Download all country CSV, requires Pro">All CSV <span>Pro</span></button>
+        <button class="action-button action-button-premium" id="download-country" type="button" aria-label="Download selected country CSV, requires Pro">Country CSV <span>Pro</span></button>
+        <button class="action-button action-button-premium" id="download-donors" type="button" aria-label="Download donor CSV for selected country, requires Pro">Donors CSV <span>Pro</span></button>
+        <button class="action-button action-button-premium" id="download-projects" type="button" aria-label="Download project signals CSV for selected country, requires Pro">Projects CSV <span>Pro</span></button>
+        <button class="action-button" id="copy-country-link" type="button" aria-label="Copy link to selected country briefing">Copy link</button>
+        <p class="action-note">CSV exports require Pro access. Public browsing and copy-link sharing remain free.</p>
         <p id="share-status" class="action-status" role="status" aria-live="polite"></p>
       </section>
 
@@ -440,8 +435,8 @@
           <article>
             <span>Contact</span>
             <strong>Feedback and institutional use</strong>
-            <p>For corrections, source suggestions, institutional pilots, or country evidence requests, contact the project owner.</p>
-            <a href="mailto:contact@bisolutions.group">contact@bisolutions.group</a>
+            <p>For corrections, source suggestions, institutional pilots, or country evidence requests, contact the project owner through LinkedIn.</p>
+            <a href="https://www.linkedin.com/in/ioannisbekas/" target="_blank" rel="noreferrer">LinkedIn profile</a>
           </article>
         </div>
       </section>
@@ -749,6 +744,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="./app.js?v=2026-05-11-mobile-sticky" defer></script>
+    <script src="./app.js?v=2026-05-11-anchor-fix" defer></script>
   </body>
 </html>

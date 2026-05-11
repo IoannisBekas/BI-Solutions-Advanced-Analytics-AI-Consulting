@@ -1,4 +1,5 @@
-const ASSET_VERSION = "2026-05-11-mobile-sticky";
+const ASSET_VERSION = "2026-05-11-anchor-fix";
+const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
   try {
@@ -118,7 +119,7 @@ function renderDataTables(state) {
     column("hazardExposure", "Hazard/exposure", (row) => fmtFixed(row.hazardExposure, 1)),
     column("vulnerability", "Vulnerability", (row) => fmtFixed(row.vulnerability, 1)),
     column("lackCopingCapacity", "Lack of coping", (row) => fmtFixed(row.lackCopingCapacity, 1)),
-  ]);
+  ], state);
 
   const hazards = state.data.series.thinkHazardSummary || [];
   const topHazard = hazards[0];
@@ -132,7 +133,7 @@ function renderDataTables(state) {
     column("medium", "Medium countries", (row) => fmtNumber(row.medium)),
     column("low", "Low countries", (row) => fmtNumber(row.low)),
     column("total", "Countries with record", (row) => fmtNumber(row.total)),
-  ]);
+  ], state);
 
   const topRisk = countries.slice(0, 15);
   setPlainText(
@@ -144,7 +145,7 @@ function renderDataTables(state) {
     column("iso3", "ISO3"),
     column("name", "Country"),
     column("risk", "INFORM risk", (row) => fmtFixed(row.risk, 1)),
-  ]);
+  ], state);
 
   const financeGap = financeGapRows(countries);
   setPlainText(
@@ -157,7 +158,7 @@ function renderDataTables(state) {
     column("risk", "INFORM risk", (row) => fmtFixed(row.risk, 1)),
     column("drrOdaDisbursementUsd", "DRR ODA disb.", (row) => fmtMoney(row.drrOdaDisbursementUsd, row.drrOdaYear)),
     column("financePerRisk", "USD per risk point", (row) => fmtMoney(row.financePerRisk)),
-  ]);
+  ], state);
 
   const latestEventYear = d3.max(state.data.series.disasterEvents, (row) => row.year);
   const latestEvents = state.data.series.disasterEvents
@@ -168,7 +169,7 @@ function renderDataTables(state) {
     column("year", "Year"),
     column("type", "Hazard type"),
     column("value", "Reported events", (row) => fmtNumber(row.value)),
-  ]);
+  ], state);
 
   const damageRows = state.data.series.economicDamage
     .filter((row) => row.type === "All disasters")
@@ -179,7 +180,7 @@ function renderDataTables(state) {
     column("year", "Year"),
     column("type", "Type"),
     column("value", "Damage", (row) => fmtMoney(row.value)),
-  ]);
+  ], state);
 
   const scatterRows = countries
     .filter((country) => Number.isFinite(country.risk) && Number.isFinite(country.worldRiskIndexValue))
@@ -191,7 +192,7 @@ function renderDataTables(state) {
     column("risk", "INFORM risk", (row) => fmtFixed(row.risk, 1)),
     column("worldRiskIndexValue", "WorldRiskIndex", (row) => fmtYearValue(row.worldRiskIndexValue, row.worldRiskIndexYear, 2)),
     column("disasterDisplacementValue", "Disaster displacement", (row) => fmtYearValue(row.disasterDisplacementValue, row.disasterDisplacementYear)),
-  ]);
+  ], state);
 }
 
 function column(key, label, format = null) {
@@ -228,15 +229,18 @@ function renderStartupError(error) {
   `;
 }
 
-function renderTable(selector, filename, rows, columns) {
+function renderTable(selector, filename, rows, columns, state) {
   const node = document.querySelector(selector);
   if (!node) return;
   const csvRows = rows.map((row, index) =>
     Object.fromEntries(columns.map((item) => [item.label, item.format ? item.format(row, index) : row[item.key]])),
   );
   const csv = toCsv(csvRows, columns.map((item) => item.label));
+  const downloadControl = hasExportAccess(state)
+    ? `<a class="table-download" href="data:text/csv;charset=utf-8,${encodeURIComponent(csv)}" download="${escapeHtml(filename)}">Download this table CSV</a>`
+    : `<button class="table-download" type="button" data-locked-export="table CSV">CSV export requires <span>Pro</span></button>`;
   node.innerHTML = `
-    <a class="table-download" href="data:text/csv;charset=utf-8,${encodeURIComponent(csv)}" download="${escapeHtml(filename)}">Download this table CSV</a>
+    ${downloadControl}
     <table class="data-table">
       <thead>
         <tr>${columns.map((item) => `<th scope="col">${escapeHtml(item.label)}</th>`).join("")}</tr>
@@ -256,6 +260,9 @@ function renderTable(selector, filename, rows, columns) {
       </tbody>
     </table>
   `;
+  node.querySelector("[data-locked-export]")?.addEventListener("click", () => {
+    showPremiumExportPrompt(state, "Table CSV export");
+  });
 }
 
 function setPlainText(selector, text) {
@@ -1132,9 +1139,22 @@ function scrollToSectionTarget(targetOrId, options = {}) {
     typeof targetOrId === "string" ? document.getElementById(targetOrId) : targetOrId;
   if (!target) return false;
   updateStickyNavOffset();
-  const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - getStickyNavOffset());
-  window.scrollTo({ top, behavior: options.behavior || "auto" });
+  const behavior = options.behavior || "auto";
+  const top = sectionTargetTop(target);
+  window.scrollTo({ top, behavior });
+  const correctionDelay = behavior === "smooth" ? 460 : 80;
+  window.setTimeout(() => {
+    const correctedTop = sectionTargetTop(target);
+    if (Math.abs(window.scrollY - correctedTop) > 2) {
+      window.scrollTo({ top: correctedTop, behavior: "auto" });
+    }
+  }, correctionDelay);
   return true;
+}
+
+function sectionTargetTop(target) {
+  updateStickyNavOffset();
+  return Math.max(0, window.scrollY + target.getBoundingClientRect().top - getStickyNavOffset());
 }
 
 function getStickyNavOffset() {
@@ -1738,13 +1758,10 @@ async function requestAccess(planId, state) {
       return;
     }
   }
-  const email = billing.contactEmail || "contact@bisolutions.group";
-  const safeEmail = safeEmailAddress(email);
-  const subject = encodeURIComponent(`DRR dashboard ${plan.name} access`);
-  const body = encodeURIComponent(`Plan: ${plan.name}\nCountry: ${countryName}\nPage: ${country ? countryShareUrl(country.iso3) : window.location.href}`);
+  const contactUrl = safeExternalUrl(billing.contactUrl || CONTACT_URL, CONTACT_URL);
   status.innerHTML =
     `${escapeHtml(plan.name)} access is handled by request. ` +
-    `<a class="text-link" href="mailto:${escapeHtml(safeEmail)}?subject=${subject}&body=${body}">Email ${escapeHtml(safeEmail)}</a> to request access for ${escapeHtml(countryName)}.`;
+    `<a class="text-link" href="${escapeHtml(contactUrl)}" target="_blank" rel="noreferrer">Contact Bekas Ioannis on LinkedIn</a> to request access for ${escapeHtml(countryName)}.`;
 }
 
 function attachQuestionBar(state) {
@@ -1978,7 +1995,15 @@ function answerBlock(title, body, actions) {
 }
 
 function attachDashboardActions(state) {
+  document.querySelector("#download-all-countries")?.addEventListener("click", () => {
+    if (!ensureExportAccess(state, "All-country CSV export")) return;
+    const rows = countryMetricsExportRows(state.data.countries);
+    downloadRows("drr-country-metrics.csv", rows, Object.keys(rows[0] || {}));
+    setActionStatus("Downloaded all-country metrics CSV.");
+  });
+
   document.querySelector("#download-country")?.addEventListener("click", () => {
+    if (!ensureExportAccess(state, "Selected-country CSV export")) return;
     const country = countryByIso(state, state.selectedIso);
     if (!country) return;
     downloadRows(
@@ -1990,6 +2015,7 @@ function attachDashboardActions(state) {
   });
 
   document.querySelector("#download-donors")?.addEventListener("click", () => {
+    if (!ensureExportAccess(state, "Donor CSV export")) return;
     const country = countryByIso(state, state.selectedIso);
     if (!country) return;
     const donors = Array.isArray(country.drrOdaTopDonors) ? country.drrOdaTopDonors : [];
@@ -2010,6 +2036,7 @@ function attachDashboardActions(state) {
   });
 
   document.querySelector("#download-projects")?.addEventListener("click", () => {
+    if (!ensureExportAccess(state, "Project-signal CSV export")) return;
     const country = countryByIso(state, state.selectedIso);
     if (!country) return;
     downloadRows(
@@ -2031,6 +2058,49 @@ function attachDashboardActions(state) {
       setActionStatus(url);
     }
   });
+}
+
+function hasExportAccess(state) {
+  const entitlement = state?.entitlement || {};
+  const plan = String(entitlement.plan || "").toLowerCase();
+  return Boolean(entitlement.premiumAccess) || ["pro", "institution", "enterprise"].includes(plan);
+}
+
+function ensureExportAccess(state, exportLabel) {
+  if (hasExportAccess(state)) return true;
+  showPremiumExportPrompt(state, exportLabel);
+  return false;
+}
+
+function showPremiumExportPrompt(state, exportLabel) {
+  const status = document.querySelector("#share-status");
+  const country = countryByIso(state, state.selectedIso);
+  const countryName = country?.name || "the selected country";
+  const message =
+    `${escapeHtml(exportLabel)} is included in Pro access. ` +
+    `<a class="text-link" href="#premium-plans">View pricing</a> or ` +
+    `<a class="text-link" href="${CONTACT_URL}" target="_blank" rel="noreferrer">request access on LinkedIn</a> for ${escapeHtml(countryName)}.`;
+  if (status) status.innerHTML = message;
+}
+
+function countryMetricsExportRows(countries) {
+  return countries.map((country) => ({
+    iso3: country.iso3,
+    country: country.name,
+    continent: countryContinent(country),
+    informRisk: fmtFixed(country.risk, 1),
+    hazardExposure: fmtFixed(country.hazardExposure, 1),
+    vulnerability: fmtFixed(country.vulnerability, 1),
+    lackCopingCapacity: fmtFixed(country.lackCopingCapacity, 1),
+    drrOdaDisbursement: fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear),
+    drrOdaCommitment: fmtMoney(country.drrOdaCommitmentUsd, country.drrOdaYear),
+    topDonor: topDonorLabel(country),
+    directEconomicLoss: fmtMoney(country.lossUsdValue, country.lossUsdYear),
+    disasterDisplacement: fmtYearValue(country.disasterDisplacementValue, country.disasterDisplacementYear),
+    worldBankDrmProjects: fmtNumber(country.worldBankDrmProjectCount),
+    gcfDrrProjects: fmtNumber(country.gcfDrrProjectCount),
+    ochaResponseFunding: fmtMoney(country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear),
+  }));
 }
 
 function countryProfileRows(country) {
@@ -2194,7 +2264,7 @@ function fallbackProductConfig() {
   return {
     billing: {
       status: "configuration_required",
-      contactEmail: "contact@bisolutions.group",
+      contactUrl: CONTACT_URL,
       securityNote: "Restricted data is fetched only from an authenticated backend.",
     },
     plans: [],
@@ -3318,11 +3388,6 @@ function safeExternalUrl(value, fallback = "#") {
   } catch {
     return fallback;
   }
-}
-
-function safeEmailAddress(value) {
-  const text = String(value || "").trim();
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text) ? text : "contact@bisolutions.group";
 }
 
 function csvEscape(value) {

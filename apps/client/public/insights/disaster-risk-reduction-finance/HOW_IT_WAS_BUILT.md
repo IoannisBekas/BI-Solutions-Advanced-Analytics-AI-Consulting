@@ -12,11 +12,11 @@ The public site is a static GitHub Pages application.
 
 | Layer | Files | Purpose |
 | --- | --- | --- |
-| Front end | `index.html`, `styles.css`, `app.js` | Renders the public dashboard, charts, filters, country profiles, exports, premium access surfaces, and dataset Q&A. |
+| Front end | `index.html`, `styles.css`, `app.js` | Renders the public dashboard, charts, filters, country profiles, gated export prompts, premium access surfaces, and dataset Q&A. |
 | Data pipeline | `scripts/download-data.mjs` | Downloads, normalizes, and joins public datasets into country-level records. |
 | Validation | `scripts/validate-data.mjs` | Checks schema, country counts, source counts, missing values, and warning conditions before data is published. |
 | Static audits | `scripts/audit-static.mjs`, `scripts/mobile-audit.mjs` | Checks accessibility basics, contrast, links, mobile overflow, and chart rendering. |
-| Public data | `data/processed/dashboard-data.json`, `data/processed/country_metrics.csv` | Compact data used by the dashboard and CSV export. |
+| Public data | `data/processed/dashboard-data.json` | Compact data used by the public dashboard. CSV exports are generated only for entitled Pro or Institution users. |
 | Source inventory | `data_catalog.json`, `DATA_SOURCES.md` | Documents automated, reference, and case-study source layers. |
 | Premium template | `premium-api/` | Server-side Stripe and entitlement API template for protected paid data access. |
 
@@ -25,7 +25,7 @@ The public site is a static GitHub Pages application.
 1. Public sources are downloaded or queried by `scripts/download-data.mjs`.
 2. Country names are normalized and joined primarily by ISO3 country code.
 3. Source-specific values are transformed into a compact country metrics model.
-4. Processed JSON and CSV files are written to `data/processed/`.
+4. Processed public JSON files are written to `data/processed/`; CSV exports remain behind the premium access surface.
 5. `scripts/validate-data.mjs` checks the result before publication.
 6. GitHub Actions runs the refresh workflow weekly and commits refreshed public data only when validation passes.
 
