@@ -23,6 +23,15 @@ function isStaticAssetRequest(requestPath: string) {
   return path.posix.extname(normalizedPath) !== "";
 }
 
+function resolveContainedPath(rootPath: string, requestPath: string) {
+  const candidate = path.resolve(rootPath, `.${requestPath}`);
+  const relative = path.relative(rootPath, candidate);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    return null;
+  }
+  return candidate;
+}
+
 function setStaticCacheHeaders(res: Response, filePath: string) {
   const normalizedPath = filePath.replace(/\\/g, "/");
   const baseName = path.basename(normalizedPath);
@@ -203,6 +212,26 @@ function serveProductSpa(app: Express, mountPath: string, productDistPath: strin
 
   const indexPath = path.resolve(productDistPath, "index.html");
   const indexHtml = fs.existsSync(indexPath) ? fs.readFileSync(indexPath, "utf-8") : "";
+
+  app.use(mountPath, (req, res, next) => {
+    if ((req.method !== "GET" && req.method !== "HEAD") || path.posix.extname(req.path).toLowerCase() !== ".html") {
+      next();
+      return;
+    }
+
+    const htmlPath = resolveContainedPath(productDistPath, req.path);
+    if (!htmlPath) {
+      res.status(404).type("text/plain").send("Not found");
+      return;
+    }
+
+    if (!fs.existsSync(htmlPath) || !fs.statSync(htmlPath).isFile()) {
+      next();
+      return;
+    }
+
+    sendUncachedHtml(res, fs.readFileSync(htmlPath, "utf-8"));
+  });
 
   app.use(mountPath, express.static(productDistPath, {
     index: false,
