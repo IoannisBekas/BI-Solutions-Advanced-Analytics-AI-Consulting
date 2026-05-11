@@ -33,7 +33,7 @@
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <meta name="twitter:image:alt" content="Disaster Risk Reduction dashboard preview with country, risk, and finance indicators." />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-11-hardening" />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-11-mobile-sticky" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -229,6 +229,42 @@
     </header>
 
     <main id="main-content">
+      <div class="mobile-country-strip" id="mobile-country-strip" aria-label="Sticky country filter">
+        <button
+          class="country-filter-toggle mobile-country-strip-toggle"
+          id="mobile-country-toggle"
+          type="button"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="mobile-country-panel"
+          aria-labelledby="mobile-country-strip-label mobile-country-current"
+        >
+          <span class="country-filter-current mobile-country-strip-text">
+            <span class="mobile-country-strip-label" id="mobile-country-strip-label">Country briefing</span>
+            <strong id="mobile-country-current">Loading</strong>
+            <small id="mobile-country-meta">Select a country</small>
+          </span>
+          <span class="mobile-country-strip-action">Change</span>
+          <span class="country-filter-chevron" aria-hidden="true">&#9662;</span>
+        </button>
+        <div class="country-filter-panel mobile-country-panel" id="mobile-country-panel" hidden>
+          <label for="mobile-country-input">
+            <span>Search by country or ISO3</span>
+            <input
+              id="mobile-country-input"
+              type="search"
+              autocomplete="off"
+              placeholder="Start typing, e.g. Philippines or PHL"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-controls="mobile-country-results"
+            />
+          </label>
+          <div id="mobile-country-results" class="country-filter-results" role="listbox" aria-label="Mobile country results"></div>
+          <p>Use arrow keys and Enter, or tap a country.</p>
+        </div>
+      </div>
       <nav class="section-nav" aria-label="Dashboard sections">
         <div class="section-links">
           <a href="#risk-section">Risk</a>
@@ -713,6 +749,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="./app.js?v=2026-05-11-hardening" defer></script>
+    <script src="./app.js?v=2026-05-11-mobile-sticky" defer></script>
   </body>
 </html>

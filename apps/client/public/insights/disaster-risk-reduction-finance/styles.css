@@ -2033,9 +2033,13 @@ footer p {
   text-transform: uppercase;
 }
 
+.mobile-country-strip {
+  display: none;
+}
+
 @media (max-width: 900px) {
   :root {
-    --sticky-nav-offset: 24px;
+    --sticky-nav-offset: 92px;
   }
 
   .masthead-grid,
@@ -2071,20 +2075,94 @@ footer p {
     gap: 10px;
   }
 
+  .mobile-country-strip {
+    position: sticky;
+    top: 0;
+    z-index: 12;
+    display: block;
+    margin: -4px 0 10px;
+    padding: 10px;
+    border: 1px solid var(--hairline);
+    border-top: 3px solid var(--accent-dark);
+    background: var(--control-band);
+    box-shadow: 0 12px 24px rgba(17, 17, 17, 0.13);
+  }
+
+  .mobile-country-strip-toggle {
+    min-height: 58px;
+    background: var(--panel);
+  }
+
+  .mobile-country-strip-text {
+    gap: 1px;
+  }
+
+  .mobile-country-strip-label,
+  .mobile-country-strip-action {
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .mobile-country-strip-current,
+  #mobile-country-current {
+    overflow: hidden;
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-country-strip-action {
+    flex: 0 0 auto;
+    color: var(--accent-dark);
+  }
+
+  .mobile-country-strip-open .mobile-country-strip-toggle {
+    border-color: var(--accent-dark);
+    box-shadow: inset 0 0 0 2px var(--accent-light);
+  }
+
+  .mobile-country-strip-open .country-filter-chevron {
+    transform: rotate(180deg);
+  }
+
+  .mobile-country-panel {
+    top: calc(100% + 6px);
+    right: 10px;
+    left: 10px;
+    max-height: min(70vh, 430px);
+  }
+
+  .mobile-country-panel .country-filter-results {
+    max-height: min(46vh, 300px);
+  }
+
   .section-links {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .quick-country-picker {
-    grid-template-columns: 1fr;
-    justify-self: stretch;
-    width: 100%;
+    display: none;
   }
 
   .country-filter-panel {
     position: static;
     margin-top: 6px;
     box-shadow: none;
+  }
+
+  .mobile-country-strip .mobile-country-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 10px;
+    left: 10px;
+    margin-top: 0;
+    box-shadow: var(--shadow);
   }
 
   .reference-links {
@@ -2116,7 +2194,7 @@ footer p {
   #methodology,
   #source-audit,
   #faq {
-    scroll-margin-top: 24px;
+    scroll-margin-top: var(--sticky-nav-offset);
   }
 
   .panel-heading,
