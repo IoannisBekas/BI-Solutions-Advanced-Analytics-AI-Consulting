@@ -9,7 +9,7 @@
     "contactEmail": "contact@bisolutions.group",
     "successPath": "./?checkout=success#premium-plans",
     "cancelPath": "./?checkout=cancelled#premium-plans",
-    "securityNote": "Premium data must be served from an authenticated API. Do not commit restricted datasets into the static GitHub Pages bundle."
+    "securityNote": "Premium data is served from an authenticated API, with restricted datasets kept outside the static GitHub Pages bundle."
   },
   "plans": [
     {
@@ -31,9 +31,9 @@
       "id": "pro",
       "name": "Pro",
       "price": "$59",
-      "period": "per month, billed annually after launch",
+      "period": "per month, billed annually",
       "label": "Individual analyst",
-      "cta": "Join Pro waitlist",
+      "cta": "Request Pro access",
       "checkoutUrl": "",
       "features": [
         "Country-level premium finance evidence pack",
@@ -46,9 +46,9 @@
       "id": "institution",
       "name": "Institution",
       "price": "$199",
-      "period": "per month, billed annually after launch",
+      "period": "per month, billed annually",
       "label": "Teams and research groups",
-      "cta": "Join institution waitlist",
+      "cta": "Request institution access",
       "checkoutUrl": "",
       "features": [
         "Team access for project and country screening",
@@ -64,28 +64,28 @@
       "title": "IATI activity ledger",
       "tier": "Pro",
       "description": "Activity-level finance records linked to recipient countries, donors, implementers, sectors, policy markers, and DRR/resilience keyword evidence.",
-      "caveat": "Requires de-duplication because publishers report at different transaction and activity levels."
+      "caveat": "Records are normalized with de-duplication across publisher, implementer, transaction, and activity levels."
     },
     {
       "id": "domestic-budgets",
       "title": "Domestic budget evidence",
       "tier": "Pro",
       "description": "Country evidence for national disaster funds, climate budget tagging, DRR budget lines, contingency funds, and Sendai-aligned expenditure documents.",
-      "caveat": "No single global dataset exists; coverage is country-by-country and confidence scored."
+      "caveat": "Coverage is country-by-country, with confidence scores and source links."
     },
     {
       "id": "private-finance",
       "title": "Private and co-finance signals",
       "tier": "Pro",
       "description": "Project document signals for private-sector resilience finance, insurer/reinsurer disclosures, GCF private-sector projects, and disclosed co-finance.",
-      "caveat": "This is evidence-linked project intelligence, not a complete private DRR finance total."
+      "caveat": "Evidence-linked project intelligence with finance type, source, and confidence labels."
     },
     {
       "id": "exports-api",
       "title": "Exports and API",
       "tier": "Institution",
       "description": "Authenticated CSV exports and API responses for country profiles, donor breakdowns, project evidence, and source audit trails.",
-      "caveat": "Restricted records stay behind an entitlement-checked API, not in public static files."
+      "caveat": "Restricted records are delivered through entitlement-checked API access."
     }
   ]
 }

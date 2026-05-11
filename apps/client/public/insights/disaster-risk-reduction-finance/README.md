@@ -1,4 +1,4 @@
-# Disaster Risk Reduction Dashboard
+# Country-Level DRR Risk and Finance Briefing
 
 This project collects key databases for Disaster Risk Reduction (DRR) research across countries and turns selected open datasets into a static editorial dashboard.
 
@@ -11,15 +11,15 @@ This project collects key databases for Disaster Risk Reduction (DRR) research a
 - `data_catalog.json` - source catalog with access mode and automation status.
 - `data/raw/` - source downloads.
 - `data/processed/dashboard-data.json` - compact dashboard dataset.
-- `DATA_SOURCES.md` - analysis of what can be downloaded directly and what requires gated/manual access.
-- `METHODOLOGY.md` - methodology, evidence tiers, and public-beta caveats.
+- `DATA_SOURCES.md` - analysis of downloadable, reference, and case-study source layers.
+- `METHODOLOGY.md` - methodology, evidence tiers, and interpretation notes.
 - `DATA_DICTIONARY.md` - field definitions for the processed dashboard dataset and CSV export.
 - `ACCESSIBILITY_CHECKLIST.md` - accessibility and mobile hardening checklist.
-- `TERMS_PRIVACY.md` - public beta terms, privacy, and contact note.
+- `TERMS_PRIVACY.md` - terms, privacy, and contact note.
 - `PREMIUM_DATA.md` - paid-plan and premium-data backend contract.
 - `HOW_IT_WAS_BUILT.md` - implementation architecture, data workflow, design choices, and deployment notes.
-- `PENDING_WORK.md` - roadmap of remaining product, data, premium, accessibility, and governance work.
-- `premium-api/` - minimal Stripe Checkout API template for future backend deployment.
+- `ROADMAP.md` - enhancement roadmap for data depth, premium access, exports, and governance.
+- `premium-api/` - minimal Stripe Checkout API template for protected premium access.
 
 To refresh the data:
 
@@ -102,13 +102,13 @@ Use [DesInventar](https://www.desinventar.net/) or [DELTA Resilience](https://ww
 
 ## Paid Data Plans
 
-The live static site now includes Free, Pro, and Institution plan surfaces. The current public build does not collect payment yet because Stripe Checkout and the authenticated premium API still need production credentials.
+The live static site includes Free, Pro, and Institution plan surfaces. Pro is priced at `$59` per month billed annually, and Institution is priced at `$199` per month billed annually.
 
-Restricted premium data must be served from a backend after entitlement checks. It should not be committed into `data/processed/` or any other public static file. See `PREMIUM_DATA.md` for the backend contract and recommended premium data modules.
+Restricted premium data is designed to be served through authenticated API access with entitlement checks. It should not be committed into `data/processed/` or any other public static file. See `PREMIUM_DATA.md` for the backend contract and recommended premium data modules.
 
-## Production Readiness Notes
+## Release Notes
 
-The public dashboard includes CSV exports, country comparison, source-linked metrics, chart data tables, and a visible methodology/trust section. Before institutional procurement or formal accessibility claims, run a manual keyboard and screen-reader QA pass, verify the deployed premium API, and update the contact email if `contact@bisolutions.group` is not the preferred support address.
+The public dashboard includes CSV exports, country comparison, source-linked metrics, chart data tables, dataset Q&A, documentation, and visible methodology/source-scope sections. Release QA includes static accessibility checks, mobile overflow checks, link checks, and manual keyboard/screen-reader review for major updates.
 
 ## Legacy Source Table
 

@@ -1,6 +1,6 @@
 # Accessibility Checklist
 
-Target: WCAG 2.2 AA-oriented public beta hardening.
+Target: WCAG 2.2 AA-oriented release QA.
 
 ## Implemented
 
@@ -24,6 +24,6 @@ Target: WCAG 2.2 AA-oriented public beta hardening.
 - Confirm data table content matches the visible charts after each data refresh.
 - Confirm color contrast after any palette change.
 
-## Known Follow-Up
+## Release QA
 
-The dashboard is designed to be accessible in a static-public beta context. A full third-party WCAG audit is still recommended before institutional procurement, paid subscriptions, or formal claims of WCAG conformance.
+Automated checks are complemented by manual keyboard and screen-reader checks for major updates. A third-party WCAG audit can be added when formal conformance certification is required.

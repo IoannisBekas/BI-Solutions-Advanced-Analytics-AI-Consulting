@@ -57,7 +57,7 @@
     "access": "public_api",
     "automation_status": "automated",
     "geography": "destination country-year",
-    "role": "Current-year humanitarian response funding by destination country, shown as response context rather than DRR prevention/preparedness spending."
+    "role": "Current-year humanitarian response funding by destination country, shown as a separate response-context layer."
   },
   {
     "id": "thinkhazard",

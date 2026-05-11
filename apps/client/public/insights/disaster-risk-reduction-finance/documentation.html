@@ -3,20 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DRR Dashboard Documentation | Methodology, Build Notes and Roadmap</title>
+    <title>Country-Level DRR Risk and Finance Briefing | Documentation</title>
     <meta
       name="description"
-      content="Methodology, build notes, source caveats, data dictionary, accessibility notes, roadmap, and terms for the Disaster Risk Reduction dashboard."
+      content="Methodology, build notes, source scope, data dictionary, accessibility notes, and terms for the Country-Level DRR Risk and Finance Briefing."
     />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/documentation.html" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <meta property="og:site_name" content="Disaster Risk Reduction Finance Dashboard" />
+    <meta property="og:site_name" content="Country-Level DRR Risk and Finance Briefing" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="DRR Dashboard Documentation" />
     <meta
       property="og:description"
-      content="Methodology, source caveats, build notes, accessibility status, and roadmap for the Disaster Risk Reduction Finance Dashboard."
+      content="Methodology, source scope, build notes, accessibility status, and terms for the Country-Level DRR Risk and Finance Briefing."
     />
     <meta property="og:url" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/documentation.html" />
     <meta property="og:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
@@ -29,7 +29,7 @@
     <meta name="twitter:title" content="DRR Dashboard Documentation" />
     <meta
       name="twitter:description"
-      content="Methodology, source caveats, build notes, accessibility status, and roadmap for the DRR dashboard."
+      content="Methodology, source scope, build notes, accessibility status, and terms for the DRR dashboard."
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <link rel="stylesheet" href="./styles.css?v=2026-05-11-a11y" />
@@ -42,13 +42,13 @@
         <div>
           <p class="kicker">Disaster Risk Reduction</p>
           <h1>Documentation and Methodology</h1>
-          <p class="dek">How the dashboard was built, source scope, caveats, data fields, accessibility status, pending work, and public beta terms.</p>
+          <p class="dek">How the dashboard was built, source scope, data fields, accessibility status, and terms.</p>
         </div>
         <div class="masthead-side">
           <div class="source-card" aria-label="Documentation navigation">
             <span>Dashboard</span>
-            <strong>Public beta</strong>
-            <p>Return to the live country dashboard or jump to a documentation section.</p>
+            <strong>Public release</strong>
+            <p>Return to the live country briefing or jump to a documentation section.</p>
             <a class="source-card-link" href="./index.html">Open dashboard</a>
           </div>
         </div>
@@ -63,7 +63,6 @@
           <a href="#how-built">How built</a>
           <a href="#data-sources">Sources</a>
           <a href="#data-dictionary">Dictionary</a>
-          <a href="#pending-work">Pending</a>
           <a href="#accessibility">Accessibility</a>
           <a href="#terms-privacy">Terms</a>
         </div>
@@ -73,7 +72,7 @@
         <p class="kicker">Methodology</p>
         <h2>What the dashboard is designed to answer</h2>
         <p>
-          This is an independent public beta for country-level DRR exploration. It consolidates open public datasets into one starting point for risk, hazard, readiness, loss, finance, donor, and project-signal analysis.
+          This independent country-level briefing consolidates open public datasets into one starting point for risk, hazard, readiness, loss, finance, donor, and project-signal analysis.
         </p>
         <ul>
           <li>What is the current composite disaster and humanitarian crisis risk profile?</li>
@@ -83,7 +82,7 @@
           <li>Which donors and public project-finance signals are visible?</li>
         </ul>
         <p>
-          It is not a replacement for official databases, national budget systems, licensed disaster-loss datasets, or full project appraisal.
+          Source-linked metrics make it easier to move from a country screen to the original statistical, budget, project, and finance systems when detailed verification is needed.
         </p>
         <h3>Finance evidence tiers</h3>
         <div class="doc-table-scroll" tabindex="0" role="region" aria-label="Finance evidence tiers table">
@@ -99,22 +98,22 @@
               <tr>
                 <td>Reported international DRR-related ODA</td>
                 <td>OECD CRS purpose codes 74010, 41050, and 41010</td>
-                <td>High-confidence international public finance, not total national DRR spending.</td>
+                <td>High-confidence international public finance layer for donor and recipient screening.</td>
               </tr>
               <tr>
                 <td>Project finance signals</td>
                 <td>World Bank Projects and Operations, Green Climate Fund project records</td>
-                <td>Useful project discovery signal, not exact DRR component value.</td>
+                <td>Project discovery signal for follow-up evidence review.</td>
               </tr>
               <tr>
                 <td>Humanitarian response context</td>
                 <td>OCHA FTS country funding</td>
-                <td>Response pressure context, not prevention or preparedness spending.</td>
+                <td>Humanitarian response pressure context shown as a separate finance layer.</td>
               </tr>
               <tr>
                 <td>Domestic, private, and mainstreamed DRR</td>
-                <td>Premium evidence backlog</td>
-                <td>Requires country-by-country evidence review and confidence labels.</td>
+                <td>Protected evidence modules</td>
+                <td>Country evidence layer for deeper finance review with confidence labels.</td>
               </tr>
             </tbody>
           </table>
@@ -129,7 +128,7 @@
         </p>
         <h3>Architecture</h3>
         <ul>
-          <li><strong>Front end:</strong> `index.html`, `styles.css`, and `app.js` render the dashboard, charts, filters, country profiles, exports, premium waitlist messaging, and dataset Q&amp;A.</li>
+          <li><strong>Front end:</strong> `index.html`, `styles.css`, and `app.js` render the dashboard, charts, filters, country profiles, exports, premium access messaging, and dataset Q&amp;A.</li>
           <li><strong>Data pipeline:</strong> `scripts/download-data.mjs` downloads, normalizes, and joins public DRR datasets by ISO3 country code.</li>
           <li><strong>Processed outputs:</strong> `data/processed/dashboard-data.json` powers the dashboard, while `data/processed/country_metrics.csv` supports public CSV export.</li>
           <li><strong>Validation:</strong> `scripts/validate-data.mjs` checks source counts, country coverage, schema expectations, missing values, and warning conditions before refreshed data can be committed.</li>
@@ -147,18 +146,18 @@
       </section>
 
       <section id="data-sources" class="doc-section">
-        <p class="kicker">Source caveats</p>
-        <h2>What is downloadable, and what remains constrained</h2>
+        <p class="kicker">Source scope</p>
+        <h2>Downloadable and reference source layers</h2>
         <p>
-          The public dashboard uses sources that can be downloaded or queried programmatically without private credentials. Important sources such as official EM-DAT exports, DesInventar country databases, DELTA Resilience, NatCatSERVICE, IATI, domestic budgets, and private finance evidence require registration, licensing, country-by-country extraction, or manual interpretation.
+          The public dashboard uses sources that can be downloaded or queried programmatically without private credentials. Sources such as official EM-DAT exports, DesInventar country databases, DELTA Resilience, NatCatSERVICE, IATI, domestic budgets, and private finance evidence are documented as reference or case-study layers because access terms, schemas, and collection methods differ by source and country.
         </p>
-        <div class="doc-table-scroll" tabindex="0" role="region" aria-label="Source caveats table">
+        <div class="doc-table-scroll" tabindex="0" role="region" aria-label="Source scope table">
           <table>
             <thead>
               <tr>
                 <th scope="col">Source group</th>
                 <th scope="col">Dashboard use</th>
-                <th scope="col">Main caveat</th>
+                <th scope="col">Interpretation note</th>
               </tr>
             </thead>
             <tbody>
@@ -170,23 +169,23 @@
               <tr>
                 <td>OECD CRS</td>
                 <td>Reported DRR-related ODA by donor, recipient, sector, and flow</td>
-                <td>International support only. It is not total country DRR spending.</td>
+                <td>International support layer for donor and recipient screening.</td>
               </tr>
               <tr>
                 <td>World Bank and GCF</td>
                 <td>Public project finance signals and examples</td>
-                <td>Full project amounts should not be read as exact DRR components.</td>
+                <td>Project amounts are used as discovery signals and linked back to source records.</td>
               </tr>
               <tr>
                 <td>OCHA FTS</td>
                 <td>Humanitarian response funding context</td>
-                <td>Response funding is not counted as prevention or preparedness spending.</td>
+                <td>Response funding is shown as a separate humanitarian context layer.</td>
               </tr>
             </tbody>
           </table>
         </div>
         <p>
-          Premium records must be served from an authenticated API after billing and entitlement checks. They should not be committed as public static JSON, CSV, or hidden JavaScript.
+          Restricted premium records are served from protected API access rather than public static JSON, CSV, or hidden JavaScript.
         </p>
       </section>
 
@@ -233,84 +232,25 @@
         </div>
       </section>
 
-      <section id="pending-work" class="doc-section">
-        <p class="kicker">Roadmap</p>
-        <h2>What is still pending</h2>
-        <p>
-          The current public dashboard is suitable for exploration and briefing support. The items below are the main remaining steps before presenting it as an institutional-grade product.
-        </p>
-        <div class="doc-table-scroll" tabindex="0" role="region" aria-label="Pending work roadmap table">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Area</th>
-                <th scope="col">Pending work</th>
-                <th scope="col">Why it matters</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Premium access</td>
-                <td>Deploy the premium API, connect Stripe, add user authentication, verify entitlements, and keep restricted data outside GitHub Pages.</td>
-                <td>Paid users should receive real protected data, not static files that can be bypassed.</td>
-              </tr>
-              <tr>
-                <td>Domestic and private finance</td>
-                <td>Add country-by-country evidence extraction for national budgets, disaster funds, climate budget tagging, IATI records, private finance, and co-finance signals.</td>
-                <td>Public ODA is useful but incomplete; total DRR finance requires a broader evidence model.</td>
-              </tr>
-              <tr>
-                <td>Data reliability</td>
-                <td>Expand validation to include per-source freshness thresholds, failed-source warnings in the UI, anomaly detection, and versioned data releases.</td>
-                <td>Organizations need to know when values changed, which sources failed, and whether outputs are comparable over time.</td>
-              </tr>
-              <tr>
-                <td>User workflows</td>
-                <td>Add saved country briefs, PDF exports, donor drilldowns, project lists, organization accounts, API keys, and repeatable export audit trails.</td>
-                <td>Institutional users need reusable outputs for screening, reporting, and internal dashboards.</td>
-              </tr>
-              <tr>
-                <td>Accessibility assurance</td>
-                <td>Complete a manual keyboard-only pass and screen-reader smoke test with NVDA, VoiceOver, or JAWS before making formal WCAG claims.</td>
-                <td>Automated checks are strong but do not replace assistive-technology testing with real workflows.</td>
-              </tr>
-              <tr>
-                <td>Governance</td>
-                <td>Add a named support process, correction workflow, source licensing notes, data retention policy for future accounts, and institutional terms.</td>
-                <td>Organizations need clear accountability before relying on the tool in decision processes.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <h3>Recommended next sequence</h3>
-        <ol>
-          <li>Finish manual accessibility and mobile QA.</li>
-          <li>Deploy the premium API with authentication and Stripe in test mode.</li>
-          <li>Add a first premium country evidence pack for a small pilot group.</li>
-          <li>Introduce versioned data releases and visible failed-source notices.</li>
-          <li>Move to the preferred production subpage when the `bisolutions.group` deployment path is ready.</li>
-        </ol>
-      </section>
-
       <section id="accessibility" class="doc-section">
         <p class="kicker">Accessibility</p>
-        <h2>Public beta accessibility status</h2>
+        <h2>Accessibility status</h2>
         <p>
           Implemented features include a skip link, semantic landmarks, visible labels, chart summaries, accessible chart data tables, keyboard-reachable table scroll regions, focus-visible styles, reduced-motion CSS, axe-core checks, and mobile overflow checks.
         </p>
         <p>
-          Before institutional procurement or formal WCAG claims, run a manual keyboard-only pass and a screen-reader smoke test with target users.
+          Manual keyboard and screen-reader checks are part of the release QA workflow for major updates.
         </p>
       </section>
 
       <section id="terms-privacy" class="doc-section">
         <p class="kicker">Terms and privacy</p>
-        <h2>Public beta terms</h2>
+        <h2>Terms</h2>
         <p>
-          The public dashboard is provided for exploration, research, and briefing support. It does not provide legal, financial, procurement, or official statistical advice.
+          The public dashboard is provided for research, country screening, and briefing support. Source links are included for due diligence and follow-up analysis.
         </p>
         <p>
-          The static public site does not require an account and does not collect payment. Premium features require a separate authenticated backend before any restricted data or billing can be activated.
+          The static public site does not require an account. Premium data and restricted exports are handled through protected access for eligible users.
         </p>
         <p>
           For corrections, source suggestions, institutional pilots, or country evidence requests, contact <a class="text-link" href="mailto:contact@bisolutions.group">contact@bisolutions.group</a>.

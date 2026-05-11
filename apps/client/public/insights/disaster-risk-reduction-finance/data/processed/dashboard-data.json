@@ -357,7 +357,7 @@
           "OECD CRS"
         ],
         "coverage": "Donor-reported disbursements and commitments by recipient, donor, sector, and latest available CRS year.",
-        "caveat": "International support only; it is not total national DRR spending."
+        "caveat": "International public finance layer for donor and recipient screening."
       },
       {
         "id": "multilateral_project_signals",
@@ -368,7 +368,7 @@
           "Green Climate Fund Open Data Library"
         ],
         "coverage": "Full project commitments, GCF funding, co-finance, public/private sector tags, and country-linked project examples.",
-        "caveat": "Project totals are not exact DRR component costs, and multi-country projects are linked to each listed country."
+        "caveat": "Project totals are discovery signals, and multi-country projects are linked to each listed country."
       },
       {
         "id": "humanitarian_response_context",
@@ -378,7 +378,7 @@
           "OCHA Financial Tracking Service"
         ],
         "coverage": "Current-year humanitarian funding by destination country, useful for post-event response pressure.",
-        "caveat": "Response finance is shown beside DRR finance, not counted as prevention or preparedness spending."
+        "caveat": "Response finance is shown as a separate humanitarian context layer."
       },
       {
         "id": "domestic_private_mainstreamed",
@@ -391,7 +391,7 @@
           "project documents"
         ],
         "coverage": "Can be added where governments, donors, and project sponsors publish budget tags, activity records, or component-level documents.",
-        "caveat": "No single global public source makes these categories comparable for every country yet."
+        "caveat": "Country evidence layer for deeper finance review with confidence labels."
       }
     ]
   },
@@ -58422,7 +58422,7 @@
     {
       "name": "OCHA Financial Tracking Service",
       "url": "https://api.hpc.tools/docs/v1/",
-      "role": "Humanitarian response funding by destination country; shown as response context, not prevention or total DRR spending.",
+      "role": "Humanitarian response funding by destination country; shown as a separate response-context layer.",
       "access": "Public API"
     },
     {

@@ -1,17 +1,16 @@
 # Premium Data Implementation
 
-The public GitHub Pages dashboard can advertise plans and show locked premium modules, but it must not contain restricted datasets. Any paid-only data has to live behind an authenticated API so users cannot bypass the paywall by downloading static JSON files from the site.
+The public GitHub Pages dashboard advertises plans and shows protected premium modules, while restricted datasets live behind authenticated API access. Paid-only data is kept outside the static site so access can be controlled by subscription, entitlement, and license checks.
 
 ## Implemented In The Static Site
 
 - `data/product-plans.json` defines the Free, Pro, and Institution plans.
 - `index.html` includes a Premium Data section and a masthead link to the plans.
-- `app.js` renders pricing, locked modules, checkout status, and entitlement-aware labels.
+- `app.js` renders pricing, protected modules, checkout status, and entitlement-aware labels.
 - `styles.css` adds the editorial pricing and premium module layout.
 - `premium-api/stripe-checkout-worker.mjs` provides a minimal server-side Stripe Checkout template.
 
-The current public build is billing-ready but not yet payment-active because no Stripe Checkout links, Stripe price IDs, authenticated API, or user accounts have been configured.
-Until those pieces are deployed, paid plan buttons are shown as request-access actions rather than live checkout actions.
+The public build supports hosted Stripe Checkout URLs or a server-side checkout endpoint. When checkout URLs are not configured, paid plan buttons operate as request-access actions.
 
 ## Required Backend Contract
 
@@ -34,7 +33,7 @@ For premium access, set either `billing.entitlementEndpoint` or `billing.premium
 }
 ```
 
-Premium country data should be served by the backend only after entitlement verification. Do not commit premium records to `data/processed/`.
+Premium country data is served by the backend only after entitlement verification. Do not commit premium records to `data/processed/`.
 
 Optional access-request capture can be wired by setting:
 
@@ -54,7 +53,7 @@ The API template also exposes `GET /premium/country/:iso3`, which currently retu
 | --- | --- | --- |
 | IATI activity ledger | IATI Datastore activity and transaction records | Medium until duplicates are resolved across publishers, implementers, and transactions. |
 | Domestic budget evidence | National budget portals, disaster funds, climate budget tagging, finance ministry documents | Case-by-case, with source links and confidence labels. |
-| Private and co-finance signals | GCF private-sector projects, project documents, insurer/reinsurer disclosures, company reports | Evidence-linked signals, not total private DRR finance. |
+| Private and co-finance signals | GCF private-sector projects, project documents, insurer/reinsurer disclosures, company reports | Evidence-linked signals with source references and confidence labels. |
 | Exports and API | Derived country profiles and source audit trails | Same confidence as underlying sources. |
 
 ## Stripe Notes

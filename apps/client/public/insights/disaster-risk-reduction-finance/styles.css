@@ -396,8 +396,8 @@ main {
 .plan-button:focus-visible,
 .action-button:hover,
 .action-button:focus-visible,
-.quick-country-picker select:focus-visible,
 .country-filter-toggle:focus-visible,
+.continent-filter-results:focus-visible,
 .country-filter-panel input:focus-visible,
 .compare-controls input:focus-visible,
 .data-table-panel summary:focus-visible,
@@ -417,7 +417,7 @@ main {
   width: 100%;
 }
 
-.quick-country-picker label,
+.continent-filter,
 .country-filter {
   display: grid;
   gap: 7px;
@@ -987,6 +987,10 @@ main {
   box-shadow: inset 0 0 0 2px var(--accent-light);
 }
 
+.country-filter-label {
+  line-height: 1;
+}
+
 .country-filter-open .country-filter-chevron {
   transform: rotate(180deg);
 }
@@ -1063,12 +1067,27 @@ main {
   font-weight: 800;
 }
 
+.country-filter-option:hover,
 .country-filter-option.is-active {
   background: var(--accent-light);
 }
 
 .country-filter-option.is-selected {
   box-shadow: inset 4px 0 0 var(--accent-dark);
+}
+
+.continent-filter-results {
+  max-height: 240px;
+}
+
+.continent-filter-option {
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 12px;
+}
+
+.continent-filter-option strong {
+  white-space: normal;
 }
 
 .country-filter-empty {

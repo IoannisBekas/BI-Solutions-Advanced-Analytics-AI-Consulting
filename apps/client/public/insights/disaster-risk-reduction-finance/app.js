@@ -1,41 +1,47 @@
-const ASSET_VERSION = "2026-05-11-nav-cleanup";
+const ASSET_VERSION = "2026-05-11-hardening";
 
 (async function init() {
-  const [data, world, product, validation] = await Promise.all([
-    d3.json("./data/processed/dashboard-data.json"),
-    d3.json("./data/processed/world.geojson"),
-    d3.json(`./data/product-plans.json?v=${ASSET_VERSION}`).catch(() => null),
-    d3.json("./data/processed/validation-report.json").catch(() => null),
-  ]);
+  try {
+    const [data, world, product, validation] = await Promise.all([
+      d3.json("./data/processed/dashboard-data.json"),
+      d3.json("./data/processed/world.geojson"),
+      d3.json(`./data/product-plans.json?v=${ASSET_VERSION}`).catch(() => null),
+      d3.json("./data/processed/validation-report.json").catch(() => null),
+    ]);
+    assertDashboardData(data, world);
 
-  const selectedIso = initialCountryIso(data);
-  const comparisonIso = data.countries.find((country) => country.iso3 !== selectedIso)?.iso3 || selectedIso;
-  const state = {
-    data,
-    world,
-    product: product || fallbackProductConfig(),
-    validation,
-    entitlement: null,
-    selectedIso,
-    compareIsoA: selectedIso,
-    compareIsoB: comparisonIso,
-  };
-  state.entitlement = await loadEntitlement(state.product);
+    const selectedIso = initialCountryIso(data);
+    const comparisonIso = data.countries.find((country) => country.iso3 !== selectedIso)?.iso3 || selectedIso;
+    const state = {
+      data,
+      world,
+      product: product || fallbackProductConfig(),
+      validation,
+      entitlement: null,
+      selectedIso,
+      compareIsoA: selectedIso,
+      compareIsoB: comparisonIso,
+    };
+    state.entitlement = await loadEntitlement(state.product);
 
-  populateCountrySelect(state);
-  renderAll(state);
-  updateStickyNavOffset();
-  attachDashboardActions(state);
-  attachQuestionBar(state);
-  restoreInitialHashScroll();
-  window.addEventListener(
-    "resize",
-    debounce(() => {
-      renderCharts(state);
-      updateStickyNavOffset();
-    }, 150),
-  );
-  window.addEventListener("scroll", hideTooltip, { passive: true });
+    populateCountrySelect(state);
+    renderAll(state);
+    updateStickyNavOffset();
+    attachSectionNavigation();
+    attachDashboardActions(state);
+    attachQuestionBar(state);
+    restoreInitialHashScroll();
+    window.addEventListener(
+      "resize",
+      debounce(() => {
+        renderCharts(state);
+        updateStickyNavOffset();
+      }, 150),
+    );
+    window.addEventListener("scroll", hideTooltip, { passive: true });
+  } catch (error) {
+    renderStartupError(error);
+  }
 })();
 
 const CONTINENT_LABELS = {
@@ -192,6 +198,36 @@ function column(key, label, format = null) {
   return { key, label, format };
 }
 
+function assertDashboardData(data, world) {
+  if (!Array.isArray(data?.countries) || data.countries.length === 0) {
+    throw new Error("Dashboard data is missing country records.");
+  }
+  if (!Array.isArray(data?.series?.disasterEvents) || !Array.isArray(data?.series?.economicDamage)) {
+    throw new Error("Dashboard data is missing required chart series.");
+  }
+  if (!Array.isArray(world?.features) || world.features.length === 0) {
+    throw new Error("World map data is missing features.");
+  }
+}
+
+function renderStartupError(error) {
+  console.error(error);
+  const target = document.querySelector("#main-content") || document.body;
+  target.innerHTML = `
+    <section class="panel error-panel" role="alert" aria-live="assertive">
+      <div class="panel-heading">
+        <div>
+          <p class="kicker">Data loading</p>
+          <h2>Dashboard data could not be loaded</h2>
+        </div>
+        <p>Refresh the page, or open the documentation while the data files are checked.</p>
+      </div>
+      <p class="empty-note">${escapeHtml(error?.message || "Unknown loading error.")}</p>
+      <a class="plan-button" href="./documentation.html">Open documentation</a>
+    </section>
+  `;
+}
+
 function renderTable(selector, filename, rows, columns) {
   const node = document.querySelector(selector);
   if (!node) return;
@@ -314,11 +350,11 @@ function renderTimeframeNotes(data) {
   );
   setInfoNote(
     "#finance-profile-note",
-    `<strong>Timeframe:</strong> OECD CRS disbursements and commitments are ${crsYear}; World Bank and GCF records are cumulative project signals in the downloaded data; OCHA FTS is ${responseYear} response-funding context. This is international DRR-related finance, not total country DRR spending.`,
+    `<strong>Timeframe:</strong> OECD CRS disbursements and commitments are ${crsYear}; World Bank and GCF records are cumulative project signals in the downloaded data; OCHA FTS is ${responseYear} response-funding context. The finance view separates international DRR-related finance from project, response, domestic, private, and mainstreamed evidence layers.`,
   );
   setInfoNote(
     "#finance-gap-note",
-    `<strong>Timeframe:</strong> CRS ${crsYear} divided by ${inform}. <strong>How to read it:</strong> lower bars flag high-risk countries receiving less reported international DRR-related ODA per point of current risk, before domestic budgets, private finance, and mainstreamed project components are added.`,
+    `<strong>Timeframe:</strong> CRS ${crsYear} divided by ${inform}. <strong>How to read it:</strong> lower bars flag high-risk countries receiving less reported international DRR-related ODA per point of current risk. Domestic budget, private finance, and mainstreamed DRR evidence are treated as separate evidence layers.`,
   );
   setInfoNote(
     "#events-note",
@@ -351,35 +387,149 @@ function initialCountryIso(data) {
 }
 
 function populateCountrySelect(state) {
-  const countries = [...state.data.countries].sort((a, b) => a.name.localeCompare(b.name));
   const continentSelect = document.querySelector("#continent-select");
   const selectedCountry = state.data.countries.find((country) => country.iso3 === state.selectedIso);
+  const continents = orderedContinents(state.data.countries);
   const initialContinent = "";
 
   if (continentSelect) {
-    const continents = orderedContinents(state.data.countries);
     continentSelect.innerHTML = [
       `<option value="">All continents</option>`,
       ...continents.map((continent) => `<option value="${escapeHtml(continent)}">${escapeHtml(continent)}</option>`),
     ].join("");
     continentSelect.value = initialContinent;
-    continentSelect.addEventListener("change", () => {
-      updateCountryDatalist(state, continentSelect.value);
-      const current = state.data.countries.find((country) => country.iso3 === state.selectedIso);
-      if (continentSelect.value && current && countryContinent(current) !== continentSelect.value) {
-        const nextCountry = countries
-          .filter((country) => countryContinent(country) === continentSelect.value)
-          .sort((a, b) => b.risk - a.risk || a.name.localeCompare(b.name))[0];
-        if (nextCountry) setSelectedCountry(state, nextCountry.iso3, { preserveContinent: true });
-      }
-      renderOpenCountryFilterResults(state);
-    });
   }
 
+  populateContinentFilter(state, continents, initialContinent);
   populateMainCountryFilter(state, selectedCountry);
-
   updateCountryDatalist(state, initialContinent);
   populateCompareControls(state);
+}
+
+function populateContinentFilter(state, continents, initialContinent = "") {
+  const filter = document.querySelector("#continent-filter");
+  const toggle = document.querySelector("#continent-filter-toggle");
+  const panel = document.querySelector("#continent-filter-panel");
+  const results = document.querySelector("#continent-filter-results");
+  const select = document.querySelector("#continent-select");
+  if (!filter || !toggle || !panel || !results || !select) return;
+
+  const options = [{ value: "", label: "All continents" }, ...continents.map((continent) => ({ value: continent, label: continent }))];
+  let activeIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === initialContinent),
+  );
+  syncContinentFilterLabel(initialContinent);
+
+  const refreshResults = (nextActiveIndex = activeIndex) => {
+    activeIndex = renderContinentFilterResults(options, {
+      activeIndex: nextActiveIndex,
+      selectedValue: select.value,
+    });
+  };
+
+  const openPanel = () => {
+    panel.hidden = false;
+    filter.classList.add("country-filter-open");
+    toggle.setAttribute("aria-expanded", "true");
+    refreshResults(
+      options.findIndex((option) => option.value === select.value) >= 0
+        ? options.findIndex((option) => option.value === select.value)
+        : 0,
+    );
+    window.requestAnimationFrame(() => {
+      results.focus();
+    });
+  };
+
+  const closePanel = (options = {}) => {
+    panel.hidden = true;
+    filter.classList.remove("country-filter-open");
+    toggle.setAttribute("aria-expanded", "false");
+    if (options.focusToggle) toggle.focus();
+  };
+
+  const chooseOption = (value) => {
+    applyContinentFilterSelection(state, value);
+    closePanel({ focusToggle: true });
+  };
+
+  toggle.addEventListener("click", () => {
+    if (panel.hidden) openPanel();
+    else closePanel({ focusToggle: true });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!filter.contains(event.target)) closePanel();
+  });
+
+  filter.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closePanel({ focusToggle: true });
+      return;
+    }
+    if (panel.hidden && ["Enter", " ", "ArrowDown", "ArrowUp"].includes(event.key)) {
+      event.preventDefault();
+      openPanel();
+      return;
+    }
+    if (panel.hidden) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      refreshResults(activeIndex + 1);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      refreshResults(activeIndex - 1);
+      return;
+    }
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      chooseOption(options[activeIndex]?.value ?? "");
+      return;
+    }
+    if (event.key === "Tab") closePanel();
+  });
+
+  results.addEventListener("mouseover", (event) => {
+    const option = event.target.closest("[data-continent-index]");
+    if (!option) return;
+    const nextIndex = Number(option.dataset.continentIndex);
+    if (Number.isNaN(nextIndex) || nextIndex === activeIndex) return;
+    refreshResults(nextIndex);
+  });
+
+  results.addEventListener("mousedown", (event) => {
+    const option = event.target.closest("[data-continent-value]");
+    if (!option) return;
+    event.preventDefault();
+    chooseOption(option.dataset.continentValue || "");
+  });
+}
+
+function applyContinentFilterSelection(state, continent = "") {
+  const select = document.querySelector("#continent-select");
+  if (select) select.value = continent;
+  syncContinentFilterLabel(continent);
+  updateCountryDatalist(state, continent);
+
+  const current = countryByIso(state, state.selectedIso);
+  if (continent && current && countryContinent(current) !== continent) {
+    const nextCountry = state.data.countries
+      .filter((country) => countryContinent(country) === continent)
+      .sort(
+        (a, b) =>
+          (Number.isFinite(b.risk) ? b.risk : -1) - (Number.isFinite(a.risk) ? a.risk : -1) ||
+          a.name.localeCompare(b.name),
+      )[0];
+    if (nextCountry) {
+      setSelectedCountry(state, nextCountry.iso3, { preserveContinent: true });
+      return;
+    }
+  }
+  renderOpenCountryFilterResults(state);
 }
 
 function populateMainCountryFilter(state, selectedCountry) {
@@ -476,6 +626,14 @@ function populateMainCountryFilter(state, selectedCountry) {
     event.preventDefault();
     chooseCountry(countryByIso(state, option.dataset.countryIso));
   });
+
+  results.addEventListener("mouseover", (event) => {
+    const option = event.target.closest("[data-country-index]");
+    if (!option) return;
+    const nextIndex = Number(option.dataset.countryIndex);
+    if (Number.isNaN(nextIndex) || nextIndex === activeIndex) return;
+    activeIndex = setCountryFilterActiveResult(nextIndex);
+  });
 }
 
 function setSelectedCountry(state, iso3, options = {}) {
@@ -491,8 +649,7 @@ function setSelectedCountry(state, iso3, options = {}) {
   hideTooltip();
 
   if (options.scrollToCountry) {
-    updateStickyNavOffset();
-    document.querySelector("#country-view")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    scrollToSectionTarget("country-view", { behavior: "smooth" });
   }
 }
 
@@ -554,6 +711,7 @@ function syncCountryControls(state, options = {}) {
   if (continentSelect && !options.preserveContinent) {
     continentSelect.value = countryContinent(country);
   }
+  syncContinentFilterLabel(continentSelect?.value || "");
   updateCountryDatalist(state, continentSelect?.value || "");
   renderOpenCountryFilterResults(state);
 
@@ -585,7 +743,6 @@ function updateCountryDatalist(state, continent = "") {
   const datalist = document.querySelector("#country-options");
   const countries = countriesForContinent(state.data.countries, continent);
   if (datalist) datalist.innerHTML = countryOptionHtml(countries);
-
 }
 
 function countryOptionHtml(countries) {
@@ -628,6 +785,7 @@ function renderCountryFilterResults(state, query = "", options = {}) {
         <div
           class="country-filter-option${active ? " is-active" : ""}${selected ? " is-selected" : ""}"
           id="country-filter-option-${escapeHtml(country.iso3)}"
+          data-country-index="${index}"
           data-country-iso="${escapeHtml(country.iso3)}"
           role="option"
           aria-selected="${active ? "true" : "false"}"
@@ -641,6 +799,58 @@ function renderCountryFilterResults(state, query = "", options = {}) {
 
   input.setAttribute("aria-activedescendant", `country-filter-option-${matches[activeIndex].iso3}`);
   return matches;
+}
+
+function setCountryFilterActiveResult(index) {
+  const results = document.querySelector("#country-filter-results");
+  const input = document.querySelector("#quick-country-input");
+  const options = [...(results?.querySelectorAll("[data-country-index]") || [])];
+  if (!options.length || !input) {
+    input?.removeAttribute("aria-activedescendant");
+    return -1;
+  }
+
+  const nextIndex = clamp(index, 0, options.length - 1);
+  options.forEach((option, optionIndex) => {
+    const active = optionIndex === nextIndex;
+    option.classList.toggle("is-active", active);
+    option.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  input.setAttribute("aria-activedescendant", options[nextIndex].id);
+  return nextIndex;
+}
+
+function syncContinentFilterLabel(continent = "") {
+  const current = document.querySelector("#continent-filter-current");
+  const label = continent || "All continents";
+  if (current) current.textContent = label;
+}
+
+function renderContinentFilterResults(options, settings = {}) {
+  const results = document.querySelector("#continent-filter-results");
+  if (!results) return -1;
+
+  const activeIndex = options.length ? clamp(settings.activeIndex ?? 0, 0, options.length - 1) : -1;
+  const selectedValue = settings.selectedValue ?? "";
+  results.innerHTML = options
+    .map((option, index) => {
+      const active = index === activeIndex;
+      const selected = option.value === selectedValue;
+      return `
+        <div
+          class="country-filter-option continent-filter-option${active ? " is-active" : ""}${selected ? " is-selected" : ""}"
+          id="continent-filter-option-${index}"
+          data-continent-index="${index}"
+          data-continent-value="${escapeHtml(option.value)}"
+          role="option"
+          aria-selected="${active ? "true" : "false"}"
+        >
+          <strong>${escapeHtml(option.label)}</strong>
+        </div>
+      `;
+    })
+    .join("");
+  return activeIndex;
 }
 
 function countryFilterMatches(state, query = "") {
@@ -742,26 +952,62 @@ function restoreInitialHashScroll() {
   scrollToInitialHash();
   requestAnimationFrame(() => requestAnimationFrame(scrollToInitialHash));
   window.setTimeout(scrollToInitialHash, 120);
+  window.addEventListener("hashchange", () => scrollToInitialHash());
 }
 
 function scrollToInitialHash() {
-  const id = decodeURIComponent(window.location.hash.slice(1));
-  if (!id) return;
-  const target = document.getElementById(id);
-  if (!target) return;
+  scrollToHashTarget(window.location.hash, { behavior: "auto" });
+}
+
+function attachSectionNavigation() {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest('.section-links a[href^="#"], .answer-link[href^="#"]');
+    if (!link) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const hash = link.getAttribute("href");
+    if (!hash || hash === "#") return;
+    const id = decodeHashId(hash);
+    if (!document.getElementById(id)) return;
+    event.preventDefault();
+    if (window.location.hash !== hash) history.pushState(null, "", hash);
+    scrollToSectionTarget(id, { behavior: "smooth" });
+  });
+}
+
+function scrollToHashTarget(hash, options = {}) {
+  const id = decodeHashId(hash);
+  if (!id) return false;
+  return scrollToSectionTarget(id, options);
+}
+
+function decodeHashId(hash) {
+  const raw = String(hash || "").replace(/^#/, "");
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return "";
+  }
+}
+
+function scrollToSectionTarget(targetOrId, options = {}) {
+  const target =
+    typeof targetOrId === "string" ? document.getElementById(targetOrId) : targetOrId;
+  if (!target) return false;
   updateStickyNavOffset();
-  const previousScrollBehavior = document.documentElement.style.scrollBehavior;
-  document.documentElement.style.scrollBehavior = "auto";
-  target.scrollIntoView({ block: "start" });
-  document.documentElement.style.scrollBehavior = previousScrollBehavior;
+  const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - getStickyNavOffset());
+  window.scrollTo({ top, behavior: options.behavior || "auto" });
+  return true;
+}
+
+function getStickyNavOffset() {
+  const nav = document.querySelector(".section-nav");
+  if (!nav) return 24;
+  const position = window.getComputedStyle(nav).position;
+  return position === "sticky" ? Math.ceil(nav.getBoundingClientRect().height + 16) : 24;
 }
 
 function updateStickyNavOffset() {
-  const nav = document.querySelector(".section-nav");
-  if (!nav) return;
-  const position = window.getComputedStyle(nav).position;
-  const offset = position === "sticky" ? Math.ceil(nav.getBoundingClientRect().height + 24) : 24;
-  document.documentElement.style.setProperty("--sticky-nav-offset", `${offset}px`);
+  document.documentElement.style.setProperty("--sticky-nav-offset", `${getStickyNavOffset()}px`);
 }
 
 function renderTrustStatus(state) {
@@ -805,9 +1051,9 @@ function renderCoverageStatus(state) {
   const rows = metricCoverageRows(state.data.countries);
   panel.innerHTML = `
     <div class="coverage-copy">
-      <span>Coverage and caveats</span>
+      <span>Coverage and source scope</span>
       <strong>Know where the public data is strong, and where it is thin</strong>
-      <p>Coverage means the current public build contains a usable value or signal for the metric. Project-signal rows count countries with at least one linked public project record.</p>
+      <p>Coverage means the dashboard dataset contains a usable value or signal for the metric. Project-signal rows count countries with at least one linked public project record.</p>
     </div>
     <div class="coverage-grid">
       ${rows
@@ -955,7 +1201,7 @@ function metric(label, value, wide = false, sourceId = "") {
   return `
     <div class="metric${wide ? " metric-wide" : ""}">
       <span>${escapeHtml(label)}</span>
-      <strong>${value}</strong>
+      <strong>${escapeHtml(value)}</strong>
       ${sourceLink(sourceId)}
     </div>
   `;
@@ -964,7 +1210,8 @@ function metric(label, value, wide = false, sourceId = "") {
 function sourceLink(sourceId) {
   const source = SOURCE_LINKS[sourceId];
   if (!source) return "";
-  return `<a class="metric-source" href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">Source: ${escapeHtml(source.label)}</a>`;
+  const href = safeExternalUrl(source.url);
+  return `<a class="metric-source" href="${escapeHtml(href)}" target="_blank" rel="noreferrer">Source: ${escapeHtml(source.label)}</a>`;
 }
 
 function renderFinanceProfile(state) {
@@ -1013,7 +1260,7 @@ function renderFinanceProfile(state) {
         <span>OCHA humanitarian response context</span>
         ${confidenceBadge("Response funding")}
         <strong>${fmtMoney(country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear)}</strong>
-        <p>Response funding tracked by FTS, not counted as prevention or preparedness spending.</p>
+        <p>Response funding tracked by FTS is shown as a separate humanitarian context layer.</p>
         ${sourceLink("ocha")}
       </article>
     </div>
@@ -1063,7 +1310,7 @@ function renderFinanceProfile(state) {
               ? projects
                   .map(
                     (project) => `
-                      <a class="project-row" href="${escapeHtml(project.url)}" target="_blank" rel="noreferrer">
+                      <a class="project-row" href="${escapeHtml(safeExternalUrl(project.url))}" target="_blank" rel="noreferrer">
                         <span>${escapeHtml(project.name)}</span>
                         <strong>${escapeHtml(project.status || "Unknown")} - ${projectYear(project.approvedAt)} - ${fmtMoney(project.commitmentUsd)}</strong>
                       </a>
@@ -1082,7 +1329,7 @@ function renderFinanceProfile(state) {
               ? gcfProjects
                   .map(
                     (project) => `
-                      <a class="project-row" href="${escapeHtml(project.url)}" target="_blank" rel="noreferrer">
+                      <a class="project-row" href="${escapeHtml(safeExternalUrl(project.url))}" target="_blank" rel="noreferrer">
                         <span>${escapeHtml(project.name)}</span>
                         <strong>${escapeHtml(project.sector || "Unknown")} - ${projectYear(project.approvedAt)} - ${fmtMoney(project.gcfBudgetUsd)} GCF</strong>
                       </a>
@@ -1192,7 +1439,8 @@ function renderPremiumAccess(state) {
   const modules = Array.isArray(product.premiumModules) ? product.premiumModules : [];
   const entitlement = state.entitlement || { plan: "free", premiumAccess: false };
   const billing = product.billing || {};
-  const billingReady = Boolean(billing.checkoutEndpoint || plans.some((plan) => plan.checkoutUrl));
+  const checkoutEndpoint = safeExternalUrl(billing.checkoutEndpoint, "");
+  const billingReady = Boolean(checkoutEndpoint || plans.some((plan) => safeExternalUrl(plan.checkoutUrl, "")));
   const countryLabel = country ? shortCountryName(country.name) : "selected country";
 
   panel.innerHTML = `
@@ -1200,12 +1448,12 @@ function renderPremiumAccess(state) {
       <article>
         <span>Current access</span>
         <strong>${escapeHtml(entitlement.planName || entitlement.plan || "Free")}</strong>
-        <p>${entitlement.premiumAccess ? "Premium API access is active for this browser session." : "Public edition. Premium records remain locked until billing and entitlement checks are configured."}</p>
+        <p>${entitlement.premiumAccess ? "Premium API access is active for this browser session." : "Public edition. Premium records are delivered through protected access for eligible users."}</p>
       </article>
       <article>
         <span>Billing status</span>
-        <strong>${billingReady ? "Checkout ready" : "Waitlist mode"}</strong>
-        <p>${billingReady ? "Plan buttons can send users through a configured checkout flow." : "No payment collection is active. Paid plans are shown for product direction and access requests only."}</p>
+        <strong>${billingReady ? "Checkout ready" : "Access requests"}</strong>
+        <p>${billingReady ? "Plan buttons can send users through a configured checkout flow." : "Use the plan buttons to request access to protected data modules."}</p>
       </article>
       <article>
         <span>Data security</span>
@@ -1235,11 +1483,12 @@ function renderPlanCard(plan, entitlement, billingReady) {
   const isCurrent = (entitlement.plan || "free") === plan.id;
   const features = Array.isArray(plan.features) ? plan.features : [];
   const buttonLabel = isCurrent ? "Current plan" : plan.cta || "Choose plan";
+  const checkoutUrl = safeExternalUrl(plan.checkoutUrl, "");
   const button = plan.id === "free"
     ? `<a class="plan-button" href="#risk-map">${escapeHtml(buttonLabel)}</a>`
     : billingReady
-      ? plan.checkoutUrl
-        ? `<a class="plan-button plan-button-primary" href="${escapeHtml(plan.checkoutUrl)}" target="_blank" rel="noreferrer">${escapeHtml(buttonLabel)}</a>`
+      ? checkoutUrl
+        ? `<a class="plan-button plan-button-primary" href="${escapeHtml(checkoutUrl)}" target="_blank" rel="noreferrer">${escapeHtml(buttonLabel)}</a>`
         : `<button class="plan-button plan-button-primary" type="button" data-checkout-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`
       : `<button class="plan-button plan-button-primary" type="button" data-request-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`;
 
@@ -1263,15 +1512,15 @@ function renderPremiumPreview(countryLabel) {
   const rows = [
     ["IATI activity", "Donor, implementer, sector, transaction type", "Amount and DRR evidence", "Pro"],
     ["Domestic budget", "Budget line, disaster fund, climate tag", "Document link and confidence score", "Pro"],
-    ["Private/co-finance", "Sponsor, fund, project document", "Public/private signal and caveat", "Pro"],
+    ["Private/co-finance", "Sponsor, fund, project document", "Public/private signal and source note", "Pro"],
   ];
 
   return `
     <div class="premium-preview">
       <div class="preview-copy">
-        <p class="kicker">Locked preview</p>
-        <h3>What paid users would see for ${escapeHtml(countryLabel)}</h3>
-        <p>Premium rows stay behind an authenticated API. This public preview shows the structure, not restricted records.</p>
+        <p class="kicker">Premium preview</p>
+        <h3>Protected finance modules for ${escapeHtml(countryLabel)}</h3>
+        <p>Premium rows are delivered through an authenticated API. This preview shows module structure and field coverage.</p>
       </div>
       <div class="preview-table" role="table" aria-label="Premium data preview">
         <div class="preview-row preview-header" role="row">
@@ -1308,7 +1557,7 @@ function renderPremiumModule(module, entitlement, countryLabel) {
       <p>${escapeHtml(module.description)}</p>
       <em>${escapeHtml(module.caveat)}</em>
       <small class="${unlocked ? "module-unlocked" : "module-locked"}">
-        ${unlocked ? `Available for ${escapeHtml(countryLabel)}` : "Locked until entitlement is verified"}
+        ${unlocked ? `Available for ${escapeHtml(countryLabel)}` : "Protected access"}
       </small>
     </article>
   `;
@@ -1323,10 +1572,11 @@ async function requestAccess(planId, state) {
   if (!plan || !status) return;
   const country = state.data.countries.find((item) => item.iso3 === state.selectedIso);
   const countryName = country ? country.name : "the selected country";
-  if (billing.requestAccessEndpoint) {
+  const requestAccessEndpoint = safeExternalUrl(billing.requestAccessEndpoint, "");
+  if (requestAccessEndpoint) {
     status.textContent = "Sending access request...";
     try {
-      const response = await fetch(billing.requestAccessEndpoint, {
+      const response = await fetch(requestAccessEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1344,11 +1594,12 @@ async function requestAccess(planId, state) {
     }
   }
   const email = billing.contactEmail || "contact@bisolutions.group";
+  const safeEmail = safeEmailAddress(email);
   const subject = encodeURIComponent(`DRR dashboard ${plan.name} access`);
   const body = encodeURIComponent(`Plan: ${plan.name}\nCountry: ${countryName}\nPage: ${country ? countryShareUrl(country.iso3) : window.location.href}`);
   status.innerHTML =
-    `${escapeHtml(plan.name)} access is in waitlist mode. No payment has been collected. ` +
-    `<a class="text-link" href="mailto:${escapeHtml(email)}?subject=${subject}&body=${body}">Email ${escapeHtml(email)}</a> to request access for ${escapeHtml(countryName)}.`;
+    `${escapeHtml(plan.name)} access is handled by request. ` +
+    `<a class="text-link" href="mailto:${escapeHtml(safeEmail)}?subject=${subject}&body=${body}">Email ${escapeHtml(safeEmail)}</a> to request access for ${escapeHtml(countryName)}.`;
 }
 
 function attachQuestionBar(state) {
@@ -1516,7 +1767,7 @@ function answerMissingData(countries, query) {
   const missing = countries.filter((country) => !Number.isFinite(country[field]));
   return answerBlock(
     `Missing ${label} records`,
-    `${fmtNumber(missing.length)} of ${fmtNumber(countries.length)} countries do not have this value in the current public build. Examples: ${escapeHtml(
+    `${fmtNumber(missing.length)} of ${fmtNumber(countries.length)} countries do not have this value in the dashboard dataset. Examples: ${escapeHtml(
       missing.slice(0, 6).map((country) => country.name).join(", ") || "none",
     )}.`,
     [{ label: "Open coverage", href: "#methodology" }],
@@ -1533,11 +1784,11 @@ function answerSources(state) {
   const sources = Array.isArray(state.data.sources) ? state.data.sources : [];
   return answerBlock(
     "Public sources in this build",
-    `${fmtNumber(sources.length)} public sources are included, led by INFORM, OECD CRS, WorldRiskIndex, ThinkHazard, GCF, World Bank, OCHA FTS, ND-GAIN, WRI Aqueduct, and OWID/UNDRR series. WMO is referenced as a relevant DRR and weather-climate organization, but it is not a direct country metric source in the current public build. This dashboard is independent and is not endorsed by referenced organizations.`,
+    `${fmtNumber(sources.length)} public sources are included, led by INFORM, OECD CRS, WorldRiskIndex, ThinkHazard, GCF, World Bank, OCHA FTS, ND-GAIN, WRI Aqueduct, and OWID/UNDRR series. WMO is referenced as a relevant DRR and weather-climate organization; metric coverage follows the source audit. This dashboard is independent and is not endorsed by referenced organizations.`,
     [
       { label: "Open sources", href: "#source-audit" },
       { label: "Open FAQ", href: "#faq" },
-      { label: "Read source caveats", href: "./documentation.html#data-sources" },
+      { label: "Read source scope", href: "./documentation.html#data-sources" },
     ],
   );
 }
@@ -1588,7 +1839,7 @@ function attachDashboardActions(state) {
     downloadRows(
       `${country.iso3.toLowerCase()}-drr-profile.csv`,
       countryProfileRows(country),
-      ["metric", "value", "year", "source", "caveat"],
+      ["metric", "value", "year", "source", "interpretationNote"],
     );
     setActionStatus(`Downloaded ${country.name} profile CSV.`);
   });
@@ -1649,20 +1900,20 @@ function countryProfileRows(country) {
     profileRow("DRR-related ODA commitment", country.drrOdaCommitmentUsd, country.drrOdaYear, "OECD CRS", "International DRR-related ODA only."),
     profileRow("World Bank DRM projects", country.worldBankDrmProjectCount, "", "World Bank Projects", "Project signal count."),
     profileRow("GCF DRR/resilience projects", country.gcfDrrProjectCount, "", "GCF", "Keyword-screened project signal count."),
-    profileRow("OCHA response funding", country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear, "OCHA FTS", "Response context, not prevention spending."),
+    profileRow("OCHA response funding", country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear, "OCHA FTS", "Humanitarian response context."),
     profileRow("WorldRiskIndex", country.worldRiskIndexValue, country.worldRiskIndexYear, "WorldRiskIndex", ""),
     profileRow("ND-GAIN score", country.ndGainValue, country.ndGainYear, "ND-GAIN", ""),
     profileRow("Water stress", country.waterStressScore, "", "WRI Aqueduct", country.waterStressLabel || ""),
   ];
 }
 
-function profileRow(metricName, value, year, source, caveat) {
+function profileRow(metricName, value, year, source, interpretationNote) {
   return {
     metric: metricName,
     value: Number.isFinite(value) ? value : "",
     year: year || "",
     source,
-    caveat,
+    interpretationNote,
   };
 }
 
@@ -1726,20 +1977,22 @@ async function startCheckout(planId, state) {
   const status = document.querySelector("#billing-status");
   if (!plan || !status) return;
 
-  if (plan.checkoutUrl) {
-    window.location.href = plan.checkoutUrl;
+  const checkoutUrl = safeExternalUrl(plan.checkoutUrl, "");
+  if (checkoutUrl) {
+    window.location.href = checkoutUrl;
     return;
   }
 
-  if (!billing.checkoutEndpoint) {
+  const checkoutEndpoint = safeExternalUrl(billing.checkoutEndpoint, "");
+  if (!checkoutEndpoint) {
     status.textContent =
-      "Checkout is not active yet. Configure Stripe price IDs and a server-side checkout endpoint before taking payment.";
+      "Checkout is handled through access request for this plan.";
     return;
   }
 
   status.textContent = "Opening checkout...";
   try {
-    const response = await fetch(billing.checkoutEndpoint, {
+    const response = await fetch(checkoutEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1752,7 +2005,9 @@ async function startCheckout(planId, state) {
     if (!response.ok || !payload.url) {
       throw new Error(payload.error || "Checkout endpoint did not return a redirect URL.");
     }
-    window.location.href = payload.url;
+    const redirectUrl = safeExternalUrl(payload.url, "");
+    if (!redirectUrl) throw new Error("Checkout endpoint returned an invalid redirect URL.");
+    window.location.href = redirectUrl;
   } catch (error) {
     status.textContent = `Checkout failed: ${error.message}`;
   }
@@ -1760,7 +2015,10 @@ async function startCheckout(planId, state) {
 
 async function loadEntitlement(product) {
   const billing = product?.billing || {};
-  const endpoint = billing.entitlementEndpoint || buildPremiumUrl(billing.premiumApiBase, "/entitlements");
+  const endpoint = safeExternalUrl(
+    billing.entitlementEndpoint || buildPremiumUrl(billing.premiumApiBase, "/entitlements"),
+    "",
+  );
   if (!endpoint) return { plan: "free", planName: "Free", premiumAccess: false };
 
   try {
@@ -1780,7 +2038,11 @@ function buildPremiumUrl(base, path) {
 }
 
 function absoluteUrl(path) {
-  return new URL(path, window.location.href).toString();
+  try {
+    return new URL(path, window.location.href).toString();
+  } catch {
+    return window.location.href;
+  }
 }
 
 function fallbackProductConfig() {
@@ -1797,13 +2059,15 @@ function fallbackProductConfig() {
 
 function renderSources(sources) {
   const list = document.querySelector("#sources-list");
-  list.innerHTML = sources
+  if (!list) return;
+  const rows = Array.isArray(sources) ? sources : [];
+  list.innerHTML = rows
     .map(
       (source) => `
         <article class="source-item">
-          <strong><a href="${source.url}" target="_blank" rel="noreferrer">${source.name}</a></strong>
-          <p>${source.role}</p>
-          <p>${source.access}</p>
+          <strong><a href="${escapeHtml(safeExternalUrl(source.url))}" target="_blank" rel="noreferrer">${escapeHtml(source.name)}</a></strong>
+          <p>${escapeHtml(source.role)}</p>
+          <p>${escapeHtml(source.access)}</p>
         </article>
       `,
     )
@@ -1852,7 +2116,7 @@ function drawRiskMap(selector, state) {
       const name = row?.name || feature.properties.name;
       showTooltip(
         event,
-        `<strong>${name}</strong>${row ? `INFORM risk: ${fmtFixed(row.risk, 1)}<br>Click for country profile` : "No INFORM score"}`,
+        `<strong>${escapeHtml(name)}</strong>${row ? `INFORM risk: ${fmtFixed(row.risk, 1)}<br>Click for country profile` : "No INFORM score"}`,
       );
     })
     .on("click", (_, feature) => {
@@ -1889,7 +2153,7 @@ function drawRiskMap(selector, state) {
     .on("mousemove", (event, item) => {
       showTooltip(
         event,
-        `<strong>${item.row.name}</strong>INFORM risk: ${fmtFixed(item.row.risk, 1)}<br>Click for country profile`,
+        `<strong>${escapeHtml(item.row.name)}</strong>INFORM risk: ${fmtFixed(item.row.risk, 1)}<br>Click for country profile`,
       );
     })
     .on("click", (_, item) => {
@@ -2490,7 +2754,7 @@ function drawScatter(selector, countries, selectedIso) {
     .on("mousemove", (event, country) => {
       showTooltip(
         event,
-        `<strong>${country.name}</strong>INFORM: ${fmtFixed(country.risk, 1)}<br>WorldRiskIndex: ${fmtFixed(country.worldRiskIndexValue, 2)}`,
+        `<strong>${escapeHtml(country.name)}</strong>INFORM: ${fmtFixed(country.risk, 1)}<br>WorldRiskIndex: ${fmtFixed(country.worldRiskIndexValue, 2)}`,
       );
     })
     .on("mouseleave", hideTooltip);
@@ -2898,6 +3162,22 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function safeExternalUrl(value, fallback = "#") {
+  const text = String(value || "").trim();
+  if (!text) return fallback;
+  try {
+    const url = new URL(text, window.location.href);
+    return ["http:", "https:"].includes(url.protocol) ? url.toString() : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function safeEmailAddress(value) {
+  const text = String(value || "").trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text) ? text : "contact@bisolutions.group";
 }
 
 function csvEscape(value) {

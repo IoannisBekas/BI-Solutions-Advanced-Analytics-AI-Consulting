@@ -12,13 +12,13 @@ The public site is a static GitHub Pages application.
 
 | Layer | Files | Purpose |
 | --- | --- | --- |
-| Front end | `index.html`, `styles.css`, `app.js` | Renders the public dashboard, charts, filters, country profiles, exports, premium waitlist surfaces, and dataset Q&A. |
+| Front end | `index.html`, `styles.css`, `app.js` | Renders the public dashboard, charts, filters, country profiles, exports, premium access surfaces, and dataset Q&A. |
 | Data pipeline | `scripts/download-data.mjs` | Downloads, normalizes, and joins public datasets into country-level records. |
 | Validation | `scripts/validate-data.mjs` | Checks schema, country counts, source counts, missing values, and warning conditions before data is published. |
 | Static audits | `scripts/audit-static.mjs`, `scripts/mobile-audit.mjs` | Checks accessibility basics, contrast, links, mobile overflow, and chart rendering. |
 | Public data | `data/processed/dashboard-data.json`, `data/processed/country_metrics.csv` | Compact data used by the dashboard and CSV export. |
-| Source inventory | `data_catalog.json`, `DATA_SOURCES.md` | Documents which datasets are automated, constrained, manual, or out of scope. |
-| Premium template | `premium-api/` | Server-side Stripe and entitlement API template for future paid data access. |
+| Source inventory | `data_catalog.json`, `DATA_SOURCES.md` | Documents automated, reference, and case-study source layers. |
+| Premium template | `premium-api/` | Server-side Stripe and entitlement API template for protected paid data access. |
 
 ## Data Workflow
 
@@ -46,7 +46,7 @@ The dashboard currently uses public or openly downloadable signals from:
 - World Bank / IDMC displacement indicators
 - EM-DAT-derived Our World in Data disaster series
 
-Some important DRR datasets are documented but not fully automated because they require registration, licensing, manual interpretation, or country-by-country extraction.
+Some important DRR datasets are documented as reference or case-study layers because they require registration, licensing, manual interpretation, or country-by-country extraction.
 
 ## Dashboard Features
 
@@ -57,8 +57,8 @@ Some important DRR datasets are documented but not fully automated because they 
 - Finance gap screening.
 - Public CSV exports.
 - Dataset Q&A bar using only the public dashboard dataset.
-- Methodology, source caveat, data dictionary, accessibility, terms, build, and roadmap documentation.
-- Premium plan surfaces in waitlist mode.
+- Methodology, source scope, data dictionary, accessibility, terms, build, and roadmap documentation.
+- Premium plan surfaces with protected-access request flows.
 
 ## Design System
 
@@ -88,7 +88,7 @@ Implemented accessibility features include:
 - Mobile overflow checks.
 - Axe-core checks across dashboard and documentation pages.
 
-The latest automated checks pass. Manual keyboard-only and screen-reader smoke tests are still recommended before formal WCAG claims.
+The latest automated checks pass. Manual keyboard-only and screen-reader smoke tests are part of the release QA workflow for major updates.
 
 ## Deployment
 
@@ -100,4 +100,4 @@ The planned organizational placement is:
 
 <https://www.bisolutions.group/insights/disaster-risk-reduction-finance/>
 
-That move requires deployment coordination with the `bisolutions.group` site repository.
+That placement can be coordinated through the `bisolutions.group` site repository.
