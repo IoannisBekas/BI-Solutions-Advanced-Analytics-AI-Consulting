@@ -334,10 +334,12 @@ function renderTimeframeNotes(data) {
   const crsYear = escapeHtml(financeYear);
   const wriYear = escapeHtml(worldRiskYear);
   const responseYear = escapeHtml(ochaYear);
+  const crsDetailNote =
+    "OECD 2025 preliminary ODA totals are aggregate context and are not used for donor-recipient-sector breakdowns.";
 
   setInfoNote(
     "#kpi-timeframe-note",
-    `<strong>What timeframe is this?</strong> Risk scores use ${inform}; the disaster count is ${latestEvents}; DRR-related ODA uses OECD CRS ${crsYear}. Other country metrics show their own year in parentheses where available. Dashboard generated ${escapeHtml(generatedDate)}.`,
+    `<strong>What timeframe is this?</strong> Risk scores use ${inform}; the disaster count is ${latestEvents}; DRR-related ODA uses the latest detailed OECD CRS year available to the pipeline, ${crsYear}. Other country metrics show their own year in parentheses where available. Dashboard generated ${escapeHtml(generatedDate)}.`,
   );
   setInfoNote(
     "#risk-map-note",
@@ -353,15 +355,15 @@ function renderTimeframeNotes(data) {
   );
   setInfoNote(
     "#country-profile-note",
-    `<strong>Timeframe:</strong> mixed-source snapshot. INFORM uses ${inform}; ODA uses CRS ${crsYear}; WorldRiskIndex uses ${wriYear}; OCHA response funding uses ${responseYear}.`,
+    `<strong>Timeframe:</strong> mixed-source snapshot. INFORM uses ${inform}; ODA uses detailed CRS ${crsYear}; WorldRiskIndex uses ${wriYear}; OCHA response funding uses ${responseYear}. ${crsDetailNote}`,
   );
   setInfoNote(
     "#finance-profile-note",
-    `<strong>Timeframe:</strong> OECD CRS disbursements and commitments are ${crsYear}; World Bank and GCF records are cumulative project signals in the downloaded data; OCHA FTS is ${responseYear} response-funding context. The finance view separates international DRR-related finance from project, response, domestic, private, and mainstreamed evidence layers.`,
+    `<strong>Timeframe:</strong> OECD CRS disbursements and commitments use detailed CRS ${crsYear}; World Bank and GCF records are cumulative project signals in the downloaded data; OCHA FTS is ${responseYear} response-funding context. ${crsDetailNote} The finance view separates international DRR-related finance from project, response, domestic, private, and mainstreamed evidence layers.`,
   );
   setInfoNote(
     "#finance-gap-note",
-    `<strong>Timeframe:</strong> CRS ${crsYear} divided by ${inform}. <strong>How to read it:</strong> lower bars flag high-risk countries receiving less reported international DRR-related ODA per point of current risk. Domestic budget, private finance, and mainstreamed DRR evidence are treated as separate evidence layers.`,
+    `<strong>Timeframe:</strong> detailed CRS ${crsYear} divided by ${inform}. <strong>How to read it:</strong> lower bars flag high-risk countries receiving less reported international DRR-related ODA per point of current risk. ${crsDetailNote} Domestic budget, private finance, and mainstreamed DRR evidence are treated as separate evidence layers.`,
   );
   setInfoNote(
     "#events-note",
