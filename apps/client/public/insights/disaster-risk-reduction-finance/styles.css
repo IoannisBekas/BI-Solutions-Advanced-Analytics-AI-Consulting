@@ -75,7 +75,8 @@ body {
 
 .masthead,
 main,
-footer {
+footer,
+.visual-context {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
 }
@@ -1676,6 +1677,14 @@ main {
   text-transform: uppercase;
 }
 
+.plan-button-current,
+.plan-button:disabled {
+  border-color: var(--hairline);
+  background: var(--panel);
+  color: var(--muted);
+  cursor: default;
+}
+
 .plan-button-primary {
   background: var(--ink);
   color: #ffffff;
@@ -1945,6 +1954,34 @@ main {
   border-color: var(--ink);
   outline: 2px solid var(--accent-light);
   outline-offset: 2px;
+}
+
+.visual-context {
+  overflow: hidden;
+  margin: 22px auto 0;
+  border: 1px solid var(--hairline);
+  background: var(--panel);
+}
+
+.visual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--hairline);
+  border-top: 1px solid var(--hairline);
+}
+
+.visual-grid figure {
+  display: grid;
+  margin: 0;
+  background: var(--panel);
+}
+
+.visual-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .legend {
@@ -2219,6 +2256,10 @@ footer p {
 
   .reference-links {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .visual-grid {
+    grid-template-columns: 1fr;
   }
 
   .premium-preview {

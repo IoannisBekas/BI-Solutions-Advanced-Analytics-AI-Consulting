@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-11-anchor-fix";
+const ASSET_VERSION = "2026-05-11-tier-nav-fix";
 const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
@@ -1106,7 +1106,7 @@ function scrollToInitialHash() {
 
 function attachSectionNavigation() {
   document.addEventListener("click", (event) => {
-    const link = event.target.closest('.section-links a[href^="#"], .answer-link[href^="#"]');
+    const link = event.target.closest('a[href^="#"]:not(.skip-link)');
     if (!link) return;
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const hash = link.getAttribute("href");
@@ -1649,13 +1649,15 @@ function renderPlanCard(plan, entitlement, billingReady) {
   const features = Array.isArray(plan.features) ? plan.features : [];
   const buttonLabel = isCurrent ? "Current plan" : plan.cta || "Choose plan";
   const checkoutUrl = safeExternalUrl(plan.checkoutUrl, "");
-  const button = plan.id === "free"
-    ? `<a class="plan-button" href="#risk-map">${escapeHtml(buttonLabel)}</a>`
-    : billingReady
-      ? checkoutUrl
-        ? `<a class="plan-button plan-button-primary" href="${escapeHtml(checkoutUrl)}" target="_blank" rel="noreferrer">${escapeHtml(buttonLabel)}</a>`
-        : `<button class="plan-button plan-button-primary" type="button" data-checkout-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`
-      : `<button class="plan-button plan-button-primary" type="button" data-request-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`;
+  const button = isCurrent
+    ? `<button class="plan-button plan-button-current" type="button" disabled>Current plan</button>`
+    : plan.id === "free"
+      ? `<a class="plan-button" href="#risk-map">${escapeHtml(buttonLabel)}</a>`
+      : billingReady
+        ? checkoutUrl
+          ? `<a class="plan-button plan-button-primary" href="${escapeHtml(checkoutUrl)}" target="_blank" rel="noreferrer">${escapeHtml(buttonLabel)}</a>`
+          : `<button class="plan-button plan-button-primary" type="button" data-checkout-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`
+        : `<button class="plan-button plan-button-primary" type="button" data-request-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`;
 
   return `
     <article class="pricing-card${isCurrent ? " pricing-card-current" : ""}">
