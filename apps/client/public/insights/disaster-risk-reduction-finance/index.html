@@ -33,7 +33,7 @@
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <meta name="twitter:image:alt" content="Disaster Risk Reduction dashboard preview with country, risk, and finance indicators." />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-12-mobile-table-fix" />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-12-dashboard-ux-fixes" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -79,7 +79,7 @@
             ],
             "spatialCoverage": { "@type": "Place", "name": "Global" },
             "temporalCoverage": "1970/2026",
-            "dateModified": "2026-05-11",
+            "dateModified": "2026-05-12",
             "isAccessibleForFree": true,
             "includedInDataCatalog": { "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#catalog" },
             "creator": { "@id": "https://www.bisolutions.group/insights/disaster-risk-reduction-finance/#creator" },
@@ -195,6 +195,11 @@
           <p class="dek">
             International DRR-related finance, donor, and risk signals across 191 countries.
           </p>
+          <div class="masthead-actions" aria-label="Primary dashboard actions">
+            <a href="#risk-section">Open risk map</a>
+            <a href="#ask-section">Ask the dataset</a>
+            <a href="#compare-view">Compare countries</a>
+          </div>
           <div class="masthead-info-bar" aria-label="Dashboard publication details">
             <div class="info-badge creator-badge">
               <img src="./assets/bekas-ioannis.jpg" alt="Bekas Ioannis" width="48" height="48" />
@@ -363,12 +368,12 @@
       <p id="kpi-timeframe-note" class="context-note" role="note"></p>
 
       <section class="action-bar" aria-label="Dashboard actions">
+        <button class="action-button action-button-primary" id="copy-country-link" type="button" aria-label="Copy link to selected country briefing">Copy country link</button>
         <button class="action-button action-button-premium" id="download-all-countries" type="button" aria-label="Download all country CSV, requires Pro">All CSV <span>Pro</span></button>
         <button class="action-button action-button-premium" id="download-country" type="button" aria-label="Download selected country CSV, requires Pro">Country CSV <span>Pro</span></button>
         <button class="action-button action-button-premium" id="download-donors" type="button" aria-label="Download donor CSV for selected country, requires Pro">Donors CSV <span>Pro</span></button>
         <button class="action-button action-button-premium" id="download-projects" type="button" aria-label="Download project signals CSV for selected country, requires Pro">Projects CSV <span>Pro</span></button>
-        <button class="action-button" id="copy-country-link" type="button" aria-label="Copy link to selected country briefing">Copy link</button>
-        <p class="action-note">CSV exports require Pro access. Public browsing and copy-link sharing remain free.</p>
+        <p class="action-note">Free: browse, ask, compare, and share country links. Pro: CSV exports and protected evidence packs.</p>
         <p id="share-status" class="action-status" role="status" aria-live="polite"></p>
       </section>
 
@@ -526,6 +531,7 @@
           </label>
           <button class="action-button" id="swap-compare" type="button">Swap</button>
         </div>
+        <p id="compare-status" class="compare-status" role="status" aria-live="polite" hidden></p>
         <div id="compare-output" class="compare-output"></div>
       </section>
 
@@ -637,6 +643,45 @@
         <div id="sources-list" class="sources-list"></div>
       </section>
 
+      <section class="panel visual-context" id="visual-context" aria-label="Disaster risk visual context">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">Visual context</p>
+            <h2>What the indicators represent</h2>
+          </div>
+          <p>Risk scores and finance signals point to real drought, wildfire, storm, and recovery conditions.</p>
+        </div>
+        <div class="visual-grid">
+          <figure>
+            <img
+              src="./assets/IPP-Blog-Template-Part-2-1200-%C3%97-675-px-1.png"
+              alt="Dry cracked land under intense heat, illustrating drought and water stress risk."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Drought and water-stress screening context.</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="./assets/UNDRR-news-2-wildfire-AdobeStock_200562584.jpg"
+              alt="Forest wildfire burning at night, illustrating extreme temperature and wildfire hazards."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Wildfire and extreme-heat hazard context.</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="./assets/managing-disaster-risks-in-an-interconnected-world_UNU-Centre.jpg"
+              alt="Damaged buildings and trees after a severe storm, illustrating disaster losses and recovery needs."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Storm damage and recovery-finance context.</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section class="panel faq-panel" id="faq">
         <div class="panel-heading">
           <div>
@@ -744,36 +789,7 @@
       </p>
     </footer>
 
-    <section class="visual-context" id="visual-context" aria-label="Disaster risk visual context">
-      <div class="visual-grid">
-        <figure>
-          <img
-            src="./assets/IPP-Blog-Template-Part-2-1200-%C3%97-675-px-1.png"
-            alt="Dry cracked land under intense heat, illustrating drought and water stress risk."
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-        <figure>
-          <img
-            src="./assets/UNDRR-news-2-wildfire-AdobeStock_200562584.jpg"
-            alt="Forest wildfire burning at night, illustrating extreme temperature and wildfire hazards."
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-        <figure>
-          <img
-            src="./assets/managing-disaster-risks-in-an-interconnected-world_UNU-Centre.jpg"
-            alt="Damaged buildings and trees after a severe storm, illustrating disaster losses and recovery needs."
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-      </div>
-    </section>
-
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="./app.js?v=2026-05-12-mobile-table-fix" defer></script>
+    <script src="./app.js?v=2026-05-12-dashboard-ux-fixes" defer></script>
   </body>
 </html>

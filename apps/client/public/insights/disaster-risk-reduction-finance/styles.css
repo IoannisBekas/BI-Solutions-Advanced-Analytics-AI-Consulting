@@ -75,28 +75,27 @@ body {
 
 .masthead,
 main,
-footer,
-.visual-context {
+footer {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
 }
 
 .masthead {
-  padding-bottom: 26px;
+  padding-bottom: 18px;
 }
 
 .masthead-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
+  gap: 18px;
   align-items: start;
-  padding: 42px 0 24px;
+  padding: 30px 0 18px;
   border-bottom: 2px solid var(--ink);
 }
 
 .masthead-copy {
   display: grid;
-  gap: 18px;
+  gap: 14px;
 }
 
 .kicker {
@@ -121,8 +120,8 @@ h2 {
 
 h1 {
   max-width: 980px;
-  font-size: clamp(2.55rem, 6.2vw, 5.6rem);
-  line-height: 0.95;
+  font-size: clamp(2.2rem, 4.8vw, 4.7rem);
+  line-height: 0.98;
 }
 
 h2 {
@@ -142,6 +141,33 @@ h2 {
   line-height: 1.35;
 }
 
+.masthead-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.masthead-actions a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid var(--ink);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.masthead-actions a:first-child {
+  background: var(--accent-dark);
+  color: #ffffff;
+}
+
 .masthead-info-bar {
   display: grid;
   grid-template-columns: minmax(220px, 1.15fr) repeat(3, minmax(0, 1fr));
@@ -152,8 +178,8 @@ h2 {
 }
 
 .info-badge {
-  min-height: 84px;
-  padding: 12px;
+  min-height: 74px;
+  padding: 10px;
   background: var(--panel);
 }
 
@@ -357,6 +383,7 @@ main > * {
 #accessibility,
 #terms-privacy,
 #source-audit,
+#visual-context,
 #faq {
   scroll-margin-top: var(--sticky-nav-offset);
 }
@@ -366,9 +393,9 @@ main > * {
   top: 0;
   z-index: 8;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  align-items: start;
+  grid-template-columns: minmax(0, 0.92fr) minmax(430px, 0.68fr);
+  gap: 12px;
+  align-items: end;
   margin: -4px 0 0;
   padding: 14px;
   background: var(--control-band);
@@ -420,8 +447,8 @@ main > * {
 
 .quick-country-picker {
   display: grid;
-  grid-template-columns: minmax(180px, 0.28fr) minmax(360px, 1fr);
-  gap: 10px;
+  grid-template-columns: minmax(150px, 0.35fr) minmax(260px, 1fr);
+  gap: 8px;
   align-items: start;
   justify-self: stretch;
   width: 100%;
@@ -545,6 +572,12 @@ main > * {
 
 .action-button-premium {
   border-color: var(--warm);
+}
+
+.action-button-primary {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: #ffffff;
 }
 
 .action-status {
@@ -1153,11 +1186,36 @@ main > * {
 }
 
 .country-filter-empty {
+  display: grid;
+  gap: 8px;
   padding: 12px;
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 800;
   text-transform: none;
+}
+
+.country-filter-empty strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.country-filter-empty span {
+  line-height: 1.35;
+}
+
+.country-filter-clear {
+  width: fit-content;
+  min-height: 32px;
+  padding: 7px 10px;
+  border: 1px solid var(--accent-dark);
+  background: var(--panel);
+  color: var(--accent-dark);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .country-profile {
@@ -1528,6 +1586,26 @@ main > * {
   font: inherit;
   font-weight: 700;
   padding: 8px 10px;
+}
+
+.compare-controls input[aria-invalid="true"] {
+  border-color: var(--red-dark);
+  box-shadow: inset 0 0 0 2px rgba(64, 6, 6, 0.18);
+}
+
+.compare-status {
+  margin: -6px 22px 14px;
+  padding: 10px 12px;
+  border-left: 4px solid var(--red-dark);
+  background: #ffffff;
+  color: var(--red-dark);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.compare-status[hidden] {
+  display: none;
 }
 
 .compare-output {
@@ -1967,8 +2045,7 @@ main > * {
 
 .visual-context {
   overflow: hidden;
-  margin: 22px auto 0;
-  border: 1px solid var(--hairline);
+  margin: 0;
   background: var(--panel);
 }
 
@@ -1982,6 +2059,7 @@ main > * {
 
 .visual-grid figure {
   display: grid;
+  grid-template-rows: auto 1fr;
   margin: 0;
   background: var(--panel);
 }
@@ -1991,6 +2069,14 @@ main > * {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+}
+
+.visual-grid figcaption {
+  padding: 10px 12px 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.3;
 }
 
 .legend {
@@ -2300,6 +2386,7 @@ footer p {
   #accessibility,
   #terms-privacy,
   #source-audit,
+  #visual-context,
   #faq {
     scroll-margin-top: var(--sticky-nav-offset);
   }

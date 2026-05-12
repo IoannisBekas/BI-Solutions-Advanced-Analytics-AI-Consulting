@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-12-mobile-table-fix";
+const ASSET_VERSION = "2026-05-12-dashboard-ux-fixes";
 const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
@@ -630,6 +630,14 @@ function populateMainCountryFilter(state, selectedCountry) {
   });
 
   results.addEventListener("mousedown", (event) => {
+    const clearContinent = event.target.closest("[data-clear-continent]");
+    if (clearContinent) {
+      event.preventDefault();
+      applyContinentFilterSelection(state, "");
+      refreshResults(0);
+      input.focus();
+      return;
+    }
     const option = event.target.closest("[data-country-iso]");
     if (!option) return;
     event.preventDefault();
@@ -733,6 +741,14 @@ function populateMobileCountryFilter(state, selectedCountry) {
   });
 
   results.addEventListener("mousedown", (event) => {
+    const clearContinent = event.target.closest("[data-clear-continent]");
+    if (clearContinent) {
+      event.preventDefault();
+      applyContinentFilterSelection(state, "");
+      refreshResults(0);
+      input.focus();
+      return;
+    }
     const option = event.target.closest("[data-country-iso]");
     if (!option) return;
     event.preventDefault();
@@ -781,32 +797,56 @@ function populateCompareControls(state) {
     [inputA, "compareIsoA"],
     [inputB, "compareIsoB"],
   ].forEach(([input, field]) => {
+    const currentCountryName = () => countryByIso(state, state[field])?.name || "";
+    const acceptCountry = (country) => {
+      state[field] = country.iso3;
+      input.value = country.name;
+      input.removeAttribute("aria-invalid");
+      setCompareStatus("");
+      renderCompareView(state);
+    };
+    const rejectCountry = () => {
+      const attempted = input.value.trim();
+      input.value = currentCountryName();
+      input.setAttribute("aria-invalid", "true");
+      setCompareStatus(
+        attempted
+          ? `No country found for "${attempted}". Choose a country from the suggestions or try its ISO3 code.`
+          : "Choose a country from the suggestions or type an ISO3 code.",
+      );
+      renderCompareView(state);
+    };
+
     input.addEventListener("input", () => {
       const country = countryFromSearchValue(state, input.value, { ignoreContinent: true });
-      if (!country) return;
-      state[field] = country.iso3;
-      renderCompareView(state);
+      if (!country) {
+        input.removeAttribute("aria-invalid");
+        setCompareStatus("");
+        return;
+      }
+      acceptCountry(country);
     });
     input.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
+      event.preventDefault();
       const country = countryFromSearchValue(state, input.value, {
         allowPartial: true,
         ignoreContinent: true,
       });
-      if (!country) return;
-      event.preventDefault();
-      state[field] = country.iso3;
-      input.value = country.name;
-      renderCompareView(state);
+      if (country) acceptCountry(country);
+      else rejectCountry();
     });
     input.addEventListener("blur", () => {
       const country = countryFromSearchValue(state, input.value, {
         allowPartial: true,
         ignoreContinent: true,
       });
-      if (country) state[field] = country.iso3;
-      input.value = countryByIso(state, state[field])?.name || "";
-      renderCompareView(state);
+      if (country) acceptCountry(country);
+      else if (input.value.trim() && input.value.trim() !== currentCountryName()) rejectCountry();
+      else {
+        input.value = currentCountryName();
+        input.removeAttribute("aria-invalid");
+      }
     });
   });
 
@@ -814,6 +854,9 @@ function populateCompareControls(state) {
     [state.compareIsoA, state.compareIsoB] = [state.compareIsoB, state.compareIsoA];
     inputA.value = countryByIso(state, state.compareIsoA)?.name || "";
     inputB.value = countryByIso(state, state.compareIsoB)?.name || "";
+    inputA.removeAttribute("aria-invalid");
+    inputB.removeAttribute("aria-invalid");
+    setCompareStatus("");
     renderCompareView(state);
   });
 }
@@ -911,12 +954,16 @@ function renderCountryFilterResultsIn(state, query = "", options = {}) {
   const optionIdPrefix = options.optionIdPrefix || "country-filter-option";
   if (!results || !input) return [];
 
-  const matches = countryFilterMatches(state, query);
+  const continent = document.querySelector("#continent-select")?.value || "";
+  const matches = countryFilterMatches(state, query, { continent });
   const activeIndex = matches.length ? clamp(options.activeIndex ?? 0, 0, matches.length - 1) : -1;
   const normalized = normalizeSearch(query);
 
   if (!matches.length) {
-    results.innerHTML = `<div class="country-filter-empty" role="note">No countries match this filter.</div>`;
+    const allContinentMatches = continent
+      ? countryFilterMatches(state, query, { ignoreContinent: true })
+      : [];
+    results.innerHTML = countryFilterEmptyHtml(query, continent, allContinentMatches.length);
     input.removeAttribute("aria-activedescendant");
     return [];
   }
@@ -944,6 +991,28 @@ function renderCountryFilterResultsIn(state, query = "", options = {}) {
 
   input.setAttribute("aria-activedescendant", `${optionIdPrefix}-${matches[activeIndex].iso3}`);
   return matches;
+}
+
+function countryFilterEmptyHtml(query, continent, allContinentMatchCount) {
+  const normalized = normalizeSearch(query);
+  if (continent && normalized && allContinentMatchCount) {
+    return `
+      <div class="country-filter-empty" role="note">
+        <strong>No matches in ${escapeHtml(continent)}.</strong>
+        <span>${fmtNumber(allContinentMatchCount)} result${allContinentMatchCount === 1 ? "" : "s"} match "${escapeHtml(query.trim())}" across all continents.</span>
+        <button class="country-filter-clear" type="button" data-clear-continent>Search all continents</button>
+      </div>
+    `;
+  }
+  if (continent) {
+    return `
+      <div class="country-filter-empty" role="note">
+        <strong>No countries match the current ${escapeHtml(continent)} filter.</strong>
+        <button class="country-filter-clear" type="button" data-clear-continent>Show all continents</button>
+      </div>
+    `;
+  }
+  return `<div class="country-filter-empty" role="note">No countries match this search.</div>`;
 }
 
 function setCountryFilterActiveResult(index, settings = {}) {
@@ -998,8 +1067,10 @@ function renderContinentFilterResults(options, settings = {}) {
   return activeIndex;
 }
 
-function countryFilterMatches(state, query = "") {
-  const continent = document.querySelector("#continent-select")?.value || "";
+function countryFilterMatches(state, query = "", options = {}) {
+  const continent = options.ignoreContinent
+    ? ""
+    : options.continent ?? document.querySelector("#continent-select")?.value ?? "";
   const pool = countriesForContinent(state.data.countries, continent);
   const normalized = normalizeSearch(query);
 
@@ -1184,7 +1255,7 @@ function renderTrustStatus(state) {
   const sourceCount = Array.isArray(data.sources) ? data.sources.length : 0;
   const validationStatus = validation?.status || "not bundled";
   const warningCount = validation?.warnings?.length || 0;
-  const nextRefresh = nextWeeklyRefreshLabel(data.generatedAt);
+  const refreshSchedule = weeklyRefreshSchedule(data.generatedAt);
 
   panel.innerHTML = `
     <article>
@@ -1203,9 +1274,9 @@ function renderTrustStatus(state) {
       <p>${warningCount ? `${fmtNumber(warningCount)} warning(s) require review.` : "Automated checks run before refresh commits."}</p>
     </article>
     <article>
-      <span>Next scheduled refresh</span>
-      <strong>${escapeHtml(nextRefresh)}</strong>
-      <p>GitHub Actions is configured for weekly public-data refreshes.</p>
+      <span>Refresh cadence</span>
+      <strong>${escapeHtml(refreshSchedule.nextLabel)}</strong>
+      <p>${escapeHtml(refreshSchedule.note)}</p>
     </article>
   `;
 }
@@ -1277,13 +1348,37 @@ function metricCoverageRows(countries) {
   }));
 }
 
-function nextWeeklyRefreshLabel(generatedAt) {
+function weeklyRefreshSchedule(generatedAt) {
+  const firstDue = nextWeeklyRefreshDate(generatedAt);
+  if (!firstDue) {
+    return {
+      nextLabel: "Weekly",
+      note: "GitHub Actions is configured for weekly public-data refreshes.",
+    };
+  }
+
+  const now = new Date();
+  const next = new Date(firstDue);
+  while (next <= now) {
+    next.setUTCDate(next.getUTCDate() + 7);
+  }
+
+  const lastDuePassed = firstDue <= now;
+  return {
+    nextLabel: `Next ${formatDate(next)}`,
+    note: lastDuePassed
+      ? `The first scheduled run after this build was ${formatDate(firstDue)}; the next weekly window is ${formatDate(next)}.`
+      : "GitHub Actions is configured for weekly public-data refreshes.",
+  };
+}
+
+function nextWeeklyRefreshDate(generatedAt) {
   const base = generatedAt ? new Date(generatedAt) : new Date();
-  if (Number.isNaN(base.getTime())) return "weekly";
+  if (Number.isNaN(base.getTime())) return null;
   const next = new Date(base);
   next.setUTCDate(next.getUTCDate() + ((8 - next.getUTCDay()) % 7 || 7));
   next.setUTCHours(4, 17, 0, 0);
-  return formatDate(next.toISOString());
+  return next;
 }
 
 function renderCountryProfile(state) {
@@ -1587,6 +1682,13 @@ function renderCompareView(state) {
       </tbody>
     </table>
   `;
+}
+
+function setCompareStatus(message = "") {
+  const status = document.querySelector("#compare-status");
+  if (!status) return;
+  status.textContent = message;
+  status.hidden = !message;
 }
 
 function topDonorLabel(country) {
@@ -2057,7 +2159,7 @@ function attachDashboardActions(state) {
       await navigator.clipboard.writeText(url);
       setActionStatus(`Copied link for ${country.name}.`);
     } catch {
-      setActionStatus(url);
+      setActionStatus(`Clipboard access is blocked. Link for ${country.name}: ${url}`);
     }
   });
 }
@@ -2961,6 +3063,7 @@ function drawScatter(selector, countries, selectedIso) {
     .selectAll("circle")
     .data(data)
     .join("circle")
+    .attr("class", "chart-hover-target")
     .attr("cx", (country) => x(country.risk))
     .attr("cy", (country) => y(country.worldRiskIndexValue))
     .attr("r", (country) => radius(country.disasterDisplacementValue || 0))
@@ -2971,7 +3074,11 @@ function drawScatter(selector, countries, selectedIso) {
     .on("mousemove", (event, country) => {
       showTooltip(
         event,
-        `<strong>${escapeHtml(country.name)}</strong>INFORM: ${fmtFixed(country.risk, 1)}<br>WorldRiskIndex: ${fmtFixed(country.worldRiskIndexValue, 2)}`,
+        `<strong>${escapeHtml(country.name)}</strong>` +
+          `INFORM: ${fmtFixed(country.risk, 1)}<br>` +
+          `WorldRiskIndex: ${fmtFixed(country.worldRiskIndexValue, 2)}<br>` +
+          `Displacement signal: ${fmtYearValue(country.disasterDisplacementValue, country.disasterDisplacementYear)}<br>` +
+          `Dot size reflects disaster displacement where available.`,
       );
     })
     .on("mouseleave", hideTooltip);
