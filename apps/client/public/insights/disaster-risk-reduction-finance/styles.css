@@ -3,6 +3,7 @@
   --panel: #fffaf7;
   --control-band: #e8e8e8;
   --sticky-nav-offset: 220px;
+  --mobile-country-strip-height: 0px;
   --ink: #111111;
   --muted: #4d4d4d;
   --hairline: #d7c5ba;
@@ -372,7 +373,13 @@ main > * {
 }
 
 #risk-section,
+#hazard-screening,
+#risk-ranking,
 #ask-section,
+#global-screening,
+#trends-section,
+#finance-gaps,
+#country-briefing,
 #country-view,
 #compare-view,
 #finance-view,
@@ -393,11 +400,11 @@ main > * {
   top: 0;
   z-index: 8;
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(430px, 0.68fr);
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 0.82fr);
+  gap: 16px;
   align-items: end;
   margin: -4px 0 0;
-  padding: 14px;
+  padding: 12px 14px;
   background: var(--control-band);
   border: 1px solid var(--hairline);
   border-top: 2px solid var(--ink);
@@ -407,8 +414,9 @@ main > * {
 
 .section-links {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
-  gap: 1px;
+  grid-template-columns: repeat(5, minmax(72px, 1fr));
+  min-width: 0;
+  gap: 6px;
   align-items: stretch;
 }
 
@@ -417,14 +425,29 @@ main > * {
   min-height: 38px;
   align-items: center;
   justify-content: center;
-  padding: 8px 6px;
+  padding: 8px 7px;
   border: 1px solid var(--hairline);
   background: var(--panel);
   color: var(--ink);
   font-size: 0.76rem;
   font-weight: 900;
+  line-height: 1;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+.section-links a[href="#premium-plans"] {
+  border-color: var(--accent-dark);
+  background: var(--accent-dark);
+  color: #ffffff;
+  box-shadow: inset 0 -4px 0 var(--teal);
+}
+
+.section-links a[href="#premium-plans"]:hover,
+.section-links a[href="#premium-plans"]:focus-visible {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  color: #ffffff;
 }
 
 .section-links a:hover,
@@ -447,7 +470,7 @@ main > * {
 
 .quick-country-picker {
   display: grid;
-  grid-template-columns: minmax(150px, 0.35fr) minmax(260px, 1fr);
+  grid-template-columns: minmax(160px, 0.44fr) minmax(260px, 1fr);
   gap: 8px;
   align-items: start;
   justify-self: stretch;
@@ -477,6 +500,7 @@ main > * {
 }
 
 .panel {
+  min-width: 0;
   background: var(--panel);
   border: 1px solid var(--hairline);
   box-shadow: var(--shadow);
@@ -722,6 +746,44 @@ main > * {
   margin-top: 12px;
 }
 
+.dashboard-zone {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.dashboard-zone > *,
+.trend-stack > * {
+  min-width: 0;
+}
+
+.zone-heading {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(260px, 0.42fr);
+  gap: 24px;
+  align-items: end;
+  padding: 6px 2px 0;
+  border-top: 2px solid var(--ink);
+}
+
+.zone-heading h2 {
+  margin: 0;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.75rem, 3.1vw, 2.7rem);
+  line-height: 0.98;
+}
+
+.zone-heading p:not(.kicker) {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
 .trust-status {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -920,6 +982,16 @@ main > * {
 
 .wide-left {
   grid-template-columns: 1.35fr 0.85fr;
+}
+
+.trend-stack {
+  display: grid;
+  gap: 22px;
+}
+
+.trend-stack .chart-area,
+.trend-stack .chart-line {
+  min-height: 430px;
 }
 
 .chart {
@@ -2215,7 +2287,8 @@ footer p {
 
 @media (max-width: 900px) {
   :root {
-    --sticky-nav-offset: 92px;
+    --sticky-nav-offset: 240px;
+    --mobile-country-strip-height: 87px;
   }
 
   .masthead-grid,
@@ -2247,8 +2320,11 @@ footer p {
   }
 
   .section-nav {
-    position: static;
+    position: sticky;
+    top: calc(var(--mobile-country-strip-height) + 8px);
+    z-index: 10;
     gap: 10px;
+    margin-top: 0;
   }
 
   .mobile-country-strip {
@@ -2319,6 +2395,7 @@ footer p {
   }
 
   .section-links {
+    display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -2366,7 +2443,13 @@ footer p {
   }
 
   #risk-section,
+  #hazard-screening,
+  #risk-ranking,
   #ask-section,
+  #global-screening,
+  #trends-section,
+  #finance-gaps,
+  #country-briefing,
   #country-view,
   #compare-view,
   #finance-view,
@@ -2383,8 +2466,10 @@ footer p {
   }
 
   .panel-heading,
-  .panel-heading.compact {
+  .panel-heading.compact,
+  .zone-heading {
     display: grid;
+    grid-template-columns: 1fr;
     align-items: start;
   }
 
@@ -2433,7 +2518,7 @@ footer p {
   }
 
   .section-links {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1px;
   }
 

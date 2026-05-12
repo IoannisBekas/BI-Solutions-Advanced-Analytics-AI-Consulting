@@ -33,7 +33,7 @@
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/insights/disaster-risk-reduction-finance/assets/social-preview.png" />
     <meta name="twitter:image:alt" content="Disaster Risk Reduction dashboard preview with country, risk, and finance indicators." />
-    <link rel="stylesheet" href="./styles.css?v=2026-05-12-decorative-photo-strip" />
+    <link rel="stylesheet" href="./styles.css?v=2026-05-13-visual-split" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -264,13 +264,13 @@
           <p>Use arrow keys and Enter, or tap a country.</p>
         </div>
       </div>
-      <nav class="section-nav" aria-label="Dashboard sections">
-        <div class="section-links">
+      <nav class="section-nav" aria-label="Dashboard sections and filters">
+        <div class="section-links" aria-label="Dashboard sections">
           <a href="#risk-section">Risk</a>
-          <a href="#ask-section">Ask</a>
-          <a href="#country-view">Country</a>
+          <a href="#trends-section">Trends</a>
+          <a href="#finance-gaps">Finance gaps</a>
+          <a href="#country-briefing">Country</a>
           <a href="#compare-view">Compare</a>
-          <a href="#finance-view">Finance</a>
           <a href="#premium-plans">Premium</a>
           <a href="#methodology">Method</a>
           <a href="#source-audit">Sources</a>
@@ -405,6 +405,222 @@
         </div>
       </section>
 
+      <section class="dashboard-zone global-zone" id="global-screening" aria-labelledby="global-screening-title">
+        <div class="zone-heading">
+          <div>
+            <p class="kicker">Global screening</p>
+            <h2 id="global-screening-title">All-country risk, hazard, trend, and finance screens</h2>
+          </div>
+          <p>
+            Aggregate signals across the full country set, designed for scanning where risk,
+            hazards, disaster losses, and reported DRR finance do not line up.
+          </p>
+        </div>
+
+        <section class="panel map-panel" id="risk-section">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Current risk</p>
+              <h2>INFORM Risk Index, 2026</h2>
+            </div>
+            <p>
+              Higher scores indicate greater humanitarian crisis and disaster risk, on a 0-10
+              scale. Click a country to open its profile and finance view.
+            </p>
+          </div>
+          <div id="risk-map" class="chart chart-map" role="group" aria-label="World map of INFORM risk" aria-describedby="risk-map-summary risk-map-note"></div>
+          <div id="risk-map-summary" class="sr-only"></div>
+          <div id="risk-map-note" class="chart-explainer" role="note"></div>
+          <details class="data-table-panel">
+            <summary>Accessible data table</summary>
+            <div id="risk-map-table" class="table-scroll"></div>
+          </details>
+        </section>
+
+        <section class="panel" id="hazard-screening">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Hazard screening</p>
+              <h2>How many countries are classified high?</h2>
+            </div>
+            <p>ThinkHazard country-level classifications, grouped by hazard type.</p>
+          </div>
+          <div id="hazard-summary-chart" class="chart chart-hazards" role="img" aria-label="Countries with high or medium hazard classifications" aria-describedby="hazard-summary-summary hazard-summary-note"></div>
+          <div id="hazard-summary-summary" class="sr-only"></div>
+          <div id="hazard-summary-note" class="chart-explainer" role="note"></div>
+          <details class="data-table-panel">
+            <summary>Accessible data table</summary>
+            <div id="hazard-summary-table" class="table-scroll"></div>
+          </details>
+        </section>
+
+        <section class="panel" id="risk-ranking">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Risk ranking</p>
+              <h2>Countries at the top of the index</h2>
+            </div>
+            <p>The highest INFORM scores across all scored countries.</p>
+          </div>
+          <div id="top-risk-chart" class="chart chart-bars" role="img" aria-label="Top risk countries" aria-describedby="top-risk-summary top-risk-note"></div>
+          <div id="top-risk-summary" class="sr-only"></div>
+          <div id="top-risk-note" class="chart-explainer" role="note"></div>
+          <details class="data-table-panel">
+            <summary>Accessible data table</summary>
+            <div id="top-risk-table" class="table-scroll"></div>
+          </details>
+        </section>
+
+        <section class="panel finance-gap-panel" id="finance-gaps">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Finance gap screen</p>
+              <h2>High-risk countries with thin reported DRR ODA</h2>
+            </div>
+            <p>Lower bars indicate less DRR-related ODA per point of INFORM risk.</p>
+          </div>
+          <div id="finance-gap-chart" class="chart chart-finance" role="img" aria-label="DRR finance per risk point" aria-describedby="finance-gap-summary finance-gap-note"></div>
+          <div id="finance-gap-summary" class="sr-only"></div>
+          <div id="finance-gap-note" class="chart-explainer" role="note"></div>
+          <details class="data-table-panel">
+            <summary>Accessible data table</summary>
+            <div id="finance-gap-table" class="table-scroll"></div>
+          </details>
+        </section>
+
+        <section class="trend-stack" id="trends-section" aria-label="Global trend and economic impact">
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="kicker">Global trend</p>
+                <h2>Reported disasters by hazard type</h2>
+              </div>
+              <p>EM-DAT-derived annual counts, 1970 onward.</p>
+            </div>
+            <div id="events-chart" class="chart chart-area" role="img" aria-label="Reported disasters by type" aria-describedby="events-summary events-note"></div>
+            <div id="events-summary" class="sr-only"></div>
+            <div id="events-note" class="chart-explainer" role="note"></div>
+            <details class="data-table-panel">
+              <summary>Accessible data table</summary>
+              <div id="events-table" class="table-scroll"></div>
+            </details>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="kicker">Economic impact</p>
+                <h2>Damage remains volatile</h2>
+              </div>
+              <p>Global annual damage in current US dollars.</p>
+            </div>
+            <div id="damage-chart" class="chart chart-line" role="img" aria-label="Economic damages from disasters" aria-describedby="damage-summary damage-note"></div>
+            <div id="damage-summary" class="sr-only"></div>
+            <div id="damage-note" class="chart-explainer" role="note"></div>
+            <details class="data-table-panel">
+              <summary>Accessible data table</summary>
+              <div id="damage-table" class="table-scroll"></div>
+            </details>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Index comparison</p>
+              <h2>Two risk models, one country view</h2>
+            </div>
+            <p>INFORM 2026 scores are plotted against the latest WorldRiskIndex trend values.</p>
+          </div>
+          <div id="scatter-chart" class="chart chart-scatter" role="img" aria-label="INFORM risk versus WorldRiskIndex score" aria-describedby="scatter-summary scatter-note"></div>
+          <div id="scatter-summary" class="sr-only"></div>
+          <div id="scatter-note" class="chart-explainer" role="note"></div>
+          <details class="data-table-panel">
+            <summary>Accessible data table</summary>
+            <div id="scatter-table" class="table-scroll"></div>
+          </details>
+        </section>
+      </section>
+
+      <section class="dashboard-zone country-zone" id="country-briefing" aria-labelledby="country-briefing-title">
+        <div class="zone-heading">
+          <div>
+            <p class="kicker">Country briefing</p>
+            <h2 id="country-briefing-title">Selected-country risk, finance, donor, and comparison evidence</h2>
+          </div>
+          <p>
+            These panels respond to the sticky country selector, so the chosen country stays
+            clear while reviewing risk, finance, donor, project, and comparison signals.
+          </p>
+        </div>
+
+        <section class="panel" id="country-view">
+          <div class="panel-heading compact">
+            <div>
+              <p class="kicker">Country profile</p>
+              <h2>Risk snapshot</h2>
+            </div>
+          </div>
+          <div id="country-profile-note" class="chart-explainer" role="note"></div>
+          <div id="country-profile" class="country-profile"></div>
+        </section>
+
+        <section class="panel finance-panel" id="finance-view">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Financing and donors</p>
+              <h2>Does international finance match risk?</h2>
+            </div>
+            <p>
+              OECD CRS is reported international DRR-related ODA. World Bank and GCF
+              figures are project finance signals, while OCHA FTS is response funding context.
+              CRS figures use the latest detailed donor-recipient-sector year available to the
+              pipeline; preliminary aggregate ODA releases are not used for country donor
+              breakdowns. Domestic, private, and mainstreamed DRR remain separate evidence tiers.
+            </p>
+          </div>
+          <div id="finance-profile-note" class="chart-explainer" role="note"></div>
+          <div id="finance-profile" class="finance-profile"></div>
+        </section>
+
+        <section class="panel compare-panel" id="compare-view">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Country comparison</p>
+              <h2>Compare two country profiles</h2>
+            </div>
+            <p>Use the same country list to compare risk, readiness, hazard, finance, donor, and project signals side by side.</p>
+          </div>
+          <div class="compare-controls" aria-label="Country comparison controls">
+            <label>
+              <span>Country A</span>
+              <input id="compare-country-a" type="search" list="country-options" autocomplete="off" />
+            </label>
+            <label>
+              <span>Country B</span>
+              <input id="compare-country-b" type="search" list="country-options" autocomplete="off" />
+            </label>
+            <button class="action-button" id="swap-compare" type="button">Swap</button>
+          </div>
+          <p id="compare-status" class="compare-status" role="status" aria-live="polite" hidden></p>
+          <div id="compare-output" class="compare-output"></div>
+        </section>
+      </section>
+
+      <section class="panel premium-panel" id="premium-plans">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">Premium data</p>
+            <h2>Paid access for deeper DRR finance intelligence</h2>
+          </div>
+          <p>
+            The public dashboard remains open. Paid plans are designed for restricted
+            project-level exports, country evidence packs, and authenticated premium API data.
+          </p>
+        </div>
+        <div id="premium-access" class="premium-access"></div>
+      </section>
+
       <section class="panel trust-panel" id="methodology">
         <div class="panel-heading">
           <div>
@@ -444,192 +660,6 @@
             <a href="https://www.linkedin.com/in/ioannisbekas/" target="_blank" rel="noreferrer">LinkedIn profile</a>
           </article>
         </div>
-      </section>
-
-      <section class="panel map-panel" id="risk-section">
-        <div class="panel-heading">
-          <div>
-            <p class="kicker">Current risk</p>
-            <h2>INFORM Risk Index, 2026</h2>
-          </div>
-          <p>
-            Higher scores indicate greater humanitarian crisis and disaster risk, on a 0-10
-            scale. Click a country to open its profile and finance view.
-          </p>
-        </div>
-        <div id="risk-map" class="chart chart-map" role="group" aria-label="World map of INFORM risk" aria-describedby="risk-map-summary risk-map-note"></div>
-        <div id="risk-map-summary" class="sr-only"></div>
-        <div id="risk-map-note" class="chart-explainer" role="note"></div>
-        <details class="data-table-panel">
-          <summary>Accessible data table</summary>
-          <div id="risk-map-table" class="table-scroll"></div>
-        </details>
-      </section>
-
-      <section class="panel">
-        <div class="panel-heading">
-          <div>
-            <p class="kicker">Hazard screening</p>
-            <h2>How many countries are classified high?</h2>
-          </div>
-          <p>ThinkHazard country-level classifications, grouped by hazard type.</p>
-        </div>
-        <div id="hazard-summary-chart" class="chart chart-hazards" role="img" aria-label="Countries with high or medium hazard classifications" aria-describedby="hazard-summary-summary hazard-summary-note"></div>
-        <div id="hazard-summary-summary" class="sr-only"></div>
-        <div id="hazard-summary-note" class="chart-explainer" role="note"></div>
-        <details class="data-table-panel">
-          <summary>Accessible data table</summary>
-          <div id="hazard-summary-table" class="table-scroll"></div>
-        </details>
-      </section>
-
-      <section class="two-column" id="country-view">
-        <article class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="kicker">Risk ranking</p>
-              <h2>Countries at the top of the index</h2>
-            </div>
-          </div>
-          <div id="top-risk-chart" class="chart chart-bars" role="img" aria-label="Top risk countries" aria-describedby="top-risk-summary top-risk-note"></div>
-          <div id="top-risk-summary" class="sr-only"></div>
-          <div id="top-risk-note" class="chart-explainer" role="note"></div>
-          <details class="data-table-panel">
-            <summary>Accessible data table</summary>
-            <div id="top-risk-table" class="table-scroll"></div>
-          </details>
-        </article>
-
-        <article class="panel">
-          <div class="panel-heading compact">
-            <div>
-              <p class="kicker">Country profile</p>
-              <h2>Risk snapshot</h2>
-            </div>
-          </div>
-          <div id="country-profile-note" class="chart-explainer" role="note"></div>
-          <div id="country-profile" class="country-profile"></div>
-        </article>
-      </section>
-
-      <section class="panel compare-panel" id="compare-view">
-        <div class="panel-heading">
-          <div>
-            <p class="kicker">Country comparison</p>
-            <h2>Compare two country profiles</h2>
-          </div>
-          <p>Use the same country list to compare risk, readiness, hazard, finance, donor, and project signals side by side.</p>
-        </div>
-        <div class="compare-controls" aria-label="Country comparison controls">
-          <label>
-            <span>Country A</span>
-            <input id="compare-country-a" type="search" list="country-options" autocomplete="off" />
-          </label>
-          <label>
-            <span>Country B</span>
-            <input id="compare-country-b" type="search" list="country-options" autocomplete="off" />
-          </label>
-          <button class="action-button" id="swap-compare" type="button">Swap</button>
-        </div>
-        <p id="compare-status" class="compare-status" role="status" aria-live="polite" hidden></p>
-        <div id="compare-output" class="compare-output"></div>
-      </section>
-
-      <section class="panel finance-panel" id="finance-view">
-        <div class="panel-heading">
-          <div>
-            <p class="kicker">Financing and donors</p>
-            <h2>Does international finance match risk?</h2>
-          </div>
-          <p>
-            OECD CRS is reported international DRR-related ODA. World Bank and GCF
-            figures are project finance signals, while OCHA FTS is response funding context.
-            Domestic, private, and mainstreamed DRR remain separate evidence tiers.
-          </p>
-        </div>
-        <div id="finance-profile-note" class="chart-explainer" role="note"></div>
-        <div id="finance-profile" class="finance-profile"></div>
-        <div class="panel-heading finance-gap-heading">
-          <div>
-            <p class="kicker">Finance gap screen</p>
-            <h2>High-risk countries with thin reported DRR ODA</h2>
-          </div>
-          <p>Lower bars indicate less DRR-related ODA per point of INFORM risk.</p>
-        </div>
-        <div id="finance-gap-chart" class="chart chart-finance" role="img" aria-label="DRR finance per risk point" aria-describedby="finance-gap-summary finance-gap-note"></div>
-        <div id="finance-gap-summary" class="sr-only"></div>
-        <div id="finance-gap-note" class="chart-explainer" role="note"></div>
-        <details class="data-table-panel">
-          <summary>Accessible data table</summary>
-          <div id="finance-gap-table" class="table-scroll"></div>
-        </details>
-      </section>
-
-      <section class="panel premium-panel" id="premium-plans">
-        <div class="panel-heading">
-          <div>
-            <p class="kicker">Premium data</p>
-            <h2>Paid access for deeper DRR finance intelligence</h2>
-          </div>
-          <p>
-            The public dashboard remains open. Paid plans are designed for restricted
-            project-level exports, country evidence packs, and authenticated premium API data.
-          </p>
-        </div>
-        <div id="premium-access" class="premium-access"></div>
-      </section>
-
-      <section class="two-column wide-left">
-        <article class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="kicker">Global trend</p>
-              <h2>Reported disasters by hazard type</h2>
-            </div>
-            <p>EM-DAT-derived annual counts, 1970 onward.</p>
-          </div>
-          <div id="events-chart" class="chart chart-area" role="img" aria-label="Reported disasters by type" aria-describedby="events-summary events-note"></div>
-          <div id="events-summary" class="sr-only"></div>
-          <div id="events-note" class="chart-explainer" role="note"></div>
-          <details class="data-table-panel">
-            <summary>Accessible data table</summary>
-            <div id="events-table" class="table-scroll"></div>
-          </details>
-        </article>
-
-        <article class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="kicker">Economic impact</p>
-              <h2>Damage remains volatile</h2>
-            </div>
-            <p>Global annual damage in current US dollars.</p>
-          </div>
-          <div id="damage-chart" class="chart chart-line" role="img" aria-label="Economic damages from disasters" aria-describedby="damage-summary damage-note"></div>
-          <div id="damage-summary" class="sr-only"></div>
-          <div id="damage-note" class="chart-explainer" role="note"></div>
-          <details class="data-table-panel">
-            <summary>Accessible data table</summary>
-            <div id="damage-table" class="table-scroll"></div>
-          </details>
-        </article>
-      </section>
-
-      <section class="panel">
-        <div class="panel-heading">
-          <div>
-            <p class="kicker">Index comparison</p>
-            <h2>Two risk models, one country view</h2>
-          </div>
-          <p>INFORM 2026 scores are plotted against the latest WorldRiskIndex trend values.</p>
-        </div>
-        <div id="scatter-chart" class="chart chart-scatter" role="img" aria-label="INFORM risk versus WorldRiskIndex score" aria-describedby="scatter-summary scatter-note"></div>
-        <div id="scatter-summary" class="sr-only"></div>
-        <div id="scatter-note" class="chart-explainer" role="note"></div>
-        <details class="data-table-panel">
-          <summary>Accessible data table</summary>
-          <div id="scatter-table" class="table-scroll"></div>
-        </details>
       </section>
 
       <section class="panel" id="source-audit">
@@ -780,6 +810,6 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="./app.js?v=2026-05-12-decorative-photo-strip" defer></script>
+    <script src="./app.js?v=2026-05-13-visual-split" defer></script>
   </body>
 </html>

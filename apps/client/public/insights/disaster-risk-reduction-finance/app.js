@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-12-decorative-photo-strip";
+const ASSET_VERSION = "2026-05-13-visual-split";
 const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
@@ -1229,21 +1229,25 @@ function sectionTargetTop(target) {
 }
 
 function getStickyNavOffset() {
-  const mobileStrip = document.querySelector(".mobile-country-strip");
-  if (mobileStrip) {
-    const style = window.getComputedStyle(mobileStrip);
-    if (style.display !== "none" && style.position === "sticky") {
-      return Math.ceil(mobileStrip.getBoundingClientRect().height + 16);
-    }
-  }
-  const nav = document.querySelector(".section-nav");
-  if (!nav) return 24;
-  const position = window.getComputedStyle(nav).position;
-  return position === "sticky" ? Math.ceil(nav.getBoundingClientRect().height + 16) : 24;
+  const mobileStripHeight = stickyElementHeight(".mobile-country-strip");
+  const navHeight = stickyElementHeight(".section-nav");
+  if (mobileStripHeight && navHeight) return Math.ceil(mobileStripHeight + navHeight + 24);
+  if (mobileStripHeight) return Math.ceil(mobileStripHeight + 16);
+  if (navHeight) return Math.ceil(navHeight + 16);
+  return 24;
 }
 
 function updateStickyNavOffset() {
+  document.documentElement.style.setProperty("--mobile-country-strip-height", `${stickyElementHeight(".mobile-country-strip")}px`);
   document.documentElement.style.setProperty("--sticky-nav-offset", `${getStickyNavOffset()}px`);
+}
+
+function stickyElementHeight(selector) {
+  const element = document.querySelector(selector);
+  if (!element) return 0;
+  const style = window.getComputedStyle(element);
+  if (style.display === "none" || style.position !== "sticky") return 0;
+  return Math.ceil(element.getBoundingClientRect().height);
 }
 
 function renderTrustStatus(state) {
@@ -1949,7 +1953,7 @@ function answerTopRisk(countries) {
   return answerBlock(
     "Highest current INFORM risk",
     top.map((country, index) => `${index + 1}. ${escapeHtml(country.name)}: ${fmtFixed(country.risk, 1)}`).join("<br>"),
-    [{ label: "Open risk ranking", href: "#country-view" }],
+    [{ label: "Open risk ranking", href: "#risk-ranking" }],
   );
 }
 
@@ -1960,7 +1964,7 @@ function answerFinanceGaps(countries) {
     rows
       .map((country, index) => `${index + 1}. ${escapeHtml(country.name)}: ${fmtMoney(country.financePerRisk)} per risk point`)
       .join("<br>"),
-    [{ label: "Open finance view", href: "#finance-view" }],
+    [{ label: "Open finance gaps", href: "#finance-gaps" }],
   );
 }
 
@@ -2016,7 +2020,7 @@ function answerHazardQuery(countries, query) {
     rows.length
       ? rows.map((country, index) => `${index + 1}. ${escapeHtml(country.name)}: INFORM ${fmtFixed(country.risk, 1)}`).join("<br>")
       : `No countries are flagged high for ${escapeHtml(label)} in the current ThinkHazard data.`,
-    [{ label: "Open hazard chart", href: "#risk-section" }],
+    [{ label: "Open hazard chart", href: "#hazard-screening" }],
   );
 }
 
