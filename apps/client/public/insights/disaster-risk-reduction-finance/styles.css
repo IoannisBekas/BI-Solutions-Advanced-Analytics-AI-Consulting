@@ -75,7 +75,8 @@ body {
 
 .masthead,
 main,
-footer {
+footer,
+.visual-context {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
 }
@@ -383,7 +384,6 @@ main > * {
 #accessibility,
 #terms-privacy,
 #source-audit,
-#visual-context,
 #faq {
   scroll-margin-top: var(--sticky-nav-offset);
 }
@@ -2045,7 +2045,8 @@ main > * {
 
 .visual-context {
   overflow: hidden;
-  margin: 0;
+  margin: 22px auto 0;
+  border: 1px solid var(--hairline);
   background: var(--panel);
 }
 
@@ -2059,7 +2060,6 @@ main > * {
 
 .visual-grid figure {
   display: grid;
-  grid-template-rows: auto 1fr;
   margin: 0;
   background: var(--panel);
 }
@@ -2069,14 +2069,6 @@ main > * {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-}
-
-.visual-grid figcaption {
-  padding: 10px 12px 12px;
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 800;
-  line-height: 1.3;
 }
 
 .legend {
@@ -2386,7 +2378,6 @@ footer p {
   #accessibility,
   #terms-privacy,
   #source-audit,
-  #visual-context,
   #faq {
     scroll-margin-top: var(--sticky-nav-offset);
   }

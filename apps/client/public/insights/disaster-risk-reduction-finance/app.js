@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-12-dashboard-ux-fixes";
+const ASSET_VERSION = "2026-05-12-decorative-photo-strip";
 const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
