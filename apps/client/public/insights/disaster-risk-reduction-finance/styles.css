@@ -340,6 +340,10 @@ main {
   gap: 22px;
 }
 
+main > * {
+  min-width: 0;
+}
+
 #risk-section,
 #ask-section,
 #country-view,
@@ -544,11 +548,14 @@ main {
 }
 
 .action-status {
+  min-width: 0;
+  max-width: 100%;
   min-height: 20px;
   margin: 0 0 0 auto;
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .action-note {
@@ -808,6 +815,7 @@ main {
 }
 
 .data-table-panel {
+  min-width: 0;
   margin: -10px 22px 22px;
   border: 1px solid var(--hairline);
   background: var(--panel);
@@ -824,6 +832,7 @@ main {
 }
 
 .table-scroll {
+  max-width: 100%;
   overflow-x: auto;
   padding: 12px 14px 14px;
   border-top: 1px solid var(--hairline);

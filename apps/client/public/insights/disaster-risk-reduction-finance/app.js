@@ -1,4 +1,4 @@
-const ASSET_VERSION = "2026-05-11-tier-nav-fix";
+const ASSET_VERSION = "2026-05-12-mobile-table-fix";
 const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
