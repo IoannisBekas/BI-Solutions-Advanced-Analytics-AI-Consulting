@@ -20,7 +20,8 @@ type Motif =
   | "privacy"
   | "roadmap"
   | "decision"
-  | "proof";
+  | "proof"
+  | "risk";
 
 type Palette = {
   paper: string;
@@ -78,9 +79,19 @@ const PALETTES: Record<string, Palette> = {
     accent2: "#0F766E",
     accent3: "#2563EB",
   },
+  risk: {
+    paper: "#FAFAFA",
+    tint: "#F4F4F5",
+    ink: "#111827",
+    quiet: "#A1A1AA",
+    accent: "#111827",
+    accent2: "#52525B",
+    accent3: "#71717A",
+  },
 };
 
 const MOTIF_BY_SLUG: Record<string, Motif> = {
+  "disaster-risk-reduction-finance-dashboard-launch": "risk",
   "website-web-app-development-greece-business-needs": "web",
   "power-bi-consulting-dashboards-business-infrastructure": "dashboard",
   "semantic-modeling-power-bi-clean-models": "model",
@@ -116,6 +127,7 @@ const MOTIF_BY_SLUG: Record<string, Motif> = {
 };
 
 function getPalette(post: ArticleVisualPost): Palette {
+  if (post.slug === "disaster-risk-reduction-finance-dashboard-launch") return PALETTES.risk;
   if (post.category.includes("Web")) return PALETTES.web;
   if (post.category.includes("BI") || post.category.includes("Analytics")) return PALETTES.bi;
   if (post.category.includes("AI")) return PALETTES.ai;
@@ -175,6 +187,25 @@ function AxisChart({ p }: { p: Palette }) {
         <path d="M418 212C454 182 480 196 506 162C520 144 532 134 546 126" fill="none" stroke={p.accent} strokeLinecap="round" strokeWidth="6" />
         <path d="M420 222C456 218 482 220 508 210C526 204 540 190 552 174" fill="none" stroke={p.accent3} strokeDasharray="7 8" strokeLinecap="round" strokeWidth="4" />
         <rect x="414" y="94" width="72" height="14" rx="7" fill={p.ink} />
+      </Panel>
+    </g>
+  );
+}
+
+function RiskMotif({ p }: { p: Palette }) {
+  return (
+    <g>
+      <Panel x={360} y={88} width={226} height={176} fill="#FFFFFF" stroke={p.quiet}>
+        <path d="M396 222H552M396 122V222" fill="none" stroke={p.quiet} strokeWidth="2" />
+        <rect x="414" y="178" width="22" height="44" rx="6" fill={p.accent} opacity="0.92" />
+        <rect x="452" y="150" width="22" height="72" rx="6" fill={p.accent2} opacity="0.72" />
+        <rect x="490" y="132" width="22" height="90" rx="6" fill={p.accent3} opacity="0.72" />
+        <path d="M394 118C430 102 462 112 490 96C516 82 544 84 568 100" fill="none" stroke={p.accent} strokeLinecap="round" strokeWidth="4" />
+        <rect x="414" y="112" width="72" height="16" rx="8" fill={p.ink} />
+        <MiniText x={414} y={236} widths={[120, 78]} color={p.quiet} />
+      </Panel>
+      <Panel x={514} y={210} width={90} height={54} fill="#FFFFFF" stroke={p.accent2}>
+        <text x="559" y="243" textAnchor="middle" fill={p.accent2} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">finance</text>
       </Panel>
     </g>
   );
@@ -327,6 +358,8 @@ function renderMotif(motif: Motif, palette: Palette) {
       return <MLOpsMotif p={palette} />;
     case "proof":
       return <ProofMotif p={palette} />;
+    case "risk":
+      return <RiskMotif p={palette} />;
     case "roadmap":
     case "decision":
     default:
@@ -355,6 +388,8 @@ function getCoverLabel(motif: Motif) {
       return ["90-day", "roadmap"];
     case "proof":
       return ["Proof", "story"];
+    case "risk":
+      return ["Risk", "finance"];
     case "decision":
     default:
       return ["Decision", "brief"];

@@ -23,11 +23,7 @@ export function ProductPageHero({
 }: ProductPageHeroProps) {
   return (
     <section className="relative max-w-full overflow-hidden px-6 pb-10 md:px-12">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-20 top-12 h-72 w-72 rounded-full bg-amber-200/25 blur-3xl" />
-        <div className="absolute right-0 top-20 h-80 w-80 rounded-full bg-sky-200/20 blur-3xl" />
-        <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-stone-200/20 blur-3xl" />
-      </div>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden bi-hero-backdrop" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <div

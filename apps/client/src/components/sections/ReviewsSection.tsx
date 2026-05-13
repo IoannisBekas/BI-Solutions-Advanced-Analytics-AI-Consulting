@@ -149,12 +149,12 @@ export function ReviewsSection() {
                                             }}
                                             className="block h-full cursor-pointer"
                                         >
-                                            <Card className="h-full bg-card/50 backdrop-blur border-border/50 hover:bg-card/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                                            <Card className="h-full rounded-[1.5rem] border-gray-200 bg-white shadow-sm shadow-black/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.06]">
                                                 <CardHeader>
                                                     <div className="flex items-center justify-between mb-2">
                                                         <div className="flex space-x-1">
                                                             {[...Array(review.rating)].map((_, i) => (
-                                                                <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                                                <Star key={i} className="w-4 h-4 text-gray-950 fill-gray-950" />
                                                             ))}
                                                         </div>
                                                         <span className="text-xs text-muted-foreground">{review.date}</span>

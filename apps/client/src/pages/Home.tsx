@@ -283,7 +283,7 @@ function LatestInsightsSection() {
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
                     {post.category}
                   </p>
-                  <h3 className="mt-4 text-xl font-bold font-heading text-gray-950 group-hover:text-blue-600">
+                  <h3 className="mt-4 text-xl font-bold font-heading text-gray-950 group-hover:text-gray-700">
                     {post.title}
                   </h3>
                   <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-500">

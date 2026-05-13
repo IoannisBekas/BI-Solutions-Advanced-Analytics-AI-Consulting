@@ -53,7 +53,7 @@ export function ServicesSection() {
             <ScrollReveal key={index} delay={service.delay} className="h-full">
               <Link href={service.path} className="block h-full">
                 <Card className="h-full p-8 border-gray-100 shadow-none hover:shadow-xl hover:border-gray-200 transition-all duration-500 group bg-gray-50/50 hover:bg-white">
-                  <h3 className="text-2xl font-bold font-heading mb-4 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-2xl font-bold font-heading mb-4 group-hover:text-gray-700 transition-colors">
                     {service.title}
                   </h3>
 

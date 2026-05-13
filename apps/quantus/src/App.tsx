@@ -247,7 +247,7 @@ function App() {
                     <motion.div key={route.path} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <button
                             onClick={goBackToSearch}
-                            className="mb-6 flex cursor-pointer items-center gap-2 text-sm transition-colors hover:text-blue-400"
+                            className="mb-6 flex cursor-pointer items-center gap-2 text-sm transition-colors hover:text-gray-900"
                             style={{ color: '#9CA3AF' }}
                         >
                             <ArrowLeft className="h-4 w-4" />

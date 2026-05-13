@@ -6,13 +6,13 @@ import { getStoredAiSearchReferral } from "@/lib/referralTracking";
 const COOKIE_CONSENT_KEY = "cookie-consent";
 const GA_ID = "G-M1276CBX6M";
 const COOKIE_BODY =
-  "\u03a7\u03c1\u03b7\u03c3\u03b9\u03bc\u03bf\u03c0\u03bf\u03b9\u03bf\u03cd\u03bc\u03b5 \u03b1\u03c0\u03b1\u03c1\u03b1\u03af\u03c4\u03b7\u03c4\u03b1 cookies \u03ba\u03b1\u03b9 \u03b2\u03b1\u03c3\u03b9\u03ba\u03ac analytics \u03b3\u03b9\u03b1 \u03ba\u03b1\u03bb\u03cd\u03c4\u03b5\u03c1\u03b7 \u03b5\u03bc\u03c0\u03b5\u03b9\u03c1\u03af\u03b1.";
+  "We use essential cookies and basic analytics to improve the site experience.";
 const COOKIE_BODY_SHORT =
-  "\u0391\u03c0\u03b1\u03c1\u03b1\u03af\u03c4\u03b7\u03c4\u03b1 cookies \u03ba\u03b1\u03b9 \u03b2\u03b1\u03c3\u03b9\u03ba\u03ac analytics.";
+  "Essential cookies and basic analytics.";
 const COOKIE_LINK_LABEL =
-  "\u03a0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03ae \u0391\u03c0\u03bf\u03c1\u03c1\u03ae\u03c4\u03bf\u03c5";
-const COOKIE_DECLINE_LABEL = "\u0391\u03c0\u03cc\u03c1\u03c1\u03b9\u03c8\u03b7";
-const COOKIE_ACCEPT_LABEL = "\u0391\u03c0\u03bf\u03b4\u03bf\u03c7\u03ae";
+  "Privacy Policy";
+const COOKIE_DECLINE_LABEL = "Decline";
+const COOKIE_ACCEPT_LABEL = "Accept";
 const COOKIE_TITLE = "Cookies & Analytics";
 
 function loadGA() {
@@ -89,7 +89,7 @@ export function CookieConsent() {
           role="dialog"
           aria-label={COOKIE_TITLE}
         >
-          <div className="rounded-2xl border border-white/10 bg-black/95 px-3 py-2 text-white shadow-2xl shadow-black/30 backdrop-blur-xl sm:rounded-[1.4rem] sm:px-4 sm:py-3">
+          <div className="rounded-[1.5rem] border border-white/10 bg-black/95 px-3 py-2 text-white shadow-2xl shadow-black/30 backdrop-blur-xl sm:px-4 sm:py-3">
             <div className="flex items-start gap-3 sm:block">
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400 sm:text-[11px]">

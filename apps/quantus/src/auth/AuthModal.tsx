@@ -167,7 +167,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
-                            <Zap className="w-5 h-5 text-blue-400" />
+                            <Zap className="w-5 h-5" style={{ color: tp }} />
                             <span className="font-bold" style={{ color: tp }}>Quantus Preview Access</span>
                         </div>
                         <button onClick={onClose} className="cursor-pointer opacity-50 hover:opacity-100">
@@ -186,7 +186,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
 
                     <div
                         className="rounded-xl p-3 mb-5 text-xs leading-relaxed"
-                        style={{ background: lightMode ? 'rgba(59,130,246,0.05)' : 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)', color: ts }}
+                        style={{ background: lightMode ? 'rgba(9,9,11,0.04)' : 'rgba(255,255,255,0.06)', border: `1px solid ${border}`, color: ts }}
                     >
                         Separate Quantus auth stays inside this product runtime. This preview sign-in is independent from Power BI Solutions and is intended for workspace access rehearsal before live billing and entitlement flows are connected.
                     </div>

@@ -2,7 +2,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Link } from "wouter";
+import { FileText } from "lucide-react";
 
 const CONTACT_EMAIL = "BekasYannis@gmail.com";
 
@@ -16,15 +18,17 @@ export default function TermsOfService() {
       />
       <Navbar />
       <main className="pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-6 md:px-12">
-          <ScrollReveal>
-            <h1 className="text-[2.65rem] sm:text-5xl md:text-7xl font-bold font-heading mb-4 leading-[1.05]">
-              Terms of Service
-            </h1>
-            <p className="text-sm text-gray-400 mb-12">Last updated: March 2026</p>
-          </ScrollReveal>
+        <PublicPageHero
+          icon={FileText}
+          eyebrow="Legal"
+          title="Terms of Service"
+          description="The service terms for BI Solutions Group consulting, products, AI workflows, and website use."
+          footer={<p className="text-sm text-gray-400">Last updated: March 2026</p>}
+        />
 
-          <div className="space-y-12 text-gray-700 leading-relaxed">
+        <section className="mx-auto max-w-5xl px-6 md:px-12">
+          <div className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-10 md:py-10">
+            <div className="space-y-12 text-gray-700 leading-relaxed">
             <ScrollReveal delay={0.05}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
@@ -208,8 +212,9 @@ export default function TermsOfService() {
                 </p>
               </section>
             </ScrollReveal>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
       <Footer />
     </div>

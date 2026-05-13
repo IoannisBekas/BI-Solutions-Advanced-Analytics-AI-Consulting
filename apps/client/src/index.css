@@ -33,6 +33,8 @@
   --color-ring: hsl(240 5.9% 10%);
   
   --radius: 0.5rem;
+  --radius-bi-panel: 2rem;
+  --radius-bi-card: 1.5rem;
   
   --font-sans: "Inter", sans-serif;
   --font-heading: "Plus Jakarta Sans", sans-serif;
@@ -88,4 +90,14 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-background-clip: text;
   color: transparent;
   background-image: linear-gradient(to right, #000, #666);
+}
+
+.bi-hero-backdrop {
+  background-image:
+    linear-gradient(to bottom, rgba(250, 250, 250, 0.96), rgba(255, 255, 255, 0) 68%),
+    linear-gradient(rgba(9, 9, 11, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9, 9, 11, 0.035) 1px, transparent 1px);
+  background-size: auto, 64px 64px, 64px 64px;
+  mask-image: linear-gradient(to bottom, black 0%, black 54%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 54%, transparent 100%);
 }

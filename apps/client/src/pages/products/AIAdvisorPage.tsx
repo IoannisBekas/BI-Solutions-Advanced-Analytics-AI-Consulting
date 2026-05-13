@@ -28,7 +28,6 @@ const roles = [
       english: "Accountant",
     },
     icon: Calculator,
-    color: "bg-blue-100 text-blue-600",
   },
   {
     id: "lawyer",
@@ -37,7 +36,6 @@ const roles = [
       english: "Lawyer",
     },
     icon: Scale,
-    color: "bg-amber-100 text-amber-600",
   },
   {
     id: "consultant",
@@ -46,7 +44,6 @@ const roles = [
       english: "Consultant",
     },
     icon: Briefcase,
-    color: "bg-emerald-100 text-emerald-600",
   },
 ];
 
@@ -388,10 +385,10 @@ export default function AIAdvisorPage() {
 
           <div className="relative z-10 mx-auto max-w-5xl px-6">
             <ScrollReveal direction="up" delay={0.2} width="100%">
-              <Card className="overflow-hidden rounded-2xl bg-white/80 p-2 shadow-xl backdrop-blur-xl border-white/50 md:p-8">
+              <Card className="overflow-hidden rounded-[2rem] border-gray-200 bg-white p-4 shadow-xl shadow-black/[0.04] md:p-8">
                 
                 {/* Role Selection */}
-                <div className="grid grid-cols-3 gap-2 md:gap-4 mb-8 bg-gray-100/50 p-1.5 rounded-xl">
+                <div className="grid grid-cols-3 gap-2 md:gap-4 mb-8 rounded-[1.5rem] bg-gray-100 p-1.5">
                   {roles.map((role) => {
                     const Icon = role.icon;
                     const isSelected = selectedRole === role.id;
@@ -409,7 +406,7 @@ export default function AIAdvisorPage() {
                           setVerification("unverified");
                         }}
                         className={cn(
-                          "flex flex-col md:flex-row items-center justify-center gap-2 py-3 md:py-4 px-2 rounded-lg transition-all duration-300 relative overflow-hidden",
+                          "flex flex-col md:flex-row items-center justify-center gap-2 py-3 md:py-4 px-2 rounded-[1.15rem] transition-all duration-300 relative overflow-hidden",
                           isSelected ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-gray-800 hover:bg-gray-200/50"
                         )}
                       >
@@ -418,7 +415,7 @@ export default function AIAdvisorPage() {
                         {isSelected && (
                           <motion.div
                             layoutId="activeRole"
-                            className="absolute inset-0 border-2 border-black/5 rounded-lg pointer-events-none"
+                            className="absolute inset-0 border-2 border-black/5 rounded-[1.15rem] pointer-events-none"
                           />
                         )}
                       </button>
@@ -479,13 +476,13 @@ export default function AIAdvisorPage() {
                         data-gramm_editor="false"
                         data-enable-grammarly="false"
                         disabled={isAdvisorChecking || isAdvisorUnavailable || isLoading}
-                        className="h-14 pl-4 pr-14 text-lg bg-white border-gray-200 focus:ring-black/10 focus:border-black transition-all rounded-xl shadow-sm"
+                        className="h-14 rounded-full border-gray-200 bg-white pl-5 pr-14 text-lg shadow-sm transition-all focus:border-black focus:ring-black/10"
                       />
                       <Button 
                         type="submit" 
                         size="icon"
                         disabled={!question.trim() || isLoading || isAdvisorChecking || isAdvisorUnavailable}
-                        className="absolute right-2 top-2 h-10 w-10 rounded-lg bg-black hover:bg-gray-800 text-white transition-all"
+                        className="absolute right-2 top-2 h-10 w-10 rounded-full bg-black text-white transition-all hover:bg-gray-800"
                       >
                         {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       </Button>
@@ -498,7 +495,7 @@ export default function AIAdvisorPage() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800"
+                      className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700"
                     >
                       {copy.advisorUnavailable}
                     </motion.div>

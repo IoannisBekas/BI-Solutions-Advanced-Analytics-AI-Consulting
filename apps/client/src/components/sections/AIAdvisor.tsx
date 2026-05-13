@@ -123,8 +123,7 @@ export function AIAdvisor() {
     <section className="py-24 bg-gray-50 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 -left-20 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 -right-20 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl" />
+        <div className="absolute inset-x-6 top-10 h-[28rem] rounded-[2rem] bi-hero-backdrop" />
       </div>
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">
@@ -258,7 +257,7 @@ export function AIAdvisor() {
                                   "inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-medium",
                                   response.verification === "grounded"
                                     ? "bg-emerald-100 text-emerald-700"
-                                    : "bg-amber-100 text-amber-700",
+                                    : "bg-gray-100 text-gray-700",
                                 )}>
                                   {response.verification === "grounded"
                                     ? <ShieldCheck className="w-3.5 h-3.5" />
@@ -280,7 +279,7 @@ export function AIAdvisor() {
                                 {response.answer}
                               </p>
                               {(response.requiresReview || response.refusalReason) && (
-                                <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                                <p className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
                                   {response.refusalReason || "Review this answer against current official sources before acting."}
                                 </p>
                               )}

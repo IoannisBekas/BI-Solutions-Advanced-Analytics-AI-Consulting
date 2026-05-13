@@ -88,7 +88,7 @@ export function Layout({
         return () => window.removeEventListener('keydown', handleShortcut);
     }, []);
 
-    const pageBg = lightMode ? '#FBFBF8' : '#05070B';
+    const pageBg = lightMode ? '#FFFFFF' : '#05070B';
     const textColor = lightMode ? '#09090B' : '#F0F6FF';
     const borderColor = lightMode ? '#E5E7EB' : '#1A1A1A';
     const muted = lightMode ? '#6B7280' : '#8B9DB5';

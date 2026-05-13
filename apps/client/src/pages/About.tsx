@@ -173,45 +173,50 @@ export default function About() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
-                className="grid md:grid-cols-[1fr_350px] gap-12 items-start"
+                className="rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/[0.05] sm:px-8 md:px-12 md:py-12"
               >
-                <div>
-                  <h1 className="text-[2.75rem] sm:text-5xl md:text-7xl font-bold font-heading mb-8 tracking-tight leading-[1.05]">
-                    Ioannis Bekas
-                  </h1>
-                  <h2 className="text-2xl font-medium text-gray-800 mb-6">Data Scientist & AI Developer</h2>
-                  <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                    Data Scientist & AI Developer with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work. Responsible for managing projects and implementing solutions.
-                  </p>
+                <div className="grid md:grid-cols-[1fr_350px] gap-12 items-start">
+                  <div>
+                    <div className="inline-flex items-center rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
+                      Founder profile
+                    </div>
+                    <h1 className="mt-6 text-[2.75rem] sm:text-5xl md:text-6xl font-bold font-heading mb-8 tracking-tight leading-[1.05]">
+                      Ioannis Bekas
+                    </h1>
+                    <h2 className="text-2xl font-medium text-gray-800 mb-6">Data Scientist & AI Developer</h2>
+                    <p className="text-xl text-gray-600 leading-relaxed mb-8">
+                      Data Scientist & AI Developer with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work. Responsible for managing projects and implementing solutions.
+                    </p>
 
-                  <div className="flex gap-4">
-                    <Button
-                      onClick={() => scrollToSection('contact')}
-                      className="rounded-full px-8 h-12 bg-black hover:bg-gray-800 text-white"
-                    >
-                      Get in Touch
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="rounded-full px-8 h-12 border-gray-200 hover:bg-gray-50"
-                      onClick={() => window.open('https://linkedin.com/in/ioannisbekas', '_blank', 'noopener,noreferrer')}
-                    >
-                      LinkedIn
-                    </Button>
+                    <div className="flex gap-4">
+                      <Button
+                        onClick={() => scrollToSection('contact')}
+                        className="rounded-full px-8 h-12 bg-black hover:bg-gray-800 text-white"
+                      >
+                        Get in Touch
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="rounded-full px-8 h-12 border-gray-200 hover:bg-gray-50"
+                        onClick={() => window.open('https://linkedin.com/in/ioannisbekas', '_blank', 'noopener,noreferrer')}
+                      >
+                        LinkedIn
+                      </Button>
+                    </div>
                   </div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                    className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-gray-100 shadow-xl shadow-black/[0.08]"
+                  >
+                    <img
+                      src={founderPhoto}
+                      alt="Ioannis Bekas"
+                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                    />
+                  </motion.div>
                 </div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8 }}
-                  className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 shadow-xl"
-                >
-                  <img
-                    src={founderPhoto}
-                    alt="Ioannis Bekas"
-                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                  />
-                </motion.div>
               </motion.div>
             </section>
 

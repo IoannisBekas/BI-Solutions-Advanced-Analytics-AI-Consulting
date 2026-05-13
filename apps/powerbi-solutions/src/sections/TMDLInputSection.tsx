@@ -429,7 +429,7 @@ export function TMDLInputSection({ onAnalysisComplete, inputRef }: TMDLInputSect
             </div>
 
             <div className="powerbi-note mt-6">
-              <p className="text-sm leading-relaxed text-amber-900">
+              <p className="text-sm leading-relaxed text-gray-700">
                 <strong>Tip:</strong> Tabular Editor 3 and SSMS can also script a
                 model as TMDL. Use whichever export path gives you the cleanest
                 semantic model definition.

@@ -19,7 +19,7 @@ export function PaywallOverlay({ requiredTier, sectionLabel, onUpgrade, lightMod
             style={{
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                background: lightMode ? 'rgba(240,244,255,0.82)' : 'rgba(10,13,20,0.78)',
+                background: lightMode ? 'rgba(249,250,251,0.88)' : 'rgba(10,13,20,0.78)',
             }}
         >
             <motion.div
@@ -28,8 +28,8 @@ export function PaywallOverlay({ requiredTier, sectionLabel, onUpgrade, lightMod
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                    style={{ background: 'rgba(99,102,241,0.14)', border: '1px solid rgba(99,102,241,0.3)' }}>
-                    <Lock className="w-6 h-6" style={{ color: '#818CF8' }} />
+                    style={{ background: lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.08)', border: lightMode ? '1px solid rgba(209,213,219,0.95)' : '1px solid rgba(255,255,255,0.12)' }}>
+                    <Lock className="w-6 h-6" style={{ color: lightMode ? '#09090B' : '#F9FAFB' }} />
                 </div>
                 <h3 className="font-bold text-lg mb-2" style={{ color: lightMode ? '#0F172A' : '#F9FAFB' }}>
                     Unlock {sectionLabel}
@@ -45,7 +45,7 @@ export function PaywallOverlay({ requiredTier, sectionLabel, onUpgrade, lightMod
                         whileTap={{ scale: 0.97 }}
                         onClick={onUpgrade}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm cursor-pointer"
-                        style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: 'white' }}
+                        style={{ background: '#09090B', color: 'white' }}
                     >
                         <Zap className="w-4 h-4" />
                         {requiredTier === 'UNLOCKED' ? 'Sign Up Free →' : 'Contact Sales →'}

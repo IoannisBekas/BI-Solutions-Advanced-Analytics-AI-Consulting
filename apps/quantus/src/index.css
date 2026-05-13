@@ -17,9 +17,9 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* ── Light mode colors (default — BI Solutions style) ────────────────── */
-  --color-bg-base: #FBFBF8;
-  --color-surface: #FCFCFA;
-  --color-surface-2: #F5F5F2;
+  --color-bg-base: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F7F7F7;
   --color-border: #E5E7EB;
   --color-border-light: #D1D5DB;
 
@@ -40,7 +40,7 @@
 
   /* ── Shadows ───────────────────────────────────────────────────────────── */
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 14px 48px rgba(15, 23, 42, 0.08);
-  --shadow-glow-blue: 0 0 40px rgba(37, 99, 235, 0.15);
+  --shadow-glow-blue: 0 0 40px rgba(9, 9, 11, 0.08);
   --shadow-glow-emerald: 0 0 40px rgba(16, 185, 129, 0.15);
 }
 
@@ -363,8 +363,8 @@ body.dark-mode .btn-nav-cta:hover {
 
 .bis-note {
   border-radius: 20px;
-  border: 1px solid rgba(245, 158, 11, 0.22);
-  background: rgba(255, 251, 235, 0.9);
+  border: 1px solid rgba(209, 213, 219, 0.92);
+  background: rgba(249, 250, 251, 0.92);
 }
 
 .bis-input {
@@ -406,8 +406,8 @@ body.dark-mode .bis-eyebrow {
 }
 
 body.dark-mode .bis-note {
-  background: rgba(120, 53, 15, 0.14);
-  border-color: rgba(245, 158, 11, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(55, 65, 81, 0.86);
 }
 
 body.dark-mode .bis-input {

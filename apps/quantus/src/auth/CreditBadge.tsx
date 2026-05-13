@@ -38,9 +38,9 @@ export function CreditBadge({ onPurchase }: CreditBadgeProps) {
                 onClick={onPurchase}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
                 style={{
-                    background: isLow ? 'rgba(245,158,11,0.1)' : 'rgba(59,130,246,0.1)',
-                    border: `1px solid ${isLow ? 'rgba(245,158,11,0.3)' : 'rgba(59,130,246,0.25)'}`,
-                    color: isLow ? '#F59E0B' : '#3B82F6',
+                    background: isLow ? 'rgba(245,158,11,0.1)' : 'rgba(9,9,11,0.06)',
+                    border: `1px solid ${isLow ? 'rgba(245,158,11,0.3)' : 'rgba(209,213,219,0.95)'}`,
+                    color: isLow ? '#F59E0B' : '#09090B',
                 }}
                 title="Purchase more credits"
             >
@@ -129,12 +129,12 @@ export function CreditPurchaseModal({ open, onClose, lightMode }: PurchaseModalP
                             onClick={() => setSelected(b.name)}
                             className="p-4 rounded-xl text-left transition-all cursor-pointer"
                             style={{
-                                background: selected === b.name ? 'rgba(99,102,241,0.12)' : 'rgba(255,255,255,0.03)',
-                                border: `1px solid ${selected === b.name ? 'rgba(99,102,241,0.4)' : border}`,
+                                background: selected === b.name ? (lightMode ? 'rgba(9,9,11,0.06)' : 'rgba(255,255,255,0.08)') : 'rgba(255,255,255,0.03)',
+                                border: `1px solid ${selected === b.name ? (lightMode ? 'rgba(9,9,11,0.18)' : 'rgba(255,255,255,0.2)') : border}`,
                             }}
                         >
                             <div className="font-bold text-sm mb-0.5" style={{ color: tp }}>{b.name}</div>
-                            <div className="text-2xl font-bold font-mono" style={{ color: '#6366F1' }}>{b.credits}cr</div>
+                            <div className="text-2xl font-bold font-mono" style={{ color: tp }}>{b.credits}cr</div>
                             <div className="text-xs mt-1" style={{ color: ts }}>
                                 ${b.priceUsd}
                                 {' · '}${(b.priceUsd / b.credits).toFixed(2)}/credit
@@ -165,7 +165,7 @@ export function CreditPurchaseModal({ open, onClose, lightMode }: PurchaseModalP
                     onClick={handlePurchase}
                     disabled={loading}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold cursor-pointer transition-all hover:scale-[1.02] disabled:opacity-60"
-                    style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: 'white' }}
+                    style={{ background: '#09090B', color: 'white' }}
                 >
                     <ShoppingCart className="w-4 h-4" />
                     {loading ? 'Redirecting to Stripe…' : `Buy ${selected} — $${BUNDLES.find(b => b.name === selected)?.priceUsd ?? 0}`}
