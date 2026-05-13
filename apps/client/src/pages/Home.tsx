@@ -13,13 +13,6 @@ import { Link } from "wouter";
 
 const latestInsights = [
   {
-    slug: "disaster-risk-reduction-finance-dashboard-launch",
-    title: "Launching the Disaster Risk Reduction Finance Dashboard",
-    excerpt:
-      "A new BI Solutions dashboard brings together country risk, readiness, loss, hazard, and public finance signals for DRR analysis.",
-    category: "Data Strategy",
-  },
-  {
     slug: "website-web-app-development-greece-business-needs",
     title: "Website & Web App Development in Greece: What Businesses Actually Need",
     excerpt:

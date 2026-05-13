@@ -91,7 +91,6 @@ const PALETTES: Record<string, Palette> = {
 };
 
 const MOTIF_BY_SLUG: Record<string, Motif> = {
-  "disaster-risk-reduction-finance-dashboard-launch": "risk",
   "website-web-app-development-greece-business-needs": "web",
   "power-bi-consulting-dashboards-business-infrastructure": "dashboard",
   "semantic-modeling-power-bi-clean-models": "model",
@@ -127,7 +126,6 @@ const MOTIF_BY_SLUG: Record<string, Motif> = {
 };
 
 function getPalette(post: ArticleVisualPost): Palette {
-  if (post.slug === "disaster-risk-reduction-finance-dashboard-launch") return PALETTES.risk;
   if (post.category.includes("Web")) return PALETTES.web;
   if (post.category.includes("BI") || post.category.includes("Analytics")) return PALETTES.bi;
   if (post.category.includes("AI")) return PALETTES.ai;

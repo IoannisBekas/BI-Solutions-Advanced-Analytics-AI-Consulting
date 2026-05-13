@@ -29,67 +29,6 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
-    slug: "disaster-risk-reduction-finance-dashboard-launch",
-    title: "Launching the Disaster Risk Reduction Finance Dashboard",
-    excerpt:
-      "BI Solutions has launched an interactive DRR finance dashboard combining country risk, readiness, loss, hazard, and public finance signals from open global datasets.",
-    content: `BI Solutions has published a new <a href="/insights/disaster-risk-reduction-finance/" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Disaster Risk Reduction Finance Dashboard</a> for country-level analysis of disaster risk, readiness, impacts, hazards, and public finance signals.
-
-The dashboard is designed for analysts, researchers, policy teams, and development-finance stakeholders who need a faster way to compare risk exposure with available evidence on DRR-related funding.
-
-## Why this dashboard exists
-
-Disaster risk analysis often lives across separate sources. Risk indexes, hazard classifications, loss statistics, adaptation readiness scores, donor finance, World Bank project data, Green Climate Fund project data, and humanitarian funding records each answer part of the question.
-
-The practical challenge is that decision makers usually need the combined view. They need to ask which countries show high risk, where readiness is lower, how disaster losses have evolved, and whether reported international DRR finance appears thin relative to risk.
-
-## What the public dashboard includes
-
-The public version combines INFORM Risk Index 2026, UNDRR and Our World in Data series, EM-DAT-derived disaster counts and losses, WorldRiskIndex, ThinkHazard classifications, ND-GAIN indicators, WRI Aqueduct water-risk data, OECD CRS DRR-related ODA, World Bank project signals, Green Climate Fund project data, and OCHA FTS response-funding context.
-
-This does not claim to be a complete global account of DRR finance. Domestic budget lines, private-sector resilience finance, insurance flows, and mainstreamed resilience spending are still hard to compare globally. The dashboard treats those as separate evidence tiers rather than hiding uncertainty.
-
-## What users can do with it
-
-The first view shows headline country coverage, median risk, the highest-risk country, latest global disaster counts, and DRR-related ODA disbursements. From there, users can screen the global risk map, compare hazard classifications, open country profiles, and review finance signals for selected countries.
-
-The finance view is intentionally framed as a screening layer. It helps identify countries where reported DRR-related ODA appears thin compared with risk, then points users toward deeper evidence work.
-
-## Why this fits BI Solutions
-
-BI Solutions builds analytics surfaces that connect data foundations, business questions, and usable decision workflows. This dashboard is a public example of that approach: source discovery, data normalization, country-level modeling, interactive visualization, and a clear source audit in one live page.
-
-For organizations working with climate risk, humanitarian planning, public finance, or development portfolios, the same pattern can be adapted into internal dashboards, country briefs, evidence packs, or authenticated data products through <a href="/services/data-strategy-governance" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">data strategy and governance</a> and <a href="/services/business-intelligence-semantic-modeling" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">business intelligence delivery</a>.
-
-## Open the dashboard
-
-You can open the live dashboard here: <a href="/insights/disaster-risk-reduction-finance/" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Disaster Risk Reduction Finance Dashboard</a>.
-
-The current public edition stays open. Premium-data surfaces in the dashboard are intentionally presented as locked previews because restricted project-level records should be served from an authenticated backend after entitlement checks.
-
-## FAQ
-
-**Is the dashboard free to use?** Yes. The public dashboard is live and open at the BI Solutions site.
-
-**Does this replace official DRR finance reporting?** No. It is a screening and analysis layer built from public datasets. Official reporting, country budget documents, and source-specific methodology still matter.
-
-**Can BI Solutions build similar dashboards for internal teams?** Yes. The same delivery pattern can be used for private analytics portals, donor portfolio dashboards, policy monitoring, or country evidence packs.`,
-    author: "BI Solutions",
-    date: "May 10, 2026",
-    updatedDate: "May 10, 2026",
-    readTime: "6 min read",
-    category: "Data Strategy",
-    tags: [
-      "Disaster Risk Reduction",
-      "DRR Finance",
-      "Data Strategy",
-      "Dashboards",
-      "Climate Risk",
-      "Open Data",
-    ],
-    featuredImage: serviceDataStrategyImage,
-  },
-  {
     slug: "website-web-app-development-greece-business-needs",
     title:
       "Website & Web App Development in Greece: What Businesses Actually Need",

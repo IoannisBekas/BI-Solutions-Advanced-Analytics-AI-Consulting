@@ -1,4 +1,0 @@
-﻿User-agent: *
-Allow: /
-
-Sitemap: https://www.bisolutions.group/insights/disaster-risk-reduction-finance/sitemap.xml

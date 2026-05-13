@@ -30,8 +30,6 @@ Instagram: https://www.instagram.com/bisolutions.group/
 - Services overview: https://www.bisolutions.group/services
 - Portfolio: https://www.bisolutions.group/portfolio
 - Blog: https://www.bisolutions.group/blog
-- Disaster Risk Reduction Finance Dashboard: https://www.bisolutions.group/insights/disaster-risk-reduction-finance/
-- DRR finance dashboard launch note: https://www.bisolutions.group/blog/disaster-risk-reduction-finance-dashboard-launch
 - Website and Web App Development in Greece: https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs
 - BI Consulting: https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure
 - AI Consulting for Greek Businesses: https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases
