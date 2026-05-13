@@ -201,6 +201,29 @@ function redirectLegacyProductPath(app: Express, fromPath: string, toPath: strin
   });
 }
 
+function serveGonePath(app: Express, removedPath: string) {
+  const normalizedRemovedPath = removedPath.replace(/\/$/, "");
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      next();
+      return;
+    }
+
+    const normalizedRequestPath = req.path.replace(/\/$/, "");
+    const isRemovedPath =
+      normalizedRequestPath === normalizedRemovedPath ||
+      req.path.startsWith(`${normalizedRemovedPath}/`);
+
+    if (!isRemovedPath) {
+      next();
+      return;
+    }
+
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.status(410).type("text/plain").send("Gone");
+  });
+}
+
 function serveProductSpa(app: Express, mountPath: string, productDistPath: string) {
   if (!fs.existsSync(productDistPath)) {
     return;
@@ -634,6 +657,9 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/Power%20BI%20Solutions", "/power-bi-solutions");
   redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
   redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/website-app-portfolio");
+
+  serveGonePath(app, "/insights/disaster-risk-reduction-finance");
+  serveGonePath(app, "/blog/disaster-risk-reduction-finance-dashboard-launch");
 
   const quantusDirCandidates = [
     path.resolve(distPath, "quantus", "workspace"),
