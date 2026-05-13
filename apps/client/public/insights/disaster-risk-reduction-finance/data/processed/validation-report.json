@@ -1,13 +1,38 @@
 {
-  "generatedAt": "2026-05-11T00:50:23.559Z",
-  "status": "passed",
+  "generatedAt": "2026-05-13T12:20:46.315Z",
+  "status": "passed_with_warnings",
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    {
+      "name": "Coverage: populationValue",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: gdpUsdValue",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: gdpPerCapitaValue",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: drrOdaPerCapitaUsd",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    }
+  ],
   "checks": [
     {
       "name": "Generated timestamp exists",
       "ok": true,
-      "detail": "2026-05-10T18:27:27.744Z",
+      "detail": "2026-05-13T09:49:45.048Z",
       "severity": "error"
     },
     {
@@ -93,6 +118,96 @@
       "ok": true,
       "detail": "191/191 (100%)",
       "severity": "warning"
+    },
+    {
+      "name": "Coverage: observedSeverityIndex",
+      "ok": true,
+      "detail": "191/191 (100%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: compoundHazardPressureIndex",
+      "ok": true,
+      "detail": "191/191 (100%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: populationValue",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: gdpUsdValue",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: gdpPerCapitaValue",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Coverage: drrOdaPerCapitaUsd",
+      "ok": false,
+      "detail": "0/191 (0%)",
+      "severity": "warning"
+    },
+    {
+      "name": "Observed severity score bounds",
+      "ok": true,
+      "detail": "all observed severity scores are finite 0-100",
+      "severity": "error"
+    },
+    {
+      "name": "Compound hazard pressure bounds",
+      "ok": true,
+      "detail": "all compound pressure scores are finite 0-100",
+      "severity": "error"
+    },
+    {
+      "name": "Reporting-gap signal values",
+      "ok": true,
+      "detail": "signals are low, medium, or high",
+      "severity": "error"
+    },
+    {
+      "name": "Limited public indicator status",
+      "ok": true,
+      "detail": "8 countries display limited public indicators with a finite score",
+      "severity": "error"
+    },
+    {
+      "name": "CRS purpose-category reconciliation",
+      "ok": true,
+      "detail": "purpose categories reconcile to detailed CRS DRR totals",
+      "severity": "error"
+    },
+    {
+      "name": "Recovery context is explicit",
+      "ok": true,
+      "detail": "recovery and reconstruction rows are labelled separately when present",
+      "severity": "error"
+    },
+    {
+      "name": "GDACS alert counts",
+      "ok": true,
+      "detail": "current alert counts are finite and non-negative",
+      "severity": "error"
+    },
+    {
+      "name": "Normalized DRR ODA per capita",
+      "ok": true,
+      "detail": "per-capita finance values require positive population denominators",
+      "severity": "error"
+    },
+    {
+      "name": "Normalized DRR ODA share of GDP",
+      "ok": true,
+      "detail": "GDP-normalized finance values require positive GDP denominators",
+      "severity": "error"
     }
   ],
   "coverage": [
@@ -131,6 +246,42 @@
       "covered": 191,
       "total": 191,
       "ratio": 1
+    },
+    {
+      "field": "observedSeverityIndex",
+      "covered": 191,
+      "total": 191,
+      "ratio": 1
+    },
+    {
+      "field": "compoundHazardPressureIndex",
+      "covered": 191,
+      "total": 191,
+      "ratio": 1
+    },
+    {
+      "field": "populationValue",
+      "covered": 0,
+      "total": 191,
+      "ratio": 0
+    },
+    {
+      "field": "gdpUsdValue",
+      "covered": 0,
+      "total": 191,
+      "ratio": 0
+    },
+    {
+      "field": "gdpPerCapitaValue",
+      "covered": 0,
+      "total": 191,
+      "ratio": 0
+    },
+    {
+      "field": "drrOdaPerCapitaUsd",
+      "covered": 0,
+      "total": 191,
+      "ratio": 0
     }
   ],
   "summary": {
@@ -139,6 +290,8 @@
     "informYear": 2025,
     "crsYear": 2024,
     "eventYear": 2025,
-    "damageYear": 2025
+    "damageYear": 2025,
+    "gdacsCurrentAlerts": 0,
+    "worldBankWdi": null
   }
 }

@@ -10,7 +10,7 @@ Target: WCAG 2.2 AA-oriented release QA.
 - `aria-describedby` links from chart containers to explanatory notes and screen-reader summaries.
 - Keyboard-accessible risk-map country selection with Enter and Space.
 - Accessible data table containers behind every chart.
-- Accessible data tables behind visual charts; CSV export controls are labeled as Pro access features.
+- Accessible data tables behind visual charts; CSV export controls have descriptive labels.
 - Focus-visible styles for links, buttons, inputs, selects, details summaries, and skip link.
 - Reduced-motion CSS preference.
 - Static contrast audit script: `npm run audit:static`.
@@ -18,7 +18,7 @@ Target: WCAG 2.2 AA-oriented release QA.
 
 ## Manual QA Before Major Launches
 
-- Keyboard-only navigation through all controls, details panels, map countries, and premium buttons.
+- Keyboard-only navigation through all controls, details panels, map countries, and export buttons.
 - Screen-reader smoke test in at least one browser/screen-reader pair.
 - Mobile viewport checks at 390px, 430px, and 768px.
 - Confirm data table content matches the visible charts after each data refresh.

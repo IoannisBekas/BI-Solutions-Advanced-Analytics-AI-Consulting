@@ -1,25 +1,23 @@
-# Country-Level DRR Risk and Finance Briefing
+# Open Risk & Resilience Atlas
 
-This project collects key databases for Disaster Risk Reduction (DRR) research across countries and turns selected open datasets into a static editorial dashboard.
+This project collects public datasets for country risk, hazards, losses, readiness, donor signals, and finance context, then turns them into a static public-source atlas.
 
-## Live Dashboard Files
+## Live Atlas Files
 
-- `index.html` - static dashboard page.
+- `index.html` - static atlas page.
 - `app.js` - D3 rendering logic.
 - `styles.css` - print-inspired editorial styling.
 - `scripts/download-data.mjs` - repeatable data download and normalization script.
 - `data_catalog.json` - source catalog with access mode and automation status.
 - `data/raw/` - source downloads.
-- `data/processed/dashboard-data.json` - compact dashboard dataset.
+- `data/processed/dashboard-data.json` - compact atlas dataset.
 - `DATA_SOURCES.md` - analysis of downloadable, reference, and case-study source layers.
 - `METHODOLOGY.md` - methodology, evidence tiers, and interpretation notes.
-- `DATA_DICTIONARY.md` - field definitions for the processed dashboard dataset and CSV export.
+- `DATA_DICTIONARY.md` - field definitions for the processed atlas dataset and CSV export.
 - `ACCESSIBILITY_CHECKLIST.md` - accessibility and mobile hardening checklist.
 - `TERMS_PRIVACY.md` - terms, privacy, and contact note.
-- `PREMIUM_DATA.md` - paid-plan and premium-data backend contract.
 - `HOW_IT_WAS_BUILT.md` - implementation architecture, data workflow, design choices, and deployment notes.
-- `ROADMAP.md` - enhancement roadmap for data depth, premium access, exports, and governance.
-- `premium-api/` - minimal Stripe Checkout API template for protected premium access.
+- `ROADMAP.md` - enhancement roadmap for data depth, exports, and governance.
 
 To refresh the data:
 
@@ -76,6 +74,8 @@ Use [DesInventar](https://www.desinventar.net/) or [DELTA Resilience](https://ww
 | --- | --- | --- |
 | GloFAS - Global Flood Awareness System | <https://www.globalfloods.eu/> | Flood monitoring and forecasting. |
 | Global Wildfire Information System (GWIS) | <https://gwis.jrc.ec.europa.eu/> | Global wildfire monitoring and related hazard information. |
+| GDACS | <https://www.gdacs.org/> | Current global disaster alerts by country, alert level, and event type. |
+| NASA FIRMS | <https://firms.modaps.eosdis.nasa.gov/api/> | Active fire and thermal anomaly data; API key required for automated ingestion. |
 | NatCatSERVICE - Munich Re | <https://www.munichre.com/en/solutions/for-industry-clients/natcatservice.html> | Economic and insured disaster loss data by country; public access may be limited to summaries and reports. |
 
 ### Meta-Resource
@@ -91,24 +91,29 @@ Use [DesInventar](https://www.desinventar.net/) or [DELTA Resilience](https://ww
 | Cross-country disaster event comparison | EM-DAT, Sendai Framework Monitor |
 | Official policy target tracking | Sendai Framework Monitor |
 | Composite disaster risk scoring | INFORM Risk Index, WorldRiskIndex |
-| DRR-related international finance and donors | OECD CRS, World Bank Projects & Operations, GCF Open Data Library |
-| Humanitarian response funding context | OCHA Financial Tracking Service |
-| Domestic and private DRR finance evidence | National budgets, climate budget tagging, IATI/project documents where public |
+| International support and donor context | OECD CRS, World Bank Projects & Operations, GCF Open Data Library |
+| Severity-finance alignment and reporting-gap screening | OECD CRS, INFORM, ThinkHazard, World Bank / IDMC, UNDRR / OWID |
+| Normalized support comparison | OECD CRS, World Bank WDI population and GDP |
+| Current disaster alert context | GDACS |
+| Humanitarian response funding context | OCHA FTS |
+| Domestic and private resilience finance evidence | National budgets, climate budget tagging, IATI/project documents, World Bank BOOST where public |
 | Subnational loss analysis | DesInventar, DELTA Resilience |
-| Flood monitoring and forecasts | GloFAS |
-| Wildfire monitoring | GWIS |
+| Flood monitoring and forecasts | GloFAS, Copernicus emergency datasets |
+| Wildfire monitoring | GWIS, NASA FIRMS |
+| Climate projections and exposure denominators | World Bank Climate Change Knowledge Portal, WorldPop |
+| Warning-system evidence | WMO public weather and climate warning reporting |
 | Economic and insured losses | NatCatSERVICE, EM-DAT |
 | Dataset discovery by hazard or geography | CONVERGE Disaster Databases Directory, PreventionWeb |
 
-## Paid Data Plans
+OECD CRS finance views use the latest detailed donor-recipient-sector CRS year available to the pipeline. Preliminary aggregate ODA releases are useful context, but they do not replace detailed CRS records for country donor breakdowns.
 
-The live static site includes Free, Pro, and Institution plan surfaces. Pro is priced at `$59` per month billed annually, and Institution is priced at `$199` per month billed annually.
+## Data Scope
 
-Restricted premium data is designed to be served through authenticated API access with entitlement checks. It should not be committed into `data/processed/` or any other public static file. See `PREMIUM_DATA.md` for the backend contract and recommended premium data modules.
+The public static site uses the public datasets listed in the source scope. Processed files in `data/processed/` are generated from those public sources.
 
 ## Release Notes
 
-The public dashboard includes CSV exports, country comparison, source-linked metrics, chart data tables, dataset Q&A, documentation, and visible methodology/source-scope sections. Release QA includes static accessibility checks, mobile overflow checks, link checks, and manual keyboard/screen-reader review for major updates.
+The public atlas includes country comparison, source-linked metrics, chart data tables, dataset Q&A, severity-finance alignment, reporting-gap screening, ODA purpose allocation, documentation, and visible methodology/source-scope sections. Release QA includes static accessibility checks, mobile overflow checks, link checks, and manual keyboard/screen-reader review for major updates.
 
 ## Legacy Source Table
 

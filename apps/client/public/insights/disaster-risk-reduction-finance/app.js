@@ -1,12 +1,11 @@
-const ASSET_VERSION = "2026-05-13-visual-split";
+const ASSET_VERSION = "2026-05-13-expanded-sources";
 const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
 
 (async function init() {
   try {
-    const [data, world, product, validation] = await Promise.all([
+    const [data, world, validation] = await Promise.all([
       d3.json("./data/processed/dashboard-data.json"),
       d3.json("./data/processed/world.geojson"),
-      d3.json(`./data/product-plans.json?v=${ASSET_VERSION}`).catch(() => null),
       d3.json("./data/processed/validation-report.json").catch(() => null),
     ]);
     assertDashboardData(data, world);
@@ -16,14 +15,11 @@ const CONTACT_URL = "https://www.linkedin.com/in/ioannisbekas/";
     const state = {
       data,
       world,
-      product: product || fallbackProductConfig(),
       validation,
-      entitlement: null,
       selectedIso,
       compareIsoA: selectedIso,
       compareIsoB: comparisonIso,
     };
-    state.entitlement = await loadEntitlement(state.product);
 
     populateCountrySelect(state);
     renderAll(state);
@@ -65,6 +61,8 @@ const SOURCE_LINKS = {
   worldBankProjects: { label: "World Bank", url: "https://projects.worldbank.org/" },
   gcf: { label: "GCF", url: "https://data.greenclimate.fund/" },
   ocha: { label: "OCHA FTS", url: "https://fts.unocha.org/" },
+  gdacs: { label: "GDACS", url: "https://www.gdacs.org/" },
+  worldBankWdi: { label: "World Bank WDI", url: "https://data.worldbank.org/" },
 };
 const THEME = {
   ink: "#111111",
@@ -77,6 +75,11 @@ const THEME = {
   warm: "#BF8D71",
   mapNoData: "#efe4de",
   riskScale: ["#f8fbf8", "#dcefe6", "#71BFA2", "#BF8D71", "#400606", "#111111"],
+  gapSignal: {
+    high: "#400606",
+    medium: "#BF8D71",
+    low: "#71BFA2",
+  },
 };
 
 function renderAll(state) {
@@ -88,7 +91,6 @@ function renderAll(state) {
   renderCountryProfile(state);
   renderFinanceProfile(state);
   renderCompareView(state);
-  renderPremiumAccess(state);
   renderSources(state.data.sources);
   renderCharts(state);
   renderDataTables(state);
@@ -102,6 +104,8 @@ function renderCharts(state) {
   drawDamage("#damage-chart", state.data.series.economicDamage);
   drawScatter("#scatter-chart", state.data.countries, state.selectedIso);
   drawFinanceGap("#finance-gap-chart", state.data.countries);
+  drawSeverityAlignment("#severity-alignment-chart", state.data.countries, state.selectedIso);
+  drawPurposeAllocation("#purpose-allocation-chart", countryByIso(state, state.selectedIso));
 }
 
 function renderDataTables(state) {
@@ -157,7 +161,27 @@ function renderDataTables(state) {
     column("name", "Country"),
     column("risk", "INFORM risk", (row) => fmtFixed(row.risk, 1)),
     column("drrOdaDisbursementUsd", "DRR ODA disb.", (row) => fmtMoney(row.drrOdaDisbursementUsd, row.drrOdaYear)),
+    column("drrOdaPerCapitaUsd", "DRR ODA per person", (row) => fmtUsdPerPerson(row.drrOdaPerCapitaUsd, row.drrOdaYear)),
+    column("drrOdaShareOfGdp", "DRR ODA / GDP", (row) => fmtPct(row.drrOdaShareOfGdp, row.drrOdaYear)),
     column("financePerRisk", "USD per risk point", (row) => fmtMoney(row.financePerRisk)),
+  ], state);
+
+  const severityGap = severityGapRows(countries);
+  setPlainText(
+    "#severity-alignment-summary",
+    "Severity and finance alignment compares public impact indicators, modeled hazard pressure, DRR-related ODA, and reporting-gap signals.",
+  );
+  renderTable("#severity-gap-table", "severity-finance-reporting-gap.csv", severityGap, [
+    column("iso3", "ISO3"),
+    column("name", "Country"),
+    column("compoundHazardPressureIndex", "Compound pressure", (row) => fmtIndex(row.compoundHazardPressureIndex)),
+    column("observedSeverityIndex", "Observed severity", (row) => fmtObservedSeverity(row)),
+    column("gdacsCurrentAlertCount", "GDACS current alerts", (row) => fmtGdacsAlerts(row)),
+    column("drrOdaDisbursementUsd", "DRR ODA disb.", (row) => fmtMoney(row.drrOdaDisbursementUsd, row.drrOdaYear)),
+    column("drrOdaPerSeverityPoint", "USD per severity point", (row) => fmtMoney(row.drrOdaPerSeverityPoint)),
+    column("drrOdaPerCapitaUsd", "DRR ODA per person", (row) => fmtUsdPerPerson(row.drrOdaPerCapitaUsd, row.drrOdaYear)),
+    column("reportingGapSignal", "Reporting-gap signal", (row) => reportingGapLabel(row.reportingGapSignal)),
+    column("reportingGapReasons", "Reasons", (row) => fmtReasonList(row.reportingGapReasons)),
   ], state);
 
   const latestEventYear = d3.max(state.data.series.disasterEvents, (row) => row.year);
@@ -201,10 +225,10 @@ function column(key, label, format = null) {
 
 function assertDashboardData(data, world) {
   if (!Array.isArray(data?.countries) || data.countries.length === 0) {
-    throw new Error("Dashboard data is missing country records.");
+    throw new Error("Atlas data is missing country records.");
   }
   if (!Array.isArray(data?.series?.disasterEvents) || !Array.isArray(data?.series?.economicDamage)) {
-    throw new Error("Dashboard data is missing required chart series.");
+    throw new Error("Atlas data is missing required chart series.");
   }
   if (!Array.isArray(world?.features) || world.features.length === 0) {
     throw new Error("World map data is missing features.");
@@ -219,7 +243,7 @@ function renderStartupError(error) {
       <div class="panel-heading">
         <div>
           <p class="kicker">Data loading</p>
-          <h2>Dashboard data could not be loaded</h2>
+          <h2>Atlas data could not be loaded</h2>
         </div>
         <p>Refresh the page, or open the documentation while the data files are checked.</p>
       </div>
@@ -236,9 +260,7 @@ function renderTable(selector, filename, rows, columns, state) {
     Object.fromEntries(columns.map((item) => [item.label, item.format ? item.format(row, index) : row[item.key]])),
   );
   const csv = toCsv(csvRows, columns.map((item) => item.label));
-  const downloadControl = hasExportAccess(state)
-    ? `<a class="table-download" href="data:text/csv;charset=utf-8,${encodeURIComponent(csv)}" download="${escapeHtml(filename)}">Download this table CSV</a>`
-    : `<button class="table-download" type="button" data-locked-export="table CSV">CSV export requires <span>Pro</span></button>`;
+  const downloadControl = `<a class="table-download" href="data:text/csv;charset=utf-8,${encodeURIComponent(csv)}" download="${escapeHtml(filename)}">Download this table CSV</a>`;
   node.innerHTML = `
     ${downloadControl}
     <table class="data-table">
@@ -260,9 +282,6 @@ function renderTable(selector, filename, rows, columns, state) {
       </tbody>
     </table>
   `;
-  node.querySelector("[data-locked-export]")?.addEventListener("click", () => {
-    showPremiumExportPrompt(state, "Table CSV export");
-  });
 }
 
 function setPlainText(selector, text) {
@@ -284,6 +303,22 @@ function financeGapRows(countries) {
     }))
     .sort((a, b) => a.financePerRisk - b.financePerRisk || b.risk - a.risk)
     .slice(0, 14);
+}
+
+function severityGapRows(countries) {
+  return countries
+    .filter((country) => Number.isFinite(country.compoundHazardPressureIndex))
+    .map((country) => ({
+      ...country,
+      severityFinanceScore: Number.isFinite(country.drrOdaPerSeverityPoint) ? country.drrOdaPerSeverityPoint : 0,
+    }))
+    .sort(
+      (a, b) =>
+        signalRank(b.reportingGapSignal) - signalRank(a.reportingGapSignal) ||
+        b.compoundHazardPressureIndex - a.compoundHazardPressureIndex ||
+        a.severityFinanceScore - b.severityFinanceScore,
+    )
+    .slice(0, 18);
 }
 
 function renderHeader(data) {
@@ -327,7 +362,6 @@ function renderTimeframeNotes(data) {
     data.summary?.latestDrrFinance?.year || mostCommonYear(data.countries, "drrOdaYear") || "latest available";
   const worldRiskYear = mostCommonYear(data.countries, "worldRiskIndexYear") || "latest available";
   const ochaYear = mostCommonYear(data.countries, "ochaHumanitarianYear") || "latest available";
-
   const inform = escapeHtml(informEdition);
   const published = escapeHtml(informPublished);
   const latestEvents = escapeHtml(latestDisasterYear);
@@ -339,7 +373,7 @@ function renderTimeframeNotes(data) {
 
   setInfoNote(
     "#kpi-timeframe-note",
-    `<strong>What timeframe is this?</strong> Risk scores use ${inform}; the disaster count is ${latestEvents}; DRR-related ODA uses the latest detailed OECD CRS year available to the pipeline, ${crsYear}. Other country metrics show their own year in parentheses where available. Dashboard generated ${escapeHtml(generatedDate)}.`,
+    `<strong>What timeframe is this?</strong> Risk scores use ${inform}; the disaster count is ${latestEvents}; DRR-related ODA uses the latest detailed OECD CRS year available to the pipeline, ${crsYear}. Other country metrics show their own year in parentheses where available. Atlas generated ${escapeHtml(generatedDate)}.`,
   );
   setInfoNote(
     "#risk-map-note",
@@ -359,11 +393,15 @@ function renderTimeframeNotes(data) {
   );
   setInfoNote(
     "#finance-profile-note",
-    `<strong>Timeframe:</strong> OECD CRS disbursements and commitments use detailed CRS ${crsYear}; World Bank and GCF records are cumulative project signals in the downloaded data; OCHA FTS is ${responseYear} response-funding context. ${crsDetailNote} The finance view separates international DRR-related finance from project, response, domestic, private, and mainstreamed evidence layers.`,
+    `<strong>Timeframe:</strong> OECD CRS disbursements and commitments use detailed CRS ${crsYear}; World Bank and GCF records are cumulative project signals in the downloaded data; OCHA FTS is ${responseYear} response-funding context. ${crsDetailNote} The finance context view separates reported international support from project and response evidence layers.`,
   );
   setInfoNote(
     "#finance-gap-note",
     `<strong>Timeframe:</strong> detailed CRS ${crsYear} divided by ${inform}. <strong>How to read it:</strong> lower bars flag high-risk countries receiving less reported international DRR-related ODA per point of current risk. ${crsDetailNote} Domestic budget, private finance, and mainstreamed DRR evidence are treated as separate evidence layers.`,
+  );
+  setInfoNote(
+    "#severity-alignment-note",
+    `<strong>Timeframe:</strong> public impact indicators use latest available loss, deaths, and displacement fields; finance uses detailed CRS ${crsYear}. <strong>How to read it:</strong> the cascading score is a proxy from multi-hazard pressure and modeled risk. It is not proof that one event caused another. Reporting-gap signals flag countries where modeled pressure is high but public impact indicators are sparse.`,
   );
   setInfoNote(
     "#events-note",
@@ -777,7 +815,6 @@ function setSelectedCountry(state, iso3, options = {}) {
   renderCountryProfile(state);
   renderFinanceProfile(state);
   renderCompareView(state);
-  renderPremiumAccess(state);
   drawRiskMap("#risk-map", state);
   hideTooltip();
 
@@ -1295,7 +1332,7 @@ function renderCoverageStatus(state) {
     <div class="coverage-copy">
       <span>Coverage and source scope</span>
       <strong>Know where the public data is strong, and where it is thin</strong>
-      <p>Coverage means the dashboard dataset contains a usable value or signal for the metric. Project-signal rows count countries with at least one linked public project record.</p>
+      <p>Coverage means the atlas dataset contains a usable value or signal for the metric. Project-signal rows count countries with at least one linked public project record.</p>
     </div>
     <div class="coverage-grid">
       ${rows
@@ -1343,7 +1380,7 @@ function metricCoverageRows(countries) {
     },
     {
       label: "GCF signals",
-      note: "countries with at least one DRR/resilience-linked GCF project",
+      note: "countries with at least one resilience-linked GCF project",
       covered: countries.filter((country) => (country.gcfDrrProjectCount || 0) > 0).length,
     },
   ];
@@ -1397,6 +1434,10 @@ function renderCountryProfile(state) {
     metric("Hazard and exposure", fmtFixed(country.hazardExposure, 1), false, "inform"),
     metric("Vulnerability", fmtFixed(country.vulnerability, 1), false, "inform"),
     metric("Lack of coping capacity", fmtFixed(country.lackCopingCapacity, 1), false, "inform"),
+    metric("Observed severity", fmtObservedSeverity(country), false, "owidUndrr"),
+    metric("Compound pressure", fmtIndex(country.compoundHazardPressureIndex), false, "thinkHazard"),
+    metric("Reporting-gap signal", reportingGapLabel(country.reportingGapSignal)),
+    metric("GDACS current alerts", fmtGdacsAlerts(country), false, "gdacs"),
     metric(
       "Disaster displacement",
       fmtYearValue(country.disasterDisplacementValue, country.disasterDisplacementYear),
@@ -1407,6 +1448,17 @@ function renderCountryProfile(state) {
     metric("DRR ODA disb.", fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear), false, "oecdCrs"),
   ].join("");
   const detailMetrics = [
+    metric("Reporting-gap reasons", fmtReasonList(country.reportingGapReasons), true),
+    metric("GDACS alert types", fmtGdacsAlertTypes(country), true, "gdacs"),
+    metric("Latest GDACS alert", fmtLatestGdacsAlert(country), true, "gdacs"),
+    metric("DRR ODA purpose", fmtPurposeHeadline(country), true, "oecdCrs"),
+    metric("Population", fmtYearValue(country.populationValue, country.populationYear), false, "worldBankWdi"),
+    metric("GDP", fmtMoney(country.gdpUsdValue, country.gdpUsdYear), false, "worldBankWdi"),
+    metric("GDP per capita", fmtMoney(country.gdpPerCapitaValue, country.gdpPerCapitaYear), false, "worldBankWdi"),
+    metric("DRR ODA per capita", fmtUsdPerPerson(country.drrOdaPerCapitaUsd, country.drrOdaYear), false, "oecdCrs"),
+    metric("DRR ODA / GDP", fmtPct(country.drrOdaShareOfGdp, country.drrOdaYear), false, "oecdCrs"),
+    metric("Displacement per 100k", fmtPer100k(country.disasterDisplacementPer100k, country.disasterDisplacementYear), false, "worldBankDisplacement"),
+    metric("Direct loss per capita", fmtUsdPerPerson(country.directLossPerCapitaUsd, country.lossUsdYear), false, "owidUndrr"),
     metric("Natural hazards", fmtFixed(country.naturalHazards, 1), false, "inform"),
     metric("Human hazards", fmtFixed(country.humanHazards, 1), false, "inform"),
     metric("Direct loss / GDP", fmtPct(country.lossGdpValue, country.lossGdpYear), false, "owidUndrr"),
@@ -1414,7 +1466,7 @@ function renderCountryProfile(state) {
     metric("Local DRR coverage", fmtPct(country.localStrategyValue, country.localStrategyYear), false, "owidUndrr"),
     metric("Natural disaster deaths", fmtYearValue(country.deathsValue, country.deathsYear), false, "owidUndrr"),
     metric("DRR ODA commit.", fmtMoney(country.drrOdaCommitmentUsd, country.drrOdaYear), false, "oecdCrs"),
-    metric("GCF DRR/resilience", fmtNumber(country.gcfDrrProjectCount), false, "gcf"),
+    metric("GCF resilience", fmtNumber(country.gcfDrrProjectCount), false, "gcf"),
     metric("GCF linked budget", fmtMoney(country.gcfDrrLinkedTotalBudgetUsd), false, "gcf"),
     metric("OCHA response funding", fmtMoney(country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear), false, "ocha"),
     metric("WorldRiskIndex", fmtYearValue(country.worldRiskIndexValue, country.worldRiskIndexYear, 2), false, "worldRiskIndex"),
@@ -1487,6 +1539,7 @@ function renderFinanceProfile(state) {
 
   const donors = Array.isArray(country.drrOdaTopDonors) ? country.drrOdaTopDonors : [];
   const sectors = Array.isArray(country.drrOdaSectors) ? country.drrOdaSectors : [];
+  const purposeCategories = Array.isArray(country.drrOdaPurposeCategories) ? country.drrOdaPurposeCategories : [];
   const projects = Array.isArray(country.worldBankDrmProjects) ? country.worldBankDrmProjects : [];
   const gcfProjects = Array.isArray(country.gcfDrrProjects) ? country.gcfDrrProjects : [];
   const financeTiers = Array.isArray(state.data.summary.financeTiers) ? state.data.summary.financeTiers : [];
@@ -1516,7 +1569,7 @@ function renderFinanceProfile(state) {
         ${sourceLink("worldBankProjects")}
       </article>
       <article>
-        <span>GCF DRR/resilience project signals</span>
+        <span>GCF resilience project signals</span>
         ${confidenceBadge("Project signal")}
         <strong>${fmtNumber(country.gcfDrrProjectCount)}</strong>
         <p>${fmtMoney(country.gcfDrrLinkedGcfBudgetUsd)} GCF funding; ${fmtMoney(country.gcfDrrLinkedCoFinancingUsd)} co-finance.</p>
@@ -1528,6 +1581,20 @@ function renderFinanceProfile(state) {
         <strong>${fmtMoney(country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear)}</strong>
         <p>Response funding tracked by FTS is shown as a separate humanitarian context layer.</p>
         ${sourceLink("ocha")}
+      </article>
+      <article>
+        <span>DRR ODA normalized</span>
+        ${confidenceBadge("Context signal")}
+        <strong>${fmtUsdPerPerson(country.drrOdaPerCapitaUsd, country.drrOdaYear)} per person</strong>
+        <p>${fmtPct(country.drrOdaShareOfGdp, country.drrOdaYear)} of GDP, using World Bank WDI population and GDP.</p>
+        ${sourceLink("worldBankWdi")}
+      </article>
+      <article>
+        <span>Current disaster alerts</span>
+        ${confidenceBadge("Live alert feed")}
+        <strong>${fmtGdacsAlerts(country)}</strong>
+        <p>${escapeHtml(fmtLatestGdacsAlert(country))}</p>
+        ${sourceLink("gdacs")}
       </article>
     </div>
     ${renderFinanceTiers(financeTiers)}
@@ -1548,6 +1615,23 @@ function renderFinanceProfile(state) {
                   )
                   .join("")
               : `<p class="empty-note">No OECD CRS donor records in the latest finance year.</p>`
+          }
+        </div>
+        <h4>ODA purpose allocation</h4>
+        <div class="donor-list">
+          ${
+            purposeCategories.length
+              ? purposeCategories
+                  .map(
+                    (category) => `
+                      <div class="donor-row">
+                        <span>${escapeHtml(category.label)} <small>${escapeHtml((category.sourceCodes || []).join(", "))}</small></span>
+                        <strong>${fmtMoney(category.disbursementUsd)}</strong>
+                      </div>
+                    `,
+                  )
+                  .join("")
+              : `<p class="empty-note">No purpose allocation is available for the selected country.</p>`
           }
         </div>
         <h4>ODA sector split</h4>
@@ -1602,7 +1686,7 @@ function renderFinanceProfile(state) {
                     `,
                   )
                   .join("")
-              : `<p class="empty-note">No GCF projects matched the DRR/resilience keyword screen.</p>`
+              : `<p class="empty-note">No GCF projects matched the resilience keyword screen.</p>`
           }
         </div>
       </article>
@@ -1651,10 +1735,19 @@ function renderCompareView(state) {
     ["Hazard and exposure", fmtFixed(a.hazardExposure, 1), fmtFixed(b.hazardExposure, 1), "INFORM"],
     ["Vulnerability", fmtFixed(a.vulnerability, 1), fmtFixed(b.vulnerability, 1), "INFORM"],
     ["Lack of coping capacity", fmtFixed(a.lackCopingCapacity, 1), fmtFixed(b.lackCopingCapacity, 1), "INFORM"],
+    ["Observed severity", fmtObservedSeverity(a), fmtObservedSeverity(b), "Public impact indicators"],
+    ["Compound hazard pressure", fmtIndex(a.compoundHazardPressureIndex), fmtIndex(b.compoundHazardPressureIndex), "INFORM / ThinkHazard"],
+    ["Reporting-gap signal", reportingGapLabel(a.reportingGapSignal), reportingGapLabel(b.reportingGapSignal), "Derived signal"],
+    ["GDACS current alerts", fmtGdacsAlerts(a), fmtGdacsAlerts(b), "GDACS"],
     ["DRR-related ODA disbursements", fmtMoney(a.drrOdaDisbursementUsd, a.drrOdaYear), fmtMoney(b.drrOdaDisbursementUsd, b.drrOdaYear), "OECD CRS"],
+    ["DRR ODA per capita", fmtUsdPerPerson(a.drrOdaPerCapitaUsd, a.drrOdaYear), fmtUsdPerPerson(b.drrOdaPerCapitaUsd, b.drrOdaYear), "OECD CRS / World Bank WDI"],
+    ["DRR ODA / GDP", fmtPct(a.drrOdaShareOfGdp, a.drrOdaYear), fmtPct(b.drrOdaShareOfGdp, b.drrOdaYear), "OECD CRS / World Bank WDI"],
+    ["Top ODA purpose", fmtPurposeHeadline(a), fmtPurposeHeadline(b), "OECD CRS"],
     ["Top reported donor", topDonorLabel(a), topDonorLabel(b), "OECD CRS"],
+    ["Population", fmtYearValue(a.populationValue, a.populationYear), fmtYearValue(b.populationValue, b.populationYear), "World Bank WDI"],
+    ["GDP", fmtMoney(a.gdpUsdValue, a.gdpUsdYear), fmtMoney(b.gdpUsdValue, b.gdpUsdYear), "World Bank WDI"],
     ["World Bank DRM projects", fmtNumber(a.worldBankDrmProjectCount), fmtNumber(b.worldBankDrmProjectCount), "World Bank"],
-    ["GCF DRR/resilience projects", fmtNumber(a.gcfDrrProjectCount), fmtNumber(b.gcfDrrProjectCount), "GCF"],
+    ["GCF resilience projects", fmtNumber(a.gcfDrrProjectCount), fmtNumber(b.gcfDrrProjectCount), "GCF"],
     ["OCHA response funding", fmtMoney(a.ochaHumanitarianFundingUsd, a.ochaHumanitarianYear), fmtMoney(b.ochaHumanitarianFundingUsd, b.ochaHumanitarianYear), "OCHA FTS"],
     ["WorldRiskIndex", fmtYearValue(a.worldRiskIndexValue, a.worldRiskIndexYear, 2), fmtYearValue(b.worldRiskIndexValue, b.worldRiskIndexYear, 2), "WorldRiskIndex"],
     ["ND-GAIN score", fmtYearValue(a.ndGainValue, a.ndGainYear, 1), fmtYearValue(b.ndGainValue, b.ndGainYear, 1), "ND-GAIN"],
@@ -1702,178 +1795,6 @@ function topDonorLabel(country) {
   return donor ? `${donor.name} (${fmtMoney(donor.disbursementUsd, country.drrOdaYear)})` : "n/a";
 }
 
-function renderPremiumAccess(state) {
-  const panel = document.querySelector("#premium-access");
-  if (!panel) return;
-
-  const product = state.product || fallbackProductConfig();
-  const country = state.data.countries.find((item) => item.iso3 === state.selectedIso);
-  const plans = Array.isArray(product.plans) ? product.plans : [];
-  const modules = Array.isArray(product.premiumModules) ? product.premiumModules : [];
-  const entitlement = state.entitlement || { plan: "free", premiumAccess: false };
-  const billing = product.billing || {};
-  const checkoutEndpoint = safeExternalUrl(billing.checkoutEndpoint, "");
-  const billingReady = Boolean(checkoutEndpoint || plans.some((plan) => safeExternalUrl(plan.checkoutUrl, "")));
-  const countryLabel = country ? shortCountryName(country.name) : "selected country";
-
-  panel.innerHTML = `
-    <div class="premium-status">
-      <article>
-        <span>Current access</span>
-        <strong>${escapeHtml(entitlement.planName || entitlement.plan || "Free")}</strong>
-        <p>${entitlement.premiumAccess ? "Premium API access is active for this browser session." : "Public edition. Premium records are delivered through protected access for eligible users."}</p>
-      </article>
-      <article>
-        <span>Billing status</span>
-        <strong>${billingReady ? "Checkout ready" : "Access requests"}</strong>
-        <p>${billingReady ? "Plan buttons can send users through a configured checkout flow." : "Use the plan buttons to request access to protected data modules."}</p>
-      </article>
-      <article>
-        <span>Data security</span>
-        <strong>API gated</strong>
-        <p>${escapeHtml(billing.securityNote || "Restricted data is fetched only from an authenticated backend.")}</p>
-      </article>
-    </div>
-    <div class="pricing-grid">
-      ${plans.map((plan) => renderPlanCard(plan, entitlement, billingReady)).join("")}
-    </div>
-    <div class="premium-modules">
-      ${modules.map((module) => renderPremiumModule(module, entitlement, countryLabel)).join("")}
-    </div>
-    ${renderPremiumPreview(countryLabel)}
-    <p id="billing-status" class="billing-status" role="status" aria-live="polite"></p>
-  `;
-
-  panel.querySelectorAll("[data-checkout-plan]").forEach((button) => {
-    button.addEventListener("click", () => startCheckout(button.dataset.checkoutPlan, state));
-  });
-  panel.querySelectorAll("[data-request-plan]").forEach((button) => {
-    button.addEventListener("click", () => requestAccess(button.dataset.requestPlan, state));
-  });
-}
-
-function renderPlanCard(plan, entitlement, billingReady) {
-  const isCurrent = (entitlement.plan || "free") === plan.id;
-  const features = Array.isArray(plan.features) ? plan.features : [];
-  const buttonLabel = isCurrent ? "Current plan" : plan.cta || "Choose plan";
-  const checkoutUrl = safeExternalUrl(plan.checkoutUrl, "");
-  const button = isCurrent
-    ? `<button class="plan-button plan-button-current" type="button" disabled>Current plan</button>`
-    : plan.id === "free"
-      ? `<a class="plan-button" href="#risk-map">${escapeHtml(buttonLabel)}</a>`
-      : billingReady
-        ? checkoutUrl
-          ? `<a class="plan-button plan-button-primary" href="${escapeHtml(checkoutUrl)}" target="_blank" rel="noreferrer">${escapeHtml(buttonLabel)}</a>`
-          : `<button class="plan-button plan-button-primary" type="button" data-checkout-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`
-        : `<button class="plan-button plan-button-primary" type="button" data-request-plan="${escapeHtml(plan.id)}">${escapeHtml(buttonLabel)}</button>`;
-
-  return `
-    <article class="pricing-card${isCurrent ? " pricing-card-current" : ""}">
-      <span>${escapeHtml(plan.label || plan.name)}</span>
-      <h3>${escapeHtml(plan.name)}</h3>
-      <div class="price-line">
-        <strong>${escapeHtml(plan.price)}</strong>
-        <em>${escapeHtml(plan.period || "")}</em>
-      </div>
-      <ul>
-        ${features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join("")}
-      </ul>
-      ${button}
-    </article>
-  `;
-}
-
-function renderPremiumPreview(countryLabel) {
-  const rows = [
-    ["IATI activity", "Donor, implementer, sector, transaction type", "Amount and DRR evidence", "Pro"],
-    ["Domestic budget", "Budget line, disaster fund, climate tag", "Document link and confidence score", "Pro"],
-    ["Private/co-finance", "Sponsor, fund, project document", "Public/private signal and source note", "Pro"],
-  ];
-
-  return `
-    <div class="premium-preview">
-      <div class="preview-copy">
-        <p class="kicker">Premium preview</p>
-        <h3>Protected finance modules for ${escapeHtml(countryLabel)}</h3>
-        <p>Premium rows are delivered through an authenticated API. This preview shows module structure and field coverage.</p>
-      </div>
-      <div class="preview-table" role="table" aria-label="Premium data preview">
-        <div class="preview-row preview-header" role="row">
-          <span role="columnheader">Module</span>
-          <span role="columnheader">Fields</span>
-          <span role="columnheader">Value</span>
-          <span role="columnheader">Tier</span>
-        </div>
-        ${rows
-          .map(
-            (row) => `
-              <div class="preview-row" role="row">
-                <span role="cell">${escapeHtml(row[0])}</span>
-                <span role="cell">${escapeHtml(row[1])}</span>
-                <span role="cell">${escapeHtml(row[2])}</span>
-                <strong role="cell">${escapeHtml(row[3])} locked</strong>
-              </div>
-            `,
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
-}
-
-function renderPremiumModule(module, entitlement, countryLabel) {
-  const unlocked = Boolean(entitlement.premiumAccess);
-  return `
-    <article>
-      <div>
-        <span class="module-tier">${escapeHtml(module.tier || "Premium")}</span>
-        <strong>${escapeHtml(module.title)}</strong>
-      </div>
-      <p>${escapeHtml(module.description)}</p>
-      <em>${escapeHtml(module.caveat)}</em>
-      <small class="${unlocked ? "module-unlocked" : "module-locked"}">
-        ${unlocked ? `Available for ${escapeHtml(countryLabel)}` : "Protected access"}
-      </small>
-    </article>
-  `;
-}
-
-async function requestAccess(planId, state) {
-  const product = state.product || {};
-  const plans = Array.isArray(product.plans) ? product.plans : [];
-  const plan = plans.find((item) => item.id === planId);
-  const billing = product.billing || {};
-  const status = document.querySelector("#billing-status");
-  if (!plan || !status) return;
-  const country = state.data.countries.find((item) => item.iso3 === state.selectedIso);
-  const countryName = country ? country.name : "the selected country";
-  const requestAccessEndpoint = safeExternalUrl(billing.requestAccessEndpoint, "");
-  if (requestAccessEndpoint) {
-    status.textContent = "Sending access request...";
-    try {
-      const response = await fetch(requestAccessEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          plan: plan.id,
-          country: country?.iso3 || "",
-          pageUrl: country ? countryShareUrl(country.iso3) : window.location.href,
-        }),
-      });
-      if (!response.ok) throw new Error("Request endpoint returned an error.");
-      status.textContent = `${plan.name} access request sent for ${countryName}.`;
-      return;
-    } catch (error) {
-      status.textContent = `Access request failed: ${error.message}`;
-      return;
-    }
-  }
-  const contactUrl = safeExternalUrl(billing.contactUrl || CONTACT_URL, CONTACT_URL);
-  status.innerHTML =
-    `${escapeHtml(plan.name)} access is handled by request. ` +
-    `<a class="text-link" href="${escapeHtml(contactUrl)}" target="_blank" rel="noreferrer">Contact Bekas Ioannis on LinkedIn</a> to request access for ${escapeHtml(countryName)}.`;
-}
-
 function attachQuestionBar(state) {
   const form = document.querySelector("#dashboard-question-form");
   const input = document.querySelector("#dashboard-question");
@@ -1901,7 +1822,7 @@ function answerDashboardQuestion(state, question) {
   const countries = state.data.countries || [];
   if (!query) {
     return answerBlock(
-      "Ask a dashboard question",
+      "Ask an atlas question",
       "Try asking about top risk countries, donors to a country, finance gaps, hazards, missing data, sources, or a country profile.",
       [],
     );
@@ -1909,6 +1830,24 @@ function answerDashboardQuestion(state, question) {
 
   const mentionedCountries = countriesMentionedInQuestion(countries, query);
   if (query.includes("source") || query.includes("method") || asksAboutReferenceOrganization(query)) return answerSources(state);
+  if (asksAboutGdacsAlerts(query)) {
+    return answerGdacsAlerts(mentionedCountries[0], countries);
+  }
+  if (asksAboutNormalizedFinance(query)) {
+    return answerNormalizedFinance(mentionedCountries[0] || countryByIso(state, state.selectedIso));
+  }
+  if (asksAboutOdaPurpose(query)) {
+    return answerOdaPurpose(mentionedCountries[0] || countryByIso(state, state.selectedIso));
+  }
+  if (asksAboutReportingGap(query)) {
+    return answerReportingGaps(countries);
+  }
+  if (asksAboutSeverityFinance(query)) {
+    return answerSeverityFinanceGaps(countries);
+  }
+  if (asksAboutCompoundPressure(query)) {
+    return answerCompoundPressure(countries);
+  }
   if (query.includes("missing") || query.includes("no data") || query.includes("coverage")) {
     return answerMissingData(countries, query);
   }
@@ -1933,7 +1872,7 @@ function answerDashboardQuestion(state, question) {
 
   return answerBlock(
     "Question not recognized",
-    "This public assistant answers only from the dashboard dataset. Try: top donors to Philippines, highest risk countries, high flood risk, missing ODA data, or compare Greece and Philippines.",
+    "This public assistant answers only from the atlas dataset. Try: top donors to Philippines, highest risk countries, high flood risk, missing ODA data, or compare Greece and Philippines.",
     [{ label: "Open methodology", href: "#methodology" }],
   );
 }
@@ -1948,6 +1887,60 @@ function countriesMentionedInQuestion(countries, query) {
       const iso3 = normalizeSearch(country.iso3);
       return query.includes(name) || (tokens.has(iso3) && !commonWords.has(iso3));
     });
+}
+
+function asksAboutOdaPurpose(query) {
+  return (
+    (query.includes("where") || query.includes("go") || query.includes("going") || query.includes("purpose") || query.includes("allocation")) &&
+    (query.includes("oda") || query.includes("finance") || query.includes("funding") || query.includes("drr")) &&
+    (query.includes("preparedness") ||
+      query.includes("mitigation") ||
+      query.includes("recovery") ||
+      query.includes("governance") ||
+      query.includes("allocation") ||
+      query.includes("purpose") ||
+      query.includes("going"))
+  );
+}
+
+function asksAboutReportingGap(query) {
+  return (
+    query.includes("reporting gap") ||
+    query.includes("under reported") ||
+    query.includes("underreported") ||
+    query.includes("less reported") ||
+    query.includes("limited public") ||
+    query.includes("missing impact")
+  );
+}
+
+function asksAboutSeverityFinance(query) {
+  return (
+    (query.includes("severity") || query.includes("severe")) &&
+    (query.includes("finance") || query.includes("funding") || query.includes("oda") || query.includes("low") || query.includes("thin"))
+  );
+}
+
+function asksAboutCompoundPressure(query) {
+  return query.includes("compound") || query.includes("cascading") || query.includes("hazard pressure");
+}
+
+function asksAboutGdacsAlerts(query) {
+  return (
+    query.includes("gdacs") ||
+    query.includes("current alert") ||
+    query.includes("active alert") ||
+    query.includes("current disaster") ||
+    query.includes("active disaster") ||
+    query.includes("live alert")
+  );
+}
+
+function asksAboutNormalizedFinance(query) {
+  return (
+    (query.includes("per capita") || query.includes("per person") || query.includes("gdp") || query.includes("normalize") || query.includes("normalised") || query.includes("normalized")) &&
+    (query.includes("finance") || query.includes("funding") || query.includes("oda") || query.includes("drr"))
+  );
 }
 
 function answerTopRisk(countries) {
@@ -1970,6 +1963,128 @@ function answerFinanceGaps(countries) {
   );
 }
 
+function answerSeverityFinanceGaps(countries) {
+  const rows = severityGapRows(countries).slice(0, 5);
+  return answerBlock(
+    "High severity-pressure countries with thin DRR ODA",
+    rows
+      .map(
+        (country, index) =>
+          `${index + 1}. ${escapeHtml(country.name)}: compound ${fmtIndex(country.compoundHazardPressureIndex)}, public impact ${fmtObservedSeverity(country)}, ${fmtMoney(country.drrOdaPerSeverityPoint)} per severity point`,
+      )
+      .join("<br>"),
+    [{ label: "Open severity alignment", href: "#severity-view" }],
+  );
+}
+
+function answerReportingGaps(countries) {
+  let rows = countries
+    .filter((country) => country.reportingGapSignal === "high" || country.reportingGapSignal === "medium")
+    .sort((a, b) => signalRank(b.reportingGapSignal) - signalRank(a.reportingGapSignal) || b.compoundHazardPressureIndex - a.compoundHazardPressureIndex)
+    .slice(0, 6);
+  const hasFlaggedSignals = rows.length > 0;
+
+  if (!hasFlaggedSignals) {
+    rows = countries
+      .filter(
+        (country) =>
+          country.observedSeverityStatus === "limited public indicators" ||
+          (country.reportingGapReasons || []).some((reason) => /limited public|missing loss/i.test(reason)),
+      )
+      .sort((a, b) => b.compoundHazardPressureIndex - a.compoundHazardPressureIndex || b.risk - a.risk)
+      .slice(0, 6);
+  }
+
+  return answerBlock(
+    hasFlaggedSignals ? "Possible disaster reporting-gap signals" : "Limited public impact indicator watchlist",
+    rows.length
+      ? rows
+          .map(
+            (country, index) =>
+              `${index + 1}. ${escapeHtml(country.name)}: ${escapeHtml(fmtReasonList(country.reportingGapReasons))}; compound pressure ${fmtIndex(country.compoundHazardPressureIndex)}`,
+          )
+          .join("<br>")
+      : "No high or medium reporting-gap signals are flagged, and no countries have limited public impact indicators in the current dataset.",
+    [{ label: "Open severity alignment", href: "#severity-view" }],
+  );
+}
+
+function answerCompoundPressure(countries) {
+  const rows = [...countries]
+    .filter((country) => Number.isFinite(country.compoundHazardPressureIndex))
+    .sort((a, b) => b.compoundHazardPressureIndex - a.compoundHazardPressureIndex)
+    .slice(0, 6);
+  return answerBlock(
+    "Highest compound hazard pressure",
+    rows
+      .map(
+        (country, index) =>
+          `${index + 1}. ${escapeHtml(country.name)}: ${fmtIndex(country.compoundHazardPressureIndex)}; high hazards: ${escapeHtml(fmtHazardList(country.thinkHazard?.highHazards))}`,
+      )
+      .join("<br>"),
+    [{ label: "Open severity alignment", href: "#severity-view" }],
+  );
+}
+
+function answerGdacsAlerts(country, countries) {
+  if (country) {
+    return answerBlock(
+      `Current GDACS alerts for ${country.name}`,
+      `${escapeHtml(fmtGdacsAlerts(country))}. ${escapeHtml(fmtLatestGdacsAlert(country))}. Alert types: ${escapeHtml(fmtGdacsAlertTypes(country))}.`,
+      [{ label: "Open country profile", href: "#country-view" }],
+    );
+  }
+  const rows = [...countries]
+    .filter((item) => (item.gdacsCurrentAlertCount || 0) > 0)
+    .sort(
+      (a, b) =>
+        (b.gdacsRedAlertCount || 0) - (a.gdacsRedAlertCount || 0) ||
+        (b.gdacsOrangeAlertCount || 0) - (a.gdacsOrangeAlertCount || 0) ||
+        (b.gdacsCurrentAlertCount || 0) - (a.gdacsCurrentAlertCount || 0),
+    )
+    .slice(0, 8);
+  return answerBlock(
+    "Countries with current GDACS alerts",
+    rows.length
+      ? rows
+          .map((item, index) => `${index + 1}. ${escapeHtml(item.name)}: ${escapeHtml(fmtGdacsAlerts(item))}; ${escapeHtml(fmtGdacsAlertTypes(item))}`)
+          .join("<br>")
+      : "No countries in the current GDACS feed match the atlas country list.",
+    [{ label: "Open sources", href: "#sources" }],
+  );
+}
+
+function answerNormalizedFinance(country) {
+  if (!country) return answerBlock("No country selected", "Select or name a country first.", []);
+  return answerBlock(
+    `Normalized support context for ${country.name}`,
+    [
+      `DRR ODA per person: ${escapeHtml(fmtUsdPerPerson(country.drrOdaPerCapitaUsd, country.drrOdaYear))}`,
+      `DRR ODA as share of GDP: ${escapeHtml(fmtPct(country.drrOdaShareOfGdp, country.drrOdaYear))}`,
+      `Population: ${escapeHtml(fmtYearValue(country.populationValue, country.populationYear))}`,
+      `GDP: ${escapeHtml(fmtMoney(country.gdpUsdValue, country.gdpUsdYear))}`,
+    ].join("<br>"),
+    [{ label: "Open finance view", href: "#finance-view" }],
+  );
+}
+
+function answerOdaPurpose(country) {
+  if (!country) return answerBlock("No country selected", "Select or name a country first.", []);
+  const categories = Array.isArray(country.drrOdaPurposeCategories) ? country.drrOdaPurposeCategories : [];
+  const body = categories.length
+    ? categories
+        .map(
+          (category, index) =>
+            `${index + 1}. ${escapeHtml(category.label)}: ${fmtMoney(category.disbursementUsd, country.drrOdaYear)} disbursed; ${fmtMoney(category.commitmentUsd, country.drrOdaYear)} committed`,
+        )
+        .join("<br>")
+    : `No OECD CRS purpose allocation is available for ${escapeHtml(country.name)} in the latest detailed CRS year.`;
+  return answerBlock(`Where DRR ODA goes in ${country.name}`, body, [
+    { label: "Open severity alignment", href: "#severity-view" },
+    { label: "Open finance view", href: "#finance-view" },
+  ]);
+}
+
 function answerDonors(country) {
   if (!country) return answerBlock("No country selected", "Select or name a country first.", []);
   const donors = Array.isArray(country.drrOdaTopDonors) ? country.drrOdaTopDonors.slice(0, 5) : [];
@@ -1987,9 +2102,10 @@ function answerCountryFinance(country) {
     `Finance snapshot for ${country.name}`,
     [
       `DRR-related ODA disbursements: ${fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear)}`,
+      `Top ODA purpose: ${escapeHtml(fmtPurposeHeadline(country))}`,
       `Top donor: ${escapeHtml(topDonorLabel(country))}`,
       `World Bank DRM project signals: ${fmtNumber(country.worldBankDrmProjectCount)}`,
-      `GCF DRR/resilience project signals: ${fmtNumber(country.gcfDrrProjectCount)}`,
+      `GCF resilience project signals: ${fmtNumber(country.gcfDrrProjectCount)}`,
       `OCHA response funding: ${fmtMoney(country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear)}`,
     ].join("<br>"),
     [{ label: "Open finance view", href: "#finance-view" }],
@@ -2039,7 +2155,7 @@ function answerMissingData(countries, query) {
   const missing = countries.filter((country) => !Number.isFinite(country[field]));
   return answerBlock(
     `Missing ${label} records`,
-    `${fmtNumber(missing.length)} of ${fmtNumber(countries.length)} countries do not have this value in the dashboard dataset. Examples: ${escapeHtml(
+    `${fmtNumber(missing.length)} of ${fmtNumber(countries.length)} countries do not have this value in the atlas dataset. Examples: ${escapeHtml(
       missing.slice(0, 6).map((country) => country.name).join(", ") || "none",
     )}.`,
     [{ label: "Open coverage", href: "#methodology" }],
@@ -2056,7 +2172,7 @@ function answerSources(state) {
   const sources = Array.isArray(state.data.sources) ? state.data.sources : [];
   return answerBlock(
     "Public sources in this build",
-    `${fmtNumber(sources.length)} public sources are included, led by INFORM, OECD CRS, WorldRiskIndex, ThinkHazard, GCF, World Bank, OCHA FTS, ND-GAIN, WRI Aqueduct, and OWID/UNDRR series. WMO is referenced as a relevant DRR and weather-climate organization; metric coverage follows the source audit. This dashboard is independent and is not endorsed by referenced organizations.`,
+    `${fmtNumber(sources.length)} public sources are included, led by INFORM, OECD CRS, WorldRiskIndex, ThinkHazard, GCF, World Bank, OCHA FTS, ND-GAIN, WRI Aqueduct, and OWID/UNDRR series. Metric coverage follows the source audit. This atlas is independent and is not endorsed by referenced organizations.`,
     [
       { label: "Open sources", href: "#source-audit" },
       { label: "Open FAQ", href: "#faq" },
@@ -2072,6 +2188,8 @@ function answerCountrySnapshot(country) {
       `INFORM risk: ${fmtFixed(country.risk, 1)}`,
       `Hazard and exposure: ${fmtFixed(country.hazardExposure, 1)}`,
       `High hazards: ${escapeHtml(fmtHazardList(country.thinkHazard?.highHazards))}`,
+      `Public impact severity: ${escapeHtml(fmtObservedSeverity(country))}`,
+      `Reporting-gap signal: ${escapeHtml(reportingGapLabel(country.reportingGapSignal))}`,
       `DRR-related ODA: ${fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear)}`,
     ].join("<br>"),
     [{ label: "Open country profile", href: "#country-view" }],
@@ -2106,14 +2224,12 @@ function answerBlock(title, body, actions) {
 
 function attachDashboardActions(state) {
   document.querySelector("#download-all-countries")?.addEventListener("click", () => {
-    if (!ensureExportAccess(state, "All-country CSV export")) return;
     const rows = countryMetricsExportRows(state.data.countries);
     downloadRows("drr-country-metrics.csv", rows, Object.keys(rows[0] || {}));
     setActionStatus("Downloaded all-country metrics CSV.");
   });
 
   document.querySelector("#download-country")?.addEventListener("click", () => {
-    if (!ensureExportAccess(state, "Selected-country CSV export")) return;
     const country = countryByIso(state, state.selectedIso);
     if (!country) return;
     downloadRows(
@@ -2125,7 +2241,6 @@ function attachDashboardActions(state) {
   });
 
   document.querySelector("#download-donors")?.addEventListener("click", () => {
-    if (!ensureExportAccess(state, "Donor CSV export")) return;
     const country = countryByIso(state, state.selectedIso);
     if (!country) return;
     const donors = Array.isArray(country.drrOdaTopDonors) ? country.drrOdaTopDonors : [];
@@ -2146,7 +2261,6 @@ function attachDashboardActions(state) {
   });
 
   document.querySelector("#download-projects")?.addEventListener("click", () => {
-    if (!ensureExportAccess(state, "Project-signal CSV export")) return;
     const country = countryByIso(state, state.selectedIso);
     if (!country) return;
     downloadRows(
@@ -2170,29 +2284,6 @@ function attachDashboardActions(state) {
   });
 }
 
-function hasExportAccess(state) {
-  const entitlement = state?.entitlement || {};
-  const plan = String(entitlement.plan || "").toLowerCase();
-  return Boolean(entitlement.premiumAccess) || ["pro", "institution", "enterprise"].includes(plan);
-}
-
-function ensureExportAccess(state, exportLabel) {
-  if (hasExportAccess(state)) return true;
-  showPremiumExportPrompt(state, exportLabel);
-  return false;
-}
-
-function showPremiumExportPrompt(state, exportLabel) {
-  const status = document.querySelector("#share-status");
-  const country = countryByIso(state, state.selectedIso);
-  const countryName = country?.name || "the selected country";
-  const message =
-    `${escapeHtml(exportLabel)} is included in Pro access. ` +
-    `<a class="text-link" href="#premium-plans">View pricing</a> or ` +
-    `<a class="text-link" href="${CONTACT_URL}" target="_blank" rel="noreferrer">request access on LinkedIn</a> for ${escapeHtml(countryName)}.`;
-  if (status) status.innerHTML = message;
-}
-
 function countryMetricsExportRows(countries) {
   return countries.map((country) => ({
     iso3: country.iso3,
@@ -2202,11 +2293,26 @@ function countryMetricsExportRows(countries) {
     hazardExposure: fmtFixed(country.hazardExposure, 1),
     vulnerability: fmtFixed(country.vulnerability, 1),
     lackCopingCapacity: fmtFixed(country.lackCopingCapacity, 1),
+    observedSeverity: fmtObservedSeverity(country),
+    compoundHazardPressure: fmtIndex(country.compoundHazardPressureIndex),
+    reportingGapSignal: reportingGapLabel(country.reportingGapSignal),
+    reportingGapReasons: fmtReasonList(country.reportingGapReasons),
+    gdacsCurrentAlerts: fmtGdacsAlerts(country),
+    gdacsAlertTypes: fmtGdacsAlertTypes(country),
+    highHazards: fmtHazardList(country.thinkHazard?.highHazards),
     drrOdaDisbursement: fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear),
     drrOdaCommitment: fmtMoney(country.drrOdaCommitmentUsd, country.drrOdaYear),
+    drrOdaPerCapita: fmtUsdPerPerson(country.drrOdaPerCapitaUsd, country.drrOdaYear),
+    drrOdaShareOfGdp: fmtPct(country.drrOdaShareOfGdp, country.drrOdaYear),
+    drrOdaPurpose: fmtPurposeHeadline(country),
     topDonor: topDonorLabel(country),
+    population: fmtYearValue(country.populationValue, country.populationYear),
+    gdp: fmtMoney(country.gdpUsdValue, country.gdpUsdYear),
+    gdpPerCapita: fmtMoney(country.gdpPerCapitaValue, country.gdpPerCapitaYear),
     directEconomicLoss: fmtMoney(country.lossUsdValue, country.lossUsdYear),
+    directLossPerCapita: fmtUsdPerPerson(country.directLossPerCapitaUsd, country.lossUsdYear),
     disasterDisplacement: fmtYearValue(country.disasterDisplacementValue, country.disasterDisplacementYear),
+    disasterDisplacementPer100k: fmtPer100k(country.disasterDisplacementPer100k, country.disasterDisplacementYear),
     worldBankDrmProjects: fmtNumber(country.worldBankDrmProjectCount),
     gcfDrrProjects: fmtNumber(country.gcfDrrProjectCount),
     ochaResponseFunding: fmtMoney(country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear),
@@ -2219,12 +2325,24 @@ function countryProfileRows(country) {
     profileRow("Hazard and exposure", country.hazardExposure, "", "INFORM", ""),
     profileRow("Vulnerability", country.vulnerability, "", "INFORM", ""),
     profileRow("Lack of coping capacity", country.lackCopingCapacity, "", "INFORM", ""),
+    profileRow("Observed severity index", country.observedSeverityIndex, "", "Public impact indicators", country.observedSeverityStatus || ""),
+    profileRow("Compound hazard pressure index", country.compoundHazardPressureIndex, "", "INFORM / ThinkHazard", "Proxy score; not proof of causal cascading."),
+    profileRow("Reporting-gap signal", reportingGapLabel(country.reportingGapSignal), "", "Derived signal", fmtReasonList(country.reportingGapReasons)),
+    profileRow("GDACS current alerts", fmtGdacsAlerts(country), "", "GDACS", fmtLatestGdacsAlert(country)),
+    profileRow("GDACS alert types", fmtGdacsAlertTypes(country), "", "GDACS", "Current feed; not a historical disaster-loss series."),
+    profileRow("Population", country.populationValue, country.populationYear, "World Bank WDI", ""),
+    profileRow("GDP", country.gdpUsdValue, country.gdpUsdYear, "World Bank WDI", ""),
+    profileRow("GDP per capita", country.gdpPerCapitaValue, country.gdpPerCapitaYear, "World Bank WDI", ""),
+    profileRow("DRR ODA per capita", fmtUsdPerPerson(country.drrOdaPerCapitaUsd, country.drrOdaYear), country.drrOdaYear, "OECD CRS / World Bank WDI", ""),
+    profileRow("DRR ODA / GDP", fmtPct(country.drrOdaShareOfGdp, country.drrOdaYear), country.drrOdaYear, "OECD CRS / World Bank WDI", ""),
     profileRow("Direct economic loss", country.lossUsdValue, country.lossUsdYear, "UNDRR / OWID", "Reported direct economic loss."),
+    profileRow("Direct loss per capita", fmtUsdPerPerson(country.directLossPerCapitaUsd, country.lossUsdYear), country.lossUsdYear, "UNDRR / OWID / World Bank WDI", ""),
     profileRow("Disaster displacement", country.disasterDisplacementValue, country.disasterDisplacementYear, "World Bank / IDMC", ""),
+    profileRow("Displacement per 100k", fmtPer100k(country.disasterDisplacementPer100k, country.disasterDisplacementYear), country.disasterDisplacementYear, "World Bank / IDMC / World Bank WDI", ""),
     profileRow("DRR-related ODA disbursement", country.drrOdaDisbursementUsd, country.drrOdaYear, "OECD CRS", "International DRR-related ODA only."),
     profileRow("DRR-related ODA commitment", country.drrOdaCommitmentUsd, country.drrOdaYear, "OECD CRS", "International DRR-related ODA only."),
     profileRow("World Bank DRM projects", country.worldBankDrmProjectCount, "", "World Bank Projects", "Project signal count."),
-    profileRow("GCF DRR/resilience projects", country.gcfDrrProjectCount, "", "GCF", "Keyword-screened project signal count."),
+    profileRow("GCF resilience projects", country.gcfDrrProjectCount, "", "GCF", "Keyword-screened project signal count."),
     profileRow("OCHA response funding", country.ochaHumanitarianFundingUsd, country.ochaHumanitarianYear, "OCHA FTS", "Humanitarian response context."),
     profileRow("WorldRiskIndex", country.worldRiskIndexValue, country.worldRiskIndexYear, "WorldRiskIndex", ""),
     profileRow("ND-GAIN score", country.ndGainValue, country.ndGainYear, "ND-GAIN", ""),
@@ -2235,7 +2353,7 @@ function countryProfileRows(country) {
 function profileRow(metricName, value, year, source, interpretationNote) {
   return {
     metric: metricName,
-    value: Number.isFinite(value) ? value : "",
+    value: value === null || value === undefined ? "" : value,
     year: year || "",
     source,
     interpretationNote,
@@ -2292,94 +2410,6 @@ function downloadRows(filename, rows, columns) {
   link.click();
   URL.revokeObjectURL(link.href);
   link.remove();
-}
-
-async function startCheckout(planId, state) {
-  const product = state.product || {};
-  const plans = Array.isArray(product.plans) ? product.plans : [];
-  const plan = plans.find((item) => item.id === planId);
-  const billing = product.billing || {};
-  const status = document.querySelector("#billing-status");
-  if (!plan || !status) return;
-
-  const checkoutUrl = safeExternalUrl(plan.checkoutUrl, "");
-  if (checkoutUrl) {
-    window.location.href = checkoutUrl;
-    return;
-  }
-
-  const checkoutEndpoint = safeExternalUrl(billing.checkoutEndpoint, "");
-  if (!checkoutEndpoint) {
-    status.textContent =
-      "Checkout is handled through access request for this plan.";
-    return;
-  }
-
-  status.textContent = "Opening checkout...";
-  try {
-    const response = await fetch(checkoutEndpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        plan: plan.id,
-        successUrl: absoluteUrl(billing.successPath || "./?checkout=success#premium-plans"),
-        cancelUrl: absoluteUrl(billing.cancelPath || "./?checkout=cancelled#premium-plans"),
-      }),
-    });
-    const payload = await response.json();
-    if (!response.ok || !payload.url) {
-      throw new Error(payload.error || "Checkout endpoint did not return a redirect URL.");
-    }
-    const redirectUrl = safeExternalUrl(payload.url, "");
-    if (!redirectUrl) throw new Error("Checkout endpoint returned an invalid redirect URL.");
-    window.location.href = redirectUrl;
-  } catch (error) {
-    status.textContent = `Checkout failed: ${error.message}`;
-  }
-}
-
-async function loadEntitlement(product) {
-  const billing = product?.billing || {};
-  const endpoint = safeExternalUrl(
-    billing.entitlementEndpoint || buildPremiumUrl(billing.premiumApiBase, "/entitlements"),
-    "",
-  );
-  if (!endpoint) return { plan: "free", planName: "Free", premiumAccess: false };
-
-  try {
-    const token = window.localStorage.getItem("drrPremiumToken");
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    const response = await fetch(endpoint, { headers });
-    if (!response.ok) throw new Error("Entitlement check failed.");
-    return await response.json();
-  } catch {
-    return { plan: "free", planName: "Free", premiumAccess: false };
-  }
-}
-
-function buildPremiumUrl(base, path) {
-  if (!base) return "";
-  return `${String(base).replace(/\/$/, "")}${path}`;
-}
-
-function absoluteUrl(path) {
-  try {
-    return new URL(path, window.location.href).toString();
-  } catch {
-    return window.location.href;
-  }
-}
-
-function fallbackProductConfig() {
-  return {
-    billing: {
-      status: "configuration_required",
-      contactUrl: CONTACT_URL,
-      securityNote: "Restricted data is fetched only from an authenticated backend.",
-    },
-    plans: [],
-    premiumModules: [],
-  };
 }
 
 function renderSources(sources) {
@@ -3277,6 +3307,216 @@ function drawFinanceGap(selector, countries) {
     .text("DRR-related ODA disbursements per INFORM risk point, latest CRS year");
 }
 
+function drawSeverityAlignment(selector, countries, selectedIso) {
+  const container = d3.select(selector);
+  if (!container.node()) return;
+  const { width, height } = chartSize(container, 440);
+  const compact = isCompactChart(width);
+  const margin = { top: 18, right: compact ? 28 : 96, bottom: 54, left: 72 };
+  const data = countries
+    .filter((country) => Number.isFinite(country.compoundHazardPressureIndex))
+    .map((country) => ({
+      ...country,
+      severityY: Number.isFinite(country.drrOdaPerSeverityPoint) ? country.drrOdaPerSeverityPoint : 0,
+    }));
+  container.selectAll("*").remove();
+
+  const svg = container.append("svg").attr("viewBox", `0 0 ${width} ${height}`);
+  if (!data.length) {
+    svg.append("text").attr("x", margin.left).attr("y", 40).attr("fill", THEME.muted).text("No severity alignment data available.");
+    return;
+  }
+
+  const yMax = d3.quantile(
+    data.map((country) => country.severityY).filter(Number.isFinite).sort((a, b) => a - b),
+    0.95,
+  ) || d3.max(data, (country) => country.severityY) || 1;
+  const x = d3.scaleLinear().domain([0, 100]).range([margin.left, width - margin.right]);
+  const y = d3
+    .scaleLinear()
+    .domain([0, Math.max(yMax, 1)])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+  const radius = d3
+    .scaleSqrt()
+    .domain([0, 100])
+    .range([4, compact ? 13 : 20]);
+  const signalColor = (signal) => THEME.gapSignal[signal] || THEME.greenLight;
+
+  svg.append("g").attr("class", "grid").call(axisGridLeft(y, margin.left, width - margin.right));
+  svg.append("g").attr("class", "grid").call(axisGridBottom(x, height - margin.bottom, margin.top));
+
+  svg
+    .append("g")
+    .selectAll("circle")
+    .data(data)
+    .join("circle")
+    .attr("class", "chart-hover-target")
+    .attr("cx", (country) => x(country.compoundHazardPressureIndex))
+    .attr("cy", (country) => y(Math.min(country.severityY, y.domain()[1])))
+    .attr("r", (country) => radius(country.observedSeverityIndex || 0))
+    .attr("fill", (country) => signalColor(country.reportingGapSignal))
+    .attr("fill-opacity", 0.58)
+    .attr("stroke", THEME.ink)
+    .attr("stroke-width", (country) => (country.iso3 === selectedIso ? 2 : 0.8))
+    .on("mousemove touchstart", (event, country) => {
+      showTooltip(
+        event,
+        `<strong>${escapeHtml(country.name)}</strong>` +
+          `Compound pressure: ${fmtIndex(country.compoundHazardPressureIndex)}<br>` +
+          `Observed severity: ${escapeHtml(fmtObservedSeverity(country))}<br>` +
+          `DRR ODA: ${fmtMoney(country.drrOdaDisbursementUsd, country.drrOdaYear)}<br>` +
+          `ODA per severity point: ${fmtMoney(country.drrOdaPerSeverityPoint)}<br>` +
+          `Top donor: ${escapeHtml(topDonorLabel(country))}<br>` +
+          `High hazards: ${escapeHtml(fmtHazardList(country.thinkHazard?.highHazards))}<br>` +
+          `Reporting-gap signal: ${escapeHtml(reportingGapLabel(country.reportingGapSignal))}<br>` +
+          `Reasons: ${escapeHtml(fmtReasonList(country.reportingGapReasons))}`,
+      );
+    })
+    .on("mouseleave touchend touchcancel", hideTooltip);
+
+  const selected = data.find((country) => country.iso3 === selectedIso);
+  const labels = [...data]
+    .sort(
+      (a, b) =>
+        signalRank(b.reportingGapSignal) - signalRank(a.reportingGapSignal) ||
+        b.compoundHazardPressureIndex - a.compoundHazardPressureIndex,
+    )
+    .slice(0, compact ? 4 : 7);
+  if (selected && !labels.some((country) => country.iso3 === selected.iso3)) labels.push(selected);
+
+  const labelRows = labels.map((country, index) => ({
+    ...country,
+    pointX: x(country.compoundHazardPressureIndex),
+    pointY: y(Math.min(country.severityY, y.domain()[1])),
+    labelX: x(country.compoundHazardPressureIndex) + 8,
+    labelY: y(Math.min(country.severityY, y.domain()[1])) - 8 + ((index % 3) - 1) * 7,
+    selected: country.iso3 === selectedIso,
+  }));
+  placeVerticalLabels(labelRows, margin.top + 10, height - margin.bottom - 12, 14);
+
+  svg
+    .append("g")
+    .attr("class", "chart-labels scatter-labels")
+    .selectAll("text")
+    .data(labelRows)
+    .join("text")
+    .attr("class", (country) => `chart-label scatter-label${country.selected ? " selected-label" : ""}`)
+    .attr("x", (country) => country.labelX)
+    .attr("y", (country) => country.labelY)
+    .text((country) => country.iso3);
+
+  svg
+    .append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).ticks(5));
+  svg
+    .append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y).ticks(5).tickFormat((value) => fmtMoney(value).replace(" (undefined)", "")))
+    .call((group) => group.select(".domain").remove());
+
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - 10)
+    .attr("text-anchor", "middle")
+    .attr("fill", THEME.muted)
+    .attr("font-size", 12)
+    .text("Compound hazard pressure proxy");
+  svg
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -height / 2)
+    .attr("y", 16)
+    .attr("text-anchor", "middle")
+    .attr("fill", THEME.muted)
+    .attr("font-size", 12)
+    .text("DRR ODA per observed severity point");
+
+  drawLegend(container, [
+    { label: "High reporting-gap signal", color: THEME.gapSignal.high },
+    { label: "Medium", color: THEME.gapSignal.medium },
+    { label: "Low", color: THEME.gapSignal.low },
+  ]);
+}
+
+function drawPurposeAllocation(selector, country) {
+  const container = d3.select(selector);
+  if (!container.node()) return;
+  const { width, height } = chartSize(container, 230);
+  const margin = { top: 28, right: 26, bottom: 52, left: 26 };
+  const categories = Array.isArray(country?.drrOdaPurposeCategories) ? country.drrOdaPurposeCategories : [];
+  const data = categories.filter((category) => Number.isFinite(category.disbursementUsd) && category.disbursementUsd > 0);
+  container.selectAll("*").remove();
+  const summary = document.querySelector("#purpose-allocation-summary");
+  if (summary) {
+    summary.textContent = data.length
+      ? `${country.name}: ${data.map((category) => `${category.label} ${fmtMoney(category.disbursementUsd)}`).join("; ")}.`
+      : `${country?.name || "Selected country"} has no purpose allocation in the latest detailed CRS year.`;
+  }
+
+  const svg = container.append("svg").attr("viewBox", `0 0 ${width} ${height}`);
+  if (!data.length) {
+    svg.append("text").attr("x", margin.left).attr("y", 44).attr("fill", THEME.muted).text("No purpose allocation available.");
+    return;
+  }
+
+  const total = d3.sum(data, (category) => category.disbursementUsd);
+  const x = d3.scaleLinear().domain([0, total]).range([margin.left, width - margin.right]);
+  const colors = d3
+    .scaleOrdinal()
+    .domain(data.map((category) => category.id))
+    .range([THEME.greenDark, THEME.greenLight, THEME.warm, THEME.redDark, THEME.ink, "#8f7465"]);
+  let cursor = 0;
+  const segments = data.map((category) => {
+    const start = cursor;
+    cursor += category.disbursementUsd;
+    return { ...category, start, end: cursor };
+  });
+
+  svg
+    .append("g")
+    .selectAll("rect")
+    .data(segments)
+    .join("rect")
+    .attr("x", (category) => x(category.start))
+    .attr("y", margin.top)
+    .attr("width", (category) => Math.max(1, x(category.end) - x(category.start)))
+    .attr("height", 46)
+    .attr("fill", (category) => colors(category.id))
+    .on("mousemove touchstart", (event, category) => {
+      showTooltip(
+        event,
+        `<strong>${escapeHtml(category.label)}</strong>` +
+          `Disbursement: ${fmtMoney(category.disbursementUsd, country.drrOdaYear)}<br>` +
+          `Commitment: ${fmtMoney(category.commitmentUsd, country.drrOdaYear)}<br>` +
+          `CRS codes: ${escapeHtml((category.sourceCodes || []).join(", ") || "n/a")}`,
+      );
+    })
+    .on("mouseleave touchend touchcancel", hideTooltip);
+
+  svg
+    .append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0,${margin.top + 46})`)
+    .call(d3.axisBottom(x).ticks(4).tickFormat((value) => fmtMoney(value)))
+    .call((group) => group.select(".domain").remove());
+
+  svg
+    .append("text")
+    .attr("x", margin.left)
+    .attr("y", 16)
+    .attr("font-size", 12)
+    .attr("font-weight", 900)
+    .attr("fill", THEME.muted)
+    .text(`${country.name} DRR-ODA purpose split`);
+
+  drawLegend(container, data.map((category) => ({ label: category.label, color: colors(category.id) })));
+}
+
 function drawLegend(container, items) {
   container
     .append("div")
@@ -3425,6 +3665,16 @@ function fmtMoney(value, year) {
   return `$${fmtNumber(value)}${suffix}`;
 }
 
+function fmtUsdPerPerson(value, year) {
+  if (!Number.isFinite(value)) return "n/a";
+  const suffix = year ? ` (${year})` : "";
+  const digits = value < 1 ? 2 : value < 10 ? 1 : 0;
+  return `$${new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value)}${suffix}`;
+}
+
 function fmtBillions(value) {
   if (!Number.isFinite(value)) return "n/a";
   return value >= 10 ? `$${value.toFixed(0)}bn` : `$${value.toFixed(1)}bn`;
@@ -3433,6 +3683,12 @@ function fmtBillions(value) {
 function fmtPct(value, year) {
   if (!Number.isFinite(value)) return "n/a";
   return `${fmtFixed(value, value < 10 ? 2 : 1)}% (${year})`;
+}
+
+function fmtPer100k(value, year) {
+  if (!Number.isFinite(value)) return "n/a";
+  const suffix = year ? ` (${year})` : "";
+  return `${fmtFixed(value, value < 10 ? 2 : 1)} per 100k${suffix}`;
 }
 
 function fmtStrategy(value, year) {
@@ -3444,6 +3700,58 @@ function fmtAqueduct(value, label) {
   if (!Number.isFinite(value)) return "n/a";
   const clean = label ? label.replace(/\s*\([^)]*\)/g, "").replace(" - ", "-") : "";
   return clean ? `${fmtFixed(value, 1)} ${clean}` : fmtFixed(value, 1);
+}
+
+function fmtIndex(value) {
+  return Number.isFinite(value) ? `${fmtFixed(value, 1)} / 100` : "n/a";
+}
+
+function fmtObservedSeverity(country) {
+  const score = fmtIndex(country?.observedSeverityIndex);
+  if (country?.observedSeverityStatus === "limited public indicators") {
+    return `Limited public indicators (${score})`;
+  }
+  return score;
+}
+
+function reportingGapLabel(signal) {
+  const labels = { high: "High", medium: "Medium", low: "Low" };
+  return labels[signal] || "n/a";
+}
+
+function signalRank(signal) {
+  return { high: 3, medium: 2, low: 1 }[signal] || 0;
+}
+
+function fmtReasonList(reasons) {
+  return Array.isArray(reasons) && reasons.length ? reasons.join(", ") : "No major reporting-gap signal";
+}
+
+function fmtGdacsAlerts(country) {
+  const count = Number(country?.gdacsCurrentAlertCount || 0);
+  if (!count) return "No current alerts";
+  const red = Number(country?.gdacsRedAlertCount || 0);
+  const orange = Number(country?.gdacsOrangeAlertCount || 0);
+  const elevated = [red ? `${red} red` : "", orange ? `${orange} orange` : ""].filter(Boolean).join(", ");
+  return elevated ? `${count} current (${elevated})` : `${count} current`;
+}
+
+function fmtGdacsAlertTypes(country) {
+  const rows = Array.isArray(country?.gdacsAlertTypes) ? country.gdacsAlertTypes : [];
+  return rows.length ? rows.map((row) => `${row.type} ${row.count}`).join(", ") : "No current alert types";
+}
+
+function fmtLatestGdacsAlert(country) {
+  if (!country?.gdacsLatestAlertTitle) return "No current GDACS alerts";
+  const date = country.gdacsLatestAlertAt ? formatDate(country.gdacsLatestAlertAt) : "";
+  const dateSuffix = date ? ` (${date})` : "";
+  return `${country.gdacsLatestAlertLevel || "Alert"}: ${country.gdacsLatestAlertTitle}${dateSuffix}`;
+}
+
+function fmtPurposeHeadline(country) {
+  const categories = Array.isArray(country?.drrOdaPurposeCategories) ? country.drrOdaPurposeCategories : [];
+  const top = categories.find((category) => Number.isFinite(category.disbursementUsd) && category.disbursementUsd > 0);
+  return top ? `${top.label} ${fmtMoney(top.disbursementUsd, country.drrOdaYear)}` : "No purpose allocation";
 }
 
 function fmtHazardList(hazards) {
