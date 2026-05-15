@@ -187,6 +187,11 @@ from api.screener import router as screener_router       # noqa: E402
 from api.portfolio import router as portfolio_router     # noqa: E402
 from api.comparison import router as comparison_router   # noqa: E402
 from api.webhooks import router as webhook_router        # noqa: E402
+from api.sector_packs import router as sector_packs_router  # noqa: E402
+from api.insider import router as insider_router        # noqa: E402
+from api.earnings import router as earnings_router      # noqa: E402
+from api.whales import router as whales_router          # noqa: E402
+from api.billing import billing_router, revolut_webhook_router  # noqa: E402
 
 app.include_router(report_router)
 app.include_router(market_intel_router)
@@ -194,6 +199,12 @@ app.include_router(screener_router)
 app.include_router(portfolio_router)
 app.include_router(comparison_router)
 app.include_router(webhook_router)
+app.include_router(sector_packs_router)
+app.include_router(insider_router)
+app.include_router(earnings_router)
+app.include_router(whales_router)
+app.include_router(billing_router)
+app.include_router(revolut_webhook_router)
 
 @app.get("/api/v1/search")
 async def search_tickers(q: str = "", limit: int = 5):

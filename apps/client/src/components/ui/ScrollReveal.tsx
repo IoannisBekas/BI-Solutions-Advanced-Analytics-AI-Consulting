@@ -52,9 +52,12 @@ export const ScrollReveal = ({
     };
   };
 
+  const rootClassName = className ? `h-full ${className}` : "h-full";
+
   return (
-    <div ref={ref} style={{ width, position: "relative" }} className={className}>
+    <div ref={ref} style={{ width, position: "relative" }} className={rootClassName}>
       <motion.div
+        className="h-full"
         variants={getVariants()}
         initial="hidden"
         animate={mainControls}

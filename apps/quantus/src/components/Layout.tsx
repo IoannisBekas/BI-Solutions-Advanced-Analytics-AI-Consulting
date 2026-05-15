@@ -1,9 +1,11 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import {
+    Anchor,
     Archive,
     ArrowUpRight,
     BarChart3,
     BookOpen,
+    CalendarClock,
     CalendarDays,
     Layers,
     List,
@@ -12,6 +14,7 @@ import {
     ScanLine,
     Search,
     Sun,
+    UserCheck,
     X,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -142,6 +145,9 @@ export function Layout({
         { label: 'Sector Packs', icon: Layers, action: () => onNavigate?.('sectors'), view: 'sectors' },
         { label: 'Watchlist', icon: List, action: () => onNavigate?.('watchlist'), view: 'watchlist' },
         { label: 'Scanner', icon: ScanLine, action: () => onNavigate?.('scanner'), view: 'scanner' },
+        { label: 'Insider', icon: UserCheck, action: () => onNavigate?.('insider'), view: 'insider' },
+        { label: '13F Whales', icon: Anchor, action: () => onNavigate?.('whales'), view: 'whales' },
+        { label: 'Earnings', icon: CalendarClock, action: () => onNavigate?.('earnings'), view: 'earnings' },
         { label: 'Macro Calendar', icon: CalendarDays, action: () => onNavigate?.('calendar'), view: 'calendar' },
         { label: 'Archive', icon: Archive, action: () => onNavigate?.('archive'), view: 'archive' },
         { label: 'Accuracy', icon: BarChart3, action: () => onNavigate?.('accuracy'), view: 'accuracy' },
@@ -168,7 +174,7 @@ export function Layout({
                         : 'none',
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[82px] flex items-center justify-between gap-2 sm:gap-4">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 h-[72px] flex items-center justify-between gap-2 sm:gap-4">
                     <a
                         href={bisolutionsHomeUrl}
                         className="flex items-center gap-3 flex-shrink-0 text-left min-w-0"
@@ -197,7 +203,7 @@ export function Layout({
                                     color: muted,
                                 }}
                             >
-                                Advanced Analytics & AI Consulting
+                                Quantus Investing workspace
                             </div>
                         </div>
                         <div
@@ -210,11 +216,11 @@ export function Layout({
                                 textTransform: 'uppercase',
                             }}
                         >
-                            Quantus
+                            Workspace
                         </div>
                     </a>
 
-                    <nav className={showExpandedHeader ? 'hidden lg:flex items-center gap-6 xl:gap-8 flex-shrink-0' : 'hidden'}>
+                    <nav className={showExpandedHeader ? 'hidden lg:flex items-center gap-5 xl:gap-6 flex-shrink-0' : 'hidden'}>
                         {primaryLinks.map((link) => {
                             const isActive = link.kind === 'scope'
                                 ? (link.scope === 'workspace' ? isWorkspaceScope : isResourcesScope)
@@ -260,7 +266,7 @@ export function Layout({
                     </nav>
                     {/* Compact nav search */}
                     <form
-                        className="hidden"
+                        className={showExpandedHeader ? 'hidden xl:flex items-center gap-2 rounded-full px-3 py-2 w-[220px] 2xl:w-[260px] flex-shrink-0' : 'hidden'}
                         style={{
                             background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                             border: `1px solid ${borderColor}`,
@@ -282,7 +288,7 @@ export function Layout({
                             type="text"
                             value={navQuery}
                             onChange={(e) => setNavQuery(e.target.value)}
-                            placeholder="Ticker..."
+                            placeholder="Search ticker"
                             className="flex-1 bg-transparent text-xs outline-none placeholder:text-gray-500"
                             style={{ color: textColor, minWidth: 0 }}
                             autoComplete="off"
@@ -378,16 +384,18 @@ export function Layout({
                             </button>
                         )}
 
-                        <button
-                            onClick={() => onNavigate?.('hero')}
-                            className="btn-nav-cta"
-                            style={{
-                                background: lightMode ? '#09090B' : '#FFFFFF',
-                                color: lightMode ? '#FFFFFF' : '#09090B',
-                            }}
-                        >
-                            Get Started
-                        </button>
+                        <div className="hidden sm:block">
+                            <button
+                                onClick={() => onNavigate?.('hero')}
+                                className="btn-nav-cta"
+                                style={{
+                                    background: lightMode ? '#09090B' : '#FFFFFF',
+                                    color: lightMode ? '#FFFFFF' : '#09090B',
+                                }}
+                            >
+                                Search
+                            </button>
+                        </div>
 
                         {showExpandedHeader && (
                             <button
@@ -412,7 +420,7 @@ export function Layout({
                         className="hidden lg:block"
                         style={{ borderTop: `1px solid ${scrolled ? borderColor : 'transparent'}` }}
                     >
-                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-6">
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 flex items-center justify-between gap-6">
                             <nav className="flex items-center gap-2 xl:gap-3 flex-wrap">
                                 {workspaceLinks.map((link) => {
                                     const isActive = currentView === link.view;
@@ -421,7 +429,7 @@ export function Layout({
                                         <button
                                             key={link.view}
                                             onClick={link.action}
-                                            className="rounded-full px-3.5 py-2 text-sm font-medium transition-all"
+                                            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-all"
                                             style={{
                                                 color: isActive ? textColor : muted,
                                                 background: isActive
@@ -435,6 +443,7 @@ export function Layout({
                                                     : 'none',
                                             }}
                                         >
+                                            <link.icon className="h-3.5 w-3.5" />
                                             {link.label}
                                         </button>
                                     );
@@ -574,7 +583,7 @@ export function Layout({
                     borderTop: `1px solid ${lightMode ? '#E5E7EB' : '#1A1A1A'}`,
                 }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
                     <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                         <div>
                             <div className="flex items-center gap-3 mb-4">
@@ -605,8 +614,7 @@ export function Layout({
                                 </div>
                             </div>
                             <p className="text-sm leading-relaxed max-w-xl" style={{ color: lightMode ? '#6B7280' : '#9CA3AF' }}>
-                                Quantus is the research product inside the BI Solutions ecosystem, with a dedicated
-                                workspace for signal review, archive access, methodology, and sector workflows.
+                                Quantus workspace keeps search, cached reports, watchlists, and methodology routes in one focused research surface.
                             </p>
                         </div>
 

@@ -116,7 +116,7 @@ export function ProductShowcase({
           </p>
         </ScrollReveal>
 
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid auto-rows-fr gap-8 lg:grid-cols-2">
           {typedProducts.map((product, index) => {
             return (
               <ScrollReveal
@@ -125,7 +125,7 @@ export function ProductShowcase({
                 width="100%"
                 className="h-full"
               >
-                <Card className="h-full rounded-3xl border-gray-200 bg-white/90 p-8 shadow-xl shadow-black/5">
+                <Card className="flex h-full flex-col rounded-3xl border-gray-200 bg-white/90 p-8 shadow-xl shadow-black/5">
                   <div className="flex items-start justify-between gap-6">
                     <div>
                       <h3 className="text-3xl font-bold font-heading tracking-tight">
@@ -152,7 +152,7 @@ export function ProductShowcase({
                     ))}
                   </div>
 
-                  <div className="mt-8 flex flex-wrap gap-4">
+                  <div className="mt-auto flex flex-wrap gap-4 pt-8">
                     <Link
                       href={product.href}
                       onClick={() =>

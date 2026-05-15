@@ -112,13 +112,13 @@ export default function Services() {
             </p>
           </ScrollReveal>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
             {servicePages.map((service, index) => {
               const Icon = service.icon;
 
               return (
                 <ScrollReveal key={service.title} delay={index * 0.06} width="100%">
-                  <article className="h-full rounded-[2rem] border border-gray-200 bg-white p-6 shadow-xl shadow-black/[0.04]">
+                  <article className="flex h-full flex-col rounded-[2rem] border border-gray-200 bg-white p-6 shadow-xl shadow-black/[0.04]">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black text-white shadow-lg shadow-black/10">
                       <Icon className="h-5 w-5" />
                     </div>
@@ -128,7 +128,7 @@ export default function Services() {
                     <p className="mt-4 text-base leading-relaxed text-gray-600">
                       {service.description}
                     </p>
-                    <ul className="mt-6 space-y-3">
+                    <ul className="mt-6 flex-1 space-y-3">
                       {service.items.map((item) => (
                         <li key={item} className="flex gap-3 text-sm leading-relaxed text-gray-600">
                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
@@ -163,7 +163,7 @@ export default function Services() {
             </h2>
           </ScrollReveal>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          <div className="mt-10 grid auto-rows-fr gap-6 lg:grid-cols-3">
             {deliveryFlow.map((item, index) => (
               <ScrollReveal key={item.step} delay={index * 0.08} width="100%">
                 <div className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 px-6 py-7">

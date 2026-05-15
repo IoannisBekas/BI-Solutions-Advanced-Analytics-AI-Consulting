@@ -369,7 +369,7 @@ export default function BlogPost() {
               </h2>
             </ScrollReveal>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2">
               {relatedPosts.map((relatedPost, index) => (
                 <ScrollReveal key={relatedPost.slug} delay={index * 0.08} width="100%">
                   <Link href={`/blog/${relatedPost.slug}`} className="group block h-full">

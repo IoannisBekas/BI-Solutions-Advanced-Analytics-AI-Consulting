@@ -8,6 +8,10 @@ export type RouteView =
   | "archive"
   | "accuracy"
   | "methodology"
+  | "insider"
+  | "whales"
+  | "earnings"
+  | "upgrade"
   | "notFound";
 
 export type DisplayView = RouteView | "generating";
@@ -29,6 +33,10 @@ export const QUANTUS_CALENDAR_ROUTE = "/quantus/workspace/calendar";
 export const QUANTUS_ARCHIVE_ROUTE = "/quantus/workspace/archive";
 export const QUANTUS_ACCURACY_ROUTE = "/quantus/workspace/accuracy";
 export const QUANTUS_METHODOLOGY_ROUTE = "/quantus/workspace/methodology";
+export const QUANTUS_INSIDER_ROUTE = "/quantus/workspace/insider";
+export const QUANTUS_WHALES_ROUTE = "/quantus/workspace/whales";
+export const QUANTUS_EARNINGS_ROUTE = "/quantus/workspace/earnings";
+export const QUANTUS_UPGRADE_ROUTE = "/quantus/workspace/upgrade";
 export const QUANTUS_LEGACY_WORKSPACE_ROUTE = "/quantus";
 
 const WORKSPACE_VIEW_ROUTES: Record<WorkspaceNavigationView, string> = {
@@ -40,6 +48,10 @@ const WORKSPACE_VIEW_ROUTES: Record<WorkspaceNavigationView, string> = {
   archive: QUANTUS_ARCHIVE_ROUTE,
   accuracy: QUANTUS_ACCURACY_ROUTE,
   methodology: QUANTUS_METHODOLOGY_ROUTE,
+  insider: QUANTUS_INSIDER_ROUTE,
+  whales: QUANTUS_WHALES_ROUTE,
+  earnings: QUANTUS_EARNINGS_ROUTE,
+  upgrade: QUANTUS_UPGRADE_ROUTE,
 };
 
 export function isWorkspaceNavigationView(
@@ -102,6 +114,10 @@ export function normalizeQuantusPath(pathname: string) {
   if (trimmed === QUANTUS_ARCHIVE_ROUTE) return QUANTUS_ARCHIVE_ROUTE;
   if (trimmed === QUANTUS_ACCURACY_ROUTE) return QUANTUS_ACCURACY_ROUTE;
   if (trimmed === QUANTUS_METHODOLOGY_ROUTE) return QUANTUS_METHODOLOGY_ROUTE;
+  if (trimmed === QUANTUS_INSIDER_ROUTE) return QUANTUS_INSIDER_ROUTE;
+  if (trimmed === QUANTUS_WHALES_ROUTE) return QUANTUS_WHALES_ROUTE;
+  if (trimmed === QUANTUS_EARNINGS_ROUTE) return QUANTUS_EARNINGS_ROUTE;
+  if (trimmed === QUANTUS_UPGRADE_ROUTE) return QUANTUS_UPGRADE_ROUTE;
 
   return trimmed;
 }
@@ -139,6 +155,22 @@ export function resolveWorkspaceRoute(pathname: string): RouteState {
 
   if (normalized === QUANTUS_METHODOLOGY_ROUTE) {
     return { view: "methodology", path: QUANTUS_METHODOLOGY_ROUTE };
+  }
+
+  if (normalized === QUANTUS_INSIDER_ROUTE) {
+    return { view: "insider", path: QUANTUS_INSIDER_ROUTE };
+  }
+
+  if (normalized === QUANTUS_WHALES_ROUTE) {
+    return { view: "whales", path: QUANTUS_WHALES_ROUTE };
+  }
+
+  if (normalized === QUANTUS_EARNINGS_ROUTE) {
+    return { view: "earnings", path: QUANTUS_EARNINGS_ROUTE };
+  }
+
+  if (normalized === QUANTUS_UPGRADE_ROUTE) {
+    return { view: "upgrade", path: QUANTUS_UPGRADE_ROUTE };
   }
 
   if (normalized.startsWith(`${QUANTUS_REPORT_ROUTE_PREFIX}/`)) {

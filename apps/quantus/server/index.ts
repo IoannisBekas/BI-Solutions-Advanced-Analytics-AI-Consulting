@@ -94,7 +94,13 @@ app.use(
     }),
 );
 app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({
+    limit: '1mb',
+    // Capture raw body for endpoints that need signature verification (e.g. Revolut webhook).
+    verify: (req, _res, buf) => {
+        (req as express.Request & { rawBody?: Buffer }).rawBody = Buffer.from(buf);
+    },
+}));
 
 const stateChangingMethods = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 const sameOriginAllowlist = new Set([
@@ -120,8 +126,18 @@ function readRequestOrigin(req: express.Request) {
     }
 }
 
+// Routes that legitimately receive cross-origin POSTs (signed by the sender).
+const crossOriginWebhookPaths = new Set<string>([
+    '/quantus/webhooks/revolut',
+]);
+
 app.use((req, res, next) => {
     if (!isProduction || !stateChangingMethods.has(req.method)) {
+        next();
+        return;
+    }
+
+    if (crossOriginWebhookPaths.has(req.path)) {
         next();
         return;
     }
@@ -451,6 +467,15 @@ function buildPythonHeaders(req: express.Request, baseHeaders?: Record<string, s
 
     if (QUANTUS_INTERNAL_KEY) {
         headers[QUANTUS_INTERNAL_HEADER] = QUANTUS_INTERNAL_KEY;
+    }
+
+    // Forward authenticated identity so the Python tier guard can enforce paywalls.
+    const authReq = req as AuthenticatedRequest;
+    if (authReq.user?.userId) {
+        headers['x-quantus-user-id'] = authReq.user.userId;
+    }
+    if (authReq.user?.tier) {
+        headers['x-quantus-user-tier'] = authReq.user.tier;
     }
 
     return headers;
@@ -1778,6 +1803,137 @@ app.get(`${API_PREFIX}/v1/scanner`, async (req, res) => {
         res.json({ results, total: results.length });
     } catch (error: unknown) {
         res.status(503).json({ error: `Scanner unavailable: ${getErrorMessage(error)}` });
+    }
+});
+
+// ─── PREMIUM FEATURE PROXIES ────────────────────────────────────────────────
+// Generic forwarder used by every premium feature below.
+async function proxyPython(
+    req: express.Request,
+    res: express.Response,
+    pythonPath: string,
+    opts?: { method?: 'GET' | 'POST' | 'DELETE'; body?: unknown; timeoutMs?: number },
+) {
+    const method = opts?.method ?? 'GET';
+    const timeoutMs = opts?.timeoutMs ?? 15_000;
+    try {
+        const response = await fetch(`${PYTHON_API_URL}${pythonPath}`, {
+            method,
+            signal: AbortSignal.timeout(timeoutMs),
+            headers: buildPythonHeaders(req, opts?.body ? { 'content-type': 'application/json' } : {}),
+            body: opts?.body ? JSON.stringify(opts.body) : undefined,
+        });
+        const text = await response.text();
+        res.status(response.status);
+        const ct = response.headers.get('content-type');
+        if (ct) res.setHeader('content-type', ct);
+        res.send(text);
+    } catch (error: unknown) {
+        res.status(503).json({ error: `Upstream unavailable: ${getErrorMessage(error)}` });
+    }
+}
+
+// Sector Packs
+app.get(`${API_PREFIX}/v1/sector-packs/catalog`, (req, res) => {
+    void proxyPython(req, res, '/api/v1/sector-packs/catalog');
+});
+app.get(`${API_PREFIX}/v1/sector-packs/subscriptions`, requireAuth, (req, res) => {
+    void proxyPython(req, res, '/api/v1/sector-packs/subscriptions');
+});
+app.post(`${API_PREFIX}/v1/sector-packs/subscriptions`, requireAuth, (req, res) => {
+    void proxyPython(req, res, '/api/v1/sector-packs/subscriptions', { method: 'POST', body: req.body });
+});
+app.delete(`${API_PREFIX}/v1/sector-packs/subscriptions/:sector`, requireAuth, (req, res) => {
+    void proxyPython(req, res, `/api/v1/sector-packs/subscriptions/${encodeURIComponent(req.params.sector)}`, { method: 'DELETE' });
+});
+app.get(`${API_PREFIX}/v1/sector-packs/:sector/digest`, requireAuth, (req, res) => {
+    const limit = Math.min(Number(req.query.limit) || 20, 50);
+    void proxyPython(req, res, `/api/v1/sector-packs/${encodeURIComponent(req.params.sector)}/digest?limit=${limit}`);
+});
+
+// Insider trades
+app.get(`${API_PREFIX}/v1/insider/feed`, requireAuth, (req, res) => {
+    const limit = Math.min(Number(req.query.limit) || 50, 200);
+    void proxyPython(req, res, `/api/v1/insider/feed?limit=${limit}`);
+});
+app.get(`${API_PREFIX}/v1/insider/ticker/:ticker`, requireAuth, (req, res) => {
+    const limit = Math.min(Number(req.query.limit) || 30, 100);
+    void proxyPython(req, res, `/api/v1/insider/ticker/${encodeURIComponent(req.params.ticker)}?limit=${limit}`);
+});
+app.get(`${API_PREFIX}/v1/insider/cluster`, requireAuth, (req, res) => {
+    const days = Math.min(Math.max(Number(req.query.days) || 30, 7), 180);
+    const minInsiders = Math.min(Math.max(Number(req.query.min_insiders) || 3, 2), 10);
+    void proxyPython(req, res, `/api/v1/insider/cluster?days=${days}&min_insiders=${minInsiders}`);
+});
+
+// 13F whales
+app.get(`${API_PREFIX}/v1/whales/funds`, requireAuth, (req, res) => {
+    void proxyPython(req, res, '/api/v1/whales/funds');
+});
+app.get(`${API_PREFIX}/v1/whales/holdings/:cik`, requireAuth, (req, res) => {
+    void proxyPython(req, res, `/api/v1/whales/holdings/${encodeURIComponent(req.params.cik)}`);
+});
+app.get(`${API_PREFIX}/v1/whales/ticker/:ticker`, requireAuth, (req, res) => {
+    void proxyPython(req, res, `/api/v1/whales/ticker/${encodeURIComponent(req.params.ticker)}`);
+});
+app.get(`${API_PREFIX}/v1/whales/new-positions`, requireAuth, (req, res) => {
+    const limit = Math.min(Number(req.query.limit) || 40, 100);
+    void proxyPython(req, res, `/api/v1/whales/new-positions?limit=${limit}`, { timeoutMs: 30_000 });
+});
+
+// Earnings
+app.get(`${API_PREFIX}/v1/earnings/calendar`, requireAuth, (req, res) => {
+    const days = Math.min(Math.max(Number(req.query.days) || 7, 1), 30);
+    const sector = typeof req.query.sector === 'string' ? `&sector=${encodeURIComponent(req.query.sector)}` : '';
+    void proxyPython(req, res, `/api/v1/earnings/calendar?days=${days}${sector}`);
+});
+app.get(`${API_PREFIX}/v1/earnings/preview/:ticker`, requireAuth, (req, res) => {
+    void proxyPython(req, res, `/api/v1/earnings/preview/${encodeURIComponent(req.params.ticker)}`, { timeoutMs: 30_000 });
+});
+app.get(`${API_PREFIX}/v1/earnings/recap/:ticker`, requireAuth, (req, res) => {
+    void proxyPython(req, res, `/api/v1/earnings/recap/${encodeURIComponent(req.params.ticker)}`, { timeoutMs: 30_000 });
+});
+
+// Billing (Revolut Merchant)
+app.get(`${API_PREFIX}/v1/billing/catalog`, (req, res) => {
+    void proxyPython(req, res, '/api/v1/billing/catalog');
+});
+app.get(`${API_PREFIX}/v1/billing/me`, (req, res) => {
+    void proxyPython(req, res, '/api/v1/billing/me');
+});
+app.post(`${API_PREFIX}/v1/billing/checkout`, requireAuth, (req, res) => {
+    void proxyPython(req, res, '/api/v1/billing/checkout', { method: 'POST', body: req.body });
+});
+app.post(`${API_PREFIX}/v1/billing/cancel`, requireAuth, (req, res) => {
+    void proxyPython(req, res, '/api/v1/billing/cancel', { method: 'POST' });
+});
+
+// Revolut webhook — forwards raw body so HMAC signature stays valid.
+app.post('/quantus/webhooks/revolut', async (req, res) => {
+    const raw = (req as express.Request & { rawBody?: Buffer }).rawBody;
+    if (!raw) {
+        res.status(400).json({ error: 'raw body unavailable' });
+        return;
+    }
+    try {
+        const upstream = await fetch(`${PYTHON_API_URL}/webhooks/revolut`, {
+            method: 'POST',
+            signal: AbortSignal.timeout(15_000),
+            headers: {
+                'content-type': req.headers['content-type'] ?? 'application/json',
+                'revolut-signature': String(req.headers['revolut-signature'] ?? ''),
+                'revolut-request-timestamp': String(req.headers['revolut-request-timestamp'] ?? ''),
+                ...buildPythonHeaders(req),
+            },
+            body: raw,
+        });
+        const text = await upstream.text();
+        res.status(upstream.status);
+        const ct = upstream.headers.get('content-type');
+        if (ct) res.setHeader('content-type', ct);
+        res.send(text);
+    } catch (error: unknown) {
+        res.status(503).json({ error: `Webhook forwarding failed: ${getErrorMessage(error)}` });
     }
 });
 

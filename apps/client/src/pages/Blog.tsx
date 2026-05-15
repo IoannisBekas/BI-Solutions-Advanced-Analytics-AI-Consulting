@@ -144,7 +144,7 @@ export default function Blog() {
                   </h2>
                 </ScrollReveal>
 
-                <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
                   {otherPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
@@ -194,7 +194,7 @@ export default function Blog() {
             </ScrollReveal>
 
             {filteredPosts.length > 0 ? (
-              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredPosts.map((post, index) => (
                   <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                     <Link href={`/blog/${post.slug}`} className="group block h-full">

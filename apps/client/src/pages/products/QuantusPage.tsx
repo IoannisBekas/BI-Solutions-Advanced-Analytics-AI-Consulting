@@ -15,12 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { ProductPageHero } from "@/components/sections/ProductPageHero";
 import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
+import heroBg from "@/assets/generated_images/hero_bg_3d.png";
 
 const QUANTUS_APP_URL =
   import.meta.env.VITE_QUANTUS_URL || withPublicSiteOrigin("/quantus/workspace/");
@@ -62,6 +62,12 @@ const previewSignals = [
   { ticker: "NVDA", signal: "Strong Buy", change: "+4.2%" },
   { ticker: "MSFT", signal: "Buy", change: "+1.1%" },
   { ticker: "BTC-USD", signal: "Buy", change: "+2.8%" },
+];
+
+const confidenceFactors = [
+  { label: "Momentum", value: "86", width: "w-[86%]" },
+  { label: "Regime alignment", value: "78", width: "w-[78%]" },
+  { label: "Model agreement", value: "91", width: "w-[91%]" },
 ];
 
 const capabilities = [
@@ -272,19 +278,40 @@ export default function QuantusPage() {
       />
       <Navbar />
 
-      <main className="pt-32 pb-20">
-        <section className="relative overflow-hidden">
-          <ScrollReveal width="100%">
-            <ProductPageHero
-              icon={Sparkles}
-              eyebrow="Quantitative research workspace"
-              title="Quantus Investing"
-              description="Quantus runs each ticker through regime detection, a 12-model ensemble, tiered data validation, and a 7-part confidence score. The result is research that stays explainable, backtested, and usable inside one BI Solutions workflow."
-              actions={(
-                <>
+      <main className="pb-20">
+        <section className="relative isolate overflow-hidden px-0 pb-16 pt-32 sm:pt-36 md:pb-20">
+          <div className="absolute inset-0 -z-10">
+            <div
+              className="absolute inset-0 scale-105 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${heroBg})` }}
+            />
+            <div className="absolute inset-0 bg-white/45" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-white" />
+          </div>
+
+          <div className="mx-auto grid max-w-7xl gap-10 px-6 md:px-12 lg:min-h-[620px] lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,0.85fr)] lg:items-center">
+            <ScrollReveal width="100%">
+              <div className="max-w-4xl">
+                <div className="inline-flex items-center gap-3 rounded-full bg-white/75 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm shadow-black/[0.04] backdrop-blur">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-black text-white shadow-lg shadow-black/10">
+                    <Sparkles className="h-4 w-4" />
+                  </span>
+                  Quantitative research workspace
+                </div>
+
+                <h1 className="mt-6 max-w-5xl text-5xl font-bold font-heading leading-[1.05] tracking-tight text-gray-950 sm:text-6xl lg:text-7xl">
+                  Quantus Investing
+                </h1>
+                <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-700 md:text-xl">
+                  AI-native market research that turns a ticker into an
+                  explainable signal, a 7-section report, and an accuracy trail
+                  you can verify before acting.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-4">
                   <Button
                     asChild
-                    className="rounded-full bg-black px-8 text-white hover:bg-gray-800"
+                    className="h-12 rounded-full bg-black px-7 text-base text-white hover:bg-gray-800 sm:h-14 sm:px-8 sm:text-lg"
                   >
                     <a href={QUANTUS_APP_URL}>
                       Open Quantus workspace
@@ -294,191 +321,178 @@ export default function QuantusPage() {
                   <Button
                     asChild
                     variant="outline"
-                    className="rounded-full border-gray-300 px-8"
+                    className="h-12 rounded-full border-gray-300 bg-white/70 px-7 text-base backdrop-blur hover:bg-white sm:h-14 sm:px-8 sm:text-lg"
                   >
                     <a href={withSiteBase("/contact")}>
                       Talk to BI Solutions
                       <ExternalLink className="h-4 w-4" />
                     </a>
                   </Button>
-                </>
-              )}
-              footer={(
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                </div>
+
+                <div className="mt-8 grid max-w-3xl grid-cols-3 gap-2 sm:gap-3">
                   {heroMetrics.map((item) => {
                     const Icon = item.icon;
 
                     return (
                       <div
                         key={item.label}
-                        className="rounded-2xl border border-gray-200 bg-gray-50/80 px-5 py-5"
+                        className="rounded-2xl border border-gray-200 bg-white/75 px-3 py-3 shadow-sm shadow-black/[0.03] backdrop-blur sm:px-4 sm:py-4"
                       >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
-                          <Icon className="h-4 w-4" />
+                        <div className="flex items-center gap-3">
+                          <span className="hidden h-9 w-9 items-center justify-center rounded-xl bg-black text-white sm:flex">
+                            <Icon className="h-4 w-4" />
+                          </span>
+                          <span className="text-xl font-bold font-heading tracking-tight text-gray-950 sm:text-2xl">
+                            {item.value}
+                          </span>
                         </div>
-                        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                        <p className="mt-2 text-[0.62rem] font-semibold uppercase leading-tight tracking-[0.08em] text-gray-500 sm:mt-3 sm:text-xs sm:tracking-[0.16em]">
                           {item.label}
-                        </p>
-                        <p className="mt-3 text-2xl font-bold font-heading tracking-tight text-gray-900">
-                          {item.value}
                         </p>
                       </div>
                     );
                   })}
                 </div>
-              )}
-            />
-          </ScrollReveal>
-        </section>
 
-        <section className="mx-auto mb-20 max-w-7xl px-6">
-          <ScrollReveal width="100%">
-            <Card className="rounded-3xl border-gray-200 bg-white p-8 shadow-2xl shadow-black/[0.05] md:p-10">
-              <div className="grid min-w-0 gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-                <div className="min-w-0">
-                  <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white">
-                    <Brain className="h-4 w-4" />
-                    Research workflow
+                <div className="mt-8 hidden max-w-3xl gap-3 2xl:grid 2xl:grid-cols-3">
+                  {proofPoints.map((item, index) => (
+                    <div
+                      key={item}
+                      className="rounded-2xl border border-white/80 bg-white/60 px-4 py-4 text-sm leading-relaxed text-gray-700 shadow-sm shadow-black/[0.03] backdrop-blur"
+                    >
+                      <span className="mb-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-black text-xs font-semibold text-white">
+                        {index + 1}
+                      </span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.12} width="100%">
+              <div className="relative overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white/90 p-4 shadow-2xl shadow-black/[0.12] backdrop-blur-xl md:p-5 lg:max-w-[540px] lg:justify-self-end">
+                <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-black/30 to-transparent" />
+
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                      Live research preview
+                    </p>
+                    <h2 className="mt-2 text-xl font-bold font-heading tracking-tight text-gray-950">
+                      Search to signal in one place
+                    </h2>
                   </div>
-                  <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
-                    From first search to a research trail you can verify
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
-                    Quantus combines regime detection, a 12-model ensemble,
-                    tiered data validation, and a 7-part confidence score in one
-                    workflow. It pairs the signal with the accuracy context so
-                    the product still feels accountable inside the BI Solutions
-                    ecosystem.
-                  </p>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600">
+                    <span className="inline-flex h-2 w-2 rounded-full bg-black" />
+                    Meridian v2.4
+                  </div>
+                </div>
 
-                  <div className="mt-8 space-y-4">
-                    {proofPoints.map((item, index) => (
-                      <div
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className="mt-4 flex items-center gap-3 rounded-full border border-gray-200 bg-white px-4 py-2.5 shadow-sm shadow-black/[0.03] transition-colors focus-within:border-gray-400"
+                >
+                  <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                  <input
+                    name="ticker"
+                    type="text"
+                    placeholder="Search NVDA, BTC-USD, SPY, gold, or sector themes"
+                    className="min-w-0 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-500"
+                    autoComplete="off"
+                  />
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="h-8 w-8 rounded-full bg-black text-white hover:bg-gray-800"
+                    aria-label="Search Quantus reports"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </form>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {["Equities", "Crypto", "Sector Packs", "Cached reports"].map(
+                    (item) => (
+                      <button
                         key={item}
-                        className="flex gap-4 rounded-2xl border border-gray-200 bg-gray-50 p-4"
+                        type="button"
+                        onClick={openWorkspace}
+                        className="cursor-pointer rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100"
                       >
-                        <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black text-xs font-semibold text-white">
-                          {index + 1}
+                        {item}
+                      </button>
+                    ),
+                  )}
+                </div>
+
+                <div className="mt-5 grid gap-2.5 sm:grid-cols-3">
+                  {previewSignals.map((item) => (
+                    <button
+                      key={item.ticker}
+                      type="button"
+                      onClick={() => openReport(item.ticker)}
+                      className="w-full cursor-pointer rounded-2xl border border-gray-200 bg-white px-3.5 py-3 text-left shadow-sm shadow-black/[0.02] transition-colors hover:bg-gray-50"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-950">
+                            {item.ticker}
+                          </p>
+                          <p className="mt-1 hidden text-xs text-gray-500">
+                            Research-ready market snapshot
+                          </p>
+                        </div>
+                        <span className="text-sm font-medium text-emerald-700">
+                          {item.change}
                         </span>
-                        <p className="text-sm leading-relaxed text-gray-600">
-                          {item}
-                        </p>
+                      </div>
+                      <span className="mt-2 inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-semibold text-gray-700">
+                        {item.signal}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-4 hidden rounded-2xl bg-gray-950 p-4 text-white shadow-xl shadow-black/[0.12] sm:block">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                        Confidence mix
+                      </p>
+                      <h3 className="mt-2 text-xl font-bold font-heading">
+                        NVDA signal quality
+                      </h3>
+                    </div>
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-gray-950">
+                      91
+                    </span>
+                  </div>
+
+                  <div className="mt-4 space-y-3">
+                    {confidenceFactors.map((factor) => (
+                      <div key={factor.label}>
+                        <div className="mb-2 flex items-center justify-between text-xs text-gray-300">
+                          <span>{factor.label}</span>
+                          <span>{factor.value}</span>
+                        </div>
+                        <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                          <div
+                            className={`${factor.width} h-full rounded-full bg-white`}
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
-
-                <div className="min-w-0 rounded-3xl border border-gray-200 bg-gray-50 p-5 md:p-6">
-                  <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                        Quantus Investing workspace preview
-                      </p>
-                      <h3 className="mt-2 text-2xl font-bold font-heading tracking-tight text-gray-900">
-                        From search to signal in one place
-                      </h3>
-                    </div>
-                    <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600">
-                      <span className="inline-flex h-2 w-2 rounded-full bg-black" />
-                      Meridian v2.4
-                    </div>
-                  </div>
-
-                  <form
-                    onSubmit={handleSearchSubmit}
-                    className="mt-5 flex items-center gap-3 rounded-full border border-gray-200 bg-white px-4 py-3 transition-colors focus-within:border-gray-400"
-                  >
-                    <Search className="h-4 w-4 flex-shrink-0 text-gray-400" />
-                    <input
-                      name="ticker"
-                      type="text"
-                      placeholder="Search NVDA, BTC-USD, SPY, gold, or sector themes"
-                      className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </form>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {["Equities", "Crypto", "Sector Packs", "Cached reports"].map(
-                      (item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={openWorkspace}
-                          className="cursor-pointer rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100"
-                        >
-                          {item}
-                        </button>
-                      ),
-                    )}
-                  </div>
-
-                  <div className="mt-6 space-y-3">
-                    {previewSignals.map((item) => (
-                      <button
-                        key={item.ticker}
-                        type="button"
-                        onClick={() => openReport(item.ticker)}
-                        className="w-full cursor-pointer rounded-2xl border border-gray-200 bg-white px-4 py-4 text-left transition-colors hover:bg-gray-50"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <p className="text-sm font-semibold text-gray-900">
-                              {item.ticker}
-                            </p>
-                            <p className="mt-1 text-sm text-gray-500">
-                              Research-ready market snapshot
-                            </p>
-                          </div>
-                          <span className="text-sm font-medium text-gray-900">
-                            {item.change}
-                          </span>
-                        </div>
-                        <span className="mt-3 inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-semibold text-gray-700">
-                          {item.signal}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-gray-200 bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                        Confidence scoring
-                      </p>
-                      <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                        Each report exposes the 7-factor confidence mix behind
-                        the signal, not just the headline output.
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-gray-200 bg-white p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                        Sector packs
-                      </p>
-                      <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                        Grouped market coverage is refreshed every 96 hours for
-                        users who want more than a single ticker view.
-                      </p>
-                    </div>
-                  </div>
-
-                  <Button
-                    asChild
-                    className="mt-6 w-full rounded-full bg-black py-6 text-lg text-white hover:bg-gray-800"
-                  >
-                    <a href={QUANTUS_APP_URL}>
-                      Open Quantus Investing
-                      <ArrowRight className="h-5 w-5" />
-                    </a>
-                  </Button>
-                </div>
               </div>
-            </Card>
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
         </section>
 
         <section className="mx-auto mb-20 max-w-7xl px-6">
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid auto-rows-fr gap-6 md:grid-cols-3">
             {marketCoverage.map((item, index) => {
               const Icon = item.icon;
 
@@ -523,7 +537,7 @@ export default function QuantusPage() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid auto-rows-fr grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {capabilities.map((feature, index) => {
               const Icon = feature.icon;
 

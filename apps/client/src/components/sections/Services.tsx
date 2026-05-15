@@ -48,19 +48,19 @@ export function ServicesSection() {
           </ScrollReveal>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+        <div className="grid auto-rows-fr grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => (
             <ScrollReveal key={index} delay={service.delay} className="h-full">
               <Link href={service.path} className="block h-full">
-                <Card className="h-full p-8 border-gray-100 shadow-none hover:shadow-xl hover:border-gray-200 transition-all duration-500 group bg-gray-50/50 hover:bg-white">
+                <Card className="flex h-full flex-col p-8 border-gray-100 shadow-none hover:shadow-xl hover:border-gray-200 transition-all duration-500 group bg-gray-50/50 hover:bg-white">
                   <h3 className="text-2xl font-bold font-heading mb-4 group-hover:text-gray-700 transition-colors">
                     {service.title}
                   </h3>
 
-                  <p className="text-gray-500 leading-relaxed mb-8">
+                  <p className="mb-8 flex-1 text-gray-500 leading-relaxed">
                     {service.description}
                   </p>
-                  <div className="flex items-center text-sm font-semibold text-gray-900 group-hover:translate-x-2 transition-transform duration-300">
+                  <div className="mt-auto flex items-center text-sm font-semibold text-gray-900 group-hover:translate-x-2 transition-transform duration-300">
                     Learn more <div className="w-8 h-[1px] bg-black ml-4 group-hover:w-12 transition-all" />
                   </div>
                 </Card>

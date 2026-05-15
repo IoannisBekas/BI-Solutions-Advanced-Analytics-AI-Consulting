@@ -56,6 +56,22 @@ const MacroCalendar = lazy(async () => {
     const module = await import('./pages/MacroCalendar');
     return { default: module.MacroCalendar };
 });
+const InsiderTrades = lazy(async () => {
+    const module = await import('./pages/InsiderTrades');
+    return { default: module.InsiderTrades };
+});
+const WhaleTracking = lazy(async () => {
+    const module = await import('./pages/WhaleTracking');
+    return { default: module.WhaleTracking };
+});
+const EarningsCalendar = lazy(async () => {
+    const module = await import('./pages/EarningsCalendar');
+    return { default: module.EarningsCalendar };
+});
+const UpgradePage = lazy(async () => {
+    const module = await import('./pages/UpgradePage');
+    return { default: module.UpgradePage };
+});
 
 function WorkspacePanelFallback({ lightMode }: { lightMode?: boolean }) {
     return (
@@ -375,6 +391,54 @@ function App() {
                     <motion.div key="methodology" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
                         <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
                             <Methodology lightMode={lightMode} />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'insider' && (
+                    <motion.div key="insider" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <InsiderTrades
+                                lightMode={lightMode}
+                                onUpgrade={() => syncBrowserRoute(getWorkspaceRouteForView('upgrade'))}
+                                onSelectTicker={(ticker: string) => openReportRoute(ticker)}
+                            />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'whales' && (
+                    <motion.div key="whales" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <WhaleTracking
+                                lightMode={lightMode}
+                                onUpgrade={() => syncBrowserRoute(getWorkspaceRouteForView('upgrade'))}
+                                onSelectTicker={(ticker: string) => openReportRoute(ticker)}
+                            />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'earnings' && (
+                    <motion.div key="earnings" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <EarningsCalendar
+                                lightMode={lightMode}
+                                onUpgrade={() => syncBrowserRoute(getWorkspaceRouteForView('upgrade'))}
+                                onSelectTicker={(ticker: string) => openReportRoute(ticker)}
+                            />
+                        </Suspense>
+                    </motion.div>
+                )}
+
+                {route.view === 'upgrade' && (
+                    <motion.div key="upgrade" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
+                        <Suspense fallback={<WorkspacePanelFallback lightMode={lightMode} />}>
+                            <UpgradePage
+                                lightMode={lightMode}
+                                currentTier={userTier}
+                                onRequireSignin={() => openAuthModal('signin')}
+                            />
                         </Suspense>
                     </motion.div>
                 )}

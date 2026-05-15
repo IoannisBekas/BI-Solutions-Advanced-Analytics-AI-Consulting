@@ -165,7 +165,7 @@ export default function ServiceDetail() {
             </p>
           </ScrollReveal>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2">
             {service.outcomes.map((outcome, index) => (
               <ScrollReveal key={outcome} delay={index * 0.06} width="100%">
                 <article className="h-full rounded-[2rem] border border-gray-200 bg-white p-6 shadow-xl shadow-black/[0.04]">
@@ -235,7 +235,7 @@ export default function ServiceDetail() {
             </h2>
           </ScrollReveal>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          <div className="mt-10 grid auto-rows-fr gap-6 lg:grid-cols-3">
             {service.useCases.map((useCase, index) => (
               <ScrollReveal key={useCase} delay={index * 0.08} width="100%">
                 <div className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 px-6 py-7">

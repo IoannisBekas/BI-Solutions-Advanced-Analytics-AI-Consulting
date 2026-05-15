@@ -268,7 +268,7 @@ function LatestInsightsSection() {
           </ScrollReveal>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid auto-rows-fr grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {latestInsights.map((post, index) => (
             <ScrollReveal key={post.slug} delay={index * 0.08} className="h-full">
               <Link href={`/blog/${post.slug}`} className="group block h-full">
