@@ -83,7 +83,7 @@ const features = [
 
 const launchChecklist = [
   "Open the public Bonusaki demo on the BI Solutions domain.",
-  "Try the customer scratch-card flow, merchant dashboard, and cashier validation states.",
+  "Try the customer scratch-card flow, merchant reporting view, and cashier validation states.",
   "Use the product page to discuss a merchant pilot with real campaign rules, cashier controls, and prize inventory.",
 ];
 
@@ -121,8 +121,8 @@ export default function BonusakiPage() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="Bonusaki | Scratch-and-Win Loyalty Demo"
-        description="Bonusaki is a QR-led scratch-and-win loyalty product demo for cafes and local merchants, with customer, merchant, and cashier flows."
+        title="Bonusaki Cafe Pilot | QR Scratch-and-Win Loyalty"
+        description="Bonusaki is a paid cafe pilot for QR scratch-and-win campaigns, with custom rewards, QR batches, cashier validation, privacy wording, and campaign reporting."
         path={PRODUCT_ROUTE_ALIASES.bonusaki}
         keywords={[
           "Bonusaki",
@@ -139,7 +139,7 @@ export default function BonusakiPage() {
               name: "Bonusaki",
               url: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.bonusaki}`,
               description:
-                "QR-led scratch-and-win loyalty product demo for local merchants.",
+                "QR-led scratch-and-win cafe pilot for local merchants.",
             },
             {
               "@type": "SoftwareApplication",

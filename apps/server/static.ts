@@ -307,8 +307,8 @@ const routeMetaMap: Record<string, RouteMeta> = {
     path: "/power-bi-solutions",
   },
   "/bonusaki": {
-    title: "Bonusaki - Scratch-and-Win Loyalty Demo",
-    description: "Bonusaki is a QR-led scratch-and-win loyalty product demo for cafes and local merchants, with customer, merchant, and cashier flows.",
+    title: "Bonusaki Cafe Pilot - QR Scratch-and-Win Loyalty",
+    description: "Bonusaki is a paid cafe pilot for QR scratch-and-win campaigns, with custom rewards, QR batches, cashier validation, privacy wording, and campaign reporting.",
     path: "/bonusaki",
   },
   "/ai-advisor": {
