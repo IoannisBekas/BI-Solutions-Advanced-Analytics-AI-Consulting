@@ -11,6 +11,7 @@ const viteLogger = createLogger();
 const NAMED_MARKETING_ROUTES = new Set([
   "/Quantus",
   "/Power BI Solutions",
+  "/Bonusaki",
   "/Greek AI Professional Advisor",
   "/Website & App Portfolio",
 ]);
@@ -77,7 +78,16 @@ export async function setupVite(server: Server, app: Express) {
       return;
     }
 
-    if (!NAMED_MARKETING_ROUTES.has(decodePathname(req.path))) {
+    const decodedPath = decodePathname(req.path);
+    if (decodedPath === "/Bonusaki") {
+      const qs = req.originalUrl.includes("?")
+        ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
+        : "";
+      res.redirect(308, `/bonusaki${qs}`);
+      return;
+    }
+
+    if (!NAMED_MARKETING_ROUTES.has(decodedPath)) {
       next();
       return;
     }
@@ -85,7 +95,7 @@ export async function setupVite(server: Server, app: Express) {
     void renderClientApp(req.originalUrl, res, next);
   });
 
-  // Serve pre-built product SPAs (Quantus, Power BI Solutions) in dev mode
+  // Serve pre-built product SPAs (Quantus, Power BI Solutions, Bonusaki) in dev mode
   // These must be mounted before Vite middleware and the root catch-all so
   // product workspace routes do not render the marketing app during local QA.
   const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
@@ -111,6 +121,12 @@ export async function setupVite(server: Server, app: Express) {
       "/power-bi-solutions/workspace",
       fs.existsSync(path.resolve(distPath, "power-bi-solutions", "workspace"))
         ? path.resolve(distPath, "power-bi-solutions", "workspace")
+        : "",
+    ],
+    [
+      "/bonusaki/demo",
+      fs.existsSync(path.resolve(distPath, "bonusaki", "demo"))
+        ? path.resolve(distPath, "bonusaki", "demo")
         : "",
     ],
   ];

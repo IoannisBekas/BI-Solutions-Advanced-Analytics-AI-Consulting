@@ -14,7 +14,7 @@ export default function Products() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Products"
-        description="Explore Quantus Investing, Power BI Solutions, the Greek AI Professional Advisor, and the Website & App Portfolio showcase from one searchable hub."
+        description="Explore Quantus Investing, Power BI Solutions, Bonusaki, the Greek AI Professional Advisor, and the Website & App Portfolio showcase from one searchable hub."
         path="/products"
         structuredData={{
           "@context": "https://schema.org",
@@ -24,6 +24,7 @@ export default function Products() {
           hasPart: [
             `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
             `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}`,
+            `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.bonusaki}`,
             `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}`,
             `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}`,
           ],

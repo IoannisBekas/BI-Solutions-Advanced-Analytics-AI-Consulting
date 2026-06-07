@@ -38,8 +38,8 @@ export default function TermsOfService() {
                   BI Solutions Group provides business consulting, data
                   analytics, artificial intelligence, business intelligence, and
                   digital transformation services. Our products and services may
-                  include AI Advisor, Quantus, Power BI Solutions, and website
-                  or application portfolio services.
+                  include AI Advisor, Quantus, Power BI Solutions, Bonusaki,
+                  and website or application portfolio services.
                 </p>
               </section>
             </ScrollReveal>

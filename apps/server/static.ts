@@ -293,7 +293,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
   },
   "/products": {
     title: "Products - BI Solutions Group",
-    description: "Purpose-built analytics products: Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio.",
+    description: "Purpose-built analytics products: Quantus Investing, Power BI Solutions, Bonusaki, Greek AI Professional Advisor, and Website & App Portfolio.",
     path: "/products",
   },
   "/quantus": {
@@ -305,6 +305,11 @@ const routeMetaMap: Record<string, RouteMeta> = {
     title: "Power BI Solutions - Semantic Model Analysis & AI Optimization",
     description: "Upload TMDL files, review semantic models, and get AI-powered guidance to optimize your Power BI data architecture.",
     path: "/power-bi-solutions",
+  },
+  "/bonusaki": {
+    title: "Bonusaki - Scratch-and-Win Loyalty Demo",
+    description: "Bonusaki is a QR-led scratch-and-win loyalty product demo for cafes and local merchants, with customer, merchant, and cashier flows.",
+    path: "/bonusaki",
   },
   "/ai-advisor": {
     title: "Greek AI Professional Advisor - AI for Accountants, Lawyers & Consultants",
@@ -655,6 +660,7 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/Quantus%20Investing", "/quantus");
   redirectLegacyProductPath(app, "/Quantus", "/quantus");
   redirectLegacyProductPath(app, "/Power%20BI%20Solutions", "/power-bi-solutions");
+  redirectLegacyProductPath(app, "/Bonusaki", "/bonusaki");
   redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
   redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/website-app-portfolio");
 
@@ -670,6 +676,9 @@ export function serveStatic(app: Express) {
   const powerBiDir = fs.existsSync(path.resolve(distPath, "power-bi-solutions", "workspace"))
     ? path.resolve(distPath, "power-bi-solutions", "workspace")
     : null;
+  const bonusakiDir = fs.existsSync(path.resolve(distPath, "bonusaki", "demo"))
+    ? path.resolve(distPath, "bonusaki", "demo")
+    : null;
 
   if (quantusDir) {
     serveProductSpa(app, "/quantus/workspace", quantusDir);
@@ -677,6 +686,10 @@ export function serveStatic(app: Express) {
 
   if (powerBiDir) {
     serveProductSpa(app, "/power-bi-solutions/workspace", powerBiDir);
+  }
+
+  if (bonusakiDir) {
+    serveProductSpa(app, "/bonusaki/demo", bonusakiDir);
   }
 
   app.use(express.static(distPath, {

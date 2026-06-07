@@ -166,8 +166,8 @@ export default function Home() {
         <ProductShowcase
           badge="Product Studio"
           id="products"
-          heading="Four products, each purpose-built for a specific workflow."
-          description="Quantus Investing, Power BI Solutions, Greek AI Professional Advisor, and Website & App Portfolio - ready to explore."
+          heading="Five products, each purpose-built for a specific workflow."
+          description="Quantus Investing, Power BI Solutions, Bonusaki, Greek AI Professional Advisor, and Website & App Portfolio - ready to explore."
         />
 
         <section className="py-24 bg-black text-white overflow-hidden">

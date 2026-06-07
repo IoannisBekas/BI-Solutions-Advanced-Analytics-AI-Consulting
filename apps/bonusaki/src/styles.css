@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@source "../index.html";
+@source "./main.js";
+
+@theme {
+  --font-display: "Fredoka", "Comfortaa", system-ui, sans-serif;
+  --color-cream: #FAF1DA;
+  --color-sun: #FBD03B;
+  --color-sky: #9FD8F5;
+  --color-ink: #1b1b1b;
+  --shadow-pop: 4px 4px 0 #1b1b1b;
+  --shadow-popsm: 3px 3px 0 #1b1b1b;
+}
+
+@layer base {
+  body {
+    -webkit-tap-highlight-color: transparent;
+    font-family: "Fredoka", "Comfortaa", system-ui, sans-serif;
+  }
+
+  canvas {
+    touch-action: none;
+  }
+}
+
+@layer components {
+  .phone {
+    box-shadow: 0 30px 80px rgb(0 0 0 / 30%);
+  }
+
+  .tabbtn {
+    border: 2px solid #1b1b1b;
+    background: #fff;
+  }
+
+  .tabbtn[aria-selected="true"] {
+    background: #FBD03B;
+  }
+
+  .pop {
+    animation: pop .28s cubic-bezier(.2, .8, .2, 1.2);
+  }
+
+  .scanframe .cnr {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 4px solid #1b1b1b;
+  }
+
+  .scanframe .tl {
+    top: 8px;
+    left: 8px;
+    border-right: 0;
+    border-bottom: 0;
+    border-top-left-radius: 8px;
+  }
+
+  .scanframe .tr {
+    top: 8px;
+    right: 8px;
+    border-left: 0;
+    border-bottom: 0;
+    border-top-right-radius: 8px;
+  }
+
+  .scanframe .bl {
+    bottom: 8px;
+    left: 8px;
+    border-right: 0;
+    border-top: 0;
+    border-bottom-left-radius: 8px;
+  }
+
+  .scanframe .br {
+    right: 8px;
+    bottom: 8px;
+    border-left: 0;
+    border-top: 0;
+    border-bottom-right-radius: 8px;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(.8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

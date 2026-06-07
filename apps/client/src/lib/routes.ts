@@ -1,6 +1,7 @@
 export const PRODUCT_ROUTES = {
   quantus: "/Quantus-Investing",
   powerBiSolutions: "/Power%20BI%20Solutions",
+  bonusaki: "/Bonusaki",
   aiAdvisor: "/Greek%20AI%20Professional%20Advisor",
   websiteAppPortfolio: "/Website%20%26%20App%20Portfolio",
 } as const;
@@ -8,6 +9,7 @@ export const PRODUCT_ROUTES = {
 export const PRODUCT_ROUTE_ALIASES = {
   quantus: "/quantus",
   powerBiSolutions: "/power-bi-solutions",
+  bonusaki: "/bonusaki",
   aiAdvisor: "/ai-advisor",
   websiteAppPortfolio: "/website-app-portfolio",
 } as const;
@@ -19,6 +21,7 @@ export const PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS = {
 export const PRODUCT_ROUTE_DISPLAY_PATHS = {
   quantus: decodeRoutePath(PRODUCT_ROUTES.quantus),
   powerBiSolutions: decodeRoutePath(PRODUCT_ROUTES.powerBiSolutions),
+  bonusaki: decodeRoutePath(PRODUCT_ROUTES.bonusaki),
   aiAdvisor: decodeRoutePath(PRODUCT_ROUTES.aiAdvisor),
   websiteAppPortfolio: decodeRoutePath(PRODUCT_ROUTES.websiteAppPortfolio),
 } as const;

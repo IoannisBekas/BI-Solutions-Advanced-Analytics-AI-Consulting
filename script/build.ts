@@ -32,6 +32,7 @@ async function buildAll() {
     path.resolve("apps", "powerbi-solutions"),
     path.join("power-bi-solutions", "workspace"),
   );
+  await buildNestedApp("Bonusaki", path.resolve("apps", "bonusaki"), path.join("bonusaki", "demo"));
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
@@ -85,6 +86,7 @@ async function writeGitHubPages404() {
   const rootBase = getDeployBasePath();
   const quantusBase = joinBasePath(rootBase, "quantus/workspace");
   const powerBIBase = joinBasePath(rootBase, "power-bi-solutions/workspace");
+  const bonusakiBase = joinBasePath(rootBase, "bonusaki/demo");
   const outputPath = path.resolve("dist", "public", "404.html");
 
   const html = `<!doctype html>
@@ -100,6 +102,7 @@ async function writeGitHubPages404() {
         var repoBase = ${JSON.stringify(rootBase)};
         var quantusBase = ${JSON.stringify(quantusBase)};
         var powerBIBase = ${JSON.stringify(powerBIBase)};
+        var bonusakiBase = ${JSON.stringify(bonusakiBase)};
 
         function normalize(value) {
           if (!value) return "/";
@@ -122,6 +125,10 @@ async function writeGitHubPages404() {
 
           if (matchesProductPath(relativePath, "power-bi-solutions/workspace")) {
             return powerBIBase;
+          }
+
+          if (matchesProductPath(relativePath, "bonusaki/demo")) {
+            return bonusakiBase;
           }
 
           return rootBase;

@@ -28,6 +28,10 @@ export function Footer() {
       href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
     },
     {
+      label: "Bonusaki",
+      href: PRODUCT_ROUTE_ALIASES.bonusaki,
+    },
+    {
       label: "Greek AI Professional Advisor",
       href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
     },

@@ -1,0 +1,29 @@
+const fs = require("fs");
+const path = require("path");
+
+const appRoot = path.resolve(__dirname, "..");
+const indexHtml = fs.readFileSync(path.join(appRoot, "index.html"), "utf8");
+const mainJs = fs.readFileSync(path.join(appRoot, "src", "main.js"), "utf8");
+
+const requiredFiles = ["index.html", "qr.svg", "favicon.svg", "src/main.js", "src/styles.css"];
+const missingFiles = requiredFiles.filter((file) => !fs.existsSync(path.join(appRoot, file)));
+
+if (missingFiles.length > 0) {
+  throw new Error(`Missing Bonusaki demo file(s): ${missingFiles.join(", ")}`);
+}
+
+if (indexHtml.includes("cdn.tailwindcss.com")) {
+  throw new Error("Bonusaki demo must not use the Tailwind CDN in production.");
+}
+
+if (mainJs.includes('src="./qr.svg"')) {
+  throw new Error("Dynamic QR images must use the Vite-resolved QR_URL asset.");
+}
+
+for (const name of ["renderCustomer", "addToWallet", "simulateRedeem"]) {
+  if (!mainJs.includes(name)) {
+    throw new Error(`Expected demo function ${name} to be present.`);
+  }
+}
+
+console.log("Bonusaki demo checks passed.");

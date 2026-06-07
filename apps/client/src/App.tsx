@@ -31,6 +31,7 @@ const Products = lazy(() => import("@/pages/Products"));
 const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
 const QuantusPage = lazy(() => import("@/pages/products/QuantusPage"));
 const PowerBISolutionsPage = lazy(() => import("@/pages/products/PowerBISolutionsPage"));
+const BonusakiPage = lazy(() => import("@/pages/products/BonusakiPage"));
 const WebsiteAppPortfolioPage = lazy(() => import("@/pages/products/WebsiteAppPortfolioPage"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
@@ -116,6 +117,14 @@ function Router() {
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}
           </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.powerBiSolutions} component={PowerBISolutionsPage} />
+
+          <Route path={PRODUCT_ROUTE_ALIASES.bonusaki} component={BonusakiPage} />
+          <Route path={PRODUCT_ROUTES.bonusaki}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.bonusaki} />}
+          </Route>
+          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.bonusaki}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.bonusaki} />}
+          </Route>
 
           <Route path={PRODUCT_ROUTES.websiteAppPortfolio}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} />}

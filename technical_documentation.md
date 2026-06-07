@@ -1,6 +1,6 @@
 # BI Solutions Engineering Documentation
 
-Last updated: 2026-04-19
+Last updated: 2026-06-07
 Status: canonical engineer-facing project documentation
 
 ## Purpose
@@ -21,7 +21,7 @@ Do not create parallel "source of truth" docs unless there is a strong reason. K
 
 ## Product Map
 
-The repository currently ships three product surfaces:
+The repository currently ships four product surfaces:
 
 1. Root BI Solutions site
    - Marketing site and shared root server
@@ -40,6 +40,14 @@ The repository currently ships three product surfaces:
    - Server-side AI proxy is mounted from the root Express app
    - Production URL family:
      - `https://www.bisolutions.group/power-bi-solutions/`
+
+4. Bonusaki
+   - Public product page: `apps/client/src/pages/products/BonusakiPage.tsx`
+   - Static demo app: `apps/bonusaki`
+   - Demo build output is mounted below the root site at `/bonusaki/demo/`
+   - Production URL family:
+     - `https://www.bisolutions.group/bonusaki`
+     - `https://www.bisolutions.group/bonusaki/demo/`
 
 ### Canonical public host
 
@@ -120,6 +128,13 @@ Important design rule:
 - TypeScript
 - Tailwind
 - Vitest
+
+### Bonusaki
+
+- Vite 7
+- Tailwind 4 via the root toolchain
+- Static HTML/CSS/JavaScript demo
+- No app-local backend or persistence in this repository
 
 ## Data Storage
 
@@ -266,6 +281,30 @@ Recent live changes included:
   - `apps/powerbi-solutions/src/sections/HeroSection.tsx`
   - `apps/powerbi-solutions/src/sections/TMDLInputSection.tsx`
 
+## Bonusaki Product Notes
+
+Bonusaki is currently published as a first-party product page plus a static,
+mock-data demo.
+
+Public launch checklist:
+
+- Keep `/bonusaki` as the canonical product/discovery page.
+- Keep `/bonusaki/demo/` as the public UI-only demo.
+- Do not expose private backend repository names, payment-provider internals,
+  redemption secrets, or merchant data in public demo copy.
+- Run `npm run check`, `npm run build`, and `node script/smoke-routes.cjs`
+  against a local server before deployment.
+- Visually check `/bonusaki` and `/bonusaki/demo/` on desktop and mobile,
+  including customer, merchant, cashier, and scratch-card states.
+- After deployment, verify:
+  - `https://www.bisolutions.group/bonusaki`
+  - `https://www.bisolutions.group/bonusaki/demo/`
+
+Production app work is separate from the public demo launch. Before connecting
+real merchants or customers, define the live app host, account model, QR batch
+generation, prize engine, wallet-pass issuing, single-use redemption, billing,
+privacy/GDPR terms, monitoring, and operational owner.
+
 ## Environment Variables
 
 ### Required in production
@@ -340,6 +379,16 @@ Recent live changes included:
 - Build:
   - `npm run build`
 
+### Bonusaki
+
+- Dev:
+  - `cd apps/bonusaki`
+  - `npm run dev`
+- Lint:
+  - `npm run lint`
+- Build:
+  - `npm run build`
+
 ## CI and Deploy
 
 ### CI
@@ -367,6 +416,7 @@ Behavior:
 
 - runs on push to `main`/`master`
 - installs root, Quantus, and Power BI dependencies
+- uses root Node tooling for the dependency-free Bonusaki static demo
 - runs root typecheck
 - runs Quantus lint/tests/Python tests
 - runs Power BI lint/tests
@@ -383,6 +433,7 @@ Current Railway behavior:
 
 - Nixpacks build
 - installs root, Quantus, and Power BI dependencies
+- uses root Node tooling for the dependency-free Bonusaki static demo
 - builds all artifacts
 - starts the three-service topology via `npm run start`
 - healthcheck path: `/api/health`

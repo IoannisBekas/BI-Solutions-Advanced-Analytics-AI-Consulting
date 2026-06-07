@@ -31,6 +31,11 @@ export function Navbar() {
       description: "Semantic model audits and AI-assisted optimization",
     },
     {
+      name: "Bonusaki",
+      href: PRODUCT_ROUTE_ALIASES.bonusaki,
+      description: "QR-led scratch-and-win loyalty demo for local merchants",
+    },
+    {
       name: "Greek AI Professional Advisor",
       href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
       description: "Greek-language AI guidance for accounting, legal, and consulting",
@@ -46,6 +51,7 @@ export function Navbar() {
     "/products",
     PRODUCT_ROUTE_ALIASES.quantus,
     PRODUCT_ROUTE_ALIASES.powerBiSolutions,
+    PRODUCT_ROUTE_ALIASES.bonusaki,
     PRODUCT_ROUTE_ALIASES.aiAdvisor,
     PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
   ]);

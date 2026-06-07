@@ -41,6 +41,19 @@ const products = [
     secondaryLabel: "Open workspace",
   },
   {
+    name: "Bonusaki",
+    href: PRODUCT_ROUTE_ALIASES.bonusaki,
+    appHref: withPublicSiteOrigin("/bonusaki/demo/"),
+    description:
+      "A QR-led scratch-and-win loyalty demo for cafes and local merchants, covering customer play, wallet-style reward, merchant, and cashier flows.",
+    bullets: [
+      "Customer scan flow with instant scratch-and-win rewards",
+      "Merchant dashboard for campaign stats and prize weights",
+      "Cashier validation states for redemption rehearsal",
+    ],
+    secondaryLabel: "Open demo",
+  },
+  {
     name: "Greek AI Professional Advisor",
     href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
     appHref: withSiteBase(PRODUCT_ROUTE_ALIASES.aiAdvisor),

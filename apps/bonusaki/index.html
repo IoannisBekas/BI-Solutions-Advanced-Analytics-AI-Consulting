@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bonusaki — Σκάναρε & κέρδισε (demo)</title>
+<meta name="description" content="Demo του Bonusaki: σκάναρε ένα ποτήρι, παίξε scratch-and-win και κέρδισε δώρο κατευθείαν στο πορτοφόλι σου." />
+<link rel="icon" href="./favicon.svg" />
+<meta property="og:title" content="Bonusaki — Σκάναρε & κέρδισε" />
+<meta property="og:description" content="Σκάναρε ένα ποτήρι, παίξε scratch-and-win, κέρδισε δώρο στο πορτοφόλι σου." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  body{ -webkit-tap-highlight-color: transparent; font-family:'Fredoka','Comfortaa',system-ui,sans-serif; }
+  .phone{ box-shadow: 0 30px 80px rgba(0,0,0,.30); }
+  .tabbtn{ border:2px solid #1b1b1b; background:#fff; }
+  .tabbtn[aria-selected="true"]{ background:#FBD03B; }
+  canvas{ touch-action:none; }
+  @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+  .pop{animation:pop .28s cubic-bezier(.2,.8,.2,1.2)}
+  .scanframe .cnr{position:absolute;width:22px;height:22px;border:4px solid #1b1b1b}
+  .scanframe .tl{top:8px;left:8px;border-right:0;border-bottom:0;border-top-left-radius:8px}
+  .scanframe .tr{top:8px;right:8px;border-left:0;border-bottom:0;border-top-right-radius:8px}
+  .scanframe .bl{bottom:8px;left:8px;border-right:0;border-top:0;border-bottom-left-radius:8px}
+  .scanframe .br{bottom:8px;right:8px;border-left:0;border-top:0;border-bottom-right-radius:8px}
+</style>
+</head>
+<body class="min-h-screen bg-cream text-ink">
+
+<canvas id="confetti" class="pointer-events-none fixed inset-0 z-50"></canvas>
+
+<!-- Top bar -->
+<header class="sticky top-0 z-20 border-b-2 border-ink bg-cream/90 backdrop-blur">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <div class="flex items-center gap-2">
+      <div class="relative pt-2">
+        <div class="absolute -top-0.5 left-1/2 flex -translate-x-1/2 gap-0.5">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBD03B" stroke="#1b1b1b" stroke-width="2.5" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#FBD03B" stroke="#1b1b1b" stroke-width="2.5" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#FBD03B" stroke="#1b1b1b" stroke-width="2.5" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        </div>
+        <div class="rounded-full border-2 border-ink bg-sun px-3 py-1 font-display text-lg font-bold leading-none shadow-popsm">Bonusaki</div>
+      </div>
+      <span class="rounded-full border-2 border-ink bg-white px-2 py-0.5 text-[11px] font-semibold">demo</span>
+    </div>
+    <nav class="flex flex-wrap justify-end gap-1.5 text-sm" id="tabs">
+      <button class="tabbtn rounded-full px-3 py-1.5 font-display font-semibold transition-colors" data-tab="customer" aria-selected="true">Πελάτης</button>
+      <button class="tabbtn rounded-full px-3 py-1.5 font-display font-semibold transition-colors" data-tab="merchant" aria-selected="false">Κατάστημα</button>
+      <button class="tabbtn rounded-full px-3 py-1.5 font-display font-semibold transition-colors" data-tab="cashier" aria-selected="false">Ταμείο</button>
+    </nav>
+  </div>
+</header>
+
+<div class="mx-auto max-w-5xl px-4 py-6">
+  <p class="mb-6 rounded-2xl border-2 border-ink bg-white px-4 py-3 text-sm shadow-popsm">
+    Δημόσιο demo με εικονικά δεδομένα — <strong>κάθε σάρωση κερδίζει</strong>.
+    Δοκίμασε τη ροή πελάτη, καταστήματος και ταμείου χωρίς πραγματικές πληρωμές,
+    κουπόνια ή δεδομένα πελατών.
+  </p>
+
+  <!-- ============ CUSTOMER ============ -->
+  <section data-panel="customer">
+    <div class="grid gap-8 lg:grid-cols-2 lg:items-center">
+      <div>
+        <h1 class="font-display text-4xl font-bold tracking-tight">Σκάναρε ένα ποτήρι.<br />Κέρδισε αμέσως.</h1>
+        <p class="mt-3 text-ink/70">
+          Μοναδικό QR σε κάθε ποτήρι ή συσκευασία. Ο πελάτης σκανάρει, βάζει το email του και παίζει
+          scratch-and-win. Το δώρο πάει κατευθείαν στο Apple/Google Wallet — χωρίς να κατεβάσει εφαρμογή.
+        </p>
+        <ul class="mt-5 space-y-2.5 text-sm">
+          <li class="flex items-center gap-2"><span class="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-sun text-base shadow-popsm">🎟️</span> <span><b>Κάθε σάρωση κερδίζει</b> — σπάνια τα μεγάλα, πάντα κάτι μικρό.</span></li>
+          <li class="flex items-center gap-2"><span class="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-sky text-base shadow-popsm">📲</span> <span><b>Χωρίς τριβή</b> — wallet pass, όχι άλλη μια εφαρμογή.</span></li>
+          <li class="flex items-center gap-2"><span class="grid h-8 w-8 place-items-center rounded-lg border-2 border-ink bg-white text-base shadow-popsm">📈</span> <span><b>Χτίζει λίστα marketing</b> — κάθε παιχνίδι ένα email.</span></li>
+        </ul>
+
+        <div class="mt-6 inline-flex items-center gap-4 rounded-2xl border-2 border-ink bg-white p-4 shadow-pop">
+          <img src="./qr.svg" alt="Σκάναρε για να ανοίξεις το demo στο κινητό σου" class="h-24 w-24" width="96" height="96" />
+          <div class="text-sm">
+            <div class="font-display font-bold">Σκάναρε από το κινητό σου 📷</div>
+            <div class="mt-0.5 text-ink/60">Ανοίγει το demo για να παίξεις<br />το scratch-and-win στο τηλέφωνό σου.</div>
+          </div>
+        </div>
+        <p class="mt-4 text-xs text-ink/50">Ή δοκίμασέ το εδώ → πάτα «Συνέχεια», μετά ξύσε την κάρτα με τον κέρσορα.</p>
+      </div>
+
+      <!-- phone -->
+      <div class="mx-auto w-full max-w-[340px]">
+        <div class="phone relative overflow-hidden rounded-[2.4rem] border-[10px] border-ink bg-ink">
+          <div class="absolute left-1/2 top-0 z-20 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-ink"></div>
+          <div class="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-7 py-2 text-[11px] font-semibold text-ink">
+            <span>9:41</span>
+            <span class="tracking-tight">5G&nbsp;&nbsp;100%&nbsp;🔋</span>
+          </div>
+          <div id="screen" class="h-[600px] overflow-hidden bg-cream"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MERCHANT ============ -->
+  <section data-panel="merchant" hidden>
+    <div class="grid gap-5 lg:grid-cols-[210px_1fr]">
+      <!-- sidebar -->
+      <aside class="hidden lg:block">
+        <div class="space-y-1 rounded-2xl border-2 border-ink bg-white p-3 font-display font-semibold shadow-pop">
+          <div class="flex items-center gap-2 rounded-xl border-2 border-ink bg-sun px-3 py-2">📣 Καμπάνιες</div>
+          <div class="flex items-center gap-2 px-3 py-2 text-ink/70">🎯 Πιθανότητες</div>
+          <div class="flex items-center gap-2 px-3 py-2 text-ink/70">🏷️ Παρτίδες QR</div>
+          <div class="flex items-center gap-2 px-3 py-2 text-ink/70">🎁 Εξαργυρώσεις</div>
+          <div class="flex items-center gap-2 px-3 py-2 text-ink/70">👥 Πελάτες</div>
+        </div>
+      </aside>
+
+      <div>
+        <!-- store header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="grid h-11 w-11 place-items-center rounded-xl border-2 border-ink bg-white text-xl shadow-popsm">🏪</div>
+            <div><div class="font-display text-lg font-bold">Καφέ Γωνία ☕</div><div class="text-xs text-ink/60">Ιδιοκτήτης · ID 10245</div></div>
+          </div>
+          <div class="hidden rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-semibold shadow-popsm sm:block">📅 12–18 Μαΐ 2025</div>
+        </div>
+
+        <!-- stats -->
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl border-2 border-ink bg-sky/40 p-4 shadow-pop">
+            <div class="flex items-center gap-2 text-sm font-semibold">📷 σκαναρίσματα</div>
+            <div class="mt-1 font-display text-4xl font-bold">3.824</div>
+            <div class="mt-1 text-xs font-semibold text-green-700">↑ 18,2% vs προηγ. 7 ημέρες</div>
+          </div>
+          <div class="rounded-2xl border-2 border-ink bg-sun/40 p-4 shadow-pop">
+            <div class="flex items-center gap-2 text-sm font-semibold">🎁 εξαργυρώσεις</div>
+            <div class="mt-1 font-display text-4xl font-bold">612</div>
+            <div class="mt-1 text-xs font-semibold text-green-700">↑ 12,7% vs προηγ. 7 ημέρες</div>
+          </div>
+        </div>
+
+        <!-- campaign -->
+        <div class="mt-4 rounded-2xl border-2 border-ink bg-white p-4 shadow-pop">
+          <span class="inline-block rounded-full border-2 border-ink bg-green-300 px-2 py-0.5 text-[11px] font-bold">★ ΕΝΕΡΓΗ</span>
+          <div class="mt-2 flex items-center gap-3">
+            <span class="text-3xl">🍔</span>
+            <div>
+              <div class="font-display text-xl font-bold">Μενού Ημέρας</div>
+              <div class="text-xs text-ink/60">Σκάναρε το QR με κάθε παραγγελία και κέρδισε μοναδικά δώρα!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- prize mix (editable) -->
+        <div class="mt-4 rounded-2xl border-2 border-ink bg-white p-4 shadow-pop">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-display text-base font-bold">🎁 Μίγμα δώρων</h2>
+            <div id="weightmeter" class="flex items-center gap-2 text-xs font-semibold"></div>
+          </div>
+          <div id="tiers" class="grid gap-2 sm:grid-cols-2"></div>
+          <p class="mt-3 text-xs text-ink/60">Τα ποσοστά πρέπει να αθροίζουν 100% — κάθε σάρωση κερδίζει ακριβώς ένα δώρο. Άλλαξε έναν αριθμό για να δεις τον μετρητή.</p>
+        </div>
+
+        <!-- charts -->
+        <div class="mt-4 grid gap-4 lg:grid-cols-2">
+          <div class="rounded-2xl border-2 border-ink bg-white p-4 shadow-pop">
+            <h2 class="mb-3 font-display text-sm font-bold">Σαρώσεις · 14 ημέρες</h2>
+            <div class="flex h-28 items-end gap-1" id="scanbars"></div>
+          </div>
+          <div class="rounded-2xl border-2 border-ink bg-white p-4 shadow-pop">
+            <h2 class="mb-3 font-display text-sm font-bold">Κατανομή δώρων</h2>
+            <div class="space-y-2" id="dist"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASHIER ============ -->
+  <section data-panel="cashier" hidden>
+    <div class="mx-auto max-w-sm">
+      <div class="text-center">
+        <h1 class="font-display text-2xl font-bold">Έλεγχος δώρου</h1>
+        <p class="mt-1 inline-flex items-center gap-2 text-sm text-ink/70"><span>▥</span> Πορτοφόλι σκαναρίστηκε</p>
+      </div>
+
+      <div id="redeem-result" class="mt-4"></div>
+
+      <div class="mt-4 rounded-2xl border-2 border-ink bg-white p-4 shadow-pop">
+        <div class="grid aspect-[4/3] w-full place-items-center rounded-xl border-2 border-dashed border-ink/40 bg-cream text-ink/50">
+          <div class="text-center"><div class="text-5xl">▢</div><div class="mt-1 text-xs">σκόπευτρο κάμερας</div></div>
+        </div>
+        <div class="mt-3 grid gap-2">
+          <button onclick="simulateRedeem('ok')" class="rounded-xl border-2 border-ink bg-sun px-4 py-2.5 text-sm font-bold shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">Σκάναρε έγκυρο δώρο</button>
+          <button onclick="simulateRedeem('used')" class="rounded-xl border-2 border-ink bg-white px-4 py-2.5 text-sm font-semibold shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">Σκάναρε χρησιμοποιημένο δώρο</button>
+          <button onclick="simulateRedeem('invalid')" class="rounded-xl border-2 border-ink bg-white px-4 py-2.5 text-sm font-semibold shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">Σκάναρε πλαστό κωδικό</button>
+        </div>
+      </div>
+      <p class="mt-3 text-center text-[11px] text-ink/50">Στη live έκδοση, κάθε δώρο ελέγχεται ως μοναδικό, εξαργυρώνεται μία φορά και μπορεί να δουλεύει με απλή ροή ταμείου.</p>
+    </div>
+  </section>
+</div>
+
+<footer class="mx-auto max-w-5xl px-4 pb-10 pt-2 text-center text-xs text-ink/40">
+  Bonusaki demo · δημόσια προεπισκόπηση εμπειρίας πελάτη, καταστήματος και ταμείου
+</footer>
+
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

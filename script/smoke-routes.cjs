@@ -28,6 +28,16 @@ const routes = [
     title: "Power BI Solutions Workspace",
     body: "Power BI Solutions",
   },
+  {
+    path: "/bonusaki",
+    title: "BI Solutions Group",
+    body: "BI Solutions Group",
+  },
+  {
+    path: "/bonusaki/demo/",
+    title: "Bonusaki",
+    body: "Bonusaki",
+  },
 ];
 
 function includesAll(haystack, needles) {
