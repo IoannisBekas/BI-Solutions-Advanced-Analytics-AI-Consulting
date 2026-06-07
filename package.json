@@ -13,7 +13,8 @@
     "check": "node ./node_modules/typescript/bin/tsc",
     "scan:env": "node script/scan-env-secrets.cjs",
     "check:encoding": "node script/check-encoding.cjs",
-    "smoke:routes": "node script/smoke-routes.cjs"
+    "smoke:routes": "node script/smoke-routes.cjs",
+    "bonusaki:qr": "node script/bonusaki-generate-qr-batch.cjs --config docs/bonusaki/sample-cafe-pilot.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -96,6 +97,7 @@
     "cross-env": "^10.1.0",
     "esbuild": "^0.25.0",
     "postcss": "^8.5.6",
+    "qrcode": "^1.5.4",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.20.5",
     "typescript": "5.6.3",

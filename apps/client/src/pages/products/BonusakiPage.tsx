@@ -37,7 +37,7 @@ const heroHighlights = [
   },
   {
     label: "Merchant view",
-    value: "Campaign stats, prize weights, redemptions, and customer capture live in one dashboard.",
+    value: "Pilot reporting covers scans, prize weights, redemption counts, and cashier outcomes.",
     icon: Store,
   },
 ];
@@ -65,7 +65,7 @@ const features = [
     icon: LineChart,
     title: "Merchant Campaign Analytics",
     description:
-      "Operators can inspect scans, redemption rates, reward distribution, and probability weights from the merchant view.",
+      "Operators can review scans, redemption rates, reward distribution, and probability weights through the pilot reporting flow.",
   },
   {
     icon: ShieldCheck,
@@ -75,9 +75,9 @@ const features = [
   },
   {
     icon: BadgeCheck,
-    title: "Local-Business Fit",
+    title: "Cafe Pilot Pack",
     description:
-      "Bonusaki is shaped for cafes, food service, and quick-service businesses that need lightweight loyalty without another app install.",
+      "The pilot package includes commercial terms, campaign rules, QR batches, cashier SOP, privacy wording, and support workflow.",
   },
 ];
 
@@ -101,7 +101,7 @@ const bonusakiFaqs = [
   {
     question: "Is Bonusaki ready for a real merchant pilot?",
     answer:
-      "The public product and demo are live, and the server has a production-pilot foundation for signed rewards, validation, redemption, and audit logs. A real pilot still needs merchant rules, prize inventory, and production secrets before live customers scan campaign QR codes.",
+      "Yes, as a controlled paid pilot. The public product and demo are live, the server has signed rewards, validation, redemption, and audit logs, and the pilot pack defines the agreement, rules, QR batch, cashier, privacy, and support process. Real wallet issuer accounts and fully automated self-onboarding remain separate expansion work.",
   },
   {
     question: "Who is Bonusaki built for?",

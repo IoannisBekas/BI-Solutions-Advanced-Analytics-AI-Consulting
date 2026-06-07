@@ -29,6 +29,10 @@ if (!mainJs.includes("/api/bonusaki/events")) {
   throw new Error("Bonusaki demo must send privacy-safe engagement events.");
 }
 
+if (!mainJs.includes("new URLSearchParams(window.location.search)")) {
+  throw new Error("Bonusaki demo must include QR attribution parameters in event metadata.");
+}
+
 if (/onclick\s*=/.test(indexHtml) || /onclick\s*=/.test(mainJs)) {
   throw new Error("Bonusaki demo must not use inline onclick handlers; production CSP blocks them.");
 }

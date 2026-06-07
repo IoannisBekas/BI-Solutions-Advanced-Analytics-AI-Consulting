@@ -318,6 +318,33 @@ Production pilot readiness:
 - Define merchant campaign rules, prize inventory, expiration policy, cashier
   operating process, fraud handling, billing, and privacy ownership before
   live customers scan production QR codes.
+- Use the cafe pilot operations pack in `docs/bonusaki/` before launch:
+  - `cafe-pilot-agreement.md`
+  - `campaign-rules-template.md`
+  - `cashier-sop.md`
+  - `privacy-notice-template.md`
+  - `support-runbook.md`
+  - `wallet-and-onboarding-roadmap.md`
+  - `launch-checklist.md`
+
+Generate a real cafe QR batch:
+
+```powershell
+npm run bonusaki:qr
+```
+
+For a custom cafe, copy `docs/bonusaki/sample-cafe-pilot.json`, change the
+merchant/campaign fields, then run:
+
+```powershell
+node script/bonusaki-generate-qr-batch.cjs --config path\to\cafe-config.json
+```
+
+The output is written to `output/bonusaki-qr/` with SVG QR files,
+`manifest.csv`, `config.json`, and a printable `index.html`.
+Generated URLs include `merchant`, `campaign`, and `qr` query parameters; the
+Bonusaki demo event tracker includes those values in privacy-safe event
+metadata.
 
 Bonusaki API endpoints:
 

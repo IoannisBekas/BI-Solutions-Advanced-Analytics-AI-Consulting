@@ -1,0 +1,10 @@
+{
+  "merchantName": "Kafe Gonia",
+  "merchantSlug": "kafe-gonia",
+  "campaignSlug": "launch-pilot",
+  "batchPrefix": "KG",
+  "count": 25,
+  "baseUrl": "https://www.bisolutions.group/bonusaki/demo/",
+  "placement": "cup-sticker",
+  "notes": "Sample QR batch for the first cafe pilot."
+}

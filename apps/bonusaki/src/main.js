@@ -4,6 +4,15 @@ const QR_URL = new URL("../qr.svg", import.meta.url).href;
 const EVENT_ENDPOINT = "/api/bonusaki/events";
 const SESSION_KEY = "bonusaki_demo_session";
 
+function getAttribution(){
+  const params = new URLSearchParams(window.location.search);
+  return {
+    merchant: (params.get("merchant") || "").slice(0, 80),
+    campaign: (params.get("campaign") || "").slice(0, 80),
+    qr: (params.get("qr") || "").slice(0, 80),
+  };
+}
+
 function getSessionId(){
   try{
     let sessionId = sessionStorage.getItem(SESSION_KEY);
@@ -23,12 +32,15 @@ function trackDemoEvent(eventName, metadata = {}){
     surface: "bonusaki_demo",
     path: window.location.pathname,
     sessionId: getSessionId(),
-    metadata,
+    metadata: {
+      ...getAttribution(),
+      ...metadata,
+    },
   };
 
   try{
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: eventName, ...metadata, product: "bonusaki" });
+    window.dataLayer.push({ event: eventName, ...payload.metadata, product: "bonusaki" });
   }catch(e){}
 
   try{
