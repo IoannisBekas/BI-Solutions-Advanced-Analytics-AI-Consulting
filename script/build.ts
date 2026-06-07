@@ -131,7 +131,7 @@ async function writeGitHubPages404() {
             return bonusakiBase;
           }
 
-          return rootBase;
+          return repoBase;
         }
 
         try {
