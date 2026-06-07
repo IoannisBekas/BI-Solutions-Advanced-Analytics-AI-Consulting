@@ -284,7 +284,9 @@ Recent live changes included:
 ## Bonusaki Product Notes
 
 Bonusaki is currently published as a first-party product page plus a static,
-mock-data demo.
+mock-data demo. The root server also includes a production-pilot API foundation
+for privacy-safe demo events, signed reward issuing, cashier validation,
+redemption audit logs, and admin campaign summaries.
 
 Public launch checklist:
 
@@ -299,11 +301,40 @@ Public launch checklist:
 - After deployment, verify:
   - `https://www.bisolutions.group/bonusaki`
   - `https://www.bisolutions.group/bonusaki/demo/`
+- Confirm the QR asset opens `https://www.bisolutions.group/bonusaki/demo/`.
+- Confirm `POST /api/bonusaki/events` records demo engagement without
+  customer email addresses or reward secrets.
 
-Production app work is separate from the public demo launch. Before connecting
-real merchants or customers, define the live app host, account model, QR batch
-generation, prize engine, wallet-pass issuing, single-use redemption, billing,
-privacy/GDPR terms, monitoring, and operational owner.
+Production pilot readiness:
+
+- Set `BONUSAKI_PILOT_ENABLED=true` only after a merchant pilot agreement is in
+  place.
+- Set a dedicated `BONUSAKI_TOKEN_SECRET` with at least 32 characters. If it is
+  absent, the server can fall back to `JWT_SECRET`, but a dedicated secret is
+  preferred before real rewards are issued.
+- Set `BONUSAKI_CASHIER_PIN` before enabling cashier redemption.
+- Set `BONUSAKI_ADMIN_KEY` with at least 24 characters before using admin
+  campaign summaries.
+- Define merchant campaign rules, prize inventory, expiration policy, cashier
+  operating process, fraud handling, billing, and privacy ownership before
+  live customers scan production QR codes.
+
+Bonusaki API endpoints:
+
+- `GET /api/bonusaki/health`
+  - reports pilot readiness flags and default pilot slugs.
+- `GET /api/bonusaki/campaign`
+  - returns public campaign and reward-tier metadata for the default pilot.
+- `POST /api/bonusaki/events`
+  - stores privacy-safe demo engagement events.
+- `POST /api/bonusaki/rewards/issue`
+  - issues a signed single-use reward token when the pilot is enabled.
+- `POST /api/bonusaki/rewards/validate`
+  - validates a token or public code for cashier inspection.
+- `POST /api/bonusaki/rewards/redeem`
+  - redeems an issued reward when cashier validation is configured.
+- `GET /api/bonusaki/admin/summary`
+  - requires `x-bonusaki-admin-key` and returns campaign counts.
 
 ## Environment Variables
 
@@ -324,8 +355,20 @@ privacy/GDPR terms, monitoring, and operational owner.
   - enables Google sign-in
 - `FMP_API_KEY`
   - live market/news enrichment for Quantus
+- `BONUSAKI_PILOT_ENABLED`
+  - set to `true` only for an approved merchant pilot
 - `SEC_EDGAR_USER_AGENT`
   - required for SEC filing access hygiene
+
+### Required before live Bonusaki merchant pilots
+
+- `BONUSAKI_TOKEN_SECRET`
+  - required before issuing real Bonusaki reward tokens
+- `BONUSAKI_CASHIER_PIN`
+  - required before real Bonusaki cashier redemption is enabled
+- `BONUSAKI_ADMIN_KEY`
+  - required before Bonusaki admin summaries are available; use at least 24
+    characters
 
 ### Runtime/config variables used by Quantus
 

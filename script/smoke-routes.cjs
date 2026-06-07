@@ -30,13 +30,24 @@ const routes = [
   },
   {
     path: "/bonusaki",
-    title: "BI Solutions Group",
-    body: "BI Solutions Group",
+    title: "Bonusaki",
+    body: "Bonusaki",
   },
   {
     path: "/bonusaki/demo/",
     title: "Bonusaki",
     body: "Bonusaki",
+  },
+];
+
+const jsonRoutes = [
+  {
+    path: "/api/bonusaki/health",
+    marker: "bonusaki",
+  },
+  {
+    path: "/api/bonusaki/campaign",
+    marker: "rewards",
   },
 ];
 
@@ -69,6 +80,25 @@ async function smokeRoute(route) {
   return `${route.path} -> ${title}`;
 }
 
+async function smokeJsonRoute(route) {
+  const url = `${baseUrl}${route.path}`;
+  const response = await fetch(url, { redirect: "manual" });
+  const contentType = response.headers.get("content-type") || "";
+  const body = await response.text();
+
+  if (response.status !== 200) {
+    throw new Error(`${route.path} returned HTTP ${response.status}`);
+  }
+  if (!contentType.includes("application/json")) {
+    throw new Error(`${route.path} returned ${contentType || "unknown content type"}`);
+  }
+  if (!body.includes(route.marker)) {
+    throw new Error(`${route.path} did not include expected marker: ${route.marker}`);
+  }
+
+  return `${route.path} -> json`;
+}
+
 async function main() {
   console.log(`Smoke testing route shells at ${baseUrl}`);
   const failures = [];
@@ -76,6 +106,16 @@ async function main() {
   for (const route of routes) {
     try {
       const line = await smokeRoute(route);
+      console.log(`ok ${line}`);
+    } catch (error) {
+      failures.push(`${route.path}: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(`fail ${failures[failures.length - 1]}`);
+    }
+  }
+
+  for (const route of jsonRoutes) {
+    try {
+      const line = await smokeJsonRoute(route);
       console.log(`ok ${line}`);
     } catch (error) {
       failures.push(`${route.path}: ${error instanceof Error ? error.message : String(error)}`);

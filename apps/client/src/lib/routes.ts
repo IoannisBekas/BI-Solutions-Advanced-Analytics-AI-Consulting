@@ -1,7 +1,7 @@
 export const PRODUCT_ROUTES = {
   quantus: "/Quantus-Investing",
   powerBiSolutions: "/Power%20BI%20Solutions",
-  bonusaki: "/Bonusaki",
+  bonusaki: "/bonusaki",
   aiAdvisor: "/Greek%20AI%20Professional%20Advisor",
   websiteAppPortfolio: "/Website%20%26%20App%20Portfolio",
 } as const;

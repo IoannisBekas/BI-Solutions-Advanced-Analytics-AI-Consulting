@@ -23,7 +23,7 @@ export default function TermsOfService() {
           eyebrow="Legal"
           title="Terms of Service"
           description="The service terms for BI Solutions Group consulting, products, AI workflows, and website use."
-          footer={<p className="text-sm text-gray-400">Last updated: March 2026</p>}
+          footer={<p className="text-sm text-gray-400">Last updated: June 2026</p>}
         />
 
         <section className="mx-auto max-w-5xl px-6 md:px-12">
@@ -92,7 +92,24 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  4. AI-Generated Content
+                  4. Bonusaki Demo and Merchant Pilots
+                </h2>
+                <p>
+                  The public Bonusaki demo is a mock-data preview and does not
+                  create real prizes, wallet passes, merchant obligations, or
+                  customer entitlements. A live Bonusaki merchant pilot requires
+                  a separate written agreement covering campaign rules, prize
+                  inventory, cashier validation, fraud controls, privacy
+                  responsibilities, support expectations, and any commercial
+                  terms.
+                </p>
+              </section>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.1}>
+              <section>
+                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                  5. AI-Generated Content
                 </h2>
                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-4">
                   <p className="text-sm font-medium text-black mb-2">
@@ -117,7 +134,7 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  5. Intellectual Property
+                  6. Intellectual Property
                 </h2>
                 <p>
                   The website, platform, code, design, trademarks, content, and
@@ -132,7 +149,7 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  6. Limitation of Liability
+                  7. Limitation of Liability
                 </h2>
                 <p>
                   To the maximum extent permitted by law, BI Solutions Group is
@@ -147,7 +164,7 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  7. Termination
+                  8. Termination
                 </h2>
                 <p>
                   We may suspend or terminate access to our services if these
@@ -161,7 +178,7 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  8. Governing Law and Disputes
+                  9. Governing Law and Disputes
                 </h2>
                 <p>
                   These terms are governed by Greek law. Any dispute arising from
@@ -179,7 +196,7 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  9. Changes to These Terms
+                  10. Changes to These Terms
                 </h2>
                 <p>
                   We may update these terms from time to time. Updated terms will
@@ -192,7 +209,7 @@ export default function TermsOfService() {
             <ScrollReveal delay={0.1}>
               <section>
                 <h2 className="text-2xl font-bold font-heading text-black mb-4">
-                  10. Contact
+                  11. Contact
                 </h2>
                 <p>For questions about these terms, contact us:</p>
                 <p className="mt-3">

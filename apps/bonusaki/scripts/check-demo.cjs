@@ -7,6 +7,7 @@ const mainJs = fs.readFileSync(path.join(appRoot, "src", "main.js"), "utf8");
 
 const requiredFiles = ["index.html", "qr.svg", "favicon.svg", "src/main.js", "src/styles.css"];
 const missingFiles = requiredFiles.filter((file) => !fs.existsSync(path.join(appRoot, file)));
+const publicDemoUrl = "https://www.bisolutions.group/bonusaki/demo/";
 
 if (missingFiles.length > 0) {
   throw new Error(`Missing Bonusaki demo file(s): ${missingFiles.join(", ")}`);
@@ -18,6 +19,18 @@ if (indexHtml.includes("cdn.tailwindcss.com")) {
 
 if (mainJs.includes('src="./qr.svg"')) {
   throw new Error("Dynamic QR images must use the Vite-resolved QR_URL asset.");
+}
+
+if (!indexHtml.includes(publicDemoUrl)) {
+  throw new Error(`The visible QR fallback link must point to ${publicDemoUrl}`);
+}
+
+if (!mainJs.includes("/api/bonusaki/events")) {
+  throw new Error("Bonusaki demo must send privacy-safe engagement events.");
+}
+
+if (/onclick\s*=/.test(indexHtml) || /onclick\s*=/.test(mainJs)) {
+  throw new Error("Bonusaki demo must not use inline onclick handlers; production CSP blocks them.");
 }
 
 for (const name of ["renderCustomer", "addToWallet", "simulateRedeem"]) {

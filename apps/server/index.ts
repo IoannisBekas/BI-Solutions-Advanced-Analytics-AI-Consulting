@@ -183,6 +183,8 @@ const privateApiPrefixes = [
   "/api/quantus/watchlist",
   "/api/quantus/alerts",
   "/api/quantus/usage",
+  "/api/bonusaki/rewards",
+  "/api/bonusaki/admin",
   "/power-bi-solutions/api/anthropic",
 ];
 

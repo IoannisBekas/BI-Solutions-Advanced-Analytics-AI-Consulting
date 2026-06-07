@@ -17,6 +17,7 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
+import { trackEvent } from "@/lib/analytics";
 import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 
 const BONUSAKI_DEMO_URL =
@@ -70,7 +71,7 @@ const features = [
     icon: ShieldCheck,
     title: "Single-Use Control Model",
     description:
-      "The public demo uses mock data, while the product architecture is designed around signed, single-use redemptions.",
+      "The public demo uses mock data, while the pilot API supports signed, single-use redemption tokens when production controls are enabled.",
   },
   {
     icon: BadgeCheck,
@@ -83,7 +84,7 @@ const features = [
 const launchChecklist = [
   "Open the public Bonusaki demo on the BI Solutions domain.",
   "Try the customer scratch-card flow, merchant dashboard, and cashier validation states.",
-  "Use the product page to discuss a rollout, pilot, or production integration.",
+  "Use the product page to discuss a merchant pilot with real campaign rules, cashier controls, and prize inventory.",
 ];
 
 const bonusakiFaqs = [
@@ -98,6 +99,11 @@ const bonusakiFaqs = [
       "No. The hosted demo is UI-only and uses mock data so visitors can inspect the customer, merchant, and cashier experience safely.",
   },
   {
+    question: "Is Bonusaki ready for a real merchant pilot?",
+    answer:
+      "The public product and demo are live, and the server has a production-pilot foundation for signed rewards, validation, redemption, and audit logs. A real pilot still needs merchant rules, prize inventory, and production secrets before live customers scan campaign QR codes.",
+  },
+  {
     question: "Who is Bonusaki built for?",
     answer:
       "It is designed for cafes, food service, and local retailers that want a low-friction campaign mechanic tied to real purchases and email capture.",
@@ -105,6 +111,13 @@ const bonusakiFaqs = [
 ];
 
 export default function BonusakiPage() {
+  const trackBonusakiClick = (action: string) => {
+    trackEvent("bonusaki_product_click", {
+      action,
+      product: "bonusaki",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
@@ -177,7 +190,10 @@ export default function BonusakiPage() {
                     asChild
                     className="rounded-full bg-black px-8 text-white hover:bg-gray-800"
                   >
-                    <a href={BONUSAKI_DEMO_URL}>
+                    <a
+                      href={BONUSAKI_DEMO_URL}
+                      onClick={() => trackBonusakiClick("open_demo_hero")}
+                    >
                       Open Bonusaki demo
                       <ArrowRight className="h-4 w-4" />
                     </a>
@@ -187,7 +203,10 @@ export default function BonusakiPage() {
                     variant="outline"
                     className="rounded-full border-gray-300 px-8"
                   >
-                    <a href={withSiteBase("/contact")}>
+                    <a
+                      href={withSiteBase("/contact")}
+                      onClick={() => trackBonusakiClick("discuss_rollout")}
+                    >
                       Discuss a rollout
                       <ExternalLink className="h-4 w-4" />
                     </a>
@@ -291,7 +310,10 @@ export default function BonusakiPage() {
                     asChild
                     className="rounded-full bg-black px-8 text-white hover:bg-gray-800"
                   >
-                    <a href={BONUSAKI_DEMO_URL}>
+                    <a
+                      href={BONUSAKI_DEMO_URL}
+                      onClick={() => trackBonusakiClick("open_demo_preview")}
+                    >
                       Launch demo
                       <ArrowRight className="h-4 w-4" />
                     </a>
@@ -301,7 +323,12 @@ export default function BonusakiPage() {
                     variant="outline"
                     className="rounded-full border-gray-300 px-8"
                   >
-                    <a href={withSiteBase("/products")}>Back to products</a>
+                    <a
+                      href={withSiteBase("/products")}
+                      onClick={() => trackBonusakiClick("back_to_products")}
+                    >
+                      Back to products
+                    </a>
                   </Button>
                 </div>
               </div>

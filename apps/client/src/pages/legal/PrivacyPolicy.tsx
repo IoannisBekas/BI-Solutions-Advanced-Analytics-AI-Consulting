@@ -22,7 +22,7 @@ export default function PrivacyPolicy() {
           eyebrow="Legal"
           title="Privacy Policy"
           description="How BI Solutions Group handles personal data, cookies, analytics, and service information."
-          footer={<p className="text-sm text-gray-400">Last updated: March 2026</p>}
+          footer={<p className="text-sm text-gray-400">Last updated: June 2026</p>}
         />
 
         <section className="mx-auto max-w-5xl px-6 md:px-12">
@@ -80,6 +80,16 @@ export default function PrivacyPolicy() {
                     <span>
                       <strong>Contact data:</strong> Information you provide
                       through contact forms or direct email.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
+                      <strong>Bonusaki pilot data:</strong> If a live merchant
+                      pilot is enabled, reward issue and redemption records,
+                      signed redemption tokens, cashier validation activity,
+                      merchant campaign data, and hashed customer email values
+                      where an email is provided.
                     </span>
                   </li>
                 </ul>
@@ -215,6 +225,16 @@ export default function PrivacyPolicy() {
                     <span>
                       <strong>Preference cookies:</strong> Store user preferences
                       where supported.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
+                      <strong>Bonusaki demo events:</strong> Record
+                      privacy-safe actions such as demo views, tab switches,
+                      scratch-card interactions, wallet-preview clicks, and
+                      cashier simulation outcomes. These events do not include
+                      reward secrets or customer email addresses.
                     </span>
                   </li>
                 </ul>

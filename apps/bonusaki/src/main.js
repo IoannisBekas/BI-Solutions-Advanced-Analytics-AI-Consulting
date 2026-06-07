@@ -1,12 +1,59 @@
 import "./styles.css";
 
 const QR_URL = new URL("../qr.svg", import.meta.url).href;
+const EVENT_ENDPOINT = "/api/bonusaki/events";
+const SESSION_KEY = "bonusaki_demo_session";
+
+function getSessionId(){
+  try{
+    let sessionId = sessionStorage.getItem(SESSION_KEY);
+    if(!sessionId){
+      sessionId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
+      sessionStorage.setItem(SESSION_KEY, sessionId);
+    }
+    return sessionId;
+  }catch(e){
+    return "";
+  }
+}
+
+function trackDemoEvent(eventName, metadata = {}){
+  const payload = {
+    eventName,
+    surface: "bonusaki_demo",
+    path: window.location.pathname,
+    sessionId: getSessionId(),
+    metadata,
+  };
+
+  try{
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: eventName, ...metadata, product: "bonusaki" });
+  }catch(e){}
+
+  try{
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(EVENT_ENDPOINT, new Blob([body], { type: "application/json" }));
+      return;
+    }
+    fetch(EVENT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+      keepalive: true,
+    }).catch(() => {});
+  }catch(e){}
+}
+
+trackDemoEvent("bonusaki_demo_loaded");
 
 // ---------- tab switching ----------
 const tabs = document.getElementById('tabs');
 tabs.addEventListener('click', (e) => {
   const btn = e.target.closest('.tabbtn'); if(!btn) return;
   const tab = btn.dataset.tab;
+  trackDemoEvent("bonusaki_demo_tab", { tab });
   [...tabs.children].forEach(b => b.setAttribute('aria-selected', b===btn));
   document.querySelectorAll('[data-panel]').forEach(p => p.hidden = (p.dataset.panel !== tab));
   if(tab==='customer') renderCustomer('form');
@@ -63,11 +110,16 @@ function renderCustomer(state, celebrate=true){
           <button id="play" class="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-ink bg-sun px-4 py-3 font-display text-lg font-bold shadow-pop transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">Συνέχεια →</button>
         </div>
       </div>`;
-    document.getElementById('play').onclick = () => { currentPrize = pickPrize(); renderCustomer('scratch'); };
-    document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter'){ currentPrize=pickPrize(); renderCustomer('scratch'); }});
+    document.getElementById('play').addEventListener('click', () => {
+      trackDemoEvent("bonusaki_demo_play_start", { method: "button" });
+      currentPrize = pickPrize();
+      renderCustomer('scratch');
+    });
+    document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter'){ trackDemoEvent("bonusaki_demo_play_start", { method: "enter" }); currentPrize=pickPrize(); renderCustomer('scratch'); }});
   }
 
   if(state==='scratch'){
+    trackDemoEvent("bonusaki_demo_scratch_view");
     screen.innerHTML = `
       <div class="flex h-full flex-col items-center justify-center px-6 text-ink">
         <div class="mb-3 font-display text-base font-bold">Ξύσε για να αποκαλύψεις!</div>
@@ -80,12 +132,19 @@ function renderCustomer(state, celebrate=true){
         </div>
         <button id="reveal" class="mt-4 text-xs font-semibold underline">αποκάλυψη αμέσως</button>
       </div>`;
-    requestAnimationFrame(() => initScratch(document.getElementById('scratch'), () => renderCustomer('done')));
-    document.getElementById('reveal').onclick = () => renderCustomer('done');
+    requestAnimationFrame(() => initScratch(document.getElementById('scratch'), () => {
+      trackDemoEvent("bonusaki_demo_scratch_completed");
+      renderCustomer('done');
+    }));
+    document.getElementById('reveal').addEventListener('click', () => {
+      trackDemoEvent("bonusaki_demo_reveal_now");
+      renderCustomer('done');
+    });
   }
 
   if(state==='done'){
     if(currentCode === null) currentCode = randCode();
+    trackDemoEvent("bonusaki_demo_reward_view", { reward: currentPrize ? currentPrize.label : "unknown" });
     screen.innerHTML = `
       <div class="flex h-full flex-col items-center justify-center px-5 text-ink">
         <div class="pop w-full rounded-3xl border-2 border-ink bg-white p-6 text-center shadow-pop">
@@ -96,13 +155,16 @@ function renderCustomer(state, celebrate=true){
           <div class="mt-4 rounded-xl border-2 border-ink bg-cream px-3 py-2 font-mono text-sm tracking-wider">SD-${currentCode}</div>
           <div class="mt-4 text-xs font-semibold text-ink/60">Πρόσθεσε στο πορτοφόλι σου:</div>
           <div class="mt-2 grid gap-2">
-            <button onclick="addToWallet('apple')" class="rounded-2xl border-2 border-ink bg-ink px-4 py-2.5 text-sm font-bold text-white shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"> Apple Wallet</button>
-            <button onclick="addToWallet('google')" class="rounded-2xl border-2 border-ink bg-white px-4 py-2.5 text-sm font-bold shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">Google Wallet</button>
+            <button data-wallet-provider="apple" class="rounded-2xl border-2 border-ink bg-ink px-4 py-2.5 text-sm font-bold text-white shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"> Apple Wallet</button>
+            <button data-wallet-provider="google" class="rounded-2xl border-2 border-ink bg-white px-4 py-2.5 text-sm font-bold shadow-popsm transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">Google Wallet</button>
           </div>
         </div>
         <button id="again" class="mt-4 text-xs font-semibold underline">παίξε ξανά</button>
       </div>`;
-    document.getElementById('again').onclick = () => renderCustomer('form');
+    screen.querySelectorAll('[data-wallet-provider]').forEach(button => {
+      button.addEventListener('click', () => addToWallet(button.dataset.walletProvider));
+    });
+    document.getElementById('again').addEventListener('click', () => renderCustomer('form'));
     if(celebrate) confettiBurst();
   }
 }
@@ -121,6 +183,7 @@ function barcodeBars(seed){
 }
 function addToWallet(provider){
   const apple = provider === 'apple';
+  trackDemoEvent("bonusaki_demo_wallet_preview", { provider: apple ? "apple" : "google" });
   if(currentCode === null) currentCode = randCode();
   const code = 'SD-' + currentCode;
   const reward = currentPrize ? currentPrize.reward : 'Δωρεάν καφές';
@@ -130,7 +193,7 @@ function addToWallet(provider){
   screen.innerHTML = `
     <div class="flex h-full flex-col px-4 pt-5 text-ink">
       <div class="mb-3 flex items-center justify-between text-xs">
-        <button onclick="renderCustomer('done', false)" class="font-semibold opacity-80 active:scale-95">‹ Πίσω</button>
+        <button data-return-reward class="font-semibold opacity-80 active:scale-95">‹ Πίσω</button>
         <span class="rounded-full border-2 border-ink bg-white px-2.5 py-0.5 font-semibold">${apple ? 'Apple Wallet' : 'Google Wallet'}</span>
       </div>
       <div class="pop overflow-hidden rounded-2xl border-2 border-ink bg-white shadow-pop">
@@ -154,8 +217,10 @@ function addToWallet(provider){
       <div class="pop mt-4 flex items-center gap-2 rounded-2xl border-2 border-ink bg-green-300 px-4 py-3 text-sm font-semibold shadow-popsm">
         <span class="text-lg leading-none">✓</span> Προστέθηκε στο ${apple ? 'Apple' : 'Google'} Wallet — δείξ’ το στο ταμείο.
       </div>
-      <button onclick="renderCustomer('form')" class="mx-auto mt-4 text-xs font-semibold underline">παίξε ξανά</button>
+      <button data-play-again class="mx-auto mt-4 text-xs font-semibold underline">παίξε ξανά</button>
     </div>`;
+  screen.querySelector('[data-return-reward]').addEventListener('click', () => renderCustomer('done', false));
+  screen.querySelector('[data-play-again]').addEventListener('click', () => renderCustomer('form'));
 }
 
 // ---------- scratch canvas ----------
@@ -258,6 +323,7 @@ function confettiBurst(){
 
 // ---------- cashier ----------
 function simulateRedeem(kind){
+  trackDemoEvent("bonusaki_demo_cashier_simulation", { result: kind });
   const el = document.getElementById('redeem-result');
   const map = {
     ok:     { bg:'bg-green-300',   icon:'✅', big:'ΕΓΚΥΡΟ',             sub:'Δωρεάν Burger 🍔 · SD-'+randCode() },
@@ -272,7 +338,8 @@ function simulateRedeem(kind){
   </div>`;
 }
 
+document.querySelectorAll('[data-redeem-kind]').forEach(button => {
+  button.addEventListener('click', () => simulateRedeem(button.dataset.redeemKind));
+});
+
 renderCustomer('form');
-
-
-Object.assign(window, { renderCustomer, addToWallet, simulateRedeem });
