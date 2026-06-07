@@ -5,7 +5,7 @@ const DEFAULT_MERCHANT_ID = "bonusaki-merchant-kafe-gonia";
 const DEFAULT_CAMPAIGN_ID = "bonusaki-campaign-launch-pilot";
 const DEFAULT_MERCHANT_SLUG = "kafe-gonia";
 const DEFAULT_CAMPAIGN_SLUG = "launch-pilot";
-const REWARD_TOKEN_TYPE = "bonusaki_reward_v1";
+const REWARD_PAYLOAD_KIND = "bonusaki_reward_v1";
 const TOKEN_TTL_DAYS = 30;
 
 type BonusakiRedemptionStatus = "issued" | "redeemed" | "expired" | "void";
@@ -58,7 +58,7 @@ interface BonusakiRedemptionRow {
 }
 
 interface BonusakiTokenPayload {
-  typ: typeof REWARD_TOKEN_TYPE;
+  typ: typeof REWARD_PAYLOAD_KIND;
   rid: string;
   code: string;
   exp: number;
@@ -379,7 +379,7 @@ function verifyToken(token: string, secret: string) {
 
   try {
     const payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8")) as BonusakiTokenPayload;
-    if (payload.typ !== REWARD_TOKEN_TYPE || !payload.rid || !payload.code || !payload.exp) {
+    if (payload.typ !== REWARD_PAYLOAD_KIND || !payload.rid || !payload.code || !payload.exp) {
       return null;
     }
     return payload;
@@ -545,7 +545,7 @@ export function issueBonusakiReward(input: BonusakiIssueInput) {
   const redemptionId = randomId("redemption");
   const publicCode = randomPublicCode();
   const payload: BonusakiTokenPayload = {
-    typ: REWARD_TOKEN_TYPE,
+    typ: REWARD_PAYLOAD_KIND,
     rid: redemptionId,
     code: publicCode,
     exp: Math.floor(expiresAt.getTime() / 1000),
