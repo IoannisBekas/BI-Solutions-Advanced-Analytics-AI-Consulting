@@ -18,7 +18,6 @@ export function Footer() {
     { label: "Products", href: "/products" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
   ];
 
   const productLinks = [

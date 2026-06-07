@@ -9,6 +9,7 @@ import {
   pathMatches,
 } from "@/lib/routes";
 import { withAssetBase } from "@/lib/site";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -238,11 +239,14 @@ export function Navbar() {
                 </Link>
               )
             )}
-            <Link href="/contact">
-              <Button className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105">
+            <Button
+              asChild
+              className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105"
+            >
+              <a href={CONTACT_MAILTO}>
                 Get Started
-              </Button>
-            </Link>
+              </a>
+            </Button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -328,11 +332,11 @@ export function Navbar() {
                   </Link>
                 )
               )}
-              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="w-full mt-8 rounded-full py-6 text-lg">
+              <Button asChild className="w-full mt-8 rounded-full py-6 text-lg">
+                <a href={CONTACT_MAILTO} onClick={() => setIsMobileMenuOpen(false)}>
                   Get Started
-                </Button>
-              </Link>
+                </a>
+              </Button>
             </nav>
           </motion.div>
         )}

@@ -18,6 +18,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
 import { getBlogPostBySlug, getRelatedPosts } from "@/data/blogData";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 function renderRichText(line: string) {
   const nodes: ReactNode[] = [];
@@ -414,7 +415,7 @@ export default function BlogPost() {
                   </p>
                 </div>
                 <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
-                  <Link href="/contact">Get in touch</Link>
+                  <a href={CONTACT_MAILTO}>Get in touch</a>
                 </Button>
               </div>
             </div>

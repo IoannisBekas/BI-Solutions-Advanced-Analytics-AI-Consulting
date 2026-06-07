@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withPublicSiteOrigin } from "@/lib/site";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 export default function Products() {
   return (
@@ -46,14 +47,14 @@ export default function Products() {
               <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
                 Each product has its own workspace, tailored for the audience and workflow it
                 serves. Pick the one that fits your problem.
-              </p>
+                </p>
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <Link href="/contact">
-                    <Button className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                  <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                    <a href={CONTACT_MAILTO}>
                       Discuss a product rollout
                       <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                    </a>
+                  </Button>
                   <a href={withPublicSiteOrigin("/quantus/workspace/")}>
                     <Button
                       variant="outline"

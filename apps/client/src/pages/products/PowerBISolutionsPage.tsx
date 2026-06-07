@@ -17,7 +17,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin } from "@/lib/site";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 const POWERBI_SOLUTIONS_APP_URL =
   import.meta.env.VITE_POWERBI_SOLUTIONS_URL ||
@@ -192,7 +193,7 @@ export default function PowerBISolutionsPage() {
                     variant="outline"
                     className="rounded-full border-gray-300 px-8"
                   >
-                    <a href={withSiteBase("/contact")}>
+                    <a href={CONTACT_MAILTO}>
                       Talk to BI Solutions
                       <ExternalLink className="h-4 w-4" />
                     </a>

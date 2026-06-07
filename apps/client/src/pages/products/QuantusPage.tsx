@@ -19,7 +19,8 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin } from "@/lib/site";
+import { CONTACT_MAILTO } from "@/lib/contact";
 import heroBg from "@/assets/generated_images/hero_bg_3d.png";
 
 const QUANTUS_APP_URL =
@@ -323,7 +324,7 @@ export default function QuantusPage() {
                     variant="outline"
                     className="h-12 rounded-full border-gray-300 bg-white/70 px-7 text-base backdrop-blur hover:bg-white sm:h-14 sm:px-8 sm:text-lg"
                   >
-                    <a href={withSiteBase("/contact")}>
+                    <a href={CONTACT_MAILTO}>
                       Talk to BI Solutions
                       <ExternalLink className="h-4 w-4" />
                     </a>

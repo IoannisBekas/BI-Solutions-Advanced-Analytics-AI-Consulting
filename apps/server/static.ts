@@ -366,11 +366,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Ioannis Bekas - Data Scientist & AI Developer with 9+ years delivering analytics, customer insight, and product innovation.",
     path: "/about",
   },
-  "/contact": {
-    title: "Contact - BI Solutions Group",
-    description: "Book a consultation, find us on Google Maps, or send a message to discuss your analytics and AI project.",
-    path: "/contact",
-  },
   "/blog": {
     title: "Blog - BI Solutions Group",
     description: "Insights on analytics, AI, data engineering, and digital transformation from BI Solutions Group.",
@@ -666,6 +661,7 @@ export function serveStatic(app: Express) {
 
   serveGonePath(app, "/insights/disaster-risk-reduction-finance");
   serveGonePath(app, "/blog/disaster-risk-reduction-finance-dashboard-launch");
+  serveGonePath(app, "/contact");
 
   const quantusDirCandidates = [
     path.resolve(distPath, "quantus", "workspace"),

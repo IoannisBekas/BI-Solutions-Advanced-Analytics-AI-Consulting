@@ -22,6 +22,7 @@ import chaniaTax4 from "@/assets/partnerships/chania_tax_4.png";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
 import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
 import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 const portfolioHighlights = [
   {
@@ -100,10 +101,10 @@ export default function Portfolio() {
           actions={
             <>
               <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
-                <Link href="/contact">
+                <a href={CONTACT_MAILTO}>
                   Discuss a similar project
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                </a>
               </Button>
               <Button asChild variant="outline" className="rounded-full border-gray-300 px-8">
                 <Link href="/services">View services</Link>
@@ -175,10 +176,10 @@ export default function Portfolio() {
                 </div>
                 <div className="flex flex-wrap gap-4">
                   <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
-                    <Link href="/contact">
+                    <a href={CONTACT_MAILTO}>
                       Start the conversation
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    </a>
                   </Button>
                   <Button
                     asChild

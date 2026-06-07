@@ -4,8 +4,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { ShieldCheck } from "lucide-react";
-
-const CONTACT_EMAIL = "BekasYannis@gmail.com";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 export default function PrivacyPolicy() {
   return (

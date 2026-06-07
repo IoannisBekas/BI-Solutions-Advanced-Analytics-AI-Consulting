@@ -25,7 +25,6 @@ const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const Portfolio = lazy(() => import("@/pages/Portfolio"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
-const Contact = lazy(() => import("@/pages/Contact"));
 const About = lazy(() => import("@/pages/About"));
 const Products = lazy(() => import("@/pages/Products"));
 const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
@@ -90,7 +89,6 @@ function Router() {
           <Route path="/portfolio" component={Portfolio} />
           <Route path="/blog" component={Blog} />
           <Route path="/blog/:slug" component={BlogPost} />
-          <Route path="/contact" component={Contact} />
           <Route path="/about" component={About} />
           {/* Non-canonical product paths → 308 to the clean alias.
               The server handles direct navigation; these handle in-app SPA links. */}

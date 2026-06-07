@@ -19,6 +19,7 @@ import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { trackEvent } from "@/lib/analytics";
 import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 const BONUSAKI_DEMO_URL =
   import.meta.env.VITE_BONUSAKI_DEMO_URL ||
@@ -204,7 +205,7 @@ export default function BonusakiPage() {
                     className="rounded-full border-gray-300 px-8"
                   >
                     <a
-                      href={withSiteBase("/contact")}
+                      href={CONTACT_MAILTO}
                       onClick={() => trackBonusakiClick("discuss_rollout")}
                     >
                       Discuss a rollout

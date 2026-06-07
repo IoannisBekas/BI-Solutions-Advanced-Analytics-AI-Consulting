@@ -5,8 +5,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Link } from "wouter";
 import { FileText } from "lucide-react";
-
-const CONTACT_EMAIL = "BekasYannis@gmail.com";
+import { CONTACT_EMAIL } from "@/lib/contact";
 
 export default function TermsOfService() {
   return (

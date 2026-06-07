@@ -11,6 +11,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { servicePages } from "@/lib/servicePages";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 const serviceHighlights = [
   {
@@ -67,10 +68,10 @@ export default function Services() {
           actions={
             <>
               <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
-                <Link href="/contact">
+                <a href={CONTACT_MAILTO}>
                   Start a conversation
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                </a>
               </Button>
               <Button asChild variant="outline" className="rounded-full border-gray-300 px-8">
                 <Link href="/portfolio">See selected work</Link>
@@ -201,10 +202,10 @@ export default function Services() {
                 </div>
                 <div className="flex flex-wrap gap-4">
                   <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
-                    <Link href="/contact">
+                    <a href={CONTACT_MAILTO}>
                       Discuss your project
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
+                    </a>
                   </Button>
                   <Button
                     asChild

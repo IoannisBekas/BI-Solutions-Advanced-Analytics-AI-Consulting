@@ -11,6 +11,7 @@ import {
   servicePages,
   type ServicePage,
 } from "@/lib/servicePages";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 function ServiceNotFound() {
   return (
@@ -121,10 +122,10 @@ export default function ServiceDetail() {
           actions={
             <>
               <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
-                <Link href="/contact">
+                <a href={CONTACT_MAILTO}>
                   Discuss this service
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                </a>
               </Button>
               <Button asChild variant="outline" className="rounded-full border-gray-300 px-8">
                 <Link href="/services">Back to all services</Link>

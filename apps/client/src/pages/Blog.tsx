@@ -16,6 +16,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
 import { blogPosts } from "@/data/blogData";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -270,10 +271,10 @@ export default function Blog() {
                   </p>
                 </div>
                 <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
-                  <Link href="/contact">
+                  <a href={CONTACT_MAILTO}>
                     Get in touch
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </div>

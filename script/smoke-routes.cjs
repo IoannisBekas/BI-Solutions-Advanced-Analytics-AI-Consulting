@@ -9,11 +9,6 @@ const routes = [
     body: "BI Solutions Group",
   },
   {
-    path: "/contact",
-    title: "BI Solutions Group",
-    body: "BI Solutions Group",
-  },
-  {
     path: "/products",
     title: "BI Solutions Group",
     body: "BI Solutions Group",
@@ -48,6 +43,12 @@ const jsonRoutes = [
   {
     path: "/api/bonusaki/campaign",
     marker: "rewards",
+  },
+];
+
+const goneRoutes = [
+  {
+    path: "/contact",
   },
 ];
 
@@ -99,6 +100,17 @@ async function smokeJsonRoute(route) {
   return `${route.path} -> json`;
 }
 
+async function smokeGoneRoute(route) {
+  const url = `${baseUrl}${route.path}`;
+  const response = await fetch(url, { redirect: "manual" });
+
+  if (response.status !== 410) {
+    throw new Error(`${route.path} returned HTTP ${response.status}, expected 410`);
+  }
+
+  return `${route.path} -> gone`;
+}
+
 async function main() {
   console.log(`Smoke testing route shells at ${baseUrl}`);
   const failures = [];
@@ -116,6 +128,16 @@ async function main() {
   for (const route of jsonRoutes) {
     try {
       const line = await smokeJsonRoute(route);
+      console.log(`ok ${line}`);
+    } catch (error) {
+      failures.push(`${route.path}: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(`fail ${failures[failures.length - 1]}`);
+    }
+  }
+
+  for (const route of goneRoutes) {
+    try {
+      const line = await smokeGoneRoute(route);
       console.log(`ok ${line}`);
     } catch (error) {
       failures.push(`${route.path}: ${error instanceof Error ? error.message : String(error)}`);

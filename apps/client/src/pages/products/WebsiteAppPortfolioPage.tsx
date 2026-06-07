@@ -17,6 +17,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withSiteBase } from "@/lib/site";
+import { CONTACT_MAILTO } from "@/lib/contact";
 import michailKarnasPreview from "@/assets/portfolio/michail-karnas-preview.svg";
 import rythmikiDrapetsonaPreview from "@/assets/portfolio/rythmiki-drapetsona-preview.svg";
 import mathimatikosIcon from "@/assets/portfolio/mathimatikos-icon.png";
@@ -552,14 +553,15 @@ export default function WebsiteAppPortfolioPage() {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
-                  <a href={withSiteBase("/contact")}>
-                    <Button
-                      variant="outline"
-                      className="rounded-full border-gray-300 px-8"
-                    >
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="rounded-full border-gray-300 px-8"
+                  >
+                    <a href={CONTACT_MAILTO}>
                       Discuss a website or app build
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </>
               }
               footer={
@@ -627,12 +629,12 @@ export default function WebsiteAppPortfolioPage() {
                   deliver it.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                  <a href={withSiteBase("/contact")}>
-                    <Button className="rounded-full bg-white px-8 text-gray-900 hover:bg-gray-100">
+                  <Button asChild className="rounded-full bg-white px-8 text-gray-900 hover:bg-gray-100">
+                    <a href={CONTACT_MAILTO}>
                       Start a conversation
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                   <a href={withSiteBase("/services")}>
                     <Button
                       variant="outline"
