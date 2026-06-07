@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const QRCode = require("qrcode");
 
 function parseArgs(argv) {
@@ -82,6 +83,7 @@ function loadConfig(args) {
     baseUrl,
     placement: args.placement || config.placement || "",
     notes: args.notes || config.notes || "",
+    qrSecret: args.qrSecret || process.env.BONUSAKI_QR_SECRET || "",
   };
 }
 
@@ -91,6 +93,14 @@ function buildUrl(baseUrl, params) {
     url.searchParams.set(key, value);
   }
   return url.toString();
+}
+
+function signQrCode(merchantSlug, campaignSlug, code, secret) {
+  return crypto
+    .createHmac("sha256", secret)
+    .update(`${merchantSlug}:${campaignSlug}:${code}`)
+    .digest("hex")
+    .slice(0, 16);
 }
 
 function buildPrintSheet(config, rows) {
@@ -160,6 +170,9 @@ async function main() {
       merchant: config.merchantSlug,
       campaign: config.campaignSlug,
       qr: code,
+      ...(config.qrSecret
+        ? { verify: signQrCode(config.merchantSlug, config.campaignSlug, code, config.qrSecret) }
+        : {}),
     });
     const svg = await QRCode.toString(url, {
       type: "svg",
@@ -182,8 +195,9 @@ async function main() {
     csvHeader.join(","),
     ...rows.map((row) => csvHeader.map((key) => escapeCsv(row[key])).join(",")),
   ].join("\n");
+  const { qrSecret: _qrSecret, ...safeConfig } = config;
   fs.writeFileSync(path.join(outDir, "manifest.csv"), `${csv}\n`);
-  fs.writeFileSync(path.join(outDir, "config.json"), `${JSON.stringify(config, null, 2)}\n`);
+  fs.writeFileSync(path.join(outDir, "config.json"), `${JSON.stringify(safeConfig, null, 2)}\n`);
   fs.writeFileSync(path.join(outDir, "index.html"), buildPrintSheet(config, rows));
 
   console.log(`Generated ${rows.length} Bonusaki QR codes.`);

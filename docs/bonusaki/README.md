@@ -35,8 +35,17 @@ Generate a cafe QR pack:
 node script/bonusaki-generate-qr-batch.cjs --config docs/bonusaki/sample-cafe-pilot.json
 ```
 
+Generate signed QR URLs after setting `BONUSAKI_QR_SECRET`:
+
+```powershell
+$env:BONUSAKI_QR_SECRET="use-a-32-plus-character-secret"
+node script/bonusaki-generate-qr-batch.cjs --config docs/bonusaki/sample-cafe-pilot.json
+```
+
 The script writes SVG QR codes, `manifest.csv`, and a printable `index.html`
 into `output/bonusaki-qr/<merchant>-<campaign>-<timestamp>/`.
+Signed QR batches include a `verify` URL parameter and should be regenerated
+whenever `BONUSAKI_QR_SECRET` is rotated.
 
 ## Rule
 

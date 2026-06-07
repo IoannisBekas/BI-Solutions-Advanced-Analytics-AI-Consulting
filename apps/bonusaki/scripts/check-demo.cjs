@@ -25,6 +25,25 @@ if (!indexHtml.includes(publicDemoUrl)) {
   throw new Error(`The visible QR fallback link must point to ${publicDemoUrl}`);
 }
 
+for (const endpoint of [
+  "/api/bonusaki/events",
+  "/api/bonusaki/rewards/issue",
+  "/api/bonusaki/rewards/validate",
+  "/api/bonusaki/rewards/redeem",
+]) {
+  if (!mainJs.includes(endpoint)) {
+    throw new Error(`Bonusaki pilot must call ${endpoint}.`);
+  }
+}
+
+if (!mainJs.includes("cashierPin")) {
+  throw new Error("Bonusaki cashier flow must submit a cashier PIN.");
+}
+
+if (!mainJs.includes("qrCode") || !mainJs.includes("qrVerify")) {
+  throw new Error("Bonusaki reward issue flow must include QR code attribution.");
+}
+
 if (!mainJs.includes("/api/bonusaki/events")) {
   throw new Error("Bonusaki demo must send privacy-safe engagement events.");
 }

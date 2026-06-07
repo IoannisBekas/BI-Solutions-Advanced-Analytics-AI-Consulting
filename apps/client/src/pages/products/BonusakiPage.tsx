@@ -60,7 +60,7 @@ const features = [
     icon: Smartphone,
     title: "Wallet-First Redemption",
     description:
-      "The demo shows the intended wallet-pass handoff and a cashier flow for valid, used, and invalid rewards.",
+      "The pilot flow shows a wallet-style reward pass with a public code that cashiers validate and redeem against the production API.",
   },
   {
     icon: LineChart,
@@ -72,7 +72,7 @@ const features = [
     icon: ShieldCheck,
     title: "Single-Use Control Model",
     description:
-      "The public demo uses mock data, while the pilot API supports signed, single-use redemption tokens when production controls are enabled.",
+      "Each issued reward is signed, stored, checked at the cashier, and redeemable once. QR codes can also be generated with signed verification parameters.",
   },
   {
     icon: BadgeCheck,
@@ -83,9 +83,9 @@ const features = [
 ];
 
 const launchChecklist = [
-  "Open the public Bonusaki demo on the BI Solutions domain.",
-  "Try the customer scratch-card flow, merchant reporting view, and cashier validation states.",
-  "Use the product page to discuss a merchant pilot with real campaign rules, cashier controls, and prize inventory.",
+  "Open the Bonusaki pilot flow on the BI Solutions domain with a real merchant, campaign, and QR code.",
+  "Issue a reward through the customer scratch-card flow, then validate and redeem the public code in the cashier tab.",
+  "Confirm production secrets, campaign rules, cashier controls, reward inventory, and privacy wording before letting real customers scan.",
 ];
 
 const bonusakiFaqs = [
@@ -95,14 +95,14 @@ const bonusakiFaqs = [
       "Bonusaki is a scratch-and-win loyalty product concept for local merchants. Customers scan a QR code, play for an instant reward, and redeem the prize through a wallet-style pass.",
   },
   {
-    question: "Is the public Bonusaki demo connected to production data?",
+    question: "Can the public Bonusaki flow issue real rewards?",
     answer:
-      "No. The hosted demo is UI-only and uses mock data so visitors can inspect the customer, merchant, and cashier experience safely.",
+      "Yes, when a controlled merchant pilot is enabled with production secrets. Without those controls, the flow stays in setup mode and will not issue real customer rewards.",
   },
   {
     question: "Is Bonusaki ready for a real merchant pilot?",
     answer:
-      "Yes, as a controlled paid pilot. The public product and demo are live, the server has signed rewards, validation, redemption, and audit logs, and the pilot pack defines the agreement, rules, QR batch, cashier, privacy, and support process. Real wallet issuer accounts and fully automated self-onboarding remain separate expansion work.",
+      "Yes, as a controlled paid pilot. The public product and pilot flow are live, the server has signed rewards, validation, redemption, and audit logs, and the pilot pack defines the agreement, rules, QR batch, cashier, privacy, and support process. Real wallet issuer accounts and fully automated self-onboarding remain separate expansion work.",
   },
   {
     question: "Who is Bonusaki built for?",
@@ -182,7 +182,7 @@ export default function BonusakiPage() {
           <ScrollReveal width="100%">
             <ProductPageHero
               icon={Gift}
-              eyebrow="QR loyalty product demo"
+              eyebrow="QR loyalty pilot"
               title="Bonusaki"
               description="A scratch-and-win loyalty engine for cafes and local merchants: customers scan, play, receive a reward, and redeem it through a wallet-style cashier flow."
               actions={(
@@ -195,7 +195,7 @@ export default function BonusakiPage() {
                       href={BONUSAKI_DEMO_URL}
                       onClick={() => trackBonusakiClick("open_demo_hero")}
                     >
-                      Open Bonusaki demo
+                      Open Bonusaki pilot
                       <ArrowRight className="h-4 w-4" />
                     </a>
                   </Button>
@@ -255,8 +255,8 @@ export default function BonusakiPage() {
                 </h2>
                 <p className="mt-4 text-lg leading-relaxed text-gray-600">
                   Bonusaki is built around a simple loop: scan, capture, reward,
-                  redeem, and measure. The public demo keeps that loop visible
-                  across customer, merchant, and cashier surfaces.
+                  redeem, and measure. The public pilot flow keeps that loop
+                  visible across customer, merchant, and cashier surfaces.
                 </p>
               </div>
             </ScrollReveal>
@@ -296,15 +296,16 @@ export default function BonusakiPage() {
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600">
                   <QrCode className="h-4 w-4" />
-                  Hosted preview
+                  Hosted pilot flow
                 </div>
                 <h2 className="mt-6 text-4xl font-bold font-heading tracking-tight md:text-5xl">
-                  Try the full demo flow under BI Solutions.
+                  Try the full reward flow under BI Solutions.
                 </h2>
                 <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                  The hosted demo is deliberately mock-data only. It is meant to
-                  show the end-to-end experience without exposing production
-                  merchant data, payment flows, or live redemption records.
+                  The hosted flow is connected to the Bonusaki API. Real reward
+                  issuing and redemption only turn on when the merchant pilot
+                  has signed rules, production secrets, QR batch, and cashier
+                  validation configured.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Button
@@ -315,7 +316,7 @@ export default function BonusakiPage() {
                       href={BONUSAKI_DEMO_URL}
                       onClick={() => trackBonusakiClick("open_demo_preview")}
                     >
-                      Launch demo
+                      Launch pilot flow
                       <ArrowRight className="h-4 w-4" />
                     </a>
                   </Button>
@@ -338,7 +339,7 @@ export default function BonusakiPage() {
             <ScrollReveal delay={0.1} width="100%">
               <Card className="rounded-3xl border-gray-200 bg-white p-6 shadow-xl shadow-black/5">
                 <h3 className="text-2xl font-bold font-heading tracking-tight">
-                  Demo checklist
+                  Pilot checklist
                 </h3>
                 <div className="mt-6 space-y-4">
                   {launchChecklist.map((item, index) => (

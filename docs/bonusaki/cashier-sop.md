@@ -14,12 +14,13 @@ uncontrolled cost.
 2. Cashier checks that the reward text matches an active cafe reward.
 3. Cashier opens the validation page or admin tool.
 4. Cashier enters or scans the public reward code.
-5. Cashier confirms status:
-   - valid: fulfill the reward and mark redeemed
+5. Cashier clicks **Validate** and confirms status:
+   - valid: fulfill the reward, then click **Redeem reward**
    - already redeemed: politely decline and call manager if needed
    - invalid: politely decline
    - expired: decline unless manager overrides outside Bonusaki
-6. Cashier records unusual issues in the support log.
+6. Cashier confirms the page shows redeemed after the reward is given.
+7. Cashier records unusual issues in the support log.
 
 ## Cashier PIN rules
 
@@ -35,6 +36,7 @@ uncontrolled cost.
 - codes not found in the validation tool
 - rewards from another merchant or campaign
 - rewards that are already redeemed
+- QR screenshots that never produced a valid server reward code
 
 ## Customer wording
 

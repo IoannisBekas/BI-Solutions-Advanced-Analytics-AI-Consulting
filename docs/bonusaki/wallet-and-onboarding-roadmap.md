@@ -6,18 +6,19 @@ work.
 ## Ready now for a paid pilot
 
 - public product page
-- public mock-data demo
 - signed single-use reward token foundation
 - reward validation and redemption endpoints
 - admin campaign summary endpoint
 - QR batch generation
+- production-aware customer and cashier pilot flow
+- optional signed QR URL verification
 - cashier SOP
 - manual merchant onboarding
 - manual support
 
 ## Apple Wallet and Google Wallet
 
-The current demo shows a wallet-style reward preview. Real production wallet
+The current pilot flow shows a wallet-style reward preview. Real production wallet
 passes require external platform setup:
 
 - Apple Developer account with Wallet/PassKit certificates and pass type ID
@@ -83,6 +84,8 @@ Ready now:
 - stored token hashes
 - public code validation
 - single-use redemption status
+- one reward issue per QR code
+- optional signed QR verification
 - cashier PIN
 - daily issue limit
 - audit timestamps

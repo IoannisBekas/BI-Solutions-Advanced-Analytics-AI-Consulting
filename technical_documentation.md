@@ -283,17 +283,18 @@ Recent live changes included:
 
 ## Bonusaki Product Notes
 
-Bonusaki is currently published as a first-party product page plus a static,
-mock-data demo. The root server also includes a production-pilot API foundation
-for privacy-safe demo events, signed reward issuing, cashier validation,
-redemption audit logs, and admin campaign summaries.
+Bonusaki is currently published as a first-party product page plus a hosted
+pilot flow. The root server includes the production-pilot API foundation for
+privacy-safe events, signed reward issuing, cashier validation, redemption audit
+logs, one-reward-per-QR controls, optional signed QR verification, and admin
+campaign summaries.
 
 Public launch checklist:
 
 - Keep `/bonusaki` as the canonical product/discovery page.
-- Keep `/bonusaki/demo/` as the public UI-only demo.
+- Keep `/bonusaki/demo/` as the public hosted pilot flow.
 - Do not expose private backend repository names, payment-provider internals,
-  redemption secrets, or merchant data in public demo copy.
+  redemption secrets, cashier PINs, or private merchant data in public copy.
 - Run `npm run check`, `npm run build`, and `node script/smoke-routes.cjs`
   against a local server before deployment.
 - Visually check `/bonusaki` and `/bonusaki/demo/` on desktop and mobile,
@@ -302,7 +303,7 @@ Public launch checklist:
   - `https://www.bisolutions.group/bonusaki`
   - `https://www.bisolutions.group/bonusaki/demo/`
 - Confirm the QR asset opens `https://www.bisolutions.group/bonusaki/demo/`.
-- Confirm `POST /api/bonusaki/events` records demo engagement without
+- Confirm `POST /api/bonusaki/events` records pilot engagement without
   customer email addresses or reward secrets.
 
 Production pilot readiness:
@@ -313,6 +314,9 @@ Production pilot readiness:
   absent, the server can fall back to `JWT_SECRET`, but a dedicated secret is
   preferred before real rewards are issued.
 - Set `BONUSAKI_CASHIER_PIN` before enabling cashier redemption.
+- Set `BONUSAKI_QR_SECRET` with at least 32 characters when generating signed
+  QR batches. Set `BONUSAKI_REQUIRE_SIGNED_QR=true` only after printed QR
+  materials have signed `verify` parameters.
 - Set `BONUSAKI_ADMIN_KEY` with at least 24 characters before using admin
   campaign summaries.
 - Define merchant campaign rules, prize inventory, expiration policy, cashier
@@ -342,9 +346,9 @@ node script/bonusaki-generate-qr-batch.cjs --config path\to\cafe-config.json
 
 The output is written to `output/bonusaki-qr/` with SVG QR files,
 `manifest.csv`, `config.json`, and a printable `index.html`.
-Generated URLs include `merchant`, `campaign`, and `qr` query parameters; the
-Bonusaki demo event tracker includes those values in privacy-safe event
-metadata.
+Generated URLs include `merchant`, `campaign`, and `qr` query parameters. When
+`BONUSAKI_QR_SECRET` is set, URLs also include a signed `verify` parameter. The
+Bonusaki event tracker includes those values in privacy-safe event metadata.
 
 Bonusaki API endpoints:
 
@@ -355,7 +359,8 @@ Bonusaki API endpoints:
 - `POST /api/bonusaki/events`
   - stores privacy-safe demo engagement events.
 - `POST /api/bonusaki/rewards/issue`
-  - issues a signed single-use reward token when the pilot is enabled.
+  - issues a signed single-use reward token when the pilot is enabled; includes
+    QR attribution and blocks duplicate issue attempts for the same QR.
 - `POST /api/bonusaki/rewards/validate`
   - validates a token or public code for cashier inspection.
 - `POST /api/bonusaki/rewards/redeem`
@@ -393,6 +398,10 @@ Bonusaki API endpoints:
   - required before issuing real Bonusaki reward tokens
 - `BONUSAKI_CASHIER_PIN`
   - required before real Bonusaki cashier redemption is enabled
+- `BONUSAKI_QR_SECRET`
+  - recommended for signed QR batch verification; use at least 32 characters
+- `BONUSAKI_REQUIRE_SIGNED_QR`
+  - optional hard gate that rejects unsigned QR issue requests
 - `BONUSAKI_ADMIN_KEY`
   - required before Bonusaki admin summaries are available; use at least 24
     characters

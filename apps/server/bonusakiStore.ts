@@ -48,6 +48,7 @@ interface BonusakiRedemptionRow {
   merchant_id: string;
   campaign_id: string;
   reward_id: string;
+  qr_code: string | null;
   customer_email_hash: string | null;
   status: BonusakiRedemptionStatus;
   issued_at: string;
@@ -68,6 +69,9 @@ export interface BonusakiIssueInput {
   merchantSlug?: string;
   campaignSlug?: string;
   customerEmail?: string | null;
+  qrCode?: string | null;
+  qrVerify?: string | null;
+  sessionId?: string | null;
   source?: string | null;
 }
 
@@ -132,6 +136,7 @@ db.exec(`
     merchant_id         TEXT NOT NULL,
     campaign_id         TEXT NOT NULL,
     reward_id           TEXT NOT NULL,
+    qr_code             TEXT,
     customer_email_hash TEXT,
     status              TEXT NOT NULL DEFAULT 'issued',
     issued_at           TEXT NOT NULL,
@@ -163,6 +168,16 @@ db.exec(`
     ON bonusaki_event_log(created_at DESC);
   CREATE INDEX IF NOT EXISTS idx_bonusaki_event_log_name_created
     ON bonusaki_event_log(event_name, created_at DESC);
+`);
+
+const redemptionColumns = db.prepare("PRAGMA table_info(bonusaki_redemptions)").all() as Array<{ name: string }>;
+if (!redemptionColumns.some((column) => column.name === "qr_code")) {
+  db.exec("ALTER TABLE bonusaki_redemptions ADD COLUMN qr_code TEXT");
+}
+db.exec(`
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_bonusaki_redemptions_campaign_qr
+    ON bonusaki_redemptions(campaign_id, qr_code)
+    WHERE qr_code IS NOT NULL AND qr_code <> '';
 `);
 
 const seedPilotDefaults = db.transaction(() => {
@@ -241,8 +256,8 @@ const stmts = {
   insertRedemption: db.prepare(
     `INSERT INTO bonusaki_redemptions (
       id, public_code, token_hash, merchant_id, campaign_id, reward_id,
-      customer_email_hash, status, issued_at, expires_at, metadata_json
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, 'issued', ?, ?, ?)`,
+      qr_code, customer_email_hash, status, issued_at, expires_at, metadata_json
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'issued', ?, ?, ?)`,
   ),
   incrementRewardIssued: db.prepare(
     `UPDATE bonusaki_rewards
@@ -259,6 +274,13 @@ const stmts = {
   ),
   findRedemptionByPublicCode: db.prepare(
     "SELECT * FROM bonusaki_redemptions WHERE public_code = ?",
+  ),
+  findRedemptionByQrCode: db.prepare(
+    `SELECT *
+     FROM bonusaki_redemptions
+     WHERE campaign_id = ? AND qr_code = ?
+     ORDER BY issued_at DESC
+     LIMIT 1`,
   ),
   findRewardById: db.prepare("SELECT * FROM bonusaki_rewards WHERE id = ?"),
   updateRedemptionStatus: db.prepare(
@@ -307,6 +329,10 @@ function getCashierPin() {
   return (process.env.BONUSAKI_CASHIER_PIN || "").trim();
 }
 
+function getQrSecret() {
+  return (process.env.BONUSAKI_QR_SECRET || "").trim();
+}
+
 function getAdminKey() {
   return (process.env.BONUSAKI_ADMIN_KEY || "").trim();
 }
@@ -341,8 +367,57 @@ function randomId(prefix: string) {
 }
 
 function randomPublicCode() {
-  const raw = crypto.randomBytes(8).toString("base64url").toUpperCase();
-  return `BA-${raw.replace(/[^A-Z0-9]/g, "").slice(0, 10)}`;
+  const alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+  let code = "";
+  for (let index = 0; index < 10; index += 1) {
+    code += alphabet[crypto.randomInt(0, alphabet.length)];
+  }
+  return `BA-${code}`;
+}
+
+function normalizeQrCode(value: string | null | undefined) {
+  const normalized = (value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9_-]/g, "")
+    .slice(0, 80);
+  return normalized || null;
+}
+
+function isQrSignatureRequired() {
+  return isTruthy(process.env.BONUSAKI_REQUIRE_SIGNED_QR);
+}
+
+function signQrCode(merchantSlug: string, campaignSlug: string, qrCode: string, secret: string) {
+  return hmacSha256(`${merchantSlug}:${campaignSlug}:${qrCode}`, secret).slice(0, 16);
+}
+
+function isValidQrSignature(
+  merchantSlug: string,
+  campaignSlug: string,
+  qrCode: string,
+  candidate: string | null | undefined,
+) {
+  const qrSecret = getQrSecret();
+  if (qrSecret.length < 32) {
+    return !isQrSignatureRequired();
+  }
+
+  const expected = signQrCode(merchantSlug, campaignSlug, qrCode, qrSecret);
+  const actual = (candidate || "").trim().toLowerCase();
+  if (!/^[a-f0-9]{16}$/.test(actual)) {
+    return !isQrSignatureRequired();
+  }
+  const expectedBuffer = Buffer.from(expected);
+  const actualBuffer = Buffer.from(actual);
+  return (
+    expectedBuffer.length === actualBuffer.length &&
+    crypto.timingSafeEqual(expectedBuffer, actualBuffer)
+  );
+}
+
+function isUniqueConstraintError(error: unknown) {
+  return error instanceof Error && /UNIQUE constraint failed/i.test(error.message);
 }
 
 function base64UrlJson(value: unknown) {
@@ -452,9 +527,12 @@ function chooseReward(campaignId: string) {
 export function getBonusakiPilotStatus() {
   const tokenSecret = getTokenSecret();
   const cashierPin = getCashierPin();
+  const qrSecret = getQrSecret();
   return {
     pilotEnabled: isTruthy(process.env.BONUSAKI_PILOT_ENABLED),
     tokenSigningConfigured: tokenSecret.length >= 32,
+    qrSigningConfigured: qrSecret.length >= 32,
+    signedQrRequired: isQrSignatureRequired(),
     cashierValidationConfigured: cashierPin.length > 0,
     adminConfigured: getAdminKey().length >= 24,
     defaultMerchantSlug: DEFAULT_MERCHANT_SLUG,
@@ -530,6 +608,29 @@ export function issueBonusakiReward(input: BonusakiIssueInput) {
     return { ok: false as const, code: "campaign_unavailable" };
   }
 
+  const merchant = stmts.findMerchantById.get(campaign.merchant_id) as BonusakiMerchantRow | undefined;
+  const merchantSlug = merchant?.slug || DEFAULT_MERCHANT_SLUG;
+  const campaignSlug = campaign.slug || DEFAULT_CAMPAIGN_SLUG;
+  const qrCode = normalizeQrCode(input.qrCode);
+  if (qrCode && !isValidQrSignature(merchantSlug, campaignSlug, qrCode, input.qrVerify)) {
+    return { ok: false as const, code: "invalid_qr" };
+  }
+  if (qrCode) {
+    const existingQrRedemption = stmts.findRedemptionByQrCode.get(campaign.id, qrCode) as
+      | BonusakiRedemptionRow
+      | undefined;
+    if (existingQrRedemption) {
+      const existingReward = stmts.findRewardById.get(existingQrRedemption.reward_id) as
+        | BonusakiRewardRow
+        | undefined;
+      return {
+        ok: false as const,
+        code: "qr_already_used",
+        redemption: buildRedemptionResponse(existingQrRedemption, existingReward),
+      };
+    }
+  }
+
   const issueCountRow = stmts.countCampaignIssuesToday.get(campaign.id) as { count: number };
   if (issueCountRow.count >= campaign.daily_play_limit) {
     return { ok: false as const, code: "daily_limit_reached" };
@@ -564,15 +665,41 @@ export function issueBonusakiReward(input: BonusakiIssueInput) {
       campaign.merchant_id,
       campaign.id,
       reward.id,
+      qrCode,
       customerEmailHash,
       now.toISOString(),
       expiresAt.toISOString(),
-      safeJsonStringify({ source: input.source || "api" }),
+      safeJsonStringify({
+        source: input.source || "api",
+        qrCode,
+        sessionHash: input.sessionId
+          ? hmacSha256(input.sessionId.slice(0, 160), tokenSecret)
+          : null,
+      }),
     );
     stmts.incrementRewardIssued.run(reward.id);
   });
 
-  transaction();
+  try {
+    transaction();
+  } catch (error) {
+    if (qrCode && isUniqueConstraintError(error)) {
+      const existingQrRedemption = stmts.findRedemptionByQrCode.get(campaign.id, qrCode) as
+        | BonusakiRedemptionRow
+        | undefined;
+      if (existingQrRedemption) {
+        const existingReward = stmts.findRewardById.get(existingQrRedemption.reward_id) as
+          | BonusakiRewardRow
+          | undefined;
+        return {
+          ok: false as const,
+          code: "qr_already_used",
+          redemption: buildRedemptionResponse(existingQrRedemption, existingReward),
+        };
+      }
+    }
+    throw error;
+  }
 
   return {
     ok: true as const,

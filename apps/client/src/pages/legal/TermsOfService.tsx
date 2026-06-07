@@ -94,13 +94,15 @@ export default function TermsOfService() {
                   4. Bonusaki Demo and Merchant Pilots
                 </h2>
                 <p>
-                  The public Bonusaki demo is a mock-data preview and does not
-                  create real prizes, wallet passes, merchant obligations, or
-                  customer entitlements. A live Bonusaki merchant pilot requires
-                  a separate written agreement covering campaign rules, prize
-                  inventory, cashier validation, fraud controls, privacy
-                  responsibilities, support expectations, and any commercial
-                  terms.
+                  Bonusaki public preview and pilot routes may show the customer,
+                  merchant, and cashier experience. Real customer entitlements
+                  are created only when a live merchant pilot is enabled, a valid
+                  server-issued reward code exists, and the reward is accepted
+                  under the merchant's approved campaign rules. A live Bonusaki
+                  merchant pilot requires a separate written agreement covering
+                  campaign rules, prize inventory, cashier validation, fraud
+                  controls, privacy responsibilities, support expectations, and
+                  any commercial terms.
                 </p>
               </section>
             </ScrollReveal>

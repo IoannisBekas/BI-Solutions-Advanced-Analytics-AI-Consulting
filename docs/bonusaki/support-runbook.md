@@ -77,7 +77,7 @@ Recommended promise:
 
 Minimum report:
 
-- scans / demo plays
+- scans / reward plays
 - issued rewards
 - redeemed rewards
 - redemption rate

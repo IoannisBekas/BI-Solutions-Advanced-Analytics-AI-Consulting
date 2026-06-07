@@ -28,6 +28,9 @@ const issueBodySchema = z.object({
   merchantSlug: z.string().trim().min(1).max(80).optional(),
   campaignSlug: z.string().trim().min(1).max(80).optional(),
   customerEmail: z.string().trim().email().max(254).optional(),
+  qrCode: z.string().trim().min(1).max(80).optional(),
+  qrVerify: z.string().trim().max(160).optional(),
+  sessionId: z.string().trim().max(160).optional(),
   source: z.string().trim().max(80).optional(),
 });
 
@@ -96,10 +99,18 @@ export function registerBonusakiRoutes(app: Express) {
 
     const result = issueBonusakiReward(parsed.data);
     if (!result.ok) {
-      const status = result.code === "daily_limit_reached" ? 429 : 503;
+      const status =
+        result.code === "daily_limit_reached"
+          ? 429
+          : result.code === "qr_already_used"
+            ? 409
+            : result.code === "invalid_qr"
+              ? 400
+              : 503;
       res.status(status).json({
         message: "Bonusaki pilot reward issuing is not available.",
         code: result.code,
+        redemption: "redemption" in result ? result.redemption : undefined,
         pilot: getBonusakiPilotStatus(),
       });
       return;
