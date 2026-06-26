@@ -31,30 +31,12 @@ export function Navbar() {
       href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
       description: "Semantic model audits and AI-assisted optimization",
     },
-    {
-      name: "Bonusaki",
-      href: PRODUCT_ROUTE_ALIASES.bonusaki,
-      description: "QR-led scratch-and-win loyalty demo for local merchants",
-    },
-    {
-      name: "Greek AI Professional Advisor",
-      href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
-      description: "Greek-language AI guidance for accounting, legal, and consulting",
-    },
-    {
-      name: "Website & App Portfolio",
-      href: PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
-      description: "Case-study portfolio for websites, apps, and BI dashboards",
-    },
   ];
 
   const isProductsActive = pathMatches(location, [
     "/products",
     PRODUCT_ROUTE_ALIASES.quantus,
     PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-    PRODUCT_ROUTE_ALIASES.bonusaki,
-    PRODUCT_ROUTE_ALIASES.aiAdvisor,
-    PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
   ]);
 
   useEffect(() => {
@@ -86,11 +68,9 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     { name: "Products", href: "/products" },
-    { name: "Portfolio", href: "/portfolio" },
-    { name: "Blog", href: "/blog" },
+    { name: "Work", href: "/portfolio" },
     { name: "About", href: "/about" },
   ];
 
@@ -188,10 +168,10 @@ export function Navbar() {
                         onClick={() => setIsProductsOpen(false)}
                       >
                         <div className="text-sm font-semibold text-gray-900">
-                          All products
+                          Flagship products
                         </div>
                         <div className="mt-1 text-sm leading-relaxed text-gray-500">
-                          Explore the BI Solutions product portfolio.
+                          Explore the two public product workspaces.
                         </div>
                       </Link>
                       {productLinks.map((product) => (
@@ -213,30 +193,42 @@ export function Navbar() {
                   </div>
                 </div>
               ) : (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-black relative group",
-                    location === link.href ||
-                      (link.href === "/services" && location.startsWith("/services/")) ||
-                      (link.href === "/blog" && location.startsWith("/blog/"))
-                      ? "text-black"
-                      : "text-gray-500"
-                  )}
-                >
-                  {link.name}
-                  <span
+                link.href.startsWith("mailto:") ? (
+                  <a
+                    key={link.name}
+                    href={link.href}
                     className={cn(
-                      "absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full",
-                      location === link.href ||
-                        (link.href === "/services" && location.startsWith("/services/")) ||
-                        (link.href === "/blog" && location.startsWith("/blog/"))
-                        ? "w-full"
-                        : ""
+                      "text-sm font-medium transition-colors hover:text-black relative group",
+                      "text-gray-500"
                     )}
-                  />
-                </Link>
+                  >
+                    {link.name}
+                    <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full" />
+                  </a>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-black relative group",
+                      location === link.href ||
+                        (link.href === "/services" && location.startsWith("/services/"))
+                        ? "text-black"
+                        : "text-gray-500"
+                    )}
+                  >
+                    {link.name}
+                    <span
+                      className={cn(
+                        "absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full",
+                        location === link.href ||
+                          (link.href === "/services" && location.startsWith("/services/"))
+                          ? "w-full"
+                          : ""
+                      )}
+                    />
+                  </Link>
+                )
               )
             )}
             <Button
@@ -244,7 +236,7 @@ export function Navbar() {
               className="rounded-full px-6 bg-black text-white hover:bg-gray-800 transition-all hover:scale-105"
             >
               <a href={CONTACT_MAILTO}>
-                Get Started
+                Discuss project
               </a>
             </Button>
           </nav>
@@ -322,19 +314,30 @@ export function Navbar() {
                     </div>
                   </div>
                 ) : (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="hover:text-gray-500 transition-colors py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
+                  link.href.startsWith("mailto:") ? (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      className="py-2 transition-colors hover:text-gray-500"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className="hover:text-gray-500 transition-colors py-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  )
                 )
               )}
               <Button asChild className="w-full mt-8 rounded-full py-6 text-lg">
                 <a href={CONTACT_MAILTO} onClick={() => setIsMobileMenuOpen(false)}>
-                  Get Started
+                  Discuss project
                 </a>
               </Button>
             </nav>

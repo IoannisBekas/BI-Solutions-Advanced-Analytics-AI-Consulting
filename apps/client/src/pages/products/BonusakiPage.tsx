@@ -125,6 +125,7 @@ export default function BonusakiPage() {
         title="Bonusaki Cafe Pilot | QR Scratch-and-Win Loyalty"
         description="Bonusaki is a paid cafe pilot for QR scratch-and-win campaigns, with custom rewards, QR batches, cashier validation, privacy wording, and campaign reporting."
         path={PRODUCT_ROUTE_ALIASES.bonusaki}
+        robots="noindex,follow"
         keywords={[
           "Bonusaki",
           "scratch and win loyalty",

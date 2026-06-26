@@ -13,6 +13,7 @@ const SKIP_DIRS = new Set([
   "coverage",
   "__pycache__",
   "attached_assets",
+  "outputs",
 ]);
 
 const TEXT_EXTENSIONS = new Set([

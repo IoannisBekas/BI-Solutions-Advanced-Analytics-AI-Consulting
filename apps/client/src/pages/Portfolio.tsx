@@ -82,6 +82,37 @@ const projects = [
   },
 ] as const;
 
+const webAppShowcases = [
+  {
+    title: "Michail Karnas",
+    category: "Personal portfolio",
+    description:
+      "A focused personal portfolio for an analytics engineer, built around credibility, selected work, and contact pathways.",
+    link: "https://ioannisbekas.github.io/michail-karnas-portfolio/",
+  },
+  {
+    title: "Rythmiki Drapetsonas",
+    category: "Organization website",
+    description:
+      "A Greek-first club website for programs, schedules, parent communication, and local trust-building.",
+    link: "https://ioannisbekas.github.io/Rythm-Drap/",
+  },
+  {
+    title: "Blade & Comb",
+    category: "Service business website",
+    description:
+      "A barbershop site and booking flow designed around service discovery, bilingual navigation, and fast appointment selection.",
+    link: "https://ioannisbekas.github.io/Barber/",
+  },
+  {
+    title: "Mathimatikos.xyz",
+    category: "Education web app",
+    description:
+      "An AI math learning platform with step-by-step solving, practice generation, and a product-style learning workflow.",
+    link: "https://mathimatikos.xyz/",
+  },
+] as const;
+
 export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
@@ -157,6 +188,53 @@ export default function Portfolio() {
           </div>
         </section>
 
+        <section id="web-apps" className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+          <ScrollReveal className="max-w-3xl" width="100%">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+              Web and app launches
+            </p>
+            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+              Website and app work now sits inside the portfolio.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-gray-600">
+              These examples support the web app development offer without
+              presenting the portfolio itself as a separate product.
+            </p>
+          </ScrollReveal>
+
+          <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2">
+            {webAppShowcases.map((showcase, index) => (
+              <ScrollReveal
+                key={showcase.title}
+                delay={index * 0.06}
+                width="100%"
+                className="h-full"
+              >
+                <article className="flex h-full flex-col rounded-[1.75rem] border border-gray-200 bg-white p-6 shadow-xl shadow-black/[0.04]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
+                    {showcase.category}
+                  </p>
+                  <h3 className="mt-4 text-2xl font-bold font-heading tracking-tight text-gray-950">
+                    {showcase.title}
+                  </h3>
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-600">
+                    {showcase.description}
+                  </p>
+                  <a
+                    href={showcase.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 transition-colors hover:text-gray-600"
+                  >
+                    Visit live site
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </article>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+
         <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
@@ -186,7 +264,7 @@ export default function Portfolio() {
                     variant="outline"
                     className="rounded-full border-gray-500 px-8 text-gray-200 hover:bg-white/10 hover:text-white"
                   >
-                    <Link href="/products">View product ecosystem</Link>
+                    <Link href="/products">View tools</Link>
                   </Button>
                 </div>
               </div>

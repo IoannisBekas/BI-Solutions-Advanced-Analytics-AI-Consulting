@@ -48,7 +48,7 @@ Modern website and web app development should connect design, content, performan
 
 At BI Solutions, web development sits next to analytics, BI, and AI rather than away from them. That matters because a website often becomes the source of the next data workflow: leads, form submissions, booking behavior, content engagement, funnel analysis, and product usage.
 
-The dedicated <a href="/services/website-app-development" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">website and app development service room</a> explains this delivery approach in more detail. The goal is not just to launch pages. The goal is to ship a digital surface that can support positioning, workflow, and measurable business outcomes.
+The dedicated <a href="/services/website-app-development" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">website and app development service</a> explains this delivery approach in more detail. The goal is not just to launch pages. The goal is to ship a digital surface that can support positioning, workflow, and measurable business outcomes.
 
 ## What a good first version should include
 
@@ -66,7 +66,7 @@ This is especially important for service companies in Athens, Thessaloniki, and 
 
 SEO is not only about publishing articles. The technical surface matters too. Clean routes, fast pages, readable headings, descriptive metadata, internal links, and structured content all help search engines and users understand the site. More importantly, they help visitors move from search intent to action.
 
-The <a href="/website-app-portfolio" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">website and app portfolio</a> is the proof layer for this work. Service pages explain the offer, portfolio pages show delivery, and articles answer the questions prospects ask before they are ready to contact. When these pieces connect, the site becomes more than content. It becomes a lead-quality system.
+The <a href="/portfolio#web-apps" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">web and app work in the portfolio</a> is the proof layer for this service. Service pages explain the offer, portfolio examples show delivery, and articles answer the questions prospects ask before they are ready to contact. When these pieces connect, the site becomes more than content. It becomes a lead-quality system.
 
 ## FAQ
 
@@ -109,7 +109,7 @@ The risk is not only technical. Business teams may start making decisions from n
 
 Good BI consulting improves the reporting system, not just the visual layer. That includes data modeling, measure logic, naming conventions, refresh design, access control, documentation, and stakeholder alignment across tools such as Power BI, Tableau, Looker, and similar platforms.
 
-The dedicated <a href="/services/business-intelligence-semantic-modeling" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">business intelligence and semantic modeling service room</a> covers this scope directly. The focus is on dashboards and semantic models that teams can trust, reuse, and maintain.
+The dedicated <a href="/services/business-intelligence-semantic-modeling" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">business intelligence and semantic modeling service</a> covers this scope directly. The focus is on dashboards and semantic models that teams can trust, reuse, and maintain.
 
 ## The role of semantic models
 
@@ -243,7 +243,7 @@ For professional services, AI can support research, drafting, internal knowledge
 
 Many AI discussions start with the model. That is the wrong first question. The better question is what workflow needs improvement and what level of accuracy, privacy, review, and control the workflow requires.
 
-The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">advanced analytics and AI service room</a> is structured around this idea. AI delivery should connect use-case framing, data readiness, workflow design, and adoption.
+The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">advanced analytics and AI service</a> is structured around this idea. AI delivery should connect use-case framing, data readiness, workflow design, and adoption.
 
 ## Greek businesses need local operating context
 
@@ -310,7 +310,7 @@ The same issue exists in BI. Dashboards and AI assistants both depend on shared 
 
 A useful data strategy should not be a long document that no one uses. It should define operating rules: priority datasets, owners, access patterns, quality checks, documentation habits, and delivery sequencing.
 
-The <a href="/services/data-strategy-governance" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">data strategy and governance service room</a> focuses on those practical operating rules. The goal is to make data usable for reporting, analytics, and AI without losing control.
+The <a href="/services/data-strategy-governance" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">data strategy and governance service</a> focuses on those practical operating rules. The goal is to make data usable for reporting, analytics, and AI without losing control.
 
 ## Better data reduces AI risk
 
@@ -377,7 +377,7 @@ As more people rely on the output, the process becomes harder to defend. The tea
 
 A practical cloud migration should improve ingestion, storage, transformation, access, and refresh reliability. It should also make ownership clearer. Who owns the source? Who owns the transformation? Who approves metric changes? Who monitors failures?
 
-The <a href="/services/digital-transformation-cloud-migration" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">digital transformation and cloud migration service room</a> frames cloud work around these operating questions.
+The <a href="/services/data-strategy-governance" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">data strategy and cloud foundations service</a> frames cloud work around these operating questions.
 
 ## Analytics needs architecture, not just hosting
 
@@ -423,7 +423,7 @@ At that point, the team needs to know which data was used, which code version pr
 
 Small teams do not always need a complex platform. They often need a clean repository, environment management, scheduled jobs, basic tests, logging, documentation, and clear handoff rules.
 
-The <a href="/services/mlops-productionization" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">MLOps and productionization service room</a> focuses on that practical transition from experiment to maintained system.
+The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI and automation workflows service</a> focuses on that practical transition from experiment to maintained system.
 
 ## Productionization changes the mindset
 
@@ -469,7 +469,7 @@ These questions matter for GDPR, but they also matter for day-to-day trust. If p
 
 GDPR does not mean analytics should stop. It means data use needs purpose, minimization, access control, retention awareness, and responsible handling of personal data.
 
-The <a href="/services/data-strategy-governance" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">data strategy and governance service room</a> helps define those operating rules in a way that supports analytics, BI, and AI delivery.
+The <a href="/services/data-strategy-governance" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">data strategy and governance service</a> helps define those operating rules in a way that supports analytics, BI, and AI delivery.
 
 ## Governance should be proportional
 
@@ -515,7 +515,7 @@ Training helps teams move from random experimentation to useful operating patter
 
 A practical AI literacy program should explain prompting, verification, privacy, hallucination risk, review workflows, and appropriate use cases. It should also connect those lessons to the company's real tasks.
 
-The <a href="/services/ai-literacy-change-management" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management service room</a> focuses on this kind of adoption support.
+The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI and automation workflows service</a> includes this kind of adoption support.
 
 ## Change management matters
 
@@ -827,7 +827,7 @@ A simple owner field gives teams a route for questions and changes. That is ofte
 
 Power BI often fits Microsoft-heavy environments and strong Excel adoption. Tableau is strong for visual exploration and analyst-led storytelling. Looker can be powerful when semantic modeling and governed metrics are central to the data culture.
 
-BI Solutions approaches tool choice inside the broader <a href="/services/business-intelligence-semantic-modeling" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">BI service room</a>, because the reporting tool is only one part of the system.
+BI Solutions approaches tool choice inside the broader <a href="/services/business-intelligence-semantic-modeling" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">BI service</a>, because the reporting tool is only one part of the system.
 
 ## Avoid choosing only for demos
 
@@ -1445,7 +1445,7 @@ That approach keeps delivery realistic and gives the business evidence before in
 
 A useful case study explains the starting problem, the audience, constraints, decisions, technology, and result. This helps buyers compare relevance, not just visual style.
 
-For BI Solutions, the <a href="/website-app-portfolio" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">website and app portfolio</a> should work together with service pages and blog content. The service page explains the offer, the blog educates, and the portfolio proves delivery.
+For BI Solutions, the <a href="/portfolio#web-apps" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">web and app work in the portfolio</a> should work together with service pages and resource content. The service page explains the offer, resources educate, and the portfolio proves delivery.
 
 ## Make the proof specific
 
@@ -1568,7 +1568,7 @@ In practice, it means BI Solutions can present the product through the main site
 
 This is the real shift behind Power BI Solutions. The product is not just describing semantic model best practices; it is operationalizing them. A structured upload flow, integrated diagnostics, AI guidance, and dedicated authentication make the experience more consistent for teams that need repeatable review rather than one-off commentary.
 
-For BI leaders, that means faster feedback loops. For analysts and developers, it means fewer handoffs and less ambiguity. And for organizations trying to raise the quality of their Power BI estate, it creates a clear home for semantic model analysis inside the broader BI Solutions ecosystem.
+For BI leaders, that means faster feedback loops. For analysts and developers, it means fewer handoffs and less ambiguity. And for organizations trying to raise the quality of their Power BI estate, it creates a clear home for semantic model analysis inside the BI Solutions product shell.
 
 Power BI models do not fail because teams lack opinions. They fail because review, optimization, and decision-making are scattered. Power BI Solutions brings those steps together into one workspace and gives semantic model analysis the dedicated product surface it has been missing.`,
     author: "BI Solutions",
@@ -1587,6 +1587,45 @@ Power BI models do not fail because teams lack opinions. They fail because revie
   },
 ];
 
+export const featuredBlogSlug =
+  "power-bi-consulting-dashboards-business-infrastructure";
+
+export const prominentBlogSlugs = [
+  featuredBlogSlug,
+  "semantic-modeling-power-bi-clean-models",
+  "dashboard-requirements-before-power-bi-build",
+  "data-strategy-before-ai-better-foundations",
+  "ai-consulting-greek-businesses-practical-use-cases",
+  "website-web-app-development-greece-business-needs",
+] as const;
+
+export const secondaryBlogSlugs = [
+  "kpi-dictionary-business-intelligence",
+  "data-quality-checklist-analytics-projects",
+  "analytics-roadmap-first-90-days",
+  "data-governance-gdpr-scale-analytics-control",
+  "cloud-data-warehouse-vs-spreadsheets",
+  "internal-tools-vs-saas-build-buy",
+] as const;
+
+const visibleBlogSlugs = [...prominentBlogSlugs, ...secondaryBlogSlugs];
+const visibleBlogSlugSet = new Set<string>(visibleBlogSlugs);
+
+function getPostsForSlugs(slugs: readonly string[]) {
+  return slugs
+    .map((slug) => blogPosts.find((post) => post.slug === slug))
+    .filter((post): post is BlogPost => Boolean(post));
+}
+
+export const featuredBlogPost = getBlogPostBySlug(featuredBlogSlug);
+export const prominentBlogPosts = getPostsForSlugs(prominentBlogSlugs);
+export const secondaryBlogPosts = getPostsForSlugs(secondaryBlogSlugs);
+export const visibleBlogPosts = getPostsForSlugs(visibleBlogSlugs);
+
+export function isBlogPostIndexable(slug: string) {
+  return visibleBlogSlugSet.has(slug);
+}
+
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((post) => post.slug === slug);
 }
@@ -1599,7 +1638,7 @@ export function getRelatedPosts(
 
   if (!currentPost) return [];
 
-  return blogPosts
+  return visibleBlogPosts
     .filter(
       (post) =>
         post.slug !== currentSlug && post.category === currentPost.category,

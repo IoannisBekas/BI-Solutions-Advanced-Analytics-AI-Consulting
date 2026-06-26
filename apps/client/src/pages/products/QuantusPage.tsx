@@ -575,8 +575,7 @@ export default function QuantusPage() {
                     Public methodology, clear launch path
                   </div>
                   <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
-                    Launch a Quantus workflow without leaving the BI Solutions
-                    ecosystem
+                    Launch a Quantus workflow from the BI Solutions product shell
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
                     The BI Solutions site acts as the product shell and discovery

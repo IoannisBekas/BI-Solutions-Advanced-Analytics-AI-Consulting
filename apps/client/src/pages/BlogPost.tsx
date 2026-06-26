@@ -17,7 +17,11 @@ import { ArticleVisual } from "@/components/blog/ArticleVisual";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
-import { getBlogPostBySlug, getRelatedPosts } from "@/data/blogData";
+import {
+  getBlogPostBySlug,
+  getRelatedPosts,
+  isBlogPostIndexable,
+} from "@/data/blogData";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 function renderRichText(line: string) {
@@ -169,7 +173,7 @@ export default function BlogPost() {
         <main className="pt-32 pb-20">
           <PublicPageHero
             icon={Newspaper}
-            eyebrow="Blog"
+            eyebrow="Insights"
             title="Article not found."
             description="The article you are looking for is not available at this route."
             actions={
@@ -185,6 +189,7 @@ export default function BlogPost() {
   }
 
   const shareUrl = window.location.href;
+  const robots = isBlogPostIndexable(post.slug) ? "index,follow" : "noindex,follow";
   const shareText = encodeURIComponent(post.title);
   const articleWordCount = post.content
     .replace(/<[^>]+>/g, " ")
@@ -266,6 +271,7 @@ export default function BlogPost() {
         path={`/blog/${post.slug}`}
         image={post.featuredImage}
         type="article"
+        robots={robots}
         structuredData={structuredData}
       />
       <Navbar />

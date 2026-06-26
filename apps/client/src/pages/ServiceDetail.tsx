@@ -1,4 +1,5 @@
-import { Link, useRoute } from "wouter";
+import { useEffect } from "react";
+import { Link, useLocation, useRoute } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -8,7 +9,8 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import {
   getServicePageBySlug,
-  servicePages,
+  legacyServiceRedirects,
+  servicePillarPages,
   type ServicePage,
 } from "@/lib/servicePages";
 import { CONTACT_MAILTO } from "@/lib/contact";
@@ -22,7 +24,7 @@ function ServiceNotFound() {
           icon={Sparkles}
           eyebrow="Services"
           title="Service page not found."
-          description="The service room you are looking for is not available at this route."
+          description="The service page you are looking for is not available at this route."
           actions={
             <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
               <Link href="/services">
@@ -89,16 +91,28 @@ function buildStructuredData(service: ServicePage) {
 }
 
 export default function ServiceDetail() {
+  const [, navigate] = useLocation();
   const [, params] = useRoute("/services/:slug");
   const slug = params?.slug || "";
+  const legacyRedirect = legacyServiceRedirects[slug];
   const service = getServicePageBySlug(slug);
+
+  useEffect(() => {
+    if (legacyRedirect) {
+      navigate(legacyRedirect, { replace: true });
+    }
+  }, [legacyRedirect, navigate]);
+
+  if (legacyRedirect) {
+    return null;
+  }
 
   if (!service) {
     return <ServiceNotFound />;
   }
 
   const Icon = service.icon;
-  const relatedServices = servicePages
+  const relatedServices = servicePillarPages
     .filter((item) => item.slug !== service.slug)
     .slice(0, 3);
 
@@ -154,14 +168,14 @@ export default function ServiceDetail() {
         <section className="mx-auto max-w-7xl px-6 md:px-12">
           <ScrollReveal className="max-w-3xl" width="100%">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-              What this room covers
+              What this service covers
             </p>
             <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
               A focused service page for {service.shortTitle.toLowerCase()}.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               This page separates the service from the broader BI Solutions
-              ecosystem, so clients and search engines can understand the exact
+              offer, so clients and search engines can understand the exact
               problem area, delivery scope, and expected outcomes.
             </p>
           </ScrollReveal>
@@ -256,7 +270,7 @@ export default function ServiceDetail() {
           <ScrollReveal width="100%">
             <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                Connected service rooms
+                Related services
               </p>
               <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
                 <div>
@@ -264,9 +278,9 @@ export default function ServiceDetail() {
                     Keep the broad BI Solutions offer, with sharper entry points.
                   </h2>
                   <p className="mt-4 text-lg leading-relaxed text-gray-300">
-                    Each service room can stand alone for search and client
+                    Each service can stand alone for search and client
                     clarity, while still connecting back to the wider analytics,
-                    AI, BI, and digital delivery ecosystem.
+                    AI, BI, and digital delivery offer.
                   </p>
                 </div>
                 <div className="grid gap-3">

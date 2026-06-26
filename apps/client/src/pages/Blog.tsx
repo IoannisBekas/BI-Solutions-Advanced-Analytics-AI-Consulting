@@ -15,13 +15,18 @@ import { ArticleVisual } from "@/components/blog/ArticleVisual";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Button } from "@/components/ui/button";
-import { blogPosts } from "@/data/blogData";
+import {
+  featuredBlogPost,
+  prominentBlogPosts,
+  secondaryBlogPosts,
+  visibleBlogPosts,
+} from "@/data/blogData";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredPosts = blogPosts.filter((post) => {
+  const filteredPosts = visibleBlogPosts.filter((post) => {
     const query = searchQuery.toLowerCase();
 
     return (
@@ -32,19 +37,21 @@ export default function Blog() {
   });
 
   const isSearching = searchQuery.length > 0;
-  const featuredPost = blogPosts[0];
-  const otherPosts = blogPosts.slice(1);
+  const featuredPost = featuredBlogPost ?? prominentBlogPosts[0];
+  const otherPosts = prominentBlogPosts.filter(
+    (post) => post.slug !== featuredPost?.slug,
+  );
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title="Blog"
-        description="Explore BI Solutions insights on AI, analytics, business intelligence, machine learning, and digital transformation."
+        title="Insights"
+        description="Curated BI Solutions resources on business intelligence, semantic modeling, AI workflows, data strategy, and web app delivery."
         path="/blog"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "Blog",
-          name: "BI Solutions Blog",
+          name: "BI Solutions Insights",
           url: "https://www.bisolutions.group/blog",
         }}
       />
@@ -53,9 +60,9 @@ export default function Blog() {
       <main className="pt-32 pb-20">
         <PublicPageHero
           icon={Newspaper}
-          eyebrow="Insights and perspectives"
-          title="Editorial notes on AI, analytics, and digital transformation."
-          description="This section keeps a more editorial rhythm than the main site, but it now follows the same BI Solutions shell: clear hierarchy, tighter spacing, and stronger CTA structure."
+          eyebrow="Curated resources"
+          title="Practical guides for BI, AI, data strategy, and web app delivery."
+          description="A smaller, higher-signal resource library for buyers comparing analytics, AI workflow, reporting, and web app consulting decisions."
           footer={
             <div className="max-w-xl">
               <label className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
@@ -84,7 +91,7 @@ export default function Blog() {
                     Featured article
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                    A highlighted read from the BI Solutions editorial stream.
+                    Start with the clearest commercial topic.
                   </h2>
                 </ScrollReveal>
 
@@ -141,7 +148,7 @@ export default function Blog() {
                     More articles
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                    Short reads on product, AI, and analytics delivery.
+                    Core guides that support the service offer.
                   </h2>
                 </ScrollReveal>
 
@@ -174,6 +181,43 @@ export default function Blog() {
                               Open article
                               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                             </div>
+                          </div>
+                        </article>
+                      </Link>
+                    </ScrollReveal>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {secondaryBlogPosts.length > 0 ? (
+              <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+                <ScrollReveal className="max-w-3xl" width="100%">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                    Secondary resources
+                  </p>
+                  <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                    Supporting reads for teams already scoping the work.
+                  </h2>
+                </ScrollReveal>
+
+                <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {secondaryBlogPosts.map((post, index) => (
+                    <ScrollReveal key={post.slug} delay={index * 0.04} width="100%">
+                      <Link href={`/blog/${post.slug}`} className="group block h-full">
+                        <article className="flex h-full flex-col rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-6 transition-colors hover:bg-white">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
+                            {post.category}
+                          </p>
+                          <h3 className="mt-4 text-xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
+                            {post.title}
+                          </h3>
+                          <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600">
+                            {post.excerpt}
+                          </p>
+                          <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-black">
+                            Open article
+                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                           </div>
                         </article>
                       </Link>

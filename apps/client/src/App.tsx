@@ -14,12 +14,13 @@ import {
   PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
   PRODUCT_ROUTE_DISPLAY_PATHS,
+  PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS,
   decodeRoutePath,
 } from "@/lib/routes";
 // Eagerly load the landing page for instant first paint
 import Home from "@/pages/Home";
 
-// Lazy-load all other pages — only fetched when navigated to
+// Lazy-load all other pages only when navigated to.
 const Services = lazy(() => import("@/pages/Services"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const Portfolio = lazy(() => import("@/pages/Portfolio"));
@@ -31,7 +32,6 @@ const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
 const QuantusPage = lazy(() => import("@/pages/products/QuantusPage"));
 const PowerBISolutionsPage = lazy(() => import("@/pages/products/PowerBISolutionsPage"));
 const BonusakiPage = lazy(() => import("@/pages/products/BonusakiPage"));
-const WebsiteAppPortfolioPage = lazy(() => import("@/pages/products/WebsiteAppPortfolioPage"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -77,21 +77,41 @@ function useDecodedBrowserLocation() {
   return [decodeRoutePath(location), navigate] as [string, typeof navigate];
 }
 
+const canonicalPathRedirects: Record<string, string> = {
+  [PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus]: PRODUCT_ROUTE_ALIASES.quantus,
+};
+
+function CanonicalPathRedirects() {
+  const [location, navigate] = useLocation();
+  const redirectTo = canonicalPathRedirects[location];
+
+  useEffect(() => {
+    if (redirectTo && redirectTo !== location) {
+      navigate(redirectTo, { replace: true });
+    }
+  }, [location, navigate, redirectTo]);
+
+  return null;
+}
+
 function Router() {
   return (
     <WouterRouter hook={useDecodedBrowserLocation} base={SITE_BASE_PATH}>
+      <CanonicalPathRedirects />
       <Suspense fallback={<PageFallback />}>
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/services" component={Services} />
           <Route path="/services/:slug" component={ServiceDetail} />
           <Route path="/products" component={Products} />
+          <Route path="/all-products">
+            {() => <CanonicalRedirect to="/products" />}
+          </Route>
           <Route path="/portfolio" component={Portfolio} />
           <Route path="/blog" component={Blog} />
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/about" component={About} />
-          {/* Non-canonical product paths → 308 to the clean alias.
-              The server handles direct navigation; these handle in-app SPA links. */}
+          {/* Product aliases and retired product routes are normalized in-app. */}
           <Route path={PRODUCT_ROUTES.aiAdvisor}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.aiAdvisor} />}
           </Route>
@@ -100,13 +120,16 @@ function Router() {
           </Route>
           <Route path={PRODUCT_ROUTE_ALIASES.aiAdvisor} component={AIAdvisorPage} />
 
+          <Route path={PRODUCT_ROUTE_ALIASES.quantus} component={QuantusPage} />
           <Route path={PRODUCT_ROUTES.quantus}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
           </Route>
           <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.quantus}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
           </Route>
-          <Route path={PRODUCT_ROUTE_ALIASES.quantus} component={QuantusPage} />
+          <Route path={PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus}>
+            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
+          </Route>
 
           <Route path={PRODUCT_ROUTES.powerBiSolutions}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}
@@ -125,12 +148,14 @@ function Router() {
           </Route>
 
           <Route path={PRODUCT_ROUTES.websiteAppPortfolio}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} />}
+            {() => <CanonicalRedirect to="/portfolio#web-apps" />}
           </Route>
           <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.websiteAppPortfolio}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} />}
+            {() => <CanonicalRedirect to="/portfolio#web-apps" />}
           </Route>
-          <Route path={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio} component={WebsiteAppPortfolioPage} />
+          <Route path={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}>
+            {() => <CanonicalRedirect to="/portfolio#web-apps" />}
+          </Route>
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route component={NotFound} />

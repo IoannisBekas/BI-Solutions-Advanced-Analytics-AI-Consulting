@@ -176,12 +176,16 @@ export default function AIAdvisorPage() {
           throw new Error("Unable to load advisor status.");
         }
 
+        const contentType = res.headers.get("content-type") ?? "";
+        if (!contentType.includes("application/json")) {
+          throw new Error("Advisor status endpoint did not return JSON.");
+        }
+
         const data = await res.json() as { ok?: boolean };
         if (!cancelled) {
           setAdvisorStatus(data.ok ? "ready" : "unavailable");
         }
-      } catch (error) {
-        console.error("AI Advisor status error:", error);
+      } catch {
         if (!cancelled) {
           setAdvisorStatus("unavailable");
         }
@@ -302,6 +306,7 @@ export default function AIAdvisorPage() {
         title="Greek AI Professional Advisor | AI Guidance for Professional Teams"
         description="Ask role-based AI questions for accounting, legal, and consulting workflows with Greek-language guidance and domain framing."
         path={PRODUCT_ROUTE_ALIASES.aiAdvisor}
+        robots="noindex,follow"
         keywords={[
           "Greek AI Professional Advisor",
           "AI for accountants Greece",

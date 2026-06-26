@@ -5,21 +5,21 @@ import { Link } from "wouter";
 
 const services = [
   {
-    title: "Digital Transformation & Cloud Migration",
-    description: "Move from on-premise, Excel-based processes to secure, cloud-native data platforms (Azure, AWS, GCP; Snowflake, BigQuery, Databricks). Enable real-time analytics, collaboration, and scale.",
-    path: "/services/digital-transformation-cloud-migration",
+    title: "BI & Semantic Modeling",
+    description: "Build trusted dashboards, reusable semantic models, KPI definitions, access rules, and reporting systems across Power BI, Tableau, Looker, and similar BI tools.",
+    path: "/services/business-intelligence-semantic-modeling",
     delay: 0.1
   },
   {
-    title: "Advanced Analytics & AI Consulting",
+    title: "AI & Automation Workflows",
     description: "Frame practical AI workflows, predictive analytics, forecasting, classification, and decision-support systems around clear business outcomes and review controls.",
     path: "/services/advanced-analytics-ai",
     delay: 0.2
   },
   {
-    title: "BI & Semantic Modeling",
-    description: "Build trusted dashboards, reusable semantic models, KPI definitions, access rules, and reporting systems across Power BI, Tableau, Looker, and similar BI tools.",
-    path: "/services/business-intelligence-semantic-modeling",
+    title: "Data Strategy & Cloud Foundations",
+    description: "Design the data foundation behind reporting, analytics, and AI: cloud architecture, governance, quality rules, access controls, and migration sequencing.",
+    path: "/services/data-strategy-governance",
     delay: 0.3
   },
   {
@@ -37,7 +37,7 @@ export function ServicesSection() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <ScrollReveal width="100%">
             <h2 className="text-4xl md:text-5xl font-bold font-heading leading-tight">
-              Core capabilities to <br /> drive your success.
+              Clear service pillars for <br /> serious data work.
             </h2>
           </ScrollReveal>
           <ScrollReveal delay={0.2}>

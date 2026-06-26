@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { trackEvent } from "@/lib/analytics";
 import heroBg from "@/assets/generated_images/hero_bg_3d.png";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 export function Hero() {
   const { scrollY } = useScroll();
@@ -59,47 +60,39 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap gap-3 sm:gap-4"
           >
-            <Link href="/services/business-intelligence-semantic-modeling">
-              <Button
+            <Button
+              asChild
+              className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group"
+            >
+              <a
+                href={CONTACT_MAILTO}
                 onClick={() =>
                   trackEvent("hero_cta_click", {
-                    cta: "BI Consulting",
-                    target: "/services/business-intelligence-semantic-modeling",
+                    cta: "Discuss project",
+                    target: "mailto",
                   })
                 }
-                className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg bg-black hover:bg-gray-800 hover:scale-105 transition-all duration-300 group"
               >
-                BI Consulting
-              </Button>
-            </Link>
-            <Link href="/services/advanced-analytics-ai">
-              <Button
+                Discuss a BI/AI project
+              </a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg border-gray-300 hover:bg-gray-50 transition-all"
+            >
+              <Link
+                href="/portfolio"
                 onClick={() =>
                   trackEvent("hero_cta_click", {
-                    cta: "AI Consulting",
-                    target: "/services/advanced-analytics-ai",
+                    cta: "See selected work",
+                    target: "/portfolio",
                   })
                 }
-                variant="outline"
-                className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg border-gray-300 hover:bg-gray-50 transition-all"
               >
-                AI Consulting
-              </Button>
-            </Link>
-            <Link href="/services/website-app-development">
-              <Button
-                onClick={() =>
-                  trackEvent("hero_cta_click", {
-                    cta: "Web Development",
-                    target: "/services/website-app-development",
-                  })
-                }
-                variant="outline"
-                className="rounded-full h-12 px-5 text-base sm:h-14 sm:px-8 sm:text-lg border-gray-300 hover:bg-gray-50 transition-all"
-              >
-                Web Development
-              </Button>
-            </Link>
+                See selected work
+              </Link>
+            </Button>
           </motion.div>
 
           <motion.div

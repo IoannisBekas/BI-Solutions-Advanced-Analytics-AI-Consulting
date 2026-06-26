@@ -85,7 +85,7 @@ export function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 24, opacity: 0 }}
           transition={{ type: "spring", damping: 24, stiffness: 220 }}
-          className="fixed inset-x-3 bottom-3 z-50 sm:left-auto sm:right-5 sm:w-[18rem]"
+          className="fixed inset-x-3 top-24 z-50 sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-auto sm:w-[18rem]"
           role="dialog"
           aria-label={COOKIE_TITLE}
         >

@@ -266,7 +266,7 @@ export default function PowerBISolutionsPage() {
                     Separate auth, shared domain
                   </div>
                   <h2 className="text-3xl md:text-4xl font-bold font-heading tracking-tight">
-                    Launch a dedicated Power BI workflow without leaving the BI Solutions ecosystem
+                    Launch a dedicated Power BI workflow from the BI Solutions product shell
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
                     The BI Solutions site becomes the product shell and discovery layer, while the native Power BI Solutions app handles uploads, analysis, recommendations, chat, and product-specific sessions at `/power-bi-solutions/workspace/`.

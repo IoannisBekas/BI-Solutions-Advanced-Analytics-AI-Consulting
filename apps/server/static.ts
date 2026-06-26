@@ -184,13 +184,40 @@ const blogPostMeta: Record<string, { title: string; description: string }> = {
   },
 };
 
+const indexableBlogSlugs = new Set([
+  "power-bi-consulting-dashboards-business-infrastructure",
+  "semantic-modeling-power-bi-clean-models",
+  "dashboard-requirements-before-power-bi-build",
+  "data-strategy-before-ai-better-foundations",
+  "ai-consulting-greek-businesses-practical-use-cases",
+  "website-web-app-development-greece-business-needs",
+  "kpi-dictionary-business-intelligence",
+  "data-quality-checklist-analytics-projects",
+  "analytics-roadmap-first-90-days",
+  "data-governance-gdpr-scale-analytics-control",
+  "cloud-data-warehouse-vs-spreadsheets",
+  "internal-tools-vs-saas-build-buy",
+]);
+
 function redirectLegacyProductPath(app: Express, fromPath: string, toPath: string) {
-  // Compare against the decoded path so URL-encoded variants ("/Power%20BI%20Solutions")
-  // and their decoded equivalents ("/Power BI Solutions") both match.
+  // Compare raw and decoded paths so URL-encoded variants and their decoded
+  // equivalents both normalize to the canonical URL.
   // Query strings are preserved in the redirect destination.
   const decodedFrom = decodeURIComponent(fromPath);
   app.use((req, res, next) => {
-    if (req.method === "GET" && req.path === decodedFrom) {
+    let decodedRequestPath = req.path;
+    try {
+      decodedRequestPath = decodeURIComponent(req.path);
+    } catch {
+      decodedRequestPath = req.path;
+    }
+
+    const isLegacyPath =
+      req.path === fromPath ||
+      req.path === decodedFrom ||
+      decodedRequestPath === decodedFrom;
+
+    if (req.method === "GET" && isLegacyPath) {
       const qs = req.originalUrl.includes("?")
         ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
         : "";
@@ -277,6 +304,7 @@ interface RouteMeta {
   description: string;
   path: string;
   ogImage?: string;
+  robots?: string;
 }
 
 const BASE_URL = "https://www.bisolutions.group";
@@ -293,7 +321,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
   },
   "/products": {
     title: "Products - BI Solutions Group",
-    description: "Purpose-built analytics products: Quantus Investing, Power BI Solutions, Bonusaki, Greek AI Professional Advisor, and Website & App Portfolio.",
+    description: "Focused analytics product workspaces from BI Solutions Group: Quantus Investing for research workflows and Power BI Solutions for semantic model analysis.",
     path: "/products",
   },
   "/quantus": {
@@ -310,36 +338,23 @@ const routeMetaMap: Record<string, RouteMeta> = {
     title: "Bonusaki Cafe Pilot - QR Scratch-and-Win Loyalty",
     description: "Bonusaki is a paid cafe pilot for QR scratch-and-win campaigns, with custom rewards, QR batches, cashier validation, privacy wording, and campaign reporting.",
     path: "/bonusaki",
+    robots: "noindex,follow",
   },
   "/ai-advisor": {
     title: "Greek AI Professional Advisor - AI for Accountants, Lawyers & Consultants",
     description: "AI-powered professional guidance trained on Greek law and business practices for accountants, lawyers, and consultants.",
     path: "/ai-advisor",
-  },
-  "/website-app-portfolio": {
-    title: "Website & App Portfolio - BI Solutions Group",
-    description: "Full-stack web development portfolio: personal brand websites, organization sites, and education platforms.",
-    path: "/website-app-portfolio",
+    robots: "noindex,follow",
   },
   "/services": {
     title: "Services - BI Solutions Group",
-    description: "Digital transformation, cloud migration, advanced analytics, statistical modeling, and business intelligence services.",
+    description: "Four focused service pillars for BI, AI workflows, data strategy, cloud foundations, and modern web app delivery.",
     path: "/services",
-  },
-  "/services/digital-transformation-cloud-migration": {
-    title: "Digital Transformation & Cloud Migration Services - BI Solutions Group",
-    description: "BI Solutions supports cloud migration, data platform modernization, and digital transformation delivery for organizations in Greece and Europe.",
-    path: "/services/digital-transformation-cloud-migration",
   },
   "/services/advanced-analytics-ai": {
     title: "Advanced Analytics & AI Consulting - BI Solutions Group",
     description: "Advanced analytics and AI consulting from BI Solutions, covering predictive models, statistical analysis, and practical AI workflows.",
     path: "/services/advanced-analytics-ai",
-  },
-  "/services/mlops-productionization": {
-    title: "MLOps & AI Productionization Services - BI Solutions Group",
-    description: "BI Solutions helps teams productionize analytics, ML, and AI workflows with CI/CD, orchestration, documentation, and operating controls.",
-    path: "/services/mlops-productionization",
   },
   "/services/business-intelligence-semantic-modeling": {
     title: "Business Intelligence & Semantic Modeling Services - BI Solutions Group",
@@ -355,11 +370,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     title: "Data Strategy & Governance Services - BI Solutions Group",
     description: "BI Solutions helps organizations design data strategy, governance, access controls, quality rules, and GDPR-aware analytics processes.",
     path: "/services/data-strategy-governance",
-  },
-  "/services/ai-literacy-change-management": {
-    title: "AI Literacy & Change Management Services - BI Solutions Group",
-    description: "AI literacy, analytics enablement, executive briefings, and practical change management support from BI Solutions.",
-    path: "/services/ai-literacy-change-management",
   },
   "/about": {
     title: "About - BI Solutions Group",
@@ -398,7 +408,7 @@ function getOrganizationSchema() {
     logo: DEFAULT_OG_IMAGE,
     image: DEFAULT_OG_IMAGE,
     description:
-      "AI, business intelligence, data strategy, cloud migration, and web app development consultancy for businesses in Greece and Europe.",
+      "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for businesses in Greece and Europe.",
     areaServed: ["Greece", "Europe"],
     founder: {
       "@id": FOUNDER_ID,
@@ -415,7 +425,7 @@ function getOrganizationSchema() {
       "semantic modeling",
       "AI workflows",
       "data strategy",
-      "cloud migration",
+      "cloud foundations",
       "web app development",
       "analytics engineering",
     ],
@@ -451,6 +461,10 @@ function getFounderSchema() {
 }
 
 function getServerStructuredData(meta: RouteMeta) {
+  if (meta.robots?.includes("noindex")) {
+    return null;
+  }
+
   const fullUrl = `${BASE_URL}${meta.path}`;
   const organization = getOrganizationSchema();
   const founder = getFounderSchema();
@@ -581,6 +595,7 @@ function serializeStructuredData(data: unknown) {
 function injectMeta(html: string, meta: RouteMeta): string {
   const ogImage = meta.ogImage || DEFAULT_OG_IMAGE;
   const fullUrl = `${BASE_URL}${meta.path}`;
+  const robots = meta.robots || "index,follow";
   const structuredData = getServerStructuredData(meta);
 
   // Title
@@ -629,7 +644,7 @@ function injectMeta(html: string, meta: RouteMeta): string {
     : "";
   html = html.replace(
     "</head>",
-    `  <link rel="canonical" href="${fullUrl}" />\n${structuredDataScript}</head>`,
+    `  <meta name="robots" content="${robots}" />\n  <link rel="canonical" href="${fullUrl}" />\n${structuredDataScript}</head>`,
   );
 
   return html;
@@ -655,9 +670,17 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/Quantus%20Investing", "/quantus");
   redirectLegacyProductPath(app, "/Quantus", "/quantus");
   redirectLegacyProductPath(app, "/Power%20BI%20Solutions", "/power-bi-solutions");
+  redirectLegacyProductPath(app, "/all-products", "/products");
   redirectLegacyProductPath(app, "/Bonusaki", "/bonusaki");
   redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
-  redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/website-app-portfolio");
+  redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/portfolio#web-apps");
+  redirectLegacyProductPath(app, "/website-app-portfolio", "/portfolio#web-apps");
+
+  // Retired service pages now consolidate into the four canonical pillars.
+  redirectLegacyProductPath(app, "/services/digital-transformation-cloud-migration", "/services/data-strategy-governance");
+  redirectLegacyProductPath(app, "/services/mlops-productionization", "/services/advanced-analytics-ai");
+  redirectLegacyProductPath(app, "/services/ai-literacy-change-management", "/services/advanced-analytics-ai");
+  redirectLegacyProductPath(app, "/services/website-web-app-development", "/services/website-app-development");
 
   serveGonePath(app, "/insights/disaster-risk-reduction-finance");
   serveGonePath(app, "/blog/disaster-risk-reduction-finance-dashboard-launch");
@@ -711,7 +734,11 @@ export function serveStatic(app: Express) {
         const slug = blogMatch[1];
         const postMeta = blogPostMeta[slug];
         if (postMeta) {
-          meta = { ...postMeta, path: routePath };
+          meta = {
+            ...postMeta,
+            path: routePath,
+            robots: indexableBlogSlugs.has(slug) ? "index,follow" : "noindex,follow",
+          };
         }
       }
     }

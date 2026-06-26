@@ -29,17 +29,16 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
           <div className="max-w-md text-center space-y-4">
             <h1 className="text-2xl font-semibold text-gray-900">
-              Κάτι πήγε στραβά
+              Something went wrong
             </h1>
             <p className="text-gray-600">
-              Παρουσιάστηκε ένα απροσδόκητο σφάλμα. Δοκιμάστε να ανανεώσετε τη
-              σελίδα.
+              An unexpected error occurred. Refresh the page and try again.
             </p>
             <button
               onClick={() => window.location.reload()}
               className="inline-flex items-center justify-center rounded-md bg-black px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
             >
-              Ανανέωση σελίδας
+              Refresh page
             </button>
           </div>
         </div>

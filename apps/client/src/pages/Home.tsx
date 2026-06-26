@@ -6,33 +6,15 @@ import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { Link } from "wouter";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
 import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
 import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
-import { Link } from "wouter";
 
-const latestInsights = [
-  {
-    slug: "website-web-app-development-greece-business-needs",
-    title: "Website & Web App Development in Greece: What Businesses Actually Need",
-    excerpt:
-      "A practical view of modern website and web app development: positioning, speed, conversion paths, analytics, and maintainable delivery.",
-    category: "Web Development",
-  },
-  {
-    slug: "power-bi-consulting-dashboards-business-infrastructure",
-    title: "BI Consulting: When Dashboards Become Business Infrastructure",
-    excerpt:
-      "Business intelligence becomes strategic when dashboards stop being isolated reports and start operating as trusted business infrastructure.",
-    category: "BI & Analytics",
-  },
-  {
-    slug: "ai-consulting-greek-businesses-practical-use-cases",
-    title: "AI Consulting for Greek Businesses: Practical Use Cases Beyond Hype",
-    excerpt:
-      "Useful AI consulting starts with controlled workflows, practical use cases, data boundaries, and adoption habits.",
-    category: "AI & Technology",
-  },
+const trustSignals = [
+  { label: "Buyer focus", value: "BI, AI, analytics, and web app delivery" },
+  { label: "Proof", value: "International dashboards and 5-star reviews" },
+  { label: "Delivery style", value: "Strategy, implementation, and handoff" },
 ];
 
 export default function Home() {
@@ -81,7 +63,7 @@ export default function Home() {
             logo: "https://www.bisolutions.group/bi-solutions-logo.png",
             image: "https://www.bisolutions.group/bi-solutions-logo.png",
             description:
-              "AI, business intelligence, data strategy, cloud migration, and web app development consultancy for businesses in Greece and Europe.",
+              "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for businesses in Greece and Europe.",
             areaServed: ["Greece", "Europe"],
             founder: {
               "@id": "https://www.bisolutions.group/about#ioannis-bekas",
@@ -93,7 +75,7 @@ export default function Home() {
               "semantic modeling",
               "AI workflows",
               "data strategy",
-              "cloud migration",
+              "cloud foundations",
               "web app development",
               "analytics engineering",
             ],
@@ -117,6 +99,14 @@ export default function Home() {
                   "@type": "Service",
                   name: "Advanced analytics and AI consulting",
                   url: "https://www.bisolutions.group/services/advanced-analytics-ai",
+                },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: "Data strategy and cloud foundations",
+                  url: "https://www.bisolutions.group/services/data-strategy-governance",
                 },
               },
               {
@@ -161,19 +151,46 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+
+        <section className="border-y border-gray-200 bg-white">
+          <div className="mx-auto grid max-w-7xl gap-0 px-6 md:grid-cols-3 md:px-12">
+            {trustSignals.map((item) => (
+              <div
+                key={item.label}
+                className="border-b border-gray-200 py-6 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 md:px-8 md:first:pl-0 md:last:pr-0"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  {item.label}
+                </p>
+                <p className="mt-2 text-base font-medium leading-relaxed text-gray-900">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <ServicesSection />
-        <LatestInsightsSection />
-        <ProductShowcase
-          badge="Product Studio"
-          id="products"
-          heading="Five products, each purpose-built for a specific workflow."
-          description="Quantus Investing, Power BI Solutions, Bonusaki, Greek AI Professional Advisor, and Website & App Portfolio - ready to explore."
-        />
 
         <section className="py-24 bg-black text-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <ScrollReveal className="mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-white">Selected Works</h2>
+            <ScrollReveal className="mb-16 max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+                Proof
+              </p>
+              <h2 className="mt-4 text-4xl md:text-5xl font-bold font-heading text-white">
+                Selected analytics work with serious operating contexts.
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-gray-400">
+                Lead with the work that proves BI, analytics, and decision-support depth.
+                Lighter web launches stay in the portfolio as supporting evidence.
+              </p>
+              <Link
+                href="/portfolio"
+                className="mt-6 inline-flex text-sm font-semibold text-white underline underline-offset-4 transition-colors hover:text-gray-300"
+              >
+                View full work archive
+              </Link>
             </ScrollReveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -237,60 +254,16 @@ export default function Home() {
           </div>
         </section>
 
+        <ProductShowcase
+          badge="Flagship products"
+          id="products"
+          heading="Two product workspaces for high-value analytics workflows."
+          description="Quantus Investing and Power BI Solutions are the only public product workspaces. Demos and broader web work are proof points, not competing products."
+        />
+
         <ReviewsSection />
       </main>
       <Footer />
     </div>
-  );
-}
-
-function LatestInsightsSection() {
-  return (
-    <section className="bg-gray-50 py-24">
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <ScrollReveal width="100%">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-              Latest insights
-            </p>
-            <h2 className="mt-4 max-w-3xl text-4xl font-bold font-heading leading-tight md:text-5xl">
-              Practical guides for AI, BI, data strategy, and web development.
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal delay={0.2}>
-            <Link
-              href="/blog"
-              className="flex items-center gap-2 text-sm font-semibold text-black group hover:gap-3 transition-all"
-            >
-              View all articles
-              <div className="h-[1px] w-8 bg-black transition-all group-hover:w-12" />
-            </Link>
-          </ScrollReveal>
-        </div>
-
-        <div className="grid auto-rows-fr grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {latestInsights.map((post, index) => (
-            <ScrollReveal key={post.slug} delay={index * 0.08} className="h-full">
-              <Link href={`/blog/${post.slug}`} className="group block h-full">
-                <article className="flex h-full flex-col rounded-[1.5rem] border border-gray-200 bg-white p-6 shadow-sm shadow-black/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.06]">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
-                    {post.category}
-                  </p>
-                  <h3 className="mt-4 text-xl font-bold font-heading text-gray-950 group-hover:text-gray-700">
-                    {post.title}
-                  </h3>
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-500">
-                    {post.excerpt}
-                  </p>
-                  <div className="mt-6 text-sm font-semibold text-gray-900">
-                    Read article
-                  </div>
-                </article>
-              </Link>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
-    </section>
   );
 }

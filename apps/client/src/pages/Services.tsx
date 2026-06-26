@@ -10,7 +10,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
-import { servicePages } from "@/lib/servicePages";
+import { servicePillarPages } from "@/lib/servicePages";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 const serviceHighlights = [
@@ -20,7 +20,7 @@ const serviceHighlights = [
   },
   {
     label: "Core coverage",
-    value: "Cloud, BI, AI, analytics, and product delivery",
+    value: "BI, AI workflows, data foundations, and web apps",
   },
   {
     label: "Working style",
@@ -54,7 +54,7 @@ export default function Services() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Analytics, AI, and Data Services"
-        description="Explore BI Solutions services across cloud migration, advanced analytics, AI delivery, website and app development, Power BI, MLOps, and data strategy."
+        description="Explore BI Solutions services across business intelligence, semantic modeling, AI workflows, data strategy, governance, and web app delivery."
         path="/services"
       />
       <Navbar />
@@ -64,7 +64,7 @@ export default function Services() {
           icon={Sparkles}
           eyebrow="Consulting, delivery, and enablement"
           title="End-to-end analytics and AI services built to move from strategy into production."
-          description="BI Solutions works across cloud, business intelligence, analytics, AI, and product delivery. The goal is not to add another slide deck to the process - it is to ship systems your team can actually use and maintain."
+          description="BI Solutions helps teams clarify metrics, modernize reporting, build practical AI workflows, and ship web apps or dashboards that can be used and maintained after launch."
           actions={
             <>
               <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
@@ -108,13 +108,13 @@ export default function Services() {
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Each engagement can stay narrow and practical, but the delivery
               model is broad enough to connect data foundations, reporting,
-              AI workflows, and user-facing products when the problem requires
+              AI workflows, and user-facing tools when the problem requires
               it.
             </p>
           </ScrollReveal>
 
           <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {servicePages.map((service, index) => {
+            {servicePillarPages.map((service, index) => {
               const Icon = service.icon;
 
               return (
@@ -143,7 +143,7 @@ export default function Services() {
                       className="mt-7 rounded-full border-gray-300 px-5"
                     >
                       <Link href={service.path}>
-                        Open service room
+                        View service
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -212,7 +212,7 @@ export default function Services() {
                     variant="outline"
                     className="rounded-full border-gray-500 px-8 text-gray-200 hover:bg-white/10 hover:text-white"
                   >
-                    <Link href="/products">View product ecosystem</Link>
+                    <Link href="/products">View tools</Link>
                   </Button>
                 </div>
               </div>

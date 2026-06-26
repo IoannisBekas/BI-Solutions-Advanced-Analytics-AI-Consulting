@@ -2,7 +2,8 @@ import { Link } from "wouter";
 import { Instagram, Linkedin, ArrowUp, Github } from "lucide-react";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withAssetBase } from "@/lib/site";
-import { servicePages } from "@/lib/servicePages";
+import { servicePillarPages } from "@/lib/servicePages";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 const PRIVACY_LABEL = "Privacy Policy";
 const TERMS_LABEL = "Terms of Service";
@@ -12,12 +13,10 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const sitemapLinks = [
-    { label: "Home", href: "/" },
-    { label: "Services", href: "/services" },
-    { label: "Products", href: "/products" },
-    { label: "Portfolio", href: "/portfolio" },
-    { label: "Blog", href: "/blog" },
+  const companyLinks = [
+    { label: "Work", href: "/portfolio" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: CONTACT_MAILTO },
   ];
 
   const productLinks = [
@@ -26,18 +25,12 @@ export function Footer() {
       label: "Power BI Solutions",
       href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
     },
-    {
-      label: "Bonusaki",
-      href: PRODUCT_ROUTE_ALIASES.bonusaki,
-    },
-    {
-      label: "Greek AI Professional Advisor",
-      href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
-    },
-    {
-      label: "Website & App Portfolio",
-      href: PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
-    },
+  ];
+
+  const resourceLinks = [
+    { label: "Insights", href: "/blog" },
+    { label: PRIVACY_LABEL, href: "/privacy-policy" },
+    { label: TERMS_LABEL, href: "/terms-of-service" },
   ];
 
   return (
@@ -61,23 +54,32 @@ export function Footer() {
               </div>
             </Link>
             <p className="max-w-sm leading-relaxed text-gray-400">
-              Enterprise analytics, AI, and digital transformation. Turning
-              data into competitive advantage through cutting-edge technology
-              and strategic consulting.
+              Business intelligence, AI workflows, data strategy, and focused
+              web apps for teams that need clearer decisions and maintainable
+              systems.
             </p>
           </div>
 
           <div className="space-y-6 md:col-span-2">
-            <h4 className="text-lg font-bold font-heading">Sitemap</h4>
+            <h4 className="text-lg font-bold font-heading">Company</h4>
             <ul className="space-y-4">
-              {sitemapLinks.map((item) => (
+              {companyLinks.map((item) => (
                 <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-400 transition-colors hover:text-white"
-                  >
-                    {item.label}
-                  </Link>
+                  {item.href.startsWith("mailto:") ? (
+                    <a
+                      href={item.href}
+                      className="text-gray-400 transition-colors hover:text-white"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className="text-gray-400 transition-colors hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -100,9 +102,9 @@ export function Footer() {
           </div>
 
           <div className="space-y-6 md:col-span-2">
-            <h4 className="text-lg font-bold font-heading">Capabilities</h4>
+            <h4 className="text-lg font-bold font-heading">Services</h4>
             <ul className="space-y-4 text-sm">
-              {servicePages.map((service) => (
+              {servicePillarPages.map((service) => (
                 <li key={service.slug}>
                   <Link
                     href={service.path}
@@ -116,8 +118,20 @@ export function Footer() {
           </div>
 
           <div className="space-y-6 md:col-span-2">
-            <h4 className="text-lg font-bold font-heading">Social</h4>
-            <div className="flex gap-4">
+            <h4 className="text-lg font-bold font-heading">Resources</h4>
+            <ul className="space-y-4 text-sm">
+              {resourceLinks.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="text-gray-400 transition-colors hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-4 pt-2">
               <a
                 href="https://www.instagram.com/bisolutions.group/"
                 target="_blank"
@@ -149,20 +163,6 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between pt-8 text-sm text-gray-500 md:flex-row">
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
             <p>&copy; 2026 BI Solutions Group. All rights reserved.</p>
-            <div className="flex gap-4">
-              <Link
-                href="/privacy-policy"
-                className="transition-colors hover:text-white"
-              >
-                {PRIVACY_LABEL}
-              </Link>
-              <Link
-                href="/terms-of-service"
-                className="transition-colors hover:text-white"
-              >
-                {TERMS_LABEL}
-              </Link>
-            </div>
           </div>
 
           <button

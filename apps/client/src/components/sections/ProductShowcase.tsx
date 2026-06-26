@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { trackEvent } from "@/lib/analytics";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
+import { withPublicSiteOrigin } from "@/lib/site";
 
 const products = [
   {
@@ -40,47 +40,6 @@ const products = [
     ],
     secondaryLabel: "Open workspace",
   },
-  {
-    name: "Bonusaki",
-    href: PRODUCT_ROUTE_ALIASES.bonusaki,
-    appHref: withPublicSiteOrigin("/bonusaki/demo/"),
-    description:
-      "A QR-led scratch-and-win loyalty demo for cafes and local merchants, covering customer play, wallet-style reward, merchant, and cashier flows.",
-    bullets: [
-      "Customer scan flow with instant scratch-and-win rewards",
-      "Merchant dashboard for campaign stats and prize weights",
-      "Cashier validation states for redemption rehearsal",
-    ],
-    secondaryLabel: "Open demo",
-  },
-  {
-    name: "Greek AI Professional Advisor",
-    href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
-    appHref: withSiteBase(PRODUCT_ROUTE_ALIASES.aiAdvisor),
-    description:
-      "AI-assisted Greek professional guidance with official-source grounding first and cautious fallback handling when current verification is unavailable.",
-    bullets: [
-      "Role-based AI advisors: Accountant, Lawyer, and Consultant",
-      "Prefers official Greek and EU sources for current tax, legal, and business questions",
-      "Flags answers that require professional review before action",
-    ],
-  },
-  {
-    name: "Website & App Portfolio",
-    href: PRODUCT_ROUTE_ALIASES.websiteAppPortfolio,
-    appHref: withSiteBase(
-      `${PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}#featured-sites`,
-    ),
-    description:
-      "A curated showcase of BI Solutions web builds across personal branding, local organizations, and AI-native education products.",
-    bullets: [
-      "Live examples spanning portfolio sites, organizations, and education apps",
-      "Designed to show visual range, brand adaptation, and responsive delivery",
-      "Includes direct links to launched projects and a BI Solutions-led showcase page",
-    ],
-    primaryLabel: "View portfolio page",
-    secondaryLabel: "Open showcase",
-  },
 ];
 
 interface ProductItem {
@@ -104,9 +63,9 @@ interface ProductShowcaseProps {
 }
 
 export function ProductShowcase({
-  badge = "Products",
-  heading = "Analytics products from BI Solutions Group.",
-  description = "delivers advisory services and dedicated product experiences across analytics, AI, and web development.",
+  badge = "Flagship products",
+  heading = "Two focused products from BI Solutions Group.",
+  description = "Quantus Investing and Power BI Solutions are the public product workspaces. Demos and case studies live under portfolio and resources.",
   className = "",
   id,
 }: ProductShowcaseProps) {
@@ -166,39 +125,40 @@ export function ProductShowcase({
                   </div>
 
                   <div className="mt-auto flex flex-wrap gap-4 pt-8">
-                    <Link
-                      href={product.href}
-                      onClick={() =>
-                        trackEvent("product_card_click", {
-                          product: product.name,
-                          action: "view_product_page",
-                          target: product.href,
-                        })
-                      }
-                    >
-                      <Button className="rounded-full bg-black px-6 text-white hover:bg-gray-800">
+                    <Button asChild className="rounded-full bg-black px-6 text-white hover:bg-gray-800">
+                      <Link
+                        href={product.href}
+                        onClick={() =>
+                          trackEvent("product_card_click", {
+                            product: product.name,
+                            action: "view_product_page",
+                            target: product.href,
+                          })
+                        }
+                      >
                         {product.primaryLabel ?? "View product page"}
                         <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <a
-                      href={product.appHref}
-                      onClick={() =>
-                        trackEvent("product_card_click", {
-                          product: product.name,
-                          action: product.secondaryLabel ?? "Open app",
-                          target: product.appHref,
-                        })
-                      }
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="rounded-full border-gray-300 px-6"
                     >
-                      <Button
-                        variant="outline"
-                        className="rounded-full border-gray-300 px-6"
+                      <a
+                        href={product.appHref}
+                        onClick={() =>
+                          trackEvent("product_card_click", {
+                            product: product.name,
+                            action: product.secondaryLabel ?? "Open app",
+                            target: product.appHref,
+                          })
+                        }
                       >
                         {product.secondaryLabel ?? "Open app"}
                         <ExternalLink className="h-4 w-4" />
-                      </Button>
-                    </a>
+                      </a>
+                    </Button>
                   </div>
                 </Card>
               </ScrollReveal>
