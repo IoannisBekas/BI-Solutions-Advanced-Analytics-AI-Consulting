@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
-import { clearQuantusSessionArtifacts, USER_STORAGE_KEY } from '../utils/sessionArtifacts';
+import {
+    clearQuantusSessionArtifacts,
+    clearStoredQuantusUser,
+    readStoredQuantusUser,
+    writeStoredQuantusUser,
+} from '../utils/sessionArtifacts';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -109,16 +114,7 @@ function buildUserFromPayload(data: {
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(() => {
-        try {
-            const raw = localStorage.getItem(USER_STORAGE_KEY);
-            if (!raw) return null;
-            const parsed: unknown = JSON.parse(raw);
-            return isValidStoredUser(parsed) ? parsed : null;
-        } catch {
-            return null;
-        }
-    });
+    const [user, setUser] = useState<User | null>(() => readStoredQuantusUser(isValidStoredUser));
     const [isLoading, setIsLoading] = useState(false);
     const [googleClientId, setGoogleClientId] = useState<string | null>(null);
     const clearSession = useCallback(() => {
@@ -129,9 +125,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (user) {
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+            writeStoredQuantusUser(user);
         } else {
-            localStorage.removeItem(USER_STORAGE_KEY);
+            clearStoredQuantusUser();
         }
     }, [user]);
 

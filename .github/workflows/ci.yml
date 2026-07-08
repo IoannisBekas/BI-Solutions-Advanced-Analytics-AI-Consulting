@@ -71,6 +71,10 @@ jobs:
         working-directory: apps/powerbi-solutions
         run: npm audit --audit-level=moderate
 
+      - name: Bonusaki dependency audit
+        working-directory: apps/bonusaki
+        run: npm audit --audit-level=moderate
+
       - name: Quantus lint
         working-directory: apps/quantus
         run: npm run lint

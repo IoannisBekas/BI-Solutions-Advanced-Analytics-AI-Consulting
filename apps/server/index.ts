@@ -87,6 +87,20 @@ declare module "express-serve-static-core" {
 
 const REQUEST_ID_HEADER = "x-request-id";
 const REQUEST_ID_RE = /^[A-Za-z0-9._:-]{1,128}$/;
+const PERMISSIONS_POLICY = [
+  "accelerometer=()",
+  "bluetooth=()",
+  "browsing-topics=()",
+  "camera=()",
+  "display-capture=()",
+  "geolocation=()",
+  "gyroscope=()",
+  "magnetometer=()",
+  "microphone=()",
+  "payment=()",
+  "serial=()",
+  "usb=()",
+].join(", ");
 
 app.disable("x-powered-by");
 
@@ -166,6 +180,11 @@ app.use(
   }),
 );
 
+app.use((_req, res, next) => {
+  res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
+  next();
+});
+
 app.use(
   express.json({
     limit: "2mb",
@@ -211,6 +230,7 @@ app.use((req, res, next) => {
 
 // ─── CORS ──────────────────────────────────────────────────────────────────
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+const allowedOriginSet = new Set(allowedOrigins);
 if (isProduction && allowedOrigins.length === 0) {
   throw new Error("ALLOWED_ORIGINS env var must be set in production");
 }
@@ -230,6 +250,18 @@ for (const origin of allowedOrigins) {
     throw new Error(`Invalid ALLOWED_ORIGINS entry "${origin}": ${(err as Error).message}`);
   }
 }
+
+app.use((req, res, next) => {
+  const requestOrigin = req.header("origin")?.trim() || "";
+  const isPreflight = req.method === "OPTIONS" && Boolean(req.header("access-control-request-method"));
+
+  if (isProduction && isPreflight && requestOrigin && !allowedOriginSet.has(requestOrigin)) {
+    res.status(403).end();
+    return;
+  }
+
+  next();
+});
 
 app.use(
   cors({

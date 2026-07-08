@@ -51,6 +51,20 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-local-only-never-use-
 const TOKEN_COOKIE_NAME = 'auth_token';
 const REQUEST_ID_HEADER = 'x-request-id';
 const REQUEST_ID_RE = /^[A-Za-z0-9._:-]{1,128}$/;
+const PERMISSIONS_POLICY = [
+    'accelerometer=()',
+    'bluetooth=()',
+    'browsing-topics=()',
+    'camera=()',
+    'display-capture=()',
+    'geolocation=()',
+    'gyroscope=()',
+    'magnetometer=()',
+    'microphone=()',
+    'payment=()',
+    'serial=()',
+    'usb=()',
+].join(', ');
 const ALLOWED_ORIGINS = validateAllowedOrigins(
     (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5001,http://127.0.0.1:5001,http://127.0.0.1:3000')
         .split(','),
@@ -93,6 +107,21 @@ app.use(
         crossOriginEmbedderPolicy: false,
     }),
 );
+app.use((_req, res, next) => {
+    res.setHeader('Permissions-Policy', PERMISSIONS_POLICY);
+    next();
+});
+app.use((req, res, next) => {
+    const requestOrigin = req.header('origin')?.trim() || '';
+    const isPreflight = req.method === 'OPTIONS' && Boolean(req.header('access-control-request-method'));
+
+    if (isProduction && isPreflight && requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin)) {
+        res.status(403).end();
+        return;
+    }
+
+    next();
+});
 app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
 app.use(express.json({
     limit: '1mb',

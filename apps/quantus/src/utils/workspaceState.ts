@@ -1,10 +1,16 @@
 import type { AssetEntry, ReportResponse } from "../types";
-import { getStoredReportCacheKey } from "./sessionArtifacts";
+import {
+  clearStoredReportCacheEntries,
+  getStoredReportCacheKey,
+} from "./sessionArtifacts";
 
 export const RECENT_ASSETS_STORAGE_KEY = "quantus-recent-assets";
 export const PINNED_ASSETS_STORAGE_KEY = "quantus-pinned-assets";
 const LEGACY_THEME_STORAGE_KEY = "quantus-theme";
 const THEME_STORAGE_KEY = "quantus-theme-v2";
+const REPORT_CACHE_OPT_IN_STORAGE_KEY = "quantus-report-cache-opt-in";
+const REPORT_CACHE_TTL_MS = 30 * 60 * 1000;
+const RECENT_ASSETS_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 function getStorage() {
   if (typeof window === "undefined") {
@@ -53,6 +59,22 @@ function isStoredReportResponse(value: unknown): value is ReportResponse {
   );
 }
 
+function isStoredReportEnvelope(value: unknown): value is {
+  expiresAt: number;
+  response: ReportResponse;
+} {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { expiresAt?: unknown }).expiresAt === "number" &&
+    isStoredReportResponse((value as { response?: unknown }).response)
+  );
+}
+
+function isReportCacheOptedIn(storage: Storage) {
+  return storage.getItem(REPORT_CACHE_OPT_IN_STORAGE_KEY) === "true";
+}
+
 export function readStoredReportResponse(
   ticker: string,
   userId?: string | null,
@@ -63,10 +85,23 @@ export function readStoredReportResponse(
   }
 
   try {
+    if (!isReportCacheOptedIn(storage)) {
+      clearStoredReportCacheEntries();
+      return null;
+    }
+
     const raw = storage.getItem(getStoredReportCacheKey(ticker, userId));
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    return isStoredReportResponse(parsed) ? parsed : null;
+    if (!isStoredReportEnvelope(parsed)) {
+      storage.removeItem(getStoredReportCacheKey(ticker, userId));
+      return null;
+    }
+    if (parsed.expiresAt <= Date.now()) {
+      storage.removeItem(getStoredReportCacheKey(ticker, userId));
+      return null;
+    }
+    return parsed.response;
   } catch {
     return null;
   }
@@ -83,9 +118,18 @@ export function writeStoredReportResponse(
 
   try {
     if (response.source === "starter") return;
+    if (!isReportCacheOptedIn(storage)) {
+      clearStoredReportCacheEntries();
+      return;
+    }
+
     storage.setItem(
       getStoredReportCacheKey(response.ticker, userId),
-      JSON.stringify(response),
+      JSON.stringify({
+        version: 1,
+        expiresAt: Date.now() + REPORT_CACHE_TTL_MS,
+        response,
+      }),
     );
   } catch {
     // Ignore storage quota and serialization issues.
@@ -103,6 +147,18 @@ function isStoredAssetEntry(value: unknown): value is AssetEntry {
   );
 }
 
+function isStoredAssetsEnvelope(value: unknown): value is {
+  expiresAt: number;
+  assets: AssetEntry[];
+} {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { expiresAt?: unknown }).expiresAt === "number" &&
+    Array.isArray((value as { assets?: unknown }).assets)
+  );
+}
+
 export function readStoredAssets(key: string) {
   const storage = getStorage();
   if (!storage) {
@@ -113,6 +169,13 @@ export function readStoredAssets(key: string) {
     const raw = storage.getItem(key);
     if (!raw) return [] as AssetEntry[];
     const parsed: unknown = JSON.parse(raw);
+    if (isStoredAssetsEnvelope(parsed)) {
+      if (parsed.expiresAt <= Date.now()) {
+        storage.removeItem(key);
+        return [] as AssetEntry[];
+      }
+      return parsed.assets.filter(isStoredAssetEntry);
+    }
     return Array.isArray(parsed) ? parsed.filter(isStoredAssetEntry) : [];
   } catch {
     return [] as AssetEntry[];
@@ -126,6 +189,15 @@ export function writeStoredAssets(key: string, assets: AssetEntry[]) {
   }
 
   try {
+    if (key === RECENT_ASSETS_STORAGE_KEY) {
+      storage.setItem(key, JSON.stringify({
+        version: 1,
+        expiresAt: Date.now() + RECENT_ASSETS_TTL_MS,
+        assets,
+      }));
+      return;
+    }
+
     storage.setItem(key, JSON.stringify(assets));
   } catch {
     // Ignore storage quota and serialization issues.

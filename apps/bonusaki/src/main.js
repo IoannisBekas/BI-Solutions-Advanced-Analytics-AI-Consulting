@@ -10,7 +10,13 @@ const API = {
 };
 
 const SESSION_KEY = "bonusaki_demo_session";
-const CASHIER_PIN_KEY = "bonusaki_cashier_pin";
+const LEGACY_CASHIER_PIN_KEY = "bonusaki_cashier_pin";
+const FALLBACK_REWARD_ICON = "\u{1F381}";
+const SAFE_REWARD_ICON_RE = /^\p{Extended_Pictographic}(?:\uFE0F|\uFE0E)?(?:\u200D\p{Extended_Pictographic}(?:\uFE0F|\uFE0E)?)*$/u;
+
+try {
+  sessionStorage.removeItem(LEGACY_CASHIER_PIN_KEY);
+} catch {}
 
 const REWARD_DISPLAY = {
   burger: { icon: "🍔", label: "Δωρεάν burger" },
@@ -53,6 +59,11 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+function safeRewardIcon(value) {
+  const icon = String(value ?? "").trim();
+  return SAFE_REWARD_ICON_RE.test(icon) ? escapeHtml(icon) : FALLBACK_REWARD_ICON;
+}
+
 function getParams() {
   return new URLSearchParams(window.location.search);
 }
@@ -88,22 +99,6 @@ function getSessionId() {
   } catch {
     return "";
   }
-}
-
-function readStoredCashierPin() {
-  try {
-    return sessionStorage.getItem(CASHIER_PIN_KEY) || "";
-  } catch {
-    return "";
-  }
-}
-
-function writeStoredCashierPin(pin) {
-  try {
-    if (pin) {
-      sessionStorage.setItem(CASHIER_PIN_KEY, pin);
-    }
-  } catch {}
 }
 
 function trackDemoEvent(eventName, metadata = {}) {
@@ -192,7 +187,7 @@ function displayReward(reward) {
   const key = rewardKey(reward);
   const display = REWARD_DISPLAY[key];
   return {
-    icon: display?.icon || (/\p{Extended_Pictographic}/u.test(String(reward?.emoji || "")) ? reward.emoji : "🎁"),
+    icon: safeRewardIcon(display?.icon || reward?.emoji),
     label: display?.label || reward?.label || "Bonusaki reward",
     description: reward?.description || "",
     weight: Number(reward?.weight || 0),
@@ -706,7 +701,6 @@ async function redeemCashierCode() {
     return;
   }
 
-  writeStoredCashierPin(cashierPin);
   try {
     const data = await postJson(API.redeem, { publicCode, cashierPin, cashierId: cashierId || "cashier" });
     renderCashierResult("ok", "ΕΞΑΡΓΥΡΩΘΗΚΕ", "Δώσε τώρα το reward στον πελάτη.", data.redemption);
@@ -743,7 +737,7 @@ function renderCashierControls() {
       <div class="mt-3 grid gap-3 sm:grid-cols-2">
         <div>
           <label class="block text-xs font-bold uppercase tracking-wide text-ink/60" for="cashier-pin">Cashier PIN</label>
-          <input id="cashier-pin" type="password" value="${escapeHtml(readStoredCashierPin())}" class="mt-1 w-full rounded-xl border-2 border-ink bg-cream px-3 py-2 text-sm font-bold outline-none" autocomplete="off" />
+          <input id="cashier-pin" type="password" value="" class="mt-1 w-full rounded-xl border-2 border-ink bg-cream px-3 py-2 text-sm font-bold outline-none" autocomplete="off" />
         </div>
         <div>
           <label class="block text-xs font-bold uppercase tracking-wide text-ink/60" for="cashier-id">Cashier ID</label>
