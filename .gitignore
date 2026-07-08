@@ -11,6 +11,7 @@ apps/powerbi-solutions/dist/
 apps/server/public
 apps/client/public/quantus-app/
 output/
+outputs/
 output_*
 
 # Runtime data & caches
