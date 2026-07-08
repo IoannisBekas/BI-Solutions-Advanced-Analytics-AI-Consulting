@@ -23,6 +23,7 @@ import {
   isBlogPostIndexable,
 } from "@/data/blogData";
 import { CONTACT_MAILTO } from "@/lib/contact";
+import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
 
 function renderRichText(line: string) {
   const nodes: ReactNode[] = [];
@@ -77,7 +78,7 @@ function renderBoldText(value: string, keyOffset: number): ReactNode[] {
 
 function sanitizeHref(value: string) {
   try {
-    const parsed = new URL(value, window.location.origin);
+    const parsed = new URL(value, getPublicSiteOrigin());
     if (parsed.protocol === "http:" || parsed.protocol === "https:" || parsed.protocol === "mailto:") {
       return parsed.toString();
     }
@@ -188,7 +189,9 @@ export default function BlogPost() {
     );
   }
 
-  const shareUrl = window.location.href;
+  // Canonical URL rather than window.location.href: identical on server and
+  // client, so prerendered pages hydrate without mismatches.
+  const shareUrl = withPublicSiteOrigin(`/blog/${post.slug}`);
   const robots = isBlogPostIndexable(post.slug) ? "index,follow" : "noindex,follow";
   const shareText = encodeURIComponent(post.title);
   const articleWordCount = post.content

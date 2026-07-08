@@ -36,7 +36,12 @@ const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
-function App() {
+interface AppProps {
+  /** Set only during build-time prerendering to render a fixed route. */
+  ssrPath?: string;
+}
+
+function App({ ssrPath }: AppProps = {}) {
   useEffect(() => {
     captureAiSearchReferral();
   }, []);
@@ -46,8 +51,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
-          <ScrollToTop />
-          <Router />
+          <Router ssrPath={ssrPath} />
           <CookieConsent />
         </TooltipProvider>
       </QueryClientProvider>
@@ -72,8 +76,8 @@ function CanonicalRedirect({ to }: { to: string }) {
   return null;
 }
 
-function useDecodedBrowserLocation() {
-  const [location, navigate] = useBrowserLocation();
+function useDecodedBrowserLocation(options?: { ssrPath?: string }) {
+  const [location, navigate] = useBrowserLocation(options);
   return [decodeRoutePath(location), navigate] as [string, typeof navigate];
 }
 
@@ -94,9 +98,13 @@ function CanonicalPathRedirects() {
   return null;
 }
 
-function Router() {
+function Router({ ssrPath }: { ssrPath?: string }) {
   return (
-    <WouterRouter hook={useDecodedBrowserLocation} base={SITE_BASE_PATH}>
+    <WouterRouter hook={useDecodedBrowserLocation} base={SITE_BASE_PATH} ssrPath={ssrPath}>
+      {/* Uses wouter's useLocation, so it must live inside the router —
+          outside it would fall back to a default router without ssrPath
+          and crash build-time prerendering. */}
+      <ScrollToTop />
       <CanonicalPathRedirects />
       <Suspense fallback={<PageFallback />}>
         <Switch>

@@ -17,7 +17,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withPublicSiteOrigin } from "@/lib/site";
+import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 const POWERBI_SOLUTIONS_APP_URL =
@@ -108,7 +108,7 @@ const powerBiFaqs = [
 export default function PowerBISolutionsPage() {
   const powerBiWorkspaceDisplayUrl = new URL(
     POWERBI_SOLUTIONS_APP_URL,
-    window.location.origin,
+    getPublicSiteOrigin(),
   ).toString();
 
   return (

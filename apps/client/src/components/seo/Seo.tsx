@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { SsrHeadContext } from "./ssrHead";
 
 const SITE_NAME = "BI Solutions Group";
 const SITE_URL = "https://www.bisolutions.group";
@@ -65,6 +66,8 @@ export function Seo({
   keywords,
   structuredData,
 }: SeoProps) {
+  const ssrHead = useContext(SsrHeadContext);
+
   useEffect(() => {
     const pageTitle = `${title} | ${SITE_NAME}`;
     const canonicalUrl = toAbsoluteUrl(path ?? window.location.pathname);
@@ -111,6 +114,21 @@ export function Seo({
       }
     };
   }, [description, image, keywords, path, robots, structuredData, title, type]);
+
+  // Effects never run during build-time prerendering, so hand the head
+  // values to the collector for the prerender script to inject statically.
+  if (ssrHead) {
+    ssrHead.head = {
+      title: `${title} | ${SITE_NAME}`,
+      description,
+      robots,
+      keywords: keywords && keywords.length > 0 ? keywords.join(", ") : undefined,
+      canonicalUrl: toAbsoluteUrl(path ?? ssrHead.pagePath),
+      imageUrl: toAbsoluteUrl(image),
+      ogType: type,
+      structuredDataJson: structuredData ? JSON.stringify(structuredData) : undefined,
+    };
+  }
 
   return null;
 }

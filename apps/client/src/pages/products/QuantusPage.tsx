@@ -19,7 +19,7 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { withPublicSiteOrigin } from "@/lib/site";
+import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
 import { CONTACT_MAILTO } from "@/lib/contact";
 import heroBg from "@/assets/generated_images/hero_bg_3d.png";
 
@@ -177,7 +177,7 @@ function buildQuantusReportUrl(ticker: string) {
 export default function QuantusPage() {
   const quantusWorkspaceDisplayUrl = new URL(
     QUANTUS_APP_URL,
-    window.location.origin,
+    getPublicSiteOrigin(),
   ).toString();
 
   function openWorkspace() {

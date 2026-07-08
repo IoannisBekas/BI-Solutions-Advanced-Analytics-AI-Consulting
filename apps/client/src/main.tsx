@@ -1,4 +1,4 @@
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
@@ -28,4 +28,13 @@ function restoreGitHubPagesRoute() {
   }
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+const container = document.getElementById("root")!;
+
+// Prerendered pages ship real HTML in #root — hydrate it instead of
+// discarding it. Non-prerendered routes (e.g. after the 404.html redirect)
+// still start from an empty container.
+if (container.hasChildNodes()) {
+  hydrateRoot(container, <App />);
+} else {
+  createRoot(container).render(<App />);
+}

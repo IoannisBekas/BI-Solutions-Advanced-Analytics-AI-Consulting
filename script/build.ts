@@ -4,6 +4,7 @@ import { cp, readFile, rm, writeFile } from "fs/promises";
 import path from "path";
 import { spawn } from "child_process";
 import { getDeployBasePath, joinBasePath } from "./deployBase";
+import { prerenderClient } from "./prerender";
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -25,6 +26,9 @@ async function buildAll() {
   console.log("building client...");
   await viteBuild();
   await writeGitHubPages404();
+
+  console.log("prerendering marketing pages...");
+  await prerenderClient();
 
   await buildNestedApp("Quantus", path.resolve("apps", "quantus"), path.join("quantus", "workspace"));
   await buildNestedApp(

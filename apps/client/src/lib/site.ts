@@ -15,7 +15,7 @@ export const CANONICAL_SITE_ORIGIN = trimTrailingSlash(
   import.meta.env.VITE_CANONICAL_SITE_ORIGIN || DEFAULT_CANONICAL_SITE_ORIGIN,
 );
 
-function getPublicSiteOrigin() {
+export function getPublicSiteOrigin() {
   if (typeof window === "undefined") {
     return CANONICAL_SITE_ORIGIN;
   }
