@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Link } from "wouter";
+import { aiCapabilityPages, aiLocationPages } from "@/lib/servicePages";
 import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
 import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
 import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
@@ -26,6 +27,9 @@ export default function Home() {
         path="/"
         keywords={[
           "AI consulting Greece",
+          "AI consulting services",
+          "generative AI consulting",
+          "predictive analytics consulting",
           "BI consultant Greece",
           "business intelligence consultant Greece",
           "Power BI Tableau Looker consulting",
@@ -48,6 +52,9 @@ export default function Home() {
             about: [
               "business intelligence consulting",
               "AI consulting",
+              "generative AI consulting",
+              "AI automation",
+              "predictive analytics",
               "website and web app development",
               "data strategy",
               "business intelligence",
@@ -74,6 +81,11 @@ export default function Home() {
               "Looker",
               "semantic modeling",
               "AI workflows",
+              "generative AI",
+              "LLM applications",
+              "predictive analytics",
+              "AI governance",
+              "MLOps",
               "data strategy",
               "cloud foundations",
               "web app development",
@@ -97,10 +109,18 @@ export default function Home() {
                 "@type": "Offer",
                 itemOffered: {
                   "@type": "Service",
-                  name: "Advanced analytics and AI consulting",
+                  name: "AI consulting services and implementation",
                   url: "https://www.bisolutions.group/services/advanced-analytics-ai",
                 },
               },
+              ...[...aiCapabilityPages, ...aiLocationPages].map((service) => ({
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: service.title,
+                  url: `https://www.bisolutions.group${service.path}`,
+                },
+              })),
               {
                 "@type": "Offer",
                 itemOffered: {

@@ -197,6 +197,13 @@ const indexableBlogSlugs = new Set([
   "data-governance-gdpr-scale-analytics-control",
   "cloud-data-warehouse-vs-spreadsheets",
   "internal-tools-vs-saas-build-buy",
+  "ai-document-workflows-professional-services",
+  "prompt-workflow-design-business-teams",
+  "ai-assistant-governance-company-policy",
+  "predictive-analytics-forecasting-mistakes",
+  "ai-literacy-teams-adopt-ai-without-operational-risk",
+  "mlops-small-mid-sized-teams-productionize-ai",
+  "model-monitoring-ai-workflows",
 ]);
 
 function redirectLegacyProductPath(app: Express, fromPath: string, toPath: string) {
@@ -217,11 +224,15 @@ function redirectLegacyProductPath(app: Express, fromPath: string, toPath: strin
       req.path === decodedFrom ||
       decodedRequestPath === decodedFrom;
 
-    if (req.method === "GET" && isLegacyPath) {
+    if ((req.method === "GET" || req.method === "HEAD") && isLegacyPath) {
       const qs = req.originalUrl.includes("?")
         ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
         : "";
-      res.redirect(308, `${toPath}${qs}`);
+      const fragmentIndex = toPath.indexOf("#");
+      const destination = fragmentIndex === -1
+        ? `${toPath}${qs}`
+        : `${toPath.slice(0, fragmentIndex)}${qs}${toPath.slice(fragmentIndex)}`;
+      res.redirect(308, destination);
       return;
     }
     next();
@@ -347,14 +358,54 @@ const routeMetaMap: Record<string, RouteMeta> = {
     robots: "noindex,follow",
   },
   "/services": {
-    title: "Services - BI Solutions Group",
-    description: "Four focused service pillars for BI, AI workflows, data strategy, cloud foundations, and modern web app delivery.",
+    title: "Analytics, AI, and Data Services - BI Solutions Group",
+    description: "Explore BI Solutions services across AI strategy, automation, generative AI, predictive analytics, governance, business intelligence, data strategy, and web apps.",
     path: "/services",
   },
   "/services/advanced-analytics-ai": {
-    title: "Advanced Analytics & AI Consulting - BI Solutions Group",
-    description: "Advanced analytics and AI consulting from BI Solutions, covering predictive models, statistical analysis, and practical AI workflows.",
+    title: "AI Consulting Services & Implementation - BI Solutions Group",
+    description: "AI consulting services for strategy, readiness, automation, generative AI, predictive analytics, governance, business intelligence, and production operations.",
     path: "/services/advanced-analytics-ai",
+  },
+  "/services/ai-strategy-readiness": {
+    title: "AI Strategy & Readiness Consulting - BI Solutions Group",
+    description: "AI strategy consulting and readiness assessments to prioritize use cases, assess capabilities, and build a practical roadmap for adoption.",
+    path: "/services/ai-strategy-readiness",
+  },
+  "/services/ai-automation-consulting": {
+    title: "AI Automation & Workflow Consulting - BI Solutions Group",
+    description: "AI automation consulting for document, data, and decision workflows, with practical integration, review controls, and adoption support.",
+    path: "/services/ai-automation-consulting",
+  },
+  "/services/generative-ai-llm-consulting": {
+    title: "Generative AI & LLM Consulting Services - BI Solutions Group",
+    description: "Generative AI and LLM consulting for assistants, RAG systems, prompt workflows, evaluation, integration, and practical business adoption.",
+    path: "/services/generative-ai-llm-consulting",
+  },
+  "/services/predictive-analytics-machine-learning": {
+    title: "Predictive Analytics & Machine Learning Consulting - BI Solutions Group",
+    description: "Predictive analytics and machine learning consulting for forecasting, classification, segmentation, scoring, and decision-support workflows.",
+    path: "/services/predictive-analytics-machine-learning",
+  },
+  "/services/ai-governance-literacy-adoption": {
+    title: "AI Governance, Literacy & Adoption Consulting - BI Solutions Group",
+    description: "AI governance and adoption consulting covering policies, risk controls, AI literacy, responsible use, and EU AI Act-aware operating practices.",
+    path: "/services/ai-governance-literacy-adoption",
+  },
+  "/services/mlops-model-monitoring": {
+    title: "MLOps & Model Monitoring Services - BI Solutions Group",
+    description: "MLOps and model monitoring services for deployment, versioning, evaluation, drift detection, observability, and maintainable AI operations.",
+    path: "/services/mlops-model-monitoring",
+  },
+  "/services/ai-business-intelligence": {
+    title: "AI & Business Intelligence Consulting - BI Solutions Group",
+    description: "AI and business intelligence consulting for automated reporting, Power BI workflows, metric-grounded commentary, and natural-language analysis.",
+    path: "/services/ai-business-intelligence",
+  },
+  "/services/ai-consulting-greece": {
+    title: "AI Consulting Services in Greece - BI Solutions Group",
+    description: "AI consulting in Greece for strategy, automation, generative AI, predictive analytics, governance, business intelligence, and implementation.",
+    path: "/services/ai-consulting-greece",
   },
   "/services/business-intelligence-semantic-modeling": {
     title: "Business Intelligence & Semantic Modeling Services - BI Solutions Group",
@@ -367,8 +418,8 @@ const routeMetaMap: Record<string, RouteMeta> = {
     path: "/services/website-app-development",
   },
   "/services/data-strategy-governance": {
-    title: "Data Strategy & Governance Services - BI Solutions Group",
-    description: "BI Solutions helps organizations design data strategy, governance, access controls, quality rules, and GDPR-aware analytics processes.",
+    title: "Data Strategy & Cloud Foundations Services - BI Solutions Group",
+    description: "Build governed, scalable data foundations with practical strategy, architecture, quality, access controls, cloud platforms, and GDPR-aware operating practices.",
     path: "/services/data-strategy-governance",
   },
   "/about": {
@@ -377,8 +428,8 @@ const routeMetaMap: Record<string, RouteMeta> = {
     path: "/about",
   },
   "/blog": {
-    title: "Blog - BI Solutions Group",
-    description: "Insights on analytics, AI, data engineering, and digital transformation from BI Solutions Group.",
+    title: "Insights - BI Solutions Group",
+    description: "Curated BI Solutions resources on business intelligence, semantic modeling, AI workflows, data strategy, and web app delivery.",
     path: "/blog",
   },
   "/portfolio": {
@@ -502,11 +553,26 @@ function getServerStructuredData(meta: RouteMeta) {
       "@graph": [
         {
           "@type": "Service",
+          "@id": `${fullUrl}#service`,
           name: meta.title.replace(" - BI Solutions Group", ""),
           serviceType: meta.title.replace(" - BI Solutions Group", ""),
           description: meta.description,
           url: fullUrl,
-          areaServed: ["Greece", "Europe"],
+          areaServed: meta.path === "/services/ai-consulting-greece"
+            ? {
+                "@type": "Country",
+                name: "Greece",
+              }
+            : [
+                {
+                  "@type": "Country",
+                  name: "Greece",
+                },
+                {
+                  "@type": "Place",
+                  name: "Europe",
+                },
+              ],
           provider: {
             "@id": ORGANIZATION_ID,
           },
@@ -551,7 +617,7 @@ function getServerStructuredData(meta: RouteMeta) {
           image: meta.ogImage || DEFAULT_OG_IMAGE,
           inLanguage: "en",
           author: {
-            "@id": FOUNDER_ID,
+            "@id": ORGANIZATION_ID,
           },
           publisher: {
             "@id": ORGANIZATION_ID,
@@ -562,7 +628,6 @@ function getServerStructuredData(meta: RouteMeta) {
           },
         },
         organization,
-        founder,
       ],
     };
   }
@@ -592,7 +657,40 @@ function serializeStructuredData(data: unknown) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
+function stripRouteSeoTags(html: string) {
+  return html
+    .replace(/\s*<meta(?=[^>]*\bname=["']robots["'])[^>]*>\s*/gi, "\n")
+    .replace(/\s*<link(?=[^>]*\brel=["']canonical["'])[^>]*>\s*/gi, "\n")
+    .replace(
+      /\s*<script(?=[^>]*\bid=["']seo-structured-data["'])[^>]*>[\s\S]*?<\/script>\s*/gi,
+      "\n",
+    );
+}
+
+function stripPrerenderedRootContent(html: string) {
+  const rootOpen = '<div id="root">';
+  const rootStart = html.indexOf(rootOpen);
+  if (rootStart === -1) {
+    return html;
+  }
+
+  const bodySchemaStart = html.indexOf(
+    '<script type="application/ld+json">',
+    rootStart,
+  );
+  const bodyEnd = html.indexOf("</body>", rootStart);
+  const searchEnd = bodySchemaStart === -1 ? bodyEnd : bodySchemaStart;
+  const rootEnd = html.lastIndexOf("</div>", searchEnd);
+
+  if (searchEnd === -1 || rootEnd === -1 || rootEnd < rootStart) {
+    return html;
+  }
+
+  return `${html.slice(0, rootStart)}${rootOpen}</div>${html.slice(rootEnd + 6)}`;
+}
+
 function injectMeta(html: string, meta: RouteMeta): string {
+  html = stripRouteSeoTags(html);
   const ogImage = meta.ogImage || DEFAULT_OG_IMAGE;
   const fullUrl = `${BASE_URL}${meta.path}`;
   const robots = meta.robots || "index,follow";
@@ -660,6 +758,7 @@ export function serveStatic(app: Express) {
 
   // Cache index.html in memory for meta injection
   const indexHtml = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
+  const clientShellHtml = stripPrerenderedRootContent(indexHtml);
 
   // Quantus workspace sub-paths remain mounted below the public product page.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
@@ -676,10 +775,10 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/portfolio#web-apps");
   redirectLegacyProductPath(app, "/website-app-portfolio", "/portfolio#web-apps");
 
-  // Retired service pages now consolidate into the four canonical pillars.
+  // Retired service pages normalize to the current canonical service URLs.
   redirectLegacyProductPath(app, "/services/digital-transformation-cloud-migration", "/services/data-strategy-governance");
-  redirectLegacyProductPath(app, "/services/mlops-productionization", "/services/advanced-analytics-ai");
-  redirectLegacyProductPath(app, "/services/ai-literacy-change-management", "/services/advanced-analytics-ai");
+  redirectLegacyProductPath(app, "/services/ai-literacy-change-management", "/services/ai-governance-literacy-adoption");
+  redirectLegacyProductPath(app, "/services/mlops-productionization", "/services/mlops-model-monitoring");
   redirectLegacyProductPath(app, "/services/website-web-app-development", "/services/website-app-development");
 
   serveGonePath(app, "/insights/disaster-risk-reduction-finance");
@@ -710,6 +809,27 @@ export function serveStatic(app: Express) {
   if (bonusakiDir) {
     serveProductSpa(app, "/bonusaki/demo", bonusakiDir);
   }
+
+  // Marketing routes are prerendered as <route>/index.html. Serve those files
+  // directly so crawlers receive each page's real body and self-canonical.
+  app.use((req, res, next) => {
+    if ((req.method !== "GET" && req.method !== "HEAD") || isStaticAssetRequest(req.path)) {
+      next();
+      return;
+    }
+
+    const routePath = req.path.replace(/\/$/, "") || "/";
+    const htmlRequestPath =
+      routePath === "/" ? "/index.html" : `${routePath}/index.html`;
+    const htmlPath = resolveContainedPath(distPath, htmlRequestPath);
+
+    if (!htmlPath || !fs.existsSync(htmlPath) || !fs.statSync(htmlPath).isFile()) {
+      next();
+      return;
+    }
+
+    sendUncachedHtml(res, fs.readFileSync(htmlPath, "utf-8"));
+  });
 
   app.use(express.static(distPath, {
     index: false,
@@ -743,6 +863,17 @@ export function serveStatic(app: Express) {
       }
     }
 
-    sendUncachedHtml(res, injectMeta(indexHtml, meta || routeMetaMap["/"]));
+    if (!meta) {
+      res.status(404);
+      sendUncachedHtml(res, injectMeta(clientShellHtml, {
+        title: "Page Not Found - BI Solutions Group",
+        description: "The requested BI Solutions Group page could not be found.",
+        path: routePath,
+        robots: "noindex,follow",
+      }));
+      return;
+    }
+
+    sendUncachedHtml(res, injectMeta(clientShellHtml, meta));
   });
 }

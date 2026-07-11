@@ -11,8 +11,8 @@ const services = [
     delay: 0.1
   },
   {
-    title: "AI & Automation Workflows",
-    description: "Frame practical AI workflows, predictive analytics, forecasting, classification, and decision-support systems around clear business outcomes and review controls.",
+    title: "AI Consulting Services",
+    description: "Move from AI strategy and readiness through automation, generative AI, predictive analytics, governance, and production operations.",
     path: "/services/advanced-analytics-ai",
     delay: 0.2
   },

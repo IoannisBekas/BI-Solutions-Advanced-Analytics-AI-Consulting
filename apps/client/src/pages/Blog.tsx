@@ -194,10 +194,10 @@ export default function Blog() {
               <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                    Secondary resources
+                    Specialist resources
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                    Supporting reads for teams already scoping the work.
+                    Deeper guides for teams planning AI, analytics, and delivery work.
                   </h2>
                 </ScrollReveal>
 

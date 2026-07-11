@@ -243,7 +243,7 @@ For professional services, AI can support research, drafting, internal knowledge
 
 Many AI discussions start with the model. That is the wrong first question. The better question is what workflow needs improvement and what level of accuracy, privacy, review, and control the workflow requires.
 
-The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">advanced analytics and AI service</a> is structured around this idea. AI delivery should connect use-case framing, data readiness, workflow design, and adoption.
+The <a href="/services/ai-consulting-greece" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI consulting service for organizations in Greece</a> is structured around this idea. AI delivery should connect use-case framing, data readiness, workflow design, and adoption.
 
 ## Greek businesses need local operating context
 
@@ -267,7 +267,7 @@ The point is not to install AI everywhere. The point is to identify where a team
 
 Trust comes from constraints. Users need to know what data the assistant can see, what it is allowed to produce, when a human must review the output, and how errors are handled. Without those rules, adoption becomes inconsistent and risk becomes harder to manage.
 
-This is where <a href="/services/ai-literacy-change-management" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management</a> becomes part of delivery. Teams do not only need a working AI tool. They need the judgment to use it well, reject weak outputs, and improve the workflow over time.
+This is where <a href="/services/ai-governance-literacy-adoption" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management</a> becomes part of delivery. Teams do not only need a working AI tool. They need the judgment to use it well, reject weak outputs, and improve the workflow over time.
 
 ## FAQ
 
@@ -278,7 +278,7 @@ This is where <a href="/services/ai-literacy-change-management" class="text-gray
 **Can AI consulting include custom software?** Yes. Many useful AI workflows become small web apps, internal tools, dashboards, or document portals when the business needs repeatability and access control.`,
     author: "BI Solutions",
     date: "April 18, 2026",
-    updatedDate: "April 22, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "8 min read",
     category: "AI & Technology",
     tags: [
@@ -423,7 +423,7 @@ At that point, the team needs to know which data was used, which code version pr
 
 Small teams do not always need a complex platform. They often need a clean repository, environment management, scheduled jobs, basic tests, logging, documentation, and clear handoff rules.
 
-The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI and automation workflows service</a> focuses on that practical transition from experiment to maintained system.
+The <a href="/services/mlops-model-monitoring" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">MLOps and model monitoring service</a> focuses on that practical transition from experiment to maintained system.
 
 ## Productionization changes the mindset
 
@@ -438,6 +438,7 @@ The best starting point is a workflow that already has value. Productionize that
 After one workflow is stable, the team has a pattern it can reuse. That is how MLOps becomes a delivery habit rather than an enterprise buzzword.`,
     author: "BI Solutions",
     date: "April 12, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "MLOps & AI",
     tags: [
@@ -515,7 +516,7 @@ Training helps teams move from random experimentation to useful operating patter
 
 A practical AI literacy program should explain prompting, verification, privacy, hallucination risk, review workflows, and appropriate use cases. It should also connect those lessons to the company's real tasks.
 
-The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI and automation workflows service</a> includes this kind of adoption support.
+The <a href="/services/ai-governance-literacy-adoption" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI governance, literacy, and adoption service</a> includes this kind of support.
 
 ## Change management matters
 
@@ -530,6 +531,7 @@ The safest path is to build habits first. Start with controlled use cases, teach
 AI literacy turns AI from an informal shortcut into a professional capability. That is what makes adoption more useful and less risky.`,
     author: "BI Solutions",
     date: "April 8, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "AI & Technology",
     tags: [
@@ -959,7 +961,7 @@ Good ownership does not mean bureaucracy. It means that someone can answer pract
 
 The strongest use cases keep experts in control. AI can prepare a first summary, identify themes, extract fields, or draft a response. The professional still reviews judgment, accuracy, and risk.
 
-The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">advanced analytics and AI service</a> helps frame these workflows so they are useful without becoming uncontrolled automation.
+The <a href="/services/ai-automation-consulting" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI automation and workflow service</a> helps frame these processes so they are useful without becoming uncontrolled automation.
 
 ## Privacy comes first
 
@@ -986,7 +988,7 @@ For professional services, this is often the difference between useful assistanc
 **What should an AI document workflow define?** It should define source access, prompt instructions, output format, privacy rules, review ownership, and escalation paths.`,
     author: "BI Solutions",
     date: "March 28, 2026",
-    updatedDate: "April 22, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "AI & Technology",
     tags: ["AI Workflows", "Professional Services", "Documents", "Automation", "Responsible AI"],
@@ -1003,7 +1005,7 @@ For professional services, this is often the difference between useful assistanc
 
 A workflow prompt should explain the role, context, source material, output format, constraints, and review checklist. It should also state what the AI must not do.
 
-This connects <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI consulting</a> with <a href="/services/ai-literacy-change-management" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy</a>. Teams need both the workflow and the habits to use it responsibly.
+This connects <a href="/services/ai-automation-consulting" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI automation consulting</a> with <a href="/services/ai-governance-literacy-adoption" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI governance and literacy</a>. Teams need both the workflow and the habits to use it responsibly.
 
 ## Reuse creates consistency
 
@@ -1030,7 +1032,7 @@ When the review criteria are explicit, AI use becomes easier to govern. The team
 **How does prompt workflow design support AI adoption?** It gives teams reusable patterns, improves quality, and reduces risky one-off AI use.`,
     author: "BI Solutions",
     date: "March 27, 2026",
-    updatedDate: "April 22, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "AI & Technology",
     tags: ["Prompt Engineering", "AI Workflows", "AI Literacy", "Automation", "Change Management"],
@@ -1047,7 +1049,7 @@ When the review criteria are explicit, AI use becomes easier to govern. The team
 
 Define allowed use cases, restricted data, review requirements, tool choices, logging expectations, and escalation rules. The policy should be short enough to use and specific enough to guide real work.
 
-The <a href="/services/ai-literacy-change-management" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management service</a> helps teams translate responsible AI principles into practical workplace habits.
+The <a href="/services/ai-governance-literacy-adoption" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management service</a> helps teams translate responsible AI principles into practical workplace habits.
 
 ## Training makes policy real
 
@@ -1074,7 +1076,7 @@ BI Solutions treats AI governance as part of adoption. The aim is not to block u
 **Who should own AI assistant governance?** Ownership should involve business leadership, operations, IT, privacy or legal stakeholders, and the teams using AI in daily work.`,
     author: "BI Solutions",
     date: "March 26, 2026",
-    updatedDate: "April 22, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "AI & Technology",
     tags: ["AI Governance", "Responsible AI", "Company Policy", "AI Literacy", "Risk"],
@@ -1091,7 +1093,7 @@ BI Solutions treats AI governance as part of adoption. The aim is not to block u
 
 Teams often train on weak historical data, ignore structural changes, overfocus on one accuracy metric, or fail to explain uncertainty. Another common mistake is building a forecast without defining who will use it and what action it supports.
 
-The <a href="/services/advanced-analytics-ai" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">advanced analytics and AI service</a> frames predictive work around decision support, not model output alone.
+The <a href="/services/predictive-analytics-machine-learning" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">predictive analytics and machine learning service</a> frames predictive work around decision support, not model output alone.
 
 ## Forecasts need operating context
 
@@ -1118,7 +1120,7 @@ This is also important for AI adoption. People trust predictive analytics more w
 **How does BI Solutions approach predictive analytics?** The work starts with business context, data quality, assumptions, review rules, and how the prediction will support a decision.`,
     author: "BI Solutions",
     date: "March 25, 2026",
-    updatedDate: "April 22, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "AI & Technology",
     tags: ["Predictive Analytics", "Forecasting", "Machine Learning", "Decision Support", "Statistics"],
@@ -1225,7 +1227,7 @@ This matters for GDPR, security, and business continuity. It also prepares the c
 
 dbt is often used to organize SQL transformations, documentation, testing, and analytics engineering workflows. Airflow is used to orchestrate jobs, dependencies, and schedules across systems.
 
-This belongs in the practical overlap between <a href="/services/digital-transformation-cloud-migration" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">cloud migration</a> and <a href="/services/mlops-productionization" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">productionization</a>.
+This belongs in the practical overlap between <a href="/services/digital-transformation-cloud-migration" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">cloud migration</a> and <a href="/services/mlops-model-monitoring" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">productionization</a>.
 
 ## Automate the stable workflows first
 
@@ -1269,7 +1271,7 @@ Without orchestration, teams often rely on manual checks or fragile scheduled ta
 
 Monitor input quality, data drift, output patterns, user feedback, errors, latency, cost, and the business action supported by the workflow. The goal is not surveillance. The goal is operational confidence.
 
-The <a href="/services/mlops-productionization" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">MLOps and productionization service</a> helps define these controls without making the first version too heavy.
+The <a href="/services/mlops-model-monitoring" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">MLOps and productionization service</a> helps define these controls without making the first version too heavy.
 
 ## Human review remains useful
 
@@ -1296,7 +1298,7 @@ For small and mid-sized teams, this can stay lightweight. A weekly review sample
 **When should an AI workflow be paused?** Pause it when outputs become unreliable, data sources change unexpectedly, sensitive data is mishandled, or review teams lose confidence.`,
     author: "BI Solutions",
     date: "March 21, 2026",
-    updatedDate: "April 22, 2026",
+    updatedDate: "July 11, 2026",
     readTime: "5 min read",
     category: "MLOps & AI",
     tags: ["Model Monitoring", "MLOps", "AI Workflows", "Productionization", "Quality"],
@@ -1357,7 +1359,7 @@ For BI Solutions, web analytics sits between <a href="/services/website-app-deve
 
 Managers should understand metric definitions, dashboard limitations, variance, sample size, refresh timing, and the difference between correlation and causation. These basics improve business conversations immediately.
 
-The <a href="/services/ai-literacy-change-management" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management service</a> also covers analytics adoption because AI and BI both require better interpretation habits.
+The <a href="/services/ai-governance-literacy-adoption" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">AI literacy and change management service</a> also covers analytics adoption because AI and BI both require better interpretation habits.
 
 ## Better questions improve systems
 
@@ -1606,6 +1608,13 @@ export const secondaryBlogSlugs = [
   "data-governance-gdpr-scale-analytics-control",
   "cloud-data-warehouse-vs-spreadsheets",
   "internal-tools-vs-saas-build-buy",
+  "ai-document-workflows-professional-services",
+  "prompt-workflow-design-business-teams",
+  "ai-assistant-governance-company-policy",
+  "predictive-analytics-forecasting-mistakes",
+  "ai-literacy-teams-adopt-ai-without-operational-risk",
+  "mlops-small-mid-sized-teams-productionize-ai",
+  "model-monitoring-ai-workflows",
 ] as const;
 
 const visibleBlogSlugs = [...prominentBlogSlugs, ...secondaryBlogSlugs];

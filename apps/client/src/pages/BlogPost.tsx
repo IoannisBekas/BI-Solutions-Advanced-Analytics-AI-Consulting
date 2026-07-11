@@ -5,6 +5,7 @@ import {
   Calendar,
   Clock,
   Newspaper,
+  RefreshCw,
   Share2,
   Linkedin,
   Twitter,
@@ -24,6 +25,30 @@ import {
 } from "@/data/blogData";
 import { CONTACT_MAILTO } from "@/lib/contact";
 import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
+
+const monthNumbers: Record<string, string> = {
+  January: "01",
+  February: "02",
+  March: "03",
+  April: "04",
+  May: "05",
+  June: "06",
+  July: "07",
+  August: "08",
+  September: "09",
+  October: "10",
+  November: "11",
+  December: "12",
+};
+
+function toSchemaDate(value: string) {
+  const match = value.match(/^([A-Za-z]+) (\d{1,2}), (\d{4})$/);
+  if (!match || !monthNumbers[match[1]]) {
+    return value;
+  }
+
+  return `${match[3]}-${monthNumbers[match[1]]}-${match[2].padStart(2, "0")}`;
+}
 
 function renderRichText(line: string) {
   const nodes: ReactNode[] = [];
@@ -206,20 +231,6 @@ export default function BlogPost() {
           post.featuredImage.startsWith("/") ? post.featuredImage : `/${post.featuredImage}`
         }`;
   const faqItems = extractFaqItems(post.content);
-  const authorSchema = {
-    "@type": "Person",
-    "@id": "https://www.bisolutions.group/about#ioannis-bekas",
-    name: "Ioannis Bekas",
-    jobTitle: "Data Scientist & AI Developer",
-    url: "https://www.bisolutions.group/about",
-    worksFor: {
-      "@id": "https://www.bisolutions.group/#organization",
-    },
-    sameAs: [
-      "https://linkedin.com/in/ioannisbekas",
-      "https://github.com/IoannisBekas",
-    ],
-  };
   const publisherSchema = {
     "@type": "Organization",
     "@id": "https://www.bisolutions.group/#organization",
@@ -236,10 +247,12 @@ export default function BlogPost() {
     headline: post.title,
     description: post.excerpt,
     image: structuredImageUrl,
-    author: authorSchema,
+    author: {
+      "@id": "https://www.bisolutions.group/#organization",
+    },
     publisher: publisherSchema,
-    datePublished: new Date(post.date).toISOString(),
-    dateModified: new Date(post.updatedDate || post.date).toISOString(),
+    datePublished: toSchemaDate(post.date),
+    dateModified: toSchemaDate(post.updatedDate || post.date),
     articleSection: post.category,
     keywords: post.tags.join(", "),
     wordCount: articleWordCount,
@@ -298,8 +311,14 @@ export default function BlogPost() {
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
               <span className="inline-flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                {post.date}
+                Published {post.date}
               </span>
+              {post.updatedDate ? (
+                <span className="inline-flex items-center gap-1">
+                  <RefreshCw className="h-4 w-4" />
+                  Updated {post.updatedDate}
+                </span>
+              ) : null}
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-4 w-4" />
                 {post.readTime}

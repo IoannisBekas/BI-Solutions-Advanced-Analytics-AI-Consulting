@@ -10,7 +10,11 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
-import { servicePillarPages } from "@/lib/servicePages";
+import {
+  aiCapabilityPages,
+  aiLocationPages,
+  servicePillarPages,
+} from "@/lib/servicePages";
 import { CONTACT_MAILTO } from "@/lib/contact";
 
 const serviceHighlights = [
@@ -49,13 +53,39 @@ const deliveryFlow = [
   },
 ];
 
+const listedServicePages = [
+  ...servicePillarPages,
+  ...aiCapabilityPages,
+  ...aiLocationPages,
+];
+
+const servicesStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "BI Solutions Group services",
+  itemListElement: listedServicePages.map((service, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "Service",
+      "@id": `https://www.bisolutions.group${service.path}#service`,
+      name: service.title,
+      url: `https://www.bisolutions.group${service.path}`,
+      provider: {
+        "@id": "https://www.bisolutions.group/#organization",
+      },
+    },
+  })),
+};
+
 export default function Services() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
         title="Analytics, AI, and Data Services"
-        description="Explore BI Solutions services across business intelligence, semantic modeling, AI workflows, data strategy, governance, and web app delivery."
+        description="Explore BI Solutions services across AI strategy, automation, generative AI, predictive analytics, governance, business intelligence, data strategy, and web apps."
         path="/services"
+        structuredData={servicesStructuredData}
       />
       <Navbar />
 
@@ -113,7 +143,7 @@ export default function Services() {
             </p>
           </ScrollReveal>
 
-          <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2">
             {servicePillarPages.map((service, index) => {
               const Icon = service.icon;
 
@@ -152,6 +182,81 @@ export default function Services() {
               );
             })}
           </div>
+        </section>
+
+        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+          <ScrollReveal className="max-w-3xl" width="100%">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+              AI consulting capabilities
+            </p>
+            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+              Focused entry points from AI strategy through production operations.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-gray-600">
+              Use the broad AI consulting hub when the scope is still forming,
+              or start with the capability that matches the immediate delivery
+              need.
+            </p>
+          </ScrollReveal>
+
+          <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {aiCapabilityPages.map((service, index) => {
+              const Icon = service.icon;
+
+              return (
+                <ScrollReveal key={service.slug} delay={index * 0.04} width="100%">
+                  <Link href={service.path} className="group block h-full">
+                    <article className="flex h-full flex-col rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-6 transition-all hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-black/[0.04]">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black text-white">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-5 text-xl font-bold font-heading tracking-tight text-gray-950">
+                        {service.title}
+                      </h3>
+                      <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600">
+                        {service.description}
+                      </p>
+                      <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-black">
+                        Explore capability
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </article>
+                  </Link>
+                </ScrollReveal>
+              );
+            })}
+          </div>
+
+          {aiLocationPages.map((service) => {
+            const Icon = service.icon;
+
+            return (
+              <ScrollReveal key={service.slug} className="mt-6" width="100%">
+                <Link href={service.path} className="group block">
+                  <article className="grid gap-6 rounded-[1.75rem] bg-gray-950 px-7 py-7 text-white transition-transform hover:-translate-y-1 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:px-9">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-black">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                        Regional service page
+                      </p>
+                      <h3 className="mt-2 text-2xl font-bold font-heading tracking-tight">
+                        {service.title}
+                      </h3>
+                      <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-300">
+                        {service.description}
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center gap-2 text-sm font-medium">
+                      Explore Greece service
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </article>
+                </Link>
+              </ScrollReveal>
+            );
+          })}
         </section>
 
         <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
