@@ -2,6 +2,7 @@ import { Link, useRoute } from "wouter";
 import type { ReactNode } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
   Calendar,
   Clock,
   Newspaper,
@@ -23,8 +24,36 @@ import {
   getRelatedPosts,
   isBlogPostIndexable,
 } from "@/data/blogData";
-import { CONTACT_MAILTO } from "@/lib/contact";
 import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
+import { trackEvent } from "@/lib/analytics";
+
+function getRelatedService(category: string) {
+  if (category.includes("BI")) {
+    return {
+      href: "/services/business-intelligence-semantic-modeling",
+      label: "Explore BI & Power BI services",
+    };
+  }
+
+  if (category.includes("AI") || category.includes("MLOps")) {
+    return {
+      href: "/services/advanced-analytics-ai",
+      label: "Explore AI consulting",
+    };
+  }
+
+  if (category.includes("Web")) {
+    return {
+      href: "/services/website-app-development",
+      label: "Explore web & app development",
+    };
+  }
+
+  return {
+    href: "/services/data-strategy-governance",
+    label: "Explore data strategy services",
+  };
+}
 
 const monthNumbers: Record<string, string> = {
   January: "01",
@@ -217,6 +246,7 @@ export default function BlogPost() {
   // Canonical URL rather than window.location.href: identical on server and
   // client, so prerendered pages hydrate without mismatches.
   const shareUrl = withPublicSiteOrigin(`/blog/${post.slug}`);
+  const relatedService = getRelatedService(post.category);
   const robots = isBlogPostIndexable(post.slug) ? "index,follow" : "noindex,follow";
   const shareText = encodeURIComponent(post.title);
   const articleWordCount = post.content
@@ -369,6 +399,7 @@ export default function BlogPost() {
                     href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Share this article on X"
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white"
                   >
                     <Twitter className="h-4 w-4" />
@@ -377,6 +408,7 @@ export default function BlogPost() {
                     href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Share this article on LinkedIn"
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white"
                   >
                     <Linkedin className="h-4 w-4" />
@@ -442,9 +474,25 @@ export default function BlogPost() {
                     your operating environment.
                   </p>
                 </div>
-                <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
-                  <a href={CONTACT_MAILTO}>Get in touch</a>
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
+                    <Link
+                      href={`/start-a-project?source=insight&article=${encodeURIComponent(post.slug)}`}
+                      onClick={() => trackEvent("article_to_contact", { article: post.slug })}
+                    >
+                      Start a project
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-full border-gray-600 bg-transparent px-8 text-white hover:bg-white/10 hover:text-white">
+                    <Link
+                      href={relatedService.href}
+                      onClick={() => trackEvent("article_to_service", { article: post.slug, target: relatedService.href })}
+                    >
+                      {relatedService.label}
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </ScrollReveal>

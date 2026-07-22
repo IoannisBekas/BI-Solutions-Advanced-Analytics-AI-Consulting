@@ -1,96 +1,69 @@
+import { ArrowRight, BadgeCheck, Github, Linkedin, ShieldCheck, Workflow } from "lucide-react";
+import { Link } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
-import founderPhoto from "@/assets/founder-photo-2.jpg";
 import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, MapPin, Download, Github } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import founderPhoto from "@/assets/founder-photo-2.jpg";
+import { withSiteBase } from "@/lib/site";
 
-interface Section {
-  id: string;
-  label: string;
-  ref: React.RefObject<HTMLElement | null>;
-}
+const deliveryPrinciples = [
+  {
+    title: "Senior involvement throughout",
+    description:
+      "The person shaping the solution stays involved in discovery, design, implementation, and handoff.",
+    icon: BadgeCheck,
+  },
+  {
+    title: "Systems your team can own",
+    description:
+      "Documentation, clear logic, and practical enablement are part of delivery—not an afterthought.",
+    icon: Workflow,
+  },
+  {
+    title: "Privacy and governance by design",
+    description:
+      "Data access, security, ownership, and responsible AI use are addressed as part of the working system.",
+    icon: ShieldCheck,
+  },
+];
+
+const deliverySteps = [
+  {
+    number: "01",
+    title: "Diagnose",
+    description:
+      "Clarify the decision, users, data, constraints, and the outcome that would make the work valuable.",
+  },
+  {
+    number: "02",
+    title: "Build",
+    description:
+      "Design and validate the dashboard, workflow, data layer, or application with the people who will use it.",
+  },
+  {
+    number: "03",
+    title: "Enable",
+    description:
+      "Document the system, transfer knowledge, and agree on the right level of support after handoff.",
+  },
+];
+
+const certifications = [
+  "Data Science Professional Certificate — HarvardX",
+  "Google Data Analytics Professional Certificate",
+  "Financial Engineering and Risk Management — Columbia",
+  "Financial Markets — Yale",
+  "Python and Statistics for Financial Analysis — HKUST",
+];
 
 export default function About() {
-  const [activeSection, setActiveSection] = useState("introduction");
-
-  const sections: Section[] = [
-    { id: "introduction", label: "Introduction", ref: useRef<HTMLElement>(null) },
-    { id: "experience", label: "Experience", ref: useRef<HTMLElement>(null) },
-    { id: "education", label: "Education", ref: useRef<HTMLElement>(null) },
-    { id: "certifications", label: "Certifications", ref: useRef<HTMLElement>(null) },
-    { id: "contact", label: "Get in Touch", ref: useRef<HTMLElement>(null) },
-  ];
-
-  const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const observerOptions: IntersectionObserverInit = {
-        root: null,
-        rootMargin: "-20% 0px -40% 0px",
-        threshold: 0,
-      };
-
-      const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      };
-
-      const observer = new IntersectionObserver(handleIntersection, observerOptions);
-
-      sections.forEach((section) => {
-        if (section.ref.current) {
-          observer.observe(section.ref.current);
-        }
-      });
-
-      return () => observer.disconnect();
-    }, 200);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const scrollToSection = (sectionId: string) => {
-    const section = sections.find((s) => s.id === sectionId);
-    if (section?.ref.current) {
-      section.ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  const fadeInUp: any = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
-
-  const staggerContainer: any = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const staggerItem: any = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
-  };
-
   return (
     <div className="min-h-screen bg-background font-sans text-foreground selection:bg-black/10">
       <Seo
-        title="About Ioannis Bekas and BI Solutions"
-        description="Learn about Ioannis Bekas, BI Solutions Group, and the background behind the company’s analytics, AI, and data strategy practice."
+        title="About Ioannis Bekas and BI Solutions Group"
+        description="Meet Ioannis Bekas and learn how BI Solutions Group delivers business intelligence, AI, data strategy, and focused web applications for teams in Greece and Europe."
         path="/about"
         image={founderPhoto}
         structuredData={{
@@ -110,272 +83,242 @@ export default function About() {
       />
       <Navbar />
 
-      {/* Scroll Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-black origin-left z-50"
-        style={{ scaleX }}
-      />
+      <main>
+        <section className="px-6 pb-24 pt-36 md:px-12 md:pb-32 md:pt-44">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
+            <ScrollReveal width="100%">
+              <div className="max-w-4xl">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+                  Founder-led BI, AI, and web delivery
+                </p>
+                <h1 className="mt-6 text-5xl font-bold font-heading leading-[1.03] tracking-tight text-gray-950 sm:text-6xl lg:text-7xl">
+                  Senior technical delivery without layers of handoff.
+                </h1>
+                <p className="mt-7 max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl">
+                  I’m Ioannis Bekas, founder of BI Solutions Group. I work directly
+                  with teams to turn reporting problems, AI opportunities, weak data
+                  foundations, and digital-product ideas into systems people can use
+                  and maintain.
+                </p>
 
-      <main className="flex justify-center pt-32 px-6 md:px-12 pb-20">
-        <div className="flex gap-16 w-full max-w-7xl relative">
-
-          {/* Left Sidebar - Sticky Navigation */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-32">
-              <nav className="flex flex-col space-y-4">
-                {sections.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => scrollToSection(section.id)}
-                    className={cn(
-                      "group flex items-center justify-between text-left text-sm font-medium transition-all duration-300",
-                      activeSection === section.id
-                        ? "text-black translate-x-1"
-                        : "text-gray-400 hover:text-gray-900"
-                    )}
-                  >
-                    <span>{section.label}</span>
-                    {activeSection === section.id && (
-                      <motion.div
-                        layoutId="active-indicator"
-                        className="w-1.5 h-1.5 rounded-full bg-black"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
-                  </button>
-                ))}
-              </nav>
-
-              <div className="mt-12 pt-12 border-t border-gray-100">
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 block">Connect</span>
-                <div className="flex gap-4">
-                  <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors">
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                  <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors">
-                    <Github className="w-5 h-5" />
-                  </a>
-                  <a href="mailto:Bekas.Ioannis.1996@gmail.com" className="text-gray-400 hover:text-black transition-colors">
-                    <Mail className="w-5 h-5" />
-                  </a>
+                <div className="mt-9 flex flex-wrap gap-4">
+                  <Button asChild className="h-12 rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                    <Link href="/start-a-project?source=about">
+                      Start a project
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="h-12 rounded-full border-gray-300 px-8">
+                    <Link href="/services">Explore services</Link>
+                  </Button>
                 </div>
+
+                <dl className="mt-12 grid gap-5 border-t border-gray-200 pt-8 sm:grid-cols-3">
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Experience</dt>
+                    <dd className="mt-2 text-lg font-semibold text-gray-950">9+ years</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Delivery</dt>
+                    <dd className="mt-2 text-lg font-semibold text-gray-950">Strategy through handoff</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">Coverage</dt>
+                    <dd className="mt-2 text-lg font-semibold text-gray-950">Greece and Europe</dd>
+                  </div>
+                </dl>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.08} width="100%">
+              <div className="relative mx-auto aspect-[3/4] w-full max-w-[390px] overflow-hidden rounded-[2rem] bg-gray-100 shadow-2xl shadow-black/[0.12]">
+                <img
+                  src={founderPhoto}
+                  alt="Ioannis Bekas, founder of BI Solutions Group"
+                  className="h-full w-full object-cover grayscale"
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="bg-gray-950 px-6 py-24 text-white md:px-12 md:py-28">
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal width="100%" className="max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                What clients can expect
+              </p>
+              <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight md:text-5xl">
+                Practical systems, clear decisions, and a responsible handoff.
+              </h2>
+            </ScrollReveal>
+
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {deliveryPrinciples.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <ScrollReveal key={item.title} delay={index * 0.06} width="100%">
+                    <article className="h-full rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-7">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-black">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-6 text-2xl font-bold font-heading tracking-tight">{item.title}</h3>
+                      <p className="mt-4 leading-relaxed text-gray-300">{item.description}</p>
+                    </article>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 py-24 md:px-12 md:py-28">
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal width="100%" className="max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">How I work</p>
+              <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                From a real operating problem to a working system.
+              </h2>
+            </ScrollReveal>
+
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+              {deliverySteps.map((step, index) => (
+                <ScrollReveal key={step.number} delay={index * 0.06} width="100%">
+                  <article className="h-full rounded-[1.75rem] border border-gray-200 bg-white p-7 shadow-xl shadow-black/[0.04]">
+                    <p className="text-sm font-semibold tracking-[0.16em] text-gray-400">{step.number}</p>
+                    <h3 className="mt-5 text-2xl font-bold font-heading tracking-tight text-gray-950">{step.title}</h3>
+                    <p className="mt-4 leading-relaxed text-gray-600">{step.description}</p>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-y border-gray-200 bg-gray-50 px-6 py-24 md:px-12 md:py-28">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+            <ScrollReveal width="100%">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">Experience</p>
+                <h2 className="mt-5 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                  Analytical depth shaped by demanding operating contexts.
+                </h2>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.06} width="100%">
+              <div className="space-y-6 text-lg leading-relaxed text-gray-600">
+                <p>
+                  My work spans data management, statistical analysis, artificial
+                  intelligence, information visualisation, business intelligence,
+                  and the development of focused analytical products.
+                </p>
+                <p>
+                  My professional background includes international-organisation
+                  environments such as the International Atomic Energy Agency,
+                  the International Organization for Migration, and the United
+                  Nations Office for Disaster Risk Reduction, alongside private-sector
+                  and SME delivery across Europe and North America.
+                </p>
+                <p>
+                  BI Solutions Group brings that experience into focused engagements:
+                  defining the decision, building the working system, and leaving the
+                  client with clearer logic, documentation, and ownership.
+                </p>
+                <Button asChild variant="outline" className="mt-2 h-12 rounded-full border-gray-300 px-7">
+                  <a href={withSiteBase("/#case-studies")}>See case studies</a>
+                </Button>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="px-6 py-24 md:px-12 md:py-28">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
+            <ScrollReveal width="100%">
+              <article className="h-full rounded-[2rem] border border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.04] md:p-10">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gray-500">Education</p>
+                <div className="mt-7 space-y-8">
+                  <div>
+                    <h2 className="text-2xl font-bold font-heading tracking-tight text-gray-950">
+                      M.Sc. in Operational Research, Analytics & Decision Making
+                    </h2>
+                    <p className="mt-2 text-gray-600">Technical University of Crete & Hellenic Army Academy</p>
+                    <p className="mt-3 text-sm leading-relaxed text-gray-500">GPA 9.3/10 · Thesis on AI touchpoints with multi-criteria decision analysis</p>
+                  </div>
+                  <div className="border-t border-gray-200 pt-7">
+                    <h2 className="text-2xl font-bold font-heading tracking-tight text-gray-950">
+                      B.Sc. in Mathematics & Minor in Economics
+                    </h2>
+                    <p className="mt-2 text-gray-600">University of Athens</p>
+                    <p className="mt-3 text-sm text-gray-500">Exchange in Financial Mathematics, Stockholm University</p>
+                  </div>
+                </div>
+              </article>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.06} width="100%">
+              <article className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-8 md:p-10">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gray-500">Selected credentials</p>
+                <ul className="mt-7 space-y-4">
+                  {certifications.map((certification) => (
+                    <li key={certification} className="flex items-start gap-3 text-base leading-relaxed text-gray-700">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-black" />
+                      {certification}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="px-6 pb-24 md:px-12 md:pb-32">
+          <ScrollReveal width="100%" className="mx-auto max-w-7xl">
+            <div className="rounded-[2rem] bg-gray-950 px-8 py-12 text-white shadow-2xl shadow-black/[0.14] md:px-12 md:py-14">
+              <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">Start with the problem</p>
+                  <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight md:text-5xl">
+                    What are you trying to improve?
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    Share the reporting issue, AI workflow, data challenge, or digital product you need to move forward.
+                  </p>
+                </div>
+                <Button asChild className="h-12 rounded-full bg-white px-8 text-black hover:bg-gray-100">
+                  <Link href="/start-a-project?source=about-footer">
+                    Start a project
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="mt-10 flex flex-wrap gap-5 border-t border-white/10 pt-7 text-sm text-gray-300">
+                <a
+                  href="https://linkedin.com/in/ioannisbekas"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-white"
+                >
+                  <Linkedin className="h-4 w-4" />
+                  LinkedIn
+                </a>
+                <a
+                  href="https://github.com/IoannisBekas"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-white"
+                >
+                  <Github className="h-4 w-4" />
+                  GitHub
+                </a>
               </div>
             </div>
-          </aside>
-
-          {/* Right Content Area */}
-          <div className="flex-1 min-w-0">
-
-            {/* Introduction Section */}
-            <section ref={sections[0].ref} id="introduction" className="mb-32 scroll-mt-32">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/[0.05] sm:px-8 md:px-12 md:py-12"
-              >
-                <div className="grid md:grid-cols-[1fr_350px] gap-12 items-start">
-                  <div>
-                    <div className="inline-flex items-center rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
-                      Founder profile
-                    </div>
-                    <h1 className="mt-6 text-[2.75rem] sm:text-5xl md:text-6xl font-bold font-heading mb-8 tracking-tight leading-[1.05]">
-                      Ioannis Bekas
-                    </h1>
-                    <h2 className="text-2xl font-medium text-gray-800 mb-6">Data Scientist & AI Developer</h2>
-                    <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                      Data Scientist & AI Developer with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work. Responsible for managing projects and implementing solutions.
-                    </p>
-
-                    <div className="flex gap-4">
-                      <Button
-                        onClick={() => scrollToSection('contact')}
-                        className="rounded-full px-8 h-12 bg-black hover:bg-gray-800 text-white"
-                      >
-                        Get in Touch
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="rounded-full px-8 h-12 border-gray-200 hover:bg-gray-50"
-                        onClick={() => window.open('https://linkedin.com/in/ioannisbekas', '_blank', 'noopener,noreferrer')}
-                      >
-                        LinkedIn
-                      </Button>
-                    </div>
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                    className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-gray-100 shadow-xl shadow-black/[0.08]"
-                  >
-                    <img
-                      src={founderPhoto}
-                      alt="Ioannis Bekas"
-                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                    />
-                  </motion.div>
-                </div>
-              </motion.div>
-            </section>
-
-            {/* Experience Section */}
-            <section ref={sections[1].ref} id="experience" className="mb-32 scroll-mt-32">
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-12"
-              >
-                Experience
-              </motion.h2>
-
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="space-y-8"
-              >
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  My expertise includes data management, statistical analysis, artificial intelligence, and information visualization, with a focus on building advanced analytical tools that support data-driven decision-making and training data models for predictive analytics and automation.
-                </p>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  My professional background spans international organizations such as the International Atomic Energy Agency (IAEA), the International Organization for Migration (IOM), and the United Nations Office for Disaster Risk Reduction (UNDRR), as well as private-sector environments. Across these settings, I have contributed to structuring and analyzing large-scale datasets, developing data governance frameworks, and designing scalable business intelligence and analytics solutions.
-                </p>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  In parallel, I have consulted professionals and teams across Canada, the United States, and Europe, supporting data, analytics, and decision-making initiatives for organizations including Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola, PepsiCo, and multiple SMEs.
-                </p>
-              </motion.div>
-            </section>
-
-            {/* Education Section */}
-            <section ref={sections[2].ref} id="education" className="mb-32 scroll-mt-32">
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-16"
-              >
-                Education
-              </motion.h2>
-
-              <div className="grid md:grid-cols-1 gap-12">
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeInUp}
-                  className="p-8 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
-                >
-                  <h3 className="text-2xl font-bold mb-2">M.Sc. in Operational Research, Analytics & Decision Making</h3>
-                  <p className="text-gray-600 mb-4 text-lg">Technical University of Crete & Hellenic Army Academy</p>
-                  <div className="text-base text-gray-500 space-y-2">
-                    <p>• GPA: 9.3/10</p>
-                    <p>• Thesis: "Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis"</p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeInUp}
-                  className="p-8 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
-                >
-                  <h3 className="text-2xl font-bold mb-2">B.Sc. in Mathematics & Minor in Economics</h3>
-                  <p className="text-gray-600 mb-4 text-lg">University of Athens</p>
-                  <div className="text-base text-gray-500 space-y-2">
-                    <p>• Exchange – Financial Mathematics, Stockholm University</p>
-                  </div>
-                </motion.div>
-              </div>
-            </section>
-
-            {/* Certifications Section */}
-            <section ref={sections[3].ref} id="certifications" className="mb-32 scroll-mt-32">
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-16"
-              >
-                Certifications
-              </motion.h2>
-
-              <div className="grid md:grid-cols-1 gap-8">
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeInUp}
-                  className="p-8 border border-gray-100 rounded-2xl"
-                >
-                  <ul className="space-y-4">
-                    {[
-                      "Data Science Professional Certificate – HarvardX",
-                      "Google Data Analytics Professional Certificate",
-                      "Financial Engineering and Risk Management – Columbia",
-                      "Financial Markets – Yale",
-                      "Python and Statistics for Financial Analysis – HKUST"
-                    ].map((cert, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-black flex-shrink-0" />
-                        <span className="text-lg text-gray-700">{cert}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              </div>
-            </section>
-
-
-
-            {/* Contact Section */}
-            <section ref={sections[4].ref} id="contact" className="mb-12 scroll-mt-32">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="border-t border-gray-200 pt-24"
-              >
-                <div className="grid md:grid-cols-2 gap-12">
-                  <div>
-                    <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">Let's Connect</h2>
-                    <p className="text-xl text-gray-600 mb-12">
-                      I'm always open to discussing data strategy, AI implementation, or potential collaborations.
-                    </p>
-                    <div className="space-y-6">
-
-                      <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Linkedin className="w-5 h-5" />
-                        </span>
-                        linkedin.com/in/ioannisbekas
-                      </a>
-                      <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Github className="w-5 h-5" />
-                        </span>
-                        github.com/IoannisBekas
-                      </a>
-                      <a href="https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Linkedin className="w-5 h-5" />
-                        </span>
-                        Company LinkedIn
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </section>
-
-          </div>
-        </div>
+          </ScrollReveal>
+        </section>
       </main>
+
       <Footer />
     </div>
   );

@@ -9,7 +9,6 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SITE_BASE_PATH } from "@/lib/site";
-import { captureAiSearchReferral } from "@/lib/referralTracking";
 import {
   PRODUCT_ROUTES,
   PRODUCT_ROUTE_ALIASES,
@@ -23,11 +22,11 @@ import Home from "@/pages/Home";
 // Lazy-load all other pages only when navigated to.
 const Services = lazy(() => import("@/pages/Services"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
-const Portfolio = lazy(() => import("@/pages/Portfolio"));
+const CaseStudyDetail = lazy(() => import("@/pages/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
-const Products = lazy(() => import("@/pages/Products"));
+const StartProject = lazy(() => import("@/pages/StartProject"));
 const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
 const QuantusPage = lazy(() => import("@/pages/products/QuantusPage"));
 const PowerBISolutionsPage = lazy(() => import("@/pages/products/PowerBISolutionsPage"));
@@ -42,10 +41,6 @@ interface AppProps {
 }
 
 function App({ ssrPath }: AppProps = {}) {
-  useEffect(() => {
-    captureAiSearchReferral();
-  }, []);
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -111,14 +106,11 @@ function Router({ ssrPath }: { ssrPath?: string }) {
           <Route path="/" component={Home} />
           <Route path="/services" component={Services} />
           <Route path="/services/:slug" component={ServiceDetail} />
-          <Route path="/products" component={Products} />
-          <Route path="/all-products">
-            {() => <CanonicalRedirect to="/products" />}
-          </Route>
-          <Route path="/portfolio" component={Portfolio} />
+          <Route path="/case-studies/:slug" component={CaseStudyDetail} />
           <Route path="/blog" component={Blog} />
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/about" component={About} />
+          <Route path="/start-a-project" component={StartProject} />
           {/* Product aliases and retired product routes are normalized in-app. */}
           <Route path={PRODUCT_ROUTES.aiAdvisor}>
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.aiAdvisor} />}
@@ -155,15 +147,6 @@ function Router({ ssrPath }: { ssrPath?: string }) {
             {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.bonusaki} />}
           </Route>
 
-          <Route path={PRODUCT_ROUTES.websiteAppPortfolio}>
-            {() => <CanonicalRedirect to="/portfolio#web-apps" />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.websiteAppPortfolio}>
-            {() => <CanonicalRedirect to="/portfolio#web-apps" />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_ALIASES.websiteAppPortfolio}>
-            {() => <CanonicalRedirect to="/portfolio#web-apps" />}
-          </Route>
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route component={NotFound} />

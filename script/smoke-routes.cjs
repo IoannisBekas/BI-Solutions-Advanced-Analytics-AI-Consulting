@@ -6,13 +6,13 @@ const publicRoutes = [
   {
     path: "/",
     title: "AI, BI & Web App Development",
-    body: "BI Solutions Group",
+    body: "Turn complex data into",
     absent: ["AI Products"],
   },
   {
     path: "/services",
     title: "Analytics, AI, and Data Services",
-    body: "End-to-end analytics and AI services built to move from strategy into production.",
+    body: "Turn reporting friction, manual work, and product ideas into systems your team can use.",
   },
   {
     path: "/services/business-intelligence-semantic-modeling",
@@ -93,12 +93,6 @@ const publicRoutes = [
     body: "Website and web app development for businesses that need more than a template.",
   },
   {
-    path: "/products",
-    title: "Products",
-    body: "Focused analytics products.",
-    absent: ["Bonusaki", "Greek AI Professional Advisor", "Website & App Portfolio"],
-  },
-  {
     path: "/quantus",
     title: "Quantus Investing",
     body: "Quantus Investing",
@@ -109,9 +103,28 @@ const publicRoutes = [
     body: "Power BI Solutions",
   },
   {
-    path: "/portfolio",
-    title: "Portfolio",
-    body: "Selected BI Solutions work",
+    path: "/case-studies/unicef-audit-compliance",
+    title: "Audit Compliance Power BI Case Study",
+    body: "Independent portfolio analysis",
+    canonical: "https://www.bisolutions.group/case-studies/unicef-audit-compliance",
+  },
+  {
+    path: "/case-studies/iaea-scientific-analysis",
+    title: "Scientific Analysis Power BI Case Study",
+    body: "Independent portfolio analysis",
+    canonical: "https://www.bisolutions.group/case-studies/iaea-scientific-analysis",
+  },
+  {
+    path: "/case-studies/ifc-talent-strategy",
+    title: "Talent Analytics Power BI Case Study",
+    body: "Independent portfolio analysis",
+    canonical: "https://www.bisolutions.group/case-studies/ifc-talent-strategy",
+  },
+  {
+    path: "/start-a-project",
+    title: "Start a Project",
+    body: "Bring the problem.",
+    canonical: "https://www.bisolutions.group/start-a-project",
   },
   {
     path: "/blog",
@@ -241,18 +254,6 @@ const redirectRoutes = [
     location: "/quantus",
   },
   {
-    path: "/all-products",
-    location: "/products",
-  },
-  {
-    path: "/website-app-portfolio",
-    location: "/portfolio#web-apps",
-  },
-  {
-    path: "/Website%20%26%20App%20Portfolio",
-    location: "/portfolio#web-apps",
-  },
-  {
     path: "/services/digital-transformation-cloud-migration",
     location: "/services/data-strategy-governance",
   },
@@ -269,10 +270,6 @@ const redirectRoutes = [
     location: "/services/website-app-development",
   },
   {
-    path: "/website-app-portfolio?utm_source=smoke",
-    location: "/portfolio?utm_source=smoke#web-apps",
-  },
-  {
     path: "/Quantus",
     location: "/quantus",
     method: "HEAD",
@@ -280,6 +277,24 @@ const redirectRoutes = [
 ];
 
 const goneRoutes = [
+  {
+    path: "/products",
+  },
+  {
+    path: "/all-products",
+  },
+  {
+    path: "/portfolio",
+  },
+  {
+    path: "/website-app-portfolio",
+  },
+  {
+    path: "/website-app-portfolio?utm_source=smoke",
+  },
+  {
+    path: "/Website%20%26%20App%20Portfolio",
+  },
   {
     path: "/contact",
   },

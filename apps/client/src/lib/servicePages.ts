@@ -45,7 +45,7 @@ export const servicePages: ServicePage[] = [
     icon: BrainCircuit,
     title: "AI consulting services",
     shortTitle: "AI consulting",
-    navLabel: "AI consulting services",
+    navLabel: "AI consulting & automation",
     description:
       "Plan, build, govern, and operate AI systems across strategy, automation, generative AI, predictive analytics, business intelligence, and model operations.",
     seoTitle: "AI Consulting Services & Implementation",
@@ -524,7 +524,7 @@ export const servicePages: ServicePage[] = [
     icon: BarChart3,
     title: "Business intelligence and semantic modeling",
     shortTitle: "Business intelligence",
-    navLabel: "BI & semantic modeling",
+    navLabel: "Business intelligence & Power BI",
     description:
       "Design reporting layers, semantic models, and governance structures that make dashboards easier to trust and maintain.",
     seoTitle: "Business Intelligence & Semantic Modeling Services",
@@ -578,7 +578,7 @@ export const servicePages: ServicePage[] = [
     icon: MonitorSmartphone,
     title: "Website and app development",
     shortTitle: "Web development",
-    navLabel: "Website & app development",
+    navLabel: "Websites & web apps",
     description:
       "Ship modern marketing sites and focused web apps that connect positioning, workflow, and analytics into one product surface.",
     seoTitle: "Website & Web App Development in Greece",

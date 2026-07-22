@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, Loader2, Briefcase, Scale, Calculator, RotateCcw } from "lucide-react";
+import { ArrowRight, Send, Bot, Loader2, Briefcase, Scale, Calculator, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -11,6 +12,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
+import { trackEvent } from "@/lib/analytics";
 
 type AdvisorLanguage = "greek" | "english";
 type AdvisorConfidence = "high" | "medium" | "low";
@@ -352,8 +354,7 @@ export default function AIAdvisorPage() {
               "@type": "BreadcrumbList",
               itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
-                { "@type": "ListItem", position: 2, name: "Products", item: "https://www.bisolutions.group/products" },
-                { "@type": "ListItem", position: 3, name: "Greek AI Professional Advisor", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}` },
+                { "@type": "ListItem", position: 2, name: "Greek AI Professional Advisor", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.aiAdvisor}` },
               ],
             },
           ],
@@ -365,9 +366,25 @@ export default function AIAdvisorPage() {
           <ScrollReveal width="100%">
             <ProductPageHero
               icon={Bot}
-              eyebrow="Greek professional AI guidance"
+              eyebrow="Interactive AI workflow demo"
               title="Greek AI Professional Advisor"
               description="Select a professional role and ask a question. The advisor delivers a structured first-pass response for Greek accounting, legal, and consulting workflows."
+              actions={(
+                <>
+                  <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+                    <a href="#advisor-demo">Try the advisor</a>
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-full border-gray-300 px-8">
+                    <Link
+                      href="/start-a-project?service=advanced-analytics-ai&demo=ai-advisor"
+                      onClick={() => trackEvent("demo_cta_click", { demo: "ai-advisor", placement: "hero" })}
+                    >
+                      Build an advisor for your team
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </>
+              )}
               footer={(
                 <div className="grid gap-4 md:grid-cols-3">
                   {advisorHeroDetails.map((item) => (
@@ -388,7 +405,7 @@ export default function AIAdvisorPage() {
             />
           </ScrollReveal>
 
-          <div className="relative z-10 mx-auto max-w-5xl px-6">
+          <div id="advisor-demo" className="relative z-10 mx-auto max-w-5xl scroll-mt-32 px-6">
             <ScrollReveal direction="up" delay={0.2} width="100%">
               <Card className="overflow-hidden rounded-[2rem] border-gray-200 bg-white p-4 shadow-xl shadow-black/[0.04] md:p-8">
                 
@@ -650,6 +667,34 @@ export default function AIAdvisorPage() {
                 ))}
               </div>
             </Card>
+          </ScrollReveal>
+        </section>
+
+        <section className="mx-auto mt-14 max-w-6xl px-6 md:px-12">
+          <ScrollReveal width="100%">
+            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12 md:py-12">
+              <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">From demo to secure workflow</p>
+                  <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                    Need an advisor grounded in your own policies and sources?
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    Discuss the users, knowledge sources, permissions, review steps,
+                    and governance needed for a production-ready internal advisor.
+                  </p>
+                </div>
+                <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
+                  <Link
+                    href="/start-a-project?service=advanced-analytics-ai&demo=ai-advisor&source=demo-footer"
+                    onClick={() => trackEvent("demo_cta_click", { demo: "ai-advisor", placement: "footer" })}
+                  >
+                    Start an AI advisor project
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </ScrollReveal>
         </section>
       </main>

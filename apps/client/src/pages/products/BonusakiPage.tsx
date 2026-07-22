@@ -1,7 +1,7 @@
+import { Link } from "wouter";
 import {
   ArrowRight,
   BadgeCheck,
-  ExternalLink,
   Gift,
   LineChart,
   QrCode,
@@ -19,7 +19,6 @@ import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { trackEvent } from "@/lib/analytics";
 import { withPublicSiteOrigin, withSiteBase } from "@/lib/site";
-import { CONTACT_MAILTO } from "@/lib/contact";
 
 const BONUSAKI_DEMO_URL =
   import.meta.env.VITE_BONUSAKI_DEMO_URL ||
@@ -169,8 +168,7 @@ export default function BonusakiPage() {
               "@type": "BreadcrumbList",
               itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
-                { "@type": "ListItem", position: 2, name: "Products", item: "https://www.bisolutions.group/products" },
-                { "@type": "ListItem", position: 3, name: "Bonusaki", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.bonusaki}` },
+                { "@type": "ListItem", position: 2, name: "Bonusaki", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.bonusaki}` },
               ],
             },
           ],
@@ -205,13 +203,13 @@ export default function BonusakiPage() {
                     variant="outline"
                     className="rounded-full border-gray-300 px-8"
                   >
-                    <a
-                      href={CONTACT_MAILTO}
+                    <Link
+                      href="/start-a-project?service=website-app-development&demo=bonusaki"
                       onClick={() => trackBonusakiClick("discuss_rollout")}
                     >
                       Discuss a rollout
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
                   </Button>
                 </>
               )}
@@ -327,10 +325,10 @@ export default function BonusakiPage() {
                     className="rounded-full border-gray-300 px-8"
                   >
                     <a
-                      href={withSiteBase("/products")}
-                      onClick={() => trackBonusakiClick("back_to_products")}
+                      href={withSiteBase("/")}
+                      onClick={() => trackBonusakiClick("back_to_home")}
                     >
-                      Back to products
+                      Back to BI Solutions
                     </a>
                   </Button>
                 </div>
@@ -385,6 +383,34 @@ export default function BonusakiPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-6 pb-4 md:px-12">
+          <ScrollReveal width="100%">
+            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12 md:py-12">
+              <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">Pilot to rollout</p>
+                  <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                    Exploring a loyalty flow for your venue or customer base?
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    Share the locations, reward rules, and customer journey you want
+                    to test so the next pilot can be scoped around a real operating context.
+                  </p>
+                </div>
+                <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
+                  <Link
+                    href="/start-a-project?service=website-app-development&demo=bonusaki&source=demo-footer"
+                    onClick={() => trackBonusakiClick("discuss_rollout_footer")}
+                  >
+                    Discuss a Bonusaki rollout
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </ScrollReveal>
         </section>
       </main>
 

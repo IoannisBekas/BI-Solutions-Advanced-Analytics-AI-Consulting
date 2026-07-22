@@ -1,9 +1,9 @@
 import type { FormEvent } from "react";
+import { Link } from "wouter";
 import {
   ArrowRight,
   BarChart3,
   Brain,
-  ExternalLink,
   Layers3,
   LineChart,
   Search,
@@ -19,8 +19,8 @@ import { Seo } from "@/components/seo/Seo";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
-import { CONTACT_MAILTO } from "@/lib/contact";
+import { withPublicSiteOrigin } from "@/lib/site";
+import { trackEvent } from "@/lib/analytics";
 import heroBg from "@/assets/generated_images/hero_bg_3d.png";
 
 const QUANTUS_APP_URL =
@@ -175,11 +175,6 @@ function buildQuantusReportUrl(ticker: string) {
 }
 
 export default function QuantusPage() {
-  const quantusWorkspaceDisplayUrl = new URL(
-    QUANTUS_APP_URL,
-    getPublicSiteOrigin(),
-  ).toString();
-
   function openWorkspace() {
     window.location.href = QUANTUS_APP_URL;
   }
@@ -263,12 +258,6 @@ export default function QuantusPage() {
                 {
                   "@type": "ListItem",
                   position: 2,
-                  name: "Products",
-                  item: "https://www.bisolutions.group/products",
-                },
-                {
-                  "@type": "ListItem",
-                  position: 3,
                   name: "Quantus Investing",
                   item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.quantus}`,
                 },
@@ -314,7 +303,10 @@ export default function QuantusPage() {
                     asChild
                     className="h-12 rounded-full bg-black px-7 text-base text-white hover:bg-gray-800 sm:h-14 sm:px-8 sm:text-lg"
                   >
-                    <a href={QUANTUS_APP_URL}>
+                    <a
+                      href={QUANTUS_APP_URL}
+                      onClick={() => trackEvent("workspace_open", { product: "quantus", placement: "hero" })}
+                    >
                       Open Quantus workspace
                       <ArrowRight className="h-4 w-4" />
                     </a>
@@ -324,10 +316,13 @@ export default function QuantusPage() {
                     variant="outline"
                     className="h-12 rounded-full border-gray-300 bg-white/70 px-7 text-base backdrop-blur hover:bg-white sm:h-14 sm:px-8 sm:text-lg"
                   >
-                    <a href={CONTACT_MAILTO}>
-                      Talk to BI Solutions
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                    <Link
+                      href="/start-a-project?product=quantus&source=product-hero"
+                      onClick={() => trackEvent("product_walkthrough_click", { product: "quantus", placement: "hero" })}
+                    >
+                      Request a walkthrough
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
 
@@ -572,24 +567,27 @@ export default function QuantusPage() {
                 <div className="min-w-0">
                   <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white">
                     <Shield className="h-4 w-4" />
-                    Public methodology, clear launch path
+                    Transparent methodology and a guided workflow
                   </div>
                   <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
-                    Launch a Quantus workflow from the BI Solutions product shell
+                    Know what the signal says—and why.
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
-                    The BI Solutions site acts as the product shell and discovery
-                    layer, while the Quantus workspace handles report
-                    generation, sector packs, archive comparisons, and deeper
-                    signal review at `/quantus/workspace/`.
+                    Start with a ticker, generate an explainable research report,
+                    compare archived results, review sector packs, and inspect the
+                    factors behind each signal before deciding what deserves deeper
+                    analysis.
                   </p>
 
                   <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
                     <p className="mb-2 text-sm font-semibold text-gray-900">
-                      Workspace URL
+                      Best for
                     </p>
-                    <p className="break-all font-mono text-sm text-gray-500">
-                      {quantusWorkspaceDisplayUrl}
+                    <p className="text-sm leading-relaxed text-gray-600">
+                      Independent researchers, analysts, and investment teams that
+                      want a repeatable research process with visible methodology
+                      and an accuracy trail. Quantus supports research; it does not
+                      provide personalised financial advice.
                     </p>
                   </div>
                 </div>
@@ -622,7 +620,10 @@ export default function QuantusPage() {
                     asChild
                     className="w-full rounded-full bg-black py-6 text-lg text-white hover:bg-gray-800"
                   >
-                    <a href={QUANTUS_APP_URL}>
+                    <a
+                      href={QUANTUS_APP_URL}
+                      onClick={() => trackEvent("workspace_open", { product: "quantus", placement: "workflow" })}
+                    >
                       Enter Quantus Investing workspace
                       <ArrowRight className="h-5 w-5" />
                     </a>
@@ -655,6 +656,38 @@ export default function QuantusPage() {
                 ))}
               </div>
             </Card>
+          </ScrollReveal>
+        </section>
+
+        <section className="mx-auto mb-16 max-w-7xl px-6">
+          <ScrollReveal width="100%">
+            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12 md:py-12">
+              <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                    See the workflow in context
+                  </p>
+                  <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                    Want a guided Quantus walkthrough?
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    Share the research workflow or team use case you are evaluating,
+                    and we can focus the conversation on fit, methodology, and access.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Button asChild className="rounded-full bg-white px-7 text-black hover:bg-gray-100">
+                    <Link href="/start-a-project?product=quantus&source=product-footer">
+                      Request a walkthrough
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-full border-gray-600 bg-transparent px-7 text-white hover:bg-white/10 hover:text-white">
+                    <a href={QUANTUS_APP_URL}>Open workspace</a>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </ScrollReveal>
         </section>
       </main>

@@ -3,7 +3,6 @@ export const PRODUCT_ROUTES = {
   powerBiSolutions: "/Power%20BI%20Solutions",
   bonusaki: "/bonusaki",
   aiAdvisor: "/Greek%20AI%20Professional%20Advisor",
-  websiteAppPortfolio: "/Website%20%26%20App%20Portfolio",
 } as const;
 
 export const PRODUCT_ROUTE_ALIASES = {
@@ -11,7 +10,6 @@ export const PRODUCT_ROUTE_ALIASES = {
   powerBiSolutions: "/power-bi-solutions",
   bonusaki: "/bonusaki",
   aiAdvisor: "/ai-advisor",
-  websiteAppPortfolio: "/website-app-portfolio",
 } as const;
 
 export const PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS = {
@@ -23,7 +21,6 @@ export const PRODUCT_ROUTE_DISPLAY_PATHS = {
   powerBiSolutions: decodeRoutePath(PRODUCT_ROUTES.powerBiSolutions),
   bonusaki: decodeRoutePath(PRODUCT_ROUTES.bonusaki),
   aiAdvisor: decodeRoutePath(PRODUCT_ROUTES.aiAdvisor),
-  websiteAppPortfolio: decodeRoutePath(PRODUCT_ROUTES.websiteAppPortfolio),
 } as const;
 
 export function decodeRoutePath(path: string) {
@@ -32,14 +29,4 @@ export function decodeRoutePath(path: string) {
   } catch {
     return path;
   }
-}
-
-export function pathMatches(currentPath: string, candidatePaths: string[]) {
-  const normalizedCurrent = decodeRoutePath(currentPath);
-
-  return candidatePaths.some(
-    (candidate) =>
-      currentPath === candidate ||
-      normalizedCurrent === decodeRoutePath(candidate),
-  );
 }

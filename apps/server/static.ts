@@ -319,7 +319,8 @@ interface RouteMeta {
 }
 
 const BASE_URL = "https://www.bisolutions.group";
-const DEFAULT_OG_IMAGE = `${BASE_URL}/bi-solutions-logo.png`;
+const DEFAULT_OG_IMAGE = `${BASE_URL}/og.png`;
+const ORGANIZATION_LOGO_IMAGE = `${BASE_URL}/bi-solutions-logo.png`;
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
 const WEBSITE_ID = `${BASE_URL}/#website`;
 const FOUNDER_ID = `${BASE_URL}/about#ioannis-bekas`;
@@ -329,11 +330,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     title: "AI, BI & Web App Development - BI Solutions Group",
     description: "BI Solutions Group helps companies in Greece and Europe build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
     path: "/",
-  },
-  "/products": {
-    title: "Products - BI Solutions Group",
-    description: "Focused analytics product workspaces from BI Solutions Group: Quantus Investing for research workflows and Power BI Solutions for semantic model analysis.",
-    path: "/products",
   },
   "/quantus": {
     title: "Quantus Investing - Institutional-Grade Quantitative Research",
@@ -422,20 +418,35 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Build governed, scalable data foundations with practical strategy, architecture, quality, access controls, cloud platforms, and GDPR-aware operating practices.",
     path: "/services/data-strategy-governance",
   },
+  "/case-studies/unicef-audit-compliance": {
+    title: "Audit Compliance Power BI Case Study - BI Solutions Group",
+    description: "Independent Power BI portfolio analysis showing how audit ratings, risks, expenditure, and recommendation progress can work in one reporting flow.",
+    path: "/case-studies/unicef-audit-compliance",
+  },
+  "/case-studies/iaea-scientific-analysis": {
+    title: "Scientific Analysis Power BI Case Study - BI Solutions Group",
+    description: "Independent Power BI portfolio analysis for comparing representative laboratory measurements across regions, dates, water types, and isotope measures.",
+    path: "/case-studies/iaea-scientific-analysis",
+  },
+  "/case-studies/ifc-talent-strategy": {
+    title: "Talent Analytics Power BI Case Study - BI Solutions Group",
+    description: "Independent Power BI portfolio analysis connecting recruitment activity, funnel stages, candidate sources, diversity, and applicant detail.",
+    path: "/case-studies/ifc-talent-strategy",
+  },
   "/about": {
-    title: "About - BI Solutions Group",
-    description: "Ioannis Bekas - Data Scientist & AI Developer with 9+ years delivering analytics, customer insight, and product innovation.",
+    title: "About Ioannis Bekas and BI Solutions Group",
+    description: "Meet Ioannis Bekas and learn how BI Solutions Group delivers business intelligence, AI, data strategy, and focused web applications for teams in Greece and Europe.",
     path: "/about",
+  },
+  "/start-a-project": {
+    title: "Start a Project - BI Solutions Group",
+    description: "Tell BI Solutions Group about your business intelligence, AI, data strategy, web application, or product-workspace requirement.",
+    path: "/start-a-project",
   },
   "/blog": {
     title: "Insights - BI Solutions Group",
     description: "Curated BI Solutions resources on business intelligence, semantic modeling, AI workflows, data strategy, and web app delivery.",
     path: "/blog",
-  },
-  "/portfolio": {
-    title: "Portfolio and Selected Analytics Work - BI Solutions Group",
-    description: "See BI Solutions portfolio work across UNICEF, IAEA, IFC, and strategic partnerships delivering analytics, dashboards, and digital transformation.",
-    path: "/portfolio",
   },
   "/privacy-policy": {
     title: "Privacy Policy - BI Solutions Group",
@@ -456,7 +467,7 @@ function getOrganizationSchema() {
     name: "BI Solutions Group",
     alternateName: "BI Solutions",
     url: `${BASE_URL}/`,
-    logo: DEFAULT_OG_IMAGE,
+    logo: ORGANIZATION_LOGO_IMAGE,
     image: DEFAULT_OG_IMAGE,
     description:
       "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for businesses in Greece and Europe.",
@@ -769,11 +780,8 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/Quantus%20Investing", "/quantus");
   redirectLegacyProductPath(app, "/Quantus", "/quantus");
   redirectLegacyProductPath(app, "/Power%20BI%20Solutions", "/power-bi-solutions");
-  redirectLegacyProductPath(app, "/all-products", "/products");
   redirectLegacyProductPath(app, "/Bonusaki", "/bonusaki");
   redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
-  redirectLegacyProductPath(app, "/Website%20%26%20App%20Portfolio", "/portfolio#web-apps");
-  redirectLegacyProductPath(app, "/website-app-portfolio", "/portfolio#web-apps");
 
   // Retired service pages normalize to the current canonical service URLs.
   redirectLegacyProductPath(app, "/services/digital-transformation-cloud-migration", "/services/data-strategy-governance");
@@ -781,6 +789,12 @@ export function serveStatic(app: Express) {
   redirectLegacyProductPath(app, "/services/mlops-productionization", "/services/mlops-model-monitoring");
   redirectLegacyProductPath(app, "/services/website-web-app-development", "/services/website-app-development");
 
+  serveGonePath(app, "/products");
+  serveGonePath(app, "/all-products");
+  serveGonePath(app, "/portfolio");
+  serveGonePath(app, "/Website%20%26%20App%20Portfolio");
+  serveGonePath(app, "/Website & App Portfolio");
+  serveGonePath(app, "/website-app-portfolio");
   serveGonePath(app, "/insights/disaster-risk-reduction-finance");
   serveGonePath(app, "/blog/disaster-risk-reduction-finance-dashboard-launch");
   serveGonePath(app, "/contact");

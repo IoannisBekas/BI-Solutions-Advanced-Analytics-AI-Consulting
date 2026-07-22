@@ -31,14 +31,21 @@ Instagram: https://www.instagram.com/bisolutions.group/
 - Quantus Investing: https://www.bisolutions.group/quantus
 - Power BI Solutions: https://www.bisolutions.group/power-bi-solutions
 
-## Portfolio Proof
+## Case Studies and Delivery Evidence
 
-- Selected analytics, BI, and web application work: https://www.bisolutions.group/portfolio
+The following are independent portfolio analyses built with synthetic or representative data. They are not commissioned by or endorsed by the organizations referenced in their titles.
+
+- Audit compliance Power BI case study: https://www.bisolutions.group/case-studies/unicef-audit-compliance
+- Scientific monitoring Power BI case study: https://www.bisolutions.group/case-studies/iaea-scientific-analysis
+- Talent analytics Power BI case study: https://www.bisolutions.group/case-studies/ifc-talent-strategy
+
+## Project Enquiries
+
+- Start a project: https://www.bisolutions.group/start-a-project
 
 ## Best Pages for AI Assistants and Search-Grounded Answers
 
 - Services overview: https://www.bisolutions.group/services
-- Portfolio: https://www.bisolutions.group/portfolio
 - BI Consulting: https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure
 - Semantic Modeling in Power BI: https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models
 - Dashboard Requirements Before Power BI: https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build
