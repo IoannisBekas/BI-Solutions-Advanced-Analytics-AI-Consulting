@@ -21,22 +21,43 @@ import {
   secondaryBlogPosts,
   visibleBlogPosts,
 } from "@/data/blogData";
-import { CONTACT_MAILTO } from "@/lib/contact";
+import { trackEvent } from "@/lib/analytics";
+
+const topicFilters = [
+  "All",
+  "BI & reporting",
+  "AI workflows",
+  "Data strategy",
+  "Web applications",
+] as const;
+
+type TopicFilter = (typeof topicFilters)[number];
+
+function getPostTopic(category: string): Exclude<TopicFilter, "All"> {
+  if (category.includes("BI")) return "BI & reporting";
+  if (category.includes("AI") || category.includes("MLOps")) return "AI workflows";
+  if (category.includes("Web")) return "Web applications";
+  return "Data strategy";
+}
 
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTopic, setActiveTopic] = useState<TopicFilter>("All");
 
   const filteredPosts = visibleBlogPosts.filter((post) => {
-    const query = searchQuery.toLowerCase();
+    const query = searchQuery.trim().toLowerCase();
+    const matchesTopic = activeTopic === "All" || getPostTopic(post.category) === activeTopic;
 
-    return (
+    const matchesQuery =
+      query.length === 0 ||
       post.title.toLowerCase().includes(query) ||
       post.excerpt.toLowerCase().includes(query) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(query))
-    );
+      post.tags.some((tag) => tag.toLowerCase().includes(query));
+
+    return matchesTopic && matchesQuery;
   });
 
-  const isSearching = searchQuery.length > 0;
+  const isFiltering = searchQuery.trim().length > 0 || activeTopic !== "All";
   const featuredPost = featuredBlogPost ?? prominentBlogPosts[0];
   const otherPosts = prominentBlogPosts.filter(
     (post) => post.slug !== featuredPost?.slug,
@@ -64,7 +85,8 @@ export default function Blog() {
           title="Practical guides for BI, AI, data strategy, and web app delivery."
           description="A smaller, higher-signal resource library for buyers comparing analytics, AI workflow, reporting, and web app consulting decisions."
           footer={
-            <div className="max-w-xl">
+            <div>
+              <div className="max-w-xl">
               <label className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                 Search articles
               </label>
@@ -78,11 +100,32 @@ export default function Blog() {
                   className="h-14 w-full rounded-full border border-gray-200 bg-gray-50 pl-12 pr-6 text-base outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-black"
                 />
               </div>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-2" aria-label="Filter insights by topic">
+                {topicFilters.map((topic) => (
+                  <button
+                    key={topic}
+                    type="button"
+                    aria-pressed={activeTopic === topic}
+                    onClick={() => {
+                      setActiveTopic(topic);
+                      trackEvent("insights_filter_click", { topic });
+                    }}
+                    className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                      activeTopic === topic
+                        ? "border-black bg-black text-white"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-black"
+                    }`}
+                  >
+                    {topic}
+                  </button>
+                ))}
+              </div>
             </div>
           }
         />
 
-        {!isSearching ? (
+        {!isFiltering ? (
           <>
             {featuredPost ? (
               <section className="mx-auto max-w-7xl px-6 md:px-12">
@@ -91,7 +134,7 @@ export default function Blog() {
                     Featured article
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                    Start with the clearest commercial topic.
+                    Start with a practical buyer question.
                   </h2>
                 </ScrollReveal>
 
@@ -148,7 +191,7 @@ export default function Blog() {
                     More articles
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                    Core guides that support the service offer.
+                    Explore the decisions behind better reporting, AI, and digital delivery.
                   </h2>
                 </ScrollReveal>
 
@@ -230,12 +273,14 @@ export default function Blog() {
         ) : (
           <section className="mx-auto max-w-7xl px-6 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                Search results
-              </p>
-              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                {filteredPosts.length} result{filteredPosts.length === 1 ? "" : "s"} for "{searchQuery}"
-              </h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  Filtered insights
+                </p>
+                <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                  {filteredPosts.length} article{filteredPosts.length === 1 ? "" : "s"}
+                  {searchQuery.trim() ? ` matching “${searchQuery.trim()}”` : ""}
+                  {activeTopic !== "All" ? ` in ${activeTopic}` : ""}
+                </h2>
             </ScrollReveal>
 
             {filteredPosts.length > 0 ? (
@@ -286,7 +331,10 @@ export default function Blog() {
                     Try a broader keyword or clear the search to return to the full list.
                   </p>
                   <button
-                    onClick={() => setSearchQuery("")}
+                    onClick={() => {
+                      setSearchQuery("");
+                      setActiveTopic("All");
+                    }}
                     className="mt-6 inline-flex rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
                   >
                     Clear search
@@ -315,10 +363,13 @@ export default function Blog() {
                   </p>
                 </div>
                 <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
-                  <a href={CONTACT_MAILTO}>
-                    Get in touch
+                  <Link
+                    href="/start-a-project?source=insights"
+                    onClick={() => trackEvent("insights_cta_click", { placement: "footer" })}
+                  >
+                    Start a project
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>

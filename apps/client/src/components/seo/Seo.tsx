@@ -3,7 +3,7 @@ import { SsrHeadContext } from "./ssrHead";
 
 const SITE_NAME = "BI Solutions Group";
 const SITE_URL = "https://www.bisolutions.group";
-const DEFAULT_IMAGE = "/bi-solutions-logo.png";
+const DEFAULT_IMAGE = "/og.png";
 
 type StructuredData = Record<string, unknown> | Array<Record<string, unknown>>;
 

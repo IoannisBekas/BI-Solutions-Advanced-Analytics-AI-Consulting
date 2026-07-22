@@ -61,6 +61,12 @@ body {
   overflow-x: hidden;
 }
 
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #111827;
+}
+
 h1, h2, h3, h4, h5, h6 {
   @apply font-heading font-bold tracking-tight;
 }
@@ -100,4 +106,19 @@ h1, h2, h3, h4, h5, h6 {
   background-size: auto, 64px 64px, 64px 64px;
   mask-image: linear-gradient(to bottom, black 0%, black 54%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 54%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -6,17 +6,56 @@ import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages, aiLocationPages } from "@/lib/servicePages";
-import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
-import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
-import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
+import { blogPosts } from "@/data/blogData";
+import { caseStudies } from "@/data/caseStudies";
+import { trackEvent } from "@/lib/analytics";
 
-const trustSignals = [
-  { label: "Buyer focus", value: "BI, AI, analytics, and web app delivery" },
-  { label: "Proof", value: "International dashboards and 5-star reviews" },
-  { label: "Delivery style", value: "Strategy, implementation, and handoff" },
+const engagementSteps = [
+  {
+    title: "Diagnose",
+    description:
+      "Clarify the decision, users, data, constraints, and success criteria before choosing the solution.",
+  },
+  {
+    title: "Build",
+    description:
+      "Design, test, and deliver the dashboard, workflow, data system, or application around real use.",
+  },
+  {
+    title: "Enable",
+    description:
+      "Document the work, train the people who will use it, and agree on handoff or ongoing support.",
+  },
 ];
+
+const deliveryReasons = [
+  {
+    title: "Founder-led senior delivery",
+    description:
+      "The person shaping the scope stays close to the technical decisions and the final handoff.",
+  },
+  {
+    title: "9+ years of relevant experience",
+    description:
+      "Analytics, data science, AI, reporting, and product delivery are treated as one connected operating problem.",
+  },
+  {
+    title: "Built for use after launch",
+    description:
+      "Definitions, documentation, access, maintainability, and team adoption are considered alongside the build.",
+  },
+  {
+    title: "Greece and Europe context",
+    description:
+      "Delivery is shaped for businesses operating across Greek and European markets, data expectations, and teams.",
+  },
+];
+
+const latestInsight = blogPosts[0];
 
 export default function Home() {
   return (
@@ -172,116 +211,275 @@ export default function Home() {
       <main>
         <Hero />
 
-        <section className="border-y border-gray-200 bg-white">
-          <div className="mx-auto grid max-w-7xl gap-0 px-6 md:grid-cols-3 md:px-12">
-            {trustSignals.map((item) => (
-              <div
-                key={item.label}
-                className="border-b border-gray-200 py-6 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 md:px-8 md:first:pl-0 md:last:pr-0"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                  {item.label}
-                </p>
-                <p className="mt-2 text-base font-medium leading-relaxed text-gray-900">
-                  {item.value}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <ServicesSection />
 
-        <section className="py-24 bg-black text-white overflow-hidden">
+        <section id="case-studies" className="overflow-hidden bg-black py-24 text-white scroll-mt-24">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <ScrollReveal className="mb-16 max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Proof
+                Selected case studies
               </p>
               <h2 className="mt-4 text-4xl md:text-5xl font-bold font-heading text-white">
-                Selected analytics work with serious operating contexts.
+                See the thinking, structure, and outputs behind the work.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-400">
-                Lead with the work that proves BI, analytics, and decision-support depth.
-                Lighter web launches stay in the portfolio as supporting evidence.
+                These independent portfolio analyses use synthetic or
+                representative demonstration data to show how complex reporting
+                questions can become focused, usable Power BI experiences.
               </p>
-              <Link
-                href="/portfolio"
-                className="mt-6 inline-flex text-sm font-semibold text-white underline underline-offset-4 transition-colors hover:text-gray-300"
-              >
-                View full work archive
-              </Link>
             </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              <ScrollReveal delay={0.1}>
-                <a
-                  href="https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/UNICEF%20OIAI%20Country-Office%20Audit%20Reports.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block cursor-pointer"
-                >
-                  <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
-                    <img
-                      src={unicefDashboard}
-                      alt="UNICEF Audit Reports Dashboard"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-gray-300 transition-colors">UNICEF Audit Compliance</h3>
-                  <p className="text-gray-400 text-sm">Risk Management / Strategy</p>
-                </a>
-              </ScrollReveal>
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+              {caseStudies.map((caseStudy, index) => {
+                const href = `/case-studies/${caseStudy.slug}`;
 
-              <ScrollReveal delay={0.2} className="lg:mt-12">
-                <a
-                  href="https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/IAEA%20-%20Global%20Water%20Analysis%20Laboratory%20Network.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block cursor-pointer"
-                >
-                  <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
-                    <img
-                      src={iaeaDashboard}
-                      alt="IAEA Water Analysis Dashboard"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-gray-300 transition-colors">IAEA Scientific Analysis</h3>
-                  <p className="text-gray-400 text-sm">Data Science / Laboratory Network</p>
-                </a>
-              </ScrollReveal>
+                return (
+                  <ScrollReveal
+                    key={caseStudy.slug}
+                    delay={index * 0.1}
+                    className={index === 1 ? "lg:mt-10" : index === 2 ? "lg:mt-20" : undefined}
+                    width="100%"
+                  >
+                    <Link
+                      href={href}
+                      className="group block h-full"
+                      onClick={() =>
+                        trackEvent("case_study_open", {
+                          case_study: caseStudy.slug,
+                          placement: "homepage",
+                          target: href,
+                        })
+                      }
+                    >
+                      <article className="flex h-full flex-col">
+                        <div className="aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                          <img
+                            src={caseStudy.image}
+                            alt={caseStudy.imageAlt}
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        </div>
+                        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          {caseStudy.relationship}
+                        </p>
+                        <h3 className="mt-3 text-2xl font-bold font-heading leading-tight text-white transition-colors group-hover:text-gray-300">
+                          {caseStudy.cardTitle}
+                        </h3>
+                        <p className="mt-4 text-sm leading-relaxed text-gray-400">
+                          {caseStudy.summary}
+                        </p>
+                        <div className="mt-5 border-t border-white/10 pt-5">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">
+                            Delivered
+                          </p>
+                          <p className="mt-2 text-sm leading-relaxed text-gray-300">
+                            {caseStudy.delivered[0]}
+                          </p>
+                        </div>
+                        <div className="mt-auto flex items-center gap-2 pt-6 text-sm font-semibold text-white">
+                          Read the case study
+                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </div>
+                      </article>
+                    </Link>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
 
-              <ScrollReveal delay={0.3} className="lg:mt-24">
-                <a
-                  href="https://github.com/IoannisBekas/PowerBI-Dashboards/blob/main/World%20Bank%20HR%20Dashboard.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block cursor-pointer"
+        <section className="border-b border-gray-200 bg-white py-24">
+          <div className="mx-auto max-w-7xl px-6 md:px-12">
+            <ScrollReveal className="mb-14 max-w-3xl" width="100%">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                How engagements work
+              </p>
+              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                A clear route from an unclear problem to a maintainable result.
+              </h2>
+            </ScrollReveal>
+
+            <div className="grid gap-6 lg:grid-cols-3">
+              {engagementSteps.map((step, index) => (
+                <ScrollReveal
+                  key={step.title}
+                  delay={index * 0.08}
+                  width="100%"
                 >
-                  <div className="aspect-[16/9] overflow-hidden rounded-2xl mb-6 border border-white/10">
-                    <img
-                      src={ifcDashboard}
-                      alt="IFC HR Analyst Dashboard"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-gray-300 transition-colors">IFC Talent Strategy</h3>
-                  <p className="text-gray-400 text-sm">HR Analytics / Operations</p>
-                </a>
-              </ScrollReveal>
+                  <article className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-7 sm:p-8">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-sm font-semibold text-white">
+                      {index + 1}
+                    </div>
+                    <h3 className="mt-7 text-2xl font-bold font-heading text-gray-950">
+                      {step.title}
+                    </h3>
+                    <p className="mt-4 leading-relaxed text-gray-600">
+                      {step.description}
+                    </p>
+                  </article>
+                </ScrollReveal>
+              ))}
             </div>
           </div>
         </section>
 
         <ProductShowcase
-          badge="Flagship products"
+          badge="Products"
           id="products"
-          heading="Two product workspaces for high-value analytics workflows."
-          description="Quantus Investing and Power BI Solutions are the only public product workspaces. Demos and broader web work are proof points, not competing products."
+          heading="Two focused workspaces—and smaller pilots you can explore."
+          description="Quantus Investing and Power BI Solutions support repeatable analytics workflows. Bonusaki and the Greek AI Professional Advisor show smaller product and AI concepts in action."
         />
 
+        <section className="bg-gray-950 py-24 text-white">
+          <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)] lg:items-start">
+            <ScrollReveal width="100%">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+                Why BI Solutions Group
+              </p>
+              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight md:text-5xl">
+                Senior delivery that connects strategy to the working system.
+              </h2>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-400">
+                The goal is not simply to present a recommendation or ship a
+                dashboard. It is to leave the team with a useful system and a
+                clear way to operate it.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Button asChild className="rounded-full bg-white px-7 text-black hover:bg-gray-200">
+                  <Link href="/about">
+                    Meet Ioannis
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-full border-white/20 bg-transparent px-7 text-white hover:bg-white/10"
+                >
+                  <Link href="/start-a-project">Start a project</Link>
+                </Button>
+              </div>
+            </ScrollReveal>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {deliveryReasons.map((reason, index) => (
+                <ScrollReveal key={reason.title} delay={index * 0.06} width="100%">
+                  <article className="h-full rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
+                    <CheckCircle2 className="h-5 w-5 text-gray-400" />
+                    <h3 className="mt-5 text-lg font-bold font-heading text-white">
+                      {reason.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-gray-400">
+                      {reason.description}
+                    </p>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <ReviewsSection />
+
+        <section className="bg-gray-50 py-24">
+          <div className="mx-auto max-w-7xl px-6 md:px-12">
+            <ScrollReveal className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between" width="100%">
+              <div className="max-w-3xl">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  Latest insight
+                </p>
+                <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                  Practical thinking before the project starts.
+                </h2>
+              </div>
+              <Link
+                href="/blog"
+                className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-300 underline-offset-4"
+              >
+                Browse all insights
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal width="100%">
+              <Link
+                href={`/blog/${latestInsight.slug}`}
+                className="group grid overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
+                onClick={() =>
+                  trackEvent("insight_click", {
+                    article: latestInsight.slug,
+                    placement: "homepage",
+                    target: `/blog/${latestInsight.slug}`,
+                  })
+                }
+              >
+                <div className="aspect-[16/10] overflow-hidden bg-gray-100 lg:aspect-auto">
+                  <img
+                    src={latestInsight.featuredImage}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    {latestInsight.category} · {latestInsight.date} · {latestInsight.readTime}
+                  </p>
+                  <h3 className="mt-5 text-3xl font-bold font-heading leading-tight text-gray-950 md:text-4xl">
+                    {latestInsight.title}
+                  </h3>
+                  <p className="mt-5 text-base leading-relaxed text-gray-600">
+                    {latestInsight.excerpt}
+                  </p>
+                  <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-gray-950">
+                    Read the insight
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </Link>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="bg-white py-24">
+          <div className="mx-auto max-w-7xl px-6 md:px-12">
+            <ScrollReveal width="100%">
+              <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+                  <div className="max-w-3xl">
+                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+                      Start a project
+                    </p>
+                    <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight md:text-5xl">
+                      What are you trying to improve?
+                    </h2>
+                    <p className="mt-5 text-lg leading-relaxed text-gray-400">
+                      Share the reporting problem, AI workflow, data foundation,
+                      or digital product you need to move forward.
+                    </p>
+                  </div>
+                  <Button
+                    asChild
+                    className="h-12 rounded-full bg-white px-7 text-base text-black hover:bg-gray-200"
+                  >
+                    <Link
+                      href="/start-a-project"
+                      onClick={() =>
+                        trackEvent("contact_cta_click", {
+                          placement: "homepage_final",
+                          target: "/start-a-project",
+                        })
+                      }
+                    >
+                      Start a project
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

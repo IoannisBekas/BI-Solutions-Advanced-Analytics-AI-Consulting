@@ -1,3 +1,5 @@
+import { hasAnalyticsConsent } from "@/lib/analytics";
+
 type AiReferralSource =
   | "ChatGPT"
   | "Claude"
@@ -45,6 +47,14 @@ function safeStorage(storage: Storage, key: string, value?: string) {
   }
 }
 
+function clearStorage(storage: Storage, key: string) {
+  try {
+    storage.removeItem(key);
+  } catch {
+    // Storage may be unavailable in privacy-restricted browser contexts.
+  }
+}
+
 function getReferrerDomain(referrer: string) {
   if (!referrer) return "";
 
@@ -76,6 +86,8 @@ function detectSource(referrerDomain: string, search: string): AiReferralSource 
 }
 
 export function getStoredAiSearchReferral(): AiSearchReferral | null {
+  if (!hasAnalyticsConsent()) return null;
+
   const raw = safeStorage(window.sessionStorage, SESSION_KEY);
   if (!raw) return null;
 
@@ -96,6 +108,8 @@ export function pushAiSearchReferralToDataLayer(referral: AiSearchReferral) {
 }
 
 export function captureAiSearchReferral() {
+  if (!hasAnalyticsConsent()) return null;
+
   const referrerDomain = getReferrerDomain(document.referrer);
   const source = detectSource(referrerDomain, window.location.search);
 
@@ -120,4 +134,9 @@ export function captureAiSearchReferral() {
   );
 
   return referral;
+}
+
+export function clearAiSearchReferral() {
+  clearStorage(window.sessionStorage, SESSION_KEY);
+  clearStorage(window.localStorage, LOCAL_KEY);
 }

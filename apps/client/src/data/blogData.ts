@@ -66,7 +66,7 @@ This is especially important for service companies in Athens, Thessaloniki, and 
 
 SEO is not only about publishing articles. The technical surface matters too. Clean routes, fast pages, readable headings, descriptive metadata, internal links, and structured content all help search engines and users understand the site. More importantly, they help visitors move from search intent to action.
 
-The <a href="/portfolio#web-apps" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">web and app work in the portfolio</a> is the proof layer for this service. Service pages explain the offer, portfolio examples show delivery, and articles answer the questions prospects ask before they are ready to contact. When these pieces connect, the site becomes more than content. It becomes a lead-quality system.
+Selected delivery examples and case-study material are the proof layer for this service. Service pages explain the offer, project examples show delivery, and articles answer the questions prospects ask before they are ready to contact. When these pieces connect, the site becomes more than content. It becomes a lead-quality system.
 
 ## FAQ
 
@@ -1447,7 +1447,7 @@ That approach keeps delivery realistic and gives the business evidence before in
 
 A useful case study explains the starting problem, the audience, constraints, decisions, technology, and result. This helps buyers compare relevance, not just visual style.
 
-For BI Solutions, the <a href="/portfolio#web-apps" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">web and app work in the portfolio</a> should work together with service pages and resource content. The service page explains the offer, resources educate, and the portfolio proves delivery.
+For BI Solutions, delivery examples should work together with service pages and resource content. The service page explains the offer, resources educate, and project evidence proves delivery.
 
 ## Make the proof specific
 
@@ -1570,7 +1570,7 @@ In practice, it means BI Solutions can present the product through the main site
 
 This is the real shift behind Power BI Solutions. The product is not just describing semantic model best practices; it is operationalizing them. A structured upload flow, integrated diagnostics, AI guidance, and dedicated authentication make the experience more consistent for teams that need repeatable review rather than one-off commentary.
 
-For BI leaders, that means faster feedback loops. For analysts and developers, it means fewer handoffs and less ambiguity. And for organizations trying to raise the quality of their Power BI estate, it creates a clear home for semantic model analysis inside the BI Solutions product shell.
+For BI leaders, that means faster feedback loops. For analysts and developers, it means fewer handoffs and less ambiguity. And for organizations trying to raise the quality of their Power BI estate, it creates a focused workspace for repeatable semantic-model analysis and guided improvement.
 
 Power BI models do not fail because teams lack opinions. They fail because review, optimization, and decision-making are scattered. Power BI Solutions brings those steps together into one workspace and gives semantic model analysis the dedicated product surface it has been missing.`,
     author: "BI Solutions",

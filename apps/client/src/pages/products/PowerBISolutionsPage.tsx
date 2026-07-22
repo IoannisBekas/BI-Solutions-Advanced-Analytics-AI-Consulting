@@ -1,7 +1,7 @@
+import { Link } from "wouter";
 import {
   ArrowRight,
   Bot,
-  ExternalLink,
   FileText,
   LineChart,
   MessageSquare,
@@ -17,8 +17,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { cn } from "@/lib/utils";
 import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
-import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
-import { CONTACT_MAILTO } from "@/lib/contact";
+import { withPublicSiteOrigin } from "@/lib/site";
+import { trackEvent } from "@/lib/analytics";
 
 const POWERBI_SOLUTIONS_APP_URL =
   import.meta.env.VITE_POWERBI_SOLUTIONS_URL ||
@@ -36,8 +36,8 @@ const heroHighlights = [
     icon: MessageSquare,
   },
   {
-    label: "Access model",
-    value: "Keep product-specific authentication inside the BI Solutions domain.",
+    label: "Review scope",
+    value: "Inspect tables, measures, relationships, naming, and maintainability.",
     icon: Shield,
   },
 ];
@@ -59,7 +59,7 @@ const features = [
     icon: Bot,
     title: "AI-Powered Guidance",
     description:
-      "Use a dedicated Anthropic-backed assistant for targeted DAX, model design, and optimization questions.",
+      "Use a context-aware assistant for targeted DAX, model design, and optimization questions.",
   },
   {
     icon: MessageSquare,
@@ -75,16 +75,16 @@ const features = [
   },
   {
     icon: Shield,
-    title: "Separate Product Auth",
+    title: "Prioritized Next Steps",
     description:
-      "Keep Power BI Solutions access and state isolated from Quantus while still living under the BI Solutions parent brand.",
+      "Turn diagnostics into a clear sequence of model improvements instead of an undifferentiated issue list.",
   },
 ];
 
 const launchChecklist = [
-  "Open the Power BI Solutions workspace on the BI Solutions domain.",
-  "Authenticate with the product-specific sign-in flow.",
-  "Upload TMDL files, review model diagnostics, and continue with AI-assisted analysis.",
+  "Confirm the semantic model and reporting goal you want to review.",
+  "Upload TMDL files and inspect the structured model diagnostics.",
+  "Prioritize the findings and continue with context-aware guided analysis.",
 ];
 
 const powerBiFaqs = [
@@ -106,11 +106,6 @@ const powerBiFaqs = [
 ];
 
 export default function PowerBISolutionsPage() {
-  const powerBiWorkspaceDisplayUrl = new URL(
-    POWERBI_SOLUTIONS_APP_URL,
-    getPublicSiteOrigin(),
-  ).toString();
-
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
@@ -160,8 +155,7 @@ export default function PowerBISolutionsPage() {
               "@type": "BreadcrumbList",
               itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
-                { "@type": "ListItem", position: 2, name: "Products", item: "https://www.bisolutions.group/products" },
-                { "@type": "ListItem", position: 3, name: "Power BI Solutions", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}` },
+                { "@type": "ListItem", position: 2, name: "Power BI Solutions", item: `https://www.bisolutions.group${PRODUCT_ROUTE_ALIASES.powerBiSolutions}` },
               ],
             },
           ],
@@ -183,7 +177,10 @@ export default function PowerBISolutionsPage() {
                     asChild
                     className="rounded-full bg-black px-8 text-white hover:bg-gray-800"
                   >
-                    <a href={POWERBI_SOLUTIONS_APP_URL}>
+                    <a
+                      href={POWERBI_SOLUTIONS_APP_URL}
+                      onClick={() => trackEvent("workspace_open", { product: "power-bi-solutions", placement: "hero" })}
+                    >
                       Open Power BI workspace
                       <ArrowRight className="h-4 w-4" />
                     </a>
@@ -193,10 +190,13 @@ export default function PowerBISolutionsPage() {
                     variant="outline"
                     className="rounded-full border-gray-300 px-8"
                   >
-                    <a href={CONTACT_MAILTO}>
-                      Talk to BI Solutions
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                    <Link
+                      href="/start-a-project?product=power-bi-solutions&source=product-hero"
+                      onClick={() => trackEvent("product_walkthrough_click", { product: "power-bi-solutions", placement: "hero" })}
+                    >
+                      Request a walkthrough
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
                   </Button>
                 </>
               )}
@@ -263,23 +263,26 @@ export default function PowerBISolutionsPage() {
                 <div className="min-w-0">
                   <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white">
                     <Shield className="h-4 w-4" />
-                    Separate auth, shared domain
+                    Model-first review, guided next steps
                   </div>
                   <h2 className="text-3xl md:text-4xl font-bold font-heading tracking-tight">
-                    Launch a dedicated Power BI workflow from the BI Solutions product shell
+                    Move from model upload to an actionable improvement plan.
                   </h2>
                   <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">
-                    The BI Solutions site becomes the product shell and discovery layer, while the native Power BI Solutions app handles uploads, analysis, recommendations, chat, and product-specific sessions at `/power-bi-solutions/workspace/`.
+                    Upload a TMDL definition, inspect tables, measures,
+                    relationships, and metadata, then use diagnostics and guided
+                    follow-up to prioritise the model changes that matter most.
                   </p>
                 </div>
 
                 <div className="min-w-0 space-y-4">
                   <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
                     <p className="mb-2 text-sm font-semibold text-gray-900">
-                      Workspace URL
+                      Before you upload
                     </p>
-                    <p className="break-all font-mono text-sm text-gray-500">
-                      {powerBiWorkspaceDisplayUrl}
+                    <p className="text-sm leading-relaxed text-gray-600">
+                      Use a walkthrough to confirm fit and data-handling requirements
+                      before reviewing a production model or any sensitive metadata.
                     </p>
                   </div>
 
@@ -307,7 +310,10 @@ export default function PowerBISolutionsPage() {
                     asChild
                     className="w-full rounded-full bg-black py-6 text-lg text-white hover:bg-gray-800"
                   >
-                    <a href={POWERBI_SOLUTIONS_APP_URL}>
+                    <a
+                      href={POWERBI_SOLUTIONS_APP_URL}
+                      onClick={() => trackEvent("workspace_open", { product: "power-bi-solutions", placement: "workflow" })}
+                    >
                       Enter Power BI Solutions workspace
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </a>
@@ -333,6 +339,38 @@ export default function PowerBISolutionsPage() {
                 ))}
               </div>
             </Card>
+          </ScrollReveal>
+        </section>
+
+        <section className="mx-auto mb-16 max-w-7xl px-6">
+          <ScrollReveal width="100%">
+            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12 md:py-12">
+              <div className="flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                    Review the workflow together
+                  </p>
+                  <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                    Want to see how your model would be reviewed?
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    Share the type of semantic model or reporting problem you are
+                    working with, and we can focus the walkthrough on the most relevant checks.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Button asChild className="rounded-full bg-white px-7 text-black hover:bg-gray-100">
+                    <Link href="/start-a-project?product=power-bi-solutions&source=product-footer">
+                      Request a walkthrough
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-full border-gray-600 bg-transparent px-7 text-white hover:bg-white/10 hover:text-white">
+                    <a href={POWERBI_SOLUTIONS_APP_URL}>Open workspace</a>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </ScrollReveal>
         </section>
       </main>

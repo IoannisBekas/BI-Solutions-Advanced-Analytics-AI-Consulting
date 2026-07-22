@@ -13,7 +13,6 @@ const NAMED_MARKETING_ROUTES = new Set([
   "/Power BI Solutions",
   "/Bonusaki",
   "/Greek AI Professional Advisor",
-  "/Website & App Portfolio",
 ]);
 
 function decodePathname(pathname: string) {

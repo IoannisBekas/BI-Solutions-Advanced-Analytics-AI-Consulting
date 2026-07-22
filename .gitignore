@@ -16,6 +16,8 @@ output_*
 
 # Runtime data & caches
 data/
+!apps/client/src/data/
+!apps/client/src/data/caseStudies.ts
 !apps/client/public/insights/
 !apps/client/public/insights/**/
 !apps/client/public/insights/**/data/

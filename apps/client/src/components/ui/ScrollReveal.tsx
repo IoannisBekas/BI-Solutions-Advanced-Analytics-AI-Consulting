@@ -1,4 +1,10 @@
-import { motion, useInView, useAnimation, Variant } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useAnimation,
+  useReducedMotion,
+  Variant,
+} from "framer-motion";
 import { useRef, useEffect } from "react";
 
 interface ScrollRevealProps {
@@ -21,12 +27,13 @@ export const ScrollReveal = ({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const mainControls = useAnimation();
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && !shouldReduceMotion) {
       mainControls.start("visible");
     }
-  }, [isInView, mainControls]);
+  }, [isInView, mainControls, shouldReduceMotion]);
 
   const getVariants = (): { hidden: Variant; visible: Variant } => {
     const distance = 50;
@@ -59,8 +66,8 @@ export const ScrollReveal = ({
       <motion.div
         className="h-full"
         variants={getVariants()}
-        initial="hidden"
-        animate={mainControls}
+        initial={shouldReduceMotion ? "visible" : "hidden"}
+        animate={shouldReduceMotion ? "visible" : mainControls}
       >
         {children}
       </motion.div>

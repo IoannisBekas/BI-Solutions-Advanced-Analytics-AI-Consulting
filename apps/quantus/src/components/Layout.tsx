@@ -129,7 +129,6 @@ export function Layout({
         WebkitAppearance: 'none' as const,
     };
     const quantusOverviewUrl = 'https://www.bisolutions.group/quantus';
-    const productsOverviewUrl = 'https://www.bisolutions.group/products';
     const contactUrl = 'mailto:BekasYannis@gmail.com';
     const bisolutionsHomeUrl = 'https://www.bisolutions.group/';
     const brandLogoSrc = `${import.meta.env.BASE_URL}bi-solutions-logo.png`;
@@ -688,9 +687,6 @@ export function Layout({
                                     Ecosystem
                                 </h4>
                                 <div className="flex flex-col gap-2.5 text-sm" style={{ color: lightMode ? '#374151' : '#D1D5DB' }}>
-                                    <a href={productsOverviewUrl} className="transition-colors hover:underline" style={{ color: 'inherit' }}>
-                                        Products overview
-                                    </a>
                                     <a href={contactUrl} className="transition-colors hover:underline" style={{ color: 'inherit' }}>
                                         Contact BI Solutions
                                     </a>
