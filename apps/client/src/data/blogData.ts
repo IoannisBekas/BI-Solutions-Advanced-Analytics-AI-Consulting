@@ -200,7 +200,9 @@ This review is especially valuable before a model spreads across multiple dashbo
 
 Refactoring becomes worth it when new measures take too long to build, report performance is poor, users disagree about definitions, or the same business logic appears in several places. Refactoring should not be cosmetic. It should make the model easier to maintain, easier to explain, and safer to reuse.
 
-For teams that want a dedicated workflow, <a href="/power-bi-solutions" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Power BI Solutions</a> is positioned around semantic model analysis, diagnostics, and AI-assisted guidance for model improvement.
+For teams that want a dedicated workflow, <a href="${withPublicSiteOrigin(
+      "/power-bi-solutions/workspace/",
+    )}" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Power BI Solutions</a> is positioned around semantic model analysis, diagnostics, and AI-assisted guidance for model improvement.
 
 ## FAQ
 

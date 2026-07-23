@@ -6,7 +6,6 @@ import {
   CONTACT_MAILTO,
   START_PROJECT_PATH,
 } from "@/lib/contact";
-import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withAssetBase, withSiteBase } from "@/lib/site";
 
 const serviceLinks = [
@@ -29,22 +28,6 @@ const serviceLinks = [
   },
 ] as const;
 
-const productLinks = [
-  { label: "Quantus Investing", href: PRODUCT_ROUTE_ALIASES.quantus },
-  {
-    label: "Power BI Solutions",
-    href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-  },
-] as const;
-
-const pilotLinks = [
-  { label: "Bonusaki", href: PRODUCT_ROUTE_ALIASES.bonusaki },
-  {
-    label: "Greek AI Professional Advisor",
-    href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
-  },
-] as const;
-
 const resourceLinks = [
   { label: "Insights", href: "/blog" },
   { label: "Privacy Policy", href: "/privacy-policy" },
@@ -60,7 +43,7 @@ export function Footer() {
   return (
     <footer className="overflow-hidden bg-black pb-10 pt-20 text-white">
       <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <div className="mb-20 grid grid-cols-1 gap-12 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-12">
+        <div className="mb-20 grid grid-cols-1 gap-12 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-10">
           <div className="space-y-6 sm:col-span-2 lg:col-span-4">
             <Link
               href="/"
@@ -133,45 +116,6 @@ export function Footer() {
             <h2 className="text-lg font-bold font-heading">Services</h2>
             <ul className="space-y-4 text-sm">
               {serviceLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-400 transition-colors hover:text-white"
-                    onClick={() =>
-                      trackNavClick(item.label, item.href, "footer")
-                    }
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="space-y-6 lg:col-span-2">
-            <h2 className="text-lg font-bold font-heading">
-              Products & demos
-            </h2>
-            <ul className="space-y-4 text-sm">
-              {productLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-400 transition-colors hover:text-white"
-                    onClick={() =>
-                      trackNavClick(item.label, item.href, "footer")
-                    }
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-600">
-              Labs & pilots
-            </div>
-            <ul className="space-y-4 text-sm">
-              {pilotLinks.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
