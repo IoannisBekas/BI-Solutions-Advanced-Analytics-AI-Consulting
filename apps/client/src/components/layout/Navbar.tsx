@@ -6,11 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
-import { PRODUCT_ROUTE_ALIASES } from "@/lib/routes";
 import { withAssetBase, withSiteBase } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-type DropdownName = "services" | "products";
+type DropdownName = "services";
 
 const serviceLinks = [
   {
@@ -40,27 +39,6 @@ const serviceLinks = [
   },
 ] as const;
 
-const productLinks = [
-  {
-    name: "Quantus Investing",
-    href: PRODUCT_ROUTE_ALIASES.quantus,
-    description: "AI-native quantitative research and reporting.",
-  },
-  {
-    name: "Power BI Solutions",
-    href: PRODUCT_ROUTE_ALIASES.powerBiSolutions,
-    description: "Semantic model audits and AI-assisted optimization.",
-  },
-] as const;
-
-const pilotLinks = [
-  { name: "Bonusaki", href: PRODUCT_ROUTE_ALIASES.bonusaki },
-  {
-    name: "Greek AI Professional Advisor",
-    href: PRODUCT_ROUTE_ALIASES.aiAdvisor,
-  },
-] as const;
-
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -87,9 +65,6 @@ export function Navbar() {
 
   const isServicesActive =
     location === "/services" || location.startsWith("/services/");
-  const isProductsActive = Object.values(PRODUCT_ROUTE_ALIASES).some(
-    (path) => path === location,
-  );
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -327,62 +302,6 @@ export function Navbar() {
                       Case Studies
                     </a>
 
-                    <div className="py-2">
-                      <button
-                        type="button"
-                        className="flex min-h-14 w-full items-center justify-between py-2 text-left text-2xl font-bold font-heading"
-                        onClick={() =>
-                          setOpenMobileSection((current) =>
-                            current === "products" ? null : "products",
-                          )
-                        }
-                        aria-expanded={openMobileSection === "products"}
-                        aria-controls="mobile-products-links"
-                      >
-                        Products
-                        <ChevronDown
-                          aria-hidden="true"
-                          className={cn(
-                            "h-5 w-5 transition-transform",
-                            openMobileSection === "products" && "rotate-180",
-                          )}
-                        />
-                      </button>
-                      <div
-                        id="mobile-products-links"
-                        hidden={openMobileSection !== "products"}
-                        className="border-l border-gray-200 pb-3 pl-4"
-                      >
-                        {productLinks.map((item) => (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            className="block min-h-11 py-2.5 text-base font-medium text-gray-600 transition-colors hover:text-black"
-                            onClick={() =>
-                              handleNavClick(item.name, item.href, "mobile_menu")
-                            }
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
-                        <div className="pb-1 pt-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                          Labs & pilots
-                        </div>
-                        {pilotLinks.map((item) => (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            className="block min-h-11 py-2.5 text-base font-medium text-gray-600 transition-colors hover:text-black"
-                            onClick={() =>
-                              handleNavClick(item.name, item.href, "mobile_menu")
-                            }
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-
                     {[
                       { name: "Insights", href: "/blog" },
                       { name: "About", href: "/about" },
@@ -543,72 +462,6 @@ export function Navbar() {
               Case Studies
               <span className="absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full" />
             </a>
-
-            <div className="relative">
-              <button
-                type="button"
-                data-dropdown-trigger="products"
-                className={dropdownTriggerClass(isProductsActive)}
-                onClick={() =>
-                  setOpenDesktopMenu((current) =>
-                    current === "products" ? null : "products",
-                  )
-                }
-                aria-expanded={openDesktopMenu === "products"}
-                aria-controls="desktop-products-panel"
-              >
-                Products
-                <ChevronDown
-                  aria-hidden="true"
-                  className={cn(
-                    "h-4 w-4 transition-transform",
-                    openDesktopMenu === "products" && "rotate-180",
-                  )}
-                />
-                <span
-                  className={cn(
-                    "absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full",
-                    isProductsActive && "w-full",
-                  )}
-                />
-              </button>
-              <div
-                id="desktop-products-panel"
-                hidden={openDesktopMenu !== "products"}
-                className="absolute left-1/2 top-full z-50 w-[25rem] -translate-x-1/2 pt-3"
-              >
-                <div className="rounded-3xl border border-gray-200 bg-white p-3 shadow-2xl shadow-black/10">
-                  {productLinks.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block rounded-2xl px-4 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-                      onClick={() => handleNavClick(item.name, item.href, "header")}
-                    >
-                      <div className="text-sm font-semibold text-gray-900">
-                        {item.name}
-                      </div>
-                      <div className="mt-1 text-xs leading-relaxed text-gray-500">
-                        {item.description}
-                      </div>
-                    </Link>
-                  ))}
-                  <div className="mx-4 mb-1 mt-2 border-t border-gray-100 pt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                    Labs & pilots
-                  </div>
-                  {pilotLinks.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block rounded-2xl px-4 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-black focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-                      onClick={() => handleNavClick(item.name, item.href, "header")}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
 
             {[
               { name: "Insights", href: "/blog" },

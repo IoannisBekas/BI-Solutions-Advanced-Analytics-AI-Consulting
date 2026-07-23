@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect } from "react";
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { lazy, Suspense } from "react";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { useBrowserLocation } from "wouter/use-browser-location";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -9,13 +9,6 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SITE_BASE_PATH } from "@/lib/site";
-import {
-  PRODUCT_ROUTES,
-  PRODUCT_ROUTE_ALIASES,
-  PRODUCT_ROUTE_DISPLAY_PATHS,
-  PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS,
-  decodeRoutePath,
-} from "@/lib/routes";
 // Eagerly load the landing page for instant first paint
 import Home from "@/pages/Home";
 
@@ -27,10 +20,6 @@ const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
 const StartProject = lazy(() => import("@/pages/StartProject"));
-const AIAdvisorPage = lazy(() => import("@/pages/products/AIAdvisorPage"));
-const QuantusPage = lazy(() => import("@/pages/products/QuantusPage"));
-const PowerBISolutionsPage = lazy(() => import("@/pages/products/PowerBISolutionsPage"));
-const BonusakiPage = lazy(() => import("@/pages/products/BonusakiPage"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -62,45 +51,13 @@ function PageFallback() {
   );
 }
 
-/** Redirect to a canonical path using history.replaceState so the old URL is removed from history. */
-function CanonicalRedirect({ to }: { to: string }) {
-  const [, navigate] = useLocation();
-  useEffect(() => {
-    navigate(to, { replace: true });
-  }, [navigate, to]);
-  return null;
-}
-
-function useDecodedBrowserLocation(options?: { ssrPath?: string }) {
-  const [location, navigate] = useBrowserLocation(options);
-  return [decodeRoutePath(location), navigate] as [string, typeof navigate];
-}
-
-const canonicalPathRedirects: Record<string, string> = {
-  [PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus]: PRODUCT_ROUTE_ALIASES.quantus,
-};
-
-function CanonicalPathRedirects() {
-  const [location, navigate] = useLocation();
-  const redirectTo = canonicalPathRedirects[location];
-
-  useEffect(() => {
-    if (redirectTo && redirectTo !== location) {
-      navigate(redirectTo, { replace: true });
-    }
-  }, [location, navigate, redirectTo]);
-
-  return null;
-}
-
 function Router({ ssrPath }: { ssrPath?: string }) {
   return (
-    <WouterRouter hook={useDecodedBrowserLocation} base={SITE_BASE_PATH} ssrPath={ssrPath}>
+    <WouterRouter hook={useBrowserLocation} base={SITE_BASE_PATH} ssrPath={ssrPath}>
       {/* Uses wouter's useLocation, so it must live inside the router —
           outside it would fall back to a default router without ssrPath
           and crash build-time prerendering. */}
       <ScrollToTop />
-      <CanonicalPathRedirects />
       <Suspense fallback={<PageFallback />}>
         <Switch>
           <Route path="/" component={Home} />
@@ -111,42 +68,6 @@ function Router({ ssrPath }: { ssrPath?: string }) {
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/about" component={About} />
           <Route path="/start-a-project" component={StartProject} />
-          {/* Product aliases and retired product routes are normalized in-app. */}
-          <Route path={PRODUCT_ROUTES.aiAdvisor}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.aiAdvisor} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.aiAdvisor}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.aiAdvisor} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_ALIASES.aiAdvisor} component={AIAdvisorPage} />
-
-          <Route path={PRODUCT_ROUTE_ALIASES.quantus} component={QuantusPage} />
-          <Route path={PRODUCT_ROUTES.quantus}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.quantus}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_LEGACY_DISPLAY_PATHS.quantus}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.quantus} />}
-          </Route>
-
-          <Route path={PRODUCT_ROUTES.powerBiSolutions}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.powerBiSolutions}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.powerBiSolutions} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_ALIASES.powerBiSolutions} component={PowerBISolutionsPage} />
-
-          <Route path={PRODUCT_ROUTE_ALIASES.bonusaki} component={BonusakiPage} />
-          <Route path={PRODUCT_ROUTES.bonusaki}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.bonusaki} />}
-          </Route>
-          <Route path={PRODUCT_ROUTE_DISPLAY_PATHS.bonusaki}>
-            {() => <CanonicalRedirect to={PRODUCT_ROUTE_ALIASES.bonusaki} />}
-          </Route>
-
           <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms-of-service" component={TermsOfService} />
           <Route component={NotFound} />

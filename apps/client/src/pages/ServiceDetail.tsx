@@ -243,113 +243,6 @@ const relatedProofMap: Record<string, ProofItem> = {
   "business-intelligence-semantic-modeling": proofItems.unicef,
 };
 
-interface RelatedExperience {
-  label: "Product" | "Pilot & demo";
-  title: string;
-  description: string;
-  path: string;
-  cta: string;
-}
-
-const relatedExperienceMap: Record<string, RelatedExperience> = {
-  [AI_HUB_SLUG]: {
-    label: "Pilot & demo",
-    title: "Greek AI Professional Advisor",
-    description:
-      "Explore a focused AI experience designed around a defined professional guidance workflow.",
-    path: "/ai-advisor",
-    cta: "Explore the AI Advisor demo",
-  },
-  "ai-strategy-readiness": {
-    label: "Pilot & demo",
-    title: "Greek AI Professional Advisor",
-    description:
-      "See how a broad AI opportunity becomes a focused experience with a clear user and task.",
-    path: "/ai-advisor",
-    cta: "Explore the AI Advisor demo",
-  },
-  "ai-automation-consulting": {
-    label: "Pilot & demo",
-    title: "Greek AI Professional Advisor",
-    description:
-      "Explore a guided AI workflow that turns a user request into a structured professional response.",
-    path: "/ai-advisor",
-    cta: "Explore the AI Advisor demo",
-  },
-  "generative-ai-llm-consulting": {
-    label: "Pilot & demo",
-    title: "Greek AI Professional Advisor",
-    description:
-      "See a task-specific generative AI experience built around a defined audience and interaction flow.",
-    path: "/ai-advisor",
-    cta: "Explore the AI Advisor demo",
-  },
-  "predictive-analytics-machine-learning": {
-    label: "Product",
-    title: "Quantus Investing",
-    description:
-      "Explore a live analytical workspace that brings structured market signals into a focused research workflow.",
-    path: "/quantus",
-    cta: "Explore Quantus Investing",
-  },
-  "ai-governance-literacy-adoption": {
-    label: "Pilot & demo",
-    title: "Greek AI Professional Advisor",
-    description:
-      "Use the demo as a concrete starting point for discussing audience, boundaries, review, and responsible adoption.",
-    path: "/ai-advisor",
-    cta: "Explore the AI Advisor demo",
-  },
-  "mlops-model-monitoring": {
-    label: "Product",
-    title: "Quantus Investing",
-    description:
-      "See a live analytical product where data freshness, repeatability, and dependable operation matter after launch.",
-    path: "/quantus",
-    cta: "Explore Quantus Investing",
-  },
-  "ai-business-intelligence": {
-    label: "Product",
-    title: "Power BI Solutions",
-    description:
-      "Explore a focused workspace for reviewing Power BI models, measures, and reporting structure.",
-    path: "/power-bi-solutions",
-    cta: "Explore Power BI Solutions",
-  },
-  "ai-consulting-greece": {
-    label: "Pilot & demo",
-    title: "Greek AI Professional Advisor",
-    description:
-      "Explore a Greece-focused AI experience and the type of user journey a targeted pilot can validate.",
-    path: "/ai-advisor",
-    cta: "Explore the AI Advisor demo",
-  },
-  "business-intelligence-semantic-modeling": {
-    label: "Product",
-    title: "Power BI Solutions",
-    description:
-      "Explore a workspace built to review Power BI semantic models, measures, and reporting structure.",
-    path: "/power-bi-solutions",
-    cta: "Explore Power BI Solutions",
-  },
-  "data-strategy-governance": {
-    label: "Product",
-    title: "Power BI Solutions",
-    description:
-      "See how model structure, measures, and reporting metadata can be inspected as part of a stronger data foundation.",
-    path: "/power-bi-solutions",
-    cta: "Explore Power BI Solutions",
-  },
-  "website-app-development": {
-    label: "Pilot & demo",
-    title: "Bonusaki",
-    description:
-      "Explore a focused web experience that combines clear user flow, responsive interaction, and a specific task.",
-    path: "/bonusaki",
-    cta: "Explore the Bonusaki demo",
-  },
-};
-
 interface FaqItem {
   question: string;
   answer: string;
@@ -561,7 +454,6 @@ export default function ServiceDetail() {
         .slice(0, 3);
   const relatedResources = (relatedResourceMap[service.slug] || []).slice(0, 2);
   const proof = relatedProofMap[service.slug];
-  const relatedExperience = relatedExperienceMap[service.slug];
   const faqItems = serviceSpecificFaqs[service.slug] || (isAiService ? aiFaqs : generalFaqs);
   const startProjectPath = `/start-a-project?service=${encodeURIComponent(service.slug)}`;
 
@@ -806,42 +698,20 @@ export default function ServiceDetail() {
           </div>
         </section>
 
-        {(relatedExperience || relatedResources.length > 0) && (
+        {relatedResources.length > 0 && (
           <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
                 See the work in context
               </p>
               <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                Explore a related experience or practical guide.
+                Explore a related practical guide.
               </h2>
             </ScrollReveal>
 
             <div className="mt-8 grid auto-rows-fr gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {relatedExperience && (
-                <ScrollReveal width="100%">
-                  <Link href={relatedExperience.path} className="group block h-full">
-                    <article className="flex h-full flex-col rounded-[1.5rem] bg-gray-950 px-6 py-7 text-white transition-transform hover:-translate-y-1">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                        {relatedExperience.label}
-                      </p>
-                      <h3 className="mt-4 text-xl font-bold font-heading">
-                        {relatedExperience.title}
-                      </h3>
-                      <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-300">
-                        {relatedExperience.description}
-                      </p>
-                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
-                        {relatedExperience.cta}
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    </article>
-                  </Link>
-                </ScrollReveal>
-              )}
-
               {relatedResources.map((resource, index) => (
-                <ScrollReveal key={resource.path} delay={(index + 1) * 0.05} width="100%">
+                <ScrollReveal key={resource.path} delay={index * 0.05} width="100%">
                   <Link
                     href={resource.path}
                     className="group flex h-full flex-col rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-7 transition-all hover:-translate-y-1 hover:bg-white hover:shadow-lg hover:shadow-black/[0.04]"

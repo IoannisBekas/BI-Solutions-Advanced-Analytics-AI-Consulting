@@ -1,6 +1,6 @@
 # BI Solutions Engineering Documentation
 
-Last updated: 2026-06-07
+Last updated: 2026-07-23
 Status: canonical engineer-facing project documentation
 
 ## Purpose
@@ -33,20 +33,18 @@ The repository currently ships four product surfaces:
    - Node service: `apps/quantus/server/index.ts`
    - Python service: `apps/quantus/main.py` and `apps/quantus/pipelines/*`
    - Production URL family:
-     - `https://www.bisolutions.group/quantus/...`
+     - `https://www.bisolutions.group/quantus/workspace/...`
 
 3. Power BI Solutions
    - Frontend: `apps/powerbi-solutions/src`
    - Server-side AI proxy is mounted from the root Express app
    - Production URL family:
-     - `https://www.bisolutions.group/power-bi-solutions/`
+     - `https://www.bisolutions.group/power-bi-solutions/workspace/`
 
 4. Bonusaki
-   - Public product page: `apps/client/src/pages/products/BonusakiPage.tsx`
    - Static demo app: `apps/bonusaki`
    - Demo build output is mounted below the root site at `/bonusaki/demo/`
    - Production URL family:
-     - `https://www.bisolutions.group/bonusaki`
      - `https://www.bisolutions.group/bonusaki/demo/`
 
 ### Canonical public host
@@ -291,16 +289,15 @@ campaign summaries.
 
 Public launch checklist:
 
-- Keep `/bonusaki` as the canonical product/discovery page.
+- Keep the retired `/bonusaki` marketing root unavailable.
 - Keep `/bonusaki/demo/` as the public hosted pilot flow.
 - Do not expose private backend repository names, payment-provider internals,
   redemption secrets, cashier PINs, or private merchant data in public copy.
 - Run `npm run check`, `npm run build`, and `node script/smoke-routes.cjs`
   against a local server before deployment.
-- Visually check `/bonusaki` and `/bonusaki/demo/` on desktop and mobile,
+- Visually check `/bonusaki/demo/` on desktop and mobile,
   including customer, merchant, cashier, and scratch-card states.
 - After deployment, verify:
-  - `https://www.bisolutions.group/bonusaki`
   - `https://www.bisolutions.group/bonusaki/demo/`
 - Confirm the QR asset opens `https://www.bisolutions.group/bonusaki/demo/`.
 - Confirm `POST /api/bonusaki/events` records pilot engagement without

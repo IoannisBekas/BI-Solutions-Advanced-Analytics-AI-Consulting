@@ -7,7 +7,12 @@ const publicRoutes = [
     path: "/",
     title: "AI, BI & Web App Development",
     body: "Turn complex data into",
-    absent: ["AI Products"],
+    absent: [
+      "AI Products",
+      "How engagements work",
+      "Two focused workspaces",
+      "Why BI Solutions Group",
+    ],
   },
   {
     path: "/services",
@@ -91,16 +96,6 @@ const publicRoutes = [
     path: "/services/website-app-development",
     title: "Website & Web App Development",
     body: "Website and web app development for businesses that need more than a template.",
-  },
-  {
-    path: "/quantus",
-    title: "Quantus Investing",
-    body: "Quantus Investing",
-  },
-  {
-    path: "/power-bi-solutions",
-    title: "Power BI Solutions",
-    body: "Power BI Solutions",
   },
   {
     path: "/case-studies/unicef-audit-compliance",
@@ -200,18 +195,6 @@ const publicRoutes = [
 
 const hiddenRoutes = [
   {
-    path: "/bonusaki",
-    title: "Bonusaki Cafe Pilot",
-    clientShell: true,
-    robots: "noindex,follow",
-  },
-  {
-    path: "/ai-advisor",
-    title: "Greek AI Professional Advisor",
-    clientShell: true,
-    robots: "noindex,follow",
-  },
-  {
     path: "/blog/google-gemini-import-ai-chats",
     title: "Google Gemini is Making it Easy to Quit ChatGPT",
     clientShell: true,
@@ -250,10 +233,6 @@ const jsonRoutes = [
 
 const redirectRoutes = [
   {
-    path: "/Quantus",
-    location: "/quantus",
-  },
-  {
     path: "/services/digital-transformation-cloud-migration",
     location: "/services/data-strategy-governance",
   },
@@ -269,14 +248,42 @@ const redirectRoutes = [
     path: "/services/website-web-app-development",
     location: "/services/website-app-development",
   },
-  {
-    path: "/Quantus",
-    location: "/quantus",
-    method: "HEAD",
-  },
 ];
 
 const goneRoutes = [
+  {
+    path: "/quantus",
+  },
+  {
+    path: "/quantus?utm_source=smoke",
+  },
+  {
+    path: "/power-bi-solutions",
+  },
+  {
+    path: "/bonusaki",
+  },
+  {
+    path: "/ai-advisor",
+  },
+  {
+    path: "/Quantus-Investing",
+  },
+  {
+    path: "/Quantus%20Investing",
+  },
+  {
+    path: "/Quantus",
+  },
+  {
+    path: "/Power%20BI%20Solutions",
+  },
+  {
+    path: "/Bonusaki",
+  },
+  {
+    path: "/Greek%20AI%20Professional%20Advisor",
+  },
   {
     path: "/products",
   },

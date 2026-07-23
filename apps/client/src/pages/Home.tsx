@@ -1,59 +1,17 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
-import { ProductShowcase } from "@/components/sections/ProductShowcase";
 import { ServicesSection } from "@/components/sections/Services";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages, aiLocationPages } from "@/lib/servicePages";
 import { blogPosts } from "@/data/blogData";
 import { caseStudies } from "@/data/caseStudies";
 import { trackEvent } from "@/lib/analytics";
-
-const engagementSteps = [
-  {
-    title: "Diagnose",
-    description:
-      "Clarify the decision, users, data, constraints, and success criteria before choosing the solution.",
-  },
-  {
-    title: "Build",
-    description:
-      "Design, test, and deliver the dashboard, workflow, data system, or application around real use.",
-  },
-  {
-    title: "Enable",
-    description:
-      "Document the work, train the people who will use it, and agree on handoff or ongoing support.",
-  },
-];
-
-const deliveryReasons = [
-  {
-    title: "Founder-led senior delivery",
-    description:
-      "The person shaping the scope stays close to the technical decisions and the final handoff.",
-  },
-  {
-    title: "9+ years of relevant experience",
-    description:
-      "Analytics, data science, AI, reporting, and product delivery are treated as one connected operating problem.",
-  },
-  {
-    title: "Built for use after launch",
-    description:
-      "Definitions, documentation, access, maintainability, and team adoption are considered alongside the build.",
-  },
-  {
-    title: "Greece and Europe context",
-    description:
-      "Delivery is shaped for businesses operating across Greek and European markets, data expectations, and teams.",
-  },
-];
 
 const latestInsight = blogPosts[0];
 
@@ -285,97 +243,6 @@ export default function Home() {
                   </ScrollReveal>
                 );
               })}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-b border-gray-200 bg-white py-24">
-          <div className="mx-auto max-w-7xl px-6 md:px-12">
-            <ScrollReveal className="mb-14 max-w-3xl" width="100%">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                How engagements work
-              </p>
-              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                A clear route from an unclear problem to a maintainable result.
-              </h2>
-            </ScrollReveal>
-
-            <div className="grid gap-6 lg:grid-cols-3">
-              {engagementSteps.map((step, index) => (
-                <ScrollReveal
-                  key={step.title}
-                  delay={index * 0.08}
-                  width="100%"
-                >
-                  <article className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-7 sm:p-8">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-sm font-semibold text-white">
-                      {index + 1}
-                    </div>
-                    <h3 className="mt-7 text-2xl font-bold font-heading text-gray-950">
-                      {step.title}
-                    </h3>
-                    <p className="mt-4 leading-relaxed text-gray-600">
-                      {step.description}
-                    </p>
-                  </article>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <ProductShowcase
-          badge="Products"
-          id="products"
-          heading="Two focused workspaces—and smaller pilots you can explore."
-          description="Quantus Investing and Power BI Solutions support repeatable analytics workflows. Bonusaki and the Greek AI Professional Advisor show smaller product and AI concepts in action."
-        />
-
-        <section className="bg-gray-950 py-24 text-white">
-          <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)] lg:items-start">
-            <ScrollReveal width="100%">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Why BI Solutions Group
-              </p>
-              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight md:text-5xl">
-                Senior delivery that connects strategy to the working system.
-              </h2>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-400">
-                The goal is not simply to present a recommendation or ship a
-                dashboard. It is to leave the team with a useful system and a
-                clear way to operate it.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button asChild className="rounded-full bg-white px-7 text-black hover:bg-gray-200">
-                  <Link href="/about">
-                    Meet Ioannis
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-full border-white/20 bg-transparent px-7 text-white hover:bg-white/10"
-                >
-                  <Link href="/start-a-project">Start a project</Link>
-                </Button>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {deliveryReasons.map((reason, index) => (
-                <ScrollReveal key={reason.title} delay={index * 0.06} width="100%">
-                  <article className="h-full rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
-                    <CheckCircle2 className="h-5 w-5 text-gray-400" />
-                    <h3 className="mt-5 text-lg font-bold font-heading text-white">
-                      {reason.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-gray-400">
-                      {reason.description}
-                    </p>
-                  </article>
-                </ScrollReveal>
-              ))}
             </div>
           </div>
         </section>

@@ -262,6 +262,35 @@ function serveGonePath(app: Express, removedPath: string) {
   });
 }
 
+function serveGoneExactPath(app: Express, removedPath: string) {
+  const normalizePath = (value: string) => {
+    let decodedPath = value;
+    try {
+      decodedPath = decodeURIComponent(value);
+    } catch {
+      decodedPath = value;
+    }
+
+    return decodedPath.replace(/\/$/, "") || "/";
+  };
+  const normalizedRemovedPath = normalizePath(removedPath);
+
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      next();
+      return;
+    }
+
+    if (normalizePath(req.path) !== normalizedRemovedPath) {
+      next();
+      return;
+    }
+
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.status(410).type("text/plain").send("Gone");
+  });
+}
+
 function serveProductSpa(app: Express, mountPath: string, productDistPath: string) {
   if (!fs.existsSync(productDistPath)) {
     return;
@@ -330,28 +359,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     title: "AI, BI & Web App Development - BI Solutions Group",
     description: "BI Solutions Group helps companies in Greece and Europe build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
     path: "/",
-  },
-  "/quantus": {
-    title: "Quantus Investing - Institutional-Grade Quantitative Research",
-    description: "Search markets, load research faster, and surface signals across equities, ETFs, crypto, and commodities with Quantus Investing.",
-    path: "/quantus",
-  },
-  "/power-bi-solutions": {
-    title: "Power BI Solutions - Semantic Model Analysis & AI Optimization",
-    description: "Upload TMDL files, review semantic models, and get AI-powered guidance to optimize your Power BI data architecture.",
-    path: "/power-bi-solutions",
-  },
-  "/bonusaki": {
-    title: "Bonusaki Cafe Pilot - QR Scratch-and-Win Loyalty",
-    description: "Bonusaki is a paid cafe pilot for QR scratch-and-win campaigns, with custom rewards, QR batches, cashier validation, privacy wording, and campaign reporting.",
-    path: "/bonusaki",
-    robots: "noindex,follow",
-  },
-  "/ai-advisor": {
-    title: "Greek AI Professional Advisor - AI for Accountants, Lawyers & Consultants",
-    description: "AI-powered professional guidance trained on Greek law and business practices for accountants, lawyers, and consultants.",
-    path: "/ai-advisor",
-    robots: "noindex,follow",
   },
   "/services": {
     title: "Analytics, AI, and Data Services - BI Solutions Group",
@@ -771,17 +778,8 @@ export function serveStatic(app: Express) {
   const indexHtml = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
   const clientShellHtml = stripPrerenderedRootContent(indexHtml);
 
-  // Quantus workspace sub-paths remain mounted below the public product page.
+  // Preserve the Quantus workspace redirect after retiring the marketing root.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
-
-  // Old capitalized / URL-encoded product marketing pages -> canonical kebab-case URLs.
-  // 308 is permanent: browsers and crawlers update their records and pass link equity.
-  redirectLegacyProductPath(app, "/Quantus-Investing", "/quantus");
-  redirectLegacyProductPath(app, "/Quantus%20Investing", "/quantus");
-  redirectLegacyProductPath(app, "/Quantus", "/quantus");
-  redirectLegacyProductPath(app, "/Power%20BI%20Solutions", "/power-bi-solutions");
-  redirectLegacyProductPath(app, "/Bonusaki", "/bonusaki");
-  redirectLegacyProductPath(app, "/Greek%20AI%20Professional%20Advisor", "/ai-advisor");
 
   // Retired service pages normalize to the current canonical service URLs.
   redirectLegacyProductPath(app, "/services/digital-transformation-cloud-migration", "/services/data-strategy-governance");
@@ -798,6 +796,18 @@ export function serveStatic(app: Express) {
   serveGonePath(app, "/insights/disaster-risk-reduction-finance");
   serveGonePath(app, "/blog/disaster-risk-reduction-finance-dashboard-launch");
   serveGonePath(app, "/contact");
+  [
+    "/quantus",
+    "/power-bi-solutions",
+    "/bonusaki",
+    "/ai-advisor",
+    "/Quantus-Investing",
+    "/Quantus Investing",
+    "/Quantus",
+    "/Power BI Solutions",
+    "/Bonusaki",
+    "/Greek AI Professional Advisor",
+  ].forEach((routePath) => serveGoneExactPath(app, routePath));
 
   const quantusDirCandidates = [
     path.resolve(distPath, "quantus", "workspace"),

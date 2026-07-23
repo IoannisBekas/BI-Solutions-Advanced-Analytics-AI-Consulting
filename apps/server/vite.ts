@@ -8,7 +8,13 @@ import path from "path";
 import { nanoid } from "nanoid";
 
 const viteLogger = createLogger();
-const NAMED_MARKETING_ROUTES = new Set([
+const REMOVED_PRODUCT_PAGE_ROUTES = new Set([
+  "/quantus",
+  "/power-bi-solutions",
+  "/bonusaki",
+  "/ai-advisor",
+  "/Quantus-Investing",
+  "/Quantus Investing",
   "/Quantus",
   "/Power BI Solutions",
   "/Bonusaki",
@@ -72,26 +78,19 @@ export async function setupVite(server: Server, app: Express) {
   };
 
   app.use((req, res, next) => {
-    if (req.method !== "GET") {
+    if (req.method !== "GET" && req.method !== "HEAD") {
       next();
       return;
     }
 
-    const decodedPath = decodePathname(req.path);
-    if (decodedPath === "/Bonusaki") {
-      const qs = req.originalUrl.includes("?")
-        ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
-        : "";
-      res.redirect(308, `/bonusaki${qs}`);
-      return;
-    }
-
-    if (!NAMED_MARKETING_ROUTES.has(decodedPath)) {
+    const decodedPath = decodePathname(req.path).replace(/\/$/, "") || "/";
+    if (!REMOVED_PRODUCT_PAGE_ROUTES.has(decodedPath)) {
       next();
       return;
     }
 
-    void renderClientApp(req.originalUrl, res, next);
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.status(410).type("text/plain").send("Gone");
   });
 
   // Serve pre-built product SPAs (Quantus, Power BI Solutions, Bonusaki) in dev mode
