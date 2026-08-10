@@ -10,10 +10,12 @@ Pattern:
 
 The Express server forwards the authenticated user identity via
 `x-quantus-user-id` and `x-quantus-user-tier` headers when proxying
-into the Python API. The Express side trusts only its own JWT cookie
-session; the Python side trusts the headers because the request was
-already pre-authorized by the QUANTUS_INTERNAL_KEY middleware in
-main.py before reaching this dependency.
+into the Python API. Premium routes refresh the caller against the root
+auth service before forwarding, so the tier header reflects current
+subscription state rather than only the signed cookie claim. The Python
+side trusts these headers because the request was already pre-authorized
+by the QUANTUS_INTERNAL_KEY middleware in main.py before reaching this
+dependency.
 
 Tier semantics:
     FREE          — free signup; sees 1 free report / day + skim summary

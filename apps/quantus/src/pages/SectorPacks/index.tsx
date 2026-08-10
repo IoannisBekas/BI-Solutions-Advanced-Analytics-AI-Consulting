@@ -301,7 +301,7 @@ export default function SectorPacksDashboard({ onSelectTicker, onUpgrade, lightM
                                                                     <div className="font-heading font-bold text-base tracking-tight truncate" style={{ color: textPrimary }}>
                                                                         {report.ticker}
                                                                     </div>
-                                                                    <div className="text-xs truncate" style={{ color: textSecondary }} title={report.company_name}>
+                                                                    <div className="text-xs leading-snug break-words" style={{ color: textSecondary }} title={report.company_name}>
                                                                         {report.company_name || '—'}
                                                                     </div>
                                                                 </div>
@@ -325,9 +325,9 @@ export default function SectorPacksDashboard({ onSelectTicker, onUpgrade, lightM
                                                         </div>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between text-xs pt-3" style={{ borderTop: `1px solid ${border}`, color: textSecondary }}>
+                                                    <div className="flex items-start justify-between gap-3 text-xs pt-3" style={{ borderTop: `1px solid ${border}`, color: textSecondary }}>
                                                         <span>Regime</span>
-                                                        <span className="font-medium truncate ml-2" style={{ color: textPrimary }}>
+                                                        <span className="break-words text-right font-medium leading-snug" style={{ color: textPrimary }}>
                                                             {report.regime_label}
                                                         </span>
                                                     </div>

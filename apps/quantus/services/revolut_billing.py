@@ -36,6 +36,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import hmac
+import ipaddress
 import json
 import logging
 import os
@@ -43,12 +44,65 @@ import time
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Iterable
+from urllib.parse import urlparse
 
 import httpx
 
 from pipelines.runtime_state import get_shared_cache
 
 logger = logging.getLogger(__name__)
+
+REVOLUT_ALLOWED_HOSTS = {"merchant.revolut.com", "sandbox-merchant.revolut.com"}
+
+
+class BillingProviderError(RuntimeError):
+    """Internal billing provider failure with public-safe message."""
+
+    def __init__(self, operation: str, status_code: int) -> None:
+        super().__init__(f"{operation} failed with status {status_code}")
+        self.operation = operation
+        self.status_code = status_code
+
+
+def _is_private_host(hostname: str) -> bool:
+    host = hostname.strip("[]").lower()
+    if host == "localhost" or host.endswith(".localhost"):
+        return True
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return host.endswith(".internal")
+    return ip.is_loopback or ip.is_private or ip.is_link_local
+
+
+def _parse_allowed_hosts(env_name: str, defaults: set[str]) -> set[str]:
+    configured = {
+        host.strip().lower()
+        for host in os.environ.get(env_name, "").split(",")
+        if host.strip()
+    }
+    return defaults | configured
+
+
+def _validated_base_url(
+    raw: str,
+    *,
+    env_name: str,
+    allowed_hosts: set[str],
+    allow_private_http: bool = False,
+) -> str:
+    parsed = urlparse(raw.strip().rstrip("/"))
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc or not parsed.hostname:
+        raise RuntimeError(f"{env_name} must be an http(s) URL")
+
+    hostname = parsed.hostname.lower()
+    private_host = _is_private_host(hostname)
+    if hostname not in allowed_hosts and not (allow_private_http and private_host):
+        raise RuntimeError(f"{env_name} host is not allowlisted")
+    if parsed.scheme != "https" and not (allow_private_http and private_host):
+        raise RuntimeError(f"{env_name} must use https://")
+
+    return parsed.geturl().rstrip("/")
 
 
 # ---------------------------------------------------------------------------
@@ -212,15 +266,21 @@ def cancel_subscription(user_id: str) -> dict | None:
 
 
 def _maybe_forward_to_auth_service(user_id: str, tier: str) -> None:
-    auth_url = os.environ.get("AUTH_SERVICE_URL", "").strip()
-    if not auth_url:
+    raw_auth_url = os.environ.get("AUTH_SERVICE_URL", "").strip()
+    if not raw_auth_url:
         return
-    auth_token = os.environ.get("AUTH_SERVICE_TOKEN", "").strip()
-    url = f"{auth_url.rstrip('/')}/internal/users/{user_id}/tier"
-    headers = {"Content-Type": "application/json"}
-    if auth_token:
-        headers["Authorization"] = f"Bearer {auth_token}"
     try:
+        auth_url = _validated_base_url(
+            raw_auth_url,
+            env_name="AUTH_SERVICE_URL",
+            allowed_hosts=_parse_allowed_hosts("AUTH_SERVICE_ALLOWED_HOSTS", set()),
+            allow_private_http=True,
+        )
+        auth_token = os.environ.get("AUTH_SERVICE_TOKEN", "").strip()
+        url = f"{auth_url.rstrip('/')}/internal/users/{user_id}/tier"
+        headers = {"Content-Type": "application/json"}
+        if auth_token:
+            headers["Authorization"] = f"Bearer {auth_token}"
         httpx.post(url, json={"tier": tier}, headers=headers, timeout=5.0)
     except Exception as exc:
         logger.warning("billing | tier forward failed: %s", exc)
@@ -232,7 +292,11 @@ def _maybe_forward_to_auth_service(user_id: str, tier: str) -> None:
 
 
 def _api_base() -> str:
-    return (os.environ.get("REVOLUT_API_BASE") or "https://merchant.revolut.com/api").rstrip("/")
+    return _validated_base_url(
+        os.environ.get("REVOLUT_API_BASE") or "https://merchant.revolut.com/api",
+        env_name="REVOLUT_API_BASE",
+        allowed_hosts=_parse_allowed_hosts("REVOLUT_ALLOWED_API_HOSTS", REVOLUT_ALLOWED_HOSTS),
+    )
 
 
 def _headers() -> dict[str, str]:
@@ -251,7 +315,8 @@ async def _post(path: str, body: dict[str, Any]) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=15) as client:
         resp = await client.post(f"{_api_base()}{path}", headers=_headers(), json=body)
         if not resp.is_success:
-            raise RuntimeError(f"Revolut POST {path} {resp.status_code}: {resp.text}")
+            logger.warning("billing | Revolut POST %s failed with status %s", path, resp.status_code)
+            raise BillingProviderError(f"Revolut POST {path}", resp.status_code)
         return resp.json()
 
 
@@ -259,7 +324,8 @@ async def _get(path: str) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=15) as client:
         resp = await client.get(f"{_api_base()}{path}", headers=_headers())
         if not resp.is_success:
-            raise RuntimeError(f"Revolut GET {path} {resp.status_code}: {resp.text}")
+            logger.warning("billing | Revolut GET %s failed with status %s", path, resp.status_code)
+            raise BillingProviderError(f"Revolut GET {path}", resp.status_code)
         return resp.json()
 
 

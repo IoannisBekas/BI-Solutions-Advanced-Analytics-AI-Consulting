@@ -3,6 +3,7 @@ import { timingSafeEqual } from "crypto";
 import { requireAuth, type AuthenticatedRequest } from "./auth";
 import {
   consumeQuantusAiDailyBudget,
+  decrementReports,
   deleteQuantusAlertSubscription,
   deleteQuantusWatchlistEntry,
   findUserById,
@@ -231,6 +232,21 @@ function buildAlertInput(
   };
 }
 
+function hasValidQuantusInternalKey(req: Request) {
+  const expected = readQuantusInternalKey();
+  const provided = req.header(QUANTUS_INTERNAL_HEADER);
+  if (!expected || !provided) {
+    return false;
+  }
+
+  const expectedBuf = Buffer.from(expected);
+  const providedBuf = Buffer.from(provided);
+  return (
+    expectedBuf.length === providedBuf.length &&
+    timingSafeEqual(expectedBuf, providedBuf)
+  );
+}
+
 export function registerQuantusPersistenceRoutes(app: Express) {
   app.get("/api/quantus/watchlist", requireAuth, (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user!.userId;
@@ -325,7 +341,22 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     });
   });
 
-  app.get("/api/quantus/archive", (req: Request, res: Response) => {
+  app.get("/api/quantus/archive", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+    const user = findUserById(req.user!.userId);
+    if (!user) {
+      res.status(401).json({ error: "User not found." });
+      return;
+    }
+    if (!hasRequiredQuantusTier(user.tier, "UNLOCKED")) {
+      res.status(403).json({
+        error: "Unlocked tier required for the Quantus archive.",
+        code: "archive_tier_required",
+        requiredTier: "UNLOCKED",
+        currentTier: user.tier,
+      });
+      return;
+    }
+
     const ticker = sanitizeQuantusTicker(req.query.ticker);
     if (!ticker) {
       res.status(400).json({ error: "Ticker query param is required." });
@@ -343,7 +374,22 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     });
   });
 
-  app.get("/api/quantus/archive/:reportId", (req: Request, res: Response) => {
+  app.get("/api/quantus/archive/:reportId", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+    const user = findUserById(req.user!.userId);
+    if (!user) {
+      res.status(401).json({ error: "User not found." });
+      return;
+    }
+    if (!hasRequiredQuantusTier(user.tier, "UNLOCKED")) {
+      res.status(403).json({
+        error: "Unlocked tier required for the Quantus archive.",
+        code: "archive_tier_required",
+        requiredTier: "UNLOCKED",
+        currentTier: user.tier,
+      });
+      return;
+    }
+
     const reportId = typeof req.params.reportId === "string" ? req.params.reportId.trim() : "";
     if (!reportId) {
       res.status(400).json({ error: "Report ID is required." });
@@ -397,6 +443,33 @@ export function registerQuantusPersistenceRoutes(app: Express) {
     const updatedUser = findUserById(user.id);
     res.json({
       ok: true,
+      user: updatedUser ? toSafeUser(updatedUser) : null,
+      reportLimit: limit,
+      remainingReports: updatedUser && limit >= 0
+        ? Math.max(0, limit - updatedUser.reports_this_month)
+      : null,
+    });
+  });
+
+  app.post("/api/quantus/usage/report/refund", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+    if (!hasValidQuantusInternalKey(req)) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    const user = findUserById(req.user!.userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    const refunded = decrementReports(user.id);
+    const updatedUser = findUserById(user.id);
+    const limit = getQuantusMonthlyReportLimitForTier(user.tier);
+
+    res.json({
+      ok: true,
+      refunded,
       user: updatedUser ? toSafeUser(updatedUser) : null,
       reportLimit: limit,
       remainingReports: updatedUser && limit >= 0
@@ -490,18 +563,7 @@ export function registerQuantusPersistenceRoutes(app: Express) {
   });
 
   app.post("/api/quantus/internal/snapshots", (req: Request, res: Response) => {
-    const expected = readQuantusInternalKey();
-    const provided = req.header(QUANTUS_INTERNAL_HEADER);
-    if (!expected || !provided) {
-      res.status(403).json({ error: "Forbidden" });
-      return;
-    }
-    const expectedBuf = Buffer.from(expected);
-    const providedBuf = Buffer.from(provided);
-    if (
-      expectedBuf.length !== providedBuf.length ||
-      !timingSafeEqual(expectedBuf, providedBuf)
-    ) {
+    if (!hasValidQuantusInternalKey(req)) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }

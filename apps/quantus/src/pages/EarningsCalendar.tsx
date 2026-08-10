@@ -90,6 +90,19 @@ export function EarningsCalendar({ lightMode, onUpgrade, onSelectTicker }: Props
         }
     }
 
+    useEffect(() => {
+        if (!previewTicker) return;
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setPreviewTicker(null);
+            }
+        };
+
+        window.addEventListener('keydown', handleEscape);
+        return () => window.removeEventListener('keydown', handleEscape);
+    }, [previewTicker]);
+
     const paywall = (error as PremiumError | null)?.status === 402;
     const requiredTier = (error as PremiumError | null)?.requiredTier ?? 'UNLOCKED';
     const currentTier = (error as PremiumError | null)?.currentTier ?? 'FREE';
@@ -251,15 +264,19 @@ export function EarningsCalendar({ lightMode, onUpgrade, onSelectTicker }: Props
                         onClick={() => setPreviewTicker(null)}
                     >
                         <div
-                            className="w-full max-w-2xl rounded-3xl border p-6 md:p-8 max-h-[80vh] overflow-y-auto"
+                            className="max-h-[calc(100vh-2rem)] w-full max-w-2xl overflow-y-auto rounded-3xl border p-6 md:p-8"
                             style={{ background: palette.surface, borderColor: palette.border }}
                             onClick={(e) => e.stopPropagation()}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="earnings-preview-title"
                         >
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-heading text-xl font-semibold tracking-tight" style={{ color: palette.textPrimary }}>
+                                <h3 id="earnings-preview-title" className="font-heading text-xl font-semibold tracking-tight" style={{ color: palette.textPrimary }}>
                                     AI preview · {previewTicker}
                                 </h3>
                                 <button
+                                    type="button"
                                     onClick={() => setPreviewTicker(null)}
                                     className="text-sm"
                                     style={{ color: palette.textMuted }}

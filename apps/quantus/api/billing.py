@@ -14,14 +14,17 @@ Endpoints:
 
 from __future__ import annotations
 
+import hmac
 import logging
+import os
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from api._auth import SubscribedUser, current_user, require_tier
+from api._auth import SubscribedUser, current_user
 from services.revolut_billing import (
+    BillingProviderError,
     cancel_subscription,
     create_checkout,
     get_subscription,
@@ -40,6 +43,24 @@ class CheckoutRequest(BaseModel):
     tier: str  # "UNLOCKED" | "INSTITUTIONAL"
     email: str | None = None
     name: str | None = None
+
+
+def _configured_operator_key() -> str:
+    key = os.environ.get("QUANTUS_BILLING_OPERATOR_KEY", "").strip()
+    return key if len(key) >= 32 else ""
+
+
+async def require_operator_key(
+    x_quantus_operator_key: str | None = Header(default=None, alias="x-quantus-operator-key"),
+) -> None:
+    configured = _configured_operator_key()
+    if not configured:
+        if os.environ.get("NODE_ENV") == "production":
+            raise HTTPException(status_code=503, detail={"message": "Billing operator key is not configured"})
+        return
+
+    if not x_quantus_operator_key or not hmac.compare_digest(x_quantus_operator_key, configured):
+        raise HTTPException(status_code=403, detail={"message": "Forbidden"})
 
 
 @billing_router.get("/catalog")
@@ -75,9 +96,12 @@ async def checkout(
             email=req.email,
             name=req.name,
         )
+    except BillingProviderError as exc:
+        logger.error("billing | checkout failed: %s", exc)
+        raise HTTPException(status_code=503, detail={"message": "Billing provider unavailable"}) from exc
     except RuntimeError as exc:
         logger.error("billing | checkout failed: %s", exc)
-        raise HTTPException(status_code=503, detail={"message": "Billing provider unavailable", "error": str(exc)}) from exc
+        raise HTTPException(status_code=503, detail={"message": "Billing provider unavailable"}) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail={"message": str(exc)}) from exc
     return JSONResponse(result)
@@ -94,9 +118,8 @@ async def cancel(user: SubscribedUser = Depends(current_user)) -> JSONResponse:
 
 
 @billing_router.post("/admin/renew")
-async def admin_renew(_: SubscribedUser = Depends(require_tier("INSTITUTIONAL"))) -> JSONResponse:
-    """Operator hook: sweep today's renewals. Gated by INSTITUTIONAL tier so
-    only admins (who you'd grant that tier to internally) can fire it."""
+async def admin_renew(_: None = Depends(require_operator_key)) -> JSONResponse:
+    """Operator hook: sweep today's renewals. Requires a dedicated operator key."""
     result = await renew_due_today()
     return JSONResponse(result)
 

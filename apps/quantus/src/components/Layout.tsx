@@ -67,6 +67,10 @@ export function Layout({
     }, [minimalHeader]);
 
     useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [currentView]);
+
+    useEffect(() => {
         if (lightMode) {
             document.body.classList.remove('dark-mode');
         } else {
@@ -90,6 +94,19 @@ export function Layout({
         window.addEventListener('keydown', handleShortcut);
         return () => window.removeEventListener('keydown', handleShortcut);
     }, []);
+
+    useEffect(() => {
+        if (!mobileMenuOpen) return;
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setMobileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener('keydown', handleEscape);
+        return () => window.removeEventListener('keydown', handleEscape);
+    }, [mobileMenuOpen]);
 
     const pageBg = lightMode ? '#FFFFFF' : '#05070B';
     const textColor = lightMode ? '#09090B' : '#F0F6FF';
@@ -320,7 +337,7 @@ export function Layout({
 
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <div
-                            className={showExpandedHeader ? 'hidden 2xl:flex items-center gap-2 px-3 py-2 rounded-full text-xs' : 'hidden'}
+                            className={showExpandedHeader ? 'hidden min-[1760px]:flex items-center gap-2 px-3 py-2 rounded-full text-xs' : 'hidden'}
                             style={{
                                 background: statusColors.bg,
                                 border: `1px solid ${statusColors.border}`,
@@ -348,7 +365,8 @@ export function Layout({
                         {userName ? (
                             <div className="hidden sm:flex items-center gap-2">
                                 <div
-                                    className="px-3 py-2 rounded-full text-xs font-medium"
+                                    className="max-w-[13rem] truncate whitespace-nowrap px-3 py-2 rounded-full text-xs font-medium"
+                                    title={`${userTier ?? 'FREE'} - ${userName}`}
                                     style={{
                                         background: lightMode ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.05)',
                                         color: muted,
@@ -359,7 +377,7 @@ export function Layout({
                                 </div>
                                 <button
                                     onClick={onSignOut}
-                                    className="px-3 py-2 rounded-full text-sm font-medium"
+                                    className="whitespace-nowrap px-3 py-2 rounded-full text-sm font-medium"
                                     style={{
                                         background: lightMode ? '#09090B' : '#FFFFFF',
                                         color: lightMode ? '#FFFFFF' : '#09090B',
@@ -383,7 +401,7 @@ export function Layout({
                             </button>
                         )}
 
-                        <div className="hidden sm:block">
+                        <div className="hidden sm:block xl:hidden">
                             <button
                                 onClick={() => onNavigate?.('hero')}
                                 className="btn-nav-cta"

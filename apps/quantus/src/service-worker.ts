@@ -94,6 +94,23 @@ if (isLocalQuantusHost) {
         ),
     );
 
+    const normalizeNotificationUrl = (rawUrl: unknown) => {
+        const fallback = '/quantus/workspace/';
+        if (typeof rawUrl !== 'string' || rawUrl.trim() === '') {
+            return fallback;
+        }
+
+        try {
+            const url = new URL(rawUrl, self.location.origin);
+            if (url.origin !== self.location.origin || !url.pathname.startsWith('/quantus/')) {
+                return fallback;
+            }
+            return `${url.pathname}${url.search}${url.hash}`;
+        } catch {
+            return fallback;
+        }
+    };
+
     self.addEventListener('push', (event: PushEvent) => {
         if (!event.data) return;
 
@@ -146,17 +163,18 @@ if (isLocalQuantusHost) {
 
         if (event.action === 'dismiss') return;
 
-        const targetUrl: string = event.notification.data?.url ?? '/quantus/workspace/';
+        const targetPath = normalizeNotificationUrl(event.notification.data?.url);
+        const targetHref = new URL(targetPath, self.location.origin).href;
 
         event.waitUntil(
             self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
                 for (const client of clients) {
-                    if (client.url.includes(targetUrl) && 'focus' in client) {
+                    if (client.url === targetHref && 'focus' in client) {
                         return (client as WindowClient).focus();
                     }
                 }
 
-                return self.clients.openWindow(targetUrl);
+                return self.clients.openWindow(targetPath);
             }),
         );
     });

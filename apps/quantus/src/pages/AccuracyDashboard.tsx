@@ -68,41 +68,46 @@ function AccuracyTable({ rows, showWinRate, lightMode }: { rows: AccuracyRow[]; 
     const ts = lightMode ? '#6B7280' : '#9CA3AF';
     const border = lightMode ? '#E5E7EB' : '#1A1A1A';
     const muted = lightMode ? '#94A3B8' : '#6B7280';
+    const tableColumns = showWinRate ? '1fr 48px 80px 80px 120px' : '1fr 48px 80px 80px';
 
     return (
         <div className="bis-section-card rounded-[24px] overflow-hidden" style={{ borderColor: border }}>
-            {/* Header */}
-            <div className="grid gap-2 px-4 py-3 text-xs font-semibold"
-                style={{ gridTemplateColumns: showWinRate ? '1fr 48px 80px 80px 120px' : '1fr 48px 80px 80px', color: ts, borderBottom: `1px solid ${border}` }}>
-                <span>Segment</span><span className="text-right">n</span>
-                <span className="text-right">Avg Return</span>
-                <span className="text-right">Excess</span>
-                {showWinRate && <span className="text-right">Win Rate</span>}
-            </div>
-            {rows.map((r, i) => (
-                <motion.div key={r.label}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    className="grid gap-2 px-4 py-3 items-center text-sm"
-                    style={{ gridTemplateColumns: showWinRate ? '1fr 48px 80px 80px 120px' : '1fr 48px 80px 80px', borderBottom: i < rows.length - 1 ? `1px solid ${border}` : 'none' }}>
-                    <div className="flex items-center gap-2">
-                        <ReturnBar pct={r.avgExcessPct ?? r.avgReturnPct} maxAbs={maxAbs} lightMode={lightMode} />
-                        <span className="font-semibold text-xs whitespace-nowrap" style={{ color: tp }}>{r.label}</span>
+            <div className="overflow-x-auto">
+                <div className="min-w-[620px]">
+                    {/* Header */}
+                    <div className="grid gap-2 px-4 py-3 text-xs font-semibold"
+                        style={{ gridTemplateColumns: tableColumns, color: ts, borderBottom: `1px solid ${border}` }}>
+                        <span>Segment</span><span className="text-right">n</span>
+                        <span className="text-right">Avg Return</span>
+                        <span className="text-right">Excess</span>
+                        {showWinRate && <span className="text-right">Win Rate</span>}
                     </div>
-                    <span className="text-right text-xs font-mono" style={{ color: ts }}>{r.count}</span>
-                    <span className="text-right"><ReturnChip pct={r.avgReturnPct} /></span>
-                    <span className="text-right">
-                        {r.avgExcessPct == null ? <span className="text-xs" style={{ color: muted }}>N/A</span> : <ReturnChip pct={r.avgExcessPct} />}
-                    </span>
-                    {showWinRate && r.winRate != null && (
-                        <span className="text-right text-xs font-semibold"
-                            style={{ color: r.winRate >= 60 ? '#10B981' : '#F59E0B' }}>
-                            {r.winRate.toFixed(0)}%
-                        </span>
-                    )}
-                </motion.div>
-            ))}
+                    {rows.map((r, i) => (
+                        <motion.div key={r.label}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.04 }}
+                            className="grid gap-2 px-4 py-3 items-center text-sm"
+                            style={{ gridTemplateColumns: tableColumns, borderBottom: i < rows.length - 1 ? `1px solid ${border}` : 'none' }}>
+                            <div className="flex min-w-0 items-center gap-2">
+                                <ReturnBar pct={r.avgExcessPct ?? r.avgReturnPct} maxAbs={maxAbs} lightMode={lightMode} />
+                                <span className="break-words text-xs font-semibold leading-snug" title={r.label} style={{ color: tp }}>{r.label}</span>
+                            </div>
+                            <span className="text-right text-xs font-mono" style={{ color: ts }}>{r.count}</span>
+                            <span className="text-right"><ReturnChip pct={r.avgReturnPct} /></span>
+                            <span className="text-right">
+                                {r.avgExcessPct == null ? <span className="text-xs" style={{ color: muted }}>N/A</span> : <ReturnChip pct={r.avgExcessPct} />}
+                            </span>
+                            {showWinRate && r.winRate != null && (
+                                <span className="text-right text-xs font-semibold"
+                                    style={{ color: r.winRate >= 60 ? '#10B981' : '#F59E0B' }}>
+                                    {r.winRate.toFixed(0)}%
+                                </span>
+                            )}
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }

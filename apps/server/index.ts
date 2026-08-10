@@ -201,6 +201,7 @@ const privateApiPrefixes = [
   "/api/auth",
   "/api/quantus/watchlist",
   "/api/quantus/alerts",
+  "/api/quantus/archive",
   "/api/quantus/usage",
   "/api/bonusaki/rewards",
   "/api/bonusaki/admin",

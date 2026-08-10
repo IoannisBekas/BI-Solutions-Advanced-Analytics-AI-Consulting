@@ -198,7 +198,7 @@ export function ScannerPage({ onSelectTicker, lightMode, apiBase = '/quantus/api
             <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
 
                 {/* ── Header ───────────────────────────────────────────── */}
-                <div className="flex items-start justify-between gap-4 mb-6">
+                <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <div className="flex items-center gap-3 mb-1">
                             <div className="h-9 w-9 rounded-xl flex items-center justify-center"
@@ -214,7 +214,7 @@ export function ScannerPage({ onSelectTicker, lightMode, apiBase = '/quantus/api
                         </p>
                     </div>
                     <button onClick={() => void load()} disabled={loading}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-80 active:scale-95"
+                            className="flex items-center gap-2 self-start whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-80 active:scale-95 sm:self-auto"
                             style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)', color: '#60A5FA' }}>
                         <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         Refresh
@@ -339,82 +339,86 @@ export function ScannerPage({ onSelectTicker, lightMode, apiBase = '/quantus/api
                     </div>
                 ) : (
                     <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${borderColor}` }}>
-                        {/* Table header */}
-                        <div className="grid grid-cols-[2fr_1.5fr_1.2fr_1fr_auto] gap-4 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.18em]"
-                             style={{ background: lightMode ? 'rgba(248,250,252,0.8)' : 'rgba(15,23,42,0.8)', color: textSecondary, borderBottom: `1px solid ${borderColor}` }}>
-                            <button className="flex items-center gap-1 text-left" onClick={() => toggleSort('ticker')}>
-                                Ticker <SortIcon field="ticker" sort={sort} />
-                            </button>
-                            <button className="flex items-center gap-1" onClick={() => toggleSort('overall_signal')}>
-                                Signal <SortIcon field="overall_signal" sort={sort} />
-                            </button>
-                            <button className="flex items-center gap-1" onClick={() => toggleSort('confidence_score')}>
-                                Confidence <SortIcon field="confidence_score" sort={sort} />
-                            </button>
-                            <button className="flex items-center gap-1" onClick={() => toggleSort('regime_label')}>
-                                Regime <SortIcon field="regime_label" sort={sort} />
-                            </button>
-                            <span className="text-right">Action</span>
-                        </div>
-
-                        {/* Rows */}
-                        <div className="divide-y" style={{ borderColor }}>
-                            {displayed.map((result, i) => (
-                                <motion.div
-                                    key={result.ticker}
-                                    initial={{ opacity: 0, x: -8 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: Math.min(i * 0.03, 0.3) }}
-                                    className="grid grid-cols-[2fr_1.5fr_1.2fr_1fr_auto] gap-4 px-4 py-4 items-center cursor-pointer transition-all hover:opacity-90"
-                                    style={{ background: cardBg }}
-                                    onClick={() => onSelectTicker(result.ticker)}
-                                >
-                                    {/* Ticker + name */}
-                                    <div className="min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-bold font-mono text-sm" style={{ color: textPrimary }}>
-                                                {result.ticker}
-                                            </span>
-                                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded"
-                                                  style={{ background: 'rgba(148,163,184,0.1)', color: textSecondary }}>
-                                                {result.asset_class}
-                                            </span>
-                                            {result.has_news && (
-                                                <Newspaper className="h-3 w-3 text-blue-400 flex-shrink-0" />
-                                            )}
-                                            {result.has_filings && (
-                                                <ShieldAlert className="h-3 w-3 text-violet-400 flex-shrink-0" />
-                                            )}
-                                        </div>
-                                        <p className="text-[11px] truncate mt-0.5" style={{ color: textSecondary }}>
-                                            {result.company_name}
-                                        </p>
-                                    </div>
-
-                                    {/* Signal */}
-                                    <div>
-                                        <SignalBadge signal={result.overall_signal} />
-                                    </div>
-
-                                    {/* Confidence */}
-                                    <div>
-                                        <ConfidenceBar value={result.confidence_score} />
-                                    </div>
-
-                                    {/* Regime */}
-                                    <div className="truncate text-[11px]" style={{ color: textSecondary }}>
-                                        {result.regime_label}
-                                    </div>
-
-                                    {/* CTA */}
-                                    <button
-                                        onClick={e => { e.stopPropagation(); onSelectTicker(result.ticker); }}
-                                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all hover:opacity-80 active:scale-95"
-                                        style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)', color: '#60A5FA' }}>
-                                        Report <ArrowRight className="h-3 w-3" />
+                        <div className="overflow-x-auto">
+                            <div className="min-w-[760px]">
+                                {/* Table header */}
+                                <div className="grid grid-cols-[2fr_1.5fr_1.2fr_1fr_auto] gap-4 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.18em]"
+                                     style={{ background: lightMode ? 'rgba(248,250,252,0.8)' : 'rgba(15,23,42,0.8)', color: textSecondary, borderBottom: `1px solid ${borderColor}` }}>
+                                    <button className="flex items-center gap-1 text-left" onClick={() => toggleSort('ticker')}>
+                                        Ticker <SortIcon field="ticker" sort={sort} />
                                     </button>
-                                </motion.div>
-                            ))}
+                                    <button className="flex items-center gap-1" onClick={() => toggleSort('overall_signal')}>
+                                        Signal <SortIcon field="overall_signal" sort={sort} />
+                                    </button>
+                                    <button className="flex items-center gap-1" onClick={() => toggleSort('confidence_score')}>
+                                        Confidence <SortIcon field="confidence_score" sort={sort} />
+                                    </button>
+                                    <button className="flex items-center gap-1" onClick={() => toggleSort('regime_label')}>
+                                        Regime <SortIcon field="regime_label" sort={sort} />
+                                    </button>
+                                    <span className="text-right">Action</span>
+                                </div>
+
+                                {/* Rows */}
+                                <div className="divide-y" style={{ borderColor }}>
+                                    {displayed.map((result, i) => (
+                                        <motion.div
+                                            key={result.ticker}
+                                            initial={{ opacity: 0, x: -8 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: Math.min(i * 0.03, 0.3) }}
+                                            className="grid grid-cols-[2fr_1.5fr_1.2fr_1fr_auto] gap-4 px-4 py-4 items-center cursor-pointer transition-all hover:opacity-90"
+                                            style={{ background: cardBg }}
+                                            onClick={() => onSelectTicker(result.ticker)}
+                                        >
+                                            {/* Ticker + name */}
+                                            <div className="min-w-0">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-bold font-mono text-sm" style={{ color: textPrimary }}>
+                                                        {result.ticker}
+                                                    </span>
+                                                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded"
+                                                          style={{ background: 'rgba(148,163,184,0.1)', color: textSecondary }}>
+                                                        {result.asset_class}
+                                                    </span>
+                                                    {result.has_news && (
+                                                        <Newspaper className="h-3 w-3 text-blue-400 flex-shrink-0" />
+                                                    )}
+                                                    {result.has_filings && (
+                                                        <ShieldAlert className="h-3 w-3 text-violet-400 flex-shrink-0" />
+                                                    )}
+                                                </div>
+                                                <p className="mt-0.5 break-words text-[11px] leading-snug" style={{ color: textSecondary }}>
+                                                    {result.company_name}
+                                                </p>
+                                            </div>
+
+                                            {/* Signal */}
+                                            <div>
+                                                <SignalBadge signal={result.overall_signal} />
+                                            </div>
+
+                                            {/* Confidence */}
+                                            <div>
+                                                <ConfidenceBar value={result.confidence_score} />
+                                            </div>
+
+                                            {/* Regime */}
+                                            <div className="break-words text-[11px] leading-snug" style={{ color: textSecondary }}>
+                                                {result.regime_label}
+                                            </div>
+
+                                            {/* CTA */}
+                                            <button
+                                                onClick={e => { e.stopPropagation(); onSelectTicker(result.ticker); }}
+                                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all hover:opacity-80 active:scale-95"
+                                                style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)', color: '#60A5FA' }}>
+                                                Report <ArrowRight className="h-3 w-3" />
+                                            </button>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}

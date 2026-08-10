@@ -466,12 +466,12 @@ export function SectionD({ report, lightMode }: Props) {
             {/* ── SEC Filings Card ─────────────────────────────────────── */}
             {report.sec_filings && (report.sec_filings.recent_filings?.length > 0 || report.sec_filings.form4_count > 0) && (
                 <div className="mt-4 p-5 rounded-2xl" style={{ background: 'rgba(139,92,246,0.05)', border: '1px solid rgba(139,92,246,0.18)' }}>
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center gap-2">
                             <FileText className="h-4 w-4" style={{ color: '#8B5CF6' }} />
                             <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: '#8B5CF6' }}>SEC Filings</span>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
                             {report.sec_filings.form4_count > 0 && (
                                 <div className="flex items-center gap-1.5">
                                     <Users className="h-3.5 w-3.5" style={{ color: report.sec_filings.insider_activity === 'ACTIVE' ? '#F97316' : textSecondary }} />
@@ -495,14 +495,14 @@ export function SectionD({ report, lightMode }: Props) {
                         <div className="space-y-2">
                             {report.sec_filings.recent_filings.slice(0, 5).map((filing, i) => (
                                 <a key={i} href={filing.url} target="_blank" rel="noopener noreferrer"
-                                   className="flex items-center justify-between gap-3 p-3 rounded-xl group hover:opacity-80 transition-opacity"
+                                   className="group flex flex-col gap-2 rounded-xl p-3 transition-opacity hover:opacity-80 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
                                    style={{ background: lightMode ? 'rgba(255,255,255,0.7)' : 'rgba(15,23,42,0.35)', border: `1px solid ${borderColor}` }}>
-                                    <div className="flex items-center gap-3 min-w-0">
+                                    <div className="flex min-w-0 items-start gap-3">
                                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded font-mono flex-shrink-0"
                                               style={{ background: 'rgba(139,92,246,0.12)', color: '#8B5CF6' }}>
                                             {filing.form_type}
                                         </span>
-                                        <span className="text-xs truncate" style={{ color: textPrimary }}>{filing.title}</span>
+                                        <span className="min-w-0 text-xs leading-snug" style={{ color: textPrimary }}>{filing.title}</span>
                                     </div>
                                     <div className="flex items-center gap-2 flex-shrink-0">
                                         <span className="text-[10px]" style={{ color: textSecondary }}>{filing.filed_at}</span>

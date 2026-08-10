@@ -46,8 +46,20 @@ function hasTableColumn(tableName: "users" | "app_meta", columnName: string): bo
   return rows.some((row) => row.name === columnName);
 }
 
+function runSchemaMigration(version: number, label: string, migrate: () => void): void {
+  if (getSchemaVersion() >= version) {
+    return;
+  }
+
+  db.transaction(() => {
+    migrate();
+    setSchemaVersion(version);
+  })();
+  console.log(`DB migration ${version} applied: ${label}`);
+}
+
 // Migration 1: Initial users table
-if (getSchemaVersion() < 1) {
+runSchemaMigration(1, "users table + credits -> INTEGER", () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id            TEXT PRIMARY KEY,
@@ -68,12 +80,10 @@ if (getSchemaVersion() < 1) {
   `);
   // Round any existing REAL credits to INTEGER (safe for existing DBs)
   db.exec("UPDATE users SET credits = CAST(ROUND(credits) AS INTEGER) WHERE typeof(credits) = 'real'");
-  setSchemaVersion(1);
-  console.log("DB migration 1 applied: users table + credits → INTEGER");
-}
+});
 
 // Migration 2: Quantus persistence tables
-if (getSchemaVersion() < 2) {
+runSchemaMigration(2, "Quantus watchlists, alerts, snapshots, outcomes", () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS quantus_watchlists (
       user_id      TEXT NOT NULL,
@@ -156,12 +166,10 @@ if (getSchemaVersion() < 2) {
     CREATE INDEX IF NOT EXISTS idx_quantus_outcomes_resolved
       ON quantus_signal_outcomes(return_pct, resolved_at DESC);
   `);
-  setSchemaVersion(2);
-  console.log("DB migration 2 applied: Quantus watchlists, alerts, snapshots, outcomes");
-}
+});
 
 // Migration 3: persistent app metadata + auth provider tracking
-if (getSchemaVersion() < 3) {
+runSchemaMigration(3, "app_meta + auth_provider", () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS app_meta (
       key         TEXT PRIMARY KEY,
@@ -174,12 +182,10 @@ if (getSchemaVersion() < 3) {
     db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'password'");
   }
 
-  setSchemaVersion(3);
-  console.log("DB migration 3 applied: app_meta + auth_provider");
-}
+});
 
 // Migration 4: persistent Quantus AI daily budget accounting
-if (getSchemaVersion() < 4) {
+runSchemaMigration(4, "Quantus AI daily usage", () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS quantus_ai_daily_usage (
       user_id         TEXT NOT NULL,
@@ -195,9 +201,7 @@ if (getSchemaVersion() < 4) {
     CREATE INDEX IF NOT EXISTS idx_quantus_ai_daily_usage_user_date
       ON quantus_ai_daily_usage(user_id, usage_date);
   `);
-  setSchemaVersion(4);
-  console.log("DB migration 4 applied: Quantus AI daily usage");
-}
+});
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -397,6 +401,9 @@ const stmts = {
   ),
   incrementReportsIfBelowLimit: db.prepare(
     "UPDATE users SET reports_this_month = reports_this_month + 1, updated_at = datetime('now') WHERE id = ? AND reports_this_month < ?"
+  ),
+  decrementReports: db.prepare(
+    "UPDATE users SET reports_this_month = reports_this_month - 1, updated_at = datetime('now') WHERE id = ? AND reports_this_month > 0"
   ),
   deductCredit: db.prepare(
     "UPDATE users SET credits = credits - ?, updated_at = datetime('now') WHERE id = ? AND credits >= ?"
@@ -768,6 +775,11 @@ export function incrementReports(userId: string): void {
 
 export function incrementReportsIfBelowLimit(userId: string, limit: number): boolean {
   const result = stmts.incrementReportsIfBelowLimit.run(userId, limit) as { changes: number };
+  return result.changes > 0;
+}
+
+export function decrementReports(userId: string): boolean {
+  const result = stmts.decrementReports.run(userId) as { changes: number };
   return result.changes > 0;
 }
 

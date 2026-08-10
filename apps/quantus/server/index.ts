@@ -14,7 +14,6 @@ import type { AssetEntry, ReportData, ReportResponse, ReportSource } from '../sr
 import {
     QUANTUS_INTERNAL_HEADER,
     getQuantusAiMaxOutputTokensForTier,
-    getQuantusMonthlyReportLimitForTier,
     readQuantusInternalKey,
     type QuantusAiUsageType,
     sanitizeQuantusAssetClass,
@@ -25,11 +24,42 @@ import {
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+const PRIVATE_HOST_RE =
+    /^(localhost|127\.|10\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[0-1])\.|::1$|fc|fd|fe80)/i;
+
+function readInternalServiceTarget(envName: string, fallback: string) {
+    const raw = (process.env[envName]?.trim() || fallback).replace(/\/+$/, '');
+    let parsed: URL;
+    try {
+        parsed = new URL(raw);
+    } catch {
+        throw new Error(`${envName} is not a valid URL: ${raw}`);
+    }
+
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        throw new Error(`${envName} must be http(s): ${raw}`);
+    }
+
+    const privateHost = PRIVATE_HOST_RE.test(parsed.hostname);
+    if (isProduction && !privateHost) {
+        if (process.env[`${envName}_ALLOW_REMOTE`] !== 'true') {
+            throw new Error(`${envName} must point at a loopback/private host in production (got ${parsed.hostname}). Set ${envName}_ALLOW_REMOTE=true to override.`);
+        }
+        if (parsed.protocol !== 'https:') {
+            throw new Error(`${envName} remote production targets must use https://`);
+        }
+    }
+
+    return raw;
+}
+
 // ─── ROOT API TARGET ────────────────────────────────────────────────────────
 // Instead of opening the SQLite DB directly (dual-writer risk), proxy auth
 // and Quantus persistence requests to the root BI Solutions server which owns
 // the database.
-const AUTH_API_TARGET = process.env.AUTH_API_TARGET || 'http://localhost:5001';
+const AUTH_API_TARGET = readInternalServiceTarget('AUTH_API_TARGET', 'http://localhost:5001');
+const PYTHON_API_URL = readInternalServiceTarget('PYTHON_API_URL', 'http://localhost:8000');
 const QUANTUS_INTERNAL_KEY = readQuantusInternalKey();
 if (process.env.NODE_ENV === 'production' && !QUANTUS_INTERNAL_KEY) {
     throw new Error('QUANTUS_INTERNAL_KEY env var (min 32 chars) is required in production');
@@ -37,7 +67,6 @@ if (process.env.NODE_ENV === 'production' && !QUANTUS_INTERNAL_KEY) {
 
 const app = express();
 const API_PREFIX = '/quantus/api';
-const isProduction = process.env.NODE_ENV === 'production';
 const ALLOW_DEMO_DATA = process.env.QUANTUS_ALLOW_DEMO_DATA === 'true' || !isProduction;
 const ENABLE_PUSH_NOTIFICATIONS = process.env.QUANTUS_ENABLE_PUSH === 'true';
 const SHOW_ENGINE_BANNER = process.env.QUANTUS_SHOW_ENGINE_BANNER === 'true' || !isProduction;
@@ -184,6 +213,7 @@ const privateApiPrefixes = [
     `${API_PREFIX}/auth`,
     `${API_PREFIX}/watchlist`,
     `${API_PREFIX}/alerts`,
+    `${API_PREFIX}/archive`,
     `${API_PREFIX}/report`,
     `${API_PREFIX}/generate`,
     `${API_PREFIX}/insights`,
@@ -269,6 +299,7 @@ interface QuantusSafeUser {
 
 interface AuthenticatedRequest extends express.Request {
     user?: JWTPayload;
+    freshUser?: QuantusSafeUser;
 }
 
 interface QuantusAiBudgetResponse extends RootJsonMap {
@@ -485,7 +516,15 @@ function buildRootAuthHeaderRecord(auth: RootAuthContext, includeJsonContentType
     if (includeJsonContentType) {
         headers['content-type'] = 'application/json';
     }
+    const origin = getRootProxyOrigin();
+    if (includeJsonContentType && origin) {
+        headers.origin = origin;
+    }
     return headers;
+}
+
+function getRootProxyOrigin() {
+    return process.env.APP_URL?.trim() || ALLOWED_ORIGINS[0] || '';
 }
 
 function buildPythonHeaders(req: express.Request, baseHeaders?: Record<string, string>) {
@@ -498,13 +537,15 @@ function buildPythonHeaders(req: express.Request, baseHeaders?: Record<string, s
         headers[QUANTUS_INTERNAL_HEADER] = QUANTUS_INTERNAL_KEY;
     }
 
-    // Forward authenticated identity so the Python tier guard can enforce paywalls.
+    // Forward current root-server entitlement when available; JWT claims may be stale.
     const authReq = req as AuthenticatedRequest;
-    if (authReq.user?.userId) {
-        headers['x-quantus-user-id'] = authReq.user.userId;
+    const userId = authReq.freshUser?.id ?? authReq.user?.userId;
+    const tier = authReq.freshUser?.tier ?? authReq.user?.tier;
+    if (userId) {
+        headers['x-quantus-user-id'] = userId;
     }
-    if (authReq.user?.tier) {
-        headers['x-quantus-user-tier'] = authReq.user.tier;
+    if (tier) {
+        headers['x-quantus-user-tier'] = tier;
     }
 
     return headers;
@@ -646,6 +687,11 @@ async function fetchRootJson(
     if (init.body && !headers.has('content-type')) {
         headers.set('content-type', 'application/json');
     }
+    const method = String(init.method ?? 'GET').toUpperCase();
+    const origin = getRootProxyOrigin();
+    if (origin && !headers.has('origin') && !['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+        headers.set('origin', origin);
+    }
 
     const upstream = await fetch(`${AUTH_API_TARGET}${path}`, {
         ...init,
@@ -681,11 +727,80 @@ async function fetchFreshAuthenticatedUser(auth: RootAuthContext = {}): Promise<
     };
 }
 
+function bindFreshUser(req: AuthenticatedRequest, user: QuantusSafeUser) {
+    req.freshUser = user;
+    req.user = {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        tier: user.tier,
+        credits: user.credits,
+        reportsThisMonth: user.reportsThisMonth,
+        jurisdiction: user.jurisdiction,
+    };
+}
+
+async function requireFreshAuth(req: AuthenticatedRequest, res: express.Response, next: express.NextFunction) {
+    const authContext = getRequestAuthContext(req);
+    if (!hasAuthContext(authContext)) {
+        res.status(401).json({ error: 'Authentication required.', code: 'auth_required' });
+        return;
+    }
+
+    try {
+        const authState = await fetchFreshAuthenticatedUser(authContext);
+        if (!authState.ok || !authState.user) {
+            res.status(authState.status || 401).json(authState.data?.error ? authState.data : {
+                error: 'Authentication required.',
+                code: 'auth_required',
+            });
+            return;
+        }
+
+        bindFreshUser(req, authState.user);
+        next();
+    } catch (error) {
+        console.error(`${getRequestLogLabel(req)} fresh auth lookup failed:`, error);
+        res.status(502).json({ error: 'Auth service temporarily unavailable.' });
+    }
+}
+
+async function attachFreshAuthIfPresent(req: AuthenticatedRequest, _res: express.Response, next: express.NextFunction) {
+    const authContext = getRequestAuthContext(req);
+    if (!hasAuthContext(authContext)) {
+        next();
+        return;
+    }
+
+    try {
+        const authState = await fetchFreshAuthenticatedUser(authContext);
+        if (authState.ok && authState.user) {
+            bindFreshUser(req, authState.user);
+        }
+    } catch (error) {
+        console.warn(`${getRequestLogLabel(req)} optional fresh auth lookup failed:`, getErrorMessage(error));
+    }
+
+    next();
+}
+
 async function consumeReportAllowance(auth: RootAuthContext) {
     return fetchRootJson(
         '/api/quantus/usage/report',
         {
             method: 'POST',
+            body: JSON.stringify({}),
+        },
+        auth,
+    );
+}
+
+async function refundReportAllowance(auth: RootAuthContext) {
+    return fetchRootJson(
+        '/api/quantus/usage/report/refund',
+        {
+            method: 'POST',
+            headers: QUANTUS_INTERNAL_KEY ? { [QUANTUS_INTERNAL_HEADER]: QUANTUS_INTERNAL_KEY } : {},
             body: JSON.stringify({}),
         },
         auth,
@@ -1009,7 +1124,7 @@ app.get(`${API_PREFIX}/archive`, async (req, res) => {
     });
 
     try {
-        const upstream = await fetchRootJson(`/api/quantus/archive?${params.toString()}`, { method: 'GET' });
+        const upstream = await fetchRootJson(`/api/quantus/archive?${params.toString()}`, { method: 'GET' }, getRequestAuthContext(req));
         res.status(upstream.status).json(upstream.data);
     } catch (error) {
         console.error('Quantus archive proxy error:', error);
@@ -1019,7 +1134,7 @@ app.get(`${API_PREFIX}/archive`, async (req, res) => {
 
 app.get(`${API_PREFIX}/archive/:reportId`, async (req, res) => {
     try {
-        const upstream = await fetchRootJson(`/api/quantus/archive/${encodeURIComponent(req.params.reportId)}`, { method: 'GET' });
+        const upstream = await fetchRootJson(`/api/quantus/archive/${encodeURIComponent(req.params.reportId)}`, { method: 'GET' }, getRequestAuthContext(req));
         if (!upstream.ok) {
             res.status(upstream.status).json(upstream.data);
             return;
@@ -1066,8 +1181,6 @@ function getAI() {
 }
 
 // ─── PYTHON PIPELINE PROXY ──────────────────────────────────────────────────
-const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://localhost:8000';
-
 async function callPythonPipeline(
     ticker: string,
     options: { forceRefresh?: boolean; userTier?: string; requestId?: string } = {},
@@ -1243,21 +1356,27 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
         return;
     }
 
-    const userTier = sanitizeQuantusUserTier(authState.user.tier);
-    const monthlyReportLimit = getQuantusMonthlyReportLimitForTier(userTier);
-    if (
-        monthlyReportLimit >= 0
-        && Number.isFinite(authState.user.reportsThisMonth)
-        && authState.user.reportsThisMonth >= monthlyReportLimit
-    ) {
-        res.status(403).json({
-            error: `Your ${userTier} tier allows up to ${monthlyReportLimit} full Quantus reports per month.`,
-            code: 'report_limit_reached',
-            tier: userTier,
-            reportLimit: monthlyReportLimit,
-        });
+    const reservation = await consumeReportAllowance(authContext);
+    if (!reservation.ok) {
+        res.status(reservation.status).json(reservation.data);
         return;
     }
+
+    let reportAllowanceReserved = true;
+    const reservedUser = extractQuantusSafeUser(reservation.data?.user);
+    const userTier = sanitizeQuantusUserTier(reservedUser?.tier ?? authState.user.tier);
+    const refundReservedReport = async () => {
+        if (!reportAllowanceReserved) return;
+        reportAllowanceReserved = false;
+        try {
+            const refund = await refundReportAllowance(authContext);
+            if (!refund.ok) {
+                console.warn(`${getRequestLogLabel(req)} report allowance refund failed with ${refund.status}`);
+            }
+        } catch (error) {
+            console.warn(`${getRequestLogLabel(req)} report allowance refund failed:`, getErrorMessage(error));
+        }
+    };
 
     const forceRefresh = parseBooleanQuery(req.query.force_refresh ?? req.query.forceRefresh);
 
@@ -1272,12 +1391,10 @@ app.get(`${API_PREFIX}/report/:ticker`, async (req: AuthenticatedRequest, res) =
     } satisfies AssetEntry;
 
     const finalizeReportResponse = async (response: ReportResponse) => {
-        if (response.source !== 'starter') {
-            const usageResult = await consumeReportAllowance(authContext);
-            if (!usageResult.ok) {
-                res.status(usageResult.status).json(usageResult.data);
-                return;
-            }
+        if (response.source === 'starter') {
+            await refundReservedReport();
+        } else {
+            reportAllowanceReserved = false;
         }
 
         res.json(response);
@@ -1863,63 +1980,63 @@ async function proxyPython(
 }
 
 // Sector Packs
-app.get(`${API_PREFIX}/v1/sector-packs/catalog`, (req, res) => {
+app.get(`${API_PREFIX}/v1/sector-packs/catalog`, attachFreshAuthIfPresent, (req, res) => {
     void proxyPython(req, res, '/api/v1/sector-packs/catalog');
 });
-app.get(`${API_PREFIX}/v1/sector-packs/subscriptions`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/sector-packs/subscriptions`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, '/api/v1/sector-packs/subscriptions');
 });
-app.post(`${API_PREFIX}/v1/sector-packs/subscriptions`, requireAuth, (req, res) => {
+app.post(`${API_PREFIX}/v1/sector-packs/subscriptions`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, '/api/v1/sector-packs/subscriptions', { method: 'POST', body: req.body });
 });
-app.delete(`${API_PREFIX}/v1/sector-packs/subscriptions/:sector`, requireAuth, (req, res) => {
+app.delete(`${API_PREFIX}/v1/sector-packs/subscriptions/:sector`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, `/api/v1/sector-packs/subscriptions/${encodeURIComponent(req.params.sector)}`, { method: 'DELETE' });
 });
-app.get(`${API_PREFIX}/v1/sector-packs/:sector/digest`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/sector-packs/:sector/digest`, requireFreshAuth, (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 20, 50);
     void proxyPython(req, res, `/api/v1/sector-packs/${encodeURIComponent(req.params.sector)}/digest?limit=${limit}`);
 });
 
 // Insider trades
-app.get(`${API_PREFIX}/v1/insider/feed`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/insider/feed`, requireFreshAuth, (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 50, 200);
     void proxyPython(req, res, `/api/v1/insider/feed?limit=${limit}`);
 });
-app.get(`${API_PREFIX}/v1/insider/ticker/:ticker`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/insider/ticker/:ticker`, requireFreshAuth, (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 30, 100);
     void proxyPython(req, res, `/api/v1/insider/ticker/${encodeURIComponent(req.params.ticker)}?limit=${limit}`);
 });
-app.get(`${API_PREFIX}/v1/insider/cluster`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/insider/cluster`, requireFreshAuth, (req, res) => {
     const days = Math.min(Math.max(Number(req.query.days) || 30, 7), 180);
     const minInsiders = Math.min(Math.max(Number(req.query.min_insiders) || 3, 2), 10);
     void proxyPython(req, res, `/api/v1/insider/cluster?days=${days}&min_insiders=${minInsiders}`);
 });
 
 // 13F whales
-app.get(`${API_PREFIX}/v1/whales/funds`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/whales/funds`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, '/api/v1/whales/funds');
 });
-app.get(`${API_PREFIX}/v1/whales/holdings/:cik`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/whales/holdings/:cik`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, `/api/v1/whales/holdings/${encodeURIComponent(req.params.cik)}`);
 });
-app.get(`${API_PREFIX}/v1/whales/ticker/:ticker`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/whales/ticker/:ticker`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, `/api/v1/whales/ticker/${encodeURIComponent(req.params.ticker)}`);
 });
-app.get(`${API_PREFIX}/v1/whales/new-positions`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/whales/new-positions`, requireFreshAuth, (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 40, 100);
     void proxyPython(req, res, `/api/v1/whales/new-positions?limit=${limit}`, { timeoutMs: 30_000 });
 });
 
 // Earnings
-app.get(`${API_PREFIX}/v1/earnings/calendar`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/earnings/calendar`, requireFreshAuth, (req, res) => {
     const days = Math.min(Math.max(Number(req.query.days) || 7, 1), 30);
     const sector = typeof req.query.sector === 'string' ? `&sector=${encodeURIComponent(req.query.sector)}` : '';
     void proxyPython(req, res, `/api/v1/earnings/calendar?days=${days}${sector}`);
 });
-app.get(`${API_PREFIX}/v1/earnings/preview/:ticker`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/earnings/preview/:ticker`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, `/api/v1/earnings/preview/${encodeURIComponent(req.params.ticker)}`, { timeoutMs: 30_000 });
 });
-app.get(`${API_PREFIX}/v1/earnings/recap/:ticker`, requireAuth, (req, res) => {
+app.get(`${API_PREFIX}/v1/earnings/recap/:ticker`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, `/api/v1/earnings/recap/${encodeURIComponent(req.params.ticker)}`, { timeoutMs: 30_000 });
 });
 
@@ -1927,13 +2044,13 @@ app.get(`${API_PREFIX}/v1/earnings/recap/:ticker`, requireAuth, (req, res) => {
 app.get(`${API_PREFIX}/v1/billing/catalog`, (req, res) => {
     void proxyPython(req, res, '/api/v1/billing/catalog');
 });
-app.get(`${API_PREFIX}/v1/billing/me`, (req, res) => {
+app.get(`${API_PREFIX}/v1/billing/me`, attachFreshAuthIfPresent, (req, res) => {
     void proxyPython(req, res, '/api/v1/billing/me');
 });
-app.post(`${API_PREFIX}/v1/billing/checkout`, requireAuth, (req, res) => {
+app.post(`${API_PREFIX}/v1/billing/checkout`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, '/api/v1/billing/checkout', { method: 'POST', body: req.body });
 });
-app.post(`${API_PREFIX}/v1/billing/cancel`, requireAuth, (req, res) => {
+app.post(`${API_PREFIX}/v1/billing/cancel`, requireFreshAuth, (req, res) => {
     void proxyPython(req, res, '/api/v1/billing/cancel', { method: 'POST' });
 });
 

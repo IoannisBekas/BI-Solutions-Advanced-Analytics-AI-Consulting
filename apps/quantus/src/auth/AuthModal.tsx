@@ -94,7 +94,7 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                 size: 'large',
                 text: mode === 'signup' ? 'signup_with' : 'signin_with',
                 shape: 'pill',
-                width: '320',
+                width: '300',
                 logo_alignment: 'left',
             });
         };
@@ -122,6 +122,19 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
             }
         };
     }, [open, googleEnabled, googleClientId, mode, referralToken, lightMode, onClose, signInWithGoogle]);
+
+    useEffect(() => {
+        if (!open) return;
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        window.addEventListener('keydown', handleEscape);
+        return () => window.removeEventListener('keydown', handleEscape);
+    }, [open, onClose]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -161,16 +174,19 @@ export function AuthModal({ open, onClose, defaultMode = 'signup', referralToken
                     exit={{ scale: 0.95, y: 16 }}
                     transition={{ ease: [0.22, 1, 0.36, 1], duration: 0.28 }}
                     onClick={e => e.stopPropagation()}
-                    className="w-full max-w-md rounded-2xl p-7"
+                    className="max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl p-5 sm:p-7"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="quantus-auth-title"
                     style={{ background: bg, border: `1px solid ${border}`, boxShadow: '0 32px 80px rgba(0,0,0,0.5)' }}
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Zap className="w-5 h-5" style={{ color: tp }} />
-                            <span className="font-bold" style={{ color: tp }}>Quantus Preview Access</span>
+                            <span id="quantus-auth-title" className="font-bold" style={{ color: tp }}>Quantus Preview Access</span>
                         </div>
-                        <button onClick={onClose} className="cursor-pointer opacity-50 hover:opacity-100">
+                        <button type="button" onClick={onClose} className="cursor-pointer opacity-50 hover:opacity-100" aria-label="Close authentication dialog">
                             <X className="w-4 h-4" style={{ color: ts }} />
                         </button>
                     </div>

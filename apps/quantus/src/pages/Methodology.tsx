@@ -29,11 +29,11 @@ function AccordionSection({ section, lightMode }: { section: Section; lightMode?
         <div className="bis-section-card mb-3 overflow-hidden rounded-[24px]" style={{ borderColor: border }}>
             <button
                 onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between cursor-pointer px-6 py-4 text-left transition-colors ${
+                className={`w-full flex items-center justify-between gap-3 cursor-pointer px-4 py-4 text-left transition-colors sm:px-6 ${
                     lightMode ? 'hover:bg-gray-50/70' : 'hover:bg-white/[0.02]'
                 }`}
             >
-                <span className="font-semibold text-sm" style={{ color: tp }}>{section.title}</span>
+                <span className="min-w-0 font-semibold text-sm" style={{ color: tp }}>{section.title}</span>
                 {open
                     ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} />
                     : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} />}
@@ -43,7 +43,7 @@ function AccordionSection({ section, lightMode }: { section: Section; lightMode?
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="px-6 pb-5 text-sm leading-relaxed space-y-3"
+                    className="px-4 pb-5 text-sm leading-relaxed space-y-3 sm:px-6"
                     style={{ color: ts, borderTop: `1px solid ${border}` }}
                 >
                     <div className="pt-4">{section.content}</div>
@@ -135,30 +135,32 @@ const SECTIONS: Section[] = [
         title: '5. Alternative Data Sources & Credibility Tiers',
         content: (
             <div className="space-y-3">
-                <table className="w-full text-xs">
-                    <thead>
-                        <tr className="text-left border-b" style={{ borderColor: 'rgba(148,163,184,0.28)' }}>
-                            <th className="pb-2 font-semibold">Tier</th>
-                            <th className="pb-2 font-semibold">Sources</th>
-                            <th className="pb-2 font-semibold">Credibility</th>
-                            <th className="pb-2 font-semibold">Use</th>
-                        </tr>
-                    </thead>
-                    <tbody className="space-y-2">
-                        {[
-                            ['A', 'SEC EDGAR, FRED, CBOE', 'Highest', 'Fundamental anchors - override lower tiers'],
-                            ['B', 'Yahoo Finance / yfinance, Financial Modeling Prep', 'High', 'Price, earnings, fundamentals'],
-                            ['C', 'Grok/X, Reddit, NewsAPI', 'Medium', 'Sentiment only - never standalone signal'],
-                        ].map(([tier, sources, cred, use]) => (
-                            <tr key={tier} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
-                                <td className="py-2 font-bold" style={{ color: tier === 'A' ? '#10B981' : tier === 'B' ? BRAND_BLUE : '#9CA3AF' }}>Tier {tier}</td>
-                                <td className="py-2">{sources}</td>
-                                <td className="py-2">{cred}</td>
-                                <td className="py-2">{use}</td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-[640px] w-full text-xs">
+                        <thead>
+                            <tr className="text-left border-b" style={{ borderColor: 'rgba(148,163,184,0.28)' }}>
+                                <th className="pb-2 font-semibold">Tier</th>
+                                <th className="pb-2 font-semibold">Sources</th>
+                                <th className="pb-2 font-semibold">Credibility</th>
+                                <th className="pb-2 font-semibold">Use</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="space-y-2">
+                            {[
+                                ['A', 'SEC EDGAR, FRED, CBOE', 'Highest', 'Fundamental anchors - override lower tiers'],
+                                ['B', 'Yahoo Finance / yfinance, Financial Modeling Prep', 'High', 'Price, earnings, fundamentals'],
+                                ['C', 'Grok/X, Reddit, NewsAPI', 'Medium', 'Sentiment only - never standalone signal'],
+                            ].map(([tier, sources, cred, use]) => (
+                                <tr key={tier} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
+                                    <td className="py-2 font-bold" style={{ color: tier === 'A' ? '#10B981' : tier === 'B' ? BRAND_BLUE : '#9CA3AF' }}>Tier {tier}</td>
+                                    <td className="py-2">{sources}</td>
+                                    <td className="py-2">{cred}</td>
+                                    <td className="py-2">{use}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <p>No Tier C source can produce a BUY or STRONG BUY signal in isolation. All sentiment signals require corroboration from at least one Tier A or Tier B source to contribute to the final recommendation.</p>
             </div>
         ),
@@ -227,29 +229,31 @@ const SECTIONS: Section[] = [
         title: '10. Regulatory Compliance by Jurisdiction',
         content: (
             <div className="space-y-3">
-                <table className="w-full text-xs">
-                    <thead>
-                        <tr className="text-left border-b" style={{ borderColor: 'rgba(148,163,184,0.28)' }}>
-                            <th className="pb-2 font-semibold">Jurisdiction</th>
-                            <th className="pb-2 font-semibold">Disclaimer Standard</th>
-                            <th className="pb-2 font-semibold">Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            ['United States', 'Not investment advice. Not a registered investment adviser.', 'SEC Rule 202(a)(11) research carve-out applies.'],
-                            ['United Kingdom', 'Financial promotion approved for professional investors. FCA consideration.', 'FSMA 2000 s.21 applies. Retail distribution requires FCA authorisation.'],
-                            ['European Union', 'MiFID II Article 24 disclosure. Not PRIIP-compliant for retail.', 'Available to elective professional clients under MiFID II.'],
-                            ['Global / Other', 'For informational purposes only. Not investment advice.', 'Institutional use presumed outside above jurisdictions.'],
-                        ].map(([j, d, n]) => (
-                            <tr key={j} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
-                                <td className="py-2 font-semibold">{j}</td>
-                                <td className="py-2">{d}</td>
-                                <td className="py-2 opacity-60">{n}</td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-[720px] w-full text-xs">
+                        <thead>
+                            <tr className="text-left border-b" style={{ borderColor: 'rgba(148,163,184,0.28)' }}>
+                                <th className="pb-2 font-semibold">Jurisdiction</th>
+                                <th className="pb-2 font-semibold">Disclaimer Standard</th>
+                                <th className="pb-2 font-semibold">Notes</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {[
+                                ['United States', 'Not investment advice. Not a registered investment adviser.', 'SEC Rule 202(a)(11) research carve-out applies.'],
+                                ['United Kingdom', 'Financial promotion approved for professional investors. FCA consideration.', 'FSMA 2000 s.21 applies. Retail distribution requires FCA authorisation.'],
+                                ['European Union', 'MiFID II Article 24 disclosure. Not PRIIP-compliant for retail.', 'Available to elective professional clients under MiFID II.'],
+                                ['Global / Other', 'For informational purposes only. Not investment advice.', 'Institutional use presumed outside above jurisdictions.'],
+                            ].map(([j, d, n]) => (
+                                <tr key={j} className="border-b" style={{ borderColor: 'rgba(148,163,184,0.18)' }}>
+                                    <td className="py-2 font-semibold">{j}</td>
+                                    <td className="py-2">{d}</td>
+                                    <td className="py-2 opacity-60">{n}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <p className="text-xs opacity-60">Disclaimer text is automatically selected based on the user's jurisdiction setting. Jurisdiction is set at account creation and can be updated in settings. All emails and PDF exports carry the appropriate jurisdiction-specific disclaimer.</p>
             </div>
         ),
