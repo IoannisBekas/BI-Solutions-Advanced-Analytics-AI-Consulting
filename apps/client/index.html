@@ -21,6 +21,11 @@
 
   <link rel="icon" type="image/png" href="%BASE_URL%bi-solutions-logo.png" />
 
+  <!-- Marks the document as script-capable before first paint. Scroll-reveal
+       animations serialize opacity:0 into the prerendered HTML; clients clear
+       this instantly, while JS-less crawlers keep the content visible. -->
+  <script>document.documentElement.setAttribute("data-js", "");</script>
+
   <!-- Fonts: Plus Jakarta Sans (Headings) and Inter (Body), supporting Greek -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

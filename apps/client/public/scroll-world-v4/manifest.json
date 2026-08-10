@@ -1,0 +1,182 @@
+[
+  {
+    "clip": 1,
+    "id": "01_secure_arrival",
+    "chapter": "clarity",
+    "variant": "desktop",
+    "video": "clip-01.mp4",
+    "videoBytes": 10419049,
+    "poster": "clip-01.webp",
+    "posterBytes": 65926
+  },
+  {
+    "clip": 1,
+    "id": "01_secure_arrival",
+    "chapter": "clarity",
+    "variant": "mobile",
+    "video": "clip-01-mobile.mp4",
+    "videoBytes": 4379521,
+    "poster": "clip-01-mobile.webp",
+    "posterBytes": 15006
+  },
+  {
+    "clip": 2,
+    "id": "02_resilient_power",
+    "chapter": "intelligence",
+    "variant": "desktop",
+    "video": "clip-02.mp4",
+    "videoBytes": 11786415,
+    "poster": "clip-02.webp",
+    "posterBytes": 56664
+  },
+  {
+    "clip": 2,
+    "id": "02_resilient_power",
+    "chapter": "intelligence",
+    "variant": "mobile",
+    "video": "clip-02-mobile.mp4",
+    "videoBytes": 4820924,
+    "poster": "clip-02-mobile.webp",
+    "posterBytes": 17502
+  },
+  {
+    "clip": 3,
+    "id": "03_liquid_core",
+    "chapter": "intelligence",
+    "variant": "desktop",
+    "video": "clip-03.mp4",
+    "videoBytes": 10307205,
+    "poster": "clip-03.webp",
+    "posterBytes": 63138
+  },
+  {
+    "clip": 3,
+    "id": "03_liquid_core",
+    "chapter": "intelligence",
+    "variant": "mobile",
+    "video": "clip-03-mobile.mp4",
+    "videoBytes": 4304990,
+    "poster": "clip-03-mobile.webp",
+    "posterBytes": 19990
+  },
+  {
+    "clip": 4,
+    "id": "04_rack_scale_ai",
+    "chapter": "ai",
+    "variant": "desktop",
+    "video": "clip-04.mp4",
+    "videoBytes": 13186713,
+    "poster": "clip-04.webp",
+    "posterBytes": 95540
+  },
+  {
+    "clip": 4,
+    "id": "04_rack_scale_ai",
+    "chapter": "ai",
+    "variant": "mobile",
+    "video": "clip-04-mobile.mp4",
+    "videoBytes": 5877688,
+    "poster": "clip-04-mobile.webp",
+    "posterBytes": 30464
+  },
+  {
+    "clip": 5,
+    "id": "05_optical_fabric",
+    "chapter": "foundations",
+    "variant": "desktop",
+    "video": "clip-05.mp4",
+    "videoBytes": 10907607,
+    "poster": "clip-05.webp",
+    "posterBytes": 98396
+  },
+  {
+    "clip": 5,
+    "id": "05_optical_fabric",
+    "chapter": "foundations",
+    "variant": "mobile",
+    "video": "clip-05-mobile.mp4",
+    "videoBytes": 5398619,
+    "poster": "clip-05-mobile.webp",
+    "posterBytes": 32438
+  },
+  {
+    "clip": 6,
+    "id": "06_data_foundation",
+    "chapter": "products",
+    "variant": "desktop",
+    "video": "clip-06.mp4",
+    "videoBytes": 9329370,
+    "poster": "clip-06.webp",
+    "posterBytes": 61568
+  },
+  {
+    "clip": 6,
+    "id": "06_data_foundation",
+    "chapter": "products",
+    "variant": "mobile",
+    "video": "clip-06-mobile.mp4",
+    "videoBytes": 4325566,
+    "poster": "clip-06-mobile.webp",
+    "posterBytes": 21550
+  },
+  {
+    "clip": 7,
+    "id": "07_edge_to_cloud",
+    "chapter": "handoff",
+    "variant": "desktop",
+    "video": "clip-07.mp4",
+    "videoBytes": 9975179,
+    "poster": "clip-07.webp",
+    "posterBytes": 75066
+  },
+  {
+    "clip": 7,
+    "id": "07_edge_to_cloud",
+    "chapter": "handoff",
+    "variant": "mobile",
+    "video": "clip-07-mobile.mp4",
+    "videoBytes": 4679045,
+    "poster": "clip-07-mobile.webp",
+    "posterBytes": 25424
+  },
+  {
+    "clip": 8,
+    "id": "08_autonomous_control",
+    "chapter": "handoff",
+    "variant": "desktop",
+    "video": "clip-08.mp4",
+    "videoBytes": 9315488,
+    "poster": "clip-08.webp",
+    "posterBytes": 72842
+  },
+  {
+    "clip": 8,
+    "id": "08_autonomous_control",
+    "chapter": "handoff",
+    "variant": "mobile",
+    "video": "clip-08-mobile.mp4",
+    "videoBytes": 4012163,
+    "poster": "clip-08-mobile.webp",
+    "posterBytes": 24598
+  },
+  {
+    "clip": 9,
+    "id": "09_always_on",
+    "chapter": "handoff",
+    "variant": "desktop",
+    "video": "clip-09.mp4",
+    "videoBytes": 11117545,
+    "poster": "clip-09.webp",
+    "posterBytes": 70096
+  },
+  {
+    "clip": 9,
+    "id": "09_always_on",
+    "chapter": "handoff",
+    "variant": "mobile",
+    "video": "clip-09-mobile.mp4",
+    "videoBytes": 5074248,
+    "poster": "clip-09-mobile.webp",
+    "posterBytes": 23774
+  }
+]

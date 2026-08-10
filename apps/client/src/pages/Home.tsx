@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
-import { Hero } from "@/components/sections/Hero";
-import { ServicesSection } from "@/components/sections/Services";
+import { CinematicHero } from "@/components/sections/CinematicHero";
+import { ServicesPanel } from "@/components/sections/ServicesPanel";
+import { ScrollStoryHero } from "@/components/sections/ScrollStoryHero";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
@@ -12,15 +13,28 @@ import { aiCapabilityPages, aiLocationPages } from "@/lib/servicePages";
 import { blogPosts } from "@/data/blogData";
 import { caseStudies } from "@/data/caseStudies";
 import { trackEvent } from "@/lib/analytics";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 const latestInsight = blogPosts[0];
 
+/**
+ * Flip to "story" to restore the scroll-scrubbed video hero. Kept switchable so
+ * both treatments can be compared before one is retired.
+ */
+const HERO_VARIANT: "cinematic" | "story" = "cinematic";
+
 export default function Home() {
+  const { t } = useLocale();
+  const isCinematic = HERO_VARIANT === "cinematic";
+
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div
+      className="min-h-screen bg-background font-sans text-foreground"
+      data-hero-overlay={isCinematic ? "true" : undefined}
+    >
       <Seo
-        title="AI, BI & Web App Development"
-        description="BI Solutions Group helps companies in Greece and Europe build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes."
+        title={t.home.seoTitle}
+        description={t.home.seoDescription}
         path="/"
         keywords={[
           "AI consulting Greece",
@@ -167,11 +181,19 @@ export default function Home() {
       />
       <Navbar />
       <main>
-        <Hero />
+        {isCinematic ? (
+          // The hero is sticky, so it must be scoped to a stage that ends with
+          // the panel. As a direct child of <main> its containing block is the
+          // whole page, which leaves it pinned behind every later section.
+          <div className="cinematic-hero-stage">
+            <CinematicHero />
+            <ServicesPanel />
+          </div>
+        ) : (
+          <ScrollStoryHero />
+        )}
 
-        <ServicesSection />
-
-        <section id="case-studies" className="overflow-hidden bg-black py-24 text-white scroll-mt-24">
+        <section id="case-studies" className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
             <ScrollReveal className="mb-16 max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
@@ -249,7 +271,9 @@ export default function Home() {
 
         <ReviewsSection />
 
-        <section className="bg-gray-50 py-24">
+        {/* Opaque, not translucent: a see-through section over a sticky hero
+            lets the hero bleed into the copy. */}
+        <section className="bg-[#f5f3f0] py-24">
           <div className="mx-auto max-w-7xl px-6 md:px-12">
             <ScrollReveal className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between" width="100%">
               <div className="max-w-3xl">
@@ -308,7 +332,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-white py-24">
+        <section className="bg-[#f6f3ef] py-24">
           <div className="mx-auto max-w-7xl px-6 md:px-12">
             <ScrollReveal width="100%">
               <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">

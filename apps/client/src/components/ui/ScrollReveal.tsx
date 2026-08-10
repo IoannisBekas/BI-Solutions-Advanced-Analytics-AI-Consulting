@@ -1,11 +1,5 @@
-import {
-  motion,
-  useInView,
-  useAnimation,
-  useReducedMotion,
-  Variant,
-} from "framer-motion";
-import { useRef, useEffect } from "react";
+import { motion, useInView, useReducedMotion, Variant } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -26,14 +20,18 @@ export const ScrollReveal = ({
 }: ScrollRevealProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const mainControls = useAnimation();
   const shouldReduceMotion = useReducedMotion();
 
+  // Animating starts only after hydration. Rendering the hidden state during
+  // prerendering would bake opacity:0 into the static HTML that search and AI
+  // crawlers read, hiding the very content the prerender exists to expose.
+  const [canAnimate, setCanAnimate] = useState(false);
   useEffect(() => {
-    if (isInView && !shouldReduceMotion) {
-      mainControls.start("visible");
-    }
-  }, [isInView, mainControls, shouldReduceMotion]);
+    setCanAnimate(true);
+  }, []);
+
+  const animateState =
+    canAnimate && !shouldReduceMotion && !isInView ? "hidden" : "visible";
 
   const getVariants = (): { hidden: Variant; visible: Variant } => {
     const distance = 50;
@@ -66,8 +64,10 @@ export const ScrollReveal = ({
       <motion.div
         className="h-full"
         variants={getVariants()}
-        initial={shouldReduceMotion ? "visible" : "hidden"}
-        animate={shouldReduceMotion ? "visible" : mainControls}
+        // `initial={false}` starts from the animate state, so the first client
+        // render matches the server markup exactly and hydration stays clean.
+        initial={false}
+        animate={animateState}
       >
         {children}
       </motion.div>
