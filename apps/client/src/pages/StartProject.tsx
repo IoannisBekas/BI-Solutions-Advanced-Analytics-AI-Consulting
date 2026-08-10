@@ -7,15 +7,12 @@ import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/contact";
-
-const needOptions = [
-  { value: "business-intelligence", label: "BI & dashboards" },
-  { value: "ai-automation", label: "AI & automation" },
-  { value: "data-strategy", label: "Data strategy" },
-  { value: "web-app", label: "Website or web app" },
-  { value: "product-walkthrough", label: "Product walkthrough" },
-  { value: "not-sure", label: "Not sure yet" },
-] as const;
+import {
+  projectNeedOptions,
+  projectTimingOptions,
+  resolveProjectNeed,
+  resolveProjectTiming,
+} from "@/lib/projectIntent";
 
 const serviceNeedMap: Record<string, FormValues["need"]> = {
   "business-intelligence-semantic-modeling": "business-intelligence",
@@ -31,13 +28,6 @@ const serviceNeedMap: Record<string, FormValues["need"]> = {
   "data-strategy-governance": "data-strategy",
   "website-app-development": "web-app",
 };
-
-const timingOptions = [
-  "As soon as practical",
-  "Within 1–3 months",
-  "Within 3–6 months",
-  "Exploring for later",
-] as const;
 
 const budgetOptions = [
   "Not decided yet",
@@ -96,18 +86,19 @@ export default function StartProject() {
     const product = params.get("product")?.trim().toLowerCase() || "";
     const demo = params.get("demo")?.trim().toLowerCase() || "";
     const article = params.get("article")?.trim() || "";
-    const requestedNeed =
-      params.get("need")?.trim().toLowerCase() ||
-      serviceNeedMap[service] ||
-      (product ? "product-walkthrough" : "");
-    const matchingNeed = needOptions.find(
-      (option) =>
-        option.value === requestedNeed ||
-        option.label.toLowerCase() === requestedNeed,
+    const matchingNeed = resolveProjectNeed(
+      params.get("need") ||
+        serviceNeedMap[service] ||
+        (product ? "product-walkthrough" : ""),
     );
+    const matchingTiming = resolveProjectTiming(params.get("timing"));
 
-    if (matchingNeed) {
-      setForm((current) => ({ ...current, need: matchingNeed.value }));
+    if (matchingNeed || matchingTiming) {
+      setForm((current) => ({
+        ...current,
+        need: matchingNeed?.value ?? current.need,
+        timing: matchingTiming?.label ?? current.timing,
+      }));
     }
 
     let referrer = "direct";
@@ -168,7 +159,8 @@ export default function StartProject() {
     hasTrackedValidationError.current = false;
 
     const selectedNeed =
-      needOptions.find((option) => option.value === form.need)?.label ?? form.need;
+      projectNeedOptions.find((option) => option.value === form.need)?.label ??
+      form.need;
     const message = [
       `Company: ${form.company}`,
       `Project need: ${selectedNeed}`,
@@ -391,7 +383,7 @@ export default function StartProject() {
                       <option value="" disabled>
                         Select the closest option
                       </option>
-                      {needOptions.map((option) => (
+                      {projectNeedOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
@@ -430,9 +422,9 @@ export default function StartProject() {
                         <option value="" disabled>
                           Select a timeframe
                         </option>
-                        {timingOptions.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
+                        {projectTimingOptions.map((option) => (
+                          <option key={option.value} value={option.label}>
+                            {option.label}
                           </option>
                         ))}
                       </select>
