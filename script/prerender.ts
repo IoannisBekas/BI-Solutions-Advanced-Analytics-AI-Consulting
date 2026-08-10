@@ -3,6 +3,12 @@ import { mkdir, readFile, rm, writeFile } from "fs/promises";
 import path from "path";
 import { pathToFileURL } from "url";
 import { getDeployBasePath } from "./deployBase";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  localePrefix,
+} from "../apps/client/src/i18n/config";
+import { TRANSLATED_ROUTES } from "../apps/client/src/i18n/translations";
 
 // Kept in sync with apps/client/src/components/seo/ssrHead.ts. Declared here
 // too because the SSR bundle is loaded dynamically, without type info.
@@ -14,6 +20,9 @@ interface SsrHeadData {
   canonicalUrl: string;
   imageUrl: string;
   ogType: string;
+  ogLocale: string;
+  htmlLang: string;
+  alternates?: Array<{ hreflang: string; href: string }>;
   structuredDataJson?: string;
 }
 
@@ -38,7 +47,17 @@ async function readRoutesFromSitemap() {
   const normalized = routes.map((route) =>
     route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route,
   );
-  return [...new Set(normalized)];
+
+  // Every translated route also ships under its locale prefix.
+  const localised = normalized.flatMap((route) =>
+    TRANSLATED_ROUTES.has(route)
+      ? LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
+          (locale) => `${localePrefix(locale)}${route === "/" ? "" : route}`,
+        )
+      : [],
+  );
+
+  return [...new Set([...normalized, ...localised])];
 }
 
 function escapeHtmlAttribute(value: string) {
@@ -66,7 +85,7 @@ function buildHeadBlock(head: SsrHeadData) {
   lines.push(
     `<link rel="canonical" href="${escapeHtmlAttribute(head.canonicalUrl)}" />`,
     meta("property", "og:site_name", "BI Solutions Group"),
-    meta("property", "og:locale", "en_US"),
+    meta("property", "og:locale", head.ogLocale),
     meta("property", "og:title", head.title),
     meta("property", "og:description", head.description),
     meta("property", "og:url", head.canonicalUrl),
@@ -77,6 +96,12 @@ function buildHeadBlock(head: SsrHeadData) {
     meta("name", "twitter:description", head.description),
     meta("name", "twitter:image", head.imageUrl),
   );
+
+  for (const alternate of head.alternates ?? []) {
+    lines.push(
+      `<link rel="alternate" hreflang="${escapeHtmlAttribute(alternate.hreflang)}" href="${escapeHtmlAttribute(alternate.href)}" />`,
+    );
+  }
 
   if (head.structuredDataJson) {
     lines.push(
@@ -102,6 +127,10 @@ function renderTemplate(template: string, page: PrerenderedPage) {
   if (page.head) {
     html = stripDefaultHeadTags(html);
     html = html.replace("</head>", `  ${buildHeadBlock(page.head)}\n</head>`);
+    html = html.replace(
+      /<html\s+lang="[^"]*"/i,
+      `<html lang="${escapeHtmlAttribute(page.head.htmlLang)}"`,
+    );
   }
 
   return html;

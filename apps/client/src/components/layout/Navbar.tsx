@@ -4,6 +4,8 @@ import { Link, useLocation } from "wouter";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
 import { withAssetBase, withSiteBase } from "@/lib/site";
@@ -57,6 +59,7 @@ export function Navbar() {
   const [openMobileSection, setOpenMobileSection] =
     useState<DropdownName | null>(null);
   const [location] = useLocation();
+  const { t } = useLocale();
   const desktopNavRef = useRef<HTMLElement>(null);
   const mobileDialogRef = useRef<HTMLDivElement>(null);
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
@@ -246,7 +249,7 @@ export function Navbar() {
                         aria-expanded={openMobileSection === "services"}
                         aria-controls="mobile-services-links"
                       >
-                        Services
+                        {t.nav.services}
                         <ChevronDown
                           aria-hidden="true"
                           className={cn(
@@ -321,6 +324,7 @@ export function Navbar() {
                 </nav>
 
                 <div className="border-t border-gray-100 bg-white px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4">
+                  <LanguageSwitcher className="mb-4 justify-center" />
                   <Button asChild className="h-12 w-full rounded-full text-base">
                     <Link
                       href={START_PROJECT_PATH}
@@ -346,6 +350,7 @@ export function Navbar() {
     <>
       <header
         data-site-header
+        data-transparent={isScrolled ? "false" : "true"}
         className={cn(
           "fixed left-0 right-0 top-0 z-50 px-6 transition-all duration-300 ease-in-out md:px-12",
           isScrolled
@@ -397,7 +402,7 @@ export function Navbar() {
                 aria-expanded={openDesktopMenu === "services"}
                 aria-controls="desktop-services-panel"
               >
-                Services
+                {t.nav.services}
                 <ChevronDown
                   aria-hidden="true"
                   className={cn(
@@ -459,13 +464,13 @@ export function Navbar() {
                 trackNavClick("Case Studies", "/#case-studies", "header")
               }
             >
-              Case Studies
+              {t.nav.caseStudies}
               <span className="absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full" />
             </a>
 
             {[
-              { name: "Insights", href: "/blog" },
-              { name: "About", href: "/about" },
+              { name: t.nav.insights, href: "/blog" },
+              { name: t.nav.about, href: "/about" },
             ].map((item) => {
               const isActive =
                 location === item.href ||
@@ -494,6 +499,8 @@ export function Navbar() {
               );
             })}
 
+            <LanguageSwitcher />
+
             <Button
               asChild
               className="h-11 rounded-full bg-black px-5 text-white transition-all hover:scale-[1.02] hover:bg-gray-800"
@@ -508,7 +515,7 @@ export function Navbar() {
                   )
                 }
               >
-                Start a project
+                {t.nav.startProject}
               </Link>
             </Button>
           </nav>

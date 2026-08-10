@@ -1,5 +1,15 @@
 import { useContext, useEffect } from "react";
 import { SsrHeadContext } from "./ssrHead";
+import { useLocale } from "@/i18n/LocaleProvider";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  LOCALE_TAGS,
+  localePrefix,
+  splitLocaleFromPath,
+  type Locale,
+} from "@/i18n/config";
+import { TRANSLATED_ROUTES } from "@/i18n/translations";
 
 const SITE_NAME = "BI Solutions Group";
 const SITE_URL = "https://www.bisolutions.group";
@@ -56,6 +66,53 @@ function setCanonicalLink(href: string) {
   link.setAttribute("href", href);
 }
 
+function setAlternateLinks(alternates: Array<{ hreflang: string; href: string }>) {
+  document.head
+    .querySelectorAll('link[rel="alternate"][data-seo-alternate]')
+    .forEach((link) => link.remove());
+
+  for (const alternate of alternates) {
+    const link = document.createElement("link");
+    link.setAttribute("rel", "alternate");
+    link.setAttribute("hreflang", alternate.hreflang);
+    link.setAttribute("href", alternate.href);
+    link.setAttribute("data-seo-alternate", "");
+    document.head.appendChild(link);
+  }
+}
+
+/**
+ * Untranslated routes reached under a locale prefix (e.g. /el/services) serve
+ * the English page, so they must canonicalise to the English URL rather than
+ * claim to be a separate page.
+ */
+function canonicalFor(routePath: string, locale: Locale) {
+  const prefix = TRANSLATED_ROUTES.has(routePath)
+    ? localePrefix(locale)
+    : localePrefix(DEFAULT_LOCALE);
+
+  return toAbsoluteUrl(`${prefix}${routePath === "/" ? "/" : routePath}`);
+}
+
+/**
+ * Only routes with genuine translations advertise alternates — pointing search
+ * engines at untranslated duplicates is worse than staying silent.
+ */
+function buildAlternates(routePath: string) {
+  if (!TRANSLATED_ROUTES.has(routePath)) return [];
+
+  const urlFor = (prefix: string) =>
+    `${SITE_URL}${prefix}${routePath === "/" ? "/" : routePath}`;
+
+  return [
+    ...LOCALES.map((candidate) => ({
+      hreflang: LOCALE_TAGS[candidate],
+      href: urlFor(localePrefix(candidate)),
+    })),
+    { hreflang: "x-default", href: urlFor(localePrefix(DEFAULT_LOCALE)) },
+  ];
+}
+
 export function Seo({
   title,
   description,
@@ -67,10 +124,12 @@ export function Seo({
   structuredData,
 }: SeoProps) {
   const ssrHead = useContext(SsrHeadContext);
+  const { locale } = useLocale();
 
   useEffect(() => {
     const pageTitle = `${title} | ${SITE_NAME}`;
-    const canonicalUrl = toAbsoluteUrl(path ?? window.location.pathname);
+    const routePath = path ?? splitLocaleFromPath(window.location.pathname).path;
+    const canonicalUrl = canonicalFor(routePath, locale);
     const imageUrl = toAbsoluteUrl(image);
     const structuredDataId = "seo-structured-data";
 
@@ -82,7 +141,7 @@ export function Seo({
       setMetaTag("name", "keywords", keywords.join(", "));
     }
     setMetaTag("property", "og:site_name", SITE_NAME);
-    setMetaTag("property", "og:locale", "en_US");
+    setMetaTag("property", "og:locale", LOCALE_TAGS[locale].replace("-", "_"));
     setMetaTag("property", "og:title", pageTitle);
     setMetaTag("property", "og:description", description);
     setMetaTag("property", "og:url", canonicalUrl);
@@ -93,6 +152,7 @@ export function Seo({
     setMetaTag("name", "twitter:description", description);
     setMetaTag("name", "twitter:image", imageUrl);
     setCanonicalLink(canonicalUrl);
+    setAlternateLinks(buildAlternates(routePath));
 
     const existingScript = document.getElementById(structuredDataId);
     if (existingScript) {
@@ -113,19 +173,34 @@ export function Seo({
         staleScript.remove();
       }
     };
-  }, [description, image, keywords, path, robots, structuredData, title, type]);
+  }, [
+    description,
+    image,
+    keywords,
+    locale,
+    path,
+    robots,
+    structuredData,
+    title,
+    type,
+  ]);
 
   // Effects never run during build-time prerendering, so hand the head
   // values to the collector for the prerender script to inject statically.
   if (ssrHead) {
+    const routePath = path ?? splitLocaleFromPath(ssrHead.pagePath).path;
+
     ssrHead.head = {
       title: `${title} | ${SITE_NAME}`,
       description,
       robots,
       keywords: keywords && keywords.length > 0 ? keywords.join(", ") : undefined,
-      canonicalUrl: toAbsoluteUrl(path ?? ssrHead.pagePath),
+      canonicalUrl: canonicalFor(routePath, locale),
       imageUrl: toAbsoluteUrl(image),
       ogType: type,
+      ogLocale: LOCALE_TAGS[locale].replace("-", "_"),
+      htmlLang: LOCALE_TAGS[locale],
+      alternates: buildAlternates(routePath),
       structuredDataJson: structuredData ? JSON.stringify(structuredData) : undefined,
     };
   }

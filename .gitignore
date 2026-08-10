@@ -14,6 +14,13 @@ output/
 outputs/
 output_*
 
+# Hero video sources (~430 MB). The posters are committed and are all the
+# cinematic hero needs; the mp4 sets stay local to keep the repo clone-able.
+apps/client/public/scroll-world/
+apps/client/public/scroll-world-v2/
+apps/client/public/scroll-world-v3/
+apps/client/public/scroll-world-v4/video/
+
 # Runtime data & caches
 data/
 !apps/client/src/data/

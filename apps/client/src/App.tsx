@@ -9,6 +9,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SITE_BASE_PATH } from "@/lib/site";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
+import { localePrefix, splitLocaleFromPath, type Locale } from "@/i18n/config";
 // Eagerly load the landing page for instant first paint
 import Home from "@/pages/Home";
 
@@ -29,15 +31,33 @@ interface AppProps {
   ssrPath?: string;
 }
 
+/** Strips the deploy base so the locale prefix can be read from the route. */
+function routePathname(ssrPath?: string) {
+  const pathname =
+    ssrPath ?? (typeof window === "undefined" ? "/" : window.location.pathname);
+
+  if (SITE_BASE_PATH && pathname.startsWith(SITE_BASE_PATH)) {
+    return pathname.slice(SITE_BASE_PATH.length) || "/";
+  }
+
+  return pathname;
+}
+
 function App({ ssrPath }: AppProps = {}) {
+  // Switching language is a full page load, so reading the locale once here is
+  // enough — every in-app link stays inside the router's locale-aware base.
+  const { locale } = splitLocaleFromPath(routePathname(ssrPath));
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Router ssrPath={ssrPath} />
-          <CookieConsent />
-        </TooltipProvider>
+        <LocaleProvider locale={locale}>
+          <TooltipProvider>
+            <Toaster />
+            <Router ssrPath={ssrPath} locale={locale} />
+            <CookieConsent />
+          </TooltipProvider>
+        </LocaleProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
@@ -51,9 +71,13 @@ function PageFallback() {
   );
 }
 
-function Router({ ssrPath }: { ssrPath?: string }) {
+function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
   return (
-    <WouterRouter hook={useBrowserLocation} base={SITE_BASE_PATH} ssrPath={ssrPath}>
+    <WouterRouter
+      hook={useBrowserLocation}
+      base={`${SITE_BASE_PATH}${localePrefix(locale)}`}
+      ssrPath={ssrPath}
+    >
       {/* Uses wouter's useLocation, so it must live inside the router —
           outside it would fall back to a default router without ssrPath
           and crash build-time prerendering. */}

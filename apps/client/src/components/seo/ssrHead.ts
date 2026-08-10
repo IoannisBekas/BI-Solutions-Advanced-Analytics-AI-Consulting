@@ -8,6 +8,9 @@ export interface SsrHeadData {
   canonicalUrl: string;
   imageUrl: string;
   ogType: "website" | "article";
+  ogLocale: string;
+  htmlLang: string;
+  alternates?: Array<{ hreflang: string; href: string }>;
   structuredDataJson?: string;
 }
 
