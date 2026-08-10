@@ -26,6 +26,12 @@
       "runtimeExecutable": "cmd",
       "runtimeArgs": ["/c", "cd apps/quantus && npx vite --port 4500"],
       "port": 4500
+    },
+    {
+      "name": "site-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["./node_modules/vite/bin/vite.js", "preview", "--port", "5183", "--strictPort"],
+      "port": 5183
     }
   ]
 }

@@ -83,7 +83,9 @@
       "Bash(\"tsx\")",
       "Bash(\"node\")",
       "Bash(tsconfig)",
-      "Bash(node -e \"const p = require\\(''./package.json''\\); console.log\\(Object.keys\\(p.dependencies || {}\\).filter\\(d => [''express'',''cors'',''dotenv'',''helmet'',''express-rate-limit'',''jsonwebtoken'',''@google/genai''].includes\\(d\\)\\)\\)\")"
+      "Bash(node -e \"const p = require\\(''./package.json''\\); console.log\\(Object.keys\\(p.dependencies || {}\\).filter\\(d => [''express'',''cors'',''dotenv'',''helmet'',''express-rate-limit'',''jsonwebtoken'',''@google/genai''].includes\\(d\\)\\)\\)\")",
+      "PowerShell(git ls-files | Select-Object -First 200 | ForEach-Object { $_.Split\\('/'\\)[0] } | Group-Object | Sort-Object Count -Descending | Select-Object Count, Name)",
+      "PowerShell(git ls-files | ForEach-Object { $_.Split\\('/'\\)[0] } | Group-Object | Sort-Object Count -Descending | Select-Object Count, Name)"
     ]
   }
 }
