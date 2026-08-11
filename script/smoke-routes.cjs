@@ -6,7 +6,7 @@ const publicRoutes = [
   {
     path: "/",
     title: "AI, BI & Web App Development",
-    body: "Turn complex data into",
+    body: "Clarity from complexity",
     absent: [
       "AI Products",
       "How engagements work",
