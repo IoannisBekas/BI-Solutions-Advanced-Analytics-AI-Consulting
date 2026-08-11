@@ -1,7 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { CinematicHero } from "@/components/sections/CinematicHero";
 import { ServicesPanel } from "@/components/sections/ServicesPanel";
-import { ScrollStoryHero } from "@/components/sections/ScrollStoryHero";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
@@ -17,20 +16,13 @@ import { useLocale } from "@/i18n/LocaleProvider";
 
 const latestInsight = blogPosts[0];
 
-/**
- * Flip to "story" to restore the scroll-scrubbed video hero. Kept switchable so
- * both treatments can be compared before one is retired.
- */
-const HERO_VARIANT: "cinematic" | "story" = "cinematic";
-
 export default function Home() {
   const { t } = useLocale();
-  const isCinematic = HERO_VARIANT === "cinematic";
 
   return (
     <div
       className="min-h-screen bg-background font-sans text-foreground"
-      data-hero-overlay={isCinematic ? "true" : undefined}
+      data-hero-overlay="true"
     >
       <Seo
         title={t.home.seoTitle}
@@ -181,17 +173,13 @@ export default function Home() {
       />
       <Navbar />
       <main>
-        {isCinematic ? (
-          // The hero is sticky, so it must be scoped to a stage that ends with
-          // the panel. As a direct child of <main> its containing block is the
-          // whole page, which leaves it pinned behind every later section.
-          <div className="cinematic-hero-stage">
-            <CinematicHero />
-            <ServicesPanel />
-          </div>
-        ) : (
-          <ScrollStoryHero />
-        )}
+        {/* The hero is sticky, so it must be scoped to a stage that ends with
+            the panel. As a direct child of <main> its containing block is the
+            whole page, which leaves it pinned behind every later section. */}
+        <div className="cinematic-hero-stage">
+          <CinematicHero />
+          <ServicesPanel />
+        </div>
 
         <section id="case-studies" className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
