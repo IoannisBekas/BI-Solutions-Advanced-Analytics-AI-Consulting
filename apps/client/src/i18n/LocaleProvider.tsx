@@ -9,9 +9,11 @@ import {
 import {
   DEFAULT_LOCALE,
   LOCALE_TAGS,
+  localePrefix,
   type Locale,
 } from "./config";
 import { catalogues, type TranslationCatalogue } from "./translations";
+import { withSiteBase } from "@/lib/site";
 
 interface LocaleContextValue {
   locale: Locale;
@@ -71,4 +73,15 @@ export function LocaleProvider({
 
 export function useLocale() {
   return useContext(LocaleContext);
+}
+
+/**
+ * Href builder for raw <a> tags (anchors, hash links) that must stay inside
+ * the active locale. Router <Link>s get the locale from the router base, but
+ * plain anchors bypass it — linking "/#case-studies" from /el/ would silently
+ * drop the visitor back to the English homepage.
+ */
+export function useLocalizedHref() {
+  const { locale } = useLocale();
+  return (path: string) => withSiteBase(`${localePrefix(locale)}${path}`);
 }

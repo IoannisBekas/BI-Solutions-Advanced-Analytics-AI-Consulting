@@ -8,11 +8,12 @@ import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { getCaseStudyBySlug } from "@/data/caseStudies";
 import { trackEvent } from "@/lib/analytics";
-import { withSiteBase } from "@/lib/site";
+import { useLocalizedHref } from "@/i18n/LocaleProvider";
 import NotFound from "@/pages/NotFound";
 
 export default function CaseStudyDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const localizedHref = useLocalizedHref();
   const caseStudy = slug ? getCaseStudyBySlug(slug) : undefined;
 
   if (!caseStudy) {
@@ -69,7 +70,7 @@ export default function CaseStudyDetail() {
               </Link>
               <span aria-hidden="true">/</span>
               <a
-                href={withSiteBase("/#case-studies")}
+                href={localizedHref("/#case-studies")}
                 className="transition-colors hover:text-gray-950"
               >
                 Case Studies

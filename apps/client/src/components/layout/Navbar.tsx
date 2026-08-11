@@ -5,10 +5,10 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import { trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
-import { withAssetBase, withSiteBase } from "@/lib/site";
+import { withAssetBase } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type DropdownName = "services";
@@ -60,6 +60,7 @@ export function Navbar() {
     useState<DropdownName | null>(null);
   const [location] = useLocation();
   const { t } = useLocale();
+  const localizedHref = useLocalizedHref();
   const desktopNavRef = useRef<HTMLElement>(null);
   const mobileDialogRef = useRef<HTMLDivElement>(null);
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
@@ -292,7 +293,7 @@ export function Navbar() {
                     </div>
 
                     <a
-                      href={withSiteBase("/#case-studies")}
+                      href={localizedHref("/#case-studies")}
                       className="block min-h-14 py-4 text-2xl font-bold font-heading"
                       onClick={() =>
                         handleNavClick(
@@ -458,7 +459,7 @@ export function Navbar() {
             </div>
 
             <a
-              href={withSiteBase("/#case-studies")}
+              href={localizedHref("/#case-studies")}
               className="group relative flex min-h-11 items-center text-sm font-medium text-gray-500 transition-colors hover:text-black"
               onClick={() =>
                 trackNavClick("Case Studies", "/#case-studies", "header")

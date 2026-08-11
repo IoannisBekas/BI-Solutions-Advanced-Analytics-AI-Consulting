@@ -6,8 +6,8 @@ import {
   CONTACT_MAILTO,
   START_PROJECT_PATH,
 } from "@/lib/contact";
-import { withAssetBase, withSiteBase } from "@/lib/site";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { withAssetBase } from "@/lib/site";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
 /** Service slugs whose footer labels come from the locale catalogue. */
 const serviceSlugs = [
@@ -26,6 +26,7 @@ const serviceFallbackLabels: Record<string, string> = {
 
 export function Footer() {
   const { t } = useLocale();
+  const localizedHref = useLocalizedHref();
 
   const serviceLinks = [
     { label: t.footer.servicesOverview, href: "/services" },
@@ -140,7 +141,7 @@ export function Footer() {
             <ul className="space-y-4 text-sm">
               <li>
                 <a
-                  href={withSiteBase("/#case-studies")}
+                  href={localizedHref("/#case-studies")}
                   className="text-gray-400 transition-colors hover:text-white"
                   onClick={() =>
                     trackNavClick("Case Studies", "/#case-studies", "footer")

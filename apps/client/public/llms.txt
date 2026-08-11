@@ -3,6 +3,8 @@
 BI Solutions Group is an AI consulting, analytics, business intelligence, data strategy, and web app development consultancy. It helps organizations move from AI strategy and readiness through implementation, governance, adoption, and production operations, serving companies in Greece and across Europe.
 
 Primary website: https://www.bisolutions.group/
+Greek homepage: https://www.bisolutions.group/el/
+German homepage: https://www.bisolutions.group/de/
 Contact email: BekasYannis@gmail.com
 LinkedIn: https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/
 GitHub: https://github.com/IoannisBekas
