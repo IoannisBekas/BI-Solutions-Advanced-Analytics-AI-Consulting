@@ -14,7 +14,7 @@ const resourceLinks = [
 ];
 
 const ecosystemLinks = [
-  { label: 'Contact BI Solutions', href: 'mailto:BekasYannis@gmail.com' },
+  { label: 'Contact BI Solutions', href: 'mailto:contact@bisolutions.group' },
   { label: 'BI Solutions Group', href: 'https://www.bisolutions.group/' },
 ];
 

@@ -7,6 +7,7 @@ import { Mail, Linkedin, MapPin, Download, Github } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { CONTACT_MAILTO } from "@/lib/contact";
 
 interface Section {
   id: string;
@@ -155,7 +156,7 @@ export default function About() {
                   <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors">
                     <Github className="w-5 h-5" />
                   </a>
-                  <a href="mailto:Bekas.Ioannis.1996@gmail.com" className="text-gray-400 hover:text-black transition-colors">
+                  <a href={CONTACT_MAILTO} className="text-gray-400 hover:text-black transition-colors">
                     <Mail className="w-5 h-5" />
                   </a>
                 </div>

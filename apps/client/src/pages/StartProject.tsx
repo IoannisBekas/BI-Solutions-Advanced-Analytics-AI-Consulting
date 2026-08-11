@@ -50,6 +50,18 @@ type FormValues = {
 
 type SubmissionStatus = "idle" | "submitting" | "success" | "error";
 
+/**
+ * Where the brief is posted.
+ *
+ * The site is served as static files, so the bundled Express route at
+ * /api/contact only exists when the server is deployed too — on static hosting
+ * it answers 403 and every submission fails. Setting VITE_CONTACT_ENDPOINT to a
+ * form service (Formspree, Web3Forms) points submissions at that instead, with
+ * no code change. Both accept this JSON shape.
+ */
+const CONTACT_ENDPOINT =
+  import.meta.env.VITE_CONTACT_ENDPOINT || "/api/contact";
+
 const initialFormValues: FormValues = {
   name: "",
   email: "",
@@ -178,9 +190,12 @@ export default function StartProject() {
     ].join("\n");
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
           name: form.name,
           email: form.email,

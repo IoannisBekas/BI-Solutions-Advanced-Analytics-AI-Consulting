@@ -5,8 +5,10 @@ function getResendApiKey() {
   return (process.env.RESEND_API_KEY || "").trim();
 }
 
+// No default: the destination mailbox is deployment configuration, not source.
+// Hardcoding it published a personal address in a public repository.
 function getContactRecipient() {
-  return (process.env.CONTACT_RECIPIENT_EMAIL || "BekasYannis@gmail.com").trim();
+  return (process.env.CONTACT_RECIPIENT_EMAIL || "").trim();
 }
 
 function getContactFromEmail() {
@@ -35,7 +37,7 @@ export function registerContactRoute(app: Express) {
     const recipient = getContactRecipient();
     const fromEmail = getContactFromEmail();
 
-    if (!apiKey) {
+    if (!apiKey || !recipient) {
       res.status(500).json({ message: "Contact form is not configured on the server." });
       return;
     }
