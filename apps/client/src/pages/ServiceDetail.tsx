@@ -456,9 +456,11 @@ export default function ServiceDetail() {
   const proof = relatedProofMap[service.slug];
   const faqItems = serviceSpecificFaqs[service.slug] || (isAiService ? aiFaqs : generalFaqs);
   const startProjectPath = `/start-a-project?service=${encodeURIComponent(service.slug)}`;
+  const techStack = service.techStack ?? [];
+  const fitLabels = ["Decision friction", "Operating constraint", "Scale blocker"];
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div data-hero-overlay className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
       <Seo
         title={service.seoTitle}
         description={service.seoDescription}
@@ -468,114 +470,171 @@ export default function ServiceDetail() {
       />
       <Navbar />
 
-      <main className="pt-32 pb-20">
-        <nav
-          aria-label="Breadcrumb"
-          className="mx-auto mb-8 max-w-7xl px-6 text-sm text-gray-600 md:px-12"
-        >
-          <ol className="flex flex-wrap items-center gap-2">
-            <li>
-              <Link href="/" className="hover:text-black hover:underline">
-                Home
-              </Link>
-            </li>
-            <li aria-hidden="true" className="text-gray-400">/</li>
-            <li>
-              <Link href="/services" className="hover:text-black hover:underline">
-                Services
-              </Link>
-            </li>
-            <li aria-hidden="true" className="text-gray-400">/</li>
-            <li aria-current="page" className="font-medium text-gray-950">
-              {service.shortTitle}
-            </li>
-          </ol>
-        </nav>
+      <main className="pb-20">
+        <section className="relative isolate overflow-hidden bg-[#050609] pt-28 text-white">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 opacity-25"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)",
+              backgroundSize: "72px 72px",
+              maskImage: "linear-gradient(to bottom, black, transparent 85%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -right-32 top-20 h-[32rem] w-[32rem] rounded-full bg-white/[0.08] blur-[120px]"
+          />
 
-        <PublicPageHero
-          icon={Icon}
-          eyebrow={service.heroEyebrow}
-          title={service.heroTitle}
-          description={service.heroDescription}
-          actions={
-            <>
-              <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
-                <Link href={startProjectPath}>
-                  Ask about {service.shortTitle}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              {proof ? (
-                <Button asChild variant="outline" className="rounded-full border-gray-300 px-8">
-                  <Link href={proof.path}>See a relevant result</Link>
-                </Button>
-              ) : (
-                <Button asChild variant="outline" className="rounded-full border-gray-300 px-8">
-                  <a href="#service-fit">See when this service fits</a>
-                </Button>
-              )}
-            </>
-          }
-          footer={
-            <div>
-              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Engagement fit
-              </p>
-              <div className="grid gap-4 md:grid-cols-3">
-                {service.metrics.map((metric) => (
-                  <div
-                    key={metric.label}
-                    className="rounded-2xl border border-gray-200 bg-gray-50 px-5 py-5"
-                  >
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
-                      {metric.label}
-                    </p>
-                    <p className="mt-3 text-base font-medium leading-relaxed text-gray-800">
-                      {metric.value}
-                    </p>
+          <div className="relative mx-auto max-w-7xl px-6 md:px-12">
+            <nav aria-label="Breadcrumb" className="border-b border-white/10 py-6 text-sm text-white/55">
+              <ol className="flex flex-wrap items-center gap-2">
+                <li>
+                  <Link href="/" className="transition-colors hover:text-white">
+                    Home
+                  </Link>
+                </li>
+                <li aria-hidden="true" className="text-white/25">/</li>
+                <li>
+                  <Link href="/services" className="transition-colors hover:text-white">
+                    Services
+                  </Link>
+                </li>
+                <li aria-hidden="true" className="text-white/25">/</li>
+                <li aria-current="page" className="font-medium text-white">
+                  {service.shortTitle}
+                </li>
+              </ol>
+            </nav>
+
+            <div className="grid gap-12 py-16 md:py-24 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end">
+              <ScrollReveal width="100%">
+                <div>
+                  <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white">
+                      <Icon className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    {service.heroEyebrow}
                   </div>
-                ))}
-              </div>
-            </div>
-          }
-        />
-
-        <section id="service-fit" className="scroll-mt-28 mx-auto max-w-7xl px-6 md:px-12">
-          <ScrollReveal className="max-w-3xl" width="100%">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
-              When this service fits
-            </p>
-            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-              Start here when these problems look familiar.
-            </h2>
-          </ScrollReveal>
-
-          <div className="mt-10 grid auto-rows-fr gap-6 lg:grid-cols-3">
-            {service.useCases.map((useCase, index) => (
-              <ScrollReveal key={useCase} delay={index * 0.08} width="100%">
-                <article className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 px-6 py-7">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
-                    Signal {index + 1}
+                  <h1 className="mt-7 max-w-5xl font-heading text-[clamp(3.2rem,7vw,6.8rem)] font-bold leading-[0.91] tracking-[-0.055em] text-[#f4f1eb]">
+                    {service.heroTitle}
+                  </h1>
+                  <p className="mt-8 max-w-3xl text-lg leading-relaxed text-white/65 md:text-xl">
+                    {service.heroDescription}
                   </p>
-                  <p className="mt-4 text-base leading-relaxed text-gray-700">
-                    {useCase}
-                  </p>
-                </article>
+
+                  {techStack.length > 0 && (
+                    <div className="mt-8 flex flex-wrap gap-2" aria-label="Technology stack">
+                      {techStack.map((technology) => (
+                        <span
+                          key={technology}
+                          className="rounded-full border border-white/15 bg-white/[0.05] px-4 py-2 text-xs font-semibold text-white/75 backdrop-blur-sm"
+                        >
+                          {technology}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <Button asChild className="h-12 rounded-full bg-[#f4f1eb] px-7 text-black hover:bg-white">
+                      <Link href={startProjectPath}>
+                        Discuss this service
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                    {proof ? (
+                      <Button
+                        asChild
+                        variant="outline"
+                        className="h-12 rounded-full border-white/20 bg-transparent px-7 text-white hover:bg-white/10 hover:text-white"
+                      >
+                        <Link href={proof.path}>See a relevant result</Link>
+                      </Button>
+                    ) : (
+                      <Button
+                        asChild
+                        variant="outline"
+                        className="h-12 rounded-full border-white/20 bg-transparent px-7 text-white hover:bg-white/10 hover:text-white"
+                      >
+                        <a href="#service-fit">See when this service fits</a>
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </ScrollReveal>
-            ))}
+
+              <ScrollReveal width="100%" delay={0.08}>
+                <div className="grid overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] backdrop-blur-md">
+                  {service.metrics.map((metric, index) => (
+                    <div
+                      key={metric.label}
+                      className={`px-6 py-6 ${index > 0 ? "border-t border-white/10" : ""}`}
+                    >
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-white/40">
+                        {metric.label}
+                      </p>
+                      <p className="mt-2 text-base font-medium leading-relaxed text-white/85">
+                        {metric.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
+
+        <section id="service-fit" className="scroll-mt-28 bg-[#f3f0ea] py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-6 md:px-12">
+            <ScrollReveal className="max-w-3xl" width="100%">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+                Where the pressure appears
+              </p>
+              <h2 className="mt-4 font-heading text-4xl font-bold tracking-[-0.04em] text-gray-950 md:text-6xl">
+                Start where the operating friction is real.
+              </h2>
+            </ScrollReveal>
+
+            <div className="mt-12 grid auto-rows-fr gap-5 lg:grid-cols-3">
+              {service.useCases.map((useCase, index) => (
+                <ScrollReveal key={useCase} delay={index * 0.08} width="100%">
+                  <article
+                    className={`flex h-full min-h-72 flex-col justify-between rounded-[2rem] border p-7 md:p-8 ${
+                      index === 0
+                        ? "border-black bg-[#090b0f] text-white shadow-2xl shadow-black/10"
+                        : "border-black/10 bg-[#faf9f6] text-gray-950"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${index === 0 ? "text-white/45" : "text-gray-500"}`}>
+                        {fitLabels[index] ?? "Delivery barrier"}
+                      </p>
+                      <span className={`font-mono text-xs ${index === 0 ? "text-white/40" : "text-gray-400"}`}>
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <p className={`mt-12 text-xl font-medium leading-snug ${index === 0 ? "text-white/90" : "text-gray-800"}`}>
+                      {useCase}
+                    </p>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </section>
 
         {proof && (
-          <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+          <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
             <ScrollReveal width="100%">
               <Link href={proof.path} className="group block">
-                <article className="grid gap-7 rounded-[2rem] bg-gray-950 px-7 py-9 text-white transition-transform hover:-translate-y-1 md:px-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_auto] lg:items-center">
+                <article className="grid gap-7 overflow-hidden rounded-[2rem] border border-black/10 bg-[#d9d5cc] px-7 py-9 text-gray-950 transition-transform hover:-translate-y-1 md:px-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)_auto] lg:items-center">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">
                       Relevant case study
                     </p>
-                    <p className="mt-3 text-xs leading-relaxed text-gray-400">
+                    <p className="mt-3 text-xs leading-relaxed text-gray-600">
                       {proof.label}
                     </p>
                   </div>
@@ -583,7 +642,7 @@ export default function ServiceDetail() {
                     <h2 className="text-2xl font-bold font-heading tracking-tight md:text-3xl">
                       {proof.title}
                     </h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-300">
+                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-700">
                       {proof.description}
                     </p>
                   </div>
@@ -597,50 +656,84 @@ export default function ServiceDetail() {
           </section>
         )}
 
-        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
-          <ScrollReveal className="max-w-3xl" width="100%">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
-              Expected outcomes
-            </p>
-            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-              What {formatInlineServiceName(service.shortTitle)} is designed to improve.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              These are intended engagement outcomes, not performance claims.
-              The exact success measures are agreed against the current system,
-              users, and business decision before delivery begins.
-            </p>
-          </ScrollReveal>
-
-          <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2">
-            {service.outcomes.map((outcome, index) => (
-              <ScrollReveal key={outcome} delay={index * 0.06} width="100%">
-                <article className="h-full rounded-[2rem] border border-gray-200 bg-white p-6 shadow-xl shadow-black/[0.04]">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black text-white shadow-lg shadow-black/10">
-                    <CheckCircle2 className="h-5 w-5" />
-                  </div>
-                  <p className="mt-5 text-base leading-relaxed text-gray-700">
-                    {outcome}
+        <section className="mt-24 bg-[#07090d] py-20 text-white md:py-28">
+          <div className="mx-auto max-w-7xl px-6 md:px-12">
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-20">
+              <ScrollReveal width="100%">
+                <div className="lg:sticky lg:top-32">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
+                    Expected outcomes
                   </p>
-                </article>
+                  <h2 className="mt-4 font-heading text-4xl font-bold tracking-[-0.04em] text-[#f4f1eb] md:text-6xl">
+                    Make the system easier to trust, use, and improve.
+                  </h2>
+                  <p className="mt-5 text-base leading-relaxed text-white/55">
+                    Success measures are agreed against the current system, users, and business decision before delivery begins.
+                  </p>
+                </div>
               </ScrollReveal>
-            ))}
+
+              <div className="grid auto-rows-fr gap-4 md:grid-cols-2">
+                {service.outcomes.map((outcome, index) => (
+                  <ScrollReveal key={outcome} delay={index * 0.06} width="100%">
+                    <article className="h-full rounded-[1.75rem] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-sm">
+                      <div className="flex items-center justify-between">
+                        <CheckCircle2 className="h-5 w-5 text-white/70" aria-hidden="true" />
+                        <span className="font-mono text-xs text-white/25">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                      <p className="mt-8 text-base leading-relaxed text-white/75">
+                        {outcome}
+                      </p>
+                    </article>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto mt-16 grid max-w-7xl gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        {techStack.length > 0 && (
+          <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
+            <ScrollReveal width="100%">
+              <div className="grid gap-8 rounded-[2rem] border border-black/10 bg-[#e5e1d9] p-8 md:p-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:items-center">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+                    Technology choices
+                  </p>
+                  <h2 className="mt-3 font-heading text-3xl font-bold tracking-[-0.035em] text-gray-950 md:text-4xl">
+                    The stack follows the operating problem.
+                  </h2>
+                </div>
+                <div className="flex flex-wrap gap-2 lg:justify-end">
+                  {techStack.map((technology) => (
+                    <span
+                      key={technology}
+                      className="rounded-full border border-black/10 bg-[#faf9f6] px-4 py-2 text-sm font-semibold text-gray-800"
+                    >
+                      {technology}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          </section>
+        )}
+
+        <section className="mx-auto mt-20 grid max-w-7xl gap-6 px-6 md:px-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <ScrollReveal width="100%">
-            <div className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+            <div className="h-full rounded-[2rem] border border-black/10 bg-[#faf9f6] p-8 md:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
                 Concrete deliverables
               </p>
-              <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight text-gray-950">
-                What the engagement can include
+              <h2 className="mt-4 font-heading text-3xl font-bold tracking-[-0.035em] text-gray-950 md:text-4xl">
+                What moves from idea to delivered system
               </h2>
               <ul className="mt-6 space-y-4">
                 {service.items.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-gray-700">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+                  <li key={item} className="flex gap-3 border-t border-black/10 pt-4 text-sm leading-relaxed text-gray-700 first:border-t-0 first:pt-0">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -649,20 +742,20 @@ export default function ServiceDetail() {
           </ScrollReveal>
 
           <ScrollReveal width="100%" delay={0.08}>
-            <div className="h-full rounded-[2rem] border border-gray-200 bg-white p-8 shadow-xl shadow-black/[0.04]">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+            <div className="h-full rounded-[2rem] bg-[#0a0c10] p-8 text-white shadow-2xl shadow-black/10 md:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
                 Delivery approach
               </p>
-              <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight text-gray-950">
-                How the work usually moves
+              <h2 className="mt-4 font-heading text-3xl font-bold tracking-[-0.035em] text-[#f4f1eb] md:text-4xl">
+                A controlled route from diagnosis to handoff
               </h2>
               <div className="mt-6 space-y-5">
                 {service.delivery.map((item, index) => (
-                  <div key={item} className="flex gap-4">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-950 text-sm font-semibold text-white">
-                      {index + 1}
+                  <div key={item} className="grid grid-cols-[3rem_1fr] gap-4 border-t border-white/10 pt-5 first:border-t-0 first:pt-0">
+                    <div className="font-mono text-sm font-semibold text-white/40">
+                      {String(index + 1).padStart(2, "0")}
                     </div>
-                    <p className="pt-1 text-sm leading-relaxed text-gray-700">
+                    <p className="text-sm leading-relaxed text-white/70">
                       {item}
                     </p>
                   </div>
@@ -672,21 +765,24 @@ export default function ServiceDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+        <section className="mx-auto mt-24 max-w-7xl px-6 md:px-12">
           <ScrollReveal className="max-w-3xl" width="100%">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
               Frequently asked questions
             </p>
-            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-              What teams usually need to know before starting.
+            <h2 className="mt-4 font-heading text-4xl font-bold tracking-[-0.04em] text-gray-950 md:text-6xl">
+              Clear answers before the work begins.
             </h2>
           </ScrollReveal>
 
-          <div className="mt-10 grid auto-rows-fr gap-5 lg:grid-cols-3">
+          <div className="mt-10 grid auto-rows-fr gap-4 lg:grid-cols-3">
             {faqItems.map((item, index) => (
               <ScrollReveal key={item.question} delay={index * 0.06} width="100%">
-                <article className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 px-6 py-7">
-                  <h3 className="text-lg font-bold leading-snug text-gray-950">
+                <article className="h-full rounded-[1.75rem] border border-black/10 bg-[#faf9f6] px-6 py-7">
+                  <p className="font-mono text-xs text-gray-400">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-6 text-lg font-bold leading-snug text-gray-950">
                     {item.question}
                   </h3>
                   <p className="mt-4 text-sm leading-relaxed text-gray-600">
@@ -699,12 +795,12 @@ export default function ServiceDetail() {
         </section>
 
         {relatedResources.length > 0 && (
-          <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+          <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
                 See the work in context
               </p>
-              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+              <h2 className="mt-4 font-heading text-4xl font-bold tracking-[-0.04em] text-gray-950 md:text-5xl">
                 Explore a related practical guide.
               </h2>
             </ScrollReveal>
@@ -714,7 +810,7 @@ export default function ServiceDetail() {
                 <ScrollReveal key={resource.path} delay={index * 0.05} width="100%">
                   <Link
                     href={resource.path}
-                    className="group flex h-full flex-col rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-7 transition-all hover:-translate-y-1 hover:bg-white hover:shadow-lg hover:shadow-black/[0.04]"
+                    className="group flex h-full flex-col rounded-[1.5rem] border border-black/10 bg-[#faf9f6] px-6 py-7 transition-all hover:-translate-y-1 hover:bg-white hover:shadow-lg hover:shadow-black/[0.04]"
                   >
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
                       Practical guide
@@ -733,10 +829,10 @@ export default function ServiceDetail() {
           </section>
         )}
 
-        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+        <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] border border-gray-200 bg-white px-8 py-10 shadow-xl shadow-black/[0.04] md:px-12">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
+            <div className="rounded-[2rem] border border-black/10 bg-[#faf9f6] px-8 py-10 md:px-12">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
                 Related services
               </p>
               <div className="mt-4 grid gap-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
@@ -768,15 +864,16 @@ export default function ServiceDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+        <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+            <div className="relative overflow-hidden rounded-[2rem] bg-[#07090d] px-8 py-12 text-white shadow-2xl shadow-black/[0.14] md:px-12">
+              <div aria-hidden="true" className="absolute -right-20 -top-32 h-80 w-80 rounded-full bg-white/[0.08] blur-3xl" />
+              <p className="relative text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
                 Start with your current situation
               </p>
-              <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="relative mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-3xl">
-                  <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                  <h2 className="font-heading text-3xl font-bold tracking-[-0.035em] md:text-5xl">
                     Tell us what you need {formatInlineServiceName(service.shortTitle)} to improve.
                   </h2>
                   <p className="mt-4 text-lg leading-relaxed text-gray-300">
@@ -787,7 +884,7 @@ export default function ServiceDetail() {
                 </div>
                 <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
                   <Link href={startProjectPath}>
-                    Start a project
+                    Discuss your project
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
