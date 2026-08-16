@@ -22,12 +22,12 @@ const publicRoutes = [
   {
     path: "/services/business-intelligence-semantic-modeling",
     title: "Business Intelligence & Semantic Modeling Services",
-    body: "Power BI, Tableau, Looker",
+    body: "Turn fragmented reporting into one governed decision system.",
   },
   {
     path: "/services/advanced-analytics-ai",
     title: "AI Consulting Services & Implementation",
-    body: "AI consulting services from strategy to production.",
+    body: "Move AI from experiments into governed production.",
     canonical: "https://www.bisolutions.group/services/advanced-analytics-ai",
     robots: "index,follow",
   },
@@ -90,12 +90,12 @@ const publicRoutes = [
   {
     path: "/services/data-strategy-governance",
     title: "Data Strategy & Cloud Foundations Services",
-    body: "Data strategy and cloud foundations for analytics that can scale.",
+    body: "Build the data foundation every decision system depends on.",
   },
   {
     path: "/services/website-app-development",
     title: "Website & Web App Development",
-    body: "Website and web app development for businesses that need more than a template.",
+    body: "Ship a digital product that earns attention and moves work forward.",
   },
   {
     path: "/case-studies/unicef-audit-compliance",
