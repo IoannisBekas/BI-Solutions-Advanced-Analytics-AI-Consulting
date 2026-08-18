@@ -13,6 +13,47 @@ const serviceSemanticModelImage = "/blog/service-semantic-model-cover.svg";
 const serviceWebAnalyticsImage = "/blog/service-web-analytics-cover.svg";
 const serviceWebDevelopmentImage = "/blog/service-web-development-cover.svg";
 
+const reviewedArticleCovers: Record<string, string> = {
+  "power-bi-consulting-dashboards-business-infrastructure":
+    "/blog/article-covers-v4/01-power-bi-consulting-dashboards-business-infrastructure.png",
+  "semantic-modeling-power-bi-clean-models":
+    "/blog/article-covers-v4/02-semantic-modeling-power-bi-clean-models.png",
+  "dashboard-requirements-before-power-bi-build":
+    "/blog/article-covers-v4/03-dashboard-requirements-before-power-bi-build.png",
+  "data-strategy-before-ai-better-foundations":
+    "/blog/article-covers-v4/04-data-strategy-before-ai-better-foundations.png",
+  "ai-consulting-greek-businesses-practical-use-cases":
+    "/blog/article-covers-v4/05-ai-consulting-greek-businesses-practical-use-cases.png",
+  "website-web-app-development-greece-business-needs":
+    "/blog/article-covers-v4/06-website-web-app-development-greece-business-needs.png",
+  "kpi-dictionary-business-intelligence":
+    "/blog/article-covers-v4/07-kpi-dictionary-business-intelligence.png",
+  "data-quality-checklist-analytics-projects":
+    "/blog/article-covers-v4/08-data-quality-checklist-analytics-projects.png",
+  "analytics-roadmap-first-90-days":
+    "/blog/article-covers-v4/09-analytics-roadmap-first-90-days.png",
+  "data-governance-gdpr-scale-analytics-control":
+    "/blog/article-covers-v4/10-data-governance-gdpr-scale-analytics-control.png",
+  "cloud-data-warehouse-vs-spreadsheets":
+    "/blog/article-covers-v4/11-cloud-data-warehouse-vs-spreadsheets.png",
+  "internal-tools-vs-saas-build-buy":
+    "/blog/article-covers-v4/12-internal-tools-vs-saas-build-buy.png",
+  "ai-document-workflows-professional-services":
+    "/blog/article-covers-v4/13-ai-document-workflows-professional-services.png",
+  "prompt-workflow-design-business-teams":
+    "/blog/article-covers-v4/14-prompt-workflow-design-business-teams.png",
+  "ai-assistant-governance-company-policy":
+    "/blog/article-covers-v4/15-ai-assistant-governance-company-policy.png",
+  "predictive-analytics-forecasting-mistakes":
+    "/blog/article-covers-v4/16-predictive-analytics-forecasting-mistakes.png",
+  "ai-literacy-teams-adopt-ai-without-operational-risk":
+    "/blog/article-covers-v4/17-ai-literacy-teams-adopt-ai-without-operational-risk.png",
+  "mlops-small-mid-sized-teams-productionize-ai":
+    "/blog/article-covers-v4/18-mlops-small-mid-sized-teams-productionize-ai.png",
+  "model-monitoring-ai-workflows":
+    "/blog/article-covers-v4/19-model-monitoring-ai-workflows.png",
+};
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -27,7 +68,7 @@ export interface BlogPost {
   featuredImage: string;
 }
 
-export const blogPosts: BlogPost[] = [
+const blogPostDefinitions: BlogPost[] = [
   {
     slug: "website-web-app-development-greece-business-needs",
     title:
@@ -1590,6 +1631,11 @@ Power BI models do not fail because teams lack opinions. They fail because revie
     featuredImage: powerBISolutionsImage,
   },
 ];
+
+export const blogPosts: BlogPost[] = blogPostDefinitions.map((post) => ({
+  ...post,
+  featuredImage: reviewedArticleCovers[post.slug] ?? post.featuredImage,
+}));
 
 export const featuredBlogSlug =
   "power-bi-consulting-dashboards-business-infrastructure";

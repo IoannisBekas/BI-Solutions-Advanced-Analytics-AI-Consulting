@@ -2,7 +2,10 @@ import { useId, type ReactNode } from "react";
 import type { BlogPost } from "@/data/blogData";
 import { cn } from "@/lib/utils";
 
-type ArticleVisualPost = Pick<BlogPost, "slug" | "title" | "category" | "tags">;
+type ArticleVisualPost = Pick<
+  BlogPost,
+  "slug" | "title" | "category" | "tags" | "featuredImage"
+>;
 
 interface ArticleVisualProps {
   post: ArticleVisualPost;
@@ -399,6 +402,9 @@ function toSvgId(value: string) {
 }
 
 export function ArticleVisual({ post, className }: ArticleVisualProps) {
+  const usesReviewedCover = post.featuredImage.startsWith(
+    "/blog/article-covers-v4/",
+  );
   const palette = getPalette(post);
   const motif = getMotif(post);
   const coverLabel = getCoverLabel(motif);
@@ -411,6 +417,20 @@ export function ArticleVisual({ post, className }: ArticleVisualProps) {
   const texturePatternId = `${idBase}-texture`;
   const paperShadowId = `${idBase}-paper-shadow`;
   const motifShadowId = `${idBase}-motif-shadow`;
+
+  if (usesReviewedCover) {
+    return (
+      <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)}>
+        <img
+          src={post.featuredImage}
+          alt={`${post.title} article cover`}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)}>

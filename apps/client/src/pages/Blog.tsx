@@ -142,7 +142,7 @@ export default function Blog() {
                   <Link href={`/blog/${featuredPost.slug}`} className="group block">
                     <article className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
                       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-                        <div className="aspect-[16/10] overflow-hidden bg-gray-100">
+                        <div className="aspect-video overflow-hidden bg-gray-100">
                           <ArticleVisual
                             post={featuredPost}
                             className="transition-transform duration-700 group-hover:scale-105"
@@ -200,7 +200,7 @@ export default function Blog() {
                     <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
                         <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
-                          <div className="aspect-[16/10] overflow-hidden bg-gray-100">
+                          <div className="aspect-video overflow-hidden bg-gray-100">
                             <ArticleVisual
                               post={post}
                               className="transition-transform duration-700 group-hover:scale-105"
