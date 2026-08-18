@@ -33,7 +33,7 @@ export default function CaseStudyDetail() {
           "Power BI case study",
           "business intelligence portfolio",
           "dashboard design",
-          "Power BI consultant Greece",
+          "Power BI consultant",
           "BI Solutions Group",
         ]}
         structuredData={{
@@ -324,13 +324,13 @@ export default function CaseStudyDetail() {
                 Explore the service behind dashboard strategy, semantic models,
                 KPI definitions, access, governance, and Power BI delivery.
               </p>
-              <Link
+              <a
                 href={caseStudy.relatedService.href}
                 className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-gray-950 underline decoration-gray-300 underline-offset-4"
               >
                 Explore the related service
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
           </ScrollReveal>
         </section>

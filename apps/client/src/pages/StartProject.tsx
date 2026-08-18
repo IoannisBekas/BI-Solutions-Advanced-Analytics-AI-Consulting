@@ -234,9 +234,9 @@ export default function StartProject() {
         path="/start-a-project"
         keywords={[
           "hire Power BI consultant",
-          "AI consultant Greece",
+          "international AI consultant",
           "business intelligence project",
-          "data strategy consultant Europe",
+          "international data strategy consultant",
         ]}
         structuredData={structuredData}
       />

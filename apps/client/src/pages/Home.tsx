@@ -8,7 +8,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
-import { aiCapabilityPages, aiLocationPages } from "@/lib/servicePages";
+import { aiCapabilityPages } from "@/lib/servicePages";
 import { blogPosts } from "@/data/blogData";
 import { caseStudies } from "@/data/caseStudies";
 import { trackEvent } from "@/lib/analytics";
@@ -29,14 +29,14 @@ export default function Home() {
         description={t.home.seoDescription}
         path="/"
         keywords={[
-          "AI consulting Greece",
+          "international AI consulting",
           "AI consulting services",
           "generative AI consulting",
           "predictive analytics consulting",
-          "BI consultant Greece",
-          "business intelligence consultant Greece",
+          "BI consultant",
+          "business intelligence consultant",
           "Power BI Tableau Looker consulting",
-          "web app development Greece",
+          "international web app development",
           "data strategy consulting",
           "business intelligence consulting",
           "BI Solutions Group",
@@ -73,8 +73,8 @@ export default function Home() {
             logo: "https://www.bisolutions.group/bi-solutions-logo.png",
             image: "https://www.bisolutions.group/bi-solutions-logo.png",
             description:
-              "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for businesses in Greece and Europe.",
-            areaServed: ["Greece", "Europe"],
+              "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for organizations worldwide.",
+            areaServed: "Worldwide",
             founder: {
               "@id": "https://www.bisolutions.group/about#ioannis-bekas",
             },
@@ -105,7 +105,7 @@ export default function Home() {
                 itemOffered: {
                   "@type": "Service",
                   name: "Business intelligence consulting and semantic modeling",
-                  url: "https://www.bisolutions.group/services/business-intelligence-semantic-modeling",
+                  url: "https://www.bisolutions.group/services#business-intelligence-semantic-modeling",
                 },
               },
               {
@@ -113,10 +113,10 @@ export default function Home() {
                 itemOffered: {
                   "@type": "Service",
                   name: "AI consulting services and implementation",
-                  url: "https://www.bisolutions.group/services/advanced-analytics-ai",
+                  url: "https://www.bisolutions.group/services#advanced-analytics-ai",
                 },
               },
-              ...[...aiCapabilityPages, ...aiLocationPages].map((service) => ({
+              ...aiCapabilityPages.map((service) => ({
                 "@type": "Offer",
                 itemOffered: {
                   "@type": "Service",
@@ -129,7 +129,7 @@ export default function Home() {
                 itemOffered: {
                   "@type": "Service",
                   name: "Data strategy and cloud foundations",
-                  url: "https://www.bisolutions.group/services/data-strategy-governance",
+                  url: "https://www.bisolutions.group/services#data-strategy-governance",
                 },
               },
               {
@@ -137,7 +137,7 @@ export default function Home() {
                 itemOffered: {
                   "@type": "Service",
                   name: "Website and web app development",
-                  url: "https://www.bisolutions.group/services/website-app-development",
+                  url: "https://www.bisolutions.group/services#website-app-development",
                 },
               },
             ],

@@ -30,27 +30,27 @@ import { trackEvent } from "@/lib/analytics";
 function getRelatedService(category: string) {
   if (category.includes("BI")) {
     return {
-      href: "/services/business-intelligence-semantic-modeling",
+      href: "/services#business-intelligence-semantic-modeling",
       label: "Explore BI & Power BI services",
     };
   }
 
   if (category.includes("AI") || category.includes("MLOps")) {
     return {
-      href: "/services/advanced-analytics-ai",
+      href: "/services#advanced-analytics-ai",
       label: "Explore AI consulting",
     };
   }
 
   if (category.includes("Web")) {
     return {
-      href: "/services/website-app-development",
+      href: "/services#website-app-development",
       label: "Explore web & app development",
     };
   }
 
   return {
-    href: "/services/data-strategy-governance",
+    href: "/services#data-strategy-governance",
     label: "Explore data strategy services",
   };
 }
@@ -134,6 +134,19 @@ function sanitizeHref(value: string) {
   try {
     const parsed = new URL(value, getPublicSiteOrigin());
     if (parsed.protocol === "http:" || parsed.protocol === "https:" || parsed.protocol === "mailto:") {
+      const serviceMatch = parsed.pathname.match(/^\/services\/([^/]+)\/?$/);
+      if (serviceMatch) {
+        const serviceAnchors: Record<string, string> = {
+          "ai-consulting-greece": "advanced-analytics-ai",
+          "digital-transformation-cloud-migration": "data-strategy-governance",
+          "ai-literacy-change-management": "ai-governance-literacy-adoption",
+          "mlops-productionization": "mlops-model-monitoring",
+          "website-web-app-development": "website-app-development",
+        };
+        const anchor = serviceAnchors[serviceMatch[1]] ?? serviceMatch[1];
+        return `${parsed.origin}/services#${anchor}`;
+      }
+
       return parsed.toString();
     }
   } catch {
@@ -485,12 +498,12 @@ export default function BlogPost() {
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="rounded-full border-gray-600 bg-transparent px-8 text-white hover:bg-white/10 hover:text-white">
-                    <Link
+                    <a
                       href={relatedService.href}
                       onClick={() => trackEvent("article_to_service", { article: post.slug, target: relatedService.href })}
                     >
                       {relatedService.label}
-                    </Link>
+                    </a>
                   </Button>
                 </div>
               </div>

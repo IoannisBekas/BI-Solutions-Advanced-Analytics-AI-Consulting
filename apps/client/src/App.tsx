@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { useBrowserLocation } from "wouter/use-browser-location";
 import { queryClient } from "./lib/queryClient";
@@ -16,7 +16,6 @@ import Home from "@/pages/Home";
 
 // Lazy-load all other pages only when navigated to.
 const Services = lazy(() => import("@/pages/Services"));
-const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const CaseStudyDetail = lazy(() => import("@/pages/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
@@ -71,6 +70,26 @@ function PageFallback() {
   );
 }
 
+function RetiredServiceRoute({ slug }: { slug: string }) {
+  useEffect(() => {
+    const anchorAliases: Record<string, string> = {
+      "ai-consulting-greece": "advanced-analytics-ai",
+      "digital-transformation-cloud-migration": "data-strategy-governance",
+      "ai-literacy-change-management": "ai-governance-literacy-adoption",
+      "mlops-productionization": "mlops-model-monitoring",
+      "website-web-app-development": "website-app-development",
+    };
+    const anchor = anchorAliases[slug] ?? slug;
+    const servicesPath = window.location.pathname.replace(
+      /\/services\/[^/]+\/?$/,
+      "/services",
+    );
+    window.location.replace(`${servicesPath}#${anchor}`);
+  }, [slug]);
+
+  return <PageFallback />;
+}
+
 function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
   return (
     <WouterRouter
@@ -86,7 +105,9 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/services" component={Services} />
-          <Route path="/services/:slug" component={ServiceDetail} />
+          <Route path="/services/:slug">
+            {(params) => <RetiredServiceRoute slug={params.slug} />}
+          </Route>
           <Route path="/case-studies/:slug" component={CaseStudyDetail} />
           <Route path="/blog" component={Blog} />
           <Route path="/blog/:slug" component={BlogPost} />

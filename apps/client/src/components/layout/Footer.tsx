@@ -7,7 +7,7 @@ import {
   START_PROJECT_PATH,
 } from "@/lib/contact";
 import { withAssetBase } from "@/lib/site";
-import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 /** Service slugs whose footer labels come from the locale catalogue. */
 const serviceSlugs = [
@@ -26,13 +26,12 @@ const serviceFallbackLabels: Record<string, string> = {
 
 export function Footer() {
   const { t } = useLocale();
-  const localizedHref = useLocalizedHref();
 
   const serviceLinks = [
     { label: t.footer.servicesOverview, href: "/services" },
     ...serviceSlugs.map((slug) => ({
       label: t.services.items[slug]?.title ?? serviceFallbackLabels[slug],
-      href: `/services/${slug}`,
+      href: `/services#${slug}`,
     })),
   ];
 
@@ -122,7 +121,7 @@ export function Footer() {
             <ul className="space-y-4 text-sm">
               {serviceLinks.map((item) => (
                 <li key={item.href}>
-                  <Link
+                  <a
                     href={item.href}
                     className="text-gray-400 transition-colors hover:text-white"
                     onClick={() =>
@@ -130,7 +129,7 @@ export function Footer() {
                     }
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -139,17 +138,6 @@ export function Footer() {
           <div className="space-y-6 lg:col-span-2">
             <h2 className="text-lg font-bold font-heading">{t.footer.resources}</h2>
             <ul className="space-y-4 text-sm">
-              <li>
-                <a
-                  href={localizedHref("/#case-studies")}
-                  className="text-gray-400 transition-colors hover:text-white"
-                  onClick={() =>
-                    trackNavClick("Case Studies", "/#case-studies", "footer")
-                  }
-                >
-                  {t.nav.caseStudies}
-                </a>
-              </li>
               {resourceLinks.map((item) => (
                 <li key={item.href}>
                   <Link

@@ -85,7 +85,7 @@ export const caseStudies: CaseStudy[] = [
       "The public project notes document the report pages, filters, mock-data status, and interactive demonstration.",
     relatedService: {
       label: "Business Intelligence & Power BI",
-      href: "/services/business-intelligence-semantic-modeling",
+      href: "/services#business-intelligence-semantic-modeling",
     },
   },
   {
@@ -139,7 +139,7 @@ export const caseStudies: CaseStudy[] = [
       "The public project notes document the filters, measurements, representative-data status, and interactive demonstration.",
     relatedService: {
       label: "Business Intelligence & Power BI",
-      href: "/services/business-intelligence-semantic-modeling",
+      href: "/services#business-intelligence-semantic-modeling",
     },
   },
   {
@@ -193,7 +193,7 @@ export const caseStudies: CaseStudy[] = [
       "The public project notes document the report pages, recruitment logic, synthetic-data status, and interactive demonstration.",
     relatedService: {
       label: "Business Intelligence & Power BI",
-      href: "/services/business-intelligence-semantic-modeling",
+      href: "/services#business-intelligence-semantic-modeling",
     },
   },
 ];

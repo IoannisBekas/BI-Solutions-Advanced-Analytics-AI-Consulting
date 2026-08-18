@@ -56,7 +56,7 @@ const en: TranslationCatalogue = {
   home: {
     seoTitle: "AI, BI & Web App Development",
     seoDescription:
-      "BI Solutions Group helps companies in Greece and Europe build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
+      "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
   },
   nav: {
     services: "Services",
@@ -67,7 +67,7 @@ const en: TranslationCatalogue = {
     language: "Language",
   },
   hero: {
-    eyebrow: "Senior-led delivery · Greece & Europe",
+    eyebrow: "Senior-led delivery · International",
     title: "Clarity from complexity",
     subtitle:
       "Business intelligence, AI, data foundations, and web applications — from strategy through to a handoff your team can keep running.",
@@ -116,7 +116,7 @@ const el: TranslationCatalogue = {
   home: {
     seoTitle: "Ανάπτυξη AI, BI & Web εφαρμογών",
     seoDescription:
-      "Η BI Solutions Group βοηθά επιχειρήσεις σε Ελλάδα και Ευρώπη να δημιουργήσουν dashboards BI, συστήματα ανάλυσης, ροές AI, στρατηγική δεδομένων και σύγχρονες web εφαρμογές με μετρήσιμα επιχειρηματικά αποτελέσματα.",
+      "Η BI Solutions Group βοηθά οργανισμούς διεθνώς να δημιουργήσουν dashboards BI, συστήματα ανάλυσης, ροές AI, στρατηγική δεδομένων και σύγχρονες web εφαρμογές με μετρήσιμα επιχειρηματικά αποτελέσματα.",
   },
   nav: {
     services: "Υπηρεσίες",
@@ -127,7 +127,7 @@ const el: TranslationCatalogue = {
     language: "Γλώσσα",
   },
   hero: {
-    eyebrow: "Υλοποίηση από senior σύμβουλο · Ελλάδα & Ευρώπη",
+    eyebrow: "Υλοποίηση από senior σύμβουλο · Διεθνώς",
     title: "Καθαρή εικόνα μέσα από την πολυπλοκότητα",
     subtitle:
       "Business intelligence, τεχνητή νοημοσύνη, υποδομές δεδομένων και web εφαρμογές — από τη στρατηγική μέχρι την παράδοση που η ομάδα σας μπορεί να συντηρεί.",
@@ -197,7 +197,7 @@ const de: TranslationCatalogue = {
   home: {
     seoTitle: "KI-, BI- & Web-App-Entwicklung",
     seoDescription:
-      "BI Solutions Group unterstützt Unternehmen in Griechenland und Europa beim Aufbau von BI-Dashboards, Analysesystemen, KI-Workflows, Datenstrategien und modernen Webanwendungen mit messbarem Geschäftsnutzen.",
+      "BI Solutions Group unterstützt Unternehmen weltweit beim Aufbau von BI-Dashboards, Analysesystemen, KI-Workflows, Datenstrategien und modernen Webanwendungen mit messbarem Geschäftsnutzen.",
   },
   nav: {
     services: "Leistungen",
@@ -208,7 +208,7 @@ const de: TranslationCatalogue = {
     language: "Sprache",
   },
   hero: {
-    eyebrow: "Beratung durch Senior-Experten · Griechenland & Europa",
+    eyebrow: "Beratung durch Senior-Experten · International",
     title: "Klarheit statt Komplexität",
     subtitle:
       "Business Intelligence, KI, Datenfundamente und Webanwendungen — von der Strategie bis zur Übergabe, die Ihr Team selbst weiterführen kann.",

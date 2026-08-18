@@ -5,7 +5,7 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
 import { withAssetBase } from "@/lib/site";
@@ -15,28 +15,28 @@ type DropdownName = "services";
 
 const serviceLinks = [
   {
-    name: "Services overview",
+    name: "All services",
     href: "/services",
-    description: "Find the right path for your business need.",
+    description: "See every capability on one page.",
   },
   {
     name: "Business Intelligence & Power BI",
-    href: "/services/business-intelligence-semantic-modeling",
+    href: "/services#business-intelligence-semantic-modeling",
     description: "Trusted reporting, semantic models, and decision systems.",
   },
   {
     name: "AI Consulting & Automation",
-    href: "/services/advanced-analytics-ai",
+    href: "/services#advanced-analytics-ai",
     description: "Practical AI workflows, strategy, and adoption.",
   },
   {
     name: "Data Strategy & Cloud",
-    href: "/services/data-strategy-governance",
+    href: "/services#data-strategy-governance",
     description: "Reliable foundations, governance, and cloud delivery.",
   },
   {
     name: "Websites & Web Apps",
-    href: "/services/website-app-development",
+    href: "/services#website-app-development",
     description: "Focused digital products built around real workflows.",
   },
 ] as const;
@@ -60,7 +60,6 @@ export function Navbar() {
     useState<DropdownName | null>(null);
   const [location] = useLocation();
   const { t } = useLocale();
-  const localizedHref = useLocalizedHref();
   const desktopNavRef = useRef<HTMLElement>(null);
   const mobileDialogRef = useRef<HTMLDivElement>(null);
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
@@ -265,7 +264,7 @@ export function Navbar() {
                         className="border-l border-gray-200 pb-3 pl-4"
                       >
                         {serviceLinks.map((item) => (
-                          <Link
+                          <a
                             key={item.href}
                             href={item.href}
                             className="block min-h-11 py-2.5 text-base font-medium text-gray-600 transition-colors hover:text-black"
@@ -274,7 +273,7 @@ export function Navbar() {
                             }
                           >
                             {item.name}
-                          </Link>
+                          </a>
                         ))}
                         <Link
                           href={START_PROJECT_PATH}
@@ -291,20 +290,6 @@ export function Navbar() {
                         </Link>
                       </div>
                     </div>
-
-                    <a
-                      href={localizedHref("/#case-studies")}
-                      className="block min-h-14 py-4 text-2xl font-bold font-heading"
-                      onClick={() =>
-                        handleNavClick(
-                          "Case Studies",
-                          "/#case-studies",
-                          "mobile_menu",
-                        )
-                      }
-                    >
-                      Case Studies
-                    </a>
 
                     {[
                       { name: "Insights", href: "/blog" },
@@ -425,7 +410,7 @@ export function Navbar() {
               >
                 <div className="rounded-3xl border border-gray-200 bg-white p-3 shadow-2xl shadow-black/10">
                   {serviceLinks.map((item) => (
-                    <Link
+                    <a
                       key={item.href}
                       href={item.href}
                       className="block rounded-2xl px-4 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
@@ -437,7 +422,7 @@ export function Navbar() {
                       <div className="mt-1 text-xs leading-relaxed text-gray-500">
                         {item.description}
                       </div>
-                    </Link>
+                    </a>
                   ))}
                   <div className="mt-1 border-t border-gray-100 px-1 pt-2">
                     <Link
@@ -457,17 +442,6 @@ export function Navbar() {
                 </div>
               </div>
             </div>
-
-            <a
-              href={localizedHref("/#case-studies")}
-              className="group relative flex min-h-11 items-center text-sm font-medium text-gray-500 transition-colors hover:text-black"
-              onClick={() =>
-                trackNavClick("Case Studies", "/#case-studies", "header")
-              }
-            >
-              {t.nav.caseStudies}
-              <span className="absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full" />
-            </a>
 
             {[
               { name: t.nav.insights, href: "/blog" },

@@ -16,86 +16,8 @@ const publicRoutes = [
   },
   {
     path: "/services",
-    title: "Analytics, AI, and Data Services",
-    body: "Turn reporting friction, manual work, and product ideas into systems your team can use.",
-  },
-  {
-    path: "/services/business-intelligence-semantic-modeling",
-    title: "Business Intelligence & Semantic Modeling Services",
-    body: "Turn fragmented reporting into one governed decision system.",
-  },
-  {
-    path: "/services/advanced-analytics-ai",
-    title: "AI Consulting Services & Implementation",
-    body: "Move AI from experiments into governed production.",
-    canonical: "https://www.bisolutions.group/services/advanced-analytics-ai",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/ai-strategy-readiness",
-    title: "AI Strategy & Readiness Consulting",
-    body: "Build an AI strategy your organization can act on.",
-    canonical: "https://www.bisolutions.group/services/ai-strategy-readiness",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/ai-automation-consulting",
-    title: "AI Automation & Workflow Consulting",
-    body: "Turn repetitive work into controlled AI-assisted workflows.",
-    canonical: "https://www.bisolutions.group/services/ai-automation-consulting",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/generative-ai-llm-consulting",
-    title: "Generative AI & LLM Consulting Services",
-    body: "Build generative AI tools around real work and trusted knowledge.",
-    canonical: "https://www.bisolutions.group/services/generative-ai-llm-consulting",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/predictive-analytics-machine-learning",
-    title: "Predictive Analytics & Machine Learning Consulting",
-    body: "Use predictive analytics to make better-informed decisions.",
-    canonical: "https://www.bisolutions.group/services/predictive-analytics-machine-learning",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/ai-governance-literacy-adoption",
-    title: "AI Governance, Literacy & Adoption Consulting",
-    body: "Put practical governance around how your organization uses AI.",
-    canonical: "https://www.bisolutions.group/services/ai-governance-literacy-adoption",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/mlops-model-monitoring",
-    title: "MLOps & Model Monitoring Services",
-    body: "MLOps and model monitoring that keep AI reliable after launch.",
-    canonical: "https://www.bisolutions.group/services/mlops-model-monitoring",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/ai-business-intelligence",
-    title: "AI & Business Intelligence Consulting",
-    body: "Make business intelligence more useful with practical AI.",
-    canonical: "https://www.bisolutions.group/services/ai-business-intelligence",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/ai-consulting-greece",
-    title: "AI Consulting Services in Greece",
-    body: "Practical AI consulting for businesses and organizations in Greece.",
-    canonical: "https://www.bisolutions.group/services/ai-consulting-greece",
-    robots: "index,follow",
-  },
-  {
-    path: "/services/data-strategy-governance",
-    title: "Data Strategy & Cloud Foundations Services",
-    body: "Build the data foundation every decision system depends on.",
-  },
-  {
-    path: "/services/website-app-development",
-    title: "Website & Web App Development",
-    body: "Ship a digital product that earns attention and moves work forward.",
+    title: "Analytics, AI, Data & Web Services",
+    body: "One partner for the systems behind better decisions.",
   },
   {
     path: "/case-studies/unicef-audit-compliance",
@@ -231,24 +153,31 @@ const jsonRoutes = [
   },
 ];
 
-const redirectRoutes = [
-  {
-    path: "/services/digital-transformation-cloud-migration",
-    location: "/services/data-strategy-governance",
-  },
-  {
-    path: "/services/ai-literacy-change-management",
-    location: "/services/ai-governance-literacy-adoption",
-  },
-  {
-    path: "/services/mlops-productionization",
-    location: "/services/mlops-model-monitoring",
-  },
-  {
-    path: "/services/website-web-app-development",
-    location: "/services/website-app-development",
-  },
-];
+const serviceRedirectAnchors = {
+  "advanced-analytics-ai": "advanced-analytics-ai",
+  "ai-strategy-readiness": "ai-strategy-readiness",
+  "ai-automation-consulting": "ai-automation-consulting",
+  "generative-ai-llm-consulting": "generative-ai-llm-consulting",
+  "predictive-analytics-machine-learning": "predictive-analytics-machine-learning",
+  "ai-governance-literacy-adoption": "ai-governance-literacy-adoption",
+  "mlops-model-monitoring": "mlops-model-monitoring",
+  "ai-business-intelligence": "ai-business-intelligence",
+  "ai-consulting-greece": "advanced-analytics-ai",
+  "business-intelligence-semantic-modeling": "business-intelligence-semantic-modeling",
+  "website-app-development": "website-app-development",
+  "data-strategy-governance": "data-strategy-governance",
+  "digital-transformation-cloud-migration": "data-strategy-governance",
+  "ai-literacy-change-management": "ai-governance-literacy-adoption",
+  "mlops-productionization": "mlops-model-monitoring",
+  "website-web-app-development": "website-app-development",
+};
+
+const redirectRoutes = Object.entries(serviceRedirectAnchors).map(
+  ([slug, anchor]) => ({
+    path: `/services/${slug}`,
+    location: `/services#${anchor}`,
+  }),
+);
 
 const goneRoutes = [
   {

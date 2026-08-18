@@ -22,27 +22,27 @@ website and the Google Business Profile as one entity.
 | LinkedIn | https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/ |
 | GitHub | https://github.com/IoannisBekas |
 | Founder | Ioannis Bekas — Data Scientist & AI Developer |
-| Location | Greece (serving Greece and Europe) |
+| Location | Greece · international delivery |
 | Founded | 2024 |
 | Team size | 1–10 |
 
 ## Short description (≤160 characters)
 
 > BI Solutions Group builds trusted BI dashboards, AI workflows, data
-> foundations and web applications for teams in Greece and Europe.
+> foundations and web applications for organizations worldwide.
 
 ## Medium description (≤400 characters)
 
-> BI Solutions Group is a senior-led analytics consultancy serving Greece and
-> Europe. We design semantic models and reporting layers teams can trust,
+> BI Solutions Group is a senior-led international analytics consultancy. We
+> design semantic models and reporting layers teams can trust,
 > build practical AI and automation workflows, set the data architecture and
 > governance underneath them, and ship the web applications that put the
 > result in front of users — from strategy through to handoff.
 
 ## Long description
 
-> BI Solutions Group is an analytics, AI and data consultancy led by Ioannis
-> Bekas, serving companies in Greece and across Europe.
+> BI Solutions Group is an international analytics, AI and data consultancy
+> led by Ioannis Bekas, serving organizations worldwide.
 >
 > Most reporting problems are not tool problems. They come from unclear
 > metric definitions, fragile data models and dashboards nobody can maintain
@@ -96,6 +96,6 @@ Two or three reviews are enough to move from listed to ranked.
 - The LinkedIn company page is still "BI Solutions by Bekas Ioannis". Rename
   it to "BI Solutions Group" so every source agrees.
 - The Google Business Profile coordinates resolve to northern Canada
-  (51.2072, -79.19775). If no Greek address or service area is set, that
-  weakens relevance for "…in Greece" queries. Check Business Profile →
-  Location / service areas.
+  (51.2072, -79.19775). Correct the business location and configure the
+  international service areas the company genuinely supports. Check Business
+  Profile → Location / service areas.

@@ -357,73 +357,13 @@ const FOUNDER_ID = `${BASE_URL}/about#ioannis-bekas`;
 const routeMetaMap: Record<string, RouteMeta> = {
   "/": {
     title: "AI, BI & Web App Development - BI Solutions Group",
-    description: "BI Solutions Group helps companies in Greece and Europe build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
+    description: "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
     path: "/",
   },
   "/services": {
-    title: "Analytics, AI, and Data Services - BI Solutions Group",
-    description: "Explore BI Solutions services across AI strategy, automation, generative AI, predictive analytics, governance, business intelligence, data strategy, and web apps.",
+    title: "Analytics, AI, Data & Web Services - BI Solutions Group",
+    description: "Explore every BI Solutions Group service on one page: business intelligence, Power BI, AI consulting, automation, data strategy, cloud foundations, websites, and web applications.",
     path: "/services",
-  },
-  "/services/advanced-analytics-ai": {
-    title: "AI Consulting Services & Implementation - BI Solutions Group",
-    description: "AI consulting services for strategy, readiness, automation, generative AI, predictive analytics, governance, business intelligence, and production operations.",
-    path: "/services/advanced-analytics-ai",
-  },
-  "/services/ai-strategy-readiness": {
-    title: "AI Strategy & Readiness Consulting - BI Solutions Group",
-    description: "AI strategy consulting and readiness assessments to prioritize use cases, assess capabilities, and build a practical roadmap for adoption.",
-    path: "/services/ai-strategy-readiness",
-  },
-  "/services/ai-automation-consulting": {
-    title: "AI Automation & Workflow Consulting - BI Solutions Group",
-    description: "AI automation consulting for document, data, and decision workflows, with practical integration, review controls, and adoption support.",
-    path: "/services/ai-automation-consulting",
-  },
-  "/services/generative-ai-llm-consulting": {
-    title: "Generative AI & LLM Consulting Services - BI Solutions Group",
-    description: "Generative AI and LLM consulting for assistants, RAG systems, prompt workflows, evaluation, integration, and practical business adoption.",
-    path: "/services/generative-ai-llm-consulting",
-  },
-  "/services/predictive-analytics-machine-learning": {
-    title: "Predictive Analytics & Machine Learning Consulting - BI Solutions Group",
-    description: "Predictive analytics and machine learning consulting for forecasting, classification, segmentation, scoring, and decision-support workflows.",
-    path: "/services/predictive-analytics-machine-learning",
-  },
-  "/services/ai-governance-literacy-adoption": {
-    title: "AI Governance, Literacy & Adoption Consulting - BI Solutions Group",
-    description: "AI governance and adoption consulting covering policies, risk controls, AI literacy, responsible use, and EU AI Act-aware operating practices.",
-    path: "/services/ai-governance-literacy-adoption",
-  },
-  "/services/mlops-model-monitoring": {
-    title: "MLOps & Model Monitoring Services - BI Solutions Group",
-    description: "MLOps and model monitoring services for deployment, versioning, evaluation, drift detection, observability, and maintainable AI operations.",
-    path: "/services/mlops-model-monitoring",
-  },
-  "/services/ai-business-intelligence": {
-    title: "AI & Business Intelligence Consulting - BI Solutions Group",
-    description: "AI and business intelligence consulting for automated reporting, Power BI workflows, metric-grounded commentary, and natural-language analysis.",
-    path: "/services/ai-business-intelligence",
-  },
-  "/services/ai-consulting-greece": {
-    title: "AI Consulting Services in Greece - BI Solutions Group",
-    description: "AI consulting in Greece for strategy, automation, generative AI, predictive analytics, governance, business intelligence, and implementation.",
-    path: "/services/ai-consulting-greece",
-  },
-  "/services/business-intelligence-semantic-modeling": {
-    title: "Business Intelligence & Semantic Modeling Services - BI Solutions Group",
-    description: "Power BI, Tableau, Looker, dashboard, KPI, and semantic model consulting from BI Solutions for trusted reporting systems.",
-    path: "/services/business-intelligence-semantic-modeling",
-  },
-  "/services/website-app-development": {
-    title: "Website & Web App Development in Greece - BI Solutions Group",
-    description: "BI Solutions builds modern websites, landing pages, booking flows, dashboards, and web applications for Greek and international businesses.",
-    path: "/services/website-app-development",
-  },
-  "/services/data-strategy-governance": {
-    title: "Data Strategy & Cloud Foundations Services - BI Solutions Group",
-    description: "Build governed, scalable data foundations with practical strategy, architecture, quality, access controls, cloud platforms, and GDPR-aware operating practices.",
-    path: "/services/data-strategy-governance",
   },
   "/case-studies/unicef-audit-compliance": {
     title: "Audit Compliance Power BI Case Study - BI Solutions Group",
@@ -442,7 +382,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
   },
   "/about": {
     title: "About Ioannis Bekas and BI Solutions Group",
-    description: "Meet Ioannis Bekas and learn how BI Solutions Group delivers business intelligence, AI, data strategy, and focused web applications for teams in Greece and Europe.",
+    description: "Meet Ioannis Bekas and learn how BI Solutions Group delivers business intelligence, AI, data strategy, and focused web applications for organizations worldwide.",
     path: "/about",
   },
   "/start-a-project": {
@@ -477,8 +417,8 @@ function getOrganizationSchema() {
     logo: ORGANIZATION_LOGO_IMAGE,
     image: DEFAULT_OG_IMAGE,
     description:
-      "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for businesses in Greece and Europe.",
-    areaServed: ["Greece", "Europe"],
+      "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for organizations worldwide.",
+    areaServed: "Worldwide",
     founder: {
       "@id": FOUNDER_ID,
     },
@@ -576,21 +516,7 @@ function getServerStructuredData(meta: RouteMeta) {
           serviceType: meta.title.replace(" - BI Solutions Group", ""),
           description: meta.description,
           url: fullUrl,
-          areaServed: meta.path === "/services/ai-consulting-greece"
-            ? {
-                "@type": "Country",
-                name: "Greece",
-              }
-            : [
-                {
-                  "@type": "Country",
-                  name: "Greece",
-                },
-                {
-                  "@type": "Place",
-                  name: "Europe",
-                },
-              ],
+          areaServed: "Worldwide",
           provider: {
             "@id": ORGANIZATION_ID,
           },
@@ -781,11 +707,32 @@ export function serveStatic(app: Express) {
   // Preserve the Quantus workspace redirect after retiring the marketing root.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
 
-  // Retired service pages normalize to the current canonical service URLs.
-  redirectLegacyProductPath(app, "/services/digital-transformation-cloud-migration", "/services/data-strategy-governance");
-  redirectLegacyProductPath(app, "/services/ai-literacy-change-management", "/services/ai-governance-literacy-adoption");
-  redirectLegacyProductPath(app, "/services/mlops-productionization", "/services/mlops-model-monitoring");
-  redirectLegacyProductPath(app, "/services/website-web-app-development", "/services/website-app-development");
+  // Service detail pages now resolve to sections of the single service atlas.
+  const retiredServiceRoutes: Record<string, string> = {
+    "advanced-analytics-ai": "advanced-analytics-ai",
+    "ai-strategy-readiness": "ai-strategy-readiness",
+    "ai-automation-consulting": "ai-automation-consulting",
+    "generative-ai-llm-consulting": "generative-ai-llm-consulting",
+    "predictive-analytics-machine-learning": "predictive-analytics-machine-learning",
+    "ai-governance-literacy-adoption": "ai-governance-literacy-adoption",
+    "mlops-model-monitoring": "mlops-model-monitoring",
+    "ai-business-intelligence": "ai-business-intelligence",
+    "ai-consulting-greece": "advanced-analytics-ai",
+    "business-intelligence-semantic-modeling": "business-intelligence-semantic-modeling",
+    "website-app-development": "website-app-development",
+    "data-strategy-governance": "data-strategy-governance",
+    "digital-transformation-cloud-migration": "data-strategy-governance",
+    "ai-literacy-change-management": "ai-governance-literacy-adoption",
+    "mlops-productionization": "mlops-model-monitoring",
+    "website-web-app-development": "website-app-development",
+  };
+  Object.entries(retiredServiceRoutes).forEach(([routeSlug, anchor]) => {
+    redirectLegacyProductPath(
+      app,
+      `/services/${routeSlug}`,
+      `/services#${anchor}`,
+    );
+  });
 
   serveGonePath(app, "/products");
   serveGonePath(app, "/all-products");

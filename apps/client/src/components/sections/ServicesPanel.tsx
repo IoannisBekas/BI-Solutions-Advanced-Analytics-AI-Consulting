@@ -59,7 +59,7 @@ export function ServicesPanel() {
 
             return (
               <ScrollReveal key={service.slug} delay={index * 0.08} width="100%">
-                <Link
+                <a
                   href={service.path}
                   className="group grid grid-cols-1 gap-4 py-8 transition-colors md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-start md:gap-10 md:py-10"
                   onClick={() =>
@@ -103,7 +103,7 @@ export function ServicesPanel() {
                     {t.services.explore}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
-                </Link>
+                </a>
               </ScrollReveal>
             );
           })}

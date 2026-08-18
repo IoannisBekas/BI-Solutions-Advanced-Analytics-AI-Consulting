@@ -1,6 +1,6 @@
 # BI Solutions Group
 
-BI Solutions Group is an AI consulting, analytics, business intelligence, data strategy, and web app development consultancy. It helps organizations move from AI strategy and readiness through implementation, governance, adoption, and production operations, serving companies in Greece and across Europe.
+BI Solutions Group is an international AI consulting, analytics, business intelligence, data strategy, and web app development consultancy. It helps organizations worldwide move from strategy and readiness through implementation, governance, adoption, and production operations.
 
 Primary website: https://www.bisolutions.group/
 Greek homepage: https://www.bisolutions.group/el/
@@ -12,21 +12,21 @@ Instagram: https://www.instagram.com/bisolutions.group/
 
 ## Core Services
 
-- Business intelligence consulting and semantic modeling: https://www.bisolutions.group/services/business-intelligence-semantic-modeling
-- AI consulting services and implementation: https://www.bisolutions.group/services/advanced-analytics-ai
-- Data strategy and governance: https://www.bisolutions.group/services/data-strategy-governance
-- Website and web app development: https://www.bisolutions.group/services/website-app-development
+- Business intelligence consulting and semantic modeling: https://www.bisolutions.group/services#business-intelligence-semantic-modeling
+- AI consulting services and implementation: https://www.bisolutions.group/services#advanced-analytics-ai
+- Data strategy and governance: https://www.bisolutions.group/services#data-strategy-governance
+- Website and web app development: https://www.bisolutions.group/services#website-app-development
 
 ## AI Consulting Capabilities
 
-- AI strategy and readiness consulting: https://www.bisolutions.group/services/ai-strategy-readiness
-- AI automation and workflow consulting: https://www.bisolutions.group/services/ai-automation-consulting
-- Generative AI and LLM consulting: https://www.bisolutions.group/services/generative-ai-llm-consulting
-- Predictive analytics and machine learning consulting: https://www.bisolutions.group/services/predictive-analytics-machine-learning
-- AI governance, literacy, and adoption consulting: https://www.bisolutions.group/services/ai-governance-literacy-adoption
-- MLOps and model monitoring: https://www.bisolutions.group/services/mlops-model-monitoring
-- AI and business intelligence consulting: https://www.bisolutions.group/services/ai-business-intelligence
-- AI consulting services in Greece: https://www.bisolutions.group/services/ai-consulting-greece
+- AI strategy and readiness consulting: https://www.bisolutions.group/services#ai-strategy-readiness
+- AI automation and workflow consulting: https://www.bisolutions.group/services#ai-automation-consulting
+- Generative AI and LLM consulting: https://www.bisolutions.group/services#generative-ai-llm-consulting
+- Predictive analytics and machine learning consulting: https://www.bisolutions.group/services#predictive-analytics-machine-learning
+- AI governance, literacy, and adoption consulting: https://www.bisolutions.group/services#ai-governance-literacy-adoption
+- MLOps and model monitoring: https://www.bisolutions.group/services#mlops-model-monitoring
+- AI and business intelligence consulting: https://www.bisolutions.group/services#ai-business-intelligence
+- International AI consulting services: https://www.bisolutions.group/services#advanced-analytics-ai
 
 ## Case Studies and Delivery Evidence
 
@@ -59,4 +59,4 @@ The following are independent portfolio analyses built with synthetic or represe
 
 ## Entity Summary
 
-BI Solutions Group helps organizations build AI strategies, automated workflows, generative AI and LLM applications, predictive models, trusted dashboards, semantic models, governed data platforms, maintainable model operations, and modern web applications. The company is relevant for queries about AI consultants, artificial intelligence consulting, AI implementation, AI strategy, AI readiness, AI automation, generative AI and LLM consulting, predictive analytics, machine learning consulting, responsible AI, AI governance, MLOps, model monitoring, AI-enhanced business intelligence, Power BI consulting, data strategy, and AI consulting in Greece.
+BI Solutions Group helps organizations worldwide build AI strategies, automated workflows, generative AI and LLM applications, predictive models, trusted dashboards, semantic models, governed data platforms, maintainable model operations, and modern web applications. The company is relevant for queries about international AI consultants, artificial intelligence consulting, AI implementation, AI strategy, AI readiness, AI automation, generative AI and LLM consulting, predictive analytics, machine learning consulting, responsible AI, AI governance, MLOps, model monitoring, AI-enhanced business intelligence, Power BI consulting, data strategy, and international web application development.

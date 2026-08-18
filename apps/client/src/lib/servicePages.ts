@@ -6,7 +6,6 @@ import {
   Compass,
   Gauge,
   LineChart,
-  MapPin,
   MonitorSmartphone,
   ShieldCheck,
   Workflow,
@@ -42,7 +41,7 @@ export interface ServicePage {
 export const servicePages: ServicePage[] = [
   {
     slug: "advanced-analytics-ai",
-    path: "/services/advanced-analytics-ai",
+    path: "/services#advanced-analytics-ai",
     icon: BrainCircuit,
     title: "AI consulting services",
     shortTitle: "AI consulting",
@@ -104,7 +103,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "ai-strategy-readiness",
-    path: "/services/ai-strategy-readiness",
+    path: "/services#ai-strategy-readiness",
     icon: Compass,
     title: "AI strategy and readiness consulting",
     shortTitle: "AI strategy",
@@ -120,7 +119,7 @@ export const servicePages: ServicePage[] = [
       "AI roadmap consulting",
       "AI transformation strategy",
       "AI adoption strategy",
-      "AI strategy consulting Greece",
+      "international AI strategy consulting",
     ],
     heroEyebrow: "Readiness, priorities, and a practical roadmap",
     heroTitle: "Build an AI strategy your organization can act on.",
@@ -157,7 +156,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "ai-automation-consulting",
-    path: "/services/ai-automation-consulting",
+    path: "/services#ai-automation-consulting",
     icon: Workflow,
     title: "AI automation and workflow consulting",
     shortTitle: "AI automation",
@@ -173,7 +172,7 @@ export const servicePages: ServicePage[] = [
       "business process automation AI",
       "intelligent automation services",
       "document workflow automation",
-      "AI automation consulting Greece",
+      "international AI automation consulting",
     ],
     heroEyebrow: "Practical automation for repeated business work",
     heroTitle: "Turn repetitive work into controlled AI-assisted workflows.",
@@ -210,7 +209,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "generative-ai-llm-consulting",
-    path: "/services/generative-ai-llm-consulting",
+    path: "/services#generative-ai-llm-consulting",
     icon: Bot,
     title: "Generative AI and LLM consulting",
     shortTitle: "Generative AI",
@@ -263,7 +262,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "predictive-analytics-machine-learning",
-    path: "/services/predictive-analytics-machine-learning",
+    path: "/services#predictive-analytics-machine-learning",
     icon: LineChart,
     title: "Predictive analytics and machine learning consulting",
     shortTitle: "Predictive analytics",
@@ -279,7 +278,7 @@ export const servicePages: ServicePage[] = [
       "forecasting services",
       "data science consulting",
       "predictive modeling services",
-      "machine learning consultant Greece",
+      "machine learning consulting services",
     ],
     heroEyebrow: "Forecasting, scoring, and decision support",
     heroTitle: "Use predictive analytics to make better-informed decisions.",
@@ -316,7 +315,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "ai-governance-literacy-adoption",
-    path: "/services/ai-governance-literacy-adoption",
+    path: "/services#ai-governance-literacy-adoption",
     icon: ShieldCheck,
     title: "AI governance, literacy, and adoption consulting",
     shortTitle: "AI governance",
@@ -369,7 +368,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "mlops-model-monitoring",
-    path: "/services/mlops-model-monitoring",
+    path: "/services#mlops-model-monitoring",
     icon: Gauge,
     title: "MLOps and model monitoring services",
     shortTitle: "MLOps",
@@ -422,7 +421,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "ai-business-intelligence",
-    path: "/services/ai-business-intelligence",
+    path: "/services#ai-business-intelligence",
     icon: BarChart3,
     title: "AI and business intelligence consulting",
     shortTitle: "AI-enhanced BI",
@@ -474,61 +473,8 @@ export const servicePages: ServicePage[] = [
     ],
   },
   {
-    slug: "ai-consulting-greece",
-    path: "/services/ai-consulting-greece",
-    icon: MapPin,
-    title: "AI consulting services in Greece",
-    shortTitle: "AI consulting Greece",
-    navLabel: "AI consulting in Greece",
-    description:
-      "Practical AI strategy, automation, generative AI, predictive analytics, governance, and implementation support for organizations in Greece.",
-    seoTitle: "AI Consulting Services in Greece",
-    seoDescription:
-      "AI consulting in Greece for strategy, automation, generative AI, predictive analytics, governance, business intelligence, and implementation.",
-    keywords: [
-      "AI consulting Greece",
-      "AI consultants Greece",
-      "AI consulting services Greece",
-      "AI consulting company Greece",
-      "AI automation Greece",
-      "generative AI consulting Greece",
-    ],
-    heroEyebrow: "AI consulting for organizations in Greece",
-    heroTitle: "Practical AI consulting for businesses and organizations in Greece.",
-    heroDescription:
-      "BI Solutions Group helps Greece-based teams move from AI interest to a practical roadmap, a working solution, and an operating process suited to their systems, capacity, and European obligations.",
-    metrics: [
-      { label: "Service coverage", value: "Strategy through operation" },
-      { label: "Delivery focus", value: "Business workflows and practical use cases" },
-      { label: "Regional context", value: "Greece and the European Union" },
-    ],
-    items: [
-      "AI opportunity and readiness assessment shaped around team size, data maturity, budget, and existing operations in Greece",
-      "Document, knowledge, and reporting workflows that may involve Greek- and English-language business content",
-      "Integration with the Microsoft 365, Power BI, web, and data tools already used by the organization",
-      "GDPR-aware governance, EU AI Act preparation, vendor review, adoption, and operating guidance",
-    ],
-    outcomes: [
-      "A shortlist of AI opportunities suited to the organization's operating reality instead of a generic trend list",
-      "A focused pilot tied to a Greek business workflow, named owner, approved data boundary, and review rule",
-      "Controls and documentation shaped around GDPR, European AI requirements, and internal risk tolerance",
-      "A maintainable workflow and handover materials that fit the capacity of the internal team",
-    ],
-    delivery: [
-      "Discover the business goals, Greek operating context, workflows, available data, systems, constraints, and current AI activity",
-      "Prioritize a use case against business value, delivery effort, language needs, privacy, and organizational readiness",
-      "Prototype and validate the workflow using representative material and the people who will review its output",
-      "Integrate the selected solution and establish ownership, guidance, monitoring, and a practical improvement cadence",
-    ],
-    useCases: [
-      "A Greek business wants to identify a realistic first AI use case before investing",
-      "A professional-services team needs a controlled assistant for Greek- and English-language documents",
-      "An organization wants AI connected to its Power BI, Microsoft 365, data, or web workflows",
-    ],
-  },
-  {
     slug: "business-intelligence-semantic-modeling",
-    path: "/services/business-intelligence-semantic-modeling",
+    path: "/services#business-intelligence-semantic-modeling",
     icon: BarChart3,
     title: "Business intelligence and semantic modeling",
     shortTitle: "Business intelligence",
@@ -539,7 +485,7 @@ export const servicePages: ServicePage[] = [
     seoDescription:
       "Power BI, Tableau, Looker, dashboard, KPI, and semantic model consulting from BI Solutions for trusted reporting systems.",
     keywords: [
-      "business intelligence consulting Greece",
+      "international business intelligence consulting",
       "Power BI consulting",
       "Tableau consulting",
       "Looker consulting",
@@ -590,20 +536,20 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "website-app-development",
-    path: "/services/website-app-development",
+    path: "/services#website-app-development",
     icon: MonitorSmartphone,
     title: "Website and app development",
     shortTitle: "Web development",
     navLabel: "Websites & web apps",
     description:
       "Build fast websites and bespoke web applications that connect clear positioning, conversion journeys, business workflows, and product analytics.",
-    seoTitle: "Website & Web App Development in Greece",
+    seoTitle: "Website & Web App Development Services",
     seoDescription:
-      "BI Solutions builds modern websites, landing pages, booking flows, dashboards, and web applications for Greek and international businesses.",
+      "BI Solutions builds modern websites, landing pages, booking flows, dashboards, and web applications for organizations worldwide.",
     keywords: [
-      "website development Greece",
-      "web app development Greece",
-      "website development Athens",
+      "international website development",
+      "international web app development",
+      "custom web application development",
       "κατασκευή ιστοσελίδων",
       "κατασκευή web εφαρμογών",
     ],
@@ -651,7 +597,7 @@ export const servicePages: ServicePage[] = [
   },
   {
     slug: "data-strategy-governance",
-    path: "/services/data-strategy-governance",
+    path: "/services#data-strategy-governance",
     icon: ShieldCheck,
     title: "Data strategy and cloud foundations",
     shortTitle: "Data foundations",
@@ -665,7 +611,7 @@ export const servicePages: ServicePage[] = [
       "data strategy consulting",
       "cloud data foundation",
       "cloud migration consulting",
-      "data governance Greece",
+      "international data governance consulting",
       "GDPR data governance",
       "data quality framework",
     ],
@@ -741,17 +687,11 @@ export const aiCapabilityPages = aiCapabilitySlugs
   .map((slug) => servicePages.find((service) => service.slug === slug))
   .filter((service): service is ServicePage => Boolean(service));
 
-const aiLocationSlugs = ["ai-consulting-greece"] as const;
-
-export const aiLocationPages = aiLocationSlugs
-  .map((slug) => servicePages.find((service) => service.slug === slug))
-  .filter((service): service is ServicePage => Boolean(service));
-
 export const legacyServiceRedirects: Record<string, string> = {
-  "digital-transformation-cloud-migration": "/services/data-strategy-governance",
-  "ai-literacy-change-management": "/services/ai-governance-literacy-adoption",
-  "mlops-productionization": "/services/mlops-model-monitoring",
-  "website-web-app-development": "/services/website-app-development",
+  "digital-transformation-cloud-migration": "/services#data-strategy-governance",
+  "ai-literacy-change-management": "/services#ai-governance-literacy-adoption",
+  "mlops-productionization": "/services#mlops-model-monitoring",
+  "website-web-app-development": "/services#website-app-development",
 };
 
 export function getServicePageBySlug(slug: string) {
