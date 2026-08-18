@@ -21,6 +21,7 @@ const needValues = [
   "ai-automation",
   "data-strategy",
   "web-app",
+  "career-mentorship",
   "not-sure",
 ];
 

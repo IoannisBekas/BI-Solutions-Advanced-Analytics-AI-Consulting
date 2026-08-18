@@ -1,6 +1,6 @@
 # BI Solutions Group
 
-BI Solutions Group is an international AI consulting, analytics, business intelligence, data strategy, and web app development consultancy. It helps organizations worldwide move from strategy and readiness through implementation, governance, adoption, and production operations.
+BI Solutions Group is an international AI consulting, analytics, business intelligence, data strategy, web app development, and data career mentorship practice. It helps organizations move from strategy through implementation and helps professionals build practical capability from entry level through senior career stages.
 
 Primary website: https://www.bisolutions.group/
 Greek homepage: https://www.bisolutions.group/el/
@@ -16,6 +16,7 @@ Instagram: https://www.instagram.com/bisolutions.group/
 - AI consulting services and implementation: https://www.bisolutions.group/services#advanced-analytics-ai
 - Data strategy and governance: https://www.bisolutions.group/services#data-strategy-governance
 - Website and web app development: https://www.bisolutions.group/services#website-app-development
+- Data career enablement and mentorship: https://www.bisolutions.group/services#data-career-enablement-mentorship
 
 ## AI Consulting Capabilities
 

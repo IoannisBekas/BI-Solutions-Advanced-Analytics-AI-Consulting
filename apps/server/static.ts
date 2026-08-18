@@ -357,12 +357,12 @@ const FOUNDER_ID = `${BASE_URL}/about#ioannis-bekas`;
 const routeMetaMap: Record<string, RouteMeta> = {
   "/": {
     title: "AI, BI & Web App Development - BI Solutions Group",
-    description: "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
+    description: "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, modern web applications, and stronger data careers through personalized mentorship.",
     path: "/",
   },
   "/services": {
-    title: "Analytics, AI, Data & Web Services - BI Solutions Group",
-    description: "Explore every BI Solutions Group service on one page: business intelligence, Power BI, AI consulting, automation, data strategy, cloud foundations, websites, and web applications.",
+    title: "Analytics, AI, Data, Web & Mentorship Services - BI Solutions Group",
+    description: "Explore every BI Solutions Group service on one page: business intelligence, Power BI, AI consulting, automation, data strategy, cloud foundations, web applications, and data career mentorship.",
     path: "/services",
   },
   "/case-studies/unicef-audit-compliance": {
@@ -387,7 +387,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
   },
   "/start-a-project": {
     title: "Start a Project - BI Solutions Group",
-    description: "Tell BI Solutions Group about your business intelligence, AI, data strategy, web application, or product-workspace requirement.",
+    description: "Tell BI Solutions Group about your business intelligence, AI, data strategy, web application, product-workspace, or data career mentorship requirement.",
     path: "/start-a-project",
   },
   "/blog": {
@@ -417,7 +417,7 @@ function getOrganizationSchema() {
     logo: ORGANIZATION_LOGO_IMAGE,
     image: DEFAULT_OG_IMAGE,
     description:
-      "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for organizations worldwide.",
+      "AI, business intelligence, data strategy, cloud foundations, web app development, and data career mentorship for organizations and professionals worldwide.",
     areaServed: "Worldwide",
     founder: {
       "@id": FOUNDER_ID,
@@ -437,6 +437,8 @@ function getOrganizationSchema() {
       "cloud foundations",
       "web app development",
       "analytics engineering",
+      "data career mentorship",
+      "professional upskilling",
     ],
   };
 }

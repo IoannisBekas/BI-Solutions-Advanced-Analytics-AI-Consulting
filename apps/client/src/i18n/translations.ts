@@ -56,7 +56,7 @@ const en: TranslationCatalogue = {
   home: {
     seoTitle: "AI, BI & Web App Development",
     seoDescription:
-      "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, and modern web applications connected to measurable business outcomes.",
+      "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, modern web applications, and stronger data careers through personalized mentorship.",
   },
   nav: {
     services: "Services",
@@ -80,6 +80,7 @@ const en: TranslationCatalogue = {
       "ai-automation": "AI workflows & automation",
       "data-strategy": "Data strategy & cloud",
       "web-app": "A website or web app",
+      "career-mentorship": "Data career mentorship",
       "not-sure": "Not sure yet",
     },
     timings: {
@@ -92,14 +93,20 @@ const en: TranslationCatalogue = {
   services: {
     eyebrow: "What we do",
     heading:
-      "Four ways we turn scattered data into something your team can run on.",
+      "Five ways to build better systems, decisions, and data careers.",
     seeAll: "See all services",
     explore: "Explore",
-    items: {},
+    items: {
+      "data-career-enablement-mentorship": {
+        title: "Enablement & mentorship",
+        description:
+          "Personalized one-to-one guidance for people entering or advancing in data, BI, analytics, and AI careers.",
+      },
+    },
   },
   footer: {
     tagline:
-      "Business intelligence, AI workflows, data strategy, and focused web apps for teams that need clearer decisions and maintainable systems.",
+      "Business intelligence, AI workflows, data strategy, focused web apps, and data career mentorship for practical progress at every level.",
     company: "Company",
     services: "Services",
     resources: "Resources",
@@ -116,7 +123,7 @@ const el: TranslationCatalogue = {
   home: {
     seoTitle: "Ανάπτυξη AI, BI & Web εφαρμογών",
     seoDescription:
-      "Η BI Solutions Group βοηθά οργανισμούς διεθνώς να δημιουργήσουν dashboards BI, συστήματα ανάλυσης, ροές AI, στρατηγική δεδομένων και σύγχρονες web εφαρμογές με μετρήσιμα επιχειρηματικά αποτελέσματα.",
+      "Η BI Solutions Group βοηθά οργανισμούς διεθνώς να δημιουργήσουν dashboards BI, συστήματα ανάλυσης, ροές AI, στρατηγική δεδομένων και web εφαρμογές, ενώ προσφέρει εξατομικευμένο mentoring για καριέρα στα data.",
   },
   nav: {
     services: "Υπηρεσίες",
@@ -140,6 +147,7 @@ const el: TranslationCatalogue = {
       "ai-automation": "Ροές AI & αυτοματοποίηση",
       "data-strategy": "Στρατηγική δεδομένων & cloud",
       "web-app": "Ιστοσελίδα ή web εφαρμογή",
+      "career-mentorship": "Mentoring για καριέρα στα data",
       "not-sure": "Δεν είμαι σίγουρος ακόμη",
     },
     timings: {
@@ -152,7 +160,7 @@ const el: TranslationCatalogue = {
   services: {
     eyebrow: "Τι κάνουμε",
     heading:
-      "Τέσσερις τρόποι να γίνουν τα διάσπαρτα δεδομένα κάτι που η ομάδα σας μπορεί να χρησιμοποιεί.",
+      "Πέντε τρόποι για καλύτερα συστήματα, αποφάσεις και καριέρες στα data.",
     seeAll: "Δείτε όλες τις υπηρεσίες",
     explore: "Περισσότερα",
     items: {
@@ -176,11 +184,16 @@ const el: TranslationCatalogue = {
         description:
           "Φτιάχνουμε σύγχρονα sites και στοχευμένες web εφαρμογές που συνδέουν δεδομένα, αυτοματισμό και καθαρή εμπειρία χρήσης.",
       },
+      "data-career-enablement-mentorship": {
+        title: "Εξέλιξη & mentoring",
+        description:
+          "Εξατομικευμένη καθοδήγηση για όσους ξεκινούν ή εξελίσσονται σε καριέρες data, BI, analytics και AI.",
+      },
     },
   },
   footer: {
     tagline:
-      "Business intelligence, ροές AI, στρατηγική δεδομένων και στοχευμένες web εφαρμογές για ομάδες που χρειάζονται καθαρότερες αποφάσεις και συστήματα που συντηρούνται.",
+      "Business intelligence, ροές AI, στρατηγική δεδομένων, στοχευμένες web εφαρμογές και mentoring για πρακτική επαγγελματική εξέλιξη στα data.",
     company: "Εταιρεία",
     services: "Υπηρεσίες",
     resources: "Πόροι",
@@ -197,7 +210,7 @@ const de: TranslationCatalogue = {
   home: {
     seoTitle: "KI-, BI- & Web-App-Entwicklung",
     seoDescription:
-      "BI Solutions Group unterstützt Unternehmen weltweit beim Aufbau von BI-Dashboards, Analysesystemen, KI-Workflows, Datenstrategien und modernen Webanwendungen mit messbarem Geschäftsnutzen.",
+      "BI Solutions Group unterstützt Unternehmen weltweit mit BI-Dashboards, Analysesystemen, KI-Workflows, Datenstrategien und Webanwendungen sowie Fachkräfte mit persönlichem Mentoring für Datenkarrieren.",
   },
   nav: {
     services: "Leistungen",
@@ -221,6 +234,7 @@ const de: TranslationCatalogue = {
       "ai-automation": "KI-Workflows & Automatisierung",
       "data-strategy": "Datenstrategie & Cloud",
       "web-app": "Website oder Webanwendung",
+      "career-mentorship": "Mentoring für die Datenkarriere",
       "not-sure": "Noch unklar",
     },
     timings: {
@@ -233,7 +247,7 @@ const de: TranslationCatalogue = {
   services: {
     eyebrow: "Was wir tun",
     heading:
-      "Vier Wege, verstreute Daten in etwas zu verwandeln, mit dem Ihr Team arbeiten kann.",
+      "Fünf Wege zu besseren Systemen, Entscheidungen und Datenkarrieren.",
     seeAll: "Alle Leistungen ansehen",
     explore: "Mehr erfahren",
     items: {
@@ -257,11 +271,16 @@ const de: TranslationCatalogue = {
         description:
           "Wir bauen moderne Websites und fokussierte Webanwendungen, die Daten, Automatisierung und klare Bedienung verbinden.",
       },
+      "data-career-enablement-mentorship": {
+        title: "Entwicklung & Mentoring",
+        description:
+          "Persönliche Begleitung für Menschen, die in Daten-, BI-, Analytics- und KI-Berufe einsteigen oder sich darin weiterentwickeln.",
+      },
     },
   },
   footer: {
     tagline:
-      "Business Intelligence, KI-Workflows, Datenstrategie und fokussierte Webanwendungen für Teams, die klarere Entscheidungen und wartbare Systeme brauchen.",
+      "Business Intelligence, KI-Workflows, Datenstrategie, fokussierte Webanwendungen und Mentoring für praktische Entwicklung in Datenberufen.",
     company: "Unternehmen",
     services: "Leistungen",
     resources: "Ressourcen",

@@ -39,6 +39,11 @@ const serviceLinks = [
     href: "/services#website-app-development",
     description: "Focused digital products built around real workflows.",
   },
+  {
+    name: "Enablement & Mentorship",
+    href: "/services#data-career-enablement-mentorship",
+    description: "One-to-one data career development at every level.",
+  },
 ] as const;
 
 const focusableSelector = [

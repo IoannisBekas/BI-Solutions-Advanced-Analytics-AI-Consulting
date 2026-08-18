@@ -17,6 +17,7 @@ export const projectNeedOptions: ProjectOption[] = [
   { value: "ai-automation", label: "AI & automation" },
   { value: "data-strategy", label: "Data strategy" },
   { value: "web-app", label: "Website or web app" },
+  { value: "career-mentorship", label: "Data career mentorship" },
   { value: "product-walkthrough", label: "Product walkthrough" },
   { value: "not-sure", label: "Not sure yet" },
 ];

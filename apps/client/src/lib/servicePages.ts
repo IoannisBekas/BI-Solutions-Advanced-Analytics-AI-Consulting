@@ -5,6 +5,7 @@ import {
   BrainCircuit,
   Compass,
   Gauge,
+  GraduationCap,
   LineChart,
   MonitorSmartphone,
   ShieldCheck,
@@ -660,6 +661,69 @@ export const servicePages: ServicePage[] = [
       "Analytics demand is growing faster than the organisation's quality, ownership, and platform standards",
     ],
   },
+  {
+    slug: "data-career-enablement-mentorship",
+    path: "/services#data-career-enablement-mentorship",
+    icon: GraduationCap,
+    title: "Data career enablement and mentorship",
+    shortTitle: "Enablement & mentorship",
+    navLabel: "Data career mentorship",
+    description:
+      "Build a focused path into or through a data career with one-to-one mentorship, practical project guidance, portfolio feedback, and skills development shaped around your goals.",
+    seoTitle: "Data Career Mentorship & Professional Upskilling",
+    seoDescription:
+      "Personalized data career mentorship and upskilling for entry-level candidates, analysts, and experienced professionals across Power BI, SQL, Python, analytics, AI, portfolios, and interviews.",
+    keywords: [
+      "data career mentorship",
+      "data analyst mentor",
+      "Power BI mentoring",
+      "data analytics career coaching",
+      "data professional upskilling",
+      "business intelligence mentorship",
+      "data science career mentoring",
+    ],
+    heroEyebrow: "Personal guidance for every career stage",
+    heroTitle: "Build the skills, judgment, and portfolio for your next step in data.",
+    heroDescription:
+      "From a first role in analytics to senior-level growth, mentorship is tailored to your current experience, target role, available time, and the practical evidence employers and clients expect to see.",
+    techStack: [
+      "Power BI",
+      "SQL",
+      "Python",
+      "Excel",
+      "Git & GitHub",
+      "AI workflows",
+    ],
+    metrics: [
+      { label: "Career stages", value: "Entry level to senior professional" },
+      { label: "Format", value: "One-to-one remote mentorship" },
+      { label: "Focus", value: "Skills, projects, portfolio, and interviews" },
+    ],
+    items: [
+      "A personalized skills assessment and career roadmap aligned to a realistic target role",
+      "One-to-one sessions across analytics, Power BI, SQL, Python, data modeling, and applied AI",
+      "Hands-on guidance for portfolio projects, technical decisions, documentation, and presentation",
+      "CV, LinkedIn, interview, case-study, and professional communication feedback",
+      "Advanced support for specialists moving toward senior, lead, consulting, or management roles",
+    ],
+    outcomes: [
+      "A clear learning sequence based on your current level instead of a generic course catalogue",
+      "Stronger practical skills developed through work you can explain, defend, and improve",
+      "A more credible portfolio and professional story for roles, clients, or internal progression",
+      "Regular expert feedback, accountability, and course correction as your goals evolve",
+    ],
+    delivery: [
+      "Assess your experience, strengths, gaps, target roles, constraints, and existing portfolio",
+      "Define a focused development plan with practical milestones and recommended resources",
+      "Work through regular mentoring sessions, exercises, project reviews, and technical feedback",
+      "Review progress and refine the roadmap around interviews, opportunities, or new responsibilities",
+    ],
+    useCases: [
+      "You are entering data or analytics and need a structured route from fundamentals to employable work",
+      "You already work with data and want to deepen your BI, analytics, engineering, or AI capability",
+      "You are an experienced professional preparing for a senior role, consulting work, or leadership responsibility",
+    ],
+  },
 ];
 
 const servicePillarSlugs = [
@@ -667,6 +731,7 @@ const servicePillarSlugs = [
   "advanced-analytics-ai",
   "data-strategy-governance",
   "website-app-development",
+  "data-career-enablement-mentorship",
 ] as const;
 
 export const servicePillarPages = servicePillarSlugs

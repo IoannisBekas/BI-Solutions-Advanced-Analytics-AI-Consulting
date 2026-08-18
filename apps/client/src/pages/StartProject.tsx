@@ -27,6 +27,7 @@ const serviceNeedMap: Record<string, FormValues["need"]> = {
   "ai-consulting-greece": "ai-automation",
   "data-strategy-governance": "data-strategy",
   "website-app-development": "web-app",
+  "data-career-enablement-mentorship": "career-mentorship",
 };
 
 const budgetOptions = [
@@ -82,7 +83,7 @@ const structuredData = {
   name: "Start a project with BI Solutions Group",
   url: "https://www.bisolutions.group/start-a-project",
   description:
-    "Share a business intelligence, AI, data strategy, automation, dashboard, or web application project with BI Solutions Group.",
+    "Share a business intelligence, AI, data strategy, automation, dashboard, web application, or data career mentorship requirement with BI Solutions Group.",
 };
 
 export default function StartProject() {
@@ -91,6 +92,7 @@ export default function StartProject() {
   const hasTrackedStart = useRef(false);
   const hasTrackedValidationError = useRef(false);
   const attribution = useRef({ source: "direct", context: "start-project-page" });
+  const isMentorship = form.need === "career-mentorship";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -174,13 +176,15 @@ export default function StartProject() {
       projectNeedOptions.find((option) => option.value === form.need)?.label ??
       form.need;
     const message = [
-      `Company: ${form.company}`,
-      `Project need: ${selectedNeed}`,
+      `Company or career stage: ${form.company}`,
+      `Enquiry type: ${selectedNeed}`,
       `Desired timing: ${form.timing}`,
-      `Budget range: ${form.budget || "Not provided"}`,
+      isMentorship
+        ? "Budget range: Not requested"
+        : `Budget range: ${form.budget || "Not provided"}`,
       "Privacy consent: Yes",
       "",
-      "Project description:",
+      "Enquiry details:",
       form.description,
       "",
       "Submission context:",
@@ -199,7 +203,7 @@ export default function StartProject() {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
-          subject: `Project enquiry — ${selectedNeed}`,
+          subject: `New enquiry — ${selectedNeed}`,
           message,
         }),
       });
@@ -212,7 +216,9 @@ export default function StartProject() {
       trackEvent("contact_form_submit", {
         selected_need: form.need,
         desired_timing: form.timing,
-        budget_range: form.budget || "not_provided",
+        budget_range: isMentorship
+          ? "not_requested"
+          : form.budget || "not_provided",
         source: attribution.current.source,
         context: attribution.current.context,
       });
@@ -230,13 +236,14 @@ export default function StartProject() {
     <div className="min-h-screen bg-white text-gray-950">
       <Seo
         title="Start a Project"
-        description="Tell BI Solutions Group about your business intelligence, AI, data strategy, dashboard, automation, or web application project."
+        description="Tell BI Solutions Group about your business intelligence, AI, data strategy, dashboard, automation, web application, or data career mentorship need."
         path="/start-a-project"
         keywords={[
           "hire Power BI consultant",
           "international AI consultant",
           "business intelligence project",
           "international data strategy consultant",
+          "data career mentorship",
         ]}
         structuredData={structuredData}
       />
@@ -247,15 +254,17 @@ export default function StartProject() {
         <div className="relative mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <section className="lg:sticky lg:top-36 lg:self-start">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-              Start a project
+              {isMentorship ? "Mentorship enquiry" : "Start a project"}
             </p>
             <h1 className="mt-6 max-w-xl text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
-              Bring the problem. We’ll clarify the right next step.
+              {isMentorship
+                ? "Bring your goal. We’ll shape the right next step."
+                : "Bring the problem. We’ll clarify the right next step."}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
               Share the essentials about your reporting, AI, data, automation,
-              dashboard, website, or web application need. Your brief helps make
-              the first conversation focused and useful.
+              digital product, or data career goal. Your brief helps make the
+              first conversation focused and useful.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -267,9 +276,9 @@ export default function StartProject() {
                 <div>
                   <h2 className="text-base font-semibold">A useful starting point</h2>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    A business bottleneck, repeated workflow, reporting gap, or
-                    product idea is enough. You do not need a finished technical
-                    specification.
+                    A business bottleneck, repeated workflow, reporting gap,
+                    product idea, or career goal is enough. You do not need a
+                    finished technical specification or learning plan.
                   </p>
                 </div>
               </div>
@@ -331,7 +340,9 @@ export default function StartProject() {
             ) : (
               <>
                 <h2 id="project-form-title" className="text-2xl sm:text-3xl">
-                  Tell us about the project
+                  {isMentorship
+                    ? "Tell us about your career goals"
+                    : "Tell us about the project"}
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-gray-600">
                   Fields marked with an asterisk are required.
@@ -358,7 +369,8 @@ export default function StartProject() {
                       />
                     </label>
                     <label className="text-sm font-medium text-gray-800">
-                      Work email <span aria-hidden="true">*</span>
+                      {isMentorship ? "Email" : "Work email"}{" "}
+                      <span aria-hidden="true">*</span>
                       <input
                         name="email"
                         type="email"
@@ -373,15 +385,21 @@ export default function StartProject() {
                   </div>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    Company <span aria-hidden="true">*</span>
+                    {isMentorship ? "Current role or career stage" : "Company"}{" "}
+                    <span aria-hidden="true">*</span>
                     <input
                       name="company"
                       type="text"
-                      autoComplete="organization"
+                      autoComplete={isMentorship ? "off" : "organization"}
                       required
                       maxLength={200}
                       value={form.company}
                       onChange={(event) => updateField("company", event.target.value)}
+                      placeholder={
+                        isMentorship
+                          ? "For example: entry level, data analyst, BI developer"
+                          : undefined
+                      }
                       className={fieldClassName}
                     />
                   </label>
@@ -407,7 +425,8 @@ export default function StartProject() {
                   </label>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    Project description <span aria-hidden="true">*</span>
+                    {isMentorship ? "Career goals and support needed" : "Project description"}{" "}
+                    <span aria-hidden="true">*</span>
                     <textarea
                       name="description"
                       required
@@ -417,12 +436,18 @@ export default function StartProject() {
                       onChange={(event) =>
                         updateField("description", event.target.value)
                       }
-                      placeholder="What needs to improve, who will use the result, and what would a useful outcome look like?"
+                      placeholder={
+                        isMentorship
+                          ? "What is your current experience, where do you want to go next, and what would you like help with?"
+                          : "What needs to improve, who will use the result, and what would a useful outcome look like?"
+                      }
                       className={`${fieldClassName} min-h-44 resize-y py-3 leading-relaxed`}
                     />
                   </label>
 
-                  <div className="grid gap-6 sm:grid-cols-2">
+                  <div
+                    className={`grid gap-6 ${isMentorship ? "" : "sm:grid-cols-2"}`}
+                  >
                     <label className="text-sm font-medium text-gray-800">
                       Desired timing <span aria-hidden="true">*</span>
                       <select
@@ -444,24 +469,26 @@ export default function StartProject() {
                         ))}
                       </select>
                     </label>
-                    <label className="text-sm font-medium text-gray-800">
-                      Budget range <span className="text-gray-400">(optional)</span>
-                      <select
-                        name="budget"
-                        value={form.budget}
-                        onChange={(event) =>
-                          updateField("budget", event.target.value)
-                        }
-                        className={fieldClassName}
-                      >
-                        <option value="">Prefer not to say</option>
-                        {budgetOptions.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+                    {!isMentorship && (
+                      <label className="text-sm font-medium text-gray-800">
+                        Budget range <span className="text-gray-400">(optional)</span>
+                        <select
+                          name="budget"
+                          value={form.budget}
+                          onChange={(event) =>
+                            updateField("budget", event.target.value)
+                          }
+                          className={fieldClassName}
+                        >
+                          <option value="">Prefer not to say</option>
+                          {budgetOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
                   </div>
 
                   <label className="flex cursor-pointer items-start gap-3 rounded-2xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-600">
@@ -514,7 +541,11 @@ export default function StartProject() {
                     disabled={status === "submitting"}
                     className="h-12 w-full rounded-full text-base sm:w-auto sm:px-7"
                   >
-                    {status === "submitting" ? "Sending…" : "Send project brief"}
+                    {status === "submitting"
+                      ? "Sending…"
+                      : isMentorship
+                        ? "Send mentorship enquiry"
+                        : "Send project brief"}
                     {status !== "submitting" ? (
                       <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
                     ) : null}

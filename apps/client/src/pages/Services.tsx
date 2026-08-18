@@ -39,26 +39,32 @@ const pillarCopy: Record<
     promise:
       "Fast, focused websites and applications that make an offer clearer or a workflow easier to run.",
   },
+  "data-career-enablement-mentorship": {
+    number: "05",
+    eyebrow: "Career development",
+    promise:
+      "Personal guidance that turns scattered learning into practical capability, stronger evidence, and a clearer next step.",
+  },
 };
 
 const deliveryFlow = [
   {
     number: "01",
-    title: "Frame the problem",
+    title: "Frame the starting point",
     description:
-      "Define the decision, users, constraints, current systems, and evidence of success.",
+      "Define the goal, current reality, constraints, and practical evidence of progress.",
   },
   {
     number: "02",
     title: "Build the useful core",
     description:
-      "Design and test the smallest complete system with representative data and real users.",
+      "Work on the smallest complete solution or development plan using representative, practical material.",
   },
   {
     number: "03",
-    title: "Make it operational",
+    title: "Make progress durable",
     description:
-      "Integrate, document, transfer ownership, and establish the support needed after launch.",
+      "Document decisions, transfer knowledge, and establish the ownership or habits needed for the next stage.",
   },
 ];
 
@@ -97,7 +103,7 @@ function ServiceChapter({ service }: { service: ServicePage }) {
           <div className="lg:sticky lg:top-32">
             <div className="flex items-center gap-4">
               <span className="font-mono text-xs tracking-[0.2em] text-gray-500">
-                {copy.number} / 04
+                {copy.number} / 05
               </span>
               <span className="h-px flex-1 bg-gray-950/15" />
             </div>
@@ -183,7 +189,9 @@ function ServiceChapter({ service }: { service: ServicePage }) {
                   href={`/start-a-project?source=services&service=${service.slug}`}
                   className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4"
                 >
-                  Discuss this service
+                  {service.slug === "data-career-enablement-mentorship"
+                    ? "Discuss mentorship"
+                    : "Discuss this service"}
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
               </div>
@@ -209,7 +217,7 @@ function AiChapter({ service }: { service: ServicePage }) {
             <div>
               <div className="flex items-center gap-4">
                 <span className="font-mono text-xs tracking-[0.2em] text-white/45">
-                  02 / 04
+                  02 / 05
                 </span>
                 <span className="h-px flex-1 bg-white/15" />
               </div>
@@ -311,14 +319,19 @@ function AiChapter({ service }: { service: ServicePage }) {
 }
 
 export default function Services() {
-  const [businessIntelligence, ai, dataStrategy, webDevelopment] =
-    servicePillarPages;
+  const [
+    businessIntelligence,
+    ai,
+    dataStrategy,
+    webDevelopment,
+    careerMentorship,
+  ] = servicePillarPages;
 
   return (
     <div className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
       <Seo
-        title="Analytics, AI, Data & Web Services"
-        description="Explore every BI Solutions Group service on one page: business intelligence, Power BI, AI consulting, automation, data strategy, cloud foundations, websites, and web applications."
+        title="Analytics, AI, Data, Web & Mentorship Services"
+        description="Explore every BI Solutions Group service on one page: business intelligence, Power BI, AI consulting, automation, data strategy, cloud foundations, web applications, and data career mentorship."
         path="/services"
         structuredData={servicesStructuredData}
       />
@@ -334,15 +347,14 @@ export default function Services() {
                     The complete service atlas
                   </p>
                   <h1 className="mt-6 max-w-5xl text-5xl font-bold font-heading leading-[0.92] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-[6.5rem]">
-                    One partner for the systems behind better decisions.
+                    One partner for better data systems, decisions, and careers.
                   </h1>
                 </div>
                 <div className="max-w-xl lg:pb-2">
                   <p className="text-lg leading-relaxed text-white/65 md:text-xl">
-                    Business intelligence, applied AI, data foundations, and
-                    digital products—designed as connected capabilities,
-                    presented in one place, and delivered from strategy to
-                    handoff.
+                    Business intelligence, applied AI, data foundations,
+                    digital products, and career mentorship—presented in one
+                    place and shaped around practical progress.
                   </p>
                   <div className="mt-7 flex flex-wrap gap-3">
                     <Button
@@ -372,7 +384,7 @@ export default function Services() {
             <nav
               id="service-index"
               aria-label="Services on this page"
-              className="mt-16 grid scroll-mt-28 border-t border-white/15 sm:grid-cols-2 lg:grid-cols-4"
+              className="mt-16 grid scroll-mt-28 border-t border-white/15 sm:grid-cols-2 lg:grid-cols-5"
             >
               {servicePillarPages.map((service, index) => (
                 <a
@@ -403,6 +415,7 @@ export default function Services() {
           {ai && <AiChapter service={ai} />}
           {dataStrategy && <ServiceChapter service={dataStrategy} />}
           {webDevelopment && <ServiceChapter service={webDevelopment} />}
+          {careerMentorship && <ServiceChapter service={careerMentorship} />}
         </div>
 
         <section className="bg-white py-20 md:py-28">
@@ -412,7 +425,7 @@ export default function Services() {
                 One delivery model
               </p>
               <h2 className="mt-5 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
-                Start with the problem. Leave with a system your team can run.
+                Start with the real need. Leave with progress you can sustain.
               </h2>
             </ScrollReveal>
             <div className="mt-12 grid border-y border-gray-950/15 lg:grid-cols-3">
@@ -440,11 +453,11 @@ export default function Services() {
             <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-4xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-600">
-                  Not sure where your problem belongs?
+                  Not sure where your need belongs?
                 </p>
                 <h2 className="mt-5 text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
-                  Tell us what needs to become clearer, faster, or easier to
-                  use.
+                  Tell us what should become clearer, faster, stronger, or
+                  easier to use.
                 </h2>
               </div>
               <Button

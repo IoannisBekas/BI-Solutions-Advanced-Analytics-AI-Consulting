@@ -15,6 +15,7 @@ const serviceSlugs = [
   "advanced-analytics-ai",
   "data-strategy-governance",
   "website-app-development",
+  "data-career-enablement-mentorship",
 ] as const;
 
 const serviceFallbackLabels: Record<string, string> = {
@@ -22,6 +23,7 @@ const serviceFallbackLabels: Record<string, string> = {
   "advanced-analytics-ai": "AI Consulting & Automation",
   "data-strategy-governance": "Data Strategy & Cloud",
   "website-app-development": "Websites & Web Apps",
+  "data-career-enablement-mentorship": "Enablement & Mentorship",
 };
 
 export function Footer() {

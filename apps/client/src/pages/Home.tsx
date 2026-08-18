@@ -39,6 +39,8 @@ export default function Home() {
           "international web app development",
           "data strategy consulting",
           "business intelligence consulting",
+          "data career mentorship",
+          "data analyst mentor",
           "BI Solutions Group",
         ]}
         structuredData={[
@@ -61,6 +63,7 @@ export default function Home() {
               "website and web app development",
               "data strategy",
               "business intelligence",
+              "data career mentorship",
             ],
           },
           {
@@ -73,7 +76,7 @@ export default function Home() {
             logo: "https://www.bisolutions.group/bi-solutions-logo.png",
             image: "https://www.bisolutions.group/bi-solutions-logo.png",
             description:
-              "AI, business intelligence, data strategy, cloud foundations, and web app development consultancy for organizations worldwide.",
+              "AI, business intelligence, data strategy, cloud foundations, web app development, and data career mentorship for organizations and professionals worldwide.",
             areaServed: "Worldwide",
             founder: {
               "@id": "https://www.bisolutions.group/about#ioannis-bekas",
@@ -93,6 +96,8 @@ export default function Home() {
               "cloud foundations",
               "web app development",
               "analytics engineering",
+              "data career mentorship",
+              "professional upskilling",
             ],
             sameAs: [
               "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
@@ -140,6 +145,14 @@ export default function Home() {
                   url: "https://www.bisolutions.group/services#website-app-development",
                 },
               },
+              {
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: "Data career enablement and mentorship",
+                  url: "https://www.bisolutions.group/services#data-career-enablement-mentorship",
+                },
+              },
             ],
           },
           {
@@ -167,6 +180,7 @@ export default function Home() {
               "advanced analytics",
               "data strategy",
               "web app development",
+              "data career mentorship",
             ],
           },
         ]}
