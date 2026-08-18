@@ -297,7 +297,7 @@ export default function Home() {
                   <img
                     src={latestInsight.featuredImage}
                     alt=""
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-contain"
                   />
                 </div>
                 <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
