@@ -15,6 +15,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/i18n/LocaleProvider";
 
 const latestInsight = blogPosts[0];
+const moreInsights = blogPosts.slice(1, 4);
 
 export default function Home() {
   const { t } = useLocale();
@@ -280,7 +281,7 @@ export default function Home() {
             <ScrollReveal className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between" width="100%">
               <div className="max-w-3xl">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                  Latest insight
+                  Latest insights
                 </p>
                 <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
                   Practical thinking before the project starts.
@@ -331,6 +332,52 @@ export default function Home() {
                 </div>
               </Link>
             </ScrollReveal>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {moreInsights.map((insight, index) => (
+                <ScrollReveal
+                  key={insight.slug}
+                  delay={index * 0.06}
+                  width="100%"
+                >
+                  <Link
+                    href={`/blog/${insight.slug}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-gray-200 bg-white transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.04]"
+                    onClick={() =>
+                      trackEvent("insight_click", {
+                        article: insight.slug,
+                        placement: "homepage_more_insights",
+                        target: `/blog/${insight.slug}`,
+                      })
+                    }
+                  >
+                    <div className="aspect-video overflow-hidden border-b border-gray-100 bg-gray-100">
+                      <img
+                        src={insight.featuredImage}
+                        alt=""
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                        loading="lazy"
+                      />
+                    </div>
+                    <article className="flex flex-1 flex-col p-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        {insight.category} · {insight.readTime}
+                      </p>
+                      <h3 className="mt-4 text-xl font-bold font-heading leading-tight text-gray-950 md:text-2xl">
+                        {insight.title}
+                      </h3>
+                      <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-600">
+                        {insight.excerpt}
+                      </p>
+                      <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-gray-950">
+                        Read article
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </article>
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </section>
 
