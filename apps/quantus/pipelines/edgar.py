@@ -25,7 +25,7 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_EDGAR_UA = "QuantusResearchSolutions/2.4 contact@bisolutions.group"
+_DEFAULT_EDGAR_UA = "QuantusResearchSolutions/2.4 https://www.bisolutions.group"
 _TICKER_CIK_URL = "https://www.sec.gov/files/company_tickers.json"
 _SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik}.json"
 

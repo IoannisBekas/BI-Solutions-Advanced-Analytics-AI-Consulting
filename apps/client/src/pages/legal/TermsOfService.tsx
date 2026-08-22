@@ -5,7 +5,6 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { Link } from "wouter";
 import { FileText } from "lucide-react";
-import { CONTACT_EMAIL } from "@/lib/contact";
 
 export default function TermsOfService() {
   return (
@@ -185,10 +184,11 @@ export default function TermsOfService() {
                   These terms are governed by Greek law. Any dispute arising from
                   use of our services will be subject to the competent courts of
                   Thessaloniki, Greece. Before starting legal proceedings, we
-                  encourage good-faith resolution by contacting{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
-                    {CONTACT_EMAIL}
-                  </a>
+                  encourage good-faith resolution by submitting an enquiry
+                  through the{" "}
+                  <Link href="/start-a-project" className="underline text-black">
+                    project enquiry form
+                  </Link>
                   .
                 </p>
               </section>
@@ -216,10 +216,11 @@ export default function TermsOfService() {
                 <p className="mt-3">
                   <strong>BI Solutions Group</strong>
                   <br />
-                  Email:{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
-                    {CONTACT_EMAIL}
-                  </a>
+                  Submit an enquiry through the{" "}
+                  <Link href="/start-a-project" className="underline text-black">
+                    project enquiry form
+                  </Link>
+                  .
                 </p>
                 <p className="mt-4">
                   See our{" "}

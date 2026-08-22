@@ -1,12 +1,11 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ArrowRight, CheckCircle2, Mail, ShieldCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
-import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/contact";
 import {
   projectNeedGroups,
   projectNeedOptions,
@@ -304,21 +303,6 @@ export default function StartProject() {
               </div>
             </div>
 
-            <p className="mt-8 flex flex-wrap items-center gap-2 text-sm text-gray-600">
-              <Mail aria-hidden="true" className="h-4 w-4" />
-              Prefer email?
-              <a
-                href={CONTACT_MAILTO}
-                className="font-medium text-black underline decoration-black/20 underline-offset-4 transition-colors hover:decoration-black"
-                onClick={() =>
-                  trackEvent("contact_email_click", {
-                    placement: "start_project_page",
-                  })
-                }
-              >
-                {CONTACT_EMAIL}
-              </a>
-            </p>
           </section>
 
           <section
@@ -531,19 +515,8 @@ export default function StartProject() {
                       role="alert"
                       className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-900"
                     >
-                      We could not send your brief. Please try again, or email{" "}
-                      <a
-                        href={CONTACT_MAILTO}
-                        className="font-semibold underline"
-                        onClick={() =>
-                          trackEvent("contact_email_click", {
-                            placement: "start_project_error",
-                          })
-                        }
-                      >
-                        {CONTACT_EMAIL}
-                      </a>
-                      .
+                      We could not send your brief. Please wait a moment and
+                      try again.
                     </div>
                   ) : null}
 

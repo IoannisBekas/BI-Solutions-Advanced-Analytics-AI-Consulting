@@ -1,11 +1,7 @@
 import { ArrowUp, Github, Instagram, Linkedin } from "lucide-react";
 import { Link } from "wouter";
 import { trackEvent, trackNavClick } from "@/lib/analytics";
-import {
-  CONTACT_EMAIL,
-  CONTACT_MAILTO,
-  START_PROJECT_PATH,
-} from "@/lib/contact";
+import { START_PROJECT_PATH } from "@/lib/contact";
 import { withAssetBase } from "@/lib/site";
 import { useLocale } from "@/i18n/LocaleProvider";
 
@@ -105,17 +101,6 @@ export function Footer() {
                 >
                   {t.nav.startProject}
                 </Link>
-              </li>
-              <li>
-                <a
-                  href={CONTACT_MAILTO}
-                  className="break-all text-gray-400 transition-colors hover:text-white"
-                  onClick={() =>
-                    trackEvent("contact_email_click", { placement: "footer" })
-                  }
-                >
-                  {CONTACT_EMAIL}
-                </a>
               </li>
             </ul>
           </div>

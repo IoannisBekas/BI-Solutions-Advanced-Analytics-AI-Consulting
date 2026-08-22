@@ -146,7 +146,7 @@ export function Layout({
         WebkitAppearance: 'none' as const,
     };
     const quantusOverviewUrl = 'https://www.bisolutions.group/quantus';
-    const contactUrl = 'mailto:contact@bisolutions.group';
+    const contactUrl = 'https://www.bisolutions.group/start-a-project';
     const bisolutionsHomeUrl = 'https://www.bisolutions.group/';
     const brandLogoSrc = `${import.meta.env.BASE_URL}bi-solutions-logo.png`;
     const showExpandedHeader = !minimalHeader;

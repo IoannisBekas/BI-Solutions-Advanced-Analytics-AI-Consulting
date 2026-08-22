@@ -18,7 +18,7 @@ website and the Google Business Profile as one entity.
 | Company name | BI Solutions Group |
 | Tagline | Advanced Analytics & AI Consulting |
 | Website | https://www.bisolutions.group |
-| Email | contact@bisolutions.group |
+| Contact | https://www.bisolutions.group/start-a-project |
 | LinkedIn | https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/ |
 | GitHub | https://github.com/IoannisBekas |
 | Founder | Ioannis Bekas — Data Scientist & AI Developer |

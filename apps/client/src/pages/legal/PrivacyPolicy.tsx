@@ -4,7 +4,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { ShieldCheck } from "lucide-react";
-import { CONTACT_EMAIL } from "@/lib/contact";
+import { Link } from "wouter";
 
 export default function PrivacyPolicy() {
   return (
@@ -37,10 +37,11 @@ export default function PrivacyPolicy() {
                   personal data processed through this website and our services.
                 </p>
                 <p className="mt-2">
-                  Contact email:{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
-                    {CONTACT_EMAIL}
-                  </a>
+                  Privacy enquiries can be submitted through the{" "}
+                  <Link href="/start-a-project" className="underline text-black">
+                    project enquiry form
+                  </Link>
+                  .
                 </p>
               </section>
             </ScrollReveal>
@@ -186,10 +187,10 @@ export default function PrivacyPolicy() {
                   </li>
                 </ul>
                 <p className="mt-4">
-                  To exercise your rights, email{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
-                    {CONTACT_EMAIL}
-                  </a>
+                  To exercise your rights, submit a request through the{" "}
+                  <Link href="/start-a-project" className="underline text-black">
+                    project enquiry form
+                  </Link>
                   .
                 </p>
               </section>
@@ -311,10 +312,11 @@ export default function PrivacyPolicy() {
                 <p className="mt-3">
                   <strong>BI Solutions Group</strong>
                   <br />
-                  Email:{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="underline text-black">
-                    {CONTACT_EMAIL}
-                  </a>
+                  Submit a privacy enquiry through the{" "}
+                  <Link href="/start-a-project" className="underline text-black">
+                    project enquiry form
+                  </Link>
+                  .
                 </p>
                 <p className="mt-3">
                   If you believe your rights have not been respected, you may
