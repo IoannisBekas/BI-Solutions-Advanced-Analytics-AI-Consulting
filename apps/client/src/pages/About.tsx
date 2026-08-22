@@ -3,11 +3,10 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import founderPhoto from "@/assets/founder-photo-2.jpg";
 import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, MapPin, Download, Github } from "lucide-react";
+import { Linkedin, MapPin, Download, Github } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { CONTACT_MAILTO } from "@/lib/contact";
 
 interface Section {
   id: string;
@@ -150,14 +149,11 @@ export default function About() {
               <div className="mt-12 pt-12 border-t border-gray-100">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 block">Connect</span>
                 <div className="flex gap-4">
-                  <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors">
-                    <Linkedin className="w-5 h-5" />
+                  <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" aria-label="Ioannis Bekas on LinkedIn" className="text-gray-400 hover:text-black transition-colors">
+                    <Linkedin aria-hidden="true" className="w-5 h-5" />
                   </a>
-                  <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-black transition-colors">
-                    <Github className="w-5 h-5" />
-                  </a>
-                  <a href={CONTACT_MAILTO} className="text-gray-400 hover:text-black transition-colors">
-                    <Mail className="w-5 h-5" />
+                  <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" aria-label="Ioannis Bekas on GitHub" className="text-gray-400 hover:text-black transition-colors">
+                    <Github aria-hidden="true" className="w-5 h-5" />
                   </a>
                 </div>
               </div>
@@ -240,13 +236,33 @@ export default function About() {
                 className="space-y-8"
               >
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  My expertise includes data management, statistical analysis, artificial intelligence, and information visualization, with a focus on building advanced analytical tools that support data-driven decision-making and training data models for predictive analytics and automation.
+                  My expertise spans data engineering, statistical analysis,
+                  artificial intelligence, and interactive data visualization,
+                  with a focus on building advanced analytical tools and
+                  scalable data models for predictive analytics and automation.
                 </p>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  My professional background spans international organizations such as the International Atomic Energy Agency (IAEA), the International Organization for Migration (IOM), and the United Nations Office for Disaster Risk Reduction (UNDRR), as well as private-sector environments. Across these settings, I have contributed to structuring and analyzing large-scale datasets, developing data governance frameworks, and designing scalable business intelligence and analytics solutions.
+                  My background bridges major international
+                  organizations—including the International Atomic Energy
+                  Agency (IAEA), the International Organization for Migration
+                  (IOM), the United Nations Office for Disaster Risk Reduction
+                  (UNDRR) and the United Nations Women organization—with
+                  private-sector enterprises. Across these environments, I have
+                  structured large-scale datasets, established robust data
+                  governance frameworks, and deployed end-to-end business
+                  intelligence architectures.
                 </p>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  In parallel, I have consulted professionals and teams across Canada, the United States, and Europe, supporting data, analytics, and decision-making initiatives for organizations including Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola, PepsiCo, and multiple SMEs.
+                  In parallel, I advise cross-functional teams and leadership
+                  across North America and Europe on high-impact data
+                  initiatives—
+                  <strong className="font-semibold text-gray-900">
+                    helping organizations leverage state-of-the-art tooling,
+                    modern data stacks, and emerging AI frameworks
+                  </strong>
+                  —supporting global brands including Fujitsu, LG, Nespresso,
+                  Collins Aerospace, Coca-Cola, and PepsiCo, as well as
+                  high-growth SMEs.
                 </p>
               </motion.div>
             </section>
@@ -351,20 +367,20 @@ export default function About() {
                     <div className="space-y-6">
 
                       <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Linkedin className="w-5 h-5" />
+                        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
+                          <Linkedin aria-hidden="true" className="w-5 h-5" />
                         </span>
                         linkedin.com/in/ioannisbekas
                       </a>
                       <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Github className="w-5 h-5" />
+                        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
+                          <Github aria-hidden="true" className="w-5 h-5" />
                         </span>
                         github.com/IoannisBekas
                       </a>
                       <a href="https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
-                        <span className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Linkedin className="w-5 h-5" />
+                        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
+                          <Linkedin aria-hidden="true" className="w-5 h-5" />
                         </span>
                         Company LinkedIn
                       </a>
