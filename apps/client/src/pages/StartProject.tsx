@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Crosshair, Waypoints } from "lucide-react";
 import { Link } from "wouter";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -275,10 +275,13 @@ export default function StartProject() {
 
             <div className="mt-10 space-y-4">
               <div className="flex gap-4 rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
-                <CheckCircle2
+                <div
                   aria-hidden="true"
-                  className="mt-0.5 h-5 w-5 shrink-0"
-                />
+                  className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-black/[0.08] bg-[linear-gradient(145deg,#ffffff_0%,#f1f1ed_100%)] text-gray-950 shadow-[0_16px_32px_-24px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.95)]"
+                >
+                  <span className="absolute right-2 top-2 size-1 rounded-full bg-black/25" />
+                  <Crosshair className="size-[1.15rem]" strokeWidth={1.6} />
+                </div>
                 <div>
                   <h2 className="text-base font-semibold">A useful starting point</h2>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600">
@@ -289,10 +292,13 @@ export default function StartProject() {
                 </div>
               </div>
               <div className="flex gap-4 rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
-                <ShieldCheck
+                <div
                   aria-hidden="true"
-                  className="mt-0.5 h-5 w-5 shrink-0"
-                />
+                  className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-black/[0.08] bg-[linear-gradient(145deg,#ffffff_0%,#f1f1ed_100%)] text-gray-950 shadow-[0_16px_32px_-24px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.95)]"
+                >
+                  <span className="absolute right-2 top-2 size-1 rounded-full bg-black/25" />
+                  <Waypoints className="size-[1.15rem]" strokeWidth={1.6} />
+                </div>
                 <div>
                   <h2 className="text-base font-semibold">A considered response</h2>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600">
@@ -315,8 +321,13 @@ export default function StartProject() {
                 role="status"
                 aria-live="polite"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black text-white">
-                  <CheckCircle2 aria-hidden="true" className="h-7 w-7" />
+                <div
+                  aria-hidden="true"
+                  className="relative flex size-14 items-center justify-center overflow-hidden rounded-[1.25rem] bg-gray-950 text-white shadow-[0_20px_42px_-18px_rgba(0,0,0,0.72)]"
+                >
+                  <span className="absolute inset-[6px] rounded-[0.9rem] border border-white/15" />
+                  <span className="absolute right-2.5 top-2.5 size-1 rounded-full bg-white/45" />
+                  <Check className="relative size-6" strokeWidth={1.75} />
                 </div>
                 <h2 className="mt-8 text-3xl sm:text-4xl">Your brief was sent.</h2>
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-gray-600">
