@@ -17,7 +17,7 @@ const publicRoutes = [
   {
     path: "/services",
     title: "Analytics, AI, Data, Digital Products & Enablement Services",
-    body: "One partner for the systems behind better decisions.",
+    body: "One partner for better data systems, decisions, and careers.",
   },
   {
     path: "/case-studies/unicef-audit-compliance",
