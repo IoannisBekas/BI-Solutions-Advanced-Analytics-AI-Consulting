@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/contact";
 import {
+  projectNeedGroups,
   projectNeedOptions,
   projectTimingOptions,
   resolveProjectNeed,
@@ -27,7 +28,8 @@ const serviceNeedMap: Record<string, FormValues["need"]> = {
   "ai-consulting-greece": "ai-automation",
   "data-strategy-governance": "data-strategy",
   "website-app-development": "web-app",
-  "data-career-enablement-mentorship": "career-mentorship",
+  "content-operations-automation": "content-operations",
+  "data-career-enablement-mentorship": "team-enablement",
 };
 
 const budgetOptions = [
@@ -83,7 +85,7 @@ const structuredData = {
   name: "Start a project with BI Solutions Group",
   url: "https://www.bisolutions.group/start-a-project",
   description:
-    "Share a business intelligence, AI, data strategy, automation, dashboard, web application, or data career mentorship requirement with BI Solutions Group.",
+    "Share a business intelligence, AI, data strategy, automation, digital product, content operations, managed support, enablement, or mentorship requirement with BI Solutions Group.",
 };
 
 export default function StartProject() {
@@ -236,13 +238,17 @@ export default function StartProject() {
     <div className="min-h-screen bg-white text-gray-950">
       <Seo
         title="Start a Project"
-        description="Tell BI Solutions Group about your business intelligence, AI, data strategy, dashboard, automation, web application, or data career mentorship need."
+        description="Tell BI Solutions Group about your business intelligence, AI, data strategy, automation, web application, content operations, digital product, managed support, enablement, or mentorship need."
         path="/start-a-project"
         keywords={[
           "hire Power BI consultant",
           "international AI consultant",
           "business intelligence project",
           "international data strategy consultant",
+          "fractional data leadership",
+          "managed analytics support",
+          "content operations consulting",
+          "corporate AI training",
           "data career mentorship",
         ]}
         structuredData={structuredData}
@@ -263,8 +269,9 @@ export default function StartProject() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
               Share the essentials about your reporting, AI, data, automation,
-              digital product, or data career goal. Your brief helps make the
-              first conversation focused and useful.
+              digital product, content operation, team capability, or career
+              goal. Your brief helps make the first conversation focused and
+              useful.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -405,7 +412,7 @@ export default function StartProject() {
                   </label>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    What do you need? <span aria-hidden="true">*</span>
+                    What would you like to achieve? <span aria-hidden="true">*</span>
                     <select
                       name="need"
                       required
@@ -416,10 +423,14 @@ export default function StartProject() {
                       <option value="" disabled>
                         Select the closest option
                       </option>
-                      {projectNeedOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
+                      {projectNeedGroups.map((group) => (
+                        <optgroup key={group.label} label={group.label}>
+                          {group.options.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </optgroup>
                       ))}
                     </select>
                   </label>

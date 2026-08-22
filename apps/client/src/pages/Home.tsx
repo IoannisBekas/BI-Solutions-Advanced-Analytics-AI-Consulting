@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { CinematicHero } from "@/components/sections/CinematicHero";
-import { ServicesPanel } from "@/components/sections/ServicesPanel";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
@@ -38,6 +37,12 @@ export default function Home() {
           "business intelligence consultant",
           "Power BI Tableau Looker consulting",
           "international web app development",
+          "content operations consulting",
+          "content repurposing systems",
+          "digital product development",
+          "fractional data leadership",
+          "managed analytics support",
+          "corporate AI training",
           "data strategy consulting",
           "business intelligence consulting",
           "data career mentorship",
@@ -62,6 +67,11 @@ export default function Home() {
               "AI automation",
               "predictive analytics",
               "website and web app development",
+              "content operations",
+              "digital products",
+              "fractional data and AI leadership",
+              "managed analytics operations",
+              "team enablement",
               "data strategy",
               "business intelligence",
               "data career mentorship",
@@ -77,7 +87,7 @@ export default function Home() {
             logo: "https://www.bisolutions.group/bi-solutions-logo.png",
             image: "https://www.bisolutions.group/bi-solutions-logo.png",
             description:
-              "AI, business intelligence, data strategy, cloud foundations, web app development, and data career mentorship for organizations and professionals worldwide.",
+              "AI, business intelligence, data strategy, cloud foundations, web applications, digital products, content operations, managed support, enablement, and mentorship for organizations and professionals worldwide.",
             areaServed: "Worldwide",
             founder: {
               "@id": "https://www.bisolutions.group/about#ioannis-bekas",
@@ -96,6 +106,11 @@ export default function Home() {
               "data strategy",
               "cloud foundations",
               "web app development",
+              "content operations",
+              "digital products",
+              "fractional data and AI leadership",
+              "managed BI and AI operations",
+              "corporate AI training",
               "analytics engineering",
               "data career mentorship",
               "professional upskilling",
@@ -150,8 +165,32 @@ export default function Home() {
                 "@type": "Offer",
                 itemOffered: {
                   "@type": "Service",
-                  name: "Data career enablement and mentorship",
+                  name: "Digital products and content operations",
+                  url: "https://www.bisolutions.group/services#content-operations-automation",
+                },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: "Data and AI enablement and mentorship",
                   url: "https://www.bisolutions.group/services#data-career-enablement-mentorship",
+                },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: "Fractional data and AI leadership",
+                  url: "https://www.bisolutions.group/services#ways-to-work-together",
+                },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  name: "Managed BI, data, and AI operations",
+                  url: "https://www.bisolutions.group/services#ways-to-work-together",
                 },
               },
             ],
@@ -188,12 +227,10 @@ export default function Home() {
       />
       <Navbar />
       <main>
-        {/* The hero is sticky, so it must be scoped to a stage that ends with
-            the panel. As a direct child of <main> its containing block is the
-            whole page, which leaves it pinned behind every later section. */}
+        {/* Keep the sticky hero scoped to its own stage so it releases before
+            the rest of the homepage content. */}
         <div className="cinematic-hero-stage">
           <CinematicHero />
-          <ServicesPanel />
         </div>
 
         <section id="case-studies" className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24">

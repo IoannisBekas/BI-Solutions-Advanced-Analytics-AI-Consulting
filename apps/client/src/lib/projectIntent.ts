@@ -12,15 +12,61 @@ export interface ProjectOption {
   label: string;
 }
 
-export const projectNeedOptions: ProjectOption[] = [
-  { value: "business-intelligence", label: "BI & dashboards" },
-  { value: "ai-automation", label: "AI & automation" },
-  { value: "data-strategy", label: "Data strategy" },
-  { value: "web-app", label: "Website or web app" },
-  { value: "career-mentorship", label: "Data career mentorship" },
-  { value: "product-walkthrough", label: "Product walkthrough" },
-  { value: "not-sure", label: "Not sure yet" },
+export interface ProjectOptionGroup {
+  label: string;
+  options: ProjectOption[];
+}
+
+export const projectNeedGroups: ProjectOptionGroup[] = [
+  {
+    label: "Build or improve",
+    options: [
+      { value: "business-intelligence", label: "Business intelligence and reporting" },
+      { value: "ai-automation", label: "AI workflows and automation" },
+      { value: "data-strategy", label: "Data engineering and cloud foundations" },
+      { value: "web-app", label: "Website or web application" },
+      { value: "content-operations", label: "Content system or digital product" },
+    ],
+  },
+  {
+    label: "Training and career development",
+    options: [
+      { value: "team-enablement", label: "Team training and enablement" },
+      { value: "career-mentorship", label: "Individual career mentorship" },
+    ],
+  },
+  {
+    label: "Advisory and ongoing support",
+    options: [
+      { value: "advisory-sprint", label: "Diagnostic or roadmap sprint" },
+      { value: "project-implementation", label: "Implementation project" },
+      { value: "fractional-leadership", label: "Fractional data and AI leadership" },
+      { value: "managed-operations", label: "Managed BI, data, or AI support" },
+    ],
+  },
+  {
+    label: "Other",
+    options: [
+      { value: "product-walkthrough", label: "Product walkthrough" },
+      { value: "not-sure", label: "Help me define the right approach" },
+    ],
+  },
 ];
+
+export const projectNeedOptions = projectNeedGroups.flatMap(
+  (group) => group.options,
+);
+
+export const heroNeedValues = [
+  "business-intelligence",
+  "ai-automation",
+  "data-strategy",
+  "web-app",
+  "content-operations",
+  "team-enablement",
+  "career-mentorship",
+  "not-sure",
+] as const;
 
 export const projectTimingOptions: ProjectOption[] = [
   { value: "asap", label: "As soon as practical" },

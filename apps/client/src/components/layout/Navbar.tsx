@@ -40,9 +40,14 @@ const serviceLinks = [
     description: "Focused digital products built around real workflows.",
   },
   {
+    name: "Content Operations & Digital Products",
+    href: "/services#content-operations-automation",
+    description: "Repurposing systems, distribution workflows, and digital assets.",
+  },
+  {
     name: "Enablement & Mentorship",
     href: "/services#data-career-enablement-mentorship",
-    description: "One-to-one data career development at every level.",
+    description: "Team training, adoption support, and career development.",
   },
 ] as const;
 

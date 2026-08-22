@@ -6,7 +6,7 @@ import { HeroSelect } from "@/components/ui/HeroSelect";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
-import { projectTimingOptions } from "@/lib/projectIntent";
+import { heroNeedValues, projectTimingOptions } from "@/lib/projectIntent";
 import { withAssetBase } from "@/lib/site";
 
 const POSTER = withAssetBase("scroll-world-v4/posters/clip-01.webp");
@@ -14,23 +14,12 @@ const POSTER_MOBILE = withAssetBase(
   "scroll-world-v4/posters/clip-01-mobile.webp",
 );
 
-// Values must match the shared vocabulary or the form will not prefill.
-// Labels come from the locale catalogue, keyed by these values.
-const needValues = [
-  "business-intelligence",
-  "ai-automation",
-  "data-strategy",
-  "web-app",
-  "career-mentorship",
-  "not-sure",
-];
-
 const timingValues = projectTimingOptions.map((option) => option.value);
 
 export function CinematicHero() {
   const [, navigate] = useLocation();
   const { t, locale } = useLocale();
-  const [need, setNeed] = useState(needValues[0]);
+  const [need, setNeed] = useState<string>(heroNeedValues[0]);
   const [timing, setTiming] = useState(timingValues[1]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -74,7 +63,7 @@ export function CinematicHero() {
               label={t.hero.needLabel}
               value={need}
               onChange={setNeed}
-              options={needValues.map((value) => ({
+              options={heroNeedValues.map((value) => ({
                 value,
                 label: t.hero.needs[value],
               }))}

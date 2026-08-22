@@ -35,36 +35,59 @@ const pillarCopy: Record<
   },
   "website-app-development": {
     number: "04",
-    eyebrow: "Digital products",
+    eyebrow: "Web applications",
     promise:
       "Fast, focused websites and applications that make an offer clearer or a workflow easier to run.",
   },
-  "data-career-enablement-mentorship": {
+  "content-operations-automation": {
     number: "05",
-    eyebrow: "Career development",
+    eyebrow: "Content systems",
     promise:
-      "Personal guidance that turns scattered learning into practical capability, stronger evidence, and a clearer next step.",
+      "A repeatable operating system for turning expertise into coordinated content, useful assets, and measurable digital products.",
+  },
+  "data-career-enablement-mentorship": {
+    number: "06",
+    eyebrow: "Capability development",
+    promise:
+      "Practical enablement that helps individuals and teams build stronger skills, judgment, adoption, and evidence of progress.",
   },
 };
 
 const deliveryFlow = [
   {
     number: "01",
-    title: "Frame the starting point",
+    title: "Diagnostic or roadmap sprint",
     description:
-      "Define the goal, current reality, constraints, and practical evidence of progress.",
+      "Clarify the current state, priority decisions, delivery risks, and the most valuable next move.",
+    need: "advisory-sprint",
   },
   {
     number: "02",
-    title: "Build the useful core",
+    title: "Implementation project",
     description:
-      "Work on the smallest complete solution or development plan using representative, practical material.",
+      "Design, build, validate, and hand over a complete solution around a defined operational outcome.",
+    need: "project-implementation",
   },
   {
     number: "03",
-    title: "Make progress durable",
+    title: "Fractional data and AI leadership",
     description:
-      "Document decisions, transfer knowledge, and establish the ownership or habits needed for the next stage.",
+      "Add senior direction for roadmaps, architecture, vendors, governance, investment, and executive decisions.",
+    need: "fractional-leadership",
+  },
+  {
+    number: "04",
+    title: "Managed operations and support",
+    description:
+      "Keep dashboards, data workflows, and AI systems reliable through monitoring, releases, support, and optimization.",
+    need: "managed-operations",
+  },
+  {
+    number: "05",
+    title: "Team enablement or mentorship",
+    description:
+      "Build lasting capability through role-based workshops, office hours, practical training, or one-to-one guidance.",
+    need: "team-enablement",
   },
 ];
 
@@ -103,7 +126,7 @@ function ServiceChapter({ service }: { service: ServicePage }) {
           <div className="lg:sticky lg:top-32">
             <div className="flex items-center gap-4">
               <span className="font-mono text-xs tracking-[0.2em] text-gray-500">
-                {copy.number} / 05
+                {copy.number} / 06
               </span>
               <span className="h-px flex-1 bg-gray-950/15" />
             </div>
@@ -209,41 +232,41 @@ function AiChapter({ service }: { service: ServicePage }) {
   return (
     <section
       id={service.slug}
-      className="scroll-mt-24 bg-[#0a0b0d] py-20 text-white md:py-28"
+      className="scroll-mt-28 border-t border-gray-950/15 py-20 md:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <ScrollReveal width="100%">
           <div className="grid gap-10 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-20">
             <div>
               <div className="flex items-center gap-4">
-                <span className="font-mono text-xs tracking-[0.2em] text-white/45">
-                  02 / 05
+                <span className="font-mono text-xs tracking-[0.2em] text-gray-500">
+                  02 / 06
                 </span>
-                <span className="h-px flex-1 bg-white/15" />
+                <span className="h-px flex-1 bg-gray-950/15" />
               </div>
-              <div className="mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-white/20">
+              <div className="mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-gray-950/20">
                 <Icon aria-hidden="true" className="h-5 w-5" />
               </div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
+              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
                 Applied AI
               </p>
             </div>
 
             <div>
-              <h2 className="max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] sm:text-5xl md:text-6xl">
+              <h2 className="max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
                 {service.title}
               </h2>
-              <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-white/90 md:text-3xl">
+              <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
                 {pillarCopy[service.slug].promise}
               </p>
-              <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/60">
+              <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
                 {service.description}
               </p>
             </div>
           </div>
         </ScrollReveal>
 
-        <div className="mt-16 border-y border-white/15">
+        <div className="mt-16 border-y border-gray-950/15">
           {aiCapabilityPages.map((capability, index) => {
             const CapabilityIcon = capability.icon;
 
@@ -251,26 +274,26 @@ function AiChapter({ service }: { service: ServicePage }) {
               <ScrollReveal key={capability.slug} width="100%">
                 <article
                   id={capability.slug}
-                  className="scroll-mt-28 grid gap-5 border-b border-white/15 py-7 last:border-b-0 md:grid-cols-[3rem_3rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-7"
+                  className="scroll-mt-28 grid gap-5 border-b border-gray-950/15 py-7 last:border-b-0 md:grid-cols-[3rem_3rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-7"
                 >
-                  <span className="font-mono text-xs text-white/35">
+                  <span className="font-mono text-xs text-gray-400">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <CapabilityIcon
                     aria-hidden="true"
-                    className="h-5 w-5 text-white/55"
+                    className="h-5 w-5 text-gray-500"
                   />
-                  <h3 className="text-xl font-bold font-heading tracking-tight md:text-2xl">
+                  <h3 className="text-xl font-bold font-heading tracking-tight text-gray-950 md:text-2xl">
                     {capability.navLabel}
                   </h3>
                   <div>
-                    <p className="text-base leading-relaxed text-white/60">
+                    <p className="text-base leading-relaxed text-gray-600">
                       {capability.description}
                     </p>
-                    <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/80">
+                    <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-700">
                       {capability.items.slice(0, 2).map((item) => (
                         <li key={item} className="flex gap-2">
-                          <span aria-hidden="true" className="text-white/30">
+                          <span aria-hidden="true" className="text-gray-400">
                             —
                           </span>
                           <span>{item}</span>
@@ -285,18 +308,18 @@ function AiChapter({ service }: { service: ServicePage }) {
         </div>
 
         <ScrollReveal width="100%">
-          <div className="mt-12 grid gap-8 border border-white/15 p-6 md:grid-cols-[1fr_auto] md:items-end md:p-8">
+          <div className="mt-12 grid gap-8 border border-gray-950/15 p-6 md:grid-cols-[1fr_auto] md:items-end md:p-8">
             <div>
-              <div className="flex items-center gap-3 text-white/50">
+              <div className="flex items-center gap-3 text-gray-500">
                 <Globe2 aria-hidden="true" className="h-4 w-4" />
                 <p className="text-xs font-semibold uppercase tracking-[0.2em]">
                   International delivery
                 </p>
               </div>
-              <h3 className="mt-4 text-2xl font-bold font-heading tracking-tight">
+              <h3 className="mt-4 text-2xl font-bold font-heading tracking-tight text-gray-950">
                 AI consulting for organizations worldwide
               </h3>
-              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/60">
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-gray-600">
                 Senior-led delivery for international organizations, adapted to
                 their operating environment, governance requirements, and
                 adoption realities.
@@ -304,7 +327,7 @@ function AiChapter({ service }: { service: ServicePage }) {
             </div>
             <Button
               asChild
-              className="rounded-full bg-white px-6 text-black hover:bg-white/90"
+              className="rounded-full bg-gray-950 px-6 text-white hover:bg-gray-800"
             >
               <Link href="/start-a-project?source=services&service=advanced-analytics-ai">
                 Discuss an AI project
@@ -324,14 +347,15 @@ export default function Services() {
     ai,
     dataStrategy,
     webDevelopment,
+    contentOperations,
     careerMentorship,
   ] = servicePillarPages;
 
   return (
     <div className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
       <Seo
-        title="Analytics, AI, Data, Web & Mentorship Services"
-        description="Explore every BI Solutions Group service on one page: business intelligence, Power BI, AI consulting, automation, data strategy, cloud foundations, web applications, and data career mentorship."
+        title="Analytics, AI, Data, Digital Products & Enablement Services"
+        description="Explore BI Solutions Group services for business intelligence, Power BI, AI, data and cloud foundations, web applications, content operations, digital products, managed support, fractional leadership, training, and mentorship."
         path="/services"
         structuredData={servicesStructuredData}
       />
@@ -352,9 +376,10 @@ export default function Services() {
                 </div>
                 <div className="max-w-xl lg:pb-2">
                   <p className="text-lg leading-relaxed text-white/65 md:text-xl">
-                    Business intelligence, applied AI, data foundations,
-                    digital products, and career mentorship—presented in one
-                    place and shaped around practical progress.
+                    Business intelligence, applied AI, data foundations, web
+                    applications, content operations, digital products, and
+                    enablement—presented in one place and shaped around
+                    practical progress.
                   </p>
                   <div className="mt-7 flex flex-wrap gap-3">
                     <Button
@@ -384,13 +409,13 @@ export default function Services() {
             <nav
               id="service-index"
               aria-label="Services on this page"
-              className="mt-16 grid scroll-mt-28 border-t border-white/15 sm:grid-cols-2 lg:grid-cols-5"
+              className="mt-16 grid scroll-mt-28 border-t border-white/15 sm:grid-cols-2 xl:grid-cols-6"
             >
               {servicePillarPages.map((service, index) => (
                 <a
                   key={service.slug}
                   href={`#${service.slug}`}
-                  className="group flex items-center justify-between gap-5 border-b border-white/15 py-5 text-sm font-semibold text-white/75 transition-colors hover:text-white sm:px-5 sm:first:pl-0 lg:border-b-0 lg:border-r lg:last:border-r-0"
+                  className="group flex items-center justify-between gap-5 border-b border-white/15 py-5 text-sm font-semibold text-white/75 transition-colors hover:text-white sm:px-5 sm:first:pl-0 xl:border-b-0 xl:border-r xl:last:border-r-0"
                 >
                   <span>
                     <span className="mr-3 font-mono text-xs text-white/30">
@@ -415,23 +440,27 @@ export default function Services() {
           {ai && <AiChapter service={ai} />}
           {dataStrategy && <ServiceChapter service={dataStrategy} />}
           {webDevelopment && <ServiceChapter service={webDevelopment} />}
+          {contentOperations && <ServiceChapter service={contentOperations} />}
           {careerMentorship && <ServiceChapter service={careerMentorship} />}
         </div>
 
-        <section className="bg-white py-20 md:py-28">
+        <section
+          id="ways-to-work-together"
+          className="scroll-mt-24 bg-[#f3f0ea] py-20 md:py-28"
+        >
           <div className="mx-auto max-w-7xl px-6 md:px-12">
             <ScrollReveal width="100%">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                One delivery model
+                Ways to work together
               </p>
               <h2 className="mt-5 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
-                Start with the real need. Leave with progress you can sustain.
+                Choose the level of support the work actually needs.
               </h2>
             </ScrollReveal>
-            <div className="mt-12 grid border-y border-gray-950/15 lg:grid-cols-3">
+            <div className="mt-12 grid border-y border-gray-950/15 md:grid-cols-2 xl:grid-cols-5">
               {deliveryFlow.map((item) => (
                 <ScrollReveal key={item.number} width="100%">
-                  <article className="border-b border-gray-950/15 py-8 lg:min-h-64 lg:border-b-0 lg:border-r lg:px-8 lg:first:pl-0 lg:last:border-r-0">
+                  <article className="flex h-full flex-col border-b border-gray-950/15 py-8 md:px-6 xl:min-h-80 xl:border-b-0 xl:border-r xl:first:pl-0 xl:last:border-r-0">
                     <p className="font-mono text-xs text-gray-400">
                       {item.number}
                     </p>
@@ -441,6 +470,13 @@ export default function Services() {
                     <p className="mt-4 max-w-sm text-base leading-relaxed text-gray-600">
                       {item.description}
                     </p>
+                    <Link
+                      href={`/start-a-project?source=services-engagement&need=${item.need}`}
+                      className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4 xl:mt-auto"
+                    >
+                      Discuss this option
+                      <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                    </Link>
                   </article>
                 </ScrollReveal>
               ))}
@@ -448,21 +484,21 @@ export default function Services() {
           </div>
         </section>
 
-        <section className="bg-[#d9d5cc] py-20 md:py-24">
+        <section className="bg-[#0a0b0d] py-20 text-white md:py-24">
           <ScrollReveal width="100%">
             <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-4xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-600">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
                   Not sure where your need belongs?
                 </p>
-                <h2 className="mt-5 text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
+                <h2 className="mt-5 text-4xl font-bold font-heading tracking-[-0.045em] text-white md:text-6xl">
                   Tell us what should become clearer, faster, stronger, or
                   easier to use.
                 </h2>
               </div>
               <Button
                 asChild
-                className="shrink-0 rounded-full bg-black px-8 text-white hover:bg-gray-800"
+                className="shrink-0 rounded-full bg-white px-8 text-black hover:bg-white/90"
               >
                 <Link href="/start-a-project?source=services-final">
                   Start a project

@@ -56,7 +56,7 @@ const en: TranslationCatalogue = {
   home: {
     seoTitle: "AI, BI & Web App Development",
     seoDescription:
-      "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, modern web applications, and stronger data careers through personalized mentorship.",
+      "BI Solutions Group helps organizations worldwide build BI, AI, data, web, content operations, digital products, managed support models, and practical capability through training and mentorship.",
   },
   nav: {
     services: "Services",
@@ -70,18 +70,20 @@ const en: TranslationCatalogue = {
     eyebrow: "Senior-led delivery · International",
     title: "Clarity from complexity",
     subtitle:
-      "Business intelligence, AI, data foundations, and web applications — from strategy through to a handoff your team can keep running.",
-    needLabel: "I need",
+      "Business intelligence, AI, data foundations, web applications, and content operations — from strategy through to a handoff your team can keep running.",
+    needLabel: "I want to",
     timingLabel: "Timeline",
     submit: "Start a project",
     scroll: "Scroll",
     needs: {
-      "business-intelligence": "BI dashboards & reporting",
-      "ai-automation": "AI workflows & automation",
-      "data-strategy": "Data strategy & cloud",
-      "web-app": "A website or web app",
-      "career-mentorship": "Data career mentorship",
-      "not-sure": "Not sure yet",
+      "business-intelligence": "See and understand my data",
+      "ai-automation": "Automate a workflow with AI",
+      "data-strategy": "Build a reliable data foundation",
+      "web-app": "Launch a website or web app",
+      "content-operations": "Scale content or a digital product",
+      "team-enablement": "Upskill my team",
+      "career-mentorship": "Grow my data or AI career",
+      "not-sure": "Clarify what I need",
     },
     timings: {
       asap: "As soon as practical",
@@ -93,20 +95,25 @@ const en: TranslationCatalogue = {
   services: {
     eyebrow: "What we do",
     heading:
-      "Five ways to build better systems, decisions, and data careers.",
+      "Six ways to build better systems, decisions, products, and capabilities.",
     seeAll: "See all services",
     explore: "Explore",
     items: {
+      "content-operations-automation": {
+        title: "Content operations & digital products",
+        description:
+          "AI-assisted systems for content repurposing, editorial workflows, coordinated distribution, and specialized digital products.",
+      },
       "data-career-enablement-mentorship": {
         title: "Enablement & mentorship",
         description:
-          "Personalized one-to-one guidance for people entering or advancing in data, BI, analytics, and AI careers.",
+          "Role-based team workshops, practical training, adoption support, and personalized career mentorship.",
       },
     },
   },
   footer: {
     tagline:
-      "Business intelligence, AI workflows, data strategy, focused web apps, and data career mentorship for practical progress at every level.",
+      "Business intelligence, AI, data foundations, web applications, content operations, managed support, enablement, and mentorship for practical progress.",
     company: "Company",
     services: "Services",
     resources: "Resources",
@@ -123,7 +130,7 @@ const el: TranslationCatalogue = {
   home: {
     seoTitle: "Ανάπτυξη AI, BI & Web εφαρμογών",
     seoDescription:
-      "Η BI Solutions Group βοηθά οργανισμούς διεθνώς να δημιουργήσουν dashboards BI, συστήματα ανάλυσης, ροές AI, στρατηγική δεδομένων και web εφαρμογές, ενώ προσφέρει εξατομικευμένο mentoring για καριέρα στα data.",
+      "Η BI Solutions Group βοηθά οργανισμούς διεθνώς με BI, AI, υποδομές δεδομένων, web εφαρμογές, content operations, ψηφιακά προϊόντα, διαχειριζόμενη υποστήριξη, εκπαίδευση και mentoring.",
   },
   nav: {
     services: "Υπηρεσίες",
@@ -137,18 +144,20 @@ const el: TranslationCatalogue = {
     eyebrow: "Υλοποίηση από senior σύμβουλο · Διεθνώς",
     title: "Καθαρή εικόνα μέσα από την πολυπλοκότητα",
     subtitle:
-      "Business intelligence, τεχνητή νοημοσύνη, υποδομές δεδομένων και web εφαρμογές — από τη στρατηγική μέχρι την παράδοση που η ομάδα σας μπορεί να συντηρεί.",
-    needLabel: "Χρειάζομαι",
+      "Business intelligence, τεχνητή νοημοσύνη, υποδομές δεδομένων, web εφαρμογές και content operations — από τη στρατηγική μέχρι την παράδοση που η ομάδα σας μπορεί να συντηρεί.",
+    needLabel: "Θέλω να",
     timingLabel: "Χρονοδιάγραμμα",
     submit: "Ξεκινήστε έργο",
     scroll: "Κύλιση",
     needs: {
-      "business-intelligence": "Dashboards & αναφορές BI",
-      "ai-automation": "Ροές AI & αυτοματοποίηση",
-      "data-strategy": "Στρατηγική δεδομένων & cloud",
-      "web-app": "Ιστοσελίδα ή web εφαρμογή",
-      "career-mentorship": "Mentoring για καριέρα στα data",
-      "not-sure": "Δεν είμαι σίγουρος ακόμη",
+      "business-intelligence": "Κατανοήσω καλύτερα τα δεδομένα μου",
+      "ai-automation": "Αυτοματοποιήσω μια διαδικασία με AI",
+      "data-strategy": "Δημιουργήσω αξιόπιστη βάση δεδομένων",
+      "web-app": "Δημιουργήσω site ή web εφαρμογή",
+      "content-operations": "Κλιμακώσω περιεχόμενο ή ψηφιακό προϊόν",
+      "team-enablement": "Αναβαθμίσω τις δεξιότητες της ομάδας μου",
+      "career-mentorship": "Εξελίξω την καριέρα μου σε data ή AI",
+      "not-sure": "Ξεκαθαρίσω τι χρειάζομαι",
     },
     timings: {
       asap: "Το συντομότερο δυνατό",
@@ -160,7 +169,7 @@ const el: TranslationCatalogue = {
   services: {
     eyebrow: "Τι κάνουμε",
     heading:
-      "Πέντε τρόποι για καλύτερα συστήματα, αποφάσεις και καριέρες στα data.",
+      "Έξι τρόποι για καλύτερα συστήματα, αποφάσεις, προϊόντα και δεξιότητες.",
     seeAll: "Δείτε όλες τις υπηρεσίες",
     explore: "Περισσότερα",
     items: {
@@ -184,16 +193,21 @@ const el: TranslationCatalogue = {
         description:
           "Φτιάχνουμε σύγχρονα sites και στοχευμένες web εφαρμογές που συνδέουν δεδομένα, αυτοματισμό και καθαρή εμπειρία χρήσης.",
       },
-      "data-career-enablement-mentorship": {
-        title: "Εξέλιξη & mentoring",
+      "content-operations-automation": {
+        title: "Content operations & ψηφιακά προϊόντα",
         description:
-          "Εξατομικευμένη καθοδήγηση για όσους ξεκινούν ή εξελίσσονται σε καριέρες data, BI, analytics και AI.",
+          "Συστήματα με υποστήριξη AI για επαναχρησιμοποίηση περιεχομένου, ροές έγκρισης, συντονισμένη διανομή και εξειδικευμένα ψηφιακά προϊόντα.",
+      },
+      "data-career-enablement-mentorship": {
+        title: "Εκπαίδευση & mentoring",
+        description:
+          "Εκπαίδευση ομάδων ανά ρόλο, πρακτικά workshops, υποστήριξη υιοθέτησης και εξατομικευμένο mentoring καριέρας.",
       },
     },
   },
   footer: {
     tagline:
-      "Business intelligence, ροές AI, στρατηγική δεδομένων, στοχευμένες web εφαρμογές και mentoring για πρακτική επαγγελματική εξέλιξη στα data.",
+      "Business intelligence, AI, υποδομές δεδομένων, web εφαρμογές, content operations, διαχειριζόμενη υποστήριξη, εκπαίδευση και mentoring.",
     company: "Εταιρεία",
     services: "Υπηρεσίες",
     resources: "Πόροι",
@@ -210,7 +224,7 @@ const de: TranslationCatalogue = {
   home: {
     seoTitle: "KI-, BI- & Web-App-Entwicklung",
     seoDescription:
-      "BI Solutions Group unterstützt Unternehmen weltweit mit BI-Dashboards, Analysesystemen, KI-Workflows, Datenstrategien und Webanwendungen sowie Fachkräfte mit persönlichem Mentoring für Datenkarrieren.",
+      "BI Solutions Group unterstützt Unternehmen weltweit mit BI, KI, Datenfundamenten, Webanwendungen, Content Operations, digitalen Produkten, Managed Support, Training und Mentoring.",
   },
   nav: {
     services: "Leistungen",
@@ -224,18 +238,20 @@ const de: TranslationCatalogue = {
     eyebrow: "Beratung durch Senior-Experten · International",
     title: "Klarheit statt Komplexität",
     subtitle:
-      "Business Intelligence, KI, Datenfundamente und Webanwendungen — von der Strategie bis zur Übergabe, die Ihr Team selbst weiterführen kann.",
-    needLabel: "Ich brauche",
+      "Business Intelligence, KI, Datenfundamente, Webanwendungen und Content Operations — von der Strategie bis zur Übergabe, die Ihr Team selbst weiterführen kann.",
+    needLabel: "Ich möchte",
     timingLabel: "Zeitrahmen",
     submit: "Projekt starten",
     scroll: "Scrollen",
     needs: {
-      "business-intelligence": "BI-Dashboards & Reporting",
-      "ai-automation": "KI-Workflows & Automatisierung",
-      "data-strategy": "Datenstrategie & Cloud",
-      "web-app": "Website oder Webanwendung",
-      "career-mentorship": "Mentoring für die Datenkarriere",
-      "not-sure": "Noch unklar",
+      "business-intelligence": "Meine Daten besser verstehen",
+      "ai-automation": "Einen Prozess mit KI automatisieren",
+      "data-strategy": "Eine verlässliche Datenbasis schaffen",
+      "web-app": "Eine Website oder Web-App starten",
+      "content-operations": "Content oder ein digitales Produkt skalieren",
+      "team-enablement": "Mein Team weiterbilden",
+      "career-mentorship": "Meine Daten- oder KI-Karriere entwickeln",
+      "not-sure": "Klären, was ich brauche",
     },
     timings: {
       asap: "So bald wie möglich",
@@ -247,7 +263,7 @@ const de: TranslationCatalogue = {
   services: {
     eyebrow: "Was wir tun",
     heading:
-      "Fünf Wege zu besseren Systemen, Entscheidungen und Datenkarrieren.",
+      "Sechs Wege zu besseren Systemen, Entscheidungen, Produkten und Fähigkeiten.",
     seeAll: "Alle Leistungen ansehen",
     explore: "Mehr erfahren",
     items: {
@@ -271,16 +287,21 @@ const de: TranslationCatalogue = {
         description:
           "Wir bauen moderne Websites und fokussierte Webanwendungen, die Daten, Automatisierung und klare Bedienung verbinden.",
       },
-      "data-career-enablement-mentorship": {
-        title: "Entwicklung & Mentoring",
+      "content-operations-automation": {
+        title: "Content Operations & digitale Produkte",
         description:
-          "Persönliche Begleitung für Menschen, die in Daten-, BI-, Analytics- und KI-Berufe einsteigen oder sich darin weiterentwickeln.",
+          "KI-gestützte Systeme für Content-Repurposing, redaktionelle Abläufe, koordinierte Distribution und spezialisierte digitale Produkte.",
+      },
+      "data-career-enablement-mentorship": {
+        title: "Enablement & Mentoring",
+        description:
+          "Rollenbasierte Team-Workshops, praxisnahes Training, Adoptionsbegleitung und persönliches Karriere-Mentoring.",
       },
     },
   },
   footer: {
     tagline:
-      "Business Intelligence, KI-Workflows, Datenstrategie, fokussierte Webanwendungen und Mentoring für praktische Entwicklung in Datenberufen.",
+      "Business Intelligence, KI, Datenfundamente, Webanwendungen, Content Operations, Managed Support, Enablement und Mentoring.",
     company: "Unternehmen",
     services: "Leistungen",
     resources: "Ressourcen",
