@@ -78,15 +78,16 @@ export default function Blog() {
       />
       <Navbar />
 
-      <main className="pt-32 pb-20">
+      <main className="pb-20 pt-32 min-[2200px]:pt-28">
         <PublicPageHero
           icon={Newspaper}
           eyebrow="Curated resources"
           title="Practical guides for BI, AI, data strategy, and web app delivery."
           description="A smaller, higher-signal resource library for buyers comparing analytics, AI workflow, reporting, and web app consulting decisions."
+          className="blog-library-hero min-[2200px]:py-12"
           footer={
             <div>
-              <div className="max-w-xl">
+              <div className="max-w-xl min-[2200px]:max-w-none">
               <label className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                 Search articles
               </label>
@@ -128,7 +129,7 @@ export default function Blog() {
         {!isFiltering ? (
           <>
             {featuredPost ? (
-              <section className="mx-auto max-w-7xl px-6 md:px-12">
+              <section className="site-container px-6 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                     Featured article
@@ -185,7 +186,7 @@ export default function Blog() {
             ) : null}
 
             {otherPosts.length > 0 ? (
-              <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+              <section className="site-container mt-16 px-6 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                     More articles
@@ -195,7 +196,7 @@ export default function Blog() {
                   </h2>
                 </ScrollReveal>
 
-                <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="blog-card-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
                   {otherPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
@@ -234,7 +235,7 @@ export default function Blog() {
             ) : null}
 
             {secondaryBlogPosts.length > 0 ? (
-              <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+              <section className="site-container mt-16 px-6 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                     Specialist resources
@@ -244,7 +245,7 @@ export default function Blog() {
                   </h2>
                 </ScrollReveal>
 
-                <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div className="blog-card-grid mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
                   {secondaryBlogPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.04} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
@@ -271,7 +272,7 @@ export default function Blog() {
             ) : null}
           </>
         ) : (
-          <section className="mx-auto max-w-7xl px-6 md:px-12">
+          <section className="site-container px-6 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                   Filtered insights
@@ -284,7 +285,7 @@ export default function Blog() {
             </ScrollReveal>
 
             {filteredPosts.length > 0 ? (
-              <div className="mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="blog-card-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredPosts.map((post, index) => (
                   <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                     <Link href={`/blog/${post.slug}`} className="group block h-full">
@@ -345,7 +346,7 @@ export default function Blog() {
           </section>
         )}
 
-        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-16 px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">

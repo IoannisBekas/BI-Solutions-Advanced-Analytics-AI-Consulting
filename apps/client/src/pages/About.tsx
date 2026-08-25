@@ -117,7 +117,7 @@ export default function About() {
       />
 
       <main className="flex justify-center pt-32 px-6 md:px-12 pb-20">
-        <div className="flex gap-16 w-full max-w-7xl relative">
+        <div className="site-container relative flex gap-16">
 
           {/* Left Sidebar - Sticky Navigation */}
           <aside className="hidden lg:block w-64 flex-shrink-0">

@@ -19,7 +19,7 @@ export function ServicesPanel() {
       id="services"
       className="relative z-10 -mt-10 rounded-t-[2.5rem] bg-[#efece7] pb-24 pt-14 shadow-[0_-28px_70px_rgba(15,17,20,0.35)] scroll-mt-24 md:-mt-14 md:rounded-t-[3rem] md:pt-20"
     >
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
+      <div className="site-container px-6 md:px-12">
         <div
           aria-hidden="true"
           className="mx-auto mb-12 h-1 w-10 rounded-full bg-gray-950/15 md:mb-16"

@@ -234,7 +234,7 @@ export default function Home() {
         </div>
 
         <section id="case-studies" className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="site-container px-6 md:px-12">
             <ScrollReveal className="mb-16 max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
                 Selected case studies
@@ -314,7 +314,7 @@ export default function Home() {
         {/* Opaque, not translucent: a see-through section over a sticky hero
             lets the hero bleed into the copy. */}
         <section className="bg-[#f5f3f0] py-24">
-          <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <div className="site-container px-6 md:px-12">
             <ScrollReveal className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between" width="100%">
               <div className="max-w-3xl">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
@@ -419,7 +419,7 @@ export default function Home() {
         </section>
 
         <section className="bg-[#f6f3ef] py-24">
-          <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <div className="site-container px-6 md:px-12">
             <ScrollReveal width="100%">
               <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">

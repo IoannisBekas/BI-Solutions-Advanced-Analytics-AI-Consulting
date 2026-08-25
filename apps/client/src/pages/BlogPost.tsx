@@ -374,7 +374,7 @@ export default function BlogPost() {
           }
         />
 
-        <section className="mx-auto max-w-7xl px-6 md:px-12">
+        <section className="site-container px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
               <div className="aspect-[16/9] bg-gray-100">
@@ -384,7 +384,7 @@ export default function BlogPost() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-12 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-12 px-6 md:px-12">
           <ScrollReveal width="100%">
             <article className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-8">
               <div className="prose prose-gray max-w-none">
@@ -470,7 +470,7 @@ export default function BlogPost() {
           </section>
         ) : null}
 
-        <section className="mx-auto mt-16 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-16 px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">

@@ -112,7 +112,7 @@ export function ReviewsSection() {
 
     return (
         <section className="py-24 bg-background">
-            <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <div className="site-container px-6 md:px-12">
                 <ScrollReveal className="mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold font-heading text-foreground mb-4">
                         Client Reviews

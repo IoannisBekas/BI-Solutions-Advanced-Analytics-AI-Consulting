@@ -59,7 +59,7 @@ export default function CaseStudyDetail() {
       <Navbar />
 
       <main className="pb-24 pt-32">
-        <section className="mx-auto max-w-7xl px-6 md:px-12">
+        <section className="site-container px-6 md:px-12">
           <ScrollReveal width="100%">
             <nav
               aria-label="Breadcrumb"
@@ -144,7 +144,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-14 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-14 px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="grid gap-px overflow-hidden rounded-[2rem] border border-gray-200 bg-gray-200 sm:grid-cols-2 lg:grid-cols-4">
               {caseStudy.snapshot.map((item) => (
@@ -161,7 +161,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-14 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-14 px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-gray-100 shadow-2xl shadow-black/[0.08]">
               <img
@@ -173,7 +173,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-24 grid max-w-7xl gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]">
+        <section className="site-container mt-24 grid gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]">
           <ScrollReveal width="100%">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
               The problem
@@ -206,7 +206,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-20 grid max-w-7xl gap-8 px-6 md:px-12 lg:grid-cols-2">
+        <section className="site-container mt-20 grid gap-8 px-6 md:px-12 lg:grid-cols-2">
           <ScrollReveal width="100%">
             <div className="h-full rounded-[2rem] bg-gray-950 p-7 text-white sm:p-9">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
@@ -253,7 +253,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-20 px-6 md:px-12">
           <ScrollReveal className="max-w-3xl" width="100%">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
               Outcome
@@ -281,7 +281,7 @@ export default function CaseStudyDetail() {
           </div>
         </section>
 
-        <section className="mx-auto mt-20 grid max-w-7xl gap-6 px-6 md:px-12 lg:grid-cols-2">
+        <section className="site-container mt-20 grid gap-6 px-6 md:px-12 lg:grid-cols-2">
           <ScrollReveal width="100%">
             <div className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-7 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
@@ -335,7 +335,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto mt-20 max-w-7xl px-6 md:px-12">
+        <section className="site-container mt-20 px-6 md:px-12">
           <ScrollReveal width="100%">
             <div className="rounded-[2rem] bg-black px-7 py-12 text-white sm:px-10 md:px-14 md:py-14">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">

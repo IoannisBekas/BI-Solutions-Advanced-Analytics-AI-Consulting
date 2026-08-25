@@ -31,7 +31,7 @@ export function PublicPageHero({
     <section className="relative max-w-full overflow-hidden px-4 pb-10 sm:px-6 md:px-12">
       <div className="pointer-events-none absolute inset-0 overflow-hidden bi-hero-backdrop" />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl min-w-0">
+      <div className="site-container relative z-10 min-w-0">
         <div
           className={cn(
             "w-full min-w-0 rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/[0.06] sm:px-8 sm:py-12 md:px-12 md:py-16",

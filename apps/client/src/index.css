@@ -76,6 +76,45 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
+.site-container {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 96rem) {
+  .site-container {
+    max-width: 90rem;
+  }
+}
+
+@media (min-width: 137.5rem) {
+  .site-container {
+    max-width: 104rem;
+  }
+
+  .blog-library-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(30rem, 0.75fr);
+    align-items: center;
+    column-gap: clamp(4rem, 6vw, 8rem);
+  }
+
+  .blog-library-hero > :last-child {
+    margin-top: 0;
+  }
+
+  .blog-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 187.5rem) {
+  .site-container {
+    max-width: 120rem;
+  }
+}
+
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);

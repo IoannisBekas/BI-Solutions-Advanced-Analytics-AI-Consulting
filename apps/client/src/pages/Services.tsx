@@ -1,10 +1,13 @@
 import { Link } from "wouter";
 import { ArrowDown, ArrowRight, Check, Globe2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   aiCapabilityPages,
   servicePillarPages,
@@ -93,6 +96,14 @@ const deliveryFlow = [
 
 const listedServices = [...servicePillarPages, ...aiCapabilityPages];
 
+const serviceNavigation = [
+  ...servicePillarPages.map((service) => ({
+    id: service.slug,
+    label: service.shortTitle,
+  })),
+  { id: "ways-to-work-together", label: "Ways to work together" },
+];
+
 const servicesStructuredData = {
   "@context": "https://schema.org",
   "@type": "ItemList",
@@ -121,37 +132,30 @@ function ServiceChapter({ service }: { service: ServicePage }) {
       id={service.slug}
       className="scroll-mt-28 border-t border-gray-950/15 py-20 md:py-28"
     >
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-20">
-        <ScrollReveal width="100%">
-          <div className="lg:sticky lg:top-32">
-            <div className="flex items-center gap-4">
-              <span className="font-mono text-xs tracking-[0.2em] text-gray-500">
-                {copy.number} / 06
-              </span>
-              <span className="h-px flex-1 bg-gray-950/15" />
-            </div>
-            <div className="mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-gray-950/20">
-              <Icon aria-hidden="true" className="h-5 w-5" />
-            </div>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+      <ScrollReveal width="100%">
+        <div>
+          <div className="flex items-center gap-4 text-gray-500">
+            <span className="font-mono text-xs tracking-[0.2em]">
+              {copy.number} / 06
+            </span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-950/20">
+              <Icon aria-hidden="true" className="h-4 w-4" />
+            </span>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em]">
               {copy.eyebrow}
             </p>
           </div>
-        </ScrollReveal>
+          <h2 className="mt-6 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
+            {service.title}
+          </h2>
+          <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
+            {copy.promise}
+          </p>
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
+            {service.description}
+          </p>
 
-        <ScrollReveal width="100%">
-          <div>
-            <h2 className="max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
-              {service.title}
-            </h2>
-            <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
-              {copy.promise}
-            </p>
-            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
-              {service.description}
-            </p>
-
-            <div className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
+          <div className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
                   What we can deliver
@@ -218,10 +222,9 @@ function ServiceChapter({ service }: { service: ServicePage }) {
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
               </div>
-            </div>
           </div>
-        </ScrollReveal>
-      </div>
+        </div>
+      </ScrollReveal>
     </section>
   );
 }
@@ -234,35 +237,29 @@ function AiChapter({ service }: { service: ServicePage }) {
       id={service.slug}
       className="scroll-mt-28 border-t border-gray-950/15 py-20 md:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
+      <div>
         <ScrollReveal width="100%">
-          <div className="grid gap-10 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-20">
-            <div>
-              <div className="flex items-center gap-4">
-                <span className="font-mono text-xs tracking-[0.2em] text-gray-500">
-                  02 / 06
-                </span>
-                <span className="h-px flex-1 bg-gray-950/15" />
-              </div>
-              <div className="mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-gray-950/20">
-                <Icon aria-hidden="true" className="h-5 w-5" />
-              </div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+          <div>
+            <div className="flex items-center gap-4 text-gray-500">
+              <span className="font-mono text-xs tracking-[0.2em]">
+                02 / 06
+              </span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-950/20">
+                <Icon aria-hidden="true" className="h-4 w-4" />
+              </span>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em]">
                 Applied AI
               </p>
             </div>
-
-            <div>
-              <h2 className="max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
-                {service.title}
-              </h2>
-              <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
-                {pillarCopy[service.slug].promise}
-              </p>
-              <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
-                {service.description}
-              </p>
-            </div>
+            <h2 className="mt-6 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
+              {service.title}
+            </h2>
+            <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
+              {pillarCopy[service.slug].promise}
+            </p>
+            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
+              {service.description}
+            </p>
           </div>
         </ScrollReveal>
 
@@ -342,6 +339,9 @@ function AiChapter({ service }: { service: ServicePage }) {
 }
 
 export default function Services() {
+  const [activeSection, setActiveSection] = useState(
+    serviceNavigation[0]?.id ?? "",
+  );
   const [
     businessIntelligence,
     ai,
@@ -350,6 +350,40 @@ export default function Services() {
     contentOperations,
     careerMentorship,
   ] = servicePillarPages;
+
+  useEffect(() => {
+    const hashSection = serviceNavigation.find(
+      (section) => section.id === window.location.hash.slice(1),
+    );
+
+    if (hashSection) {
+      setActiveSection(hashSection.id);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-20% 0px -55% 0px", threshold: 0 },
+    );
+
+    serviceNavigation.forEach((section) => {
+      const element = document.getElementById(section.id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    document
+      .getElementById(sectionId)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
@@ -362,7 +396,7 @@ export default function Services() {
       <Navbar />
 
       <main className="pt-28">
-        <section className="mx-auto max-w-[96rem] px-4 md:px-8">
+        <section className="site-container px-4 md:px-8">
           <div className="overflow-hidden rounded-[2rem] bg-[#0a0b0d] px-6 pb-8 pt-14 text-white md:rounded-[3rem] md:px-12 md:pb-12 md:pt-20 lg:px-16">
             <ScrollReveal width="100%">
               <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end">
@@ -433,60 +467,91 @@ export default function Services() {
           </div>
         </section>
 
-        <div className="mt-16 md:mt-24">
-          {businessIntelligence && (
-            <ServiceChapter service={businessIntelligence} />
-          )}
-          {ai && <AiChapter service={ai} />}
-          {dataStrategy && <ServiceChapter service={dataStrategy} />}
-          {webDevelopment && <ServiceChapter service={webDevelopment} />}
-          {contentOperations && <ServiceChapter service={contentOperations} />}
-          {careerMentorship && <ServiceChapter service={careerMentorship} />}
-        </div>
-
-        <section
-          id="ways-to-work-together"
-          className="scroll-mt-24 bg-[#f3f0ea] py-20 md:py-28"
-        >
-          <div className="mx-auto max-w-7xl px-6 md:px-12">
-            <ScrollReveal width="100%">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                Ways to work together
-              </p>
-              <h2 className="mt-5 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
-                Choose the level of support the work actually needs.
-              </h2>
-            </ScrollReveal>
-            <div className="mt-12 grid border-y border-gray-950/15 md:grid-cols-2 xl:grid-cols-5">
-              {deliveryFlow.map((item) => (
-                <ScrollReveal key={item.number} width="100%">
-                  <article className="flex h-full flex-col border-b border-gray-950/15 py-8 md:px-6 xl:min-h-80 xl:border-b-0 xl:border-r xl:first:pl-0 xl:last:border-r-0">
-                    <p className="font-mono text-xs text-gray-400">
-                      {item.number}
-                    </p>
-                    <h3 className="mt-8 text-2xl font-bold font-heading tracking-tight text-gray-950">
-                      {item.title}
-                    </h3>
-                    <p className="mt-4 max-w-sm text-base leading-relaxed text-gray-600">
-                      {item.description}
-                    </p>
-                    <Link
-                      href={`/start-a-project?source=services-engagement&need=${item.need}`}
-                      className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4 xl:mt-auto"
-                    >
-                      Discuss this option
-                      <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                    </Link>
-                  </article>
-                </ScrollReveal>
+        <div className="site-container mt-16 flex gap-16 px-6 md:mt-24 md:px-12 xl:gap-20">
+          <aside className="hidden w-64 shrink-0 py-20 lg:block">
+            <nav
+              aria-label="Navigate services"
+              className="sticky top-32 flex flex-col space-y-4"
+            >
+              {serviceNavigation.map((section) => (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() => scrollToSection(section.id)}
+                  className={cn(
+                    "group flex items-center justify-between text-left text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-black/30 focus-visible:ring-offset-4 focus-visible:ring-offset-[#f3f0ea]",
+                    activeSection === section.id
+                      ? "translate-x-1 text-black"
+                      : "text-gray-400 hover:text-gray-900",
+                  )}
+                >
+                  <span>{section.label}</span>
+                  {activeSection === section.id && (
+                    <motion.span
+                      layoutId="services-active-indicator"
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 rounded-full bg-black"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </button>
               ))}
-            </div>
+            </nav>
+          </aside>
+
+          <div className="min-w-0 flex-1">
+            {businessIntelligence && (
+              <ServiceChapter service={businessIntelligence} />
+            )}
+            {ai && <AiChapter service={ai} />}
+            {dataStrategy && <ServiceChapter service={dataStrategy} />}
+            {webDevelopment && <ServiceChapter service={webDevelopment} />}
+            {contentOperations && <ServiceChapter service={contentOperations} />}
+            {careerMentorship && <ServiceChapter service={careerMentorship} />}
+
+            <section
+              id="ways-to-work-together"
+              className="scroll-mt-24 border-t border-gray-950/15 py-20 md:py-28"
+            >
+              <ScrollReveal width="100%">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+                  Ways to work together
+                </p>
+                <h2 className="mt-5 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
+                  Choose the level of support the work actually needs.
+                </h2>
+              </ScrollReveal>
+              <div className="mt-12 grid border-y border-gray-950/15 md:grid-cols-2 2xl:grid-cols-3 min-[2200px]:grid-cols-5">
+                {deliveryFlow.map((item) => (
+                  <ScrollReveal key={item.number} width="100%">
+                    <article className="flex h-full flex-col border-b border-gray-950/15 py-8 md:px-6 min-[2200px]:min-h-80 min-[2200px]:border-b-0 min-[2200px]:border-r min-[2200px]:first:pl-0 min-[2200px]:last:border-r-0">
+                      <p className="font-mono text-xs text-gray-400">
+                        {item.number}
+                      </p>
+                      <h3 className="mt-8 text-2xl font-bold font-heading tracking-tight text-gray-950">
+                        {item.title}
+                      </h3>
+                      <p className="mt-4 max-w-sm text-base leading-relaxed text-gray-600">
+                        {item.description}
+                      </p>
+                      <Link
+                        href={`/start-a-project?source=services-engagement&need=${item.need}`}
+                        className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4 min-[2200px]:mt-auto"
+                      >
+                        Discuss this option
+                        <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                      </Link>
+                    </article>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
 
         <section className="bg-[#0a0b0d] py-20 text-white md:py-24">
           <ScrollReveal width="100%">
-            <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between">
+            <div className="site-container flex flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-4xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
                   Not sure where your need belongs?

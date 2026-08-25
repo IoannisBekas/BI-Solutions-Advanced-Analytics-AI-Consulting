@@ -256,7 +256,7 @@ export default function StartProject() {
 
       <main className="relative overflow-hidden pb-24 pt-32 md:pb-32 md:pt-40">
         <div className="bi-hero-backdrop pointer-events-none absolute inset-x-0 top-0 h-[34rem]" />
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 md:px-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        <div className="site-container relative grid gap-12 px-6 md:px-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <section className="lg:sticky lg:top-36 lg:self-start">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
               {isMentorship ? "Mentorship enquiry" : "Start a project"}

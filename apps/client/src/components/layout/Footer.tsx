@@ -48,7 +48,7 @@ export function Footer() {
 
   return (
     <footer className="overflow-hidden bg-black pb-10 pt-20 text-white">
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
+      <div className="site-container px-6 md:px-12">
         <div className="mb-20 grid grid-cols-1 gap-12 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-10">
           <div className="space-y-6 sm:col-span-2 lg:col-span-4">
             <Link
