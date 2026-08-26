@@ -208,7 +208,7 @@ export default function Blog() {
                             />
                           </div>
                           <div className="flex flex-1 flex-col px-6 py-6">
-                            <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
                               <span className="inline-flex items-center gap-1">
                                 <Tag className="h-3 w-3" />
                                 {post.category}
@@ -297,7 +297,7 @@ export default function Blog() {
                           />
                         </div>
                         <div className="flex flex-1 flex-col px-6 py-6">
-                          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
                             <span className="inline-flex items-center gap-1">
                               <Tag className="h-3 w-3" />
                               {post.category}

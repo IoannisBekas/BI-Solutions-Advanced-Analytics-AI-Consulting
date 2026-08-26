@@ -1853,15 +1853,17 @@ h1, h2, h3, h4, h5, h6 {
   border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-/* The field caption; the control itself is rendered by HeroSelect. */
+/* The field caption; the control itself is rendered by HeroSelect.
+   0.6rem at 62% white measured 3.21:1 — below the 4.5:1 AA floor and too
+   small to read on a phone. */
 .cinematic-hero__field > span {
   display: block;
-  margin-bottom: 0.15rem;
-  font-size: 0.6rem;
+  margin-bottom: 0.2rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .cinematic-hero__submit {
@@ -1926,8 +1928,16 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
   }
 
+  /* A full-viewport hero with no cue reads as the end of the page. Leaving a
+     sliver of the next section visible is what signals there is more. */
+  .cinematic-hero {
+    height: 88svh;
+    min-height: min(36rem, 88svh);
+  }
+
   .cinematic-hero__cue {
-    display: none;
+    bottom: 1rem;
+    font-size: 0.62rem;
   }
 }
 

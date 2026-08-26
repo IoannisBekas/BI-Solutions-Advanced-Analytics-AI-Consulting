@@ -34,7 +34,9 @@ export function HeroSelect({
       <SelectPrimitive.Trigger
         id={id}
         aria-label={label}
-        className="group flex w-full items-center justify-between gap-3 text-left text-[0.9rem] font-medium text-white outline-none focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+        // min-h-11 (44px) is the smallest comfortable touch target; the trigger
+        // was 22px, which is hard to hit on a phone for the page's main CTA.
+        className="group flex min-h-11 w-full items-center justify-between gap-3 text-left text-[0.95rem] font-medium text-white outline-none focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       >
         <SelectPrimitive.Value>{selected?.label}</SelectPrimitive.Value>
         <SelectPrimitive.Icon asChild>

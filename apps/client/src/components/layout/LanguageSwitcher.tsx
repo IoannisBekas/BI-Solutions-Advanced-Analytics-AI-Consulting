@@ -40,7 +40,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           lang={target}
           aria-current={target === locale ? "true" : undefined}
           className={cn(
-            "rounded-full px-2 py-1 text-xs font-semibold uppercase transition-colors",
+            "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-2 text-xs font-semibold uppercase transition-colors",
             target === locale
               ? "bg-black/10 text-current"
               : "text-current opacity-60 hover:opacity-100",

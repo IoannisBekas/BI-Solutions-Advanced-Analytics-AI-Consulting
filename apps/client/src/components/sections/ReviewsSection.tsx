@@ -92,6 +92,17 @@ const REVIEW_ROTATION_INTERVAL_MS = 4500;
 export function ReviewsSection() {
     const [carouselApi, setCarouselApi] = useState<CarouselApi>();
     const [isPaused, setIsPaused] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    useEffect(() => {
+        if (!carouselApi) return;
+        const sync = () => setSelectedIndex(carouselApi.selectedScrollSnap());
+        sync();
+        carouselApi.on("select", sync);
+        return () => {
+            carouselApi.off("select", sync);
+        };
+    }, [carouselApi]);
 
     useEffect(() => {
         if (!carouselApi || isPaused) {
@@ -137,10 +148,10 @@ export function ReviewsSection() {
                         setApi={setCarouselApi}
                         className="w-full"
                     >
-                        <CarouselContent>
+                        <CarouselContent className="items-start md:items-stretch">
                             {reviews.map((review, index) => (
                                 <CarouselItem key={review.id} className="md:basis-1/3 lg:basis-1/4 pl-6">
-                                    <div className="h-full py-2">
+                                    <div className="py-2 md:h-full">
                                         <div
                                             onClick={() => {
                                                 if (window.confirm(`Are you sure you want to open the ${review.source === "linkedin" ? "LinkedIn" : "Google"} Review?`)) {
@@ -149,7 +160,7 @@ export function ReviewsSection() {
                                             }}
                                             className="block h-full cursor-pointer"
                                         >
-                                            <Card className="h-full rounded-[1.5rem] border-gray-200 bg-white shadow-sm shadow-black/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.06]">
+                                            <Card className="md:h-full rounded-[1.5rem] border-gray-200 bg-white shadow-sm shadow-black/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.06]">
                                                 <CardHeader>
                                                     <div className="flex items-center justify-between mb-2">
                                                         <div className="flex space-x-1">
@@ -175,6 +186,28 @@ export function ReviewsSection() {
                         <CarouselPrevious className="-left-4 md:-left-12" />
                         <CarouselNext className="-right-4 md:-right-12" />
                     </Carousel>
+
+                    <div className="mt-8 flex justify-center gap-2" role="tablist" aria-label="Reviews">
+                        {reviews.map((review, index) => (
+                            <button
+                                key={review.id}
+                                type="button"
+                                role="tab"
+                                aria-label={`Review ${index + 1} of ${reviews.length}`}
+                                aria-selected={index === selectedIndex}
+                                onClick={() => carouselApi?.scrollTo(index)}
+                                className="flex h-11 w-6 items-center justify-center"
+                            >
+                                <span
+                                    className={
+                                        index === selectedIndex
+                                            ? "block h-2 w-6 rounded-full bg-gray-900 transition-all"
+                                            : "block h-2 w-2 rounded-full bg-gray-300 transition-all"
+                                    }
+                                />
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

@@ -353,7 +353,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">
                     {latestInsight.category} · {latestInsight.date} · {latestInsight.readTime}
                   </p>
                   <h3 className="mt-5 text-3xl font-bold font-heading leading-tight text-gray-950 md:text-4xl">
@@ -397,7 +397,7 @@ export default function Home() {
                       />
                     </div>
                     <article className="flex flex-1 flex-col p-6">
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-600">
                         {insight.category} · {insight.readTime}
                       </p>
                       <h3 className="mt-4 text-xl font-bold font-heading leading-tight text-gray-950 md:text-2xl">

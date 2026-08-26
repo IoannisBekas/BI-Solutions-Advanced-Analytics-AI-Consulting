@@ -302,8 +302,8 @@ export function Navbar() {
                     </div>
 
                     {[
-                      { name: "Insights", href: "/blog" },
-                      { name: "About", href: "/about" },
+                      { name: t.nav.insights, href: "/blog" },
+                      { name: t.nav.about, href: "/about" },
                     ].map((item) => (
                       <Link
                         key={item.href}
@@ -332,7 +332,7 @@ export function Navbar() {
                         )
                       }
                     >
-                      Start a project
+                      {t.nav.startProject}
                     </Link>
                   </Button>
                 </div>
