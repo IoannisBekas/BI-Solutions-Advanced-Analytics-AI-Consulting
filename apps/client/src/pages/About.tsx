@@ -7,6 +7,7 @@ import { Linkedin, MapPin, Download, Github } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useHydrated } from "@/hooks/useHydrated";
 
 interface Section {
   id: string;
@@ -15,6 +16,7 @@ interface Section {
 }
 
 export default function About() {
+  const canAnimate = useHydrated();
   const [activeSection, setActiveSection] = useState("introduction");
 
   const sections: Section[] = [
@@ -166,7 +168,7 @@ export default function About() {
             {/* Introduction Section */}
             <section ref={sections[0].ref} id="introduction" className="mb-32 scroll-mt-32">
               <motion.div
-                initial="hidden"
+                initial={canAnimate ? "hidden" : false}
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
@@ -202,7 +204,7 @@ export default function About() {
                     </div>
                   </div>
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={canAnimate ? { opacity: 0, scale: 0.95 } : false}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                     className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-gray-100 shadow-xl shadow-black/[0.08]"
@@ -220,7 +222,7 @@ export default function About() {
             {/* Experience Section */}
             <section ref={sections[1].ref} id="experience" className="mb-32 scroll-mt-32">
               <motion.h2
-                initial={{ opacity: 0, x: -20 }}
+                initial={canAnimate ? { opacity: 0, x: -20 } : false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold font-heading mb-12"
@@ -229,7 +231,7 @@ export default function About() {
               </motion.h2>
 
               <motion.div
-                initial="hidden"
+                initial={canAnimate ? "hidden" : false}
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
@@ -270,7 +272,7 @@ export default function About() {
             {/* Education Section */}
             <section ref={sections[2].ref} id="education" className="mb-32 scroll-mt-32">
               <motion.h2
-                initial={{ opacity: 0, x: -20 }}
+                initial={canAnimate ? { opacity: 0, x: -20 } : false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold font-heading mb-16"
@@ -280,7 +282,7 @@ export default function About() {
 
               <div className="grid md:grid-cols-1 gap-12">
                 <motion.div
-                  initial="hidden"
+                  initial={canAnimate ? "hidden" : false}
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={fadeInUp}
@@ -295,7 +297,7 @@ export default function About() {
                 </motion.div>
 
                 <motion.div
-                  initial="hidden"
+                  initial={canAnimate ? "hidden" : false}
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={fadeInUp}
@@ -313,7 +315,7 @@ export default function About() {
             {/* Certifications Section */}
             <section ref={sections[3].ref} id="certifications" className="mb-32 scroll-mt-32">
               <motion.h2
-                initial={{ opacity: 0, x: -20 }}
+                initial={canAnimate ? { opacity: 0, x: -20 } : false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 className="text-3xl md:text-4xl font-bold font-heading mb-16"
@@ -323,7 +325,7 @@ export default function About() {
 
               <div className="grid md:grid-cols-1 gap-8">
                 <motion.div
-                  initial="hidden"
+                  initial={canAnimate ? "hidden" : false}
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={fadeInUp}
@@ -352,7 +354,7 @@ export default function About() {
             {/* Contact Section */}
             <section ref={sections[4].ref} id="contact" className="mb-12 scroll-mt-32">
               <motion.div
-                initial="hidden"
+                initial={canAnimate ? "hidden" : false}
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}

@@ -12,6 +12,26 @@ import {
 import { TRANSLATED_ROUTES } from "@/i18n/translations";
 
 const SITE_NAME = "BI Solutions Group";
+
+/**
+ * Google truncates the title around 60 characters. Appending the full site
+ * name costs 20, which pushed most article titles past the cut so the
+ * distinguishing half was the part that disappeared. Append the shorter brand
+ * when it still fits, and drop it entirely when the page title already carries
+ * the page on its own.
+ */
+const TITLE_LIMIT = 60;
+const SHORT_SITE_NAME = "BI Solutions";
+
+function composeTitle(title: string) {
+  const full = `${title} | ${SITE_NAME}`;
+  if (full.length <= TITLE_LIMIT) return full;
+
+  const short = `${title} | ${SHORT_SITE_NAME}`;
+  if (short.length <= TITLE_LIMIT) return short;
+
+  return title;
+}
 const SITE_URL = "https://www.bisolutions.group";
 const DEFAULT_IMAGE = "/og.png";
 
@@ -127,7 +147,7 @@ export function Seo({
   const { locale } = useLocale();
 
   useEffect(() => {
-    const pageTitle = `${title} | ${SITE_NAME}`;
+    const pageTitle = composeTitle(title);
     const routePath = path ?? splitLocaleFromPath(window.location.pathname).path;
     const canonicalUrl = canonicalFor(routePath, locale);
     const imageUrl = toAbsoluteUrl(image);
@@ -191,7 +211,7 @@ export function Seo({
     const routePath = path ?? splitLocaleFromPath(ssrHead.pagePath).path;
 
     ssrHead.head = {
-      title: `${title} | ${SITE_NAME}`,
+      title: composeTitle(title),
       description,
       robots,
       keywords: keywords && keywords.length > 0 ? keywords.join(", ") : undefined,

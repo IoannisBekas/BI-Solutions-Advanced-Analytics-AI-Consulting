@@ -7,8 +7,8 @@ import {
   DEFAULT_LOCALE,
   LOCALES,
   localePrefix,
+  splitLocaleFromPath,
 } from "../apps/client/src/i18n/config";
-import { TRANSLATED_ROUTES } from "../apps/client/src/i18n/translations";
 
 // Kept in sync with apps/client/src/components/seo/ssrHead.ts. Declared here
 // too because the SSR bundle is loaded dynamically, without type info.
@@ -48,13 +48,22 @@ async function readRoutesFromSitemap() {
     route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route,
   );
 
-  // Every translated route also ships under its locale prefix.
-  const localised = normalized.flatMap((route) =>
-    TRANSLATED_ROUTES.has(route)
-      ? LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
-          (locale) => `${localePrefix(locale)}${route === "/" ? "" : route}`,
-        )
-      : [],
+  // The sitemap already lists the localised homepages, so prefixing every entry
+  // blindly would emit /el/el and /de/el. Localise only the unprefixed routes.
+  const canonicalRoutes = normalized.filter(
+    (route) => splitLocaleFromPath(route).locale === DEFAULT_LOCALE,
+  );
+
+  // Every route ships under every locale prefix, not just the translated ones.
+  // Links inside a locale carry that prefix, so a route without a prerendered
+  // file 404s on static hosting — the visitor is bounced through 404.html and a
+  // crawler simply records a dead link. Untranslated pages still serve English
+  // copy and canonicalise to the English URL, so nothing is indexed twice;
+  // hreflang stays limited to TRANSLATED_ROUTES.
+  const localised = canonicalRoutes.flatMap((route) =>
+    LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
+      (locale) => `${localePrefix(locale)}${route === "/" ? "" : route}`,
+    ),
   );
 
   return [...new Set([...normalized, ...localised])];
