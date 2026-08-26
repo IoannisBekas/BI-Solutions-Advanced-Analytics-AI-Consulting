@@ -389,7 +389,7 @@ export default function Services() {
     <div className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
       <Seo
         title="Analytics, AI, Data, Digital Products & Enablement Services"
-        description="Explore BI Solutions Group services for business intelligence, Power BI, AI, data and cloud foundations, web applications, content operations, digital products, managed support, fractional leadership, training, and mentorship."
+        description="Business intelligence, Power BI, AI, data and cloud foundations, web applications, digital products, managed support, training, and mentorship."
         path="/services"
         structuredData={servicesStructuredData}
       />

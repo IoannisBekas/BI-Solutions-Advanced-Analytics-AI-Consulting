@@ -325,7 +325,7 @@ export default function BlogPost() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title={post.title}
+        title={post.seoTitle ?? post.title}
         description={post.excerpt}
         path={`/blog/${post.slug}`}
         image={post.featuredImage}

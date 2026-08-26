@@ -1,6 +1,6 @@
-import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.png";
-import ifcDashboard from "@/assets/dashboards/ifc_dashboard.png";
-import unicefDashboard from "@/assets/dashboards/unicef_dashboard.png";
+import iaeaDashboard from "@/assets/dashboards/iaea_dashboard.webp";
+import ifcDashboard from "@/assets/dashboards/ifc_dashboard.webp";
+import unicefDashboard from "@/assets/dashboards/unicef_dashboard.webp";
 
 export interface CaseStudySnapshotItem {
   label: string;
@@ -40,7 +40,7 @@ export const caseStudies: CaseStudy[] = [
     cardTitle: "UNICEF-style audit compliance dashboard",
     seoTitle: "Audit Compliance Power BI Case Study",
     seoDescription:
-      "An independent Power BI portfolio analysis showing how country-office audit ratings, risks, expenditure, and recommendation progress can be explored in one reporting flow.",
+      "An independent Power BI analysis showing how audit ratings, risks, expenditure, and recommendation progress fit into one reporting flow.",
     relationship: "Independent portfolio analysis",
     relationshipNote:
       "This demonstration was created independently with mock data. It was not commissioned by, affiliated with, or endorsed by UNICEF.",
@@ -148,7 +148,7 @@ export const caseStudies: CaseStudy[] = [
     cardTitle: "IFC-style talent analytics dashboard",
     seoTitle: "Talent Analytics Power BI Case Study",
     seoDescription:
-      "An independent Power BI portfolio analysis showing how recruitment activity, funnel stages, candidate sources, diversity, and applicant detail can work together.",
+      "An independent Power BI analysis showing how recruitment activity, funnel stages, sources, and applicant detail work together.",
     relationship: "Independent portfolio analysis",
     relationshipNote:
       "This demonstration was created independently with fully synthetic data. It was not commissioned by, affiliated with, or endorsed by IFC or the World Bank Group.",

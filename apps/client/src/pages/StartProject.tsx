@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ArrowRight, Check, Crosshair, Waypoints } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -237,7 +237,7 @@ export default function StartProject() {
     <div className="min-h-screen bg-white text-gray-950">
       <Seo
         title="Start a Project"
-        description="Tell BI Solutions Group about your business intelligence, AI, data strategy, automation, web application, content operations, digital product, managed support, enablement, or mentorship need."
+        description="Tell BI Solutions Group about your BI, AI, data, automation, web application, or mentorship need and get a considered next step."
         path="/start-a-project"
         keywords={[
           "hire Power BI consultant",
@@ -274,38 +274,20 @@ export default function StartProject() {
             </p>
 
             <div className="mt-10 space-y-4">
-              <div className="flex gap-4 rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
-                <div
-                  aria-hidden="true"
-                  className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-black/[0.08] bg-[linear-gradient(145deg,#ffffff_0%,#f1f1ed_100%)] text-gray-950 shadow-[0_16px_32px_-24px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.95)]"
-                >
-                  <span className="absolute right-2 top-2 size-1 rounded-full bg-black/25" />
-                  <Crosshair className="size-[1.15rem]" strokeWidth={1.6} />
-                </div>
-                <div>
-                  <h2 className="text-base font-semibold">A useful starting point</h2>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    A business bottleneck, repeated workflow, reporting gap,
-                    product idea, or career goal is enough. You do not need a
-                    finished technical specification or learning plan.
-                  </p>
-                </div>
+              <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
+                <h2 className="text-base font-semibold">A useful starting point</h2>
+                <p className="mt-1 text-sm leading-relaxed text-gray-600">
+                  A business bottleneck, repeated workflow, reporting gap,
+                  product idea, or career goal is enough. You do not need a
+                  finished technical specification or learning plan.
+                </p>
               </div>
-              <div className="flex gap-4 rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
-                <div
-                  aria-hidden="true"
-                  className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-black/[0.08] bg-[linear-gradient(145deg,#ffffff_0%,#f1f1ed_100%)] text-gray-950 shadow-[0_16px_32px_-24px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.95)]"
-                >
-                  <span className="absolute right-2 top-2 size-1 rounded-full bg-black/25" />
-                  <Waypoints className="size-[1.15rem]" strokeWidth={1.6} />
-                </div>
-                <div>
-                  <h2 className="text-base font-semibold">A considered response</h2>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    The brief is reviewed before the next step is suggested. If
-                    the work is not a good fit, that will be made clear as well.
-                  </p>
-                </div>
+              <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
+                <h2 className="text-base font-semibold">A considered response</h2>
+                <p className="mt-1 text-sm leading-relaxed text-gray-600">
+                  The brief is reviewed before the next step is suggested. If
+                  the work is not a good fit, that will be made clear as well.
+                </p>
               </div>
             </div>
 
@@ -321,15 +303,7 @@ export default function StartProject() {
                 role="status"
                 aria-live="polite"
               >
-                <div
-                  aria-hidden="true"
-                  className="relative flex size-14 items-center justify-center overflow-hidden rounded-[1.25rem] bg-gray-950 text-white shadow-[0_20px_42px_-18px_rgba(0,0,0,0.72)]"
-                >
-                  <span className="absolute inset-[6px] rounded-[0.9rem] border border-white/15" />
-                  <span className="absolute right-2.5 top-2.5 size-1 rounded-full bg-white/45" />
-                  <Check className="relative size-6" strokeWidth={1.75} />
-                </div>
-                <h2 className="mt-8 text-3xl sm:text-4xl">Your brief was sent.</h2>
+                <h2 className="text-3xl sm:text-4xl">Your brief was sent.</h2>
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-gray-600">
                   Thank you for sharing the context. BI Solutions Group will
                   review the request and follow up using the email address you

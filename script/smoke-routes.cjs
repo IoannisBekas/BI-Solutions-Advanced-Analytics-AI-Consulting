@@ -56,7 +56,7 @@ const publicRoutes = [
   },
   {
     path: "/blog/ai-document-workflows-professional-services",
-    title: "AI Document Workflows for Professional Services",
+    title: "AI Document Workflows",
     body: "Professional-service work often includes document-heavy tasks",
     canonical: "https://www.bisolutions.group/blog/ai-document-workflows-professional-services",
     robots: "index,follow",
@@ -77,7 +77,7 @@ const publicRoutes = [
   },
   {
     path: "/blog/predictive-analytics-forecasting-mistakes",
-    title: "Predictive Analytics",
+    title: "Common Forecasting Mistakes to Avoid",
     body: "Predictive analytics can support better planning",
     canonical: "https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes",
     robots: "index,follow",

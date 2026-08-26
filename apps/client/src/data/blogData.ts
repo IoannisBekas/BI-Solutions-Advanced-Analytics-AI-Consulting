@@ -57,6 +57,12 @@ const reviewedArticleCovers: Record<string, string> = {
 export interface BlogPost {
   slug: string;
   title: string;
+  /**
+   * Shorter title for the <title> tag. The article headline is often longer
+   * than Google's ~60 character cut, which truncates the distinguishing half.
+   * Set this when the headline does not fit; the page still shows `title`.
+   */
+  seoTitle?: string;
   excerpt: string;
   content: string;
   author: string;
@@ -71,10 +77,11 @@ export interface BlogPost {
 const blogPostDefinitions: BlogPost[] = [
   {
     slug: "website-web-app-development-greece-business-needs",
+    seoTitle: "Website & Web App Development in Greece",
     title:
       "Website & Web App Development in Greece: What Businesses Actually Need",
     excerpt:
-      "A practical view of what Greek businesses should expect from modern website and web app development: positioning, speed, conversion paths, analytics, and maintainable delivery.",
+      "What Greek businesses should expect from modern website and web app development: positioning, speed, conversion paths, and maintainable delivery.",
     content: `A business website is no longer just a digital brochure. For many Greek companies, it is the first sales conversation, the first credibility check, and the first place where a potential client decides whether the company feels serious enough to contact.
 
 That is why website development should start with the business problem, not the template. A local service provider may need trust, location clarity, booking paths, and fast mobile performance. A B2B company may need stronger positioning, lead capture, case studies, and analytics. A product company may need an app-like surface that explains value and routes users into a workflow.
@@ -132,6 +139,7 @@ Selected delivery examples and case-study material are the proof layer for this 
   },
   {
     slug: "power-bi-consulting-dashboards-business-infrastructure",
+    seoTitle: "BI Consulting: Dashboards as Infrastructure",
     title:
       "BI Consulting: When Dashboards Become Business Infrastructure",
     excerpt:
@@ -199,6 +207,7 @@ This is why <a href="/services/business-intelligence-semantic-modeling" class="t
   },
   {
     slug: "semantic-modeling-power-bi-clean-models",
+    seoTitle: "Semantic Modeling in Power BI",
     title:
       "Semantic Modeling in Power BI: Why Clean Models Matter More Than Pretty Reports",
     excerpt:
@@ -268,6 +277,7 @@ For teams that want a dedicated workflow, <a href="${withPublicSiteOrigin(
   },
   {
     slug: "ai-consulting-greek-businesses-practical-use-cases",
+    seoTitle: "AI Consulting for Greek Businesses",
     title:
       "AI Consulting for Greek Businesses: Practical Use Cases Beyond Hype",
     excerpt:
@@ -335,6 +345,7 @@ This is where <a href="/services/ai-governance-literacy-adoption" class="text-gr
   },
   {
     slug: "data-strategy-before-ai-better-foundations",
+    seoTitle: "Data Strategy Before AI",
     title:
       "Data Strategy Before AI: Why Companies Need Better Foundations First",
     excerpt:
@@ -448,6 +459,7 @@ That makes the migration concrete. Instead of migrating everything at once, the 
   },
   {
     slug: "mlops-small-mid-sized-teams-productionize-ai",
+    seoTitle: "MLOps for Small and Mid-Sized Teams",
     title:
       "MLOps for Small and Mid-Sized Teams: How to Productionize AI Workflows",
     excerpt:
@@ -495,6 +507,7 @@ After one workflow is stable, the team has a pattern it can reuse. That is how M
   },
   {
     slug: "data-governance-gdpr-scale-analytics-control",
+    seoTitle: "Data Governance and GDPR at Scale",
     title:
       "Data Governance and GDPR: How to Scale Analytics Without Losing Control",
     excerpt:
@@ -541,6 +554,7 @@ As analytics scales, governance becomes the reason teams can keep moving without
   },
   {
     slug: "ai-literacy-teams-adopt-ai-without-operational-risk",
+    seoTitle: "AI Literacy for Teams",
     title:
       "AI Literacy for Teams: How to Adopt AI Without Creating Operational Risk",
     excerpt:
@@ -775,6 +789,7 @@ This also helps search engines and AI assistants understand the page. Specific t
   },
   {
     slug: "dashboard-requirements-before-power-bi-build",
+    seoTitle: "Dashboard Requirements Before You Build",
     title: "Dashboard Requirements: What to Define Before a Power BI Build",
     excerpt:
       "Strong dashboards start before design. Define decisions, users, KPIs, sources, refresh needs, and ownership before building visuals.",
@@ -819,6 +834,7 @@ For Power BI projects, this also connects to semantic modeling. If a requirement
   },
   {
     slug: "kpi-dictionary-business-intelligence",
+    seoTitle: "The KPI Dictionary in Business Intelligence",
     title: "KPI Dictionary: The Small BI Asset That Prevents Big Reporting Arguments",
     excerpt:
       "A KPI dictionary gives teams shared definitions for metrics, owners, formulas, and business context before dashboards multiply.",
@@ -907,6 +923,7 @@ Before choosing, define who owns the semantic layer, who can publish, how certif
   },
   {
     slug: "data-quality-checklist-analytics-projects",
+    seoTitle: "Data Quality Checklist for Analytics Projects",
     title: "Data Quality Checklist for Analytics Projects",
     excerpt:
       "A lightweight data quality checklist can prevent dashboard errors, weak AI outputs, and repeated manual corrections.",
@@ -995,6 +1012,7 @@ Good ownership does not mean bureaucracy. It means that someone can answer pract
   },
   {
     slug: "ai-document-workflows-professional-services",
+    seoTitle: "AI Document Workflows",
     title: "AI Document Workflows for Professional Services",
     excerpt:
       "Professional-service teams can use AI to summarize, classify, draft, and review documents when the workflow includes human control and privacy rules.",
@@ -1039,6 +1057,7 @@ For professional services, this is often the difference between useful assistanc
   },
   {
     slug: "prompt-workflow-design-business-teams",
+    seoTitle: "Prompt Workflow Design for Business Teams",
     title: "Prompt Workflow Design: Turning AI Prompts Into Repeatable Business Processes",
     excerpt:
       "Prompts create more value when they become reusable workflows with inputs, review rules, outputs, and ownership.",
@@ -1083,6 +1102,7 @@ When the review criteria are explicit, AI use becomes easier to govern. The team
   },
   {
     slug: "ai-assistant-governance-company-policy",
+    seoTitle: "AI Assistant Governance and Company Policy",
     title: "AI Assistant Governance: What Company Policy Should Cover",
     excerpt:
       "A practical AI policy should explain allowed use cases, sensitive data rules, review expectations, and escalation paths.",
@@ -1127,6 +1147,7 @@ BI Solutions treats AI governance as part of adoption. The aim is not to block u
   },
   {
     slug: "predictive-analytics-forecasting-mistakes",
+    seoTitle: "Common Forecasting Mistakes to Avoid",
     title: "Predictive Analytics: Common Forecasting Mistakes Business Teams Make",
     excerpt:
       "Forecasting work fails when teams ignore data quality, uncertainty, business context, and how the prediction will be used.",
@@ -1171,6 +1192,7 @@ This is also important for AI adoption. People trust predictive analytics more w
   },
   {
     slug: "analytics-roadmap-first-90-days",
+    seoTitle: "Analytics Roadmap: The First 90 Days",
     title: "Analytics Roadmap: What to Do in the First 90 Days",
     excerpt:
       "The first 90 days of analytics work should clarify priorities, data sources, reporting pain, governance gaps, and a delivery backlog.",
@@ -1217,6 +1239,7 @@ Visible wins matter because analytics programs lose support when they stay invis
   },
   {
     slug: "cloud-data-warehouse-vs-spreadsheets",
+    seoTitle: "Cloud Data Warehouse vs Spreadsheets",
     title: "Cloud Data Warehouse vs Spreadsheets: When the Move Becomes Worth It",
     excerpt:
       "Spreadsheets are useful until reporting needs reliability, shared logic, access control, and repeatable refreshes.",
@@ -1305,6 +1328,7 @@ Without orchestration, teams often rely on manual checks or fragile scheduled ta
   },
   {
     slug: "model-monitoring-ai-workflows",
+    seoTitle: "Model Monitoring for AI Workflows",
     title: "Model Monitoring for AI Workflows: What to Watch After Launch",
     excerpt:
       "AI workflow launch is not the end. Teams need to monitor data changes, output quality, failures, usage, and business impact.",
@@ -1437,6 +1461,7 @@ Teams that understand uncertainty, source quality, and review habits are better 
   },
   {
     slug: "internal-tools-vs-saas-build-buy",
+    seoTitle: "Internal Tools vs SaaS: Build or Buy",
     title: "Internal Tools vs SaaS: How to Decide Whether to Build or Buy",
     excerpt:
       "The build-vs-buy decision should compare workflow fit, data integration, maintenance, cost, and strategic differentiation.",
