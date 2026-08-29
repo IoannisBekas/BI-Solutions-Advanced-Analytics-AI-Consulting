@@ -1909,10 +1909,36 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 860px) {
+  /*
+   * Mobile browsers can enlarge text independently of the layout viewport.
+   * Let the hero grow with that content and reserve the fixed header's space,
+   * rather than centring an oversized block underneath the navigation.
+   */
+  .cinematic-hero {
+    height: auto;
+    min-height: 100svh;
+    justify-content: flex-start;
+    padding: calc(6.5rem + env(safe-area-inset-top, 0px)) 0 6rem;
+  }
+
+  .cinematic-hero__content {
+    padding-inline: 1.25rem;
+  }
+
+  .cinematic-hero__title {
+    margin-top: 1.1rem;
+  }
+
+  .cinematic-hero__subtitle {
+    margin-top: 1.25rem;
+    line-height: 1.55;
+  }
+
   .cinematic-hero__intent {
     flex-direction: column;
     align-items: stretch;
     gap: 0.9rem;
+    margin-top: 2rem;
     padding: 1.25rem;
     border-radius: 1.75rem;
   }
@@ -1928,16 +1954,27 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
   }
 
-  /* A full-viewport hero with no cue reads as the end of the page. Leaving a
-     sliver of the next section visible is what signals there is more. */
-  .cinematic-hero {
-    height: 88svh;
-    min-height: min(36rem, 88svh);
-  }
-
   .cinematic-hero__cue {
     bottom: 1rem;
     font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cinematic-hero {
+    padding-top: calc(5.75rem + env(safe-area-inset-top, 0px));
+  }
+
+  .cinematic-hero__content {
+    padding-inline: 1rem;
+  }
+
+  .cinematic-hero__title {
+    font-size: clamp(2.15rem, 12vw, 2.85rem);
+  }
+
+  .cinematic-hero__intent {
+    padding: 1rem;
   }
 }
 

@@ -348,25 +348,25 @@ export function Navbar() {
         data-site-header
         data-transparent={isScrolled ? "false" : "true"}
         className={cn(
-          "fixed left-0 right-0 top-0 z-50 px-6 transition-all duration-300 ease-in-out md:px-12",
+          "fixed left-0 right-0 top-0 z-50 px-4 transition-all duration-300 ease-in-out sm:px-6 md:px-12",
           isScrolled
             ? "border-b border-gray-100 bg-white/90 py-3 shadow-sm backdrop-blur-md"
-            : "bg-transparent py-6",
+            : "bg-transparent py-4 sm:py-6",
         )}
       >
         <div className="site-container flex items-center justify-between">
           <Link
             href="/"
-            className="group flex min-w-0 items-center gap-3"
+            className="group flex max-w-[calc(100%-3.5rem)] min-w-0 items-center gap-2.5 sm:max-w-none sm:gap-3"
             onClick={() => trackNavClick("BI Solutions Group", "/", "header")}
           >
             <img
               src={withAssetBase("bi-solutions-logo.png")}
               alt=""
-              className="h-10 w-10 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-9 w-9 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-10 sm:w-10"
             />
             <div className="min-w-0">
-              <div className="truncate text-base font-bold tracking-tight transition-colors font-heading group-hover:text-gray-700 sm:text-lg">
+              <div className="truncate text-sm font-bold tracking-tight transition-colors font-heading group-hover:text-gray-700 sm:text-lg">
                 BI Solutions Group
               </div>
               <div className="hidden truncate text-xs font-medium text-gray-500 sm:block">
