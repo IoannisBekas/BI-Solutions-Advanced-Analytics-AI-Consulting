@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import shutil
 import subprocess
 import sys
@@ -12,11 +13,13 @@ VIEWPORT = "1920,1080"
 
 
 def main() -> int:
-    if len(sys.argv) != 2:
-        print("Usage: render_svg_covers.py <cover-directory>", file=sys.stderr)
-        return 2
+    parser = argparse.ArgumentParser()
+    parser.add_argument("cover_directory", type=Path)
+    parser.add_argument("--output-dir", type=Path)
+    args = parser.parse_args()
 
-    cover_dir = Path(sys.argv[1]).resolve()
+    cover_dir = args.cover_directory.resolve()
+    output_dir = (args.output_dir or cover_dir).resolve()
     svg_files = sorted(cover_dir.glob("*.svg"))
     if not CHROME.is_file():
         print(f"Chrome was not found at {CHROME}", file=sys.stderr)
@@ -25,10 +28,11 @@ def main() -> int:
         print(f"No SVG files found in {cover_dir}", file=sys.stderr)
         return 1
 
+    output_dir.mkdir(parents=True, exist_ok=True)
     profile_dir = Path(tempfile.mkdtemp(prefix="bi-cover-render-"))
     try:
         for svg_file in svg_files:
-            png_file = svg_file.with_suffix(".png")
+            png_file = output_dir / f"{svg_file.stem}.png"
             command = [
                 str(CHROME),
                 "--headless=new",

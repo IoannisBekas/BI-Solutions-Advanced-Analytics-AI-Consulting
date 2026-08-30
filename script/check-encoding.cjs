@@ -13,7 +13,12 @@ const SKIP_DIRS = new Set([
   "coverage",
   "__pycache__",
   "attached_assets",
+  "archive",
+  "output",
   "outputs",
+  ".agents",
+  ".claude",
+  ".playwright-cli",
 ]);
 
 const TEXT_EXTENSIONS = new Set([

@@ -1,60 +1,67 @@
 # Dependencies
-node_modules
-apps/quantus/node_modules/
-apps/powerbi-solutions/node_modules/
+node_modules/
+**/node_modules/
 
-# Build output
-dist
-apps/quantus/dist/
-apps/quantus/dev-dist/
-apps/powerbi-solutions/dist/
-apps/server/public
-apps/client/public/quantus-app/
-output/
-outputs/
-output_*
+# Build and generated output
+/dist/
+**/dist/
+/apps/quantus/dev-dist/
+/apps/server/public/
+/apps/client/public/quantus-app/
+/output/
+/outputs/
+/output_*/
 
-# Hero video sources (~430 MB). The posters are committed and are all the
-# cinematic hero needs; the mp4 sets stay local to keep the repo clone-able.
-apps/client/public/scroll-world/
-apps/client/public/scroll-world-v2/
-apps/client/public/scroll-world-v3/
-apps/client/public/scroll-world-v4/video/
+# Local cinematic source video sets. Production uses the committed posters.
+/apps/client/public/scroll-world/
+/apps/client/public/scroll-world-v2/
+/apps/client/public/scroll-world-v3/
+/apps/client/public/scroll-world-v4/video/
 
-# Runtime data & caches
-data/
-!apps/client/src/data/
-!apps/client/src/data/caseStudies.ts
-!apps/client/public/insights/
-!apps/client/public/insights/**/
-!apps/client/public/insights/**/data/
-!apps/client/public/insights/**/data/**
-attached_assets/
-apps/quantus/models/saved/
+# Runtime data and caches
+/data/
+*.db
+*.db-shm
+*.db-wal
+/apps/quantus/.sec_cik_cache.json
+/apps/quantus/models/saved/
 **/__pycache__/
-**/*.pyc
+*.py[cod]
 .pytest_cache/
+*.tsbuildinfo
 
-# Env files
+# Local inputs, archives, and generated deliverables
+/attached_assets/
+/archive/*
+!/archive/README.md
+
+# Environment files
 .env
 .env.local
 .env.*.local
 !.env.example
-apps/powerbi-solutions/.env
-apps/powerbi-solutions/.env.local
-apps/powerbi-solutions/.env.*
-!apps/powerbi-solutions/.env.example
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
 
-# Logs & test artifacts
+# Logs and test artifacts
 *.log
 *.tar.gz
-.local/
-test-results/
-build_log.txt
+*.tmp
+/build_log.txt
+/.local/
+/test-results/
+/coverage/
+/.playwright-cli/
 
-# Editor / OS
-.claude/
+# Local AI/editor tooling
+/.agents/
+/.claude/
 **/.claude/
+
+# Editor and OS files
 .DS_Store
+Thumbs.db
 desktop.ini
 vite.config.ts.*

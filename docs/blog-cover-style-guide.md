@@ -2,7 +2,7 @@
 
 Use this guide for every new BI Solutions insight article. It keeps all covers recognisable as one editorial series while still giving each topic its own visual motif.
 
-The current reference set is in [`outputs/article-cover-images-v4/review`](../outputs/article-cover-images-v4/review). The source SVG files are the editable masters; the matching PNG files are ready for publication.
+The editable reference set is in [`apps/client/design/blog-covers/v4`](../apps/client/design/blog-covers/v4). Publication PNGs live in [`apps/client/public/blog/article-covers-v4`](../apps/client/public/blog/article-covers-v4), without a second generated copy beside the SVG masters.
 
 ## Non-negotiable format
 
@@ -43,24 +43,27 @@ The covers should feel like the supplied reference image: clean flat infographic
 ## Production workflow for a new article
 
 1. Add the new post to the website as usual and decide its sequential article number.
-2. Add a row to [`manifest.csv`](../outputs/article-cover-images-v4/review/manifest.csv) with `index`, `title`, `article_url`, `svg_file`, and `png_file`. Use a stable slug-based filename such as `20-new-article-slug.svg` and `20-new-article-slug.png`.
+2. Add a row to [`manifest.csv`](../apps/client/design/blog-covers/v4/manifest.csv) with `index`, `title`, `article_url`, `svg_file`, and `png_file`. Use a stable slug-based filename such as `20-new-article-slug.svg` and `20-new-article-slug.png`.
 3. In [`script/generate_infographic_covers.py`](../script/generate_infographic_covers.py), append a suitable motif name to `THEMES` in the same order as the manifest. Available values are: `decision`, `semantic`, `requirements`, `foundation`, `ai`, `web`, `kpi`, `quality`, `roadmap`, `governance`, `cloud`, `buildbuy`, `documents`, `prompts`, `forecast`, `literacy`, `mlops`, and `monitoring`.
 4. Generate the SVG master and publication PNG:
 
    ```powershell
    python script/generate_infographic_covers.py `
-     outputs/article-cover-images-v4/review/manifest.csv `
-     outputs/article-cover-images-v4/review
+     apps/client/design/blog-covers/v4/manifest.csv `
+     apps/client/design/blog-covers/v4
 
-   python script/render_svg_covers.py outputs/article-cover-images-v4/review
+   python script/render_svg_covers.py `
+     apps/client/design/blog-covers/v4 `
+     --output-dir apps/client/public/blog/article-covers-v4
    ```
 
 5. Refresh the visual overview:
 
    ```powershell
    python script/create_cover_contact_sheet.py `
-     outputs/article-cover-images-v4/review `
-     --manifest outputs/article-cover-images-v4/review/manifest.csv
+     apps/client/public/blog/article-covers-v4 `
+     --manifest apps/client/design/blog-covers/v4/manifest.csv `
+     --output output/blog-covers-v4-contact-sheet.png
    ```
 
 6. Review the new cover at 100% size and in the contact sheet before publishing.

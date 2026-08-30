@@ -1,13 +1,39 @@
-node_modules
-apps/quantus/node_modules
-apps/powerbi-solutions/node_modules
-dist
-data
+# Dependencies and build output
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+output/
+outputs/
+
+# Runtime state and local secrets
+data/
+*.db
+*.db-shm
+*.db-wal
 .env
-.env.local
-.env.*.local
+.env.*
+**/.env
+**/.env.*
+
+# Local-only media and tooling
+attached_assets/
+archive/
+.agents/
+.claude/
+.playwright-cli/
+apps/client/public/scroll-world/
+apps/client/public/scroll-world-v2/
+apps/client/public/scroll-world-v3/
+apps/client/public/scroll-world-v4/video/
+**/__pycache__/
+.pytest_cache/
+
+# Repository and operating-system metadata
+.git/
+.github/
+*.log
 *.tar.gz
-.git
-.github
-.claude
 .DS_Store
+Thumbs.db
+desktop.ini

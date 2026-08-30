@@ -24,9 +24,10 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("covers", type=Path)
     parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     cover_dir = args.covers
-    output = cover_dir / "contact-sheet.png"
+    output = args.output or cover_dir / "contact-sheet.png"
     with args.manifest.open(encoding="utf-8", newline="") as file:
         covers = list(csv.DictReader(file))
 
@@ -52,6 +53,7 @@ def main() -> None:
         title = "\n".join(textwrap.wrap(cover["title"], width=39)[:2])
         draw.multiline_text((x + 34, label_y), title, fill="#111827", font=title_font, spacing=2)
 
+    output.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(output, quality=94)
 
 

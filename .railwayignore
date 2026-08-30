@@ -1,40 +1,42 @@
-# Root node_modules
+# Dependencies are installed during the Railway build.
 node_modules/
-
-# Nested node_modules (explicit paths)
-apps/quantus/node_modules/
-apps/powerbi-solutions/node_modules/
-apps/client/node_modules/
-
-# Catch-all for any other nested node_modules
 **/node_modules/
 
-# Build output
+# Local build and generated output
 dist/
 **/dist/
-apps/quantus/dist/
-apps/powerbi-solutions/dist/
+output/
+outputs/
 
-# Database files (cause file locks)
+# Runtime data, caches, and local secrets
+data/
 *.db
 *.db-shm
 *.db-wal
-data/
-
-# Git history
-.git/
-
-# Env files and local secrets
 .env
 .env.*
 **/.env
 **/.env.*
 !**/.env.example
+**/__pycache__/
+.pytest_cache/
 
-# Logs and large assets
-root-dev.log
+# Local-only media and tooling
 attached_assets/
+archive/
+.agents/
+.claude/
+.playwright-cli/
+apps/client/public/scroll-world/
+apps/client/public/scroll-world-v2/
+apps/client/public/scroll-world-v3/
+apps/client/public/scroll-world-v4/video/
 
-# OS files
-Thumbs.db
+# Repository and operating-system metadata
+.git/
+.github/
+*.log
+*.tar.gz
 .DS_Store
+Thumbs.db
+desktop.ini

@@ -13,6 +13,12 @@ const ignoredDirs = new Set([
   "coverage",
   "data",
   "attached_assets",
+  "archive",
+  "output",
+  "outputs",
+  ".agents",
+  ".claude",
+  ".playwright-cli",
   "__pycache__",
 ]);
 
