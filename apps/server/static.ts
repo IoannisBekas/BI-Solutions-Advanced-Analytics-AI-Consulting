@@ -348,7 +348,7 @@ interface RouteMeta {
 }
 
 const BASE_URL = "https://www.bisolutions.group";
-const DEFAULT_OG_IMAGE = `${BASE_URL}/og.png`;
+const DEFAULT_OG_IMAGE = `${BASE_URL}/og.png?v=blue-20260830`;
 const ORGANIZATION_LOGO_IMAGE = `${BASE_URL}/bi-solutions-logo.png`;
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
 const WEBSITE_ID = `${BASE_URL}/#website`;

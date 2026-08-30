@@ -33,7 +33,7 @@ function composeTitle(title: string) {
   return title;
 }
 const SITE_URL = "https://www.bisolutions.group";
-const DEFAULT_IMAGE = "/og.png";
+const DEFAULT_IMAGE = "/og.png?v=blue-20260830";
 
 type StructuredData = Record<string, unknown> | Array<Record<string, unknown>>;
 
