@@ -1,5 +1,6 @@
 import { useId, type ReactNode } from "react";
 import type { BlogPost } from "@/data/blogData";
+import { withAssetBase } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type ArticleVisualPost = Pick<
@@ -422,7 +423,7 @@ export function ArticleVisual({ post, className }: ArticleVisualProps) {
     return (
       <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)}>
         <img
-          src={post.featuredImage}
+          src={withAssetBase(post.featuredImage)}
           alt={`${post.title} article cover`}
           className="h-full w-full object-cover"
           loading="lazy"

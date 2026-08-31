@@ -55,6 +55,10 @@ export function withAssetBase(path: string) {
     return path;
   }
 
+  if (path.startsWith(import.meta.env.BASE_URL)) {
+    return path;
+  }
+
   const normalizedPath = path.replace(/^\/+/, "");
   return `${import.meta.env.BASE_URL}${normalizedPath}`;
 }

@@ -11,6 +11,7 @@ import { aiCapabilityPages } from "@/lib/servicePages";
 import { blogPosts } from "@/data/blogData";
 import { caseStudies } from "@/data/caseStudies";
 import { trackEvent } from "@/lib/analytics";
+import { withAssetBase } from "@/lib/site";
 import { useLocale } from "@/i18n/LocaleProvider";
 
 const latestInsight = blogPosts[0];
@@ -347,7 +348,7 @@ export default function Home() {
               >
                 <div className="aspect-[16/10] overflow-hidden bg-gray-100 lg:aspect-auto">
                   <img
-                    src={latestInsight.featuredImage}
+                    src={withAssetBase(latestInsight.featuredImage)}
                     alt=""
                     className="h-full w-full object-contain"
                   />
@@ -390,7 +391,7 @@ export default function Home() {
                   >
                     <div className="aspect-video overflow-hidden border-b border-gray-100 bg-gray-100">
                       <img
-                        src={insight.featuredImage}
+                        src={withAssetBase(insight.featuredImage)}
                         alt=""
                         className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                         loading="lazy"
