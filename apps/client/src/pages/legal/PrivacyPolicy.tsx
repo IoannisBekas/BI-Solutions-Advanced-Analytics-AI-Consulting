@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
     <div className="min-h-screen bg-background">
       <Seo
         title="Privacy Policy"
-        description="Privacy policy and data protection information for BI Solutions Group, in compliance with GDPR."
+        description="Privacy policy and data protection information for BI Solutions Group."
         path="/privacy-policy"
       />
       <Navbar />
@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
           eyebrow="Legal"
           title="Privacy Policy"
           description="How BI Solutions Group handles personal data, cookies, analytics, and service information."
-          footer={<p className="text-sm text-gray-400">Last updated: June 2026</p>}
+          footer={<p className="text-sm text-gray-400">Last updated: September 5, 2026</p>}
         />
 
         <section className="mx-auto max-w-5xl px-6 md:px-12">
@@ -205,6 +205,16 @@ export default function PrivacyPolicy() {
                   We use cookies to operate the website, improve the user
                   experience, and understand service usage.
                 </p>
+                <p className="mb-3">
+                  Google Analytics and Google Ads measurement are optional and
+                  have separate choices in our cookie notice. Neither is loaded
+                  until you permit the relevant measurement. We remember your
+                  choices in local storage for up to 180 days. Previous consent
+                  to analytics alone does not enable advertising measurement.
+                  You can reject both, choose either, or change and withdraw
+                  permission using the Cookie settings button. Changing a saved
+                  choice may reload the page; save any unfinished form first.
+                </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
@@ -225,6 +235,17 @@ export default function PrivacyPolicy() {
                     <span>
                       <strong>Preference cookies:</strong> Store user preferences
                       where supported.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
+                      <strong>Ad measurement cookies:</strong> With your permission,
+                      Google Ads uses identifiers and successful enquiry events to
+                      measure whether advertising leads to enquiries. We do not
+                      send the form's name, email, company, or project description
+                      to Google Ads. Enhanced conversions and advertising
+                      personalization are not enabled by this implementation.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -269,6 +290,20 @@ export default function PrivacyPolicy() {
                     <span>
                       <strong>Google Analytics:</strong> Used for website
                       analytics if enabled.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
+                      <strong>Google Ads:</strong> Used for advertising measurement
+                      when you allow it. Google tags can process online identifiers,
+                      page and device information, IP addresses, and enquiry-event
+                      information. Google may process data outside your country.
+                      See Google's{" "}
+                      <a className="underline" href="https://policies.google.com/technologies/partner-sites">
+                        information about data from partner sites
+                      </a>{" "}
+                      for its processing practices.
                     </span>
                   </li>
                 </ul>

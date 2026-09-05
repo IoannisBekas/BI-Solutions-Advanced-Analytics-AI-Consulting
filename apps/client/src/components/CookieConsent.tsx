@@ -1,146 +1,102 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { withSiteBase } from "@/lib/site";
-import { COOKIE_CONSENT_KEY } from "@/lib/analytics";
 import {
-  captureAiSearchReferral,
-  clearAiSearchReferral,
-  getStoredAiSearchReferral,
-} from "@/lib/referralTracking";
-
-const GA_ID = "G-M1276CBX6M";
-const COOKIE_BODY =
-  "We use essential cookies and basic analytics to improve the site experience.";
-const COOKIE_BODY_SHORT =
-  "Essential cookies and basic analytics.";
-const COOKIE_LINK_LABEL =
-  "Privacy Policy";
-const COOKIE_DECLINE_LABEL = "Decline";
-const COOKIE_ACCEPT_LABEL = "Accept";
-const COOKIE_TITLE = "Cookies & Analytics";
-
-function loadGA() {
-  if (document.querySelector(`script[src*="gtag/js?id=${GA_ID}"]`)) return;
-
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(script);
-
-  (window as Window & { dataLayer?: unknown[] }).dataLayer =
-    (window as Window & { dataLayer?: unknown[] }).dataLayer || [];
-
-  const analyticsWindow = window as Window & {
-    dataLayer?: unknown[];
-    gtag?: (...args: unknown[]) => void;
-  };
-
-  function gtag(...args: unknown[]) {
-    analyticsWindow.dataLayer?.push(args);
-  }
-
-  analyticsWindow.gtag = gtag;
-
-  gtag("js", new Date());
-  gtag("config", GA_ID);
-
-  const referral = getStoredAiSearchReferral();
-  if (referral) {
-    gtag("event", "ai_search_referral", {
-      ai_source: referral.source,
-      referrer_domain: referral.referrerDomain,
-      landing_path: referral.landingPath,
-    });
-  }
-}
+  COOKIE_CONSENT_KEY,
+  applyMeasurementConsent,
+  initializeMeasurement,
+  readMeasurementConsent,
+  saveMeasurementConsent,
+  trackEvent,
+  type MeasurementConsent,
+} from "@/lib/analytics";
+import { captureAiSearchReferral, clearAiSearchReferral, getStoredAiSearchReferral } from "@/lib/referralTracking";
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const [choices, setChoices] = useState<MeasurementConsent>({ analytics: false, ads: false });
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+    const syncConsent = (event: StorageEvent) => {
+      if (event.key === COOKIE_CONSENT_KEY || event.key === null) {
+        applyMeasurementConsent(readMeasurementConsent() || { analytics: false, ads: false });
+        setChoices(readMeasurementConsent() || { analytics: false, ads: false });
+        setVisible(!readMeasurementConsent());
+      }
+    };
+    window.addEventListener("storage", syncConsent);
+    return () => window.removeEventListener("storage", syncConsent);
+  }, []);
 
+  useEffect(() => {
+    const consent = readMeasurementConsent();
     if (!consent) {
-      const timer = window.setTimeout(() => setVisible(true), 1000);
-      return () => window.clearTimeout(timer);
+      setVisible(true);
+      return;
     }
-
-    if (consent === "accepted") {
+    setChoices(consent);
+    initializeMeasurement();
+    if (consent.analytics) {
       captureAiSearchReferral();
-      loadGA();
+      const referral = getStoredAiSearchReferral();
+      if (referral) trackEvent("ai_search_referral", {
+        ai_source: referral.source,
+        referrer_domain: referral.referrerDomain,
+        landing_path: referral.landingPath,
+      });
     }
   }, []);
 
-  const handleAccept = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
-    captureAiSearchReferral();
-    loadGA();
+  const save = (consent: MeasurementConsent) => {
+    if (!saveMeasurementConsent(consent)) {
+      setError("Your browser could not save this choice. Optional measurement remains off unless already allowed.");
+      return;
+    }
+    setChoices(consent);
+    if (consent.analytics) captureAiSearchReferral();
+    else clearAiSearchReferral();
     setVisible(false);
+    setError("");
+    applyMeasurementConsent(consent);
   };
 
-  const handleDecline = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, "declined");
-    clearAiSearchReferral();
-    setVisible(false);
-  };
+  const buttonClass = "min-h-11 rounded-full border border-gray-400 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
-  return (
-    <AnimatePresence>
-      {visible ? (
-        <motion.div
-          initial={shouldReduceMotion ? false : { y: 32, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={shouldReduceMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
-          transition={
-            shouldReduceMotion
-              ? { duration: 0 }
-              : { type: "spring", damping: 24, stiffness: 220 }
-          }
-          className="fixed inset-x-3 bottom-3 z-[120] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[18rem]"
-          role="dialog"
-          aria-label={COOKIE_TITLE}
-          aria-describedby="cookie-consent-description"
-        >
-          <div className="rounded-[1.5rem] border border-white/10 bg-black/95 px-3 py-2 text-white shadow-2xl shadow-black/30 backdrop-blur-xl sm:px-4 sm:py-3">
-            <div className="flex items-start gap-3 sm:block">
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400 sm:text-[11px]">
-                  {COOKIE_TITLE}
-                </p>
-                <p
-                  id="cookie-consent-description"
-                  className="mt-1 text-[11px] leading-snug text-gray-300 sm:mt-2 sm:text-[13px] sm:leading-relaxed"
-                >
-                  <span className="sm:hidden">{COOKIE_BODY_SHORT}</span>
-                  <span className="hidden sm:inline">{COOKIE_BODY}</span>{" "}
-                  <a
-                    href={withSiteBase("/privacy-policy")}
-                    className="underline decoration-white/30 underline-offset-4 transition-colors hover:text-white"
-                  >
-                    {COOKIE_LINK_LABEL}
-                  </a>
-                  .
-                </p>
-              </div>
-              <div className="flex w-[7.5rem] shrink-0 flex-col gap-1.5 sm:mt-3 sm:w-auto sm:flex-row sm:gap-2">
-                <button
-                  onClick={handleDecline}
-                  className="min-h-11 flex-1 rounded-full border border-white/15 px-3 py-2 text-xs text-gray-300 transition-colors hover:border-white/35 hover:text-white"
-                >
-                  {COOKIE_DECLINE_LABEL}
-                </button>
-                <button
-                  onClick={handleAccept}
-                  className="min-h-11 flex-1 rounded-full bg-white px-3 py-2 text-xs font-medium text-black transition-colors hover:bg-gray-200"
-                >
-                  {COOKIE_ACCEPT_LABEL}
-                </button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
+  return visible ? (
+    <section
+      className="fixed inset-x-3 bottom-3 z-[120] max-h-[85dvh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-950 p-5 text-white shadow-2xl sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[26rem]"
+      role="dialog"
+      aria-labelledby="cookie-consent-title"
+      aria-describedby="cookie-consent-description"
+    >
+      <h2 id="cookie-consent-title" className="text-base font-semibold">Cookies & measurement</h2>
+      <p id="cookie-consent-description" className="mt-2 text-sm leading-relaxed text-gray-200">
+        Essential storage keeps the site working. With your permission, Google Analytics helps us understand visits and Google Ads measures which ads lead to project enquiries. Both are optional. Your form contents are not sent to Google Ads.
+      </p>
+      <fieldset className="my-4 space-y-3">
+        <legend className="sr-only">Optional measurement choices</legend>
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+          <input type="checkbox" className="h-5 w-5 shrink-0 accent-white" checked={choices.analytics} onChange={(event) => setChoices({ ...choices, analytics: event.target.checked })} />
+          Analytics (Google Analytics)
+        </label>
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+          <input type="checkbox" className="h-5 w-5 shrink-0 accent-white" checked={choices.ads} onChange={(event) => setChoices({ ...choices, ads: event.target.checked })} />
+          Ad measurement (Google Ads)
+        </label>
+      </fieldset>
+      <div className="grid grid-cols-2 gap-2">
+        <button type="button" className={buttonClass} onClick={() => save({ analytics: false, ads: false })}>Reject optional</button>
+        <button type="button" className={buttonClass} onClick={() => save({ analytics: true, ads: true })}>Accept both</button>
+        <button type="button" className={buttonClass + " col-span-2"} onClick={() => save(choices)}>Save choices</button>
+      </div>
+      {error && <p role="alert" className="mt-3 text-sm text-red-200">{error}</p>}
+      <p className="mt-3 text-xs leading-relaxed text-gray-300">
+        Change or withdraw permission using Cookie settings. Changing an existing choice may reload the page. <a href={withSiteBase("/privacy-policy")} className="underline">Privacy Policy</a>
+      </p>
+    </section>
+  ) : (
+    <button type="button" onClick={() => { setChoices(readMeasurementConsent() || { analytics: false, ads: false }); setVisible(true); }} className="fixed bottom-3 left-3 z-[120] min-h-11 rounded-full border border-gray-300 bg-white px-4 text-xs font-medium text-gray-900 shadow-sm">
+      Cookie settings
+    </button>
   );
 }

@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent, trackLeadConversion } from "@/lib/analytics";
 import {
   projectNeedGroups,
   projectNeedOptions,
@@ -214,6 +214,7 @@ export default function StartProject() {
       }
 
       setStatus("success");
+      trackLeadConversion();
       trackEvent("contact_form_submit", {
         selected_need: form.need,
         desired_timing: form.timing,

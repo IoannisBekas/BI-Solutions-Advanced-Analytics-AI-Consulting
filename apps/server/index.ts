@@ -164,7 +164,7 @@ app.use(
             // React/CSS-in-JS inject runtime <style> tags, so inline styles must remain allowed.
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
-            "frame-src": ["'self'", "https://accounts.google.com"],
+            "frame-src": ["'self'", "https://accounts.google.com", "https://www.googletagmanager.com"],
             "connect-src": [
               "'self'",
               "https://accounts.google.com",
@@ -172,6 +172,16 @@ app.use(
               "https://generativelanguage.googleapis.com",
               "https://www.google-analytics.com",
               "https://region1.google-analytics.com",
+              // Consent-gated Google tag and Ads conversion endpoints.
+              // https://developers.google.com/tag-platform/security/guides/csp
+              "https://www.googletagmanager.com",
+              "https://pagead2.googlesyndication.com",
+              "https://www.googleadservices.com",
+              "https://googleads.g.doubleclick.net",
+              "https://ad.doubleclick.net",
+              "https://www.google.com",
+              "https://google.com",
+              "https://www.google.gr",
             ],
           },
         }
