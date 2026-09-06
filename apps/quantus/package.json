@@ -63,6 +63,7 @@
   },
   "overrides": {
     "ip-address": "^10.2.0",
+    "qs": "^6.16.0",
     "serialize-javascript": "^7.0.3"
   }
 }
