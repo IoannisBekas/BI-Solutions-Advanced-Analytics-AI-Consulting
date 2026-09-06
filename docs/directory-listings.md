@@ -1,12 +1,12 @@
 # Directory listings — ready-to-paste copy
 
-These profiles are the highest-leverage remaining step for AI visibility.
-Generic queries ("BI consulting Greece", "Power BI consultant Athens") are
-answered by LLMs summarising directory pages, and BI Solutions Group is
-currently absent from all of them.
+These are the first two directory profiles worth evaluating for authority and
+buyer discovery. A listing can add a consistent third-party entity reference,
+but it does not guarantee search rankings, AI citations, or leads.
 
-Create the profiles yourself — they require account signup. Everything below
-is written to be pasted directly.
+The profiles require account authentication. The fields below can be prepared
+in advance, but the factual items marked for confirmation must be resolved and
+the completed public profile reviewed before final submission.
 
 ## Keep these identical everywhere
 
@@ -22,9 +22,9 @@ website and the Google Business Profile as one entity.
 | LinkedIn | https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/ |
 | GitHub | https://github.com/IoannisBekas |
 | Founder | Ioannis Bekas — Data Scientist & AI Developer |
-| Location | Greece · international delivery |
-| Founded | 2019 |
-| Team size | 1–10 |
+| Location | Greece · international delivery — confirm current service markets |
+| Founded | 2019 — confirm this is the public/legal start year |
+| Team size | Confirm current headcount before submission |
 
 ## Short description (≤160 characters)
 
@@ -50,7 +50,7 @@ website and the Google Business Profile as one entity.
 > business question first, design the semantic layer and governance that make
 > the answer reproducible, then build the interface.
 >
-> Four service areas:
+> Core service areas include:
 >
 > - Business intelligence and semantic modelling — Power BI, Tableau and
 >   Looker reporting layers, KPI dictionaries, access rules and governance
@@ -80,18 +80,26 @@ Answer Engine Optimization · Generative Engine Optimization
 
 | Directory | URL | Notes |
 | --- | --- | --- |
-| TechBehemoths | https://techbehemoths.com/companies/get-listed | Free registration or claim flow. A corporate-domain email is required to claim an existing managed profile. |
-| Clutch | https://clutch.co/get-listed | A Basic profile is free. Reviews and a complete profile drive visibility; paid verification is optional. |
-| GoodFirms | https://www.goodfirms.co | Free. |
-| ensun | https://ensun.io | Free. |
+| TechBehemoths | https://techbehemoths.com/companies/get-listed | Registration starts by searching the company name. If an existing TechBehemoths-managed profile is claimed, its official FAQ says a corporate-domain email is required. Complete, current profile information contributes to the platform's internal profile score. |
+| Clutch | https://clutch.co/get-listed | A Basic profile is free and is reviewed before publishing. Clutch asks for company details including headcount, minimum project size, hourly rate, location, overview, contact details, and service focus. Paid Clutch Verification is optional and distinct from the free profile review. |
+
+Official guidance checked on 2026-09-06:
+
+- Clutch profile setup: https://help.clutch.co/en/knowledge/get-listed-on-clutch
+- Clutch review verification: https://help.clutch.co/en/knowledge/how-clutch-verifies-reviews
+- Clutch methodology: https://clutch.co/methodology
+- TechBehemoths registration and claim FAQ: https://techbehemoths.com/faq
 
 ## Reviews
 
-Google reviews already exist, but they do not feed the directory rankings
-that LLMs summarise. Ask the same clients to repeat the review on Clutch —
-Clutch verifies them, which is what makes its listings carry weight.
+Invite only real clients who are willing to describe work they actually
+received. Clutch says it checks reviewer identity and work history, and its
+ranking methodology considers the number, quality, and recency of reviews.
+There is no guaranteed review count that produces a particular ranking.
 
-Two or three reviews are enough to move from listed to ranked.
+Do not copy a Google review into a client's name, prewrite the review, offer an
+incentive, or submit it through a related account. Send the platform's own
+review invitation and let the client choose whether and what to write.
 
 ## Also worth fixing
 
