@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { trackEvent, trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
 import { withAssetBase } from "@/lib/site";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
 /** Service slugs whose footer labels come from the locale catalogue. */
 const serviceSlugs = [
@@ -26,6 +26,7 @@ const serviceFallbackLabels: Record<string, string> = {
 
 export function Footer() {
   const { t } = useLocale();
+  const localizedHref = useLocalizedHref();
 
   const serviceLinks = [
     { label: t.footer.servicesOverview, href: "/services" },
@@ -113,7 +114,7 @@ export function Footer() {
               {serviceLinks.map((item) => (
                 <li key={item.href}>
                   <a
-                    href={item.href}
+                    href={localizedHref(item.href)}
                     className="text-gray-400 transition-colors hover:text-white"
                     onClick={() =>
                       trackNavClick(item.label, item.href, "footer")

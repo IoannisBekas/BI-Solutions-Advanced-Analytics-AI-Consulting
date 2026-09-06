@@ -5,7 +5,8 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
+import type { Locale } from "@/i18n/config";
 import { trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
 import { withAssetBase } from "@/lib/site";
@@ -51,6 +52,68 @@ const serviceLinks = [
   },
 ] as const;
 
+const serviceLinkCopy: Record<
+  Locale,
+  ReadonlyArray<{ name: string; description: string }>
+> = {
+  en: serviceLinks,
+  el: [
+    { name: "Όλες οι υπηρεσίες", description: "Δείτε όλες τις δυνατότητες σε μία σελίδα." },
+    { name: "Business Intelligence & Power BI", description: "Αξιόπιστες αναφορές, σημασιολογικά μοντέλα και συστήματα αποφάσεων." },
+    { name: "Συμβουλευτική AI & αυτοματοποίηση", description: "Πρακτικές ροές AI, στρατηγική και υποστήριξη υιοθέτησης." },
+    { name: "Στρατηγική δεδομένων & cloud", description: "Αξιόπιστες βάσεις, διακυβέρνηση και υλοποίηση στο cloud." },
+    { name: "Web & ορατότητα αναζήτησης", description: "Ιστότοποι και εφαρμογές με τεχνικό SEO και βάσεις για αναζήτηση AI." },
+    { name: "Content operations & ψηφιακά προϊόντα", description: "Συστήματα επαναχρησιμοποίησης, διανομής και ψηφιακών πόρων." },
+    { name: "Εκπαίδευση & mentoring", description: "Εκπαίδευση ομάδων, υποστήριξη υιοθέτησης και εξέλιξη καριέρας." },
+  ],
+  de: [
+    { name: "Alle Leistungen", description: "Alle Kompetenzen auf einer Seite ansehen." },
+    { name: "Business Intelligence & Power BI", description: "Verlässliches Reporting, semantische Modelle und Entscheidungssysteme." },
+    { name: "KI-Beratung & Automatisierung", description: "Praxisnahe KI-Workflows, Strategie und Adoptionsbegleitung." },
+    { name: "Datenstrategie & Cloud", description: "Belastbare Grundlagen, Governance und Cloud-Umsetzung." },
+    { name: "Web & Suchsichtbarkeit", description: "Websites und Anwendungen mit technischem SEO und Grundlagen für KI-Suche." },
+    { name: "Content Operations & digitale Produkte", description: "Systeme für Wiederverwendung, Distribution und digitale Assets." },
+    { name: "Enablement & Mentoring", description: "Teamtraining, Adoptionsbegleitung und Karriereentwicklung." },
+  ],
+};
+
+const navigationCopy: Record<
+  Locale,
+  {
+    primary: string;
+    mobile: string;
+    open: string;
+    close: string;
+    unsure: string;
+    unsureShort: string;
+  }
+> = {
+  en: {
+    primary: "Primary navigation",
+    mobile: "Mobile navigation",
+    open: "Open navigation menu",
+    close: "Close navigation menu",
+    unsure: "Not sure what you need? Start here →",
+    unsureShort: "Not sure what you need?",
+  },
+  el: {
+    primary: "Κύρια πλοήγηση",
+    mobile: "Πλοήγηση για κινητά",
+    open: "Άνοιγμα μενού πλοήγησης",
+    close: "Κλείσιμο μενού πλοήγησης",
+    unsure: "Δεν είστε βέβαιοι τι χρειάζεστε; Ξεκινήστε εδώ →",
+    unsureShort: "Δεν είστε βέβαιοι τι χρειάζεστε;",
+  },
+  de: {
+    primary: "Hauptnavigation",
+    mobile: "Mobile Navigation",
+    open: "Navigationsmenü öffnen",
+    close: "Navigationsmenü schließen",
+    unsure: "Sie sind nicht sicher, was Sie brauchen? Hier starten →",
+    unsureShort: "Sie sind nicht sicher, was Sie brauchen?",
+  },
+};
+
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -69,7 +132,13 @@ export function Navbar() {
   const [openMobileSection, setOpenMobileSection] =
     useState<DropdownName | null>(null);
   const [location] = useLocation();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const localizedHref = useLocalizedHref();
+  const localizedServiceLinks = serviceLinks.map((item, index) => ({
+    ...item,
+    ...serviceLinkCopy[locale][index],
+  }));
+  const navCopy = navigationCopy[locale];
   const desktopNavRef = useRef<HTMLElement>(null);
   const mobileDialogRef = useRef<HTMLDivElement>(null);
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
@@ -236,7 +305,7 @@ export function Navbar() {
                     type="button"
                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                     onClick={closeMobileMenu}
-                    aria-label="Close navigation menu"
+                    aria-label={navCopy.close}
                   >
                     <X aria-hidden="true" className="h-6 w-6" />
                   </button>
@@ -244,7 +313,7 @@ export function Navbar() {
 
                 <nav
                   className="flex-1 overflow-y-auto px-6 py-6"
-                  aria-label="Mobile navigation"
+                  aria-label={navCopy.mobile}
                 >
                   <div className="mx-auto max-w-xl divide-y divide-gray-100">
                     <div className="py-2">
@@ -273,10 +342,10 @@ export function Navbar() {
                         hidden={openMobileSection !== "services"}
                         className="border-l border-gray-200 pb-3 pl-4"
                       >
-                        {serviceLinks.map((item) => (
+                        {localizedServiceLinks.map((item) => (
                           <a
                             key={item.href}
-                            href={item.href}
+                            href={localizedHref(item.href)}
                             className="block min-h-11 py-2.5 text-base font-medium text-gray-600 transition-colors hover:text-black"
                             onClick={() =>
                               handleNavClick(item.name, item.href, "mobile_menu")
@@ -290,13 +359,13 @@ export function Navbar() {
                           className="block min-h-11 py-2.5 text-base font-semibold text-black"
                           onClick={() =>
                             handleNavClick(
-                              "Not sure what you need?",
+                              navCopy.unsureShort,
                               START_PROJECT_PATH,
                               "mobile_menu",
                             )
                           }
                         >
-                          Not sure what you need?
+                          {navCopy.unsureShort}
                         </Link>
                       </div>
                     </div>
@@ -378,7 +447,7 @@ export function Navbar() {
           <nav
             ref={desktopNavRef}
             className="hidden items-center gap-5 xl:flex"
-            aria-label="Primary navigation"
+            aria-label={navCopy.primary}
             onBlur={(event) => {
               if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
                 setOpenDesktopMenu(null);
@@ -419,10 +488,10 @@ export function Navbar() {
                 className="absolute left-1/2 top-full z-50 w-[26rem] -translate-x-1/2 pt-3"
               >
                 <div className="rounded-3xl border border-gray-200 bg-white p-3 shadow-2xl shadow-black/10">
-                  {serviceLinks.map((item) => (
+                  {localizedServiceLinks.map((item) => (
                     <a
                       key={item.href}
-                      href={item.href}
+                      href={localizedHref(item.href)}
                       className="block rounded-2xl px-4 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                       onClick={() => handleNavClick(item.name, item.href, "header")}
                     >
@@ -440,13 +509,13 @@ export function Navbar() {
                       className="block rounded-2xl px-3 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
                       onClick={() =>
                         handleNavClick(
-                          "Not sure what you need?",
+                          navCopy.unsureShort,
                           START_PROJECT_PATH,
                           "header",
                         )
                       }
                     >
-                      Not sure what you need? Start here →
+                      {navCopy.unsure}
                     </Link>
                   </div>
                 </div>
@@ -510,7 +579,7 @@ export function Navbar() {
             type="button"
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 xl:hidden"
             onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Open navigation menu"
+            aria-label={navCopy.open}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-site-menu"
           >
