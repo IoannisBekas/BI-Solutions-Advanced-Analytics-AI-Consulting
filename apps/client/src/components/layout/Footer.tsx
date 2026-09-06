@@ -19,7 +19,7 @@ const serviceFallbackLabels: Record<string, string> = {
   "business-intelligence-semantic-modeling": "Business Intelligence & Power BI",
   "advanced-analytics-ai": "AI Consulting & Automation",
   "data-strategy-governance": "Data Strategy & Cloud",
-  "website-app-development": "Websites & Web Apps",
+  "website-app-development": "Web & Search Visibility",
   "content-operations-automation": "Content Operations & Digital Products",
   "data-career-enablement-mentorship": "Enablement & Mentorship",
 };
@@ -60,6 +60,8 @@ export function Footer() {
                 src={withAssetBase("bi-solutions-logo.png")}
                 alt=""
                 className="h-10 w-10 invert"
+                loading="lazy"
+                decoding="async"
               />
               <div>
                 <div className="text-xl font-bold tracking-tight font-heading">

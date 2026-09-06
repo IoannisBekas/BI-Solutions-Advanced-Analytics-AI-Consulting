@@ -38,9 +38,9 @@ const pillarCopy: Record<
   },
   "website-app-development": {
     number: "04",
-    eyebrow: "Web applications",
+    eyebrow: "Web apps & search visibility",
     promise:
-      "Fast, focused websites and applications that make an offer clearer or a workflow easier to run.",
+      "Fast, focused websites and applications engineered for performance, conversion, and discoverability across search engines, answer features, and AI-powered experiences.",
   },
   "content-operations-automation": {
     number: "05",
@@ -388,8 +388,8 @@ export default function Services() {
   return (
     <div className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
       <Seo
-        title="Analytics, AI, Data, Digital Products & Enablement Services"
-        description="Business intelligence, Power BI, AI, data and cloud foundations, web applications, digital products, managed support, training, and mentorship."
+        title="BI, AI, Data, Web & Search Services"
+        description="Business intelligence, AI, data and cloud foundations, web development, technical SEO and AI-search visibility, digital products, training, and mentorship."
         path="/services"
         structuredData={servicesStructuredData}
       />

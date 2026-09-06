@@ -79,7 +79,7 @@ const en: TranslationCatalogue = {
       "business-intelligence": "See and understand my data",
       "ai-automation": "Automate a workflow with AI",
       "data-strategy": "Build a reliable data foundation",
-      "web-app": "Launch a website or web app",
+      "web-app": "Launch a website, web app, or improve search visibility",
       "content-operations": "Scale content or a digital product",
       "team-enablement": "Upskill my team",
       "career-mentorship": "Grow my data or AI career",
@@ -113,7 +113,7 @@ const en: TranslationCatalogue = {
   },
   footer: {
     tagline:
-      "Business intelligence, AI, data foundations, web applications, content operations, managed support, enablement, and mentorship for practical progress.",
+      "Business intelligence, AI, data foundations, web applications, search visibility, content operations, managed support, enablement, and mentorship for practical progress.",
     company: "Company",
     services: "Services",
     resources: "Resources",
@@ -153,7 +153,7 @@ const el: TranslationCatalogue = {
       "business-intelligence": "Κατανοήσω καλύτερα τα δεδομένα μου",
       "ai-automation": "Αυτοματοποιήσω μια διαδικασία με AI",
       "data-strategy": "Δημιουργήσω αξιόπιστη βάση δεδομένων",
-      "web-app": "Δημιουργήσω site ή web εφαρμογή",
+      "web-app": "Δημιουργήσω site ή web εφαρμογή ή βελτιώσω την ορατότητα στην αναζήτηση",
       "content-operations": "Κλιμακώσω περιεχόμενο ή ψηφιακό προϊόν",
       "team-enablement": "Αναβαθμίσω τις δεξιότητες της ομάδας μου",
       "career-mentorship": "Εξελίξω την καριέρα μου σε data ή AI",
@@ -189,9 +189,9 @@ const el: TranslationCatalogue = {
           "Θέτουμε την αρχιτεκτονική, την ποιότητα, την πρόσβαση και τη διακυβέρνηση ώστε η ανάλυση και η AI να κλιμακώνονται με έλεγχο.",
       },
       "website-app-development": {
-        title: "Ανάπτυξη web",
+        title: "Web ανάπτυξη & ορατότητα αναζήτησης",
         description:
-          "Φτιάχνουμε σύγχρονα sites και στοχευμένες web εφαρμογές που συνδέουν δεδομένα, αυτοματισμό και καθαρή εμπειρία χρήσης.",
+          "Δημιουργούμε γρήγορα, προσβάσιμα sites και web εφαρμογές με τεχνικό SEO, δομημένο περιεχόμενο και μέτρηση για ορατότητα στην Google και σε απαντήσεις AI.",
       },
       "content-operations-automation": {
         title: "Content operations & ψηφιακά προϊόντα",
@@ -207,7 +207,7 @@ const el: TranslationCatalogue = {
   },
   footer: {
     tagline:
-      "Business intelligence, AI, υποδομές δεδομένων, web εφαρμογές, content operations, διαχειριζόμενη υποστήριξη, εκπαίδευση και mentoring.",
+      "Business intelligence, AI, υποδομές δεδομένων, web εφαρμογές, ορατότητα αναζήτησης, content operations, διαχειριζόμενη υποστήριξη, εκπαίδευση και mentoring.",
     company: "Εταιρεία",
     services: "Υπηρεσίες",
     resources: "Πόροι",
@@ -247,7 +247,7 @@ const de: TranslationCatalogue = {
       "business-intelligence": "Meine Daten besser verstehen",
       "ai-automation": "Einen Prozess mit KI automatisieren",
       "data-strategy": "Eine verlässliche Datenbasis schaffen",
-      "web-app": "Eine Website oder Web-App starten",
+      "web-app": "Eine Website oder Web-App starten oder die Suchsichtbarkeit verbessern",
       "content-operations": "Content oder ein digitales Produkt skalieren",
       "team-enablement": "Mein Team weiterbilden",
       "career-mentorship": "Meine Daten- oder KI-Karriere entwickeln",
@@ -283,9 +283,9 @@ const de: TranslationCatalogue = {
           "Wir legen Architektur, Qualität, Zugriff und Governance fest, damit Analytics und KI kontrolliert skalieren.",
       },
       "website-app-development": {
-        title: "Webentwicklung",
+        title: "Webentwicklung & Suchsichtbarkeit",
         description:
-          "Wir bauen moderne Websites und fokussierte Webanwendungen, die Daten, Automatisierung und klare Bedienung verbinden.",
+          "Wir entwickeln schnelle, barrierearme Websites und Webanwendungen mit technischem SEO, strukturierten Inhalten und Messung für Sichtbarkeit in Google und KI-gestützten Antworten.",
       },
       "content-operations-automation": {
         title: "Content Operations & digitale Produkte",
@@ -301,7 +301,7 @@ const de: TranslationCatalogue = {
   },
   footer: {
     tagline:
-      "Business Intelligence, KI, Datenfundamente, Webanwendungen, Content Operations, Managed Support, Enablement und Mentoring.",
+      "Business Intelligence, KI, Datenfundamente, Webanwendungen, Suchsichtbarkeit, Content Operations, Managed Support, Enablement und Mentoring.",
     company: "Unternehmen",
     services: "Leistungen",
     resources: "Ressourcen",

@@ -35,9 +35,9 @@ const serviceLinks = [
     description: "Reliable foundations, governance, and cloud delivery.",
   },
   {
-    name: "Websites & Web Apps",
+    name: "Web & Search Visibility",
     href: "/services#website-app-development",
-    description: "Focused digital products built around real workflows.",
+    description: "Websites and apps with technical SEO and AI-search foundations.",
   },
   {
     name: "Content Operations & Digital Products",

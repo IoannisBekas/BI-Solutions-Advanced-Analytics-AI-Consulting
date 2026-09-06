@@ -15,7 +15,7 @@ Instagram: https://www.instagram.com/bisolutions.group/
 - Business intelligence consulting and semantic modeling: https://www.bisolutions.group/services#business-intelligence-semantic-modeling
 - AI consulting services and implementation: https://www.bisolutions.group/services#advanced-analytics-ai
 - Data strategy and governance: https://www.bisolutions.group/services#data-strategy-governance
-- Website and web app development: https://www.bisolutions.group/services#website-app-development
+- Web development and technical search visibility: https://www.bisolutions.group/services#website-app-development
 - Data career enablement and mentorship: https://www.bisolutions.group/services#data-career-enablement-mentorship
 
 ## AI Consulting Capabilities
@@ -60,4 +60,4 @@ The following are independent portfolio analyses built with synthetic or represe
 
 ## Scope
 
-BI Solutions Group helps organizations build practical AI workflows, analytics systems, governed data foundations, semantic models, dashboards, and modern web applications. It also provides team enablement and data career mentorship.
+BI Solutions Group helps organizations build practical AI workflows, analytics systems, governed data foundations, semantic models, dashboards, and modern web applications with technical search-visibility foundations. It also provides team enablement and data career mentorship.

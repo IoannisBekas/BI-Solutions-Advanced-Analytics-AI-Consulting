@@ -27,6 +27,13 @@ import {
 import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
 import { trackEvent } from "@/lib/analytics";
 
+const ARTICLE_AUTHOR = {
+  name: "Ioannis Bekas",
+  profileUrl: "/about",
+  schemaId: "https://www.bisolutions.group/about#ioannis-bekas",
+  bio: "Founder of BI Solutions Group and a data scientist and AI developer with 9+ years of experience across business intelligence, applied AI, data strategy, and analytics engineering.",
+};
+
 function getRelatedService(category: string) {
   if (category.includes("BI")) {
     return {
@@ -45,7 +52,7 @@ function getRelatedService(category: string) {
   if (category.includes("Web")) {
     return {
       href: "/services#website-app-development",
-      label: "Explore web & app development",
+      label: "Explore web development & search visibility",
     };
   }
 
@@ -267,7 +274,14 @@ export default function BlogPost() {
     description: post.excerpt,
     image: structuredImageUrl,
     author: {
-      "@id": "https://www.bisolutions.group/#organization",
+      "@type": "Person",
+      "@id": ARTICLE_AUTHOR.schemaId,
+      name: ARTICLE_AUTHOR.name,
+      url: `https://www.bisolutions.group${ARTICLE_AUTHOR.profileUrl}`,
+      jobTitle: "Data Scientist & AI Developer",
+      worksFor: {
+        "@id": "https://www.bisolutions.group/#organization",
+      },
     },
     publisher: publisherSchema,
     datePublished: toSchemaDate(post.date),
@@ -327,7 +341,7 @@ export default function BlogPost() {
               </span>
               <span className="inline-flex items-center gap-1">
                 <Tag className="h-4 w-4" />
-                {post.author}
+                By {ARTICLE_AUTHOR.name}
               </span>
             </div>
           }
@@ -349,6 +363,23 @@ export default function BlogPost() {
               <div className="prose prose-gray max-w-none">
                 {renderContent(post.content)}
               </div>
+
+              <aside
+                aria-label="About the author"
+                className="mt-10 rounded-3xl border border-gray-200 bg-gray-50 px-6 py-6"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+                  About the author
+                </p>
+                <h2 className="mt-2 text-xl font-bold font-heading text-gray-950">
+                  <Link href={ARTICLE_AUTHOR.profileUrl} className="hover:underline">
+                    {ARTICLE_AUTHOR.name}
+                  </Link>
+                </h2>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-600">
+                  {ARTICLE_AUTHOR.bio}
+                </p>
+              </aside>
 
               <div className="mt-10 border-t border-gray-100 pt-6">
                 <div className="flex flex-wrap items-center gap-2">

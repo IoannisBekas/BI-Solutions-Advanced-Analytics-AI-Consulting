@@ -16,7 +16,7 @@ const publicRoutes = [
   },
   {
     path: "/services",
-    title: "Analytics, AI, Data, Digital Products & Enablement Services",
+    title: "BI, AI, Data, Web & Search Services",
     body: "One partner for better data systems, decisions, and careers.",
   },
   {

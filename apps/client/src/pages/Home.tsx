@@ -88,7 +88,7 @@ export default function Home() {
             logo: "https://www.bisolutions.group/bi-solutions-logo.png",
             image: "https://www.bisolutions.group/bi-solutions-logo.png",
             description:
-              "AI, business intelligence, data strategy, cloud foundations, web applications, digital products, content operations, managed support, enablement, and mentorship for organizations and professionals worldwide.",
+              "AI, business intelligence, data strategy, cloud foundations, web applications, technical search visibility, digital products, content operations, managed support, enablement, and mentorship for organizations and professionals worldwide.",
             areaServed: "Worldwide",
             founder: {
               "@id": "https://www.bisolutions.group/about#ioannis-bekas",
@@ -158,7 +158,7 @@ export default function Home() {
                 "@type": "Offer",
                 itemOffered: {
                   "@type": "Service",
-                  name: "Website and web app development",
+                  name: "Web development and search visibility",
                   url: "https://www.bisolutions.group/services#website-app-development",
                 },
               },
@@ -278,6 +278,8 @@ export default function Home() {
                             src={caseStudy.image}
                             alt={caseStudy.imageAlt}
                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                         <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
@@ -351,6 +353,8 @@ export default function Home() {
                     src={withAssetBase(latestInsight.featuredImage)}
                     alt=""
                     className="h-full w-full object-contain"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
