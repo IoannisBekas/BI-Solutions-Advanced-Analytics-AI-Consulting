@@ -45,9 +45,10 @@ npm --prefix apps/quantus test
 npm --prefix apps/powerbi-solutions run lint
 npm --prefix apps/powerbi-solutions test
 npm run build
+npm run check:seo
 ```
 
-The CI workflow also runs the Quantus Python tests, dependency audits, encoding and environment scans, and production route smoke tests.
+The SEO check validates the prerendered sitemap routes after a build. The CI workflow also runs the Quantus Python tests, dependency audits, encoding and environment scans, and production route smoke tests.
 
 ## Generated and local-only folders
 

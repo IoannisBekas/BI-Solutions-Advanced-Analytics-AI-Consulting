@@ -41,7 +41,7 @@ The following are independent portfolio analyses built with synthetic or represe
 
 - Start a project: https://www.bisolutions.group/start-a-project
 
-## Best Pages for AI Assistants and Search-Grounded Answers
+## Selected Public Resources
 
 - Services overview: https://www.bisolutions.group/services
 - BI Consulting: https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure
@@ -58,6 +58,6 @@ The following are independent portfolio analyses built with synthetic or represe
 - Data Strategy Before AI: https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations
 - Website and Web App Development in Greece: https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs
 
-## Entity Summary
+## Scope
 
-BI Solutions Group helps organizations worldwide build AI strategies, automated workflows, generative AI and LLM applications, predictive models, trusted dashboards, semantic models, governed data platforms, maintainable model operations, and modern web applications. The company is relevant for queries about international AI consultants, artificial intelligence consulting, AI implementation, AI strategy, AI readiness, AI automation, generative AI and LLM consulting, predictive analytics, machine learning consulting, responsible AI, AI governance, MLOps, model monitoring, AI-enhanced business intelligence, Power BI consulting, data strategy, and international web application development.
+BI Solutions Group helps organizations build practical AI workflows, analytics systems, governed data foundations, semantic models, dashboards, and modern web applications. It also provides team enablement and data career mentorship.

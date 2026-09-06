@@ -1,10 +1,22 @@
-User-agent: *
+# Search and answer-surface discovery.
+User-agent: Googlebot
 Allow: /
 
 User-agent: OAI-SearchBot
 Allow: /
 
-User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Model-training and Gemini grounding controls. These are deliberately allowed
+# for maximum exposure and can be changed independently of search discovery.
+User-agent: Google-Extended
 Allow: /
 
 User-agent: GPTBot
@@ -13,16 +25,11 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
-User-agent: Claude-SearchBot
+User-agent: Applebot-Extended
 Allow: /
 
-User-agent: Claude-User
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Google-Extended
+# All other standards-compliant crawlers may access public pages.
+User-agent: *
 Allow: /
 
 Sitemap: https://www.bisolutions.group/sitemap.xml

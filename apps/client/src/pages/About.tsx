@@ -98,15 +98,26 @@ export default function About() {
         structuredData={{
           "@context": "https://schema.org",
           "@type": "Person",
+          "@id": "https://www.bisolutions.group/about#ioannis-bekas",
           name: "Ioannis Bekas",
           jobTitle: "Data Scientist & AI Developer",
+          url: "https://www.bisolutions.group/about",
+          description:
+            "Founder of BI Solutions Group, working across business intelligence, applied AI, data strategy, and analytics engineering.",
           worksFor: {
-            "@type": "Organization",
-            name: "BI Solutions Group",
+            "@id": "https://www.bisolutions.group/#organization",
           },
           sameAs: [
-            "https://linkedin.com/in/ioannisbekas",
+            "https://www.linkedin.com/in/ioannisbekas/",
             "https://github.com/IoannisBekas",
+          ],
+          knowsAbout: [
+            "Business intelligence",
+            "Power BI",
+            "Semantic modeling",
+            "Applied AI",
+            "Data strategy",
+            "Analytics engineering",
           ],
         }}
       />

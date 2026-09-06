@@ -164,29 +164,6 @@ function stripRichText(value: string) {
     .trim();
 }
 
-function extractFaqItems(content: string) {
-  const faqIndex = content.indexOf("## FAQ");
-  if (faqIndex === -1) return [];
-
-  const faqBlocks = content.slice(faqIndex).split("\n\n").slice(1);
-  const nextHeadingIndex = faqBlocks.findIndex((block) => block.startsWith("## "));
-  const candidateBlocks =
-    nextHeadingIndex === -1 ? faqBlocks : faqBlocks.slice(0, nextHeadingIndex);
-
-  return candidateBlocks
-    .map((block) => {
-      const match = block.match(/^\*\*([\s\S]+?)\*\*\s*([\s\S]+)$/);
-      if (!match) return null;
-
-      const question = stripRichText(match[1]);
-      const answer = stripRichText(match[2]);
-
-      if (!question || !answer) return null;
-      return { question, answer };
-    })
-    .filter((item): item is { question: string; answer: string } => Boolean(item));
-}
-
 function renderContent(content: string) {
   const sections = content.split("\n\n");
 
@@ -273,7 +250,6 @@ export default function BlogPost() {
       : `https://www.bisolutions.group${
           post.featuredImage.startsWith("/") ? post.featuredImage : `/${post.featuredImage}`
         }`;
-  const faqItems = extractFaqItems(post.content);
   const publisherSchema = {
     "@type": "Organization",
     "@id": "https://www.bisolutions.group/#organization",
@@ -305,23 +281,6 @@ export default function BlogPost() {
       "@id": `https://www.bisolutions.group/blog/${post.slug}`,
     },
   };
-  const faqStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-  };
-  const structuredData =
-    faqItems.length > 0
-      ? [articleStructuredData, faqStructuredData]
-      : articleStructuredData;
-
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
@@ -331,7 +290,7 @@ export default function BlogPost() {
         image={post.featuredImage}
         type="article"
         robots={robots}
-        structuredData={structuredData}
+        structuredData={articleStructuredData}
       />
       <Navbar />
 
