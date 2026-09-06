@@ -321,4 +321,4 @@ export const catalogues: Record<Locale, TranslationCatalogue> = { en, el, de };
  * alternates — pointing search engines at untranslated duplicates hurts more
  * than it helps.
  */
-export const TRANSLATED_ROUTES = new Set(["/", "/about"]);
+export const TRANSLATED_ROUTES = new Set(["/", "/about", "/start-a-project"]);

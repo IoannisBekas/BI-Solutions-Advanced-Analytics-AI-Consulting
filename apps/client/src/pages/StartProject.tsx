@@ -1,10 +1,12 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { LOCALE_TAGS, localePrefix, type Locale } from "@/i18n/config";
 import { trackEvent, trackLeadConversion } from "@/lib/analytics";
 import {
   projectNeedGroups,
@@ -78,16 +80,280 @@ const initialFormValues: FormValues = {
 const fieldClassName =
   "mt-2 min-h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-base text-gray-950 shadow-sm shadow-black/[0.02] outline-none transition-colors placeholder:text-gray-400 hover:border-gray-300 focus:border-black focus:ring-2 focus:ring-black/10";
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  name: "Start a project with BI Solutions Group",
-  url: "https://www.bisolutions.group/start-a-project",
-  description:
-    "Share a business intelligence, AI, data strategy, automation, digital product, content operations, managed support, enablement, or mentorship requirement with BI Solutions Group.",
+const startProjectCopy: Record<Locale, {
+  seoTitle: string;
+  seoDescription: string;
+  keywords: string[];
+  schemaName: string;
+  schemaDescription: string;
+  projectEyebrow: string;
+  mentorshipEyebrow: string;
+  projectTitle: string;
+  mentorshipTitle: string;
+  introduction: string;
+  startingPointTitle: string;
+  startingPointBody: string;
+  responseTitle: string;
+  responseBody: string;
+  successTitle: string;
+  successBody: string;
+  returnHome: string;
+  projectFormTitle: string;
+  mentorshipFormTitle: string;
+  requiredNote: string;
+  name: string;
+  email: string;
+  workEmail: string;
+  company: string;
+  careerStage: string;
+  careerStagePlaceholder: string;
+  achievement: string;
+  selectNeed: string;
+  projectDescription: string;
+  careerDescription: string;
+  projectPlaceholder: string;
+  careerPlaceholder: string;
+  timing: string;
+  selectTiming: string;
+  budget: string;
+  optional: string;
+  preferNot: string;
+  consent: string;
+  privacy: string;
+  error: string;
+  sending: string;
+  sendProject: string;
+  sendMentorship: string;
+  needGroups: Record<string, string>;
+  needs: Record<string, string>;
+  timings: Record<string, string>;
+  budgets: Record<string, string>;
+}> = {
+  en: {
+    seoTitle: "Start a Project",
+    seoDescription: "Tell BI Solutions Group about your BI, AI, data, automation, web application, or mentorship need and get a considered next step.",
+    keywords: ["hire Power BI consultant", "international AI consultant", "business intelligence project", "international data strategy consultant", "fractional data leadership", "managed analytics support", "content operations consulting", "corporate AI training", "data career mentorship"],
+    schemaName: "Start a project with BI Solutions Group",
+    schemaDescription: "Share a business intelligence, AI, data strategy, automation, digital product, content operations, managed support, enablement, or mentorship requirement with BI Solutions Group.",
+    projectEyebrow: "Start a project",
+    mentorshipEyebrow: "Mentorship enquiry",
+    projectTitle: "Bring the problem. We’ll clarify the right next step.",
+    mentorshipTitle: "Bring your goal. We’ll shape the right next step.",
+    introduction: "Share the essentials about your reporting, AI, data, automation, digital product, content operation, team capability, or career goal. Your brief helps make the first conversation focused and useful.",
+    startingPointTitle: "A useful starting point",
+    startingPointBody: "A business bottleneck, repeated workflow, reporting gap, product idea, or career goal is enough. You do not need a finished technical specification or learning plan.",
+    responseTitle: "A considered response",
+    responseBody: "The brief is reviewed before the next step is suggested. If the work is not a good fit, that will be made clear as well.",
+    successTitle: "Your brief was sent.",
+    successBody: "Thank you for sharing the context. BI Solutions Group will review the request and follow up using the email address you provided.",
+    returnHome: "Return to the homepage",
+    projectFormTitle: "Tell us about the project",
+    mentorshipFormTitle: "Tell us about your career goals",
+    requiredNote: "Fields marked with an asterisk are required.",
+    name: "Name",
+    email: "Email",
+    workEmail: "Work email",
+    company: "Company",
+    careerStage: "Current role or career stage",
+    careerStagePlaceholder: "For example: entry level, data analyst, BI developer",
+    achievement: "What would you like to achieve?",
+    selectNeed: "Select the closest option",
+    projectDescription: "Project description",
+    careerDescription: "Career goals and support needed",
+    projectPlaceholder: "What needs to improve, who will use the result, and what would a useful outcome look like?",
+    careerPlaceholder: "What is your current experience, where do you want to go next, and what would you like help with?",
+    timing: "Desired timing",
+    selectTiming: "Select a timeframe",
+    budget: "Budget range",
+    optional: "optional",
+    preferNot: "Prefer not to say",
+    consent: "I agree that BI Solutions Group may use this information to respond to my enquiry. See the",
+    privacy: "Privacy Policy",
+    error: "We could not send your brief. Please wait a moment and try again.",
+    sending: "Sending…",
+    sendProject: "Send project brief",
+    sendMentorship: "Send mentorship enquiry",
+    needGroups: {
+      "Build or improve": "Build or improve",
+      "Training and career development": "Training and career development",
+      "Advisory and ongoing support": "Advisory and ongoing support",
+      Other: "Other",
+    },
+    needs: Object.fromEntries(projectNeedOptions.map((option) => [option.value, option.label])),
+    timings: Object.fromEntries(projectTimingOptions.map((option) => [option.value, option.label])),
+    budgets: Object.fromEntries(budgetOptions.map((option) => [option, option])),
+  },
+  el: {
+    seoTitle: "Ξεκινήστε ένα έργο",
+    seoDescription: "Περιγράψτε στη BI Solutions Group την ανάγκη σας για BI, AI, δεδομένα, αυτοματοποίηση, web εφαρμογή ή mentoring και λάβετε μια τεκμηριωμένη πρόταση για το επόμενο βήμα.",
+    keywords: ["σύμβουλος Power BI", "σύμβουλος τεχνητής νοημοσύνης", "έργο business intelligence", "σύμβουλος στρατηγικής δεδομένων", "διαχειριζόμενη υποστήριξη analytics", "εταιρική εκπαίδευση AI", "mentoring καριέρας δεδομένων"],
+    schemaName: "Ξεκινήστε ένα έργο με τη BI Solutions Group",
+    schemaDescription: "Μοιραστείτε με τη BI Solutions Group μια ανάγκη για business intelligence, AI, στρατηγική δεδομένων, αυτοματοποίηση, ψηφιακό προϊόν, content operations, υποστήριξη, εκπαίδευση ή mentoring.",
+    projectEyebrow: "Ξεκινήστε ένα έργο",
+    mentorshipEyebrow: "Αίτημα mentoring",
+    projectTitle: "Φέρτε το πρόβλημα. Θα ξεκαθαρίσουμε το σωστό επόμενο βήμα.",
+    mentorshipTitle: "Φέρτε τον στόχο σας. Θα διαμορφώσουμε το σωστό επόμενο βήμα.",
+    introduction: "Μοιραστείτε τα βασικά για τις αναφορές, την AI, τα δεδομένα, την αυτοματοποίηση, το ψηφιακό προϊόν, το content operation, τις δυνατότητες της ομάδας ή τον στόχο καριέρας σας. Η σύντομη περιγραφή βοηθά η πρώτη συζήτηση να είναι εστιασμένη και χρήσιμη.",
+    startingPointTitle: "Ένα χρήσιμο σημείο εκκίνησης",
+    startingPointBody: "Ένα επιχειρηματικό εμπόδιο, μια επαναλαμβανόμενη διαδικασία, ένα κενό στις αναφορές, μια ιδέα προϊόντος ή ένας στόχος καριέρας αρκεί. Δεν χρειάζεστε ολοκληρωμένες τεχνικές προδιαγραφές ή πλάνο μάθησης.",
+    responseTitle: "Μια προσεκτικά μελετημένη απάντηση",
+    responseBody: "Η περιγραφή εξετάζεται πριν προταθεί το επόμενο βήμα. Αν το έργο δεν ταιριάζει στις υπηρεσίες μας, θα σας το πούμε ξεκάθαρα.",
+    successTitle: "Η περιγραφή σας στάλθηκε.",
+    successBody: "Ευχαριστούμε για τις πληροφορίες. Η BI Solutions Group θα εξετάσει το αίτημα και θα επικοινωνήσει στη διεύθυνση email που δώσατε.",
+    returnHome: "Επιστροφή στην αρχική σελίδα",
+    projectFormTitle: "Πείτε μας για το έργο",
+    mentorshipFormTitle: "Πείτε μας για τους στόχους καριέρας σας",
+    requiredNote: "Τα πεδία με αστερίσκο είναι υποχρεωτικά.",
+    name: "Όνομα",
+    email: "Email",
+    workEmail: "Επαγγελματικό email",
+    company: "Εταιρεία",
+    careerStage: "Τρέχων ρόλος ή στάδιο καριέρας",
+    careerStagePlaceholder: "Για παράδειγμα: αρχικό επίπεδο, data analyst, BI developer",
+    achievement: "Τι θα θέλατε να πετύχετε;",
+    selectNeed: "Επιλέξτε την πιο κοντινή επιλογή",
+    projectDescription: "Περιγραφή έργου",
+    careerDescription: "Στόχοι καριέρας και υποστήριξη που χρειάζεστε",
+    projectPlaceholder: "Τι χρειάζεται να βελτιωθεί, ποιοι θα χρησιμοποιούν το αποτέλεσμα και πώς θα έμοιαζε ένα χρήσιμο αποτέλεσμα;",
+    careerPlaceholder: "Ποια είναι η εμπειρία σας σήμερα, πού θέλετε να φτάσετε και σε τι θα θέλατε βοήθεια;",
+    timing: "Επιθυμητό χρονοδιάγραμμα",
+    selectTiming: "Επιλέξτε χρονικό ορίζοντα",
+    budget: "Εύρος προϋπολογισμού",
+    optional: "προαιρετικό",
+    preferNot: "Προτιμώ να μην απαντήσω",
+    consent: "Συμφωνώ ότι η BI Solutions Group μπορεί να χρησιμοποιήσει αυτές τις πληροφορίες για να απαντήσει στο αίτημά μου. Δείτε την",
+    privacy: "Πολιτική απορρήτου",
+    error: "Δεν μπορέσαμε να στείλουμε την περιγραφή σας. Περιμένετε λίγο και δοκιμάστε ξανά.",
+    sending: "Αποστολή…",
+    sendProject: "Αποστολή περιγραφής έργου",
+    sendMentorship: "Αποστολή αιτήματος mentoring",
+    needGroups: {
+      "Build or improve": "Δημιουργία ή βελτίωση",
+      "Training and career development": "Εκπαίδευση και ανάπτυξη καριέρας",
+      "Advisory and ongoing support": "Συμβουλευτική και συνεχής υποστήριξη",
+      Other: "Άλλο",
+    },
+    needs: {
+      "business-intelligence": "Business intelligence και αναφορές",
+      "ai-automation": "Ροές AI και αυτοματοποίηση",
+      "data-strategy": "Data engineering και υποδομές cloud",
+      "web-app": "Ιστότοπος ή web εφαρμογή",
+      "content-operations": "Σύστημα περιεχομένου ή ψηφιακό προϊόν",
+      "team-enablement": "Εκπαίδευση και ενδυνάμωση ομάδας",
+      "career-mentorship": "Ατομικό mentoring καριέρας",
+      "advisory-sprint": "Διαγνωστικό ή στρατηγικό sprint",
+      "project-implementation": "Έργο υλοποίησης",
+      "fractional-leadership": "Fractional ηγεσία δεδομένων και AI",
+      "managed-operations": "Διαχειριζόμενη υποστήριξη BI, δεδομένων ή AI",
+      "product-walkthrough": "Παρουσίαση προϊόντος",
+      "not-sure": "Βοήθεια για να ορίσω τη σωστή προσέγγιση",
+    },
+    timings: {
+      asap: "Το συντομότερο δυνατό",
+      "1-3-months": "Σε 1–3 μήνες",
+      "3-6-months": "Σε 3–6 μήνες",
+      later: "Διερεύνηση για αργότερα",
+    },
+    budgets: {
+      "Not decided yet": "Δεν έχει αποφασιστεί ακόμη",
+      "Under €5,000": "Κάτω από €5.000",
+      "€5,000–€15,000": "€5.000–€15.000",
+      "€15,000–€40,000": "€15.000–€40.000",
+      "€40,000+": "€40.000+",
+    },
+  },
+  de: {
+    seoTitle: "Projekt starten",
+    seoDescription: "Beschreiben Sie BI Solutions Group Ihren Bedarf an BI, KI, Daten, Automatisierung, Webanwendungen oder Mentoring und erhalten Sie einen fundierten nächsten Schritt.",
+    keywords: ["Power-BI-Berater beauftragen", "internationaler KI-Berater", "Business-Intelligence-Projekt", "Berater für Datenstrategie", "Managed Analytics Support", "KI-Unternehmenstraining", "Datenkarriere Mentoring"],
+    schemaName: "Projekt mit BI Solutions Group starten",
+    schemaDescription: "Teilen Sie BI Solutions Group Ihren Bedarf an Business Intelligence, KI, Datenstrategie, Automatisierung, digitalen Produkten, Content Operations, Managed Support, Enablement oder Mentoring mit.",
+    projectEyebrow: "Projekt starten",
+    mentorshipEyebrow: "Mentoring-Anfrage",
+    projectTitle: "Bringen Sie das Problem mit. Wir klären den richtigen nächsten Schritt.",
+    mentorshipTitle: "Bringen Sie Ihr Ziel mit. Wir gestalten den richtigen nächsten Schritt.",
+    introduction: "Beschreiben Sie die wesentlichen Punkte zu Reporting, KI, Daten, Automatisierung, digitalem Produkt, Content Operations, Teamkompetenzen oder Karriereziel. Ihr Briefing macht das erste Gespräch fokussiert und hilfreich.",
+    startingPointTitle: "Ein sinnvoller Ausgangspunkt",
+    startingPointBody: "Ein geschäftlicher Engpass, ein wiederkehrender Ablauf, eine Reporting-Lücke, eine Produktidee oder ein Karriereziel genügt. Sie benötigen weder eine fertige technische Spezifikation noch einen vollständigen Lernplan.",
+    responseTitle: "Eine fundierte Antwort",
+    responseBody: "Das Briefing wird geprüft, bevor der nächste Schritt vorgeschlagen wird. Wenn die Aufgabe nicht zu uns passt, sagen wir das ebenfalls klar.",
+    successTitle: "Ihr Briefing wurde gesendet.",
+    successBody: "Vielen Dank für den Kontext. BI Solutions Group prüft die Anfrage und meldet sich über die von Ihnen angegebene E-Mail-Adresse.",
+    returnHome: "Zurück zur Startseite",
+    projectFormTitle: "Erzählen Sie uns von Ihrem Projekt",
+    mentorshipFormTitle: "Erzählen Sie uns von Ihren Karrierezielen",
+    requiredNote: "Mit einem Sternchen markierte Felder sind Pflichtfelder.",
+    name: "Name",
+    email: "E-Mail",
+    workEmail: "Geschäftliche E-Mail",
+    company: "Unternehmen",
+    careerStage: "Aktuelle Rolle oder Karrierestufe",
+    careerStagePlaceholder: "Zum Beispiel: Berufseinstieg, Data Analyst, BI Developer",
+    achievement: "Was möchten Sie erreichen?",
+    selectNeed: "Wählen Sie die passendste Option",
+    projectDescription: "Projektbeschreibung",
+    careerDescription: "Karriereziele und benötigte Unterstützung",
+    projectPlaceholder: "Was soll verbessert werden, wer wird das Ergebnis nutzen und wie sähe ein hilfreiches Ergebnis aus?",
+    careerPlaceholder: "Welche Erfahrung haben Sie, wohin möchten Sie sich entwickeln und wobei wünschen Sie Unterstützung?",
+    timing: "Gewünschter Zeitrahmen",
+    selectTiming: "Zeitrahmen auswählen",
+    budget: "Budgetrahmen",
+    optional: "optional",
+    preferNot: "Keine Angabe",
+    consent: "Ich stimme zu, dass BI Solutions Group diese Informationen zur Beantwortung meiner Anfrage verwenden darf. Siehe",
+    privacy: "Datenschutzerklärung",
+    error: "Ihr Briefing konnte nicht gesendet werden. Bitte warten Sie einen Moment und versuchen Sie es erneut.",
+    sending: "Wird gesendet…",
+    sendProject: "Projektbriefing senden",
+    sendMentorship: "Mentoring-Anfrage senden",
+    needGroups: {
+      "Build or improve": "Aufbauen oder verbessern",
+      "Training and career development": "Training und Karriereentwicklung",
+      "Advisory and ongoing support": "Beratung und laufende Unterstützung",
+      Other: "Sonstiges",
+    },
+    needs: {
+      "business-intelligence": "Business Intelligence und Reporting",
+      "ai-automation": "KI-Workflows und Automatisierung",
+      "data-strategy": "Data Engineering und Cloud-Grundlagen",
+      "web-app": "Website oder Webanwendung",
+      "content-operations": "Content-System oder digitales Produkt",
+      "team-enablement": "Teamtraining und Enablement",
+      "career-mentorship": "Individuelles Karriere-Mentoring",
+      "advisory-sprint": "Diagnose- oder Roadmap-Sprint",
+      "project-implementation": "Umsetzungsprojekt",
+      "fractional-leadership": "Fractional Data & AI Leadership",
+      "managed-operations": "Managed Support für BI, Daten oder KI",
+      "product-walkthrough": "Produktvorstellung",
+      "not-sure": "Hilfe bei der Wahl des richtigen Ansatzes",
+    },
+    timings: {
+      asap: "So bald wie möglich",
+      "1-3-months": "In 1–3 Monaten",
+      "3-6-months": "In 3–6 Monaten",
+      later: "Erst einmal sondieren",
+    },
+    budgets: {
+      "Not decided yet": "Noch nicht entschieden",
+      "Under €5,000": "Unter 5.000 €",
+      "€5,000–€15,000": "5.000–15.000 €",
+      "€15,000–€40,000": "15.000–40.000 €",
+      "€40,000+": "40.000 €+",
+    },
+  },
 };
 
 export default function StartProject() {
+  const { locale } = useLocale();
+  const copy = startProjectCopy[locale];
+  const structuredData = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: copy.schemaName,
+    url: `https://www.bisolutions.group${localePrefix(locale)}/start-a-project`,
+    description: copy.schemaDescription,
+    inLanguage: LOCALE_TAGS[locale],
+  }), [copy.schemaDescription, copy.schemaName, locale]);
   const [form, setForm] = useState<FormValues>(initialFormValues);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const hasTrackedStart = useRef(false);
@@ -237,20 +503,10 @@ export default function StartProject() {
   return (
     <div className="min-h-screen bg-white text-gray-950">
       <Seo
-        title="Start a Project"
-        description="Tell BI Solutions Group about your BI, AI, data, automation, web application, or mentorship need and get a considered next step."
+        title={copy.seoTitle}
+        description={copy.seoDescription}
         path="/start-a-project"
-        keywords={[
-          "hire Power BI consultant",
-          "international AI consultant",
-          "business intelligence project",
-          "international data strategy consultant",
-          "fractional data leadership",
-          "managed analytics support",
-          "content operations consulting",
-          "corporate AI training",
-          "data career mentorship",
-        ]}
+        keywords={copy.keywords}
         structuredData={structuredData}
       />
       <Navbar />
@@ -260,34 +516,28 @@ export default function StartProject() {
         <div className="site-container relative grid gap-12 px-6 md:px-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <section className="lg:sticky lg:top-36 lg:self-start">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-              {isMentorship ? "Mentorship enquiry" : "Start a project"}
+              {isMentorship ? copy.mentorshipEyebrow : copy.projectEyebrow}
             </p>
             <h1 className="mt-6 max-w-xl text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
               {isMentorship
-                ? "Bring your goal. We’ll shape the right next step."
-                : "Bring the problem. We’ll clarify the right next step."}
+                ? copy.mentorshipTitle
+                : copy.projectTitle}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              Share the essentials about your reporting, AI, data, automation,
-              digital product, content operation, team capability, or career
-              goal. Your brief helps make the first conversation focused and
-              useful.
+              {copy.introduction}
             </p>
 
             <div className="mt-10 space-y-4">
               <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
-                <h2 className="text-base font-semibold">A useful starting point</h2>
+                <h2 className="text-base font-semibold">{copy.startingPointTitle}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                  A business bottleneck, repeated workflow, reporting gap,
-                  product idea, or career goal is enough. You do not need a
-                  finished technical specification or learning plan.
+                  {copy.startingPointBody}
                 </p>
               </div>
               <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
-                <h2 className="text-base font-semibold">A considered response</h2>
+                <h2 className="text-base font-semibold">{copy.responseTitle}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                  The brief is reviewed before the next step is suggested. If
-                  the work is not a good fit, that will be made clear as well.
+                  {copy.responseBody}
                 </p>
               </div>
             </div>
@@ -304,25 +554,23 @@ export default function StartProject() {
                 role="status"
                 aria-live="polite"
               >
-                <h2 className="text-3xl sm:text-4xl">Your brief was sent.</h2>
+                <h2 className="text-3xl sm:text-4xl">{copy.successTitle}</h2>
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-gray-600">
-                  Thank you for sharing the context. BI Solutions Group will
-                  review the request and follow up using the email address you
-                  provided.
+                  {copy.successBody}
                 </p>
                 <Button asChild variant="outline" className="mt-8 h-11 rounded-full px-6">
-                  <Link href="/">Return to the homepage</Link>
+                  <Link href="/">{copy.returnHome}</Link>
                 </Button>
               </div>
             ) : (
               <>
                 <h2 id="project-form-title" className="text-2xl sm:text-3xl">
                   {isMentorship
-                    ? "Tell us about your career goals"
-                    : "Tell us about the project"}
+                    ? copy.mentorshipFormTitle
+                    : copy.projectFormTitle}
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                  Fields marked with an asterisk are required.
+                  {copy.requiredNote}
                 </p>
 
                 <form
@@ -333,7 +581,7 @@ export default function StartProject() {
                 >
                   <div className="grid gap-6 sm:grid-cols-2">
                     <label className="text-sm font-medium text-gray-800">
-                      Name <span aria-hidden="true">*</span>
+                      {copy.name} <span aria-hidden="true">*</span>
                       <input
                         name="name"
                         type="text"
@@ -346,7 +594,7 @@ export default function StartProject() {
                       />
                     </label>
                     <label className="text-sm font-medium text-gray-800">
-                      {isMentorship ? "Email" : "Work email"}{" "}
+                      {isMentorship ? copy.email : copy.workEmail}{" "}
                       <span aria-hidden="true">*</span>
                       <input
                         name="email"
@@ -362,7 +610,7 @@ export default function StartProject() {
                   </div>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    {isMentorship ? "Current role or career stage" : "Company"}{" "}
+                    {isMentorship ? copy.careerStage : copy.company}{" "}
                     <span aria-hidden="true">*</span>
                     <input
                       name="company"
@@ -374,7 +622,7 @@ export default function StartProject() {
                       onChange={(event) => updateField("company", event.target.value)}
                       placeholder={
                         isMentorship
-                          ? "For example: entry level, data analyst, BI developer"
+                          ? copy.careerStagePlaceholder
                           : undefined
                       }
                       className={fieldClassName}
@@ -382,7 +630,7 @@ export default function StartProject() {
                   </label>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    What would you like to achieve? <span aria-hidden="true">*</span>
+                    {copy.achievement} <span aria-hidden="true">*</span>
                     <select
                       name="need"
                       required
@@ -391,13 +639,13 @@ export default function StartProject() {
                       className={fieldClassName}
                     >
                       <option value="" disabled>
-                        Select the closest option
+                        {copy.selectNeed}
                       </option>
                       {projectNeedGroups.map((group) => (
-                        <optgroup key={group.label} label={group.label}>
+                        <optgroup key={group.label} label={copy.needGroups[group.label]}>
                           {group.options.map((option) => (
                             <option key={option.value} value={option.value}>
-                              {option.label}
+                              {copy.needs[option.value]}
                             </option>
                           ))}
                         </optgroup>
@@ -406,7 +654,7 @@ export default function StartProject() {
                   </label>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    {isMentorship ? "Career goals and support needed" : "Project description"}{" "}
+                    {isMentorship ? copy.careerDescription : copy.projectDescription}{" "}
                     <span aria-hidden="true">*</span>
                     <textarea
                       name="description"
@@ -419,8 +667,8 @@ export default function StartProject() {
                       }
                       placeholder={
                         isMentorship
-                          ? "What is your current experience, where do you want to go next, and what would you like help with?"
-                          : "What needs to improve, who will use the result, and what would a useful outcome look like?"
+                          ? copy.careerPlaceholder
+                          : copy.projectPlaceholder
                       }
                       className={`${fieldClassName} min-h-44 resize-y py-3 leading-relaxed`}
                     />
@@ -430,7 +678,7 @@ export default function StartProject() {
                     className={`grid gap-6 ${isMentorship ? "" : "sm:grid-cols-2"}`}
                   >
                     <label className="text-sm font-medium text-gray-800">
-                      Desired timing <span aria-hidden="true">*</span>
+                      {copy.timing} <span aria-hidden="true">*</span>
                       <select
                         name="timing"
                         required
@@ -441,18 +689,18 @@ export default function StartProject() {
                         className={fieldClassName}
                       >
                         <option value="" disabled>
-                          Select a timeframe
+                          {copy.selectTiming}
                         </option>
                         {projectTimingOptions.map((option) => (
                           <option key={option.value} value={option.label}>
-                            {option.label}
+                            {copy.timings[option.value]}
                           </option>
                         ))}
                       </select>
                     </label>
                     {!isMentorship && (
                       <label className="text-sm font-medium text-gray-800">
-                        Budget range <span className="text-gray-400">(optional)</span>
+                        {copy.budget} <span className="text-gray-400">({copy.optional})</span>
                         <select
                           name="budget"
                           value={form.budget}
@@ -461,10 +709,10 @@ export default function StartProject() {
                           }
                           className={fieldClassName}
                         >
-                          <option value="">Prefer not to say</option>
+                          <option value="">{copy.preferNot}</option>
                           {budgetOptions.map((option) => (
                             <option key={option} value={option}>
-                              {option}
+                              {copy.budgets[option]}
                             </option>
                           ))}
                         </select>
@@ -484,13 +732,12 @@ export default function StartProject() {
                       className="mt-1 h-4 w-4 shrink-0 accent-black"
                     />
                     <span>
-                      I agree that BI Solutions Group may use this information to
-                      respond to my enquiry. See the{" "}
+                      {copy.consent}{" "}
                       <Link
                         href="/privacy-policy"
                         className="font-medium text-black underline decoration-black/20 underline-offset-4 hover:decoration-black"
                       >
-                        Privacy Policy
+                        {copy.privacy}
                       </Link>
                       .
                     </span>
@@ -501,8 +748,7 @@ export default function StartProject() {
                       role="alert"
                       className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-900"
                     >
-                      We could not send your brief. Please wait a moment and
-                      try again.
+                      {copy.error}
                     </div>
                   ) : null}
 
@@ -512,10 +758,10 @@ export default function StartProject() {
                     className="h-12 w-full rounded-full text-base sm:w-auto sm:px-7"
                   >
                     {status === "submitting"
-                      ? "Sending…"
+                      ? copy.sending
                       : isMentorship
-                        ? "Send mentorship enquiry"
-                        : "Send project brief"}
+                        ? copy.sendMentorship
+                        : copy.sendProject}
                     {status !== "submitting" ? (
                       <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
                     ) : null}
