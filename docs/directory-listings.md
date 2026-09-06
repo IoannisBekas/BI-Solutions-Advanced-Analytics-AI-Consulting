@@ -90,6 +90,12 @@ Official guidance checked on 2026-09-06:
 - Clutch methodology: https://clutch.co/methodology
 - TechBehemoths registration and claim FAQ: https://techbehemoths.com/faq
 
+An exact-match web search on 2026-09-06 found no indexed Clutch or
+TechBehemoths result for `BI Solutions Group`, `Ioannis Bekas`, or
+`bisolutions.group`. This is not proof that no private or unindexed managed
+profile exists; search each platform during signup and claim a match instead of
+creating a duplicate.
+
 ## Reviews
 
 Invite only real clients who are willing to describe work they actually

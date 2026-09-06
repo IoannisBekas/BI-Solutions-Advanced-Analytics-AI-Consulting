@@ -105,4 +105,3 @@ Ioannis
 - No payment, reciprocal link, incentive, or required positive wording is
   offered.
 - The final message and destination have been approved by Ioannis.
-
