@@ -75,6 +75,21 @@ Homepage mobile report captured 2026-09-06:
 
 Primary lab opportunities: render-blocking requests (estimated 1,640 ms), image delivery (estimated 220 KiB), and unused JavaScript (estimated 80 KiB). Google returned a temporary overloaded-service error for the homepage desktop and services-page runs; retry those before treating this as a complete performance baseline.
 
+### Post-deployment homepage recheck
+
+After non-blocking font loading, deferred below-the-fold images, and removal of the zoom restriction were deployed, the mobile lab report improved to:
+
+- Performance: **92** (up from 77)
+- Accessibility: **97** (up from 92)
+- SEO: **100**
+- First Contentful Paint: **2.3 s** (down from 3.2 s)
+- Largest Contentful Paint: **3.0 s** (down from 4.4 s)
+- Total Blocking Time: **10 ms** (down from 120 ms)
+- Cumulative Layout Shift: **0**
+- Speed Index: **2.3 s** (down from 3.8 s)
+
+The site still had no origin-level real-user field data. A responsive preload for the hero image was added after this recheck to reduce discovery delay for the remaining LCP image.
+
 ## Monthly comparison rule
 
 Compare the same trailing three-month window once per month. Track total impressions, top landing pages, country mix, and device mix. Do not interpret day-to-day movement as a trend.
