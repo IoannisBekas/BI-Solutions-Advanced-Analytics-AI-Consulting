@@ -1,5 +1,6 @@
 import { ArrowUp, Github, Instagram, Linkedin } from "lucide-react";
 import { Link } from "wouter";
+import { OPEN_COOKIE_SETTINGS_EVENT } from "@/components/CookieConsent";
 import { trackEvent, trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
 import { withAssetBase } from "@/lib/site";
@@ -45,6 +46,10 @@ export function Footer() {
   const scrollToTop = () => {
     trackEvent("back_to_top_click", { placement: "footer" });
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const openCookieSettings = () => {
+    window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS_EVENT));
   };
 
   return (
@@ -143,6 +148,15 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={openCookieSettings}
+                  className="text-left text-gray-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                >
+                  {t.footer.cookieSettings}
+                </button>
+              </li>
             </ul>
             <div className="flex gap-3 pt-2">
               <a

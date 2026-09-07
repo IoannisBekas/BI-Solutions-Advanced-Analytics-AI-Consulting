@@ -26,7 +26,6 @@ const cookieCopy: Record<
     error: string;
     change: string;
     privacy: string;
-    settings: string;
   }
 > = {
   en: {
@@ -41,7 +40,6 @@ const cookieCopy: Record<
     error: "Your browser could not save this choice. Optional measurement remains off unless already allowed.",
     change: "Change or withdraw permission using Cookie settings. Changing an existing choice may reload the page.",
     privacy: "Privacy Policy",
-    settings: "Cookie settings",
   },
   el: {
     title: "Cookies & μέτρηση",
@@ -55,7 +53,6 @@ const cookieCopy: Record<
     error: "Το πρόγραμμα περιήγησης δεν μπόρεσε να αποθηκεύσει αυτή την επιλογή. Η προαιρετική μέτρηση παραμένει απενεργοποιημένη, εκτός αν είχε ήδη επιτραπεί.",
     change: "Αλλάξτε ή ανακαλέστε την άδεια από τις Ρυθμίσεις cookies. Η αλλαγή μιας αποθηκευμένης επιλογής ενδέχεται να επαναφορτώσει τη σελίδα.",
     privacy: "Πολιτική απορρήτου",
-    settings: "Ρυθμίσεις cookies",
   },
   de: {
     title: "Cookies & Messung",
@@ -69,9 +66,10 @@ const cookieCopy: Record<
     error: "Ihr Browser konnte diese Auswahl nicht speichern. Optionale Messung bleibt deaktiviert, sofern sie nicht bereits erlaubt war.",
     change: "Sie können Ihre Einwilligung über die Cookie-Einstellungen ändern oder widerrufen. Beim Ändern einer gespeicherten Auswahl wird die Seite möglicherweise neu geladen.",
     privacy: "Datenschutzerklärung",
-    settings: "Cookie-Einstellungen",
   },
 };
+
+export const OPEN_COOKIE_SETTINGS_EVENT = "bi-open-cookie-settings";
 
 export function CookieConsent() {
   const { locale } = useLocale();
@@ -89,8 +87,18 @@ export function CookieConsent() {
         setVisible(!readMeasurementConsent());
       }
     };
+    const openSettings = () => {
+      setChoices(readMeasurementConsent() || { analytics: false, ads: false });
+      setVisible(true);
+    };
+
     window.addEventListener("storage", syncConsent);
-    return () => window.removeEventListener("storage", syncConsent);
+    window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, openSettings);
+
+    return () => {
+      window.removeEventListener("storage", syncConsent);
+      window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, openSettings);
+    };
   }, []);
 
   useEffect(() => {
@@ -127,7 +135,9 @@ export function CookieConsent() {
 
   const buttonClass = "min-h-11 rounded-full border border-gray-400 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
-  return visible ? (
+  if (!visible) return null;
+
+  return (
     <section
       className="fixed inset-x-3 bottom-3 z-[120] max-h-[85dvh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-950 p-5 text-white shadow-2xl sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[26rem]"
       role="dialog"
@@ -159,9 +169,5 @@ export function CookieConsent() {
         {copy.change} <a href={localizedHref("/privacy-policy")} className="underline">{copy.privacy}</a>
       </p>
     </section>
-  ) : (
-    <button type="button" onClick={() => { setChoices(readMeasurementConsent() || { analytics: false, ads: false }); setVisible(true); }} className="fixed bottom-3 left-3 z-[120] min-h-11 rounded-full border border-gray-300 bg-white px-4 text-xs font-medium text-gray-900 shadow-sm">
-      {copy.settings}
-    </button>
   );
 }

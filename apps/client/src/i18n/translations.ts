@@ -47,6 +47,7 @@ export interface TranslationCatalogue {
     insights: string;
     privacy: string;
     terms: string;
+    cookieSettings: string;
     backToTop: string;
     rights: string;
   };
@@ -121,6 +122,7 @@ const en: TranslationCatalogue = {
     insights: "Insights",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
+    cookieSettings: "Cookie settings",
     backToTop: "Back to top",
     rights: "All rights reserved.",
   },
@@ -215,6 +217,7 @@ const el: TranslationCatalogue = {
     insights: "Άρθρα",
     privacy: "Πολιτική απορρήτου",
     terms: "Όροι χρήσης",
+    cookieSettings: "Ρυθμίσεις cookies",
     backToTop: "Επιστροφή στην κορυφή",
     rights: "Με επιφύλαξη παντός δικαιώματος.",
   },
@@ -309,6 +312,7 @@ const de: TranslationCatalogue = {
     insights: "Insights",
     privacy: "Datenschutzerklärung",
     terms: "Nutzungsbedingungen",
+    cookieSettings: "Cookie-Einstellungen",
     backToTop: "Nach oben",
     rights: "Alle Rechte vorbehalten.",
   },
