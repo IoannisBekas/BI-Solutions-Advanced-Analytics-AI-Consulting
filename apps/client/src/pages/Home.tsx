@@ -5,17 +5,97 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages } from "@/lib/servicePages";
 import { blogPosts } from "@/data/blogData";
 import { caseStudies } from "@/data/caseStudies";
+import {
+  websiteProjects,
+  type WebsiteProject,
+} from "@/data/websiteProjects";
 import { trackEvent } from "@/lib/analytics";
 import { withAssetBase } from "@/lib/site";
 import { useLocale } from "@/i18n/LocaleProvider";
 
 const latestInsight = blogPosts[0];
 const moreInsights = blogPosts.slice(1, 4);
+
+interface WebsiteProjectCardProps {
+  project: WebsiteProject;
+  number: number;
+}
+
+function WebsiteProjectCard({
+  project,
+  number,
+}: WebsiteProjectCardProps) {
+  return (
+    <ScrollReveal className="h-full" delay={(number % 2) * 0.06} width="100%">
+      <a
+        href={project.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block h-full rounded-[2rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f3f0]"
+        onClick={() =>
+          trackEvent("website_project_open", {
+            project: project.slug,
+            placement: "homepage",
+            target: project.href,
+          })
+        }
+      >
+        <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300 group-hover:shadow-2xl group-hover:shadow-black/[0.08] group-focus-visible:-translate-y-1">
+          <div className="relative aspect-[16/9] overflow-hidden border-b border-gray-200 bg-[#07121f]">
+            <img
+              src={project.image}
+              alt={project.imageAlt}
+              width={2880}
+              height={1620}
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="h-full w-full object-cover transition-[filter] duration-300 group-hover:brightness-105"
+              loading="lazy"
+              decoding="async"
+            />
+            <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/70 px-3 py-1.5 text-xs font-semibold tracking-[0.16em] text-white backdrop-blur-md">
+              {String(number).padStart(2, "0")}
+            </span>
+          </div>
+
+          <div className="flex flex-1 flex-col p-6 sm:p-8">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold uppercase tracking-[0.14em]">
+              <span className="text-[#a51f25]">{project.category}</span>
+              <span className="h-1 w-1 rounded-full bg-[#f2bd2f]" aria-hidden="true" />
+              <span className="text-gray-500">{project.relationship}</span>
+            </div>
+            <h3
+              className="mt-5 text-3xl font-bold font-heading leading-tight text-gray-950"
+              translate="no"
+            >
+              {project.title}
+            </h3>
+            <p className="mt-4 text-base leading-relaxed text-gray-600">
+              {project.summary}
+            </p>
+            <div className="mt-6 border-t border-gray-200 pt-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
+                Why it matters
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-gray-700">
+                {project.value}
+              </p>
+            </div>
+            <div className="mt-auto flex items-center gap-2 pt-7 text-sm font-semibold text-gray-950">
+              View live website
+              <ExternalLink className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <span className="sr-only">Opens in a new tab</span>
+            </div>
+          </div>
+        </article>
+      </a>
+    </ScrollReveal>
+  );
+}
 
 export default function Home() {
   const { t } = useLocale();
@@ -234,7 +314,40 @@ export default function Home() {
           <CinematicHero />
         </div>
 
-        <section id="case-studies" className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24">
+        <section
+          id="case-studies"
+          className="overflow-hidden bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28"
+        >
+          <div className="site-container px-6 md:px-12">
+            <ScrollReveal className="mb-14 max-w-4xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                Website projects
+              </p>
+              <h2 className="mt-4 text-4xl font-bold font-heading leading-tight text-gray-950 md:text-5xl">
+                Websites designed around a clear customer journey.
+              </h2>
+              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
+                From discovery and comparison to booking and direct orders, each
+                interface prioritizes clear navigation and an obvious next step.
+              </p>
+            </ScrollReveal>
+
+            <div className="grid auto-rows-fr gap-8 md:grid-cols-2">
+              {websiteProjects.map((project, index) => (
+                <WebsiteProjectCard
+                  key={project.slug}
+                  project={project}
+                  number={index + 1}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="analytics-case-studies"
+          className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24"
+        >
           <div className="site-container px-6 md:px-12">
             <ScrollReveal className="mb-16 max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">

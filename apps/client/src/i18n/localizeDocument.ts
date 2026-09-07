@@ -20,6 +20,11 @@ const legacyTranslations: Record<string, { el: string; de: string }> = {
   Accept: { el: "Αποδοχή", de: "Akzeptieren" },
 };
 
+function shouldSkipTranslation(node: Node) {
+  const element = node instanceof Element ? node : node.parentElement;
+  return Boolean(element?.closest('[translate="no"]'));
+}
+
 export function translatePageCopy(value: string, locale: Locale) {
   if (locale === "en") return value;
   const normalized = value.replace(/\s+/g, " ").trim();
@@ -30,6 +35,8 @@ export function translatePageCopy(value: string, locale: Locale) {
 }
 
 function localizeElement(element: Element, locale: Exclude<Locale, "en">) {
+  if (shouldSkipTranslation(element)) return;
+
   for (const attribute of translatedAttributes) {
     const value = element.getAttribute(attribute);
     if (!value) continue;
@@ -44,6 +51,8 @@ function localizeElement(element: Element, locale: Exclude<Locale, "en">) {
 }
 
 function localizeNode(node: Node, locale: Exclude<Locale, "en">) {
+  if (shouldSkipTranslation(node)) return;
+
   if (node.nodeType === Node.TEXT_NODE && node.textContent) {
     const localized = translatePageCopy(node.textContent, locale);
     if (localized !== node.textContent) node.textContent = localized;
@@ -59,6 +68,8 @@ function localizeNode(node: Node, locale: Exclude<Locale, "en">) {
   );
   while (walker.nextNode()) {
     const current = walker.currentNode;
+    if (shouldSkipTranslation(current)) continue;
+
     if (current.nodeType === Node.TEXT_NODE && current.textContent) {
       const localized = translatePageCopy(current.textContent, locale);
       if (localized !== current.textContent) current.textContent = localized;
