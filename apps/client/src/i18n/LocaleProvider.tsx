@@ -13,6 +13,7 @@ import {
   type Locale,
 } from "./config";
 import { catalogues, type TranslationCatalogue } from "./translations";
+import { localizeDocument } from "./localizeDocument";
 import { withSiteBase } from "@/lib/site";
 
 interface LocaleContextValue {
@@ -64,6 +65,7 @@ export function LocaleProvider({
 
   useEffect(() => {
     document.documentElement.lang = LOCALE_TAGS[locale];
+    return localizeDocument(locale);
   }, [locale]);
 
   return (

@@ -9,7 +9,8 @@ import {
   splitLocaleFromPath,
   type Locale,
 } from "@/i18n/config";
-import { TRANSLATED_ROUTES } from "@/i18n/translations";
+import { isTranslatedRoute } from "@/i18n/translations";
+import { translatePageCopy } from "@/i18n/localizeDocument";
 
 const SITE_NAME = "BI Solutions Group";
 
@@ -33,7 +34,7 @@ function composeTitle(title: string) {
   return title;
 }
 const SITE_URL = "https://www.bisolutions.group";
-const DEFAULT_IMAGE = "/og.png?v=blue-20260830";
+const DEFAULT_IMAGE = "/assets/social/bi-solutions-social-card.png?v=blue-20260830";
 
 type StructuredData = Record<string, unknown> | Array<Record<string, unknown>>;
 
@@ -107,7 +108,7 @@ function setAlternateLinks(alternates: Array<{ hreflang: string; href: string }>
  * claim to be a separate page.
  */
 function canonicalFor(routePath: string, locale: Locale) {
-  const prefix = TRANSLATED_ROUTES.has(routePath)
+  const prefix = isTranslatedRoute(routePath)
     ? localePrefix(locale)
     : localePrefix(DEFAULT_LOCALE);
 
@@ -119,7 +120,7 @@ function canonicalFor(routePath: string, locale: Locale) {
  * engines at untranslated duplicates is worse than staying silent.
  */
 function buildAlternates(routePath: string) {
-  if (!TRANSLATED_ROUTES.has(routePath)) return [];
+  if (!isTranslatedRoute(routePath)) return [];
 
   const urlFor = (prefix: string) =>
     `${SITE_URL}${prefix}${routePath === "/" ? "/" : routePath}`;
@@ -145,9 +146,11 @@ export function Seo({
 }: SeoProps) {
   const ssrHead = useContext(SsrHeadContext);
   const { locale } = useLocale();
+  const localizedTitle = translatePageCopy(title, locale);
+  const localizedDescription = translatePageCopy(description, locale);
 
   useEffect(() => {
-    const pageTitle = composeTitle(title);
+    const pageTitle = composeTitle(localizedTitle);
     const routePath = path ?? splitLocaleFromPath(window.location.pathname).path;
     const canonicalUrl = canonicalFor(routePath, locale);
     const imageUrl = toAbsoluteUrl(image);
@@ -155,7 +158,7 @@ export function Seo({
 
     document.title = pageTitle;
 
-    setMetaTag("name", "description", description);
+    setMetaTag("name", "description", localizedDescription);
     setMetaTag("name", "robots", robots);
     if (keywords && keywords.length > 0) {
       setMetaTag("name", "keywords", keywords.join(", "));
@@ -163,13 +166,13 @@ export function Seo({
     setMetaTag("property", "og:site_name", SITE_NAME);
     setMetaTag("property", "og:locale", LOCALE_TAGS[locale].replace("-", "_"));
     setMetaTag("property", "og:title", pageTitle);
-    setMetaTag("property", "og:description", description);
+    setMetaTag("property", "og:description", localizedDescription);
     setMetaTag("property", "og:url", canonicalUrl);
     setMetaTag("property", "og:type", type);
     setMetaTag("property", "og:image", imageUrl);
     setMetaTag("name", "twitter:card", "summary_large_image");
     setMetaTag("name", "twitter:title", pageTitle);
-    setMetaTag("name", "twitter:description", description);
+    setMetaTag("name", "twitter:description", localizedDescription);
     setMetaTag("name", "twitter:image", imageUrl);
     setCanonicalLink(canonicalUrl);
     setAlternateLinks(buildAlternates(routePath));
@@ -194,14 +197,14 @@ export function Seo({
       }
     };
   }, [
-    description,
+    localizedDescription,
+    localizedTitle,
     image,
     keywords,
     locale,
     path,
     robots,
     structuredData,
-    title,
     type,
   ]);
 
@@ -211,8 +214,8 @@ export function Seo({
     const routePath = path ?? splitLocaleFromPath(ssrHead.pagePath).path;
 
     ssrHead.head = {
-      title: composeTitle(title),
-      description,
+      title: composeTitle(localizedTitle),
+      description: localizedDescription,
       robots,
       keywords: keywords && keywords.length > 0 ? keywords.join(", ") : undefined,
       canonicalUrl: canonicalFor(routePath, locale),

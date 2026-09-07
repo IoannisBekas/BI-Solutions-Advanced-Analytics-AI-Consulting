@@ -9,6 +9,7 @@ import {
   localePrefix,
   splitLocaleFromPath,
 } from "../apps/client/src/i18n/config";
+import { translatePageCopy } from "../apps/client/src/i18n/localizeDocument";
 
 // Kept in sync with apps/client/src/components/seo/ssrHead.ts. Declared here
 // too because the SSR bundle is loaded dynamically, without type info.
@@ -75,6 +76,34 @@ function escapeHtmlAttribute(value: string) {
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function decodeReactText(value: string) {
+  return value
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
+function localizeRenderedHtml(html: string, route: string) {
+  const { locale } = splitLocaleFromPath(route);
+  if (locale === DEFAULT_LOCALE) return html;
+
+  return html
+    .replace(/>([^<]+)</g, (match, text: string) => {
+      const decoded = decodeReactText(text);
+      const translated = translatePageCopy(decoded, locale);
+      return translated === decoded ? match : `>${escapeHtmlAttribute(translated)}<`;
+    })
+    .replace(/\s(alt|aria-label|placeholder|title)="([^"]*)"/g, (match, attribute, value) => {
+      const decoded = decodeReactText(value);
+      const translated = translatePageCopy(decoded, locale);
+      return translated === decoded
+        ? match
+        : ` ${attribute}="${escapeHtmlAttribute(translated)}"`;
+    });
 }
 
 function buildHeadBlock(head: SsrHeadData) {
@@ -175,7 +204,11 @@ export async function prerenderClient() {
         : path.join(PUBLIC_OUT_DIR, ...route.slice(1).split("/"), "index.html");
 
     await mkdir(path.dirname(outFile), { recursive: true });
-    await writeFile(outFile, renderTemplate(template, page), "utf-8");
+    const localizedPage = {
+      ...page,
+      appHtml: localizeRenderedHtml(page.appHtml, route),
+    };
+    await writeFile(outFile, renderTemplate(template, localizedPage), "utf-8");
     console.log(
       `prerendered ${route}${page.head ? "" : " (no <Seo> data — kept default head)"}`,
     );

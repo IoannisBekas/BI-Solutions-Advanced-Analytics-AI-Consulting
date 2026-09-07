@@ -4,8 +4,8 @@ import type { Locale } from "./config";
  * Translated UI copy. Keys missing from a locale fall back to English, so a
  * partially translated locale degrades to English rather than showing blanks.
  *
- * Long-form content (blog posts, service detail pages, legal pages) is not
- * covered here — those live in their own data modules and are still English.
+ * Shared component copy lives here. Page-specific and long-form copy is
+ * generated into pageTranslations.generated.ts from its English source.
  */
 export interface TranslationCatalogue {
   home: {
@@ -325,4 +325,20 @@ export const catalogues: Record<Locale, TranslationCatalogue> = { en, el, de };
  * alternates — pointing search engines at untranslated duplicates hurts more
  * than it helps.
  */
-export const TRANSLATED_ROUTES = new Set(["/", "/about", "/start-a-project"]);
+export const TRANSLATED_ROUTES = new Set([
+  "/",
+  "/services",
+  "/about",
+  "/start-a-project",
+  "/privacy-policy",
+  "/terms-of-service",
+  "/blog",
+]);
+
+export function isTranslatedRoute(route: string) {
+  return (
+    TRANSLATED_ROUTES.has(route) ||
+    route.startsWith("/blog/") ||
+    route.startsWith("/case-studies/")
+  );
+}
