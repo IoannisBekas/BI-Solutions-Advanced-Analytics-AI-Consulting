@@ -130,6 +130,24 @@ The LCP element was the hero heading, with **1,230 ms** of element render delay.
 
 The first post-deployment mobile run reported Performance **77**, Accessibility **97**, Best Practices **100**, SEO **100**, FCP **3.6 s**, LCP **4.4 s**, TBT **0 ms**, CLS **0**, and Speed Index **3.6 s**. The throttled headline result varied, but the targeted LCP render-delay diagnostic improved to **820 ms** and the CSP console error disappeared. The remaining render-blocking item was the first-party stylesheet, with an estimated **380 ms** saving; unused JavaScript was estimated at **88 KiB**. Treat these as lab diagnostics, not a real-user Core Web Vitals failure, until Search Console or CrUX has enough field data.
 
+### Final render-payload remediation — 2026-09-08
+
+A fresh pre-remediation mobile run exposed additional first-load costs that the earlier variable Lighthouse runs did not make as clear:
+
+- Homepage: Performance **71**, Accessibility **97**, Best Practices **100**, SEO **100**, FCP **3.8 s**, LCP **5.5 s**, TBT **60 ms**, CLS **0**, and Speed Index **3.8 s**.
+- Services: Performance **75**, Accessibility **97**, Best Practices **100**, SEO **100**, FCP **3.8 s**, LCP **4.5 s**, TBT **0 ms**, CLS **0**, and Speed Index **3.8 s**.
+
+The homepage report attributed about **514 KiB** of avoidable transfer to oversized portfolio images. It also identified the cookie notice as the LCP element, including **1,440 ms** of element render delay because it appeared only after hydration. The English application was also eagerly loading the entire long-form translation catalogue and a monolithic vendor bundle.
+
+The deployed remediation added responsive portfolio and hero images, prerendered the cookie notice while preserving stored consent behavior, loaded the large translation catalogue only on Greek and German routes, removed unused global UI providers, and replaced small animation/select dependencies with lightweight native or CSS behavior. The always-loaded application shell fell from roughly **494 KiB gzip** of main-plus-vendor JavaScript to about **75 KiB gzip**, with the homepage and shared navigation chunks loaded separately.
+
+Post-deployment mobile lab reports captured at 18:16–18:19 Europe/Athens reported:
+
+- Homepage: Performance **89**, Accessibility **97**, Best Practices **100**, SEO **100**, FCP **2.9 s**, LCP **2.9 s**, TBT **0 ms**, CLS **0**, and Speed Index **2.9 s**.
+- Services: Performance **90**, Accessibility **96**, Best Practices **100**, SEO **100**, FCP **2.9 s**, LCP **2.9 s**, TBT **0 ms**, CLS **0**, and Speed Index **2.9 s**.
+
+These are throttled Lighthouse lab measurements and can vary between runs. Google still reported no page-level or origin-level CrUX data, so this is evidence of a materially improved lab profile, not a field Core Web Vitals pass.
+
 ## Monthly comparison rule
 
 Compare the same trailing three-month window once per month. Track total impressions, top landing pages, country mix, and device mix. Do not interpret day-to-day movement as a trend.
