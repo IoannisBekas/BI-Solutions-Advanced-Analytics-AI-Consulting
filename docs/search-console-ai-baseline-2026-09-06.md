@@ -148,6 +148,10 @@ Post-deployment mobile lab reports captured at 18:16–18:19 Europe/Athens repor
 
 These are throttled Lighthouse lab measurements and can vary between runs. Google still reported no page-level or origin-level CrUX data, so this is evidence of a materially improved lab profile, not a field Core Web Vitals pass.
 
+### Services accessibility follow-up — 2026-09-08
+
+The Services report's remaining accessibility failure came from low-contrast service-index numbers and the footer's copyright/back-to-top row. After increasing those two foreground colors and deploying commit `32fc381`, the live mobile report at 18:40 Europe/Athens reported Performance **95**, Accessibility **100**, Best Practices **100**, SEO **100**, FCP **2.1 s**, LCP **2.3 s**, TBT **0 ms**, CLS **0.074**, and Speed Index **2.1 s**. The active Lighthouse color-contrast audit passed. Google still reported no CrUX field data.
+
 ## Monthly comparison rule
 
 Compare the same trailing three-month window once per month. Track total impressions, top landing pages, country mix, and device mix. Do not interpret day-to-day movement as a trend.
