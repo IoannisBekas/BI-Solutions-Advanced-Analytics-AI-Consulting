@@ -1,21 +1,27 @@
 # Google Business Profile — verification and update checklist
 
-Reviewed in Business Profile Manager on 2026-09-06.
+Reviewed in the signed-in Business Profile Manager and Google Search management panel on 2026-09-08.
 
 ## Current state
 
 - Profile: `BI Solutions Group — Advanced Analytics & AI Consulting`
 - Status: **Unverified**
 - Google message: **Verification not successful. To get verified, submit another recording.**
-- Only verification method offered: **Business video**
+- Only verification method offered: **Submit a Business Video**. Expanding **More options** reveals only **Verify later**, not an alternate method.
 - Address: Andrea Miaouli 9, Artemida, Attiki 19016
 - Primary category: Consultant
 - Service areas: Canada, Greece, Germany, Switzerland, United States
 - Hours: Monday–Friday, 09:00–17:00; Saturday–Sunday closed
 - Website: `https://bisolutions.group/`
 - Opening date: 2019-09-03
+- Phone: `698 175 2107`
+- Chat: `https://wa.me/306981752107`
+- Social profile: `https://linkedin.com/in/ioannisbekas/`
+- Services: **none configured**; the current Consultant service editor shows only **Add custom service**
+- Current description: “We specialize in data analytics, AI, machine learning, statistics, and data engineering to help businesses unlock the value of their data. Whether it's building dashboards, automating workflows, predicting trends, or engineering scalable data pipelines — we've got you covered. Let us help you translate complexity into clarity and drive real business impact.”
+- Public Google panel observed: 5.0 rating and 339 reviews. This count is recorded as observed platform state, not as verification of individual review authenticity.
 
-The website structured data has been aligned to the profile's 17:00 closing time. Do not add reviews, services, photographs, or further profile claims until the business is verified and the facts below are confirmed.
+The website structured data has been aligned to the profile's 17:00 closing time. The signed-in interface permits profile edits before verification, but public changes must still use confirmed facts. Do not upload photographs or change the name, address visibility, service areas, hours, or opening date until the facts below are confirmed.
 
 ## Required business video
 
@@ -52,6 +58,15 @@ Use the exact real-world name shown on registration, invoices, signage, and the 
 - Generative Engine Optimization (GEO)
 - Analytics training and mentoring
 
+The service editor contains no predefined Consultant options, so each approved item must be added as a custom service.
+
+### Social profiles
+
+Keep Ioannis's personal LinkedIn only if it is intentionally used as a public business contact. Add the canonical company profiles for stronger entity consistency:
+
+- LinkedIn: `https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/`
+- Instagram: `https://www.instagram.com/bisolutions.group/`
+
 ### Photos
 
 Upload only authentic photographs: exterior/entrance, the working environment, Ioannis at work, and sanitized project or workshop images that the client permits. Do not use stock images as proof of the business.
@@ -68,3 +83,8 @@ Ask genuine clients for an honest review after delivery. Do not offer incentives
 - [ ] Are 09:00–17:00 the correct public hours?
 - [ ] Is 2019-09-03 the correct opening date for this business entity/brand?
 - [ ] Which authentic photographs are approved for upload?
+- [ ] Should the personal LinkedIn remain alongside the company LinkedIn and Instagram profiles?
+
+## Next edit batch
+
+After owner approval, update the description, add the custom service list, and add the company LinkedIn and Instagram profiles in one controlled pass. Re-open the profile afterward to verify which changes Google accepted. Name, address, service areas, hours, and opening date remain unchanged until their facts are confirmed.

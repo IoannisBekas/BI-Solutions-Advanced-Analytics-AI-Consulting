@@ -33,10 +33,16 @@ Use this register before editing Google Business Profile, LinkedIn, Clutch, Tech
 | Hourly range | Not published | Commercial fact required by Clutch |  |
 | Profile owner | Not recorded | Name the person accountable for keeping all listings current |  |
 | Approved profile photos | None recorded | Use only authentic premises/work/team/project images with necessary permissions |  |
+| GBP social profiles | Personal LinkedIn only | Confirm whether to retain the personal profile; add the canonical company LinkedIn and Instagram accounts |  |
 
 ## Current profile state
 
 - Google Business Profile remains unverified after a failed video attempt; Business Video is the only offered method.
+- The 2026-09-08 signed-in audit confirmed that expanding verification options provides only “Verify later,” not another verification method.
+- The GBP service editor currently has no services configured and offers custom services only.
+- The GBP description covers analytics, AI, machine learning, statistics, data engineering, dashboards, automation, trends, and pipelines, but it does not yet mention website/web-app development or SEO/AEO/GEO.
+- The GBP social section currently links only to Ioannis's personal LinkedIn; the canonical company LinkedIn and Instagram profiles are not present.
+- Google Search displayed a 5.0 rating and 339 reviews during the signed-in audit. This is an observed platform count, not independent verification of each review.
 - Do not expand the website's country-only address schema or publicly expose the street address until the customer-facing-versus-service-area decision is confirmed.
 - The website's “Worldwide” service description can coexist with narrower GBP service areas only if international delivery is real and the GBP list reflects markets actually served.
 - The LinkedIn display name is already aligned; the legacy URL slug does not create a second public entity.
