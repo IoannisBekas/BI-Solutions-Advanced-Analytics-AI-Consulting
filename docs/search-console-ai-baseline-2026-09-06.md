@@ -59,6 +59,14 @@ The report contained 45 country rows in total.
 - The two article URLs above were previously **Crawled — currently not indexed**. `/about` was previously **Unknown to Google**.
 - After genuine Greek and German versions were deployed, indexing was requested and explicitly confirmed for `/el/about`, `/de/about`, `/el/start-a-project`, and `/de/start-a-project` on 2026-09-06. All four were **Unknown to Google** when inspected. A request only adds a URL to the priority crawl queue; it does not prove that Google has indexed it.
 
+### Indexing follow-up — 2026-09-08
+
+- Search Console overview: **48 total web-search clicks**, **19 indexed pages**, and **34 not-indexed pages** in the reporting period displayed by the interface.
+- Now confirmed **URL is on Google** and **Page is indexed**: `/about`, `/blog/cloud-data-warehouse-vs-spreadsheets`, `/blog/dashboard-requirements-before-power-bi-build`, `/el/about`, `/de/about`, `/el/start-a-project`, and `/de/start-a-project`.
+- All seven inspected URLs were also reported as served over HTTPS.
+- No additional indexing requests were submitted because every inspected priority URL was already indexed.
+- The Generative AI report was not re-baselined after only two days; retain the monthly comparison cadence below.
+
 ## PageSpeed Insights
 
 Homepage mobile report captured 2026-09-06:
