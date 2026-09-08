@@ -12,15 +12,13 @@ import { cn } from "@/lib/utils";
  * together.
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
-  const { locale, t } = useLocale();
+  const { currentPath, locale, t } = useLocale();
 
   const hrefFor = (target: Locale) => {
-    const pathname =
-      typeof window === "undefined" ? "/" : window.location.pathname;
     const withoutBase =
-      SITE_BASE_PATH && pathname.startsWith(SITE_BASE_PATH)
-        ? pathname.slice(SITE_BASE_PATH.length) || "/"
-        : pathname;
+      SITE_BASE_PATH && currentPath.startsWith(SITE_BASE_PATH)
+        ? currentPath.slice(SITE_BASE_PATH.length) || "/"
+        : currentPath;
 
     return `${SITE_BASE_PATH}${pathForLocale(withoutBase, target)}`;
   };

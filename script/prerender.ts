@@ -93,23 +93,79 @@ function decodeReactText(value: string) {
     .replace(/&amp;/g, "&");
 }
 
-function localizeRenderedHtml(html: string, route: string) {
-  const { locale } = splitLocaleFromPath(route);
-  if (locale === DEFAULT_LOCALE) return html;
+interface LocalizedHtml {
+  html: string;
+  textReversions: Record<string, string[]>;
+  attributeReversions: Record<string, string[]>;
+}
 
-  return html
+function localizeRenderedHtml(html: string, route: string): LocalizedHtml {
+  const { locale } = splitLocaleFromPath(route);
+  if (locale === DEFAULT_LOCALE) {
+    return { html, textReversions: {}, attributeReversions: {} };
+  }
+
+  const textReversions: Record<string, string[]> = {};
+  const attributeReversions: Record<string, string[]> = {};
+  const rememberTranslation = (
+    target: Record<string, string[]>,
+    original: string,
+    translated: string,
+  ) => {
+    const source = original.replace(/\s+/g, " ").trim();
+    const localized = translated.replace(/\s+/g, " ").trim();
+    (target[localized] ??= []).push(source);
+  };
+
+  const localizedHtml = html
     .replace(/>([^<]+)</g, (match, text: string) => {
       const decoded = decodeReactText(text);
       const translated = translatePageCopy(decoded, locale);
+      if (translated !== decoded) {
+        rememberTranslation(textReversions, decoded, translated);
+      }
       return translated === decoded ? match : `>${escapeHtmlAttribute(translated)}<`;
     })
     .replace(/\s(alt|aria-label|placeholder|title)="([^"]*)"/g, (match, attribute, value) => {
       const decoded = decodeReactText(value);
       const translated = translatePageCopy(decoded, locale);
+      if (translated !== decoded) {
+        rememberTranslation(attributeReversions, decoded, translated);
+      }
       return translated === decoded
         ? match
         : ` ${attribute}="${escapeHtmlAttribute(translated)}"`;
     });
+
+  return {
+    html: localizedHtml,
+    textReversions,
+    attributeReversions,
+  };
+}
+
+/**
+ * React components still contain their English source strings. Restore those
+ * strings immediately before hydration, then LocaleProvider reapplies the
+ * localized catalogue after React attaches. The inline script runs during HTML
+ * parsing, before deferred module scripts, so users never see the source copy.
+ */
+function buildPreHydrationScript(
+  textReversions: Record<string, string[]>,
+  attributeReversions: Record<string, string[]>,
+) {
+  if (
+    Object.keys(textReversions).length === 0 &&
+    Object.keys(attributeReversions).length === 0
+  ) {
+    return "";
+  }
+
+  const serialized = JSON.stringify({
+    text: textReversions,
+    attributes: attributeReversions,
+  }).replace(/</g, "\\u003c");
+  return `<script id="i18n-prehydrate">(()=>{const m=${serialized};const r=document.getElementById("root");if(!r)return;const take=(b,k)=>{const q=b[k];return q?.shift()};const w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT);while(w.nextNode()){const n=w.currentNode;const k=n.data.replace(/\\s+/g," ").trim();const v=take(m.text,k);if(v!==undefined)n.data=n.data.replace(k,v)}for(const e of r.querySelectorAll("*"))for(const a of ["alt","aria-label","placeholder","title"]){const s=e.getAttribute(a);if(!s)continue;const k=s.replace(/\\s+/g," ").trim();const v=take(m.attributes,k);if(v!==undefined)e.setAttribute(a,s.replace(k,v))}document.currentScript?.remove()})();</script>`;
 }
 
 function buildHeadBlock(head: SsrHeadData) {
@@ -210,9 +266,13 @@ export async function prerenderClient() {
         : path.join(PUBLIC_OUT_DIR, ...route.slice(1).split("/"), "index.html");
 
     await mkdir(path.dirname(outFile), { recursive: true });
+    const localized = localizeRenderedHtml(page.appHtml, route);
     const localizedPage = {
       ...page,
-      appHtml: localizeRenderedHtml(page.appHtml, route),
+      appHtml: `${localized.html}${buildPreHydrationScript(
+        localized.textReversions,
+        localized.attributeReversions,
+      )}`,
     };
     await writeFile(outFile, renderTemplate(template, localizedPage), "utf-8");
     console.log(

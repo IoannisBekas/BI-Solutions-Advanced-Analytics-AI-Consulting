@@ -104,8 +104,16 @@ const prerenderLeaks = [];
 
 for (const [relativePath, markers] of prerenderChecks) {
   const html = await fs.readFile(path.join(root, "dist", "public", relativePath), "utf8");
+  const visibleHtml = html.replace(
+    /<script id="i18n-prehydrate">[\s\S]*?<\/script>/g,
+    "",
+  );
   for (const marker of markers) {
-    if (html.includes(marker)) prerenderLeaks.push(`${relativePath}: ${marker}`);
+    if (visibleHtml.includes(marker)) prerenderLeaks.push(`${relativePath}: ${marker}`);
+  }
+
+  if (!html.includes('<script id="i18n-prehydrate">')) {
+    prerenderLeaks.push(`${relativePath}: missing pre-hydration localization bridge`);
   }
 }
 

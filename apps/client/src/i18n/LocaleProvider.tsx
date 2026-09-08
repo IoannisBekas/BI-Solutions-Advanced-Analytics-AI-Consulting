@@ -1,7 +1,7 @@
 import {
   createContext,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
   type ReactNode,
 } from "react";
@@ -18,12 +18,14 @@ import { withSiteBase } from "@/lib/site";
 
 interface LocaleContextValue {
   locale: Locale;
+  currentPath: string;
   /** Current locale's catalogue, with English filled in behind it. */
   t: TranslationCatalogue;
 }
 
 const LocaleContext = createContext<LocaleContextValue>({
   locale: DEFAULT_LOCALE,
+  currentPath: "/",
   t: catalogues[DEFAULT_LOCALE],
 });
 
@@ -53,24 +55,37 @@ function withFallback(locale: Locale): TranslationCatalogue {
 
 export function LocaleProvider({
   locale,
+  currentPath,
+  children,
+}: {
+  locale: Locale;
+  currentPath: string;
+  children: ReactNode;
+}) {
+  const value = useMemo(
+    () => ({ locale, currentPath, t: withFallback(locale) }),
+    [currentPath, locale],
+  );
+
+  return (
+    <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+  );
+}
+
+/** Runs only after the lazy route has hydrated, avoiding translated DOM drift. */
+export function DocumentLocalizer({
+  locale,
   children,
 }: {
   locale: Locale;
   children: ReactNode;
 }) {
-  const value = useMemo(
-    () => ({ locale, t: withFallback(locale) }),
-    [locale],
-  );
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.lang = LOCALE_TAGS[locale];
     return localizeDocument(locale);
   }, [locale]);
 
-  return (
-    <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
-  );
+  return children;
 }
 
 export function useLocale() {
