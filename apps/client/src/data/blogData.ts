@@ -1,6 +1,5 @@
 import geminiImage from "@/assets/blog/gemini-import-feature.png";
 import powerBISolutionsImage from "@/assets/blog/power-bi-solutions-semantic-model-review.svg";
-import { withPublicSiteOrigin } from "@/lib/site";
 
 const serviceAiConsultingImage = "/blog/service-ai-consulting-cover.svg";
 const serviceAiLiteracyImage = "/blog/service-ai-literacy-cover.svg";
@@ -250,9 +249,7 @@ This review is especially valuable before a model spreads across multiple dashbo
 
 Refactoring becomes worth it when new measures take too long to build, report performance is poor, users disagree about definitions, or the same business logic appears in several places. Refactoring should not be cosmetic. It should make the model easier to maintain, easier to explain, and safer to reuse.
 
-For teams that want a dedicated workflow, <a href="${withPublicSiteOrigin(
-      "/power-bi-solutions/workspace/",
-    )}" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Power BI Solutions</a> is positioned around semantic model analysis, diagnostics, and AI-assisted guidance for model improvement.
+For teams that want a dedicated workflow, <a href="/power-bi-solutions/workspace/" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">Power BI Solutions</a> is positioned around semantic model analysis, diagnostics, and AI-assisted guidance for model improvement.
 
 ## FAQ
 
@@ -1630,9 +1627,7 @@ Power BI Solutions adds AI-assisted guidance inside the analysis workflow itself
 
 Another important design decision is the authentication boundary. Power BI Solutions lives under the BI Solutions brand and domain, but it keeps its own product-specific access flow. That separation matters for roadmap flexibility, user management, and product state.
 
-In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="${withPublicSiteOrigin(
-      "/power-bi-solutions/workspace/",
-    )}" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">/power-bi-solutions/workspace/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
+In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href="/power-bi-solutions/workspace/" class="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600">/power-bi-solutions/workspace/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.
 
 ## From review service to scalable product workflow
 

@@ -2,6 +2,8 @@ import { useId, type ReactNode } from "react";
 import type { BlogPost } from "@/data/blogData";
 import { withAssetBase } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { translatePageCopy } from "@/i18n/localizeDocument";
 
 type ArticleVisualPost = Pick<
   BlogPost,
@@ -403,6 +405,8 @@ function toSvgId(value: string) {
 }
 
 export function ArticleVisual({ post, className }: ArticleVisualProps) {
+  const { locale } = useLocale();
+  const localizedTitle = translatePageCopy(post.title, locale);
   const usesReviewedCover = post.featuredImage.startsWith(
     "/blog/article-covers-v4/",
   );
@@ -424,7 +428,7 @@ export function ArticleVisual({ post, className }: ArticleVisualProps) {
       <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)}>
         <img
           src={withAssetBase(post.featuredImage)}
-          alt={`${post.title} article cover`}
+          alt={localizedTitle}
           className="h-full w-full object-cover"
           loading="lazy"
           decoding="async"
@@ -437,7 +441,7 @@ export function ArticleVisual({ post, className }: ArticleVisualProps) {
     <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)}>
       <svg
         role="img"
-        aria-label={`${post.title} article cover`}
+        aria-label={localizedTitle}
         className="h-full w-full"
         viewBox="0 0 640 360"
         preserveAspectRatio="xMidYMid slice"

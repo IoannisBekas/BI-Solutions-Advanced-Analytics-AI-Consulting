@@ -26,6 +26,9 @@ import {
 } from "@/data/blogData";
 import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
 import { trackEvent } from "@/lib/analytics";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { translatePageCopy } from "@/i18n/localizeDocument";
+import { LOCALE_TAGS, localePrefix, type Locale } from "@/i18n/config";
 
 const ARTICLE_AUTHOR = {
   name: "Ioannis Bekas",
@@ -86,7 +89,7 @@ function toSchemaDate(value: string) {
   return `${match[3]}-${monthNumbers[match[1]]}-${match[2].padStart(2, "0")}`;
 }
 
-function renderRichText(line: string) {
+function renderRichText(line: string, locale: Locale) {
   const nodes: ReactNode[] = [];
   const anchorPattern = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   let cursor = 0;
@@ -97,7 +100,7 @@ function renderRichText(line: string) {
       nodes.push(...renderBoldText(line.slice(cursor, match.index), nodes.length));
     }
 
-    const href = sanitizeHref(match[1]);
+    const href = sanitizeHref(match[1], locale);
     const label = stripRichText(match[2]) || href;
     if (href) {
       nodes.push(
@@ -137,7 +140,7 @@ function renderBoldText(value: string, keyOffset: number): ReactNode[] {
     });
 }
 
-function sanitizeHref(value: string) {
+function sanitizeHref(value: string, locale: Locale) {
   try {
     const parsed = new URL(value, getPublicSiteOrigin());
     if (parsed.protocol === "http:" || parsed.protocol === "https:" || parsed.protocol === "mailto:") {
@@ -151,7 +154,7 @@ function sanitizeHref(value: string) {
           "website-web-app-development": "website-app-development",
         };
         const anchor = serviceAnchors[serviceMatch[1]] ?? serviceMatch[1];
-        return `${parsed.origin}/services#${anchor}`;
+        return `${parsed.origin}${localePrefix(locale)}/services#${anchor}`;
       }
 
       return parsed.toString();
@@ -171,7 +174,7 @@ function stripRichText(value: string) {
     .trim();
 }
 
-function renderContent(content: string) {
+function renderContent(content: string, locale: Locale) {
   const sections = content.split("\n\n");
 
   return sections.map((section, index) => {
@@ -195,7 +198,7 @@ function renderContent(content: string) {
           <p
             className="text-base leading-relaxed text-gray-700"
           >
-            {renderRichText(section.replace("> ", ""))}
+            {renderRichText(section.replace("> ", ""), locale)}
           </p>
         </blockquote>
       );
@@ -206,13 +209,31 @@ function renderContent(content: string) {
         key={index}
         className="mt-5 text-base leading-relaxed text-gray-700"
       >
-        {renderRichText(section)}
+        {renderRichText(section, locale)}
       </p>
     );
   });
 }
 
+function localizeArticleContent(content: string, locale: Locale) {
+  if (locale === "en") return content;
+
+  return content
+    .split("\n\n")
+    .map((section) => {
+      if (section.startsWith("## ")) {
+        return `## ${translatePageCopy(section.slice(3), locale)}`;
+      }
+      if (section.startsWith("> ")) {
+        return `> ${translatePageCopy(section.slice(2), locale)}`;
+      }
+      return translatePageCopy(section, locale);
+    })
+    .join("\n\n");
+}
+
 export default function BlogPost() {
+  const { locale } = useLocale();
   const [, params] = useRoute("/blog/:slug");
   const slug = params?.slug || "";
   const post = getBlogPostBySlug(slug);
@@ -242,11 +263,18 @@ export default function BlogPost() {
 
   // Canonical URL rather than window.location.href: identical on server and
   // client, so prerendered pages hydrate without mismatches.
-  const shareUrl = withPublicSiteOrigin(`/blog/${post.slug}`);
+  const shareUrl = withPublicSiteOrigin(`${localePrefix(locale)}/blog/${post.slug}`);
   const relatedService = getRelatedService(post.category);
   const robots = isBlogPostIndexable(post.slug) ? "index,follow" : "noindex,follow";
-  const shareText = encodeURIComponent(post.title);
-  const articleWordCount = post.content
+  const localizedTitle = translatePageCopy(post.title, locale);
+  const localizedSeoTitle = translatePageCopy(post.seoTitle ?? post.title, locale);
+  const localizedExcerpt = translatePageCopy(post.excerpt, locale);
+  const localizedCategory = translatePageCopy(post.category, locale);
+  const localizedTags = post.tags.map((tag) => translatePageCopy(tag, locale));
+  const localizedContent = localizeArticleContent(post.content, locale);
+  const localizedPathPrefix = localePrefix(locale);
+  const shareText = encodeURIComponent(localizedTitle);
+  const articleWordCount = localizedContent
     .replace(/<[^>]+>/g, " ")
     .split(/\s+/)
     .filter(Boolean).length;
@@ -270,14 +298,14 @@ export default function BlogPost() {
   const articleStructuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
+    headline: localizedTitle,
+    description: localizedExcerpt,
     image: structuredImageUrl,
     author: {
       "@type": "Person",
       "@id": ARTICLE_AUTHOR.schemaId,
       name: ARTICLE_AUTHOR.name,
-      url: `https://www.bisolutions.group${ARTICLE_AUTHOR.profileUrl}`,
+      url: `https://www.bisolutions.group${localizedPathPrefix}${ARTICLE_AUTHOR.profileUrl}`,
       jobTitle: "Data Scientist & AI Developer",
       worksFor: {
         "@id": "https://www.bisolutions.group/#organization",
@@ -286,20 +314,20 @@ export default function BlogPost() {
     publisher: publisherSchema,
     datePublished: toSchemaDate(post.date),
     dateModified: toSchemaDate(post.updatedDate || post.date),
-    articleSection: post.category,
-    keywords: post.tags.join(", "),
+    articleSection: localizedCategory,
+    keywords: localizedTags.join(", "),
     wordCount: articleWordCount,
-    inLanguage: "en",
+    inLanguage: LOCALE_TAGS[locale],
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://www.bisolutions.group/blog/${post.slug}`,
+      "@id": `https://www.bisolutions.group${localizedPathPrefix}/blog/${post.slug}`,
     },
   };
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Seo
-        title={post.seoTitle ?? post.title}
-        description={post.excerpt}
+        title={localizedSeoTitle}
+        description={localizedExcerpt}
         path={`/blog/${post.slug}`}
         image={post.featuredImage}
         type="article"
@@ -311,9 +339,9 @@ export default function BlogPost() {
       <main className="pt-32 pb-20">
         <PublicPageHero
           icon={Newspaper}
-          eyebrow={post.category}
-          title={post.title}
-          description={post.excerpt}
+          eyebrow={localizedCategory}
+          title={localizedTitle}
+          description={localizedExcerpt}
           actions={
             <Link
               href="/blog"
@@ -361,7 +389,7 @@ export default function BlogPost() {
           <ScrollReveal width="100%">
             <article className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-8">
               <div className="prose prose-gray max-w-none">
-                {renderContent(post.content)}
+                {renderContent(localizedContent, locale)}
               </div>
 
               <aside
@@ -383,7 +411,7 @@ export default function BlogPost() {
 
               <div className="mt-10 border-t border-gray-100 pt-6">
                 <div className="flex flex-wrap items-center gap-2">
-                  {post.tags.map((tag) => (
+                  {localizedTags.map((tag) => (
                     <span
                       key={tag}
                       className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600"
@@ -489,7 +517,7 @@ export default function BlogPost() {
                   </Button>
                   <Button asChild variant="outline" className="rounded-full border-gray-600 bg-transparent px-8 text-white hover:bg-white/10 hover:text-white">
                     <a
-                      href={relatedService.href}
+                      href={`${localizedPathPrefix}${relatedService.href}`}
                       onClick={() => trackEvent("article_to_service", { article: post.slug, target: relatedService.href })}
                     >
                       {relatedService.label}

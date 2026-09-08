@@ -5,13 +5,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "© 2026 BI Solutions Group.",
     "de": "© 2026 BI Solutions Group."
   },
+  "&timing=": {
+    "el": "&χρονισμός=",
+    "de": "&timing="
+  },
+  "&url=": {
+    "el": "&url=",
+    "de": "&url="
+  },
   "(min-width: 768px) 50vw, 100vw": {
     "el": "(ελάχ. πλάτος: 768 px) 50vw, 100vw",
     "de": "(Mindestbreite: 768px) 50vw, 100vw"
-  },
-  "(optional)": {
-    "el": "(προαιρετικό)",
-    "de": "(optional)"
   },
   "(prefers-reduced-motion: reduce)": {
     "el": "(προτιμά-μειωμένη-κίνηση: μείωση)",
@@ -32,6 +36,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "**Can BI Solutions help choose a BI tool?** Yes. Tool choice fits inside BI and semantic modeling work because the tool should support the wider reporting operating model.": {
     "el": "**Μπορεί το BI Solutions να βοηθήσει στην επιλογή ενός εργαλείου BI;** Ναι. Η επιλογή εργαλείου ταιριάζει στο BI και στο έργο σημασιολογικής μοντελοποίησης, επειδή το εργαλείο θα πρέπει να υποστηρίζει το ευρύτερο μοντέλο λειτουργίας αναφοράς.",
     "de": "**Können BI-Lösungen bei der Auswahl eines BI-Tools helfen?** Ja. Die Wahl des Tools passt in die BI- und semantische Modellierungsarbeit, da das Tool das umfassendere Berichtsbetriebsmodell unterstützen sollte."
+  },
+  "**Can a dashboard be good if the model is bad?** It can look good temporarily, but it becomes harder to maintain, validate, and scale as more users depend on it.": {
+    "el": "**Μπορεί ένας πίνακας εργαλείων να είναι καλός εάν το μοντέλο είναι κακό;** Μπορεί να φαίνεται καλός προσωρινά, αλλά γίνεται πιο δύσκολο να διατηρηθεί, να επικυρωθεί και να κλιμακωθεί καθώς περισσότεροι χρήστες εξαρτώνται από αυτό.",
+    "de": "**Kann ein Dashboard gut sein, wenn das Modell schlecht ist?** Es kann vorübergehend gut aussehen, aber es wird schwieriger zu pflegen, zu validieren und zu skalieren, da immer mehr Benutzer darauf angewiesen sind."
   },
   "**Can a redesign improve lead quality?** Yes, if the new structure clarifies services, filters weak-fit enquiries, shows proof, and gives visitors a clearer route to contact.": {
     "el": "**Μπορεί ένας επανασχεδιασμός να βελτιώσει την ποιότητα των δυνητικών πελατών;** Ναι, εάν η νέα δομή διευκρινίζει τις υπηρεσίες, φιλτράρει ερωτήματα με αδύναμη προσαρμογή, παρουσιάζει αποδείξεις και δίνει στους επισκέπτες μια πιο ξεκάθαρη διαδρομή επικοινωνίας.",
@@ -133,6 +141,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "**Ποιότητα εκτύπωσης:** Οι χρήστες εντόπισαν νέες επιλογές λήψης ανάλυσης 2K και 4K.",
     "de": "**Druckbereite Qualität:** Benutzer haben neue Downloadoptionen mit 2K- und 4K-Auflösung entdeckt."
   },
+  "**Privacy Note:** If you do test this, remember that imported data is recorded in your Gemini Activity. Always scrub sensitive API keys or personal identifiers before migrating large datasets!": {
+    "el": "**Σημείωση απορρήτου:** Εάν το δοκιμάσετε, θυμηθείτε ότι τα εισαγόμενα δεδομένα καταγράφονται στη Δραστηριότητα Gemini σας. Να καθαρίζετε πάντα ευαίσθητα κλειδιά API ή προσωπικά αναγνωριστικά πριν από τη μετεγκατάσταση μεγάλων συνόλων δεδομένων!",
+    "de": "**Hinweis zum Datenschutz:** Wenn Sie dies testen, denken Sie daran, dass importierte Daten in Ihrer Gemini-Aktivität aufgezeichnet werden. Bereinigen Sie immer vertrauliche API-Schlüssel oder persönliche Identifikatoren, bevor Sie große Datensätze migrieren!"
+  },
   "**Professional Focus:** The 4K setting is specifically labeled \"Best for print,\" signaling that Gemini is moving from casual AI sketches to professional asset production.": {
     "el": "**Επαγγελματική εστίαση:** Η ρύθμιση 4K φέρει την ειδική ένδειξη \"Best for print\", σηματοδοτώντας ότι το Gemini μεταβαίνει από τα περιστασιακά σκίτσα AI στην επαγγελματική παραγωγή περιουσιακών στοιχείων.",
     "de": "**Professioneller Fokus:** Die 4K-Einstellung ist ausdrücklich mit „Best for Print“ gekennzeichnet, was signalisiert, dass Gemini von gelegentlichen KI-Skizzen zur professionellen Asset-Produktion übergeht."
@@ -177,6 +189,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "**Πρέπει οι απαιτήσεις να περιλαμβάνουν παραδείγματα σχεδίασης;** Ναι, αλλά τα παραδείγματα θα πρέπει να υποστηρίζουν την επιχειρηματική ερώτηση. Οι οπτικές αναφορές είναι χρήσιμες μόνο αφού η ομάδα συμφωνήσει τι πρέπει να αποφασίσει ή να παρακολουθήσει ο πίνακας εργαλείων.",
     "de": "**Sollten die Anforderungen Designbeispiele enthalten?** Ja, aber Beispiele sollten die Geschäftsfrage unterstützen. Visuelle Referenzen sind erst dann nützlich, wenn sich das Team darauf geeinigt hat, was das Dashboard entscheiden oder überwachen muss."
   },
+  "**Should semantic model work happen before dashboard design?** Usually yes. Clear modeling decisions make dashboard design faster and reduce the chance of rebuilding visuals later.": {
+    "el": "**Πρέπει να συμβεί το σημασιολογικό μοντέλο πριν από τη σχεδίαση του ταμπλό;** Συνήθως ναι. Οι σαφείς αποφάσεις μοντελοποίησης κάνουν πιο γρήγορο τον σχεδιασμό του ταμπλό και μειώνουν την πιθανότητα ανακατασκευής γραφικών αργότερα.",
+    "de": "**Sollte die semantische Modellarbeit vor dem Dashboard-Design erfolgen?** Normalerweise ja. Klare Modellierungsentscheidungen beschleunigen das Dashboard-Design und verringern die Wahrscheinlichkeit, dass die Visuals später neu erstellt werden müssen."
+  },
   "**Should teams automate everything immediately?** No. Start with valuable, stable workflows, then add tests, ownership, schedules, and monitoring.": {
     "el": "**Πρέπει οι ομάδες να αυτοματοποιούν τα πάντα αμέσως;** Όχι. Ξεκινήστε με πολύτιμες, σταθερές ροές εργασίας και, στη συνέχεια, προσθέστε δοκιμές, ιδιοκτησία, χρονοδιαγράμματα και παρακολούθηση.",
     "de": "**Sollten Teams alles sofort automatisieren?** Nein. Beginnen Sie mit wertvollen, stabilen Arbeitsabläufen und fügen Sie dann Tests, Verantwortung, Zeitpläne und Überwachung hinzu."
@@ -192,6 +208,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "**The Result:** Your past threads are ingested, potentially allowing Gemini to maintain the context of your previous work without a cold start.": {
     "el": "**Το αποτέλεσμα:** Τα προηγούμενα νήματα σας απορροφώνται, επιτρέποντας δυνητικά στους Διδύμους να διατηρήσουν το πλαίσιο της προηγούμενης δουλειάς σας χωρίς ψυχρή εκκίνηση.",
     "de": "**Das Ergebnis:** Ihre vergangenen Threads werden aufgenommen, sodass Gemini möglicherweise den Kontext Ihrer vorherigen Arbeit ohne Kaltstart beibehalten kann."
+  },
+  "**The product goal is simple:** turn semantic model review into a repeatable product workflow, not an improvised chain of disconnected tools.": {
+    "el": "**Ο στόχος του προϊόντος είναι απλός:** μετατρέψτε τη σημασιολογική ανασκόπηση του μοντέλου σε μια επαναλαμβανόμενη ροή εργασίας προϊόντος, όχι σε μια αυτοσχέδια αλυσίδα αποσυνδεδεμένων εργαλείων.",
+    "de": "**Das Produktziel ist einfach:** Verwandeln Sie die semantische Modellüberprüfung in einen wiederholbaren Produktworkflow und nicht in eine improvisierte Kette getrennter Tools."
   },
   "**What document tasks are good first AI use cases?** Summaries, classification, field extraction, comparison, drafting from approved sources, and internal knowledge retrieval are practical starting points.": {
     "el": "**Ποιες εργασίες εγγράφων είναι καλές περιπτώσεις πρώτης χρήσης τεχνητής νοημοσύνης;** Οι περιλήψεις, η ταξινόμηση, η εξαγωγή πεδίου, η σύγκριση, η σύνταξη από εγκεκριμένες πηγές και η εσωτερική ανάκτηση γνώσεων είναι πρακτικά σημεία εκκίνησης.",
@@ -212,6 +232,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "**What is prompt workflow design?** It is the process of turning a prompt into a repeatable workflow with inputs, constraints, output format, review criteria, and ownership.": {
     "el": "**Τι είναι η άμεση σχεδίαση ροής εργασίας;** Είναι η διαδικασία μετατροπής μιας προτροπής σε επαναλαμβανόμενη ροή εργασίας με εισόδους, περιορισμούς, μορφή εξόδου, κριτήρια αναθεώρησης και ιδιοκτησία.",
     "de": "**Was ist Prompt-Workflow-Design?** Dabei handelt es sich um den Prozess, einen Prompt in einen wiederholbaren Workflow mit Eingaben, Einschränkungen, Ausgabeformat, Überprüfungskriterien und Eigentümerschaft umzuwandeln."
+  },
+  "**What is semantic modeling in Power BI?** It is the design of tables, relationships, measures, and definitions that turn raw data into reusable business meaning.": {
+    "el": "**Τι είναι η σημασιολογική μοντελοποίηση στο Power BI;** Είναι ο σχεδιασμός πινάκων, σχέσεων, μέτρων και ορισμών που μετατρέπουν τα ακατέργαστα δεδομένα σε επαναχρησιμοποιήσιμο επιχειρηματικό νόημα.",
+    "de": "**Was ist semantische Modellierung in Power BI?** Es ist der Entwurf von Tabellen, Beziehungen, Kennzahlen und Definitionen, der Rohdaten in wiederverwendbare geschäftliche Bedeutung umwandelt."
   },
   "**What is the biggest forecasting mistake?** The biggest mistake is building a model before defining the decision it supports and the action the business will take.": {
     "el": "**Ποιο είναι το μεγαλύτερο λάθος πρόβλεψης;** Το μεγαλύτερο λάθος είναι να δημιουργήσετε ένα μοντέλο πριν καθορίσετε την απόφαση που υποστηρίζει και τη δράση που θα λάβει η επιχείρηση.",
@@ -345,17 +369,49 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "-20% 0px -55% 0px",
     "de": "-20 % 0 Pixel -55 % 0 Pixel"
   },
+  "-band": {
+    "el": "- μπάντα",
+    "de": "-Band"
+  },
   "-left-4 md:-left-12": {
     "el": "-αριστερά-4 μδ:-αριστερά-12",
     "de": "-left-4 md:-left-12"
+  },
+  "-motif": {
+    "el": "-μοτίβο",
+    "de": "-Motiv"
+  },
+  "-motif-shadow": {
+    "el": "-μοτίβο-σκιά",
+    "de": "-Motivschatten"
+  },
+  "-panel": {
+    "el": "- πάνελ",
+    "de": "-Panel"
+  },
+  "-paper-shadow": {
+    "el": "-χαρτί-σκιά",
+    "de": "-Papierschatten"
   },
   "-right-4 md:-right-12": {
     "el": "-δεξιά-4 μδ:-δεξιά-12",
     "de": "-right-4 md:-right-12"
   },
+  "-surface": {
+    "el": "- επιφάνεια",
+    "de": "-Oberfläche"
+  },
+  "-texture": {
+    "el": "- υφή",
+    "de": "-Textur"
+  },
   "1 year ago": {
     "el": "πριν 1 χρόνο",
     "de": "Vor 1 Jahr"
+  },
+  "1-3-months": {
+    "el": "1-3 μηνών",
+    "de": "1-3 Monate"
   },
   "1. Data Controller": {
     "el": "1. Υπεύθυνος επεξεργασίας δεδομένων",
@@ -381,6 +437,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "11. Επικοινωνία",
     "de": "11. Kontakt"
   },
+  "1280w": {
+    "el": "1280w",
+    "de": "1280 W"
+  },
   "2 months ago": {
     "el": "πριν 2 μήνες",
     "de": "Vor 2 Monaten"
@@ -392,6 +452,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "2. User Accounts": {
     "el": "2. Λογαριασμοί χρηστών",
     "de": "2. Benutzerkonten"
+  },
+  "3-6-months": {
+    "el": "3-6 μηνών",
+    "de": "3-6 Monate"
   },
   "3. Acceptable Use": {
     "el": "3. Αποδεκτή χρήση",
@@ -437,6 +501,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "6. Πνευματική Ιδιοκτησία",
     "de": "6. Geistiges Eigentum"
   },
+  "600w,": {
+    "el": "600w,",
+    "de": "600w,"
+  },
   "7 min read": {
     "el": "7 λεπτά ανάγνωση",
     "de": "7 Min. gelesen"
@@ -473,21 +541,21 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "90 ημερών",
     "de": "90 Tage"
   },
-  "> **Privacy Note:** If you do test this, remember that imported data is recorded in your Gemini Activity. Always scrub sensitive API keys or personal identifiers before migrating large datasets!": {
-    "el": "> **Σημείωση απορρήτου:** Εάν το δοκιμάσετε, να θυμάστε ότι τα εισαγόμενα δεδομένα καταγράφονται στη Δραστηριότητα Gemini σας. Να καθαρίζετε πάντα ευαίσθητα κλειδιά API ή προσωπικά αναγνωριστικά πριν από τη μετεγκατάσταση μεγάλων συνόλων δεδομένων!",
-    "de": "> **Hinweis zum Datenschutz:** Wenn Sie dies testen, denken Sie daran, dass importierte Daten in Ihrer Gemini-Aktivität aufgezeichnet werden. Bereinigen Sie immer vertrauliche API-Schlüssel oder persönliche Identifikatoren, bevor Sie große Datensätze migrieren!"
+  "?need=": {
+    "el": "?ανάγκη=",
+    "de": "?brauchen="
+  },
+  "@/assets/blog/gemini-import-feature.png": {
+    "el": "@/assets/blog/gemini-import-feature.png",
+    "de": "@/assets/blog/gemini-import-feature.png"
+  },
+  "@/assets/blog/power-bi-solutions-semantic-model-review.svg": {
+    "el": "@/assets/blog/power-bi-solutions-semantic-model-review.svg",
+    "de": "@/assets/blog/power-bi-solutions-semantic-model-review.svg"
   },
   "@/assets/case-studies/blade-and-comb-cover.webp": {
     "el": "@/assets/case-studies/blade-and-comb-cover.webp",
     "de": "@/assets/case-studies/blade-and-comb-cover.webp"
-  },
-  "@/assets/case-studies/iaea-dashboard.webp": {
-    "el": "@/assets/case-studies/iaea-dashboard.webp",
-    "de": "@/assets/case-studies/iaea-dashboard.webp"
-  },
-  "@/assets/case-studies/ifc-dashboard.webp": {
-    "el": "@/assets/case-studies/ifc-dashboard.webp",
-    "de": "@/assets/case-studies/ifc-dashboard.webp"
   },
   "@/assets/case-studies/paroli-cover.webp": {
     "el": "@/assets/case-studies/paroli-cover.webp",
@@ -497,25 +565,25 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "@/assets/case-studies/studios-kalliopi-cover.webp",
     "de": "@/assets/case-studies/studios-kalliopi-cover.webp"
   },
-  "@/assets/case-studies/unicef-dashboard.webp": {
-    "el": "@/assets/case-studies/unicef-dashboard.webp",
-    "de": "@/assets/case-studies/unicef-dashboard.webp"
-  },
   "@/assets/case-studies/vanta-motors-cover.webp": {
     "el": "@/assets/case-studies/vanta-motors-cover.webp",
     "de": "@/assets/case-studies/vanta-motors-cover.webp"
   },
-  "@/assets/editorial/gemini-import-feature.png": {
-    "el": "@/assets/editorial/gemini-import-feature.png",
-    "de": "@/assets/editorial/gemini-import-feature.png"
+  "@/assets/dashboards/iaea_dashboard.webp": {
+    "el": "@/assets/dashboards/iaea_dashboard.webp",
+    "de": "@/assets/dashboards/iaea_dashboard.webp"
   },
-  "@/assets/editorial/power-bi-solutions-semantic-model-review.svg": {
-    "el": "@/assets/editorial/power-bi-solutions-semantic-model-review.svg",
-    "de": "@/assets/editorial/power-bi-solutions-semantic-model-review.svg"
+  "@/assets/dashboards/ifc_dashboard.webp": {
+    "el": "@/assets/dashboards/ifc_dashboard.webp",
+    "de": "@/assets/dashboards/ifc_dashboard.webp"
   },
-  "@/assets/people/ioannis-bekas.jpg": {
-    "el": "@/assets/people/ioannis-bekas.jpg",
-    "de": "@/assets/people/ioannis-bekas.jpg"
+  "@/assets/dashboards/unicef_dashboard.webp": {
+    "el": "@/assets/dashboards/unicef_dashboard.webp",
+    "de": "@/assets/dashboards/unicef_dashboard.webp"
+  },
+  "@/assets/founder-photo-2.jpg": {
+    "el": "@/assets/founder-photo-2.jpg",
+    "de": "@/assets/founder-photo-2.jpg"
   },
   "@/components/CookieConsent": {
     "el": "@/components/CookieConsent",
@@ -664,6 +732,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "A Power BI project should not begin with chart selection. It should begin with requirements that explain what decisions the dashboard supports and who is responsible for the numbers.": {
     "el": "Ένα έργο Power BI δεν πρέπει να ξεκινά με επιλογή γραφήματος. Θα πρέπει να ξεκινά με απαιτήσεις που εξηγούν ποιες αποφάσεις υποστηρίζει ο πίνακας εργαλείων και ποιος είναι υπεύθυνος για τους αριθμούς.",
     "de": "Ein Power BI-Projekt sollte nicht mit der Diagrammauswahl beginnen. Es sollte mit Anforderungen beginnen, die erklären, welche Entscheidungen das Dashboard unterstützt und wer für die Zahlen verantwortlich ist."
+  },
+  "A Power BI report can look impressive while the underlying model is quietly creating problems. Slow visuals, duplicated measures, unclear naming, ambiguous relationships, and inconsistent KPI definitions usually start below the report canvas.": {
+    "el": "Μια αναφορά Power BI μπορεί να φαίνεται εντυπωσιακή ενώ το υποκείμενο μοντέλο δημιουργεί αθόρυβα προβλήματα. Αργή γραφικά, διπλότυπα μέτρα, ασαφής ονομασία, διφορούμενες σχέσεις και ασυνεπείς ορισμοί KPI συνήθως ξεκινούν κάτω από τον καμβά της αναφοράς.",
+    "de": "Ein Power BI-Bericht kann beeindruckend aussehen, während das zugrunde liegende Modell stillschweigend Probleme verursacht. Langsame Grafiken, doppelte Kennzahlen, unklare Benennungen, mehrdeutige Beziehungen und inkonsistente KPI-Definitionen beginnen normalerweise unterhalb des Berichtsbereichs."
+  },
+  "A better starting point for semantic model analysis": {
+    "el": "Ένα καλύτερο σημείο εκκίνησης για την ανάλυση σημασιολογικού μοντέλου",
+    "de": "Ein besserer Ausgangspunkt für die semantische Modellanalyse"
   },
   "A booking flow for a medical practice, a consultant, a training company, and a technical support provider should not ask for the same information. The form should match the operational decision the team needs to make before the appointment.": {
     "el": "Μια ροή κρατήσεων για ιατρείο, σύμβουλο, εταιρεία εκπαίδευσης και πάροχο τεχνικής υποστήριξης δεν θα πρέπει να ζητά τις ίδιες πληροφορίες. Το έντυπο πρέπει να ταιριάζει με την επιχειρησιακή απόφαση που πρέπει να λάβει η ομάδα πριν από το ραντεβού.",
@@ -853,6 +929,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Μια πρακτική πολιτική θα πρέπει να ταξινομεί τις περιπτώσεις χρήσης ανά κίνδυνο και να δίνει στις ομάδες σαφή παραδείγματα. Αυτό διευκολύνει τη συμμόρφωση, επειδή οι εργαζόμενοι μπορούν να κατανοήσουν τη διαφορά μεταξύ αποδεκτής βοήθειας και περιορισμένης αυτοματοποίησης.",
     "de": "Eine praktische Richtlinie sollte Anwendungsfälle nach Risiko klassifizieren und den Teams klare Beispiele geben. Das erleichtert die Compliance, da die Mitarbeiter den Unterschied zwischen akzeptabler Unterstützung und eingeschränkter Automatisierung verstehen können."
   },
+  "A practical semantic model review checklist": {
+    "el": "Μια πρακτική λίστα ελέγχου ανασκόπησης σημασιολογικού μοντέλου",
+    "de": "Eine praktische Checkliste für die Überprüfung semantischer Modelle"
+  },
   "A practical shortlist for AI consulting in Greece": {
     "el": "Μια πρακτική σύντομη λίστα για συμβουλευτικές υπηρεσίες AI στην Ελλάδα",
     "de": "Eine praktische Auswahlliste für KI-Beratung in Griechenland"
@@ -1005,6 +1085,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Μια χρήσιμη προτροπή είναι μια αρχή, όχι μια διαδικασία. Οι επιχειρηματικές ομάδες χρειάζονται επαναλαμβανόμενες ροές εργασίας τεχνητής νοημοσύνης που καθορίζουν την είσοδο, την αναμενόμενη έξοδο, το πρότυπο ελέγχου και την επόμενη ενέργεια.",
     "de": "Eine nützliche Eingabeaufforderung ist ein Anfang, kein Prozess. Geschäftsteams benötigen wiederholbare KI-Workflows, die die Eingabe, die erwartete Ausgabe, den Überprüfungsstandard und die nächste Aktion definieren."
   },
+  "A useful review should inspect table naming, relationship direction, inactive relationships, measure folders, duplicate calculations, date table design, role-playing dimensions, security rules, and performance-sensitive DAX patterns. It should also check whether business users can understand the model without asking the original developer to explain every decision.": {
+    "el": "Μια χρήσιμη ανασκόπηση θα πρέπει να επιθεωρήσει την ονομασία του πίνακα, την κατεύθυνση της σχέσης, τις ανενεργές σχέσεις, τους φακέλους μετρήσεων, τους διπλότυπους υπολογισμούς, τον σχεδιασμό πίνακα ημερομηνιών, τις διαστάσεις του παιχνιδιού ρόλων, τους κανόνες ασφαλείας και τα μοτίβα DAX ευαίσθητα στην απόδοση. Θα πρέπει επίσης να ελέγχει εάν οι επιχειρησιακοί χρήστες μπορούν να κατανοήσουν το μοντέλο χωρίς να ζητούν από τον αρχικό προγραμματιστή να εξηγήσει κάθε απόφαση.",
+    "de": "Eine nützliche Überprüfung sollte Tabellenbenennung, Beziehungsrichtung, inaktive Beziehungen, Maßordner, doppelte Berechnungen, Datumstabellendesign, Rollenspieldimensionen, Sicherheitsregeln und leistungsempfindliche DAX-Muster untersuchen. Es sollte auch geprüft werden, ob Geschäftsanwender das Modell verstehen können, ohne jede Entscheidung vom ursprünglichen Entwickler erläutern zu müssen."
+  },
   "A useful starting point": {
     "el": "Χρήσιμο σημείο εκκίνησης",
     "de": "Ein nützlicher Ausgangspunkt"
@@ -1049,6 +1133,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Βοηθός AI Διακυβέρνηση και εταιρική πολιτική",
     "de": "AI Assistant Governance und Unternehmenspolitik"
   },
+  "AI Assistant Governance: What Company Policy Should Cover": {
+    "el": "Βοηθός Διακυβέρνησης AI: Τι πρέπει να καλύπτει η πολιτική της εταιρείας",
+    "de": "AI Assistant Governance: Was die Unternehmensrichtlinien abdecken sollten"
+  },
   "AI Automation & Workflow Consulting": {
     "el": "AI Automation & Workflow Consulting",
     "de": "KI-Automatisierung und Workflow-Beratung"
@@ -1068,6 +1156,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "AI Consulting for Greek Businesses": {
     "el": "AI Consulting για Ελληνικές Επιχειρήσεις",
     "de": "KI-Beratung für griechische Unternehmen"
+  },
+  "AI Consulting for Greek Businesses: Practical Use Cases Beyond Hype": {
+    "el": "AI Consulting για Ελληνικές Επιχειρήσεις: Πρακτικές περιπτώσεις χρήσης πέρα από το Hype",
+    "de": "KI-Beratung für griechische Unternehmen: Praktische Anwendungsfälle jenseits des Hype"
   },
   "AI Document Workflows": {
     "el": "Ροές εργασιών εγγράφων AI",
@@ -1092,6 +1184,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "AI Literacy for Teams": {
     "el": "AI Literacy for Teams",
     "de": "KI-Kompetenz für Teams"
+  },
+  "AI Literacy for Teams: How to Adopt AI Without Creating Operational Risk": {
+    "el": "AI Literacy for Teams: Πώς να υιοθετήσετε το AI χωρίς να δημιουργείτε λειτουργικό κίνδυνο",
+    "de": "KI-Kompetenz für Teams: Wie man KI einführt, ohne betriebliche Risiken zu schaffen"
   },
   "AI Productionization": {
     "el": "Παραγωγή AI",
@@ -1240,6 +1336,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "AI governance, literacy, and adoption consulting": {
     "el": "Συμβουλευτική διακυβέρνησης, παιδείας και υιοθεσίας AI",
     "de": "Beratung zu KI-Governance, Alphabetisierung und Einführung"
+  },
+  "AI guidance that is actually grounded in the model": {
+    "el": "Καθοδήγηση AI που στηρίζεται πραγματικά στο μοντέλο",
+    "de": "KI-Anleitung, die tatsächlich im Modell verankert ist"
   },
   "AI implementation consulting": {
     "el": "Συμβουλευτική για την εφαρμογή AI",
@@ -1409,6 +1509,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Σχετικά με τον συγγραφέα",
     "de": "Über den Autor"
   },
+  "Abschlussnote: 9,3/10": {
+    "el": "Abschlussnote: 9,3/10",
+    "de": "Abschlussnote: 9,3/10"
+  },
   "Accept both": {
     "el": "Αποδεχτείτε και τα δύο",
     "de": "Akzeptiere beides"
@@ -1445,6 +1549,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Μέτρηση διαφημίσεων (Google Ads)",
     "de": "Anzeigenmessung (Google Ads)"
   },
+  "Ad measurement cookies:": {
+    "el": "Cookie μέτρησης διαφημίσεων:",
+    "de": "Cookies zur Anzeigenmessung:"
+  },
   "Add metric-grounded commentary, natural-language access, and reviewable AI assistance to governed business intelligence workflows.": {
     "el": "Προσθέστε σχολιασμούς βάσει μετρήσεων, πρόσβαση σε φυσική γλώσσα και αναθεωρήσιμη βοήθεια τεχνητής νοημοσύνης στις ελεγχόμενες ροές εργασίας επιχειρηματικής ευφυΐας.",
     "de": "Fügen Sie metrisch fundierte Kommentare, Zugriff in natürlicher Sprache und überprüfbare KI-Unterstützung zu geregelten Business-Intelligence-Workflows hinzu."
@@ -1464,6 +1572,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Advanced Analytics & AI Consulting": {
     "el": "Advanced Analytics & AI Consulting",
     "de": "Erweiterte Analytik und KI-Beratung"
+  },
+  "Advisory and ongoing support": {
+    "el": "Συμβουλευτική και διαρκής υποστήριξη",
+    "de": "Beratung und laufende Betreuung"
   },
   "After one workflow is stable, the team has a pattern it can reuse. That is how MLOps becomes a delivery habit rather than an enterprise buzzword.": {
     "el": "Αφού μια ροή εργασίας είναι σταθερή, η ομάδα έχει ένα μοτίβο που μπορεί να επαναχρησιμοποιήσει. Αυτός είναι ο τρόπος με τον οποίο τα MLOps γίνονται συνήθεια παράδοσης και όχι εταιρικό τσιτάτο.",
@@ -1489,6 +1601,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ανάπτυξη προτύπου Airtable",
     "de": "Entwicklung von Airtable-Vorlagen"
   },
+  "Aktuelle Rolle oder Karrierestufe": {
+    "el": "Aktuelle Rolle oder Karrierestufe",
+    "de": "Aktuelle Rolle oder Karrierestufe"
+  },
   "All": {
     "el": "Όλα",
     "de": "Alle"
@@ -1496,6 +1612,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "All services": {
     "el": "Όλες οι υπηρεσίες",
     "de": "Alle Dienstleistungen"
+  },
+  "Alle Kompetenzen auf einer Seite ansehen.": {
+    "el": "Alle Kompetenzen auf einer Seite ansehen.",
+    "de": "Alle Kompetenzen auf einer Seite ansehen."
+  },
+  "Alle Leistungen": {
+    "el": "Alle Leistungen",
+    "de": "Alle Leistungen"
   },
   "An AI assistance layer built on governed metrics without replacing the core reporting model": {
     "el": "Ένα επίπεδο βοήθειας AI που βασίζεται σε ελεγχόμενες μετρήσεις χωρίς να αντικαθιστά το βασικό μοντέλο αναφοράς",
@@ -1557,6 +1681,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Παρουσιάστηκε απροσδόκητο σφάλμα. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.",
     "de": "Es ist ein unerwarteter Fehler aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut."
   },
+  "Analyse (Google Analytics)": {
+    "el": "Ανάλυση (Google Analytics)",
+    "de": "Analysieren (Google Analytics)"
+  },
   "Analytical tooling": {
     "el": "Αναλυτικά εργαλεία",
     "de": "Analysetools"
@@ -1580,6 +1708,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Analytics Roadmap": {
     "el": "Οδικός χάρτης Analytics",
     "de": "Analytics-Roadmap"
+  },
+  "Analytics Roadmap: The First 90 Days": {
+    "el": "Οδικός χάρτης Analytics: Οι πρώτες 90 ημέρες",
+    "de": "Analytics-Roadmap: Die ersten 90 Tage"
+  },
+  "Analytics Roadmap: What to Do in the First 90 Days": {
+    "el": "Οδικός χάρτης Analytics: Τι πρέπει να κάνετε τις πρώτες 90 ημέρες",
+    "de": "Analytics-Roadmap: Was in den ersten 90 Tagen zu tun ist"
   },
   "Analytics automation becomes useful when transformations, refreshes, and quality checks need to run reliably without manual coordination.": {
     "el": "Η αυτοματοποίηση του Analytics γίνεται χρήσιμη όταν οι μετασχηματισμοί, οι ανανεώσεις και οι έλεγχοι ποιότητας πρέπει να εκτελούνται αξιόπιστα χωρίς μη αυτόματο συντονισμό.",
@@ -1621,9 +1757,21 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ο σχεδιασμός με επίγνωση του Analytics σημαίνει ότι η διεπαφή και το σχέδιο μέτρησης αλληλοϋποστηρίζονται. Εάν η επιχείρηση χρειάζεται περισσότερους κατάλληλους δυνητικούς πελάτες, ο ιστότοπος θα πρέπει να έχει σαφείς διαδρομές μετατροπής και συμβάντα που να δείχνουν ποιες διαδρομές λειτουργούν.",
     "de": "Analyseorientiertes Design bedeutet, dass sich die Schnittstelle und der Messplan gegenseitig unterstützen. Wenn das Unternehmen mehr qualifizierte Leads benötigt, sollte die Website über klare Conversion-Pfade und Ereignisse verfügen, die zeigen, welche Pfade funktionieren."
   },
+  "Angewandte KI": {
+    "el": "Angewandte ΚΙ",
+    "de": "Angewandte KI"
+  },
+  "Another important design decision is the authentication boundary. Power BI Solutions lives under the BI Solutions brand and domain, but it keeps its own product-specific access flow. That separation matters for roadmap flexibility, user management, and product state.": {
+    "el": "Μια άλλη σημαντική απόφαση σχεδιασμού είναι το όριο ελέγχου ταυτότητας. Το Power BI Solutions ζει κάτω από την επωνυμία και τον τομέα BI Solutions, αλλά διατηρεί τη δική του ροή πρόσβασης για συγκεκριμένο προϊόν. Αυτός ο διαχωρισμός έχει σημασία για την ευελιξία του οδικού χάρτη, τη διαχείριση των χρηστών και την κατάσταση του προϊόντος.",
+    "de": "Eine weitere wichtige Designentscheidung ist die Authentifizierungsgrenze. Power BI Solutions läuft unter der Marke und Domäne BI Solutions, behält jedoch seinen eigenen produktspezifischen Zugriffsfluss bei. Diese Trennung ist wichtig für die Flexibilität der Roadmap, die Benutzerverwaltung und den Produktstatus."
+  },
   "Anthropic AI:": {
     "el": "Anthropic AI:",
     "de": "Anthropische KI:"
+  },
+  "Anzeigenmessung (Google Ads)": {
+    "el": "Anzeigenmessung (Google Ads)",
+    "de": "Anzeigenmessung (Google Ads)"
   },
   "Applied AI": {
     "el": "Εφαρμοσμένη τεχνητή νοημοσύνη",
@@ -1700,6 +1848,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Architecture": {
     "el": "Αρχιτεκτονική",
     "de": "Architektur"
+  },
+  "Are you sure you want to open the": {
+    "el": "Είστε βέβαιοι ότι θέλετε να ανοίξετε το",
+    "de": "Sind Sie sicher, dass Sie das öffnen möchten?"
   },
   "Article not found.": {
     "el": "Το άρθρο δεν βρέθηκε.",
@@ -1785,6 +1937,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ελέγξτε το περιεχόμενο πηγής, το κοινό, τα κανάλια, τις ευκαιρίες προϊόντων, τους κανόνες έγκρισης και τα τρέχοντα σημεία συμφόρησης",
     "de": "Überprüfen Sie den Quellinhalt, die Zielgruppe, die Kanäle, die Produktchancen, die Genehmigungsregeln und aktuelle Engpässe"
   },
+  "Aufbauen oder verbessern": {
+    "el": "Aufbauen oder verbessern",
+    "de": "Aufbauen oder verbessern"
+  },
+  "Ausbildung": {
+    "el": "Ausbildung",
+    "de": "Ausbildung"
+  },
+  "Austausch – Finanzmathematik, Universität Stockholm": {
+    "el": "Austausch – Finanzmathematik, Universität Stockholm",
+    "de": "Austausch – Finanzmathematik, Universität Stockholm"
+  },
+  "Auswahl speichern": {
+    "el": "Auswahl speichern",
+    "de": "Auswahl speichern"
+  },
   "Automate the stable workflows first": {
     "el": "Αυτοματοποιήστε πρώτα τις σταθερές ροές εργασίας",
     "de": "Automatisieren Sie zunächst die stabilen Arbeitsabläufe"
@@ -1825,6 +1993,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "B.Sc. στα Μαθηματικά & Μικρά στα Οικονομικά",
     "de": "B.Sc. in Mathematik und Nebenfach Wirtschaftswissenschaften"
   },
+  "B.Sc. in Mathematik mit Nebenfach Volkswirtschaftslehre": {
+    "el": "B.Sc. στο Mathematik mit Nebenfach Volkswirtschaftslehre",
+    "de": "B.Sc. in Mathematik mit Nebenfach Volkswirtschaftslehre"
+  },
   "B2B content operations": {
     "el": "Λειτουργίες περιεχομένου B2B",
     "de": "B2B-Content-Operationen"
@@ -1840,6 +2012,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "BI & reporting": {
     "el": "BI & αναφορά",
     "de": "BI und Reporting"
+  },
+  "BI Consulting: Dashboards as Infrastructure": {
+    "el": "BI Consulting: Οι πίνακες ελέγχου ως υποδομή",
+    "de": "BI-Beratung: Dashboards als Infrastruktur"
+  },
+  "BI Consulting: When Dashboards Become Business Infrastructure": {
+    "el": "BI Consulting: Όταν οι πίνακες ελέγχου γίνονται επιχειρηματική υποδομή",
+    "de": "BI-Beratung: Wenn Dashboards zur Geschäftsinfrastruktur werden"
   },
   "BI Solutions": {
     "el": "Λύσεις BI",
@@ -1977,6 +2157,30 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Πριν από την εφαρμογή, ορίστε τύπους KPI, πηγές δεδομένων, ρυθμό ανανέωσης, κανόνες πρόσβασης και αξιολογήστε τους κατόχους. Αυτό κάνει την πρώτη κατασκευή πιο αργή στα σωστά σημεία και πολύ πιο γρήγορη αργότερα.",
     "de": "Definieren Sie vor der Implementierung KPI-Formeln, Datenquellen, Aktualisierungsrhythmus, Zugriffsregeln und Bewertungseigentümer. Dadurch wird der erste Build an den richtigen Stellen langsamer und später deutlich schneller."
   },
+  "Beide akzeptieren": {
+    "el": "Beide akzeptieren",
+    "de": "Beide akzeptieren"
+  },
+  "Belastbare Grundlagen, Governance und Cloud-Umsetzung.": {
+    "el": "Belastbare Grundlagen, Governance und Cloud-Umsetzung.",
+    "de": "Belastbare Grundlagen, Governance und Cloud-Umsetzung."
+  },
+  "Berater für Datenstrategie": {
+    "el": "Berater für Datenstrategie",
+    "de": "Berater für Datenstrategie"
+  },
+  "Beratung und laufende Unterstützung": {
+    "el": "Beratung und laufende Unterstützung",
+    "de": "Beratung und laufende Unterstützung"
+  },
+  "Beschreiben Sie BI Solutions Group Ihren Bedarf an BI, KI, Daten, Automatisierung, Webanwendungen oder Mentoring und erhalten Sie einen fundierten nächsten Schritt.": {
+    "el": "Beschreiben Sie BI Solutions Group Ihren Bedarf an BI, KI, Date, Automatisierung, Webanwendungen oder Mentoring und erhalten Sie einen Fundierten nächsten Schritt.",
+    "de": "Beschreiben Sie BI Solutions Group Ihren Bedarf an BI, KI, Daten, Automatisierung, Webanwendungen oder Mentoring und erhalten Sie einen finanzierten nächsten Schritt."
+  },
+  "Beschreiben Sie die wesentlichen Punkte zu Reporting, KI, Daten, Automatisierung, digitalem Produkt, Content Operations, Teamkompetenzen oder Karriereziel. Ihr Briefing macht das erste Gespräch fokussiert und hilfreich.": {
+    "el": "Beschreiben Sie die wesentlichen Punkte zu Reporting, KI, Date, Automatisierung, Digitalem Produkt, Content Operations, Teamkompetenzen oder Karriereziel. Ihr Ενημέρωση macht das erste Gespräch fokussiert und hilfreich.",
+    "de": "Beschreiben Sie die wesentlichen Punkte zu Reporting, KI, Daten, Automatisierung, digitalem Produkt, Content Operations, Teamkompetenzen oder Karriereziel. Ihr Briefing macht das erste Gespräch fokussiert und hilfreich."
+  },
   "Best fit": {
     "el": "Καλύτερη εφαρμογή",
     "de": "Beste Passform"
@@ -1992,6 +2196,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Better data reduces AI risk": {
     "el": "Τα καλύτερα δεδομένα μειώνουν τον κίνδυνο AI",
     "de": "Bessere Daten reduzieren das KI-Risiko"
+  },
+  "Better models create better conversations": {
+    "el": "Τα καλύτερα μοντέλα δημιουργούν καλύτερες συνομιλίες",
+    "de": "Bessere Modelle führen zu besseren Gesprächen"
   },
   "Better questions improve systems": {
     "el": "Οι καλύτερες ερωτήσεις βελτιώνουν τα συστήματα",
@@ -2025,6 +2233,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Δημοσίευση ιστολογίου",
     "de": "BlogPosting"
   },
+  "Bonusaki demo events:": {
+    "el": "Εκδηλώσεις επίδειξης Bonusaki:",
+    "de": "Bonusaki-Demo-Events:"
+  },
+  "Bonusaki pilot data:": {
+    "el": "Δεδομένα πιλότου Bonusaki:",
+    "de": "Bonusaki-Pilotdaten:"
+  },
   "Bonusaki public preview and pilot routes may show the customer, merchant, and cashier experience. Real customer entitlements are created only when a live merchant pilot is enabled, a valid server-issued reward code exists, and the reward is accepted under the merchant's approved campaign rules. A live Bonusaki merchant pilot requires a separate written agreement covering campaign rules, prize inventory, cashier validation, fraud controls, privacy responsibilities, support expectations, and any commercial terms.": {
     "el": "Η δημόσια προεπισκόπηση και οι πιλοτικές διαδρομές Bonusaki ενδέχεται να δείχνουν την εμπειρία του πελάτη, του εμπόρου και του ταμία. Τα πραγματικά δικαιώματα πελατών δημιουργούνται μόνο όταν είναι ενεργοποιημένος ένας ζωντανός πιλότος εμπόρου, υπάρχει έγκυρος κωδικός ανταμοιβής που έχει εκδοθεί από διακομιστή και η ανταμοιβή γίνεται αποδεκτή σύμφωνα με τους εγκεκριμένους κανόνες καμπάνιας του εμπόρου. Ένας ζωντανός πιλότος εμπόρου Bonusaki απαιτεί ξεχωριστή γραπτή συμφωνία που να καλύπτει τους κανόνες καμπάνιας, το απόθεμα των βραβείων, την επικύρωση ταμείου, τους ελέγχους απάτης, τις ευθύνες απορρήτου, τις προσδοκίες υποστήριξης και τυχόν εμπορικούς όρους.",
     "de": "Die öffentlichen Vorschau- und Pilotrouten von Bonusaki können das Kunden-, Händler- und Kassierererlebnis zeigen. Echte Kundenansprüche werden nur dann erstellt, wenn ein Live-Händlerpilot aktiviert ist, ein gültiger, vom Server ausgegebener Prämiencode vorhanden ist und die Prämie gemäß den genehmigten Kampagnenregeln des Händlers akzeptiert wird. Für einen Live-Bonusaki-Händlerpiloten ist eine separate schriftliche Vereinbarung erforderlich, die Kampagnenregeln, Preisinventar, Kassierervalidierung, Betrugskontrollen, Datenschutzverantwortung, Supporterwartungen und alle kommerziellen Bedingungen abdeckt."
@@ -2032,6 +2248,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Booking Flow": {
     "el": "Ροή κρατήσεων",
     "de": "Buchungsablauf"
+  },
+  "Booking Flows for Service Businesses: Why the Form Is Part of the Product": {
+    "el": "Ροές κρατήσεων για επιχειρήσεις παροχής υπηρεσιών: Γιατί η φόρμα είναι μέρος του προϊόντος",
+    "de": "Buchungsabläufe für Dienstleistungsunternehmen: Warum das Formular Teil des Produkts ist"
   },
   "Booking is a workflow": {
     "el": "Η κράτηση είναι μια ροή εργασίας",
@@ -2053,6 +2273,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Φέρε τον στόχο σου. Θα διαμορφώσουμε το σωστό επόμενο βήμα.",
     "de": "Bringen Sie Ihr Ziel mit. Wir gestalten den richtigen nächsten Schritt."
   },
+  "Bringen Sie Ihr Ziel mit. Wir gestalten den richtigen nächsten Schritt.": {
+    "el": "Bringen Sie Ihr Ziel mit. Wir gestalten den richtigen nächsten Schritt.",
+    "de": "Bringen Sie Ihr Ziel mit. Wir gestalten den richtigen nächsten Schritt."
+  },
+  "Bringen Sie das Problem mit. Wir klären den richtigen nächsten Schritt.": {
+    "el": "Bringen Sie das Problem mit. Wir klären den richtigen nächsten Schritt.",
+    "de": "Bringen Sie das Problem mit. Wir klären den richtigen nächsten Schritt."
+  },
   "Browse all insights": {
     "el": "Περιηγηθείτε σε όλες τις πληροφορίες",
     "de": "Durchsuchen Sie alle Erkenntnisse"
@@ -2060,6 +2288,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Budget range": {
     "el": "Εύρος προϋπολογισμού",
     "de": "Budgetbereich"
+  },
+  "Budget range:": {
+    "el": "Εύρος προϋπολογισμού:",
+    "de": "Budgetbereich:"
+  },
+  "Budget range: Not requested": {
+    "el": "Εύρος προϋπολογισμού: Δεν ζητείται",
+    "de": "Budgetbereich: Nicht angefordert"
+  },
+  "Budgetrahmen": {
+    "el": "Προϋπολογιστές",
+    "de": "Budgetrahmen"
   },
   "Build AI-assisted systems that turn long-form expertise into approved content, coordinated distribution, and sellable digital products.": {
     "el": "Δημιουργήστε συστήματα με τη βοήθεια τεχνητής νοημοσύνης που μετατρέπουν την μακροχρόνια τεχνογνωσία σε εγκεκριμένο περιεχόμενο, συντονισμένη διανομή και πωλήσιμα ψηφιακά προϊόντα.",
@@ -2105,6 +2345,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Δημιουργήστε μακροχρόνιες ικανότητες μέσω εργαστηρίων που βασίζονται σε ρόλους, ωρών γραφείου, πρακτικής εκπαίδευσης ή καθοδήγησης ένας προς έναν.",
     "de": "Bauen Sie dauerhafte Fähigkeiten durch rollenbasierte Workshops, Sprechstunden, praktische Schulungen oder persönliche Beratung auf."
   },
+  "Build or improve": {
+    "el": "Κατασκευάστε ή βελτιώστε",
+    "de": "Bauen oder verbessern"
+  },
   "Build scope": {
     "el": "Δημιουργία εύρους",
     "de": "Umfang erstellen"
@@ -2149,6 +2393,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Υπηρεσίες Business Intelligence & Semantic Modelling",
     "de": "Business Intelligence- und semantische Modellierungsdienste"
   },
+  "Business Intelligence und Reporting": {
+    "el": "Business Intelligence και Reporting",
+    "de": "Business Intelligence und Reporting"
+  },
   "Business intelligence": {
     "el": "Επιχειρηματική ευφυΐα",
     "de": "Business Intelligence"
@@ -2169,6 +2417,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η εργασία επιχειρηματικής ευφυΐας γίνεται στρατηγική όταν οι πίνακες εργαλείων παύουν να αποτελούν μεμονωμένες αναφορές και αρχίζουν να λειτουργούν ως αξιόπιστη επιχειρηματική υποδομή.",
     "de": "Business-Intelligence-Arbeit wird strategisch, wenn Dashboards keine isolierten Berichte mehr sind und als vertrauenswürdige Geschäftsinfrastruktur funktionieren."
   },
+  "Business intelligence και αναφορές": {
+    "el": "Επιχειρηματική ευφυΐα και αναφορές",
+    "de": "Business-Intelligence-Analyse"
+  },
   "Business intelligence, AI, data and cloud foundations, web development, technical SEO and AI-search visibility, digital products, training, and mentorship.": {
     "el": "Επιχειρηματική ευφυΐα, τεχνητή νοημοσύνη, βάσεις δεδομένων και cloud, ανάπτυξη ιστού, τεχνικό SEO και ορατότητα αναζήτησης AI, ψηφιακά προϊόντα, εκπαίδευση και καθοδήγηση.",
     "de": "Business Intelligence, KI, Daten- und Cloud-Grundlagen, Webentwicklung, technisches SEO und KI-Suchsichtbarkeit, digitale Produkte, Schulung und Mentoring."
@@ -2180,6 +2432,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Business teams often want one number, but forecasts are more useful when they show uncertainty. Ranges, scenarios, and assumptions help teams avoid treating the model as certainty.": {
     "el": "Οι επιχειρηματικές ομάδες θέλουν συχνά έναν αριθμό, αλλά οι προβλέψεις είναι πιο χρήσιμες όταν δείχνουν αβεβαιότητα. Τα εύρη, τα σενάρια και οι υποθέσεις βοηθούν τις ομάδες να αποφύγουν να αντιμετωπίσουν το μοντέλο ως βεβαιότητα.",
     "de": "Geschäftsteams möchten oft eine Zahl, aber Prognosen sind nützlicher, wenn sie Unsicherheit aufweisen. Bereiche, Szenarien und Annahmen helfen Teams dabei, das Modell nicht als Gewissheit zu betrachten."
+  },
+  "Business-Intelligence-Projekt": {
+    "el": "Business-Intelligence-Projekt",
+    "de": "Business-Intelligence-Projekt"
   },
   "Buy when the workflow is standard, the tool is mature, integrations are simple, and the process does not create strategic differentiation.": {
     "el": "Αγοράστε όταν η ροή εργασίας είναι τυπική, το εργαλείο είναι ώριμο, οι ενσωματώσεις είναι απλές και η διαδικασία δεν δημιουργεί στρατηγική διαφοροποίηση.",
@@ -2269,6 +2525,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ο Κλοντ",
     "de": "Claude"
   },
+  "Clean semantic modeling reduces that friction. It gives teams a shared language for metrics and creates a more stable foundation for dashboards, automated reporting, and executive review.": {
+    "el": "Η καθαρή σημασιολογική μοντελοποίηση μειώνει αυτή την τριβή. Δίνει στις ομάδες μια κοινή γλώσσα για τις μετρήσεις και δημιουργεί μια πιο σταθερή βάση για πίνακες εργαλείων, αυτοματοποιημένες αναφορές και εκτελεστικό έλεγχο.",
+    "de": "Eine saubere semantische Modellierung verringert diese Reibung. Es gibt Teams eine gemeinsame Sprache für Metriken und schafft eine stabilere Grundlage für Dashboards, automatisierte Berichte und die Überprüfung durch Führungskräfte."
+  },
+  "Clean semantic models make reports easier to trust. Tables have a clear purpose. Measures are named consistently. Relationships are understandable. Business definitions live in one place instead of being recreated across pages and reports.": {
+    "el": "Τα καθαρά σημασιολογικά μοντέλα καθιστούν ευκολότερη την εμπιστοσύνη των αναφορών. Οι πίνακες έχουν ξεκάθαρο σκοπό. Τα μέτρα ονομάζονται με συνέπεια. Οι σχέσεις είναι κατανοητές. Οι επιχειρηματικοί ορισμοί ζουν σε ένα μέρος αντί να αναδημιουργούνται σε σελίδες και αναφορές.",
+    "de": "Saubere semantische Modelle machen Berichte vertrauenswürdiger. Tische haben einen klaren Zweck. Maßnahmen werden einheitlich benannt. Beziehungen sind verständlich. Geschäftsdefinitionen sind an einem Ort gespeichert und müssen nicht seiten- und berichtsübergreifend neu erstellt werden."
+  },
   "Clear accountability for critical data products, definitions, access, and quality incidents": {
     "el": "Ξεκάθαρη λογοδοσία για προϊόντα κρίσιμων δεδομένων, ορισμούς, πρόσβαση και περιστατικά ποιότητας",
     "de": "Klare Verantwortlichkeit für kritische Datenprodukte, Definitionen, Zugriffe und Qualitätsvorfälle"
@@ -2321,9 +2585,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Cloud Data Warehouse vs Spreadsheets",
     "de": "Cloud Data Warehouse vs. Tabellenkalkulationen"
   },
+  "Cloud Data Warehouse vs Spreadsheets: When the Move Becomes Worth It": {
+    "el": "Cloud Data Warehouse vs Spreadsheets: Όταν η κίνηση αξίζει τον κόπο",
+    "de": "Cloud Data Warehouse vs. Spreadsheets: Wenn sich der Umzug lohnt"
+  },
   "Cloud Migration": {
     "el": "Cloud Migration",
     "de": "Cloud-Migration"
+  },
+  "Cloud Migration for Analytics Teams: Moving Beyond Local Files and Manual Reports": {
+    "el": "Cloud Migration για ομάδες Analytics: Μετακίνηση πέρα από τοπικά αρχεία και μη αυτόματες αναφορές",
+    "de": "Cloud-Migration für Analytics-Teams: Über lokale Dateien und manuelle Berichte hinaus"
   },
   "Cloud Warehouse": {
     "el": "Cloud Warehouse",
@@ -2364,6 +2636,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Company Policy": {
     "el": "Πολιτική Εταιρείας",
     "de": "Unternehmenspolitik"
+  },
+  "Company or career stage:": {
+    "el": "Στάδιο εταιρείας ή καριέρας:",
+    "de": "Unternehmen bzw. Karrierestufe:"
   },
   "Comparable views across location, time, water type, and measurement context.": {
     "el": "Συγκρίσιμες προβολές σε τοποθεσία, χρόνο, τύπο νερού και περιβάλλον μέτρησης.",
@@ -2429,6 +2705,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Στοιχεία επικοινωνίας:",
     "de": "Kontaktdaten:"
   },
+  "Contact request failed with status": {
+    "el": "Το αίτημα επικοινωνίας απέτυχε με κατάσταση",
+    "de": "Kontaktanfrage mit Status fehlgeschlagen"
+  },
   "ContactPage": {
     "el": "Σελίδα Επικοινωνίας",
     "de": "Kontaktseite"
@@ -2436,6 +2716,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Content Operations & Digital Products": {
     "el": "Λειτουργίες περιεχομένου και ψηφιακά προϊόντα",
     "de": "Content Operations und digitale Produkte"
+  },
+  "Content Operations & digitale Produkte": {
+    "el": "Λειτουργίες Περιεχομένου & Ψηφιακά Προϊόντα",
+    "de": "Content Operations & digitale Produkte"
   },
   "Content Operations, Repurposing & Digital Products": {
     "el": "Λειτουργίες περιεχομένου, επαναχρησιμοποίηση και ψηφιακά προϊόντα",
@@ -2457,6 +2741,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Λειτουργίες περιεχομένου και ψηφιακά προϊόντα",
     "de": "Content Operations und digitale Produkte"
   },
+  "Content operations & ψηφιακά προϊόντα": {
+    "el": "Λειτουργίες περιεχομένου & ψηφιακά προϊόντα",
+    "de": "Inhaltsoperationen und Datenverarbeitung"
+  },
   "Content systems": {
     "el": "Συστήματα περιεχομένου",
     "de": "Inhaltssysteme"
@@ -2465,9 +2753,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ο όγκος περιεχομένου έχει ξεπεράσει τον χειροκίνητο συντονισμό μεταξύ συγγραφέων, συντακτών, σχεδιαστών και καναλιών",
     "de": "Das Inhaltsvolumen ist über die manuelle Koordination zwischen Autoren, Redakteuren, Designern und Kanälen hinausgewachsen"
   },
+  "Content-System oder digitales Produkt": {
+    "el": "Περιεχόμενο-Σύστημα ψηφιακού προϊόντος",
+    "de": "Content-System oder digitales Produkt"
+  },
   "Content-Type": {
     "el": "Περιεχόμενο-Τύπος",
     "de": "Inhaltstyp"
+  },
+  "Context:": {
+    "el": "Πλαίσιο:",
+    "de": "Kontext:"
   },
   "Continue with adjacent reads.": {
     "el": "Συνεχίστε με τις παρακείμενες αναγνώσεις.",
@@ -2505,9 +2801,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Οι ειδοποιήσεις για τα cookies, οι πολιτικές απορρήτου, ο σχεδιασμός εκδηλώσεων και οι συνήθειες διατήρησης διαμορφώνουν την εμπιστοσύνη. Το Analytics θα πρέπει να βελτιώνει τις αποφάσεις χωρίς να αποδυναμώνει την εμπιστοσύνη των χρηστών.",
     "de": "Cookie-Hinweise, Datenschutzrichtlinien, Veranstaltungsdesign und Aufbewahrungsgewohnheiten prägen das Vertrauen. Analytics soll Entscheidungen verbessern, ohne das Vertrauen der Benutzer zu schwächen."
   },
+  "Cookies & Messung": {
+    "el": "Cookies & Messung",
+    "de": "Cookies & Messung"
+  },
   "Cookies & measurement": {
     "el": "Cookies & μέτρηση",
     "de": "Cookies und Messung"
+  },
+  "Cookies & μέτρηση": {
+    "el": "Cookies & μέτρηση",
+    "de": "Cookies & Kekse"
   },
   "Coordinated distribution across owned channels with campaign tracking and performance dashboards": {
     "el": "Συντονισμένη διανομή σε ιδιόκτητα κανάλια με παρακολούθηση καμπάνιας και πίνακες ελέγχου απόδοσης",
@@ -2544,6 +2848,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Corporate Website": {
     "el": "Εταιρική Ιστοσελίδα",
     "de": "Unternehmenswebsite"
+  },
+  "Corporate Website Redesign: Warning Signs It Is Time to Rebuild": {
+    "el": "Επανασχεδιασμός εταιρικού ιστότοπου: Προειδοποιητικά σημάδια ότι είναι καιρός για ανακατασκευή",
+    "de": "Neugestaltung der Unternehmenswebsite: Warnzeichen Es ist Zeit für eine Neugestaltung"
   },
   "Corporate data and AI enablement, role-based workshops, Power BI training, AI literacy, and personalized career mentorship for professionals at every level.": {
     "el": "Εταιρικά δεδομένα και ενεργοποίηση τεχνητής νοημοσύνης, εργαστήρια βασισμένα σε ρόλους, εκπαίδευση στο Power BI, παιδεία τεχνητής νοημοσύνης και εξατομικευμένη καθοδήγηση σταδιοδρομίας για επαγγελματίες σε κάθε επίπεδο.",
@@ -2633,6 +2941,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Βελτιστοποίηση DAX, ανανέωσης, σχέσης και απόδοσης αναφοράς",
     "de": "DAX-, Aktualisierungs-, Beziehungs- und Berichtsleistungsoptimierung"
   },
+  "Das Briefing wird geprüft, bevor der nächste Schritt vorgeschlagen wird. Wenn die Aufgabe nicht zu uns passt, sagen wir das ebenfalls klar.": {
+    "el": "Das Briefing wird geprüft, bevor der nächste Schritt vorgeschlagen wird. Wenn die Aufgabe nicht zu uns pass, sagen wir das ebenfalls klar.",
+    "de": "Das Briefing wird geprüft, bevor der nächste Schritt vorgeschlagen wird. Wenn die Aufgabe nicht zu uns passt, sagen wir das ebenfalls klar."
+  },
   "Dashboard Requirements": {
     "el": "Απαιτήσεις πίνακα ελέγχου",
     "de": "Dashboard-Anforderungen"
@@ -2640,6 +2952,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Dashboard Requirements Before You Build": {
     "el": "Απαιτήσεις πίνακα ελέγχου πριν από την κατασκευή",
     "de": "Dashboard-Anforderungen vor dem Erstellen"
+  },
+  "Dashboard Requirements: What to Define Before a Power BI Build": {
+    "el": "Απαιτήσεις πίνακα εργαλείων: Τι πρέπει να ορίσετε πριν από μια έκδοση του Power BI",
+    "de": "Dashboard-Anforderungen: Was vor einem Power BI-Build zu definieren ist"
   },
   "Dashboards": {
     "el": "Ταμπλό",
@@ -2653,6 +2969,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ενεργοποίηση δεδομένων και τεχνητής νοημοσύνης, εκπαίδευση και καθοδήγηση σταδιοδρομίας",
     "de": "Daten- und KI-Befähigung, Schulung und Karriere-Mentoring"
   },
+  "Data Engineering und Cloud-Grundlagen": {
+    "el": "Data Engineering und Cloud-Grundlagen",
+    "de": "Data Engineering und Cloud-Grundlagen"
+  },
   "Data Governance": {
     "el": "Διακυβέρνηση δεδομένων",
     "de": "Daten-Governance"
@@ -2660,6 +2980,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Data Governance and GDPR at Scale": {
     "el": "Διακυβέρνηση δεδομένων και GDPR σε κλίμακα",
     "de": "Data Governance und DSGVO im großen Maßstab"
+  },
+  "Data Governance and GDPR: How to Scale Analytics Without Losing Control": {
+    "el": "Διακυβέρνηση δεδομένων και GDPR: Πώς να κλιμακώσετε την ανάλυση χωρίς να χάσετε τον έλεγχο",
+    "de": "Data Governance und DSGVO: So skalieren Sie Analysen, ohne die Kontrolle zu verlieren"
   },
   "Data Literacy": {
     "el": "Γραμματισμός Δεδομένων",
@@ -2697,6 +3021,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Data Scientist & AI Developer με 9+ χρόνια εμπειρίας, παρέχοντας εργασίες ανάλυσης, γνώσεων πελατών και καινοτομίας προϊόντων υψηλής απόδοσης. Υπεύθυνος για τη διαχείριση έργων και την υλοποίηση λύσεων.",
     "de": "Datenwissenschaftler und KI-Entwickler mit mehr als 9 Jahren Erfahrung in der Bereitstellung wirkungsvoller Analyse-, Kundeneinblicks- und Produktinnovationsarbeiten. Verantwortlich für die Leitung von Projekten und die Umsetzung von Lösungen."
   },
+  "Data Scientist & KI-Entwickler": {
+    "el": "Data Scientist & KI-Entwickler",
+    "de": "Datenwissenschaftler & KI-Entwickler"
+  },
+  "Data Scientist & Προγραμματιστής AI": {
+    "el": "Data Scientist & Προγραμματιστής AI",
+    "de": "Datenwissenschaftler und künstliche Intelligenz"
+  },
+  "Data Scientist und KI-Entwickler mit mehr als 9 Jahren Erfahrung in wirkungsvollen Analytics-, Customer-Insight- und Produktinnovationsprojekten sowie in Projektleitung und Lösungsumsetzung.": {
+    "el": "Data Scientist και KI-Entwickler mit mehr als 9 Jahren Erfahrung στο wirkungsvollen Analytics-, Customer-Insight- και Produktinnovationsprojekten sowie in Projektleitung und Lösungsumsetzung.",
+    "de": "Data Scientist und KI-Entwickler mit mehr als 9 Jahren Erfahrung in wirkungsvollen Analytics-, Customer-Insight- und Produktinnovationsprojekten sowie in Projektleitung und Lösungsumsetzung."
+  },
+  "Data Scientist και προγραμματιστής AI με περισσότερα από 9 χρόνια εμπειρίας σε έργα ανάλυσης, κατανόησης πελατών και καινοτομίας προϊόντων, με ευθύνη διαχείρισης έργων και υλοποίησης λύσεων.": {
+    "el": "Data Scientist και προγραμματιστής AI με περισσότερα από 9 χρόνια εμπειρίας σε έργα ανάλυσης, κατανόηση πελατών και προϊόντων καινοτομίας, με διαχείριση έργων και υλοποίηση λύσεων.",
+    "de": "Data Scientist hat 9 Monate Erfahrung in der KI-Entwicklung gesammelt νάλυσης, κατανόησης πελατών και καινοτομίας προϊόντων, με ευθύνη διαχείρισης έργων και υλοποίησης λύσεων."
+  },
   "Data Strategy": {
     "el": "Στρατηγική Δεδομένων",
     "de": "Datenstrategie"
@@ -2713,6 +3053,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Στρατηγική δεδομένων πριν από την τεχνητή νοημοσύνη",
     "de": "Datenstrategie vor KI"
   },
+  "Data Strategy Before AI: Why Companies Need Better Foundations First": {
+    "el": "Στρατηγική δεδομένων πριν από την τεχνητή νοημοσύνη: Γιατί οι εταιρείες χρειάζονται πρώτα καλύτερα ιδρύματα",
+    "de": "Datenstrategie vor KI: Warum Unternehmen zuerst bessere Grundlagen brauchen"
+  },
   "Data and AI enablement and mentorship": {
     "el": "Ενεργοποίηση δεδομένων και τεχνητής νοημοσύνης και καθοδήγηση",
     "de": "Daten- und KI-Aktivierung und Mentoring"
@@ -2720,6 +3064,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Data contracts, quality tests, cataloguing, lineage, and observability standards": {
     "el": "Συμβάσεις δεδομένων, δοκιμές ποιότητας, καταλογογράφηση, γενεαλογία και πρότυπα παρατηρησιμότητας",
     "de": "Datenverträge, Qualitätstests, Katalogisierung, Abstammung und Beobachtbarkeitsstandards"
+  },
+  "Data engineering και υποδομές cloud": {
+    "el": "Data engineering και υποδομές cloud",
+    "de": "Data Engineering in der Cloud"
   },
   "Data foundations": {
     "el": "Βάσεις δεδομένων",
@@ -2776,6 +3124,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Date, water-type, isotope-type, and measurement-accuracy controls.": {
     "el": "Έλεγχοι ημερομηνίας, τύπου νερού, ισοτόπου και ακρίβειας μέτρησης.",
     "de": "Datums-, Wassertyp-, Isotopentyp- und Messgenauigkeitskontrollen."
+  },
+  "Datenkarriere Mentoring": {
+    "el": "Καθοδήγηση Datenkarriere",
+    "de": "Datenkarriere Mentoring"
+  },
+  "Datenschutzerklärung": {
+    "el": "Datenschutzerklärung",
+    "de": "Datenschutzerklärung"
+  },
+  "Datenstrategie": {
+    "el": "Στρατηγική ημερομηνίας",
+    "de": "Datenstrategie"
+  },
+  "Datenstrategie & Cloud": {
+    "el": "Datenstrategie & Cloud",
+    "de": "Datenstrategie & Cloud"
   },
   "Dec 2024": {
     "el": "Δεκέμβριος 2024",
@@ -2901,6 +3265,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Επιθυμητό timing",
     "de": "Gewünschter Zeitpunkt"
   },
+  "Desired timing:": {
+    "el": "Επιθυμητός χρόνος:",
+    "de": "Gewünschter Zeitpunkt:"
+  },
   "Detecting unusual activity and helping teams focus limited review capacity": {
     "el": "Ανίχνευση ασυνήθιστης δραστηριότητας και βοήθεια στις ομάδες να εστιάσουν την περιορισμένη ικανότητα ελέγχου",
     "de": "Erkennen Sie ungewöhnliche Aktivitäten und helfen Sie Teams, sich auf begrenzte Überprüfungskapazitäten zu konzentrieren"
@@ -2913,9 +3281,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Αναπτύξτε την ατομική και ομαδική ικανότητα μέσω εργαστηρίων βασισμένων σε ρόλους, πρακτικής εκπαίδευσης, καθοδήγησης ένας προς έναν, καθοδήγησης έργου και υποστήριξης υιοθεσίας.",
     "de": "Entwickeln Sie individuelle und Teamfähigkeiten durch rollenbasierte Workshops, praktische Schulungen, persönliche Betreuung, Projektberatung und Einführungsunterstützung."
   },
+  "Diagnose- oder Roadmap-Sprint": {
+    "el": "Διαγνωστικός χάρτης πορείας-Sprint",
+    "de": "Diagnose- oder Roadmap-Sprint"
+  },
   "Diagnostic or roadmap sprint": {
     "el": "Σπριντ διαγνωστικού ή οδικού χάρτη",
     "de": "Diagnose- oder Roadmap-Sprint"
+  },
+  "Diagnostics without losing the model context": {
+    "el": "Διαγνωστικά χωρίς απώλεια του πλαισίου του μοντέλου",
+    "de": "Diagnose ohne den Modellkontext zu verlieren"
   },
   "Digital": {
     "el": "Ψηφιακή",
@@ -2997,6 +3373,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Έγγραφα, στοιχεία, αποφάσεις",
     "de": "Dokumente, Daten, Entscheidungen"
   },
+  "E-Mail": {
+    "el": "E-Mail",
+    "de": "E-Mail"
+  },
   "ETL ELT consulting": {
     "el": "Συμβουλευτική ETL ELT",
     "de": "ETL ELT-Beratung"
@@ -3025,6 +3405,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Εκπαίδευση",
     "de": "Bildung"
   },
+  "Ein geschäftlicher Engpass, ein wiederkehrender Ablauf, eine Reporting-Lücke, eine Produktidee oder ein Karriereziel genügt. Sie benötigen weder eine fertige technische Spezifikation noch einen vollständigen Lernplan.": {
+    "el": "Ein geschäftlicher Engpass, ein wiederkehrender Ablauf, eine Reporting-Lücke, eine Produktidee oder ein Karriereziel genügt. Sie benötigen weder eine fertige technische Spezifikation noch einen vollständigen Lernplan.",
+    "de": "Ein geschäftlicher Engpass, ein wiederkehrender Ablauf, eine Reporting-Lücke, eine Produktidee oder ein Karriereziel genügt. Sie benötigen weder eine fertige technische Spezifikation noch einen vollständigen Lernplan."
+  },
+  "Ein sinnvoller Ausgangspunkt": {
+    "el": "Ein sinnvoller Ausgangspunkt",
+    "de": "Ein sinnvoller Ausgangspunkt"
+  },
+  "Eine fundierte Antwort": {
+    "el": "Eine fundierte Antwort",
+    "de": "Eine fundierte Antwort"
+  },
+  "Einführung": {
+    "el": "Einführung",
+    "de": "Einführung"
+  },
   "Email": {
     "el": "Email",
     "de": "E-Mail"
@@ -3032,6 +3428,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Employees use generative AI without a shared policy or approved working practices": {
     "el": "Οι εργαζόμενοι χρησιμοποιούν γενετική τεχνητή νοημοσύνη χωρίς κοινή πολιτική ή εγκεκριμένες πρακτικές εργασίας",
     "de": "Mitarbeiter nutzen generative KI ohne eine gemeinsame Richtlinie oder genehmigte Arbeitspraktiken"
+  },
+  "Enablement & Mentoring": {
+    "el": "Ενεργοποίηση & Καθοδήγηση",
+    "de": "Befähigung und Mentoring"
   },
   "Enablement & Mentorship": {
     "el": "Ενεργοποίηση & Καθοδήγηση",
@@ -3061,9 +3461,33 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Λεπτομέρειες διερεύνησης:",
     "de": "Anfragedetails:"
   },
+  "Enquiry type:": {
+    "el": "Τύπος έρευνας:",
+    "de": "Anfragetyp:"
+  },
   "Entity, authorship, and evidence signals that improve readiness for search features and AI-generated answers": {
     "el": "Σήματα οντότητας, συγγραφής και αποδεικτικών στοιχείων που βελτιώνουν την ετοιμότητα για λειτουργίες αναζήτησης και απαντήσεις που δημιουργούνται από AI",
     "de": "Entitäts-, Urheber- und Beweissignale, die die Bereitschaft für Suchfunktionen und KI-generierte Antworten verbessern"
+  },
+  "Erfahren Sie mehr über Ioannis Bekas, BI Solutions Group und die Erfahrung hinter der Analytics-, KI- und Datenstrategie-Beratung.": {
+    "el": "Erfahren Sie mehr über Ioannis Bekas, BI Solutions Group und die Erfahrung hinter der Analytics-, KI- und Datenstrategie-Beratung.",
+    "de": "Erfahren Sie mehr über Ioannis Bekas, BI Solutions Group und die Erfahrung hinter der Analytics-, KI- und Datenstrategie-Beratung."
+  },
+  "Erfahrung": {
+    "el": "Erfahrung",
+    "de": "Erfahrung"
+  },
+  "Erst einmal sondieren": {
+    "el": "Erst einmal sondieren",
+    "de": "Erst einmal sondieren"
+  },
+  "Erzählen Sie uns von Ihrem Projekt": {
+    "el": "Erzählen Sie uns von Ihrem Projekt",
+    "de": "Erzählen Sie uns von Ihrem Projekt"
+  },
+  "Erzählen Sie uns von Ihren Karrierezielen": {
+    "el": "Erzählen Sie uns von Ihren Karrierezielen",
+    "de": "Erzählen Sie uns von Ihren Karrierezielen"
   },
   "Escape": {
     "el": "Απόδραση",
@@ -3104,6 +3528,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Excel": {
     "el": "Excel",
     "de": "Excel"
+  },
+  "Exchange – Financial Mathematics, Stockholm University": {
+    "el": "Exchange – Financial Mathematics, Πανεπιστήμιο Στοκχόλμης",
+    "de": "Austausch – Finanzmathematik, Universität Stockholm"
   },
   "Executive and operational reporting": {
     "el": "Εκτελεστική και επιχειρησιακή αναφορά",
@@ -3253,6 +3681,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Για τη συμβουλευτική BI στην Ελλάδα, αυτό σημαίνει συχνά ότι βοηθά τις επιχειρηματικές ομάδες να μετακινηθούν από τις αναφορές που βασίζονται στο Excel και τα μη αυτόματα ανανεωμένα αρχεία σε ένα πιο ξεκάθαρο μοντέλο. Η εργασία μπορεί να εξακολουθεί να παράγει ελκυστικούς πίνακες εργαλείων στο Power BI, στο Tableau, στο Looker ή σε άλλο εργαλείο αναφοράς, αλλά η βαθύτερη αξία είναι η σταθερή λογική αναφοράς που μπορούν να χρησιμοποιούν επανειλημμένα οι διαχειριστές.",
     "de": "Für die BI-Beratung in Griechenland bedeutet dies oft, dass sie Geschäftsteams dabei helfen, von Excel-gesteuerten Berichten und manuell aktualisierten Dateien zu einem klareren Modell überzugehen. Die Arbeit kann immer noch attraktive Dashboards in Power BI, Tableau, Looker oder einem anderen Berichtstool hervorbringen, aber der tiefere Wert liegt in einer stabilen Berichtslogik, die Manager wiederholt verwenden können."
   },
+  "For BI leaders, that means faster feedback loops. For analysts and developers, it means fewer handoffs and less ambiguity. And for organizations trying to raise the quality of their Power BI estate, it creates a focused workspace for repeatable semantic-model analysis and guided improvement.": {
+    "el": "Για τους ηγέτες BI, αυτό σημαίνει ταχύτερους βρόχους ανάδρασης. Για τους αναλυτές και τους προγραμματιστές, σημαίνει λιγότερες μεταβιβάσεις και λιγότερη ασάφεια. Και για οργανισμούς που προσπαθούν να βελτιώσουν την ποιότητα του Power BI τους, δημιουργεί έναν εστιασμένο χώρο εργασίας για επαναλαμβανόμενη ανάλυση σημασιολογικών μοντέλων και καθοδηγούμενη βελτίωση.",
+    "de": "Für BI-Führungskräfte bedeutet das schnellere Feedbackschleifen. Für Analysten und Entwickler bedeutet dies weniger Übergaben und weniger Unklarheiten. Und für Unternehmen, die die Qualität ihres Power BI-Bestands verbessern möchten, entsteht ein fokussierter Arbeitsbereich für wiederholbare semantische Modellanalysen und geführte Verbesserungen."
+  },
   "For Power BI projects, this also connects to semantic modeling. If a requirement says \"show monthly recurring revenue,\" the model must define exactly what that means before the visual is built.": {
     "el": "Για έργα Power BI, αυτό συνδέεται επίσης με τη σημασιολογική μοντελοποίηση. Εάν μια απαίτηση λέει \"εμφάνιση μηνιαίων επαναλαμβανόμενων εσόδων\", το μοντέλο πρέπει να καθορίσει ακριβώς τι σημαίνει αυτό πριν από τη δημιουργία της οπτικής απεικόνισης.",
     "de": "Bei Power BI-Projekten schließt dies auch die semantische Modellierung ein. Wenn eine Anforderung lautet: „Monatlich wiederkehrende Einnahmen anzeigen“, muss das Modell genau definieren, was das bedeutet, bevor das Visual erstellt wird."
@@ -3325,6 +3757,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Για μικρές και μεσαίες ομάδες, αυτό μπορεί να παραμείνει ελαφρύ. Ένα δείγμα εβδομαδιαίας αναθεώρησης, το αρχείο καταγραφής σφαλμάτων, ο έλεγχος κόστους και ο βρόχος ανατροφοδότησης από τους χρήστες είναι συχνά αρκετά για πρώιμες ροές εργασιών παραγωγής.",
     "de": "Für kleine und mittelgroße Teams kann dies leichtgewichtig bleiben. Für frühe Produktionsabläufe reichen oft ein wöchentliches Prüfmuster, ein Fehlerprotokoll, eine Kostenprüfung und eine Benutzer-Feedback-Schleife aus."
   },
+  "For teams that want a dedicated workflow, <a href=\"/power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">Power BI Solutions</a> is positioned around semantic model analysis, diagnostics, and AI-assisted guidance for model improvement.": {
+    "el": "Για τις ομάδες που θέλουν μια αποκλειστική ροή εργασιών, οι <a href=\"/power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">Λύσεις Power BI</a> τοποθετούνται γύρω από τη σημασιολογική ανάλυση μοντέλων, τη βελτιωμένη ανάλυση μοντέλων με διαγνωστικά AI.",
+    "de": "Für Teams, die einen dedizierten Workflow wünschen, sind <a href=\"/power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">Power BI Solutions</a> auf semantische Modellanalyse, Diagnose und KI-gestützte Anleitung zur Modellverbesserung ausgerichtet."
+  },
   "Forecasting": {
     "el": "Πρόβλεψη",
     "de": "Prognose"
@@ -3373,13 +3809,25 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Διαδραστική αναφορά Power BI τεσσάρων σελίδων",
     "de": "Vierseitiger interaktiver Power BI-Bericht"
   },
+  "Fractional Data & AI Leadership": {
+    "el": "Fractional Data & AI Leadership",
+    "de": "Fraktionale Daten- und KI-Führung"
+  },
   "Fractional data and AI leadership": {
     "el": "Κλασματικά δεδομένα και ηγεσία AI",
     "de": "Fraktionale Daten und KI-Führung"
   },
+  "Fractional ηγεσία δεδομένων και AI": {
+    "el": "Fractional ηγεσία δεδομένων και AI",
+    "de": "Bruchteil der KI"
+  },
   "Frame the decision, workflow, users, data boundary, risk, and success criteria": {
     "el": "Πλαισιώστε την απόφαση, τη ροή εργασίας, τους χρήστες, τα όρια δεδομένων, τον κίνδυνο και τα κριτήρια επιτυχίας",
     "de": "Legen Sie die Entscheidungs-, Arbeitsablauf-, Benutzer-, Datengrenzen-, Risiko- und Erfolgskriterien fest"
+  },
+  "From Website to Analytics System: Why Modern Sites Should Track Business Outcomes": {
+    "el": "Από τον ιστότοπο στο σύστημα Analytics: Γιατί οι σύγχρονοι ιστότοποι πρέπει να παρακολουθούν τα επιχειρηματικά αποτελέσματα",
+    "de": "Von der Website zum Analysesystem: Warum moderne Websites Geschäftsergebnisse verfolgen sollten"
   },
   "From discovery and comparison to booking and direct orders, each interface prioritizes clear navigation and an obvious next step.": {
     "el": "Από την ανακάλυψη και τη σύγκριση μέχρι την κράτηση και τις άμεσες παραγγελίες, κάθε διεπαφή δίνει προτεραιότητα στη σαφή πλοήγηση και ένα προφανές επόμενο βήμα.",
@@ -3392,6 +3840,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "From reporting output to decision support": {
     "el": "Από την υποβολή εκθέσεων έως την υποστήριξη αποφάσεων",
     "de": "Von der Berichtsausgabe bis zur Entscheidungsunterstützung"
+  },
+  "From review service to scalable product workflow": {
+    "el": "Από την υπηρεσία αναθεώρησης έως τη ροή εργασιών προϊόντων με δυνατότητα κλιμάκωσης",
+    "de": "Vom Bewertungsservice bis zum skalierbaren Produktworkflow"
   },
   "From role-based team workshops and adoption programmes to one-to-one career mentorship, every engagement is shaped around current capability, practical work, and the evidence of progress that matters.": {
     "el": "Από ομαδικά εργαστήρια με ρόλους και προγράμματα υιοθεσίας μέχρι καθοδήγηση σταδιοδρομίας ένας προς έναν, κάθε δέσμευση διαμορφώνεται γύρω από τις τρέχουσες ικανότητες, την πρακτική εργασία και τα στοιχεία προόδου που έχουν σημασία.",
@@ -3417,6 +3869,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Το GDPR δεν σημαίνει ότι η ανάλυση πρέπει να σταματήσει. Σημαίνει ότι η χρήση δεδομένων χρειάζεται σκοπό, ελαχιστοποίηση, έλεγχο πρόσβασης, συνειδητοποίηση διατήρησης και υπεύθυνο χειρισμό προσωπικών δεδομένων.",
     "de": "Die DSGVO bedeutet nicht, dass die Analyse aufhören sollte. Das bedeutet, dass die Datennutzung Zweckmäßigkeit, Minimierung, Zugriffskontrolle, Aufbewahrungsbewusstsein und einen verantwortungsvollen Umgang mit personenbezogenen Daten erfordert."
   },
+  "GDPR-Safe Web Analytics: Measuring Demand Without Overcollecting Data": {
+    "el": "GDPR-Safe Web Analytics: Μέτρηση της ζήτησης χωρίς υπερβολική συλλογή δεδομένων",
+    "de": "DSGVO-sichere Webanalyse: Nachfrage messen, ohne übermäßig Daten zu sammeln"
+  },
   "GDPR-aware analytics": {
     "el": "Αναλυτικά στοιχεία με επίγνωση του GDPR",
     "de": "DSGVO-konforme Analysen"
@@ -3424,6 +3880,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "GDPR-aware data operations": {
     "el": "Λειτουργίες δεδομένων με επίγνωση του GDPR",
     "de": "DSGVO-konforme Datenvorgänge"
+  },
+  "GPA: 9.3/10": {
+    "el": "ΣΔΣ: 9,3/10",
+    "de": "Notendurchschnitt: 9,3/10"
   },
   "Generative AI": {
     "el": "Generative AI",
@@ -3445,6 +3905,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Δημιουργική συμβουλευτική τεχνητής νοημοσύνης και LLM για βοηθούς, συστήματα RAG, άμεσες ροές εργασιών, αξιολόγηση, ενοποίηση και πρακτική υιοθέτηση επιχειρήσεων.",
     "de": "Generative KI- und LLM-Beratung für Assistenten, RAG-Systeme, schnelle Arbeitsabläufe, Bewertung, Integration und praktische Geschäftseinführung."
   },
+  "Generic AI assistants are useful for brainstorming, but model optimization requires much tighter context. Teams do not want to re-explain their schema every time they ask about DAX patterns, naming conventions, or maintainability tradeoffs.": {
+    "el": "Οι γενικοί βοηθοί τεχνητής νοημοσύνης είναι χρήσιμοι για καταιγισμό ιδεών, αλλά η βελτιστοποίηση του μοντέλου απαιτεί πολύ πιο αυστηρό πλαίσιο. Οι ομάδες δεν θέλουν να εξηγούν ξανά το σχήμα τους κάθε φορά που ρωτούν για μοτίβα DAX, συμβάσεις ονομασίας ή ανταλλαγές συντηρησιμότητας.",
+    "de": "Generische KI-Assistenten sind für Brainstorming nützlich, aber die Modelloptimierung erfordert einen viel engeren Kontext. Teams möchten ihr Schema nicht jedes Mal neu erklären, wenn sie nach DAX-Mustern, Namenskonventionen oder Kompromissen bei der Wartbarkeit fragen."
+  },
   "Generic AI claims are easy to ignore. Better proof includes sample outputs, before-and-after workflow screenshots, privacy notes, performance boundaries, and the exact user role the product supports.": {
     "el": "Οι γενικοί ισχυρισμοί AI είναι εύκολο να αγνοηθούν. Η καλύτερη απόδειξη περιλαμβάνει εξόδους δειγμάτων, στιγμιότυπα οθόνης ροής εργασίας πριν και μετά, σημειώσεις απορρήτου, όρια απόδοσης και τον ακριβή ρόλο χρήστη που υποστηρίζει το προϊόν.",
     "de": "Allgemeine KI-Behauptungen können leicht ignoriert werden. Ein besserer Nachweis umfasst Beispielausgaben, Vorher-Nachher-Workflow-Screenshots, Datenschutzhinweise, Leistungsgrenzen und die genaue Benutzerrolle, die das Produkt unterstützt."
@@ -3453,9 +3917,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Γεω",
     "de": "Geo"
   },
+  "Geschäftliche E-Mail": {
+    "el": "Geschäftliche E-Mail",
+    "de": "Geschäftliche E-Mail"
+  },
   "Get in Touch": {
     "el": "Επικοινωνήστε",
     "de": "Nehmen Sie Kontakt auf"
+  },
+  "Gewünschter Zeitrahmen": {
+    "el": "Gewünschter Zeitrahmen",
+    "de": "Gewünschter Zeitrahmen"
   },
   "Git & GitHub": {
     "el": "Git & GitHub",
@@ -3520,6 +3992,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Google Gemini is Making it Easy to Quit ChatGPT, Claude and other LLMs": {
     "el": "Το Google Gemini διευκολύνει την εγκατάλειψη των ChatGPT, Claude και άλλων LLM",
     "de": "Google Gemini macht es einfach, ChatGPT, Claude und andere LLMs zu beenden"
+  },
+  "Google is also expanding its creative capabilities with the Nano Banana Pro model:": {
+    "el": "Η Google επεκτείνει επίσης τις δημιουργικές της δυνατότητες με το μοντέλο Nano Banana Pro:",
+    "de": "Auch Google erweitert seine kreativen Möglichkeiten mit dem Nano Banana Pro-Modell:"
   },
   "Google is currently testing a breakthrough feature: \"Import AI chats.\" This tool, spotted in early beta builds, allows users to migrate their entire conversation histories from rival platforms directly into Gemini. It is a bold move that directly attacks the \"ecosystem lock-in\" that has defined the AI wars so far.": {
     "el": "Η Google δοκιμάζει αυτήν τη στιγμή μια επαναστατική λειτουργία: \"Εισαγωγή συνομιλιών AI\". Αυτό το εργαλείο, που εντοπίστηκε στις πρώτες εκδόσεις beta, επιτρέπει στους χρήστες να μεταφέρουν ολόκληρο το ιστορικό συνομιλιών τους από αντίπαλες πλατφόρμες απευθείας στο Gemini. Είναι μια τολμηρή κίνηση που επιτίθεται άμεσα στο «κλείδωμα του οικοσυστήματος» που έχει καθορίσει τους πολέμους της τεχνητής νοημοσύνης μέχρι τώρα.",
@@ -3589,13 +4065,29 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ομαδοποιήστε πληροφορίες υποψηφίων, θέσεων εργασίας, συνεντεύξεων και προσλήψεων σε μια συνεπή ροή αξιολόγησης.",
     "de": "Gruppieren Sie Kandidaten-, Stellen-, Vorstellungsgesprächs- und Einstellungsinformationen in einem konsistenten Überprüfungsablauf."
   },
+  "Gründer der BI Solutions Group mit Schwerpunkt auf Business Intelligence, angewandter KI, Datenstrategie und Analytics Engineering.": {
+    "el": "Gründer der BI Solutions Group mit Schwerpunkt auf Business Intelligence, angewandter KI, Datenstrategie und Analytics Engineering.",
+    "de": "Gründer der BI Solutions Group mit Schwerpunkt auf Business Intelligence, angewandter KI, Datenstrategie und Analytics Engineering."
+  },
+  "Gründerprofil": {
+    "el": "Gründerprofil",
+    "de": "Gründerprofil"
+  },
   "Guests can understand the property and reach the booking step with fewer distractions.": {
     "el": "Οι επισκέπτες μπορούν να κατανοήσουν το κατάλυμα και να φτάσουν στο βήμα της κράτησης με λιγότερους περισπασμούς.",
     "de": "Gäste können die Unterkunft verstehen und mit weniger Ablenkungen zum Buchungsschritt gelangen."
   },
+  "H304": {
+    "el": "H304",
+    "de": "H304"
+  },
   "Hands-on guidance for workplace initiatives, portfolio projects, technical decisions, and documentation": {
     "el": "Πρακτική καθοδήγηση για πρωτοβουλίες στο χώρο εργασίας, έργα χαρτοφυλακίου, τεχνικές αποφάσεις και τεκμηρίωση",
     "de": "Praktische Anleitung für Arbeitsplatzinitiativen, Portfolioprojekte, technische Entscheidungen und Dokumentation"
+  },
+  "Hauptnavigation": {
+    "el": "Hauptnavigation",
+    "de": "Hauptnavigation"
   },
   "Help us understand how visitors use the website.": {
     "el": "Βοηθήστε μας να κατανοήσουμε πώς χρησιμοποιούν οι επισκέπτες τον ιστότοπο.",
@@ -3604,6 +4096,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Helping users explore governed business data through natural-language questions": {
     "el": "Βοηθώντας τους χρήστες να εξερευνήσουν ελεγχόμενα επιχειρηματικά δεδομένα μέσω ερωτήσεων σε φυσική γλώσσα",
     "de": "Helfen Sie Benutzern, verwaltete Geschäftsdaten durch Fragen in natürlicher Sprache zu erkunden"
+  },
+  "Hilfe bei der Wahl des richtigen Ansatzes": {
+    "el": "Hilfe bei der Wahl des richtigen Ansatzes",
+    "de": "Hilfe bei der Wahl des richtigen Ansatzes"
   },
   "Home": {
     "el": "Σπίτι",
@@ -3689,6 +4185,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Διεύθυνση IP, τύπος προγράμματος περιήγησης, λειτουργικό σύστημα, πληροφορίες συσκευής και cookies.",
     "de": "IP-Adresse, Browsertyp, Betriebssystem, Geräteinformationen und Cookies."
   },
+  "Ich freue mich auf Gespräche über Datenstrategie, KI-Implementierung und mögliche Kooperationen.": {
+    "el": "Ich freue mich auf Gespräche über Datenstrategie, KI-Implementierung und mögliche Kooperationen.",
+    "de": "Ich freue mich auf Gespräche über Datenstrategie, KI-Implementierung und mögliche Kooperationen."
+  },
+  "Ich stimme zu, dass BI Solutions Group diese Informationen zur Beantwortung meiner Anfrage verwenden darf. Siehe": {
+    "el": "Ich stimme zu, dass BI Solutions Group diese Informationen zur Beantwortung meiner Anfrage verwenden darf. Siehe",
+    "de": "Ich stimme zu, dass die BI Solutions Group diese Informationen zur Beantwortung meiner Anfrage verwenden darf. Siehe"
+  },
   "If a live merchant pilot is enabled, reward issue and redemption records, signed redemption tokens, cashier validation activity, merchant campaign data, and hashed customer email values where an email is provided.": {
     "el": "Εάν είναι ενεργοποιημένος ένας ζωντανός πιλότος εμπόρου, εγγραφές έκδοσης ανταμοιβής και εξαργύρωσης, υπογεγραμμένα διακριτικά εξαργύρωσης, δραστηριότητα επικύρωσης ταμείου, δεδομένα καμπάνιας εμπόρου και κατακερματισμένες τιμές ηλεκτρονικού ταχυδρομείου πελατών όπου παρέχεται ένα μήνυμα ηλεκτρονικού ταχυδρομείου.",
     "de": "Wenn ein Live-Händlerpilot aktiviert ist, werden Prämienausgabe- und Einlösungsdatensätze, signierte Einlösungstoken, Kassierervalidierungsaktivitäten, Händlerkampagnendaten und gehashte Kunden-E-Mail-Werte angezeigt, sofern eine E-Mail bereitgestellt wird."
@@ -3708,6 +4212,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "If you believe your rights have not been respected, you may lodge a complaint with the Hellenic Data Protection Authority at": {
     "el": "Εάν πιστεύετε ότι τα δικαιώματά σας δεν έχουν γίνει σεβαστά, μπορείτε να υποβάλετε καταγγελία στην Ελληνική Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα στη διεύθυνση",
     "de": "Wenn Sie glauben, dass Ihre Rechte nicht respektiert wurden, können Sie eine Beschwerde bei der griechischen Datenschutzbehörde unter einreichen"
+  },
+  "Ihr Briefing konnte nicht gesendet werden. Bitte warten Sie einen Moment und versuchen Sie es erneut.": {
+    "el": "Ihr Ενημέρωση konnte nicht gesendet werden. Bitte warten Sie einen Moment und versuchen Sie es erneut.",
+    "de": "Ihr Briefing konnte nicht gesendet werden. Bitte warten Sie einen Moment und versuchen Sie es erneut."
+  },
+  "Ihr Briefing wurde gesendet.": {
+    "el": "Ihr Ενημέρωση wurde gesendet.",
+    "de": "Ihr Briefing wurde gesendet."
+  },
+  "Ihr Browser konnte diese Auswahl nicht speichern. Optionale Messung bleibt deaktiviert, sofern sie nicht bereits erlaubt war.": {
+    "el": "Ihr Browser konnte diese Auswahl nicht speichern. Προαιρετικά Messung bleibt deaktiviert, sofern sie nicht bereits erlaubt war.",
+    "de": "Ihr Browser konnte diese Auswahl nicht speichern. Die optionale Messung bleibt deaktiviert, sofern sie nicht bereits erlaubt war."
   },
   "ImageObject": {
     "el": "ImageObject",
@@ -3733,9 +4249,21 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Σημαντική Αποποίηση Ευθύνης",
     "de": "Wichtiger Haftungsausschluss"
   },
-  "In parallel, I advise cross-functional teams and leadership across North America and Europe on high-impact data initiatives—": {
-    "el": "Παράλληλα, συμβουλεύω διαλειτουργικές ομάδες και ηγεσία σε όλη τη Βόρεια Αμερική και την Ευρώπη σχετικά με πρωτοβουλίες δεδομένων υψηλού αντίκτυπου—",
-    "de": "Parallel dazu berate ich funktionsübergreifende Teams und Führungskräfte in ganz Nordamerika und Europa bei wirkungsvollen Dateninitiativen –"
+  "In 1–3 Monaten": {
+    "el": "Σε 1–3 Monaten",
+    "de": "In 1–3 Monaten"
+  },
+  "In 3–6 Monaten": {
+    "el": "Στο 3–6 Μονατέν",
+    "de": "In 3–6 Monaten"
+  },
+  "In parallel, I advise cross-functional teams and leadership across North America and Europe on high-impact data initiatives—helping organizations leverage state-of-the-art tooling, modern data stacks, and emerging AI frameworks—supporting global brands including Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola, and PepsiCo, as well as high-growth SMEs.": {
+    "el": "Παράλληλα, συμβουλεύω διαλειτουργικές ομάδες και ηγεσία σε όλη τη Βόρεια Αμερική και την Ευρώπη σχετικά με πρωτοβουλίες δεδομένων υψηλού αντίκτυπου - βοηθώντας τους οργανισμούς να αξιοποιήσουν υπερσύγχρονα εργαλεία, σύγχρονες στοίβες δεδομένων και αναδυόμενα πλαίσια τεχνητής νοημοσύνης - υποστηρίζοντας παγκόσμιες μάρκες, όπως οι Fujitsu, LG, Nespresso, Collins Aerospace, Pepe-Coca-Row, καθώς και Coca-Corow.",
+    "de": "Parallel dazu berate ich funktionsübergreifende Teams und Führungskräfte in Nordamerika und Europa bei wirkungsvollen Dateninitiativen und helfe Unternehmen dabei, modernste Tools, moderne Datenstapel und neue KI-Frameworks zu nutzen. Dabei unterstütze ich globale Marken wie Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola und PepsiCo sowie wachstumsstarke KMU."
+  },
+  "In practice, it means BI Solutions can present the product through the main site while still routing users into a dedicated workspace at <a href=\"/power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">/power-bi-solutions/workspace/</a>. Discovery stays unified at the brand level, while sessions, uploads, and analysis workflows remain isolated inside the product experience where they belong.": {
+    "el": "Στην πράξη, σημαίνει ότι οι Λύσεις BI μπορούν να παρουσιάσουν το προϊόν μέσω του κύριου ιστότοπου, ενώ παράλληλα δρομολογούν τους χρήστες σε έναν αποκλειστικό χώρο εργασίας στη διεύθυνση <a href=\"/power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\"></power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600-solution-solution\"></power-bi-solutions/workspace. Το Discovery παραμένει ενοποιημένο σε επίπεδο επωνυμίας, ενώ οι περίοδοι σύνδεσης, οι μεταφορτώσεις και οι ροές εργασιών ανάλυσης παραμένουν απομονωμένες εντός της εμπειρίας προϊόντος όπου ανήκουν.",
+    "de": "In der Praxis bedeutet dies, dass BI Solutions das Produkt über die Hauptseite präsentieren kann, während Benutzer dennoch in einen dedizierten Arbeitsbereich unter <a href=\"/power-bi-solutions/workspace/\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">/power-bi-solutions/workspace/</a> weitergeleitet werden. Discovery bleibt auf Markenebene einheitlich, während Sitzungen, Uploads und Analyse-Workflows innerhalb des Produkterlebnisses, wo sie hingehören, isoliert bleiben."
   },
   "In the early days of the web, we fought for email portability. Then it was phone numbers. Now, it is context portability. By removing the tedium barrier, Google is not just offering a better model; it is offering a better on-ramp.": {
     "el": "Στις πρώτες μέρες του διαδικτύου, παλέψαμε για τη φορητότητα του email. Τότε ήταν οι αριθμοί τηλεφώνου. Τώρα, είναι η φορητότητα περιβάλλοντος. Καταργώντας το εμπόδιο, η Google δεν προσφέρει απλώς ένα καλύτερο μοντέλο. προσφέρει καλύτερη ράμπα.",
@@ -3769,6 +4297,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Άτομα, αναλυτές, διευθυντές και ομάδες",
     "de": "Einzelpersonen, Analysten, Manager und Teams"
   },
+  "Individuelles Karriere-Mentoring": {
+    "el": "Individuelles Karriere-Mentoring",
+    "de": "Individuelles Karriere-Mentoring"
+  },
   "Informal BI usually starts with good intentions. A team connects a few data sources, builds useful pages, and shares the report. Over time, more measures are added, more filters appear, more people depend on the output, and the model becomes harder to understand.": {
     "el": "Το άτυπο BI συνήθως ξεκινά με καλές προθέσεις. Μια ομάδα συνδέει μερικές πηγές δεδομένων, δημιουργεί χρήσιμες σελίδες και μοιράζεται την αναφορά. Με την πάροδο του χρόνου, προστίθενται περισσότερα μέτρα, εμφανίζονται περισσότερα φίλτρα, περισσότεροι άνθρωποι εξαρτώνται από την έξοδο και το μοντέλο γίνεται πιο δυσνόητο.",
     "de": "Informelle BI beginnt normalerweise mit guten Absichten. Ein Team verbindet einige Datenquellen, erstellt nützliche Seiten und teilt den Bericht. Mit der Zeit werden mehr Kennzahlen hinzugefügt, mehr Filter erscheinen, mehr Menschen sind auf die Ausgabe angewiesen und das Modell wird immer schwerer zu verstehen."
@@ -3788,6 +4320,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Inside <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">business intelligence and semantic modeling</a>, this dictionary becomes the bridge between business teams and technical reporting logic.": {
     "el": "Μέσα στο <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">επιχειρηματική ευφυΐα και σημασιολογική μοντελοποίηση</a>, αυτό το λεξικό γίνεται η γέφυρα μεταξύ των ομάδων τεχνικής αναφοράς και της επιχειρηματικής λογικής.",
     "de": "Innerhalb von <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">Business Intelligence und semantischer Modellierung</a> wird dieses Wörterbuch zur Brücke zwischen Geschäftsteams und technischer Berichtslogik."
+  },
+  "Inside Power BI Solutions, teams can upload tabular model definitions and move directly into review mode. That creates a much cleaner workflow for spotting naming issues, structural inconsistencies, documentation gaps, and performance-sensitive modeling choices before they spread downstream into dashboards and business logic.": {
+    "el": "Μέσα στο Power BI Solutions, οι ομάδες μπορούν να ανεβάσουν ορισμούς μοντέλων σε πίνακα και να περάσουν απευθείας στη λειτουργία ελέγχου. Αυτό δημιουργεί μια πολύ πιο καθαρή ροή εργασιών για τον εντοπισμό ζητημάτων ονομασίας, δομικών ασυνεπειών, κενών τεκμηρίωσης και επιλογών μοντελοποίησης ευαίσθητων στην απόδοση, προτού εξαπλωθούν κατάντη σε πίνακες εργαλείων και επιχειρηματική λογική.",
+    "de": "Innerhalb von Power BI Solutions können Teams tabellarische Modelldefinitionen hochladen und direkt in den Überprüfungsmodus wechseln. Dadurch entsteht ein viel saubererer Arbeitsablauf zum Erkennen von Namensproblemen, strukturellen Inkonsistenzen, Dokumentationslücken und leistungsabhängigen Modellierungsentscheidungen, bevor sie sich nachgelagert auf Dashboards und Geschäftslogik auswirken."
   },
   "Insights": {
     "el": "Insights",
@@ -3832,6 +4368,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Internal Tools": {
     "el": "Εσωτερικά εργαλεία",
     "de": "Interne Tools"
+  },
+  "Internal Tools vs SaaS: Build or Buy": {
+    "el": "Εσωτερικά εργαλεία έναντι SaaS: Δημιουργία ή Αγορά",
+    "de": "Interne Tools vs. SaaS: Build or Buy"
+  },
+  "Internal Tools vs SaaS: How to Decide Whether to Build or Buy": {
+    "el": "Εσωτερικά εργαλεία έναντι SaaS: Πώς να αποφασίσετε εάν θα δημιουργήσετε ή θα αγοράσετε",
+    "de": "Interne Tools vs. SaaS: So entscheiden Sie, ob Sie bauen oder kaufen"
   },
   "Internal assistants, copilots, and task-specific generative AI applications": {
     "el": "Εσωτερικοί βοηθοί, copilots και εφαρμογές τεχνητής νοημοσύνης που δημιουργούνται για συγκεκριμένες εργασίες",
@@ -3889,6 +4433,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ιούνιος 2025",
     "de": "Juni 2025"
   },
+  "KI-Beratung & Automatisierung": {
+    "el": "KI-Beratung & Automatisierung",
+    "de": "KI-Beratung & Automatisierung"
+  },
+  "KI-Unternehmenstraining": {
+    "el": "KI-Unternehmenstraining",
+    "de": "KI-Unternehmenstraining"
+  },
+  "KI-Workflows und Automatisierung": {
+    "el": "KI-Workflows und Automatisierung",
+    "de": "KI-Workflows und Automatisierung"
+  },
   "KPI Design": {
     "el": "Σχεδιασμός KPI",
     "de": "KPI-Design"
@@ -3896,6 +4452,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "KPI Dictionary": {
     "el": "Λεξικό KPI",
     "de": "KPI-Wörterbuch"
+  },
+  "KPI Dictionary: The Small BI Asset That Prevents Big Reporting Arguments": {
+    "el": "Λεξικό KPI: Το μικρό περιουσιακό στοιχείο BI που αποτρέπει τα μεγάλα επιχειρήματα αναφοράς",
+    "de": "KPI-Wörterbuch: Das kleine BI-Asset, das große Reporting-Argumente verhindert"
   },
   "KPI dictionaries, ownership rules, release controls, and model documentation": {
     "el": "Λεξικά KPI, κανόνες ιδιοκτησίας, στοιχεία ελέγχου έκδοσης και τεκμηρίωση μοντέλου",
@@ -3905,6 +4465,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η ιδιοκτησία KPI αποτρέπει την αθόρυβη μετατόπιση",
     "de": "KPI-Verantwortung verhindert stilles Abdriften"
   },
+  "Karriereziele und benötigte Unterstützung": {
+    "el": "Karriereziele und benötigte Unterstützung",
+    "de": "Karriereziele und benötigte Unterstützung"
+  },
   "Keep dashboards, data workflows, and AI systems reliable through monitoring, releases, support, and optimization.": {
     "el": "Διατηρήστε αξιόπιστους πίνακες εργαλείων, ροές εργασίας δεδομένων και συστήματα τεχνητής νοημοσύνης μέσω της παρακολούθησης, των εκδόσεων, της υποστήριξης και της βελτιστοποίησης.",
     "de": "Halten Sie Dashboards, Datenworkflows und KI-Systeme durch Überwachung, Releases, Support und Optimierung zuverlässig."
@@ -3913,6 +4477,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Διατηρήστε την πηγή, την τοποθεσία, την ποικιλομορφία, τα προσόντα και την κατάσταση διοχέτευσης διαθέσιμα για σύγκριση.",
     "de": "Halten Sie Quelle, Standort, Diversität, Qualifikationen und Trichterstatus zum Vergleich bereit."
   },
+  "Keine Angabe": {
+    "el": "Keine Angabe",
+    "de": "Keine Angabe"
+  },
   "Kept region and country selection explicit so global patterns remain connected to local observations.": {
     "el": "Διατηρήθηκε σαφής η επιλογή περιοχών και χωρών, ώστε τα παγκόσμια μοτίβα να παραμένουν συνδεδεμένα με τις τοπικές παρατηρήσεις.",
     "de": "Die Auswahl von Regionen und Ländern wurde explizit beibehalten, sodass globale Muster weiterhin mit lokalen Beobachtungen verknüpft bleiben."
@@ -3920,6 +4488,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Knowledge sources": {
     "el": "Πηγές γνώσης",
     "de": "Wissensquellen"
+  },
+  "Kontakt": {
+    "el": "Επικοινωνία",
+    "de": "Kontakt"
+  },
+  "Kontakt aufnehmen": {
+    "el": "Επικοινωνήστε μαζί μας",
+    "de": "Kontakt aufnehmen"
   },
   "LLM": {
     "el": "LLM",
@@ -3956,6 +4532,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Landing Pages for AI Products: Explain the Workflow, Not Just the Model": {
     "el": "Σελίδες προορισμού για προϊόντα τεχνητής νοημοσύνης: Εξηγήστε τη ροή εργασίας, όχι μόνο το μοντέλο",
     "de": "Landingpages für KI-Produkte: Erklären Sie den Arbeitsablauf, nicht nur das Modell"
+  },
+  "Lassen Sie uns sprechen": {
+    "el": "Lassen Sie uns sprechen",
+    "de": "Lassen Sie uns sprechen"
+  },
+  "Last updated: June 2026": {
+    "el": "Τελευταία ενημέρωση: Ιούνιος 2026",
+    "de": "Letzte Aktualisierung: Juni 2026"
   },
   "Last updated: September 5, 2026": {
     "el": "Τελευταία ενημέρωση: 5 Σεπτεμβρίου 2026",
@@ -4029,6 +4613,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "LinkedIn",
     "de": "LinkedIn"
   },
+  "LinkedIn εταιρείας": {
+    "el": "LinkedIn εταιρεία",
+    "de": "LinkedIn-Mitgliedschaft"
+  },
+  "LinkedIn-Unternehmensseite": {
+    "el": "LinkedIn-Unternehmensseite",
+    "de": "LinkedIn-Unternehmensseite"
+  },
   "ListItem": {
     "el": "Στοιχείο λίστας",
     "de": "ListItem"
@@ -4052,6 +4644,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "M.Sc. in Operational Research, Analytics & Decision Making": {
     "el": "M.Sc. στην Επιχειρησιακή Έρευνα, Αναλύσεις & Λήψη Αποφάσεων",
     "de": "M.Sc. in Betriebsforschung, Analytik und Entscheidungsfindung"
+  },
+  "M.Sc. in Operations Research, Analytics & Entscheidungsfindung": {
+    "el": "M.Sc. στο Operations Research, Analytics & Entscheidungsfindung",
+    "de": "M.Sc. in Operations Research, Analytics & Entscheidungsfindung"
+  },
+  "M.Sc. στην Επιχειρησιακή Έρευνα, Analytics & Λήψη Αποφάσεων": {
+    "el": "M.Sc. στην Επιχειρησιακή Έρευνα, Analytics & Λήψη Αποφάσεων",
+    "de": "M.Sc. Weitere Informationen zu Analytics & Analytics"
   },
   "M0 0H640V128H0Z": {
     "el": "M0 0H640V128H0Z",
@@ -4145,6 +4745,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "M64 74V190",
     "de": "M64 74V190"
   },
+  "M68": {
+    "el": "Μ68",
+    "de": "M68"
+  },
   "ML lifecycle management": {
     "el": "Διαχείριση κύκλου ζωής ML",
     "de": "ML-Lebenszyklusmanagement"
@@ -4185,6 +4789,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "MLOps για μικρές και μεσαίες ομάδες",
     "de": "MLOps für kleine und mittlere Teams"
   },
+  "MLOps for Small and Mid-Sized Teams: How to Productionize AI Workflows": {
+    "el": "MLOps για μικρές και μεσαίες ομάδες: Πώς να δημιουργήσετε ροές εργασίας AI",
+    "de": "MLOps für kleine und mittlere Teams: So produzieren Sie KI-Workflows"
+  },
   "MLOps is not only for large technology companies. Smaller teams also need versioning, deployment habits, and reliable AI workflow operations.": {
     "el": "Το MLOps δεν είναι μόνο για μεγάλες εταιρείες τεχνολογίας. Οι μικρότερες ομάδες χρειάζονται επίσης εκδόσεις, συνήθειες ανάπτυξης και αξιόπιστες λειτουργίες ροής εργασίας AI.",
     "de": "MLOps ist nicht nur für große Technologieunternehmen gedacht. Kleinere Teams benötigen außerdem Versionierung, Bereitstellungsgewohnheiten und zuverlässige KI-Workflow-Abläufe."
@@ -4217,9 +4825,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Κάντε ορατή την αβεβαιότητα",
     "de": "Unsicherheit sichtbar machen"
   },
+  "Managed Analytics Support": {
+    "el": "Υποστήριξη διαχείρισης Analytics",
+    "de": "Managed Analytics-Unterstützung"
+  },
   "Managed BI, data, and AI operations": {
     "el": "Διαχειριζόμενες λειτουργίες BI, δεδομένων και τεχνητής νοημοσύνης",
     "de": "Verwaltete BI-, Daten- und KI-Operationen"
+  },
+  "Managed Support für BI, Daten oder KI": {
+    "el": "Managed Support für BI, Date oder KI",
+    "de": "Managed Support für BI, Daten oder KI"
   },
   "Managed operations and support": {
     "el": "Διαχειριζόμενες λειτουργίες και υποστήριξη",
@@ -4357,6 +4973,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "31 Μαρτίου 2026",
     "de": "31. März 2026"
   },
+  "Masterarbeit: „Berührungspunkte künstlicher Intelligenz mit multikriterieller Entscheidungsanalyse“": {
+    "el": "Masterarbeit: \"Berührungspunkte künstlicher Intelligenz mit multikriterieller Entscheidungsanalyse\"",
+    "de": "Masterarbeit: „Berührungspunkte künstlicher Intelligenz mit multikriterieller Entscheidungsanalyse“"
+  },
   "Match the tool to the operating model": {
     "el": "Αντιστοιχίστε το εργαλείο με το μοντέλο λειτουργίας",
     "de": "Passen Sie das Tool an das Betriebsmodell an"
@@ -4373,9 +4993,25 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Μέτρηση",
     "de": "Messung"
   },
+  "Mein Hintergrund verbindet große internationale Organisationen—darunter die Internationale Atomenergie-Organisation (IAEA), die Internationale Organisation für Migration (IOM), das Büro der Vereinten Nationen für Katastrophenvorsorge (UNDRR) und UN Women—mit Unternehmen der Privatwirtschaft. In diesen Umfeldern habe ich umfangreiche Datensätze strukturiert, belastbare Data-Governance-Rahmen aufgebaut und durchgängige Business-Intelligence-Architekturen umgesetzt.": {
+    "el": "Mein Hintergrund verbindet große internationale Organisationen—darunter die Internationale Atomenergie-Organisation (IAEA), die Internationale Organization für Migration (IOM), das Büro der Vereinten Nationen für Katastrophenvorsorge (UNDRR) und UN Women—mit Unternehft. In diesen Umfeldern habe ich umfangreiche Datensätze strukturiert, belastbare Data-Governance-Rahmen aufgebaut und durchgängige Business-Intelligence-Architekturen umgesetzt.",
+    "de": "Mein Hintergrund verbindet große internationale Organisationen – darunter die Internationale Atomenergie-Organisation (IAEA), die Internationale Organisation für Migration (IOM), das Büro der Vereinten Nationen für Katastrophenvorsorge (UNDRR) und UN Women – mit Unternehmen der Privatwirtschaft. In diesem Umfeld habe ich umfangreiche Datensätze strukturiert, belastbare Data-Governance-Rahmen aufgebaut und durchgängige Business-Intelligence-Architekturen umgesetzt."
+  },
+  "Meine Expertise umfasst Data Engineering, statistische Analyse, künstliche Intelligenz und interaktive Datenvisualisierung. Der Schwerpunkt liegt auf fortschrittlichen Analysewerkzeugen und skalierbaren Datenmodellen für Predictive Analytics und Automatisierung.": {
+    "el": "Meine Expertise umfasst Data Engineering, statistische Analyse, künstliche Intelligenz und interactive Datenvisualisierung. Der Schwerpunkt liegt auf fortschrittlichen Analysewerkzeugen und skalierbaren Datenmodellen für Predictive Analytics und Automatisierung.",
+    "de": "Meine Expertise umfasst Data Engineering, statistische Analyse, künstliche Intelligenz und interaktive Datenvisualisierung. Der Schwerpunkt liegt auf fortschrittlichen Analysewerkzeugen und skalierbaren Datenmodellen für Predictive Analytics und Automatisierung."
+  },
   "Membership, access, payments, fulfillment, licensing, and product-analytics workflows": {
     "el": "Ροές εργασίας συνδρομής, πρόσβασης, πληρωμών, εκπλήρωσης, αδειοδότησης και ανάλυσης προϊόντων",
     "de": "Mitgliedschaft, Zugriff, Zahlungen, Erfüllung, Lizenzierung und Produktanalyse-Workflows"
+  },
+  "Mentoring-Anfrage": {
+    "el": "Mentoring-Anfrage",
+    "de": "Mentoring-Anfrage"
+  },
+  "Mentoring-Anfrage senden": {
+    "el": "Mentoring-Anfrage αποστέλλεται",
+    "de": "Mentoring-Anfrage senden"
   },
   "Mentorship enquiry": {
     "el": "Έρευνα καθοδήγησης",
@@ -4397,6 +5033,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Microsoft Fabric",
     "de": "Microsoft Fabric"
   },
+  "Mit einem Sternchen markierte Felder sind Pflichtfelder.": {
+    "el": "Mit einem Sternchen markierte Felder sind Pflichtfelder.",
+    "de": "Mit einem Sternchen markierte Felder sind Pflichtfelder."
+  },
+  "Mobile Navigation": {
+    "el": "Mobile Navigation",
+    "de": "Mobile Navigation"
+  },
   "Mobile navigation": {
     "el": "Κινητή πλοήγηση",
     "de": "Mobile Navigation"
@@ -4409,6 +5053,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Παρακολούθηση μοντέλου για ροές εργασίας AI",
     "de": "Modellüberwachung für KI-Workflows"
   },
+  "Model Monitoring for AI Workflows: What to Watch After Launch": {
+    "el": "Παρακολούθηση μοντέλου για ροές εργασίας AI: Τι να παρακολουθήσετε μετά την κυκλοφορία",
+    "de": "Modellüberwachung für KI-Workflows: Was Sie nach der Einführung beachten sollten"
+  },
   "Model and provider selection, API integration, access rules, and usage controls": {
     "el": "Επιλογή μοντέλου και παρόχου, ενσωμάτωση API, κανόνες πρόσβασης και έλεγχοι χρήσης",
     "de": "Modell- und Anbieterauswahl, API-Integration, Zugriffsregeln und Nutzungskontrollen"
@@ -4416,6 +5064,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Model layer": {
     "el": "Επίπεδο μοντέλου",
     "de": "Modellebene"
+  },
+  "Model quality is not only a developer concern. It affects business users directly. When two teams calculate revenue, margin, headcount, or pipeline differently, meetings become slower and decisions become weaker.": {
+    "el": "Η ποιότητα του μοντέλου δεν αφορά μόνο τους προγραμματιστές. Επηρεάζει άμεσα τους επιχειρηματικούς χρήστες. Όταν δύο ομάδες υπολογίζουν διαφορετικά τα έσοδα, το περιθώριο κέρδους, τον αριθμό εργαζομένων ή τη διοχέτευση, οι συναντήσεις γίνονται πιο αργές και οι αποφάσεις γίνονται πιο αδύναμες.",
+    "de": "Die Modellqualität ist nicht nur ein Anliegen der Entwickler. Es wirkt sich direkt auf Geschäftsanwender aus. Wenn zwei Teams Umsatz, Marge, Mitarbeiterzahl oder Pipeline unterschiedlich berechnen, werden Besprechungen langsamer und Entscheidungen schwächer."
   },
   "Model realistic recruitment logic without using personal or organizational data.": {
     "el": "Μοντελοποίηση ρεαλιστικής λογικής πρόσληψης χωρίς χρήση προσωπικών ή οργανωτικών δεδομένων.",
@@ -4449,6 +5101,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η παρακολούθηση είναι χρήσιμη μόνο εάν κάποιος ενεργεί σύμφωνα με αυτήν. Οι ομάδες θα πρέπει να ορίζουν ποιος εξετάζει τα ζητήματα, πώς συλλέγονται παραδείγματα, πότε ενημερώνονται τα μηνύματα προτροπής ή οι πηγές δεδομένων και πότε η ροή εργασίας πρέπει να τεθεί σε παύση.",
     "de": "Überwachung ist nur dann sinnvoll, wenn jemand danach handelt. Teams sollten festlegen, wer Probleme überprüft, wie Beispiele gesammelt werden, wann Eingabeaufforderungen oder Datenquellen aktualisiert werden und wann der Workflow angehalten werden soll."
   },
+  "Month one: understand the operating surface": {
+    "el": "Μήνας πρώτος: κατανοήστε την επιφάνεια λειτουργίας",
+    "de": "Erster Monat: Verstehen Sie die Bedienoberfläche"
+  },
+  "Month three: ship and set habits": {
+    "el": "Μήνας τρίτος: αποστολή και ορισμός συνηθειών",
+    "de": "Dritter Monat: Versenden und Gewohnheiten festlegen"
+  },
+  "Month two: prioritize useful delivery": {
+    "el": "Δεύτερος μήνας: δώστε προτεραιότητα στη χρήσιμη παράδοση",
+    "de": "Zweiter Monat: Priorisieren Sie die nützliche Bereitstellung"
+  },
   "More articles": {
     "el": "Περισσότερα άρθρα",
     "de": "Weitere Artikel"
@@ -4460,6 +5124,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "More credible evidence of capability for workplace progression, new roles, consulting, or leadership": {
     "el": "Πιο αξιόπιστα στοιχεία ικανότητας για εξέλιξη στο χώρο εργασίας, νέους ρόλους, συμβουλευτικές υπηρεσίες ή ηγεσία",
     "de": "Glaubwürdigerer Nachweis der Fähigkeit zur Weiterentwicklung am Arbeitsplatz, für neue Rollen, Beratung oder Führung"
+  },
+  "Most Power BI model reviews still happen in fragments. A consultant opens a file in one tool, documents issues in another, sends optimization notes over email, and then jumps into a separate chat window to explain what should change. The result is usually slower feedback, inconsistent recommendations, and too much context switching for teams that just want a reliable path from model definition to production readiness.": {
+    "el": "Οι περισσότερες αξιολογήσεις μοντέλων Power BI εξακολουθούν να γίνονται αποσπασματικά. Ένας σύμβουλος ανοίγει ένα αρχείο σε ένα εργαλείο, τεκμηριώνει προβλήματα σε ένα άλλο, στέλνει σημειώσεις βελτιστοποίησης μέσω email και, στη συνέχεια, μεταβαίνει σε ένα ξεχωριστό παράθυρο συνομιλίας για να εξηγήσει τι πρέπει να αλλάξει. Το αποτέλεσμα είναι συνήθως πιο αργή ανατροφοδότηση, ασυνεπείς συστάσεις και υπερβολική εναλλαγή περιβάλλοντος για ομάδες που θέλουν απλώς μια αξιόπιστη διαδρομή από τον ορισμό του μοντέλου μέχρι την ετοιμότητα παραγωγής.",
+    "de": "Die meisten Überprüfungen von Power BI-Modellen erfolgen immer noch in Fragmenten. Ein Berater öffnet eine Datei in einem Tool, dokumentiert Probleme in einem anderen, sendet Optimierungshinweise per E-Mail und springt dann in ein separates Chat-Fenster, um zu erklären, was sich ändern sollte. Das Ergebnis ist in der Regel langsameres Feedback, inkonsistente Empfehlungen und zu viel Kontextwechsel für Teams, die lediglich einen zuverlässigen Weg von der Modelldefinition bis zur Produktionsreife wünschen."
   },
   "Most businesses need page performance, traffic sources, conversion actions, and content engagement. They do not always need invasive user-level tracking.": {
     "el": "Οι περισσότερες επιχειρήσεις χρειάζονται απόδοση σελίδας, πηγές επισκεψιμότητας, ενέργειες μετατροπής και αφοσίωση περιεχομένου. Δεν χρειάζονται πάντα επεμβατική παρακολούθηση σε επίπεδο χρήστη.",
@@ -4493,9 +5161,9 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η μεταφορά αυτών των κανόνων σε μια αποθήκη μειώνει τις διενέξεις εκδόσεων και διευκολύνει τη συντήρηση των μοντέλων BI. Τα υπολογιστικά φύλλα μπορούν να εξακολουθούν να είναι χρήσιμα για ανάλυση, αλλά δεν περιλαμβάνουν πλέον ολόκληρη τη διαδικασία αναφοράς.",
     "de": "Durch die Verlagerung dieser Regeln in ein Warehouse werden Versionskonflikte reduziert und die Wartung von BI-Modellen erleichtert. Tabellenkalkulationen können weiterhin für die Analyse nützlich sein, sie enthalten jedoch nicht mehr den gesamten Berichtsprozess."
   },
-  "My background bridges major international organizations—including the International Atomic Energy Agency (IAEA), the International Organization for Migration (IOM), the United Nations Office for Disaster Risk Reduction (UNDRR) and the United Nations Women organization—with private-sector enterprises. Across these environments, I have structured large-scale datasets, established robust data governance frameworks, and deployed end-to-end business intelligence architectures.": {
-    "el": "Το υπόβαθρό μου γεφυρώνει σημαντικούς διεθνείς οργανισμούς - συμπεριλαμβανομένου του Διεθνούς Οργανισμού Ατομικής Ενέργειας (ΔΟΑΕ), του Διεθνούς Οργανισμού Μετανάστευσης (IOM), του Γραφείου των Ηνωμένων Εθνών για τη Μείωση Κινδύνου Καταστροφών (UNDRR) και του Οργανισμού των Ηνωμένων Εθνών για τις γυναίκες - με επιχειρήσεις του ιδιωτικού τομέα. Σε αυτά τα περιβάλλοντα, έχω δομήσει σύνολα δεδομένων μεγάλης κλίμακας, έχω δημιουργήσει ισχυρά πλαίσια διακυβέρνησης δεδομένων και έχω αναπτύξει αρχιτεκτονικές επιχειρηματικής ευφυΐας από άκρο σε άκρο.",
-    "de": "Mein Hintergrund verbindet große internationale Organisationen – darunter die Internationale Atomenergie-Organisation (IAEA), die Internationale Organisation für Migration (IOM), das Büro der Vereinten Nationen für Katastrophenvorsorge (UNDRR) und die Frauenorganisation der Vereinten Nationen – mit Unternehmen des Privatsektors. In diesen Umgebungen habe ich große Datensätze strukturiert, robuste Daten-Governance-Frameworks etabliert und End-to-End-Business-Intelligence-Architekturen implementiert."
+  "My background bridges major international organizations—including the International Atomic Energy Agency (IAEA), the International Organization for Migration (IOM), the United Nations Office for Disaster Risk Reduction (UNDRR), and the United Nations Women organization—with private-sector enterprises. Across these environments, I have structured large-scale datasets, established robust data governance frameworks, and deployed end-to-end business intelligence architectures.": {
+    "el": "Το υπόβαθρό μου γεφυρώνει σημαντικούς διεθνείς οργανισμούς - συμπεριλαμβανομένου του Διεθνούς Οργανισμού Ατομικής Ενέργειας (ΔΟΑΕ), του Διεθνούς Οργανισμού Μετανάστευσης (IOM), του Γραφείου των Ηνωμένων Εθνών για τη μείωση του κινδύνου καταστροφών (UNDRR) και του οργανισμού Ηνωμένων Εθνών για τις γυναίκες - με επιχειρήσεις του ιδιωτικού τομέα. Σε αυτά τα περιβάλλοντα, έχω δομήσει σύνολα δεδομένων μεγάλης κλίμακας, έχω δημιουργήσει ισχυρά πλαίσια διακυβέρνησης δεδομένων και έχω αναπτύξει αρχιτεκτονικές επιχειρηματικής ευφυΐας από άκρο σε άκρο.",
+    "de": "Mein Hintergrund verbindet große internationale Organisationen – darunter die Internationale Atomenergie-Organisation (IAEA), die Internationale Organisation für Migration (IOM), das Büro der Vereinten Nationen für Katastrophenvorsorge (UNDRR) und die Frauenorganisation der Vereinten Nationen – mit Unternehmen des privaten Sektors. In diesen Umgebungen habe ich große Datensätze strukturiert, robuste Daten-Governance-Frameworks etabliert und End-to-End-Business-Intelligence-Architekturen implementiert."
   },
   "My expertise spans data engineering, statistical analysis, artificial intelligence, and interactive data visualization, with a focus on building advanced analytical tools and scalable data models for predictive analytics and automation.": {
     "el": "Η εξειδίκευσή μου καλύπτει τη μηχανική δεδομένων, τη στατιστική ανάλυση, την τεχνητή νοημοσύνη και την διαδραστική οπτικοποίηση δεδομένων, με έμφαση στη δημιουργία προηγμένων αναλυτικών εργαλείων και κλιμακούμενων μοντέλων δεδομένων για προγνωστική ανάλυση και αυτοματοποίηση.",
@@ -4525,6 +5193,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Πλοήγηση σε υπηρεσίες",
     "de": "Navigieren Sie durch Dienste"
   },
+  "Navigationsmenü schließen": {
+    "el": "Navigationsmenü schließen",
+    "de": "Navigationsmenü schließen"
+  },
+  "Navigationsmenü öffnen": {
+    "el": "Navigationsmenü öffnen",
+    "de": "Navigationsmenü öffnen"
+  },
   "Need a reporting experience built around your decisions?": {
     "el": "Χρειάζεστε μια εμπειρία αναφοράς που βασίζεται στις αποφάσεις σας;",
     "de": "Benötigen Sie eine Reporting-Erfahrung, die auf Ihren Entscheidungen basiert?"
@@ -4533,6 +5209,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Χρειάζεστε βοήθεια για την εφαρμογή αυτού;",
     "de": "Benötigen Sie Hilfe bei der Anwendung?"
   },
+  "New enquiry —": {
+    "el": "Νέα έρευνα —",
+    "de": "Neue Anfrage –"
+  },
   "Next.js": {
     "el": "Επόμενο.js",
     "de": "Next.js"
@@ -4540,6 +5220,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "No articles found": {
     "el": "Δεν βρέθηκαν άρθρα",
     "de": "Keine Artikel gefunden"
+  },
+  "Noch nicht entschieden": {
+    "el": "Noch nicht entschieden",
+    "de": "Noch nicht entschieden"
   },
   "Node.js": {
     "el": "Node.js",
@@ -4581,6 +5265,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Αγορά προτύπων έννοιας",
     "de": "Marktplatz für Vorstellungsvorlagen"
   },
+  "Notwendige Speicherung hält die Website funktionsfähig. Mit Ihrer Erlaubnis hilft Google Analytics uns, Besuche zu verstehen, und Google Ads misst, welche Anzeigen zu Projektanfragen führen. Beides ist optional. Ihre Formularinhalte werden nicht an Google Ads gesendet.": {
+    "el": "Notwendige Speicherung hält die Ιστότοπος funktionsfähig. Mit Ihrer Erlaubnis hilft Google Analytics uns, Besuche zu verstehen, und Google Ads misst, welche Anzeigen zu Projektanfragen führen. Το Beides είναι προαιρετικό. Η Formularinhalte Werden Nicht an Gesendet του Google Ads.",
+    "de": "Notwendige Speicherung hält die Website funktionsfähig. Mit Ihrer Erlaubnis hilft Google Analytics uns, Besuche zu verstehen, und Google Ads misst, welche Anzeigen zu Projektanfragen führen. Beides ist optional. Ihre Formularinhalte werden nicht an Google Ads gesendet."
+  },
   "Object to processing based on legitimate interests.": {
     "el": "Εναντίωση στην επεξεργασία με βάση έννομα συμφέροντα.",
     "de": "Widerspruch gegen die Verarbeitung aufgrund berechtigter Interessen einlegen."
@@ -4608,6 +5296,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "One governed view of the business—from source data to the decisions people make every day.": {
     "el": "Μια ελεγχόμενη άποψη της επιχείρησης—από τα δεδομένα πηγής έως τις αποφάσεις που λαμβάνουν οι άνθρωποι καθημερινά.",
     "de": "Eine kontrollierte Sicht auf das Unternehmen – von den Quelldaten bis zu den Entscheidungen, die Menschen jeden Tag treffen."
+  },
+  "One of the biggest problems with conventional review workflows is that the context gets lost after the first pass. Someone flags a weak measure name, another person questions a relationship, and a third teammate asks how a recommendation affects report behavior. Soon the analysis is no longer attached to the model itself.": {
+    "el": "Ένα από τα μεγαλύτερα προβλήματα με τις συμβατικές ροές εργασιών αναθεώρησης είναι ότι το περιβάλλον χάνεται μετά το πρώτο πέρασμα. Κάποιος επισημαίνει ένα αδύναμο όνομα μέτρησης, ένα άλλο άτομο αμφισβητεί μια σχέση και ένας τρίτος συμπαίκτης ρωτά πώς μια σύσταση επηρεάζει τη συμπεριφορά αναφοράς. Σύντομα η ανάλυση δεν συνδέεται πλέον με το ίδιο το μοντέλο.",
+    "de": "Eines der größten Probleme bei herkömmlichen Review-Workflows besteht darin, dass der Kontext nach dem ersten Durchgang verloren geht. Jemand markiert einen schwachen Kennzahlennamen, eine andere Person stellt eine Beziehung in Frage und ein dritter Teamkollege fragt, wie sich eine Empfehlung auf das Berichtsverhalten auswirkt. Bald ist die Analyse nicht mehr an das Modell selbst gebunden."
   },
   "One operating view of the business": {
     "el": "Μία άποψη λειτουργίας της επιχείρησης",
@@ -4665,6 +5357,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Προαιρετικές επιλογές μέτρησης",
     "de": "Optionale Messmöglichkeiten"
   },
+  "Optionale Messeinstellungen": {
+    "el": "Προαιρετικό Messeinstellungen",
+    "de": "Optionale Messeinstellungen"
+  },
+  "Optionale ablehnen": {
+    "el": "Προαιρετική δυνατότητα",
+    "de": "Optionales Ablehnen"
+  },
   "Organization": {
     "el": "Οργάνωση",
     "de": "Organisation"
@@ -4672,6 +5372,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Organized the interface around comparison dimensions that a scientific user would repeatedly change.": {
     "el": "Οργάνωσε τη διεπαφή γύρω από διαστάσεις σύγκρισης που ένας επιστημονικός χρήστης θα άλλαζε επανειλημμένα.",
     "de": "Organisierte die Benutzeroberfläche nach Vergleichsdimensionen, die ein wissenschaftlicher Benutzer wiederholt ändern würde."
+  },
+  "Other": {
+    "el": "Άλλο",
+    "de": "Andere"
   },
   "Outcome": {
     "el": "Αποτέλεσμα",
@@ -4701,9 +5405,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η σελίδα δεν βρέθηκε",
     "de": "Seite nicht gefunden"
   },
+  "Page:": {
+    "el": "Σελίδα:",
+    "de": "Seite:"
+  },
   "Paired filterable time-series charts with current summary measures for faster orientation.": {
     "el": "Συνδυάζονται γραφήματα χρονοσειρών με δυνατότητα φιλτραρίσματος με τρέχοντα συνοπτικά μέτρα για ταχύτερο προσανατολισμό.",
     "de": "Gepaarte filterbare Zeitreihendiagramme mit aktuellen zusammenfassenden Kennzahlen zur schnelleren Orientierung."
+  },
+  "Parallel berate ich funktionsübergreifende Teams und Führungskräfte in Nordamerika und Europa bei wirkungsstarken Dateninitiativen—mit modernen Werkzeugen, zeitgemäßen Data Stacks und neuen KI-Frameworks—für globale Marken wie Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola und PepsiCo sowie wachstumsstarke KMU.": {
+    "el": "Parallel berate ich funktionsübergreifende Teams und Führungskräfte in Nordamerika und Europa bei wirkungsstarken Dateninitiativen—mit modernen Werkzeugen, zeitgemäßen Data Stacks und neuen KI-Frameworks—für globale Marken wie,Groosp,Fujit Η Coca-Cola και η PepsiCo sowie wachstumsstarke KMU.",
+    "de": "Parallel berate ich funktionsübergreifende Teams und Führungskräfte in Nordamerika und Europa bei wirkungsstarken Dateninitiativen – mit modernen Werkzeugen, zeitgemäßen Data Stacks und neuen KI-Frameworks – für globale Marken wie Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola und PepsiCo sowie wachstumsstarke KMU."
   },
   "Person": {
     "el": "Πρόσωπο",
@@ -4761,9 +5473,21 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Συμβουλευτικές υπηρεσίες Power BI AI",
     "de": "Power BI KI-Beratung"
   },
+  "Power BI Solutions adds AI-assisted guidance inside the analysis workflow itself. That means users can ask targeted follow-up questions after a TMDL upload, use recommendations as a starting point, and keep the conversation centered on the actual model under review. The value is not just that AI is present, but that it operates within the product context instead of outside it.": {
+    "el": "Το Power BI Solutions προσθέτει καθοδήγηση με τη βοήθεια AI μέσα στην ίδια τη ροή εργασιών ανάλυσης. Αυτό σημαίνει ότι οι χρήστες μπορούν να κάνουν στοχευμένες ερωτήσεις παρακολούθησης μετά από μια μεταφόρτωση TMDL, να χρησιμοποιούν συστάσεις ως σημείο εκκίνησης και να κρατούν τη συζήτηση στο επίκεντρο του πραγματικού μοντέλου υπό εξέταση. Η αξία δεν είναι μόνο ότι υπάρχει η τεχνητή νοημοσύνη, αλλά ότι λειτουργεί εντός του πλαισίου του προϊόντος και όχι εκτός αυτού.",
+    "de": "Power BI Solutions fügt KI-gestützte Anleitung innerhalb des Analyse-Workflows selbst hinzu. Das bedeutet, dass Benutzer nach einem TMDL-Upload gezielte Folgefragen stellen, Empfehlungen als Ausgangspunkt verwenden und die Konversation auf das tatsächlich zu prüfende Modell konzentrieren können. Der Wert besteht nicht nur darin, dass KI vorhanden ist, sondern auch darin, dass sie innerhalb des Produktkontexts und nicht außerhalb desselben agiert."
+  },
   "Power BI Solutions brings TMDL review, semantic model diagnostics, AI guidance, and product-specific authentication into a focused workspace hosted directly on the BI Solutions domain.": {
     "el": "Το Power BI Solutions φέρνει την αναθεώρηση TMDL, τα σημασιολογικά διαγνωστικά μοντέλων, την καθοδήγηση AI και τον έλεγχο ταυτότητας για συγκεκριμένο προϊόν σε έναν εστιασμένο χώρο εργασίας που φιλοξενείται απευθείας στον τομέα λύσεων BI.",
     "de": "Power BI Solutions bringt TMDL-Überprüfung, semantische Modelldiagnose, KI-Anleitung und produktspezifische Authentifizierung in einen fokussierten Arbeitsbereich, der direkt in der BI Solutions-Domäne gehostet wird."
+  },
+  "Power BI Solutions keeps the diagnostic flow anchored to the uploaded semantic model. Review output, recommendations, and follow-up questions all stay in the same workspace, which makes it easier to move from issue discovery to decision-making without recreating context at every step.": {
+    "el": "Το Power BI Solutions διατηρεί τη διαγνωστική ροή αγκυρωμένη στο μεταφορτωμένο σημασιολογικό μοντέλο. Τα αποτελέσματα των αναθεωρήσεων, οι συστάσεις και οι ερωτήσεις παρακολούθησης παραμένουν στον ίδιο χώρο εργασίας, γεγονός που διευκολύνει τη μετάβαση από την ανακάλυψη ζητήματος στη λήψη αποφάσεων χωρίς να δημιουργείται εκ νέου το πλαίσιο σε κάθε βήμα.",
+    "de": "Power BI Solutions sorgt dafür, dass der Diagnosefluss im hochgeladenen semantischen Modell verankert bleibt. Überprüfungsergebnisse, Empfehlungen und Folgefragen bleiben alle im selben Arbeitsbereich, was den Übergang von der Problemerkennung zur Entscheidungsfindung erleichtert, ohne den Kontext bei jedem Schritt neu erstellen zu müssen."
+  },
+  "Power BI Solutions was built to close that gap. Instead of treating semantic model analysis as an add-on service bolted onto a marketing site, the product creates a dedicated workspace where TMDL review, model diagnostics, AI-assisted guidance, and product-specific authentication all live under the BI Solutions domain.": {
+    "el": "Το Power BI Solutions δημιουργήθηκε για να καλύψει αυτό το κενό. Αντί να αντιμετωπίζει την ανάλυση σημασιολογικών μοντέλων ως μια πρόσθετη υπηρεσία που είναι βιδωμένη σε έναν ιστότοπο μάρκετινγκ, το προϊόν δημιουργεί έναν ειδικό χώρο εργασίας όπου η αναθεώρηση TMDL, τα διαγνωστικά μοντέλων, η καθοδήγηση με τη βοήθεια τεχνητής νοημοσύνης και ο έλεγχος ταυτότητας για συγκεκριμένο προϊόν βρίσκονται όλα στον τομέα λύσεων BI.",
+    "de": "Power BI Solutions wurde entwickelt, um diese Lücke zu schließen. Anstatt die semantische Modellanalyse als einen auf einer Marketing-Website integrierten Zusatzdienst zu behandeln, erstellt das Produkt einen dedizierten Arbeitsbereich, in dem TMDL-Überprüfung, Modelldiagnose, KI-gestützte Anleitung und produktspezifische Authentifizierung alle in der BI Solutions-Domäne angesiedelt sind."
   },
   "Power BI Tableau Looker consulting": {
     "el": "Συμβουλευτικές υπηρεσίες Power BI Tableau Looker",
@@ -4785,9 +5509,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Συμβουλευτικές υπηρεσίες Power BI",
     "de": "Power BI-Beratung"
   },
+  "Power BI environments often become difficult when weak patterns are copied into more reports. A measure naming issue becomes a convention. A confusing table structure becomes the default. A quick workaround becomes business logic.": {
+    "el": "Τα περιβάλλοντα Power BI γίνονται συχνά δύσκολα όταν τα αδύναμα μοτίβα αντιγράφονται σε περισσότερες αναφορές. Ένα ζήτημα ονομασίας μέτρου γίνεται σύμβαση. Μια μπερδεμένη δομή πίνακα γίνεται η προεπιλογή. Μια γρήγορη λύση γίνεται επιχειρηματική λογική.",
+    "de": "Power BI-Umgebungen werden oft schwierig, wenn schwache Muster in weitere Berichte kopiert werden. Ein Problem mit der Benennung von Kennzahlen wird zur Konvention. Eine verwirrende Tabellenstruktur wird zum Standard. Eine schnelle Problemumgehung wird zur Geschäftslogik."
+  },
   "Power BI mentoring": {
     "el": "Καθοδήγηση Power BI",
     "de": "Power BI-Mentoring"
+  },
+  "Power BI models do not fail because teams lack opinions. They fail because review, optimization, and decision-making are scattered. Power BI Solutions brings those steps together into one workspace and gives semantic model analysis the dedicated product surface it has been missing.": {
+    "el": "Τα μοντέλα Power BI δεν αποτυγχάνουν επειδή οι ομάδες δεν έχουν γνώμες. Αποτυγχάνουν επειδή η αναθεώρηση, η βελτιστοποίηση και η λήψη αποφάσεων είναι διάσπαρτα. Το Power BI Solutions συγκεντρώνει αυτά τα βήματα σε έναν χώρο εργασίας και παρέχει σημασιολογική ανάλυση μοντέλων την ειδική επιφάνεια προϊόντος που του έλειπε.",
+    "de": "Power BI-Modelle scheitern nicht daran, dass es den Teams an Meinungen mangelt. Sie scheitern, weil Überprüfung, Optimierung und Entscheidungsfindung verstreut sind. Power BI Solutions führt diese Schritte in einem Arbeitsbereich zusammen und gibt der semantischen Modellanalyse die dedizierte Produktoberfläche, die ihr bisher gefehlt hat."
   },
   "Power BI often fits Microsoft-heavy environments and strong Excel adoption. Tableau is strong for visual exploration and analyst-led storytelling. Looker can be powerful when semantic modeling and governed metrics are central to the data culture.": {
     "el": "Το Power BI ταιριάζει συχνά σε περιβάλλοντα βαριάς χρήσης της Microsoft και ισχυρή υιοθέτηση του Excel. Το Tableau είναι ισχυρό για οπτική εξερεύνηση και αφήγηση ιστοριών από αναλυτές. Το Looker μπορεί να είναι ισχυρό όταν η σημασιολογική μοντελοποίηση και οι ελεγχόμενες μετρήσεις είναι κεντρικές στην κουλτούρα δεδομένων.",
@@ -4816,6 +5548,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Power Query": {
     "el": "Power Query",
     "de": "Power-Abfrage"
+  },
+  "Power-BI-Berater beauftragen": {
+    "el": "Power-BI-Berater beauftragen",
+    "de": "Power-BI-Berater beauftragen"
   },
   "Practical AI use cases": {
     "el": "Πρακτικές περιπτώσεις χρήσης AI",
@@ -4849,6 +5585,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Πρακτική σκέψη πριν ξεκινήσει το έργο.",
     "de": "Praktisches Denken vor Projektbeginn."
   },
+  "Praxisnahe KI-Workflows, Strategie und Adoptionsbegleitung.": {
+    "el": "Praxisnahe KI-Workflows, Strategie und Adoptionsbegleitung.",
+    "de": "Praxisnahe KI-Workflows, Strategie und Adoptionsbegleitung."
+  },
   "Predictions tied to a defined decision, action, owner, and planning horizon": {
     "el": "Οι προβλέψεις συνδέονται με μια καθορισμένη απόφαση, δράση, ιδιοκτήτη και ορίζοντα προγραμματισμού",
     "de": "Vorhersagen, die an eine definierte Entscheidung, Aktion, einen Eigentümer und einen Planungshorizont gebunden sind"
@@ -4860,6 +5600,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Predictive Analytics & Machine Learning Consulting": {
     "el": "Predictive Analytics & Machine Learning Consulting",
     "de": "Beratung zu Predictive Analytics und maschinellem Lernen"
+  },
+  "Predictive Analytics: Common Forecasting Mistakes Business Teams Make": {
+    "el": "Predictive Analytics: Συνήθη λάθη πρόβλεψης που κάνουν οι επιχειρηματικές ομάδες",
+    "de": "Predictive Analytics: Häufige Prognosefehler, die Geschäftsteams machen"
   },
   "Predictive analytics": {
     "el": "Προγνωστική ανάλυση",
@@ -4925,6 +5669,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Το απόρρητο έρχεται πρώτη",
     "de": "Privatsphäre steht an erster Stelle"
   },
+  "Privacy consent: Yes": {
+    "el": "Συγκατάθεση απορρήτου: Ναι",
+    "de": "Datenschutzeinwilligung: Ja"
+  },
   "Privacy enquiries can be submitted through the": {
     "el": "Τα ερωτήματα απορρήτου μπορούν να υποβληθούν μέσω του",
     "de": "Datenschutzanfragen können über das eingereicht werden"
@@ -4957,6 +5705,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Επιφάνειες προϊόντος",
     "de": "Produktoberflächen"
   },
+  "Product-specific authentication matters": {
+    "el": "Ο έλεγχος ταυτότητας για συγκεκριμένο προϊόν έχει σημασία",
+    "de": "Es kommt auf die produktspezifische Authentifizierung an"
+  },
   "Production": {
     "el": "Παραγωγή",
     "de": "Produktion"
@@ -4976,6 +5728,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Productionization changes the mindset": {
     "el": "Η παραγωγή αλλάζει τη νοοτροπία",
     "de": "Die Produktion verändert die Denkweise"
+  },
+  "Produktvorstellung": {
+    "el": "Produktvorstellung",
+    "de": "Produktvorstellung"
   },
   "Professional Services": {
     "el": "Επαγγελματικές Υπηρεσίες",
@@ -5001,6 +5757,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Σημειώσεις έργου και τεχνικό πλαίσιο",
     "de": "Projektnotizen und technischer Kontext"
   },
+  "Projekt mit BI Solutions Group starten": {
+    "el": "Ξεκίνησε το Projekt mit BI Solutions Group",
+    "de": "Projekt mit BI Solutions Group gestartet"
+  },
+  "Projekt starten": {
+    "el": "Έναρξη σχεδίου",
+    "de": "Projekt gestartet"
+  },
+  "Projektbeschreibung": {
+    "el": "Projektbeschreibung",
+    "de": "Projektbeschreibung"
+  },
+  "Projektbriefing senden": {
+    "el": "Εστάλη η Πρόγραμμα ενημέρωσης",
+    "de": "Projektbriefing senden"
+  },
   "Prompt Engineering": {
     "el": "Άμεση Μηχανική",
     "de": "Schnelles Engineering"
@@ -5008,6 +5780,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Prompt Workflow Design for Business Teams": {
     "el": "Άμεση σχεδίαση ροής εργασιών για επιχειρηματικές ομάδες",
     "de": "Promptes Workflow-Design für Geschäftsteams"
+  },
+  "Prompt Workflow Design: Turning AI Prompts Into Repeatable Business Processes": {
+    "el": "Σχεδιασμός άμεσης ροής εργασίας: Μετατροπή προτροπών AI σε επαναλαμβανόμενες επιχειρηματικές διαδικασίες",
+    "de": "Prompt-Workflow-Design: KI-Eingabeaufforderungen in wiederholbare Geschäftsprozesse umwandeln"
   },
   "Prompt quality often fails because teams give inconsistent context. A repeatable workflow should define the required input fields, source documents, audience, output format, tone, constraints, and examples of acceptable output.": {
     "el": "Η άμεση ποιότητα συχνά αποτυγχάνει επειδή οι ομάδες δίνουν ασυνεπές πλαίσιο. Μια επαναλαμβανόμενη ροή εργασίας θα πρέπει να ορίζει τα απαιτούμενα πεδία εισόδου, τα έγγραφα προέλευσης, το κοινό, τη μορφή εξόδου, τον τόνο, τους περιορισμούς και παραδείγματα αποδεκτών αποτελεσμάτων.",
@@ -5089,6 +5865,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Αντιδράστε",
     "de": "Reagieren"
   },
+  "React Error Boundary caught:": {
+    "el": "Συνελήφθη το όριο σφάλματος αντίδρασης:",
+    "de": "Reagieren Sie auf die Fehlergrenze, die abgefangen wurde:"
+  },
   "Read article": {
     "el": "Διαβάστε το άρθρο",
     "de": "Artikel lesen"
@@ -5136,6 +5916,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Redesign work should protect existing search value. That means preserving or redirecting important URLs, migrating metadata, checking page titles, maintaining internal links, improving content depth, and making sure analytics continues to track the right events after launch.": {
     "el": "Οι εργασίες επανασχεδιασμού θα πρέπει να προστατεύουν την υπάρχουσα αξία αναζήτησης. Αυτό σημαίνει διατήρηση ή ανακατεύθυνση σημαντικών διευθύνσεων URL, μετεγκατάσταση μεταδεδομένων, έλεγχος τίτλων σελίδων, διατήρηση εσωτερικών συνδέσμων, βελτίωση του βάθους περιεχομένου και διασφάλιση ότι τα αναλυτικά στοιχεία συνεχίζουν να παρακολουθούν τα σωστά συμβάντα μετά την κυκλοφορία.",
     "de": "Neugestaltungsarbeiten sollten den vorhandenen Suchwert schützen. Das bedeutet, wichtige URLs beizubehalten oder umzuleiten, Metadaten zu migrieren, Seitentitel zu überprüfen, interne Links zu pflegen, die Inhaltstiefe zu verbessern und sicherzustellen, dass Analytics auch nach dem Start weiterhin die richtigen Ereignisse verfolgt."
+  },
+  "Refactoring becomes worth it when new measures take too long to build, report performance is poor, users disagree about definitions, or the same business logic appears in several places. Refactoring should not be cosmetic. It should make the model easier to maintain, easier to explain, and safer to reuse.": {
+    "el": "Η αναδιαμόρφωση αξίζει τον κόπο όταν τα νέα μέτρα χρειάζονται πολύ χρόνο για να δημιουργηθούν, η απόδοση των αναφορών είναι κακή, οι χρήστες διαφωνούν σχετικά με τους ορισμούς ή η ίδια επιχειρηματική λογική εμφανίζεται σε πολλά σημεία. Το Refactoring δεν πρέπει να είναι καλλυντικό. Θα πρέπει να κάνει το μοντέλο ευκολότερο στη συντήρηση, ευκολότερο να εξηγηθεί και ασφαλέστερο στην επαναχρησιμοποίηση.",
+    "de": "Refactoring lohnt sich, wenn die Erstellung neuer Maßnahmen zu lange dauert, die Berichtsleistung schlecht ist, Benutzer sich über Definitionen nicht einig sind oder an mehreren Stellen dieselbe Geschäftslogik auftritt. Refactoring sollte nicht kosmetisch sein. Dadurch sollte das Modell einfacher zu warten, einfacher zu erklären und sicherer in der Wiederverwendung sein."
   },
   "Refresh page": {
     "el": "Ανανέωση σελίδας",
@@ -5285,9 +6069,21 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η επαναχρησιμοποίηση δημιουργεί συνέπεια",
     "de": "Wiederverwendung schafft Konsistenz"
   },
+  "Review": {
+    "el": "Επανεξέταση",
+    "de": "Rezension"
+  },
   "Review adoption and capability, refine the roadmap, and leave reusable guidance for the next stage": {
     "el": "Ελέγξτε την υιοθέτηση και την ικανότητα, βελτιώστε τον οδικό χάρτη και αφήστε επαναχρησιμοποιήσιμη καθοδήγηση για το επόμενο στάδιο",
     "de": "Überprüfen Sie die Akzeptanz und Leistungsfähigkeit, verfeinern Sie die Roadmap und hinterlassen Sie wiederverwendbare Leitlinien für die nächste Phase"
+  },
+  "Review before the model spreads": {
+    "el": "Ελέγξτε πριν εξαπλωθεί το μοντέλο",
+    "de": "Überprüfen Sie, bevor sich das Modell verbreitet"
+  },
+  "Review?": {
+    "el": "Αξιολόγηση;",
+    "de": "Rezension?"
   },
   "Reviews": {
     "el": "Κριτικές",
@@ -5461,12 +6257,20 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Semantic Modeling στο Power BI",
     "de": "Semantische Modellierung in Power BI"
   },
+  "Semantic Modeling in Power BI: Why Clean Models Matter More Than Pretty Reports": {
+    "el": "Σημασιολογική μοντελοποίηση στο Power BI: Γιατί τα καθαρά μοντέλα έχουν μεγαλύτερη σημασία από τις όμορφες αναφορές",
+    "de": "Semantische Modellierung in Power BI: Warum saubere Modelle wichtiger sind als hübsche Berichte"
+  },
   "Semantic Models": {
     "el": "Σημασιολογικά Μοντέλα",
     "de": "Semantische Modelle"
   },
   "Semantic modeling": {
     "el": "Σημασιολογική μοντελοποίηση",
+    "de": "Semantische Modellierung"
+  },
+  "Semantische Modellierung": {
+    "el": "Semantische Modellierung",
     "de": "Semantische Modellierung"
   },
   "Send mentorship enquiry": {
@@ -5549,6 +6353,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Κοινά κριτήρια για να αποφασίσετε ποιες ιδέες να ακολουθήσετε, να δοκιμάσετε, να αναβάλετε ή να απορρίψετε",
     "de": "Gemeinsame Kriterien für die Entscheidung, welche Ideen verfolgt, getestet, zurückgestellt oder abgelehnt werden sollen"
   },
+  "Sie können Ihre Einwilligung über die Cookie-Einstellungen ändern oder widerrufen. Beim Ändern einer gespeicherten Auswahl wird die Seite möglicherweise neu geladen.": {
+    "el": "Sie können Ihre Einwilligung über die Cookie-Einstellungen ändern oder widerrufen. Beim Ändern einer gespeicherten Auswahl wird die Seite möglicherweise neu geladen.",
+    "de": "Sie können Ihre Einwilligung über die Cookie-Einstellungen ändern oder widerrufen. Beim Ändern einer gespeicherten Auswahl wird die Seite möglicherweise neu geladen."
+  },
+  "Sie sind nicht sicher, was Sie brauchen?": {
+    "el": "Sie sind nicht sicher, ήταν Sie brauchen;",
+    "de": "Sie sind nicht sicher, was Sie brauchen?"
+  },
+  "Sie sind nicht sicher, was Sie brauchen? Hier starten →": {
+    "el": "Sie sind nicht sicher, ήταν Sie brauchen; Hier starten →",
+    "de": "Sie sind nicht sicher, was Sie brauchen? Hier starten →"
+  },
   "Skills, projects, adoption, and progression": {
     "el": "Δεξιότητες, έργα, υιοθεσία και εξέλιξη",
     "de": "Fähigkeiten, Projekte, Akzeptanz und Fortschritt"
@@ -5561,6 +6377,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Νιφάδα χιονιού",
     "de": "Schneeflocke"
   },
+  "So bald wie möglich": {
+    "el": "Τόσο φαλακρός wie möglich",
+    "de": "So bald wie möglich"
+  },
   "Some services may require an account. You are responsible for keeping your login credentials confidential and for activity under your account. Notify us promptly if you suspect unauthorized use of your account.": {
     "el": "Ορισμένες υπηρεσίες ενδέχεται να απαιτούν λογαριασμό. Είστε υπεύθυνοι για τη διατήρηση εμπιστευτικών των διαπιστευτηρίων σύνδεσής σας και για τη δραστηριότητα στον λογαριασμό σας. Ενημερώστε μας αμέσως εάν υποψιάζεστε μη εξουσιοδοτημένη χρήση του λογαριασμού σας.",
     "de": "Für einige Dienste ist möglicherweise ein Konto erforderlich. Sie sind für die vertrauliche Behandlung Ihrer Anmeldedaten und für die Aktivitäten unter Ihrem Konto verantwortlich. Benachrichtigen Sie uns umgehend, wenn Sie den Verdacht einer unbefugten Nutzung Ihres Kontos haben."
@@ -5568,6 +6388,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Something went wrong": {
     "el": "Κάτι πήγε στραβά",
     "de": "Etwas ist schief gelaufen"
+  },
+  "Sonstiges": {
+    "el": "Sonstiges",
+    "de": "Sonstiges"
+  },
+  "Source:": {
+    "el": "Πηγή:",
+    "de": "Quelle:"
   },
   "Specialist resources": {
     "el": "Εξειδικευμένοι πόροι",
@@ -5725,9 +6553,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ενοποίηση συστήματος, χειρισμός εξαιρέσεων, αρχεία καταγραφής ελέγχου, έλεγχοι ελέγχου και οδηγίες λειτουργίας",
     "de": "Systemintegration, Ausnahmebehandlung, Prüfprotokolle, Überprüfungskontrollen und Betriebsanweisungen"
   },
+  "Systeme für Wiederverwendung, Distribution und digitale Assets.": {
+    "el": "Systeme für Wiederverwendung, Distribution und Digitale Assets.",
+    "de": "Systeme für Wiederverwendung, Distribution und digitale Assets."
+  },
   "TMDL": {
     "el": "TMDL",
     "de": "TMDL"
+  },
+  "TMDL is becoming a practical way to inspect Power BI semantic models as structured artifacts rather than opaque files. That matters because serious review work depends on seeing the tables, measures, relationships, and metadata in a form that can be parsed, checked, and discussed clearly.": {
+    "el": "Το TMDL γίνεται ένας πρακτικός τρόπος επιθεώρησης σημασιολογικών μοντέλων του Power BI ως δομημένα τεχνουργήματα και όχι ως αδιαφανή αρχεία. Αυτό έχει σημασία επειδή η σοβαρή εργασία αναθεώρησης εξαρτάται από την προβολή των πινάκων, των μέτρων, των σχέσεων και των μεταδεδομένων σε μια μορφή που μπορεί να αναλυθεί, να ελεγχθεί και να συζητηθεί με σαφήνεια.",
+    "de": "TMDL wird zu einer praktischen Möglichkeit, semantische Power BI-Modelle als strukturierte Artefakte und nicht als undurchsichtige Dateien zu überprüfen. Das ist wichtig, denn ernsthafte Überprüfungsarbeit hängt davon ab, dass die Tabellen, Kennzahlen, Beziehungen und Metadaten in einer Form angezeigt werden, die klar analysiert, überprüft und diskutiert werden kann."
   },
   "Tab": {
     "el": "Καρτέλα",
@@ -5805,6 +6641,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Οι ομάδες που κατανοούν την αβεβαιότητα, την ποιότητα της πηγής και τις συνήθειες ελέγχου είναι καλύτερα προετοιμασμένες να χρησιμοποιήσουν την τεχνητή νοημοσύνη υπεύθυνα. Ο στόχος είναι η καλύτερη κρίση, όχι περισσότερο τεχνικό λεξιλόγιο.",
     "de": "Teams, die Unsicherheit, Quellenqualität und Überprüfungsgewohnheiten verstehen, sind besser auf den verantwortungsvollen Umgang mit KI vorbereitet. Das Ziel ist ein besseres Urteilsvermögen, nicht mehr technisches Vokabular."
   },
+  "Teamtraining und Enablement": {
+    "el": "Teamtraining και Enablement",
+    "de": "Teamtraining und Enablement"
+  },
+  "Teamtraining, Adoptionsbegleitung und Karriereentwicklung.": {
+    "el": "Teamtraining, Adoptionsbegleitung und Karriereentwicklung.",
+    "de": "Teamtraining, Adoptionsbegleitung und Karriereentwicklung."
+  },
   "Technical SEO": {
     "el": "Τεχνικό SEO",
     "de": "Technisches SEO"
@@ -5820,6 +6664,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Technical data:": {
     "el": "Τεχνικά στοιχεία:",
     "de": "Technische Daten:"
+  },
+  "Technische Universität Kreta & Griechische Militärakademie": {
+    "el": "Technische Universität Kreta & Griechische Militärakademie",
+    "de": "Technische Universität Kreta & Griechische Militärakademie"
+  },
+  "Teilen Sie BI Solutions Group Ihren Bedarf an Business Intelligence, KI, Datenstrategie, Automatisierung, digitalen Produkten, Content Operations, Managed Support, Enablement oder Mentoring mit.": {
+    "el": "Teilen Sie BI Solutions Group Ihren Bedarf ως Business Intelligence, KI, Datenstrategie, Automatisierung, digitalen Productn, Content Operations, Managed Support, Enablement oder Mentoring mit.",
+    "de": "Teilen Sie BI Solutions Group Ihren Bedarf an Business Intelligence, KI, Datenstrategie, Automatisierung, digitalen Produkten, Content Operations, Managed Support, Enablement oder Mentoring mit."
   },
   "Tell BI Solutions Group about your BI, AI, data, automation, web application, or mentorship need and get a considered next step.": {
     "el": "Ενημερώστε την BI Solutions Group σχετικά με τις ανάγκες BI, AI, δεδομένων, αυτοματισμού, διαδικτυακής εφαρμογής ή καθοδήγησης και λάβετε ένα εξεταζόμενο επόμενο βήμα.",
@@ -5877,6 +6729,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Εκεί έχουν σημασία τα MLOps. Για μικρές και μεσαίες ομάδες, τα MLO θα πρέπει να είναι πρακτικά, όχι βαριά. Ο στόχος είναι να γίνουν οι ροές εργασιών τεχνητής νοημοσύνης και ανάλυσης αρκετά επαναλαμβανόμενες ώστε να είναι αξιόπιστες.",
     "de": "Hier kommt es auf MLOps an. Für kleine und mittelgroße Teams sollten MLOps praktisch und nicht schwer sein. Das Ziel besteht darin, KI- und Analyse-Workflows so wiederholbar zu machen, dass sie vertrauenswürdig sind."
   },
+  "That is why clean models often matter more than pretty reports. Visual design helps people read the story, but the model determines whether the story is reliable.": {
+    "el": "Γι' αυτό τα καθαρά μοντέλα συχνά έχουν μεγαλύτερη σημασία από τις όμορφες αναφορές. Ο οπτικός σχεδιασμός βοηθά τους ανθρώπους να διαβάσουν την ιστορία, αλλά το μοντέλο καθορίζει εάν η ιστορία είναι αξιόπιστη.",
+    "de": "Deshalb sind saubere Modelle oft wichtiger als hübsche Berichte. Visuelles Design hilft Menschen, die Geschichte zu lesen, aber das Modell bestimmt, ob die Geschichte zuverlässig ist."
+  },
   "That is why modern websites should be built with analytics in mind from the beginning. Measurement is not an afterthought. It is part of the product surface.": {
     "el": "Αυτός είναι ο λόγος για τον οποίο οι σύγχρονες ιστοσελίδες θα πρέπει να φτιάχνονται με γνώμονα την ανάλυση από την αρχή. Η μέτρηση δεν είναι εκ των υστέρων σκέψη. Είναι μέρος της επιφάνειας του προϊόντος.",
     "de": "Deshalb sollten moderne Websites von Anfang an unter Berücksichtigung von Analysen erstellt werden. Die Messung ist kein nachträglicher Einfall. Es ist Teil der Produktoberfläche."
@@ -5916,6 +6772,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "The <a href=\"/services/ai-governance-literacy-adoption\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">AI literacy and change management service</a> helps teams translate responsible AI principles into practical workplace habits.": {
     "el": "Η <a href=\"/services/ai-governance-literacy-adoption\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">υπηρεσία τεχνητής νοημοσύνης και διαχείρισης αλλαγών</a> βοηθά τις ομάδες να μεταφράσουν τις υπεύθυνες αρχές τεχνητής νοημοσύνης σε πρακτικές συνήθειες στο χώρο εργασίας.",
     "de": "Der <a href=\"/services/ai-governance-literacy-adoption\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">KI-Kompetenz- und Change-Management-Service</a> hilft Teams dabei, verantwortungsvolle KI-Prinzipien in praktische Arbeitsgewohnheiten umzusetzen."
+  },
+  "The <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">BI and semantic modeling service</a> is designed to catch those problems early and make the reporting layer easier to scale.": {
+    "el": "Η <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">υπηρεσία BI και σημασιολογικής μοντελοποίησης</a> έχει σχεδιαστεί για να εντοπίζει έγκαιρα αυτά τα προβλήματα και να κάνει το επίπεδο αναφοράς πιο εύκολο στην κλίμακα.",
+    "de": "Der <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">BI- und semantische Modellierungsdienst</a> ist darauf ausgelegt, diese Probleme frühzeitig zu erkennen und die Berichtsebene einfacher skalierbar zu machen."
   },
   "The <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">BI and semantic modeling service</a> starts with this framing because it drives the model, metrics, and user experience.": {
     "el": "Η <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">υπηρεσία BI και σημασιολογικής μοντελοποίησης</a> ξεκινά με αυτό το πλαίσιο επειδή καθοδηγεί το μοντέλο, την εμπειρία χρήστη, τη μέτρηση.",
@@ -6021,6 +6881,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Η επιχείρηση διατηρεί περισσότερο έλεγχο στο περιθώριο κέρδους, στη διαδρομή πελατών και στην εμπειρία της επωνυμίας.",
     "de": "Das Unternehmen behält mehr Kontrolle über Marge, Customer Journey und Markenerlebnis."
   },
+  "The business problem behind model quality": {
+    "el": "Το επιχειρηματικό πρόβλημα πίσω από την ποιότητα του μοντέλου",
+    "de": "Das Geschäftsproblem hinter der Modellqualität"
+  },
   "The buying journey becomes easier to scan, compare, and act on.": {
     "el": "Το ταξίδι αγοράς γίνεται πιο εύκολο στη σάρωση, τη σύγκριση και την ανάληψη δράσης.",
     "de": "Der Kaufprozess lässt sich einfacher scannen, vergleichen und entsprechend handeln."
@@ -6100,6 +6964,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "The point is not to install AI everywhere. The point is to identify where a team repeats the same cognitive work and where a controlled assistant can reduce preparation time. A good AI consulting engagement should define the workflow, the data boundary, the review rule, and the business outcome before choosing a model or tool.": {
     "el": "Το θέμα δεν είναι να εγκαταστήσετε το AI παντού. Το θέμα είναι να εντοπίσουμε πού μια ομάδα επαναλαμβάνει την ίδια γνωστική εργασία και πού ένας ελεγχόμενος βοηθός μπορεί να μειώσει τον χρόνο προετοιμασίας. Μια καλή δέσμευση παροχής συμβουλών τεχνητής νοημοσύνης θα πρέπει να ορίζει τη ροή εργασίας, τα όρια δεδομένων, τον κανόνα ελέγχου και το επιχειρηματικό αποτέλεσμα πριν επιλέξει ένα μοντέλο ή εργαλείο.",
     "de": "Es geht nicht darum, überall KI zu installieren. Es geht darum herauszufinden, wo ein Team die gleiche kognitive Arbeit wiederholt und wo ein kontrollierter Assistent die Vorbereitungszeit verkürzen kann. Bei einem guten KI-Beratungsauftrag sollten der Arbeitsablauf, die Datengrenze, die Überprüfungsregel und das Geschäftsergebnis definiert werden, bevor ein Modell oder Tool ausgewählt wird."
+  },
+  "The point of a semantic model is not technical elegance for its own sake. The point is better decision-making. When the model is clean, teams spend less time debating definitions and more time interpreting performance.": {
+    "el": "Το νόημα ενός σημασιολογικού μοντέλου δεν είναι η τεχνική κομψότητα για χάρη του. Το θέμα είναι η καλύτερη λήψη αποφάσεων. Όταν το μοντέλο είναι καθαρό, οι ομάδες αφιερώνουν λιγότερο χρόνο συζητώντας τους ορισμούς και περισσότερο χρόνο ερμηνεύοντας την απόδοση.",
+    "de": "Bei einem semantischen Modell geht es nicht um technische Eleganz als Selbstzweck. Der Punkt ist eine bessere Entscheidungsfindung. Wenn das Modell sauber ist, verbringen Teams weniger Zeit mit der Diskussion von Definitionen und haben mehr Zeit mit der Interpretation der Leistung."
   },
   "The practical starting point is simple: identify repeated work that consumes time, requires interpretation, and benefits from faster first drafts, classification, review, or decision support.": {
     "el": "Το πρακτικό σημείο εκκίνησης είναι απλό: προσδιορίστε την επαναλαμβανόμενη εργασία που καταναλώνει χρόνο, απαιτεί ερμηνεία και επωφελείται από ταχύτερα πρώτα προσχέδια, ταξινόμηση, επανεξέταση ή υποστήριξη αποφάσεων.",
@@ -6229,9 +7097,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Αυτές οι ροές εργασίας είναι πιο εύκολο να δοκιμαστούν, επειδή η ομάδα μπορεί να καθορίσει πώς φαίνεται το καλό αποτέλεσμα. Κάνουν επίσης πρακτική την αναθεώρηση. Ένας επαγγελματίας μπορεί να επιθεωρήσει μια περίληψη ή ένα πεδίο που έχει εξαχθεί πιο γρήγορα από το να γράψει τα πάντα από την αρχή.",
     "de": "Diese Arbeitsabläufe lassen sich einfacher testen, da das Team definieren kann, wie eine gute Ausgabe aussieht. Sie machen die Überprüfung auch praktisch. Ein Fachmann kann eine Zusammenfassung oder ein extrahiertes Feld schneller überprüfen, als alles von Grund auf neu zu schreiben."
   },
+  "Thesis: “Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis”": {
+    "el": "Διατριβή: «Σημεία επαφής τεχνητής νοημοσύνης με πολυκριτηριακή ανάλυση απόφασης»",
+    "de": "Abschlussarbeit: „Künstliche Intelligenz-Touchpoints mit multikriterieller Entscheidungsanalyse“"
+  },
   "This also helps search engines and AI assistants understand the page. Specific terminology around the workflow, audience, data boundary, and outcome creates a clearer entity for search systems to summarize.": {
     "el": "Αυτό βοηθά επίσης τις μηχανές αναζήτησης και τους βοηθούς AI να κατανοήσουν τη σελίδα. Η συγκεκριμένη ορολογία γύρω από τη ροή εργασίας, το κοινό, τα όρια δεδομένων και το αποτέλεσμα δημιουργεί μια σαφέστερη οντότητα για τη σύνοψη των συστημάτων αναζήτησης.",
     "de": "Dies hilft auch Suchmaschinen und KI-Assistenten, die Seite zu verstehen. Spezifische Terminologie rund um den Arbeitsablauf, die Zielgruppe, die Datengrenze und das Ergebnis schafft eine klarere Einheit, die Suchsysteme zusammenfassen können."
+  },
+  "This also improves performance. A model that is structured around the analytical question can reduce unnecessary complexity, improve DAX readability, and make future changes easier to test.": {
+    "el": "Αυτό βελτιώνει επίσης την απόδοση. Ένα μοντέλο που είναι δομημένο γύρω από την αναλυτική ερώτηση μπορεί να μειώσει την περιττή πολυπλοκότητα, να βελτιώσει την αναγνωσιμότητα του DAX και να κάνει πιο εύκολη τη δοκιμή μελλοντικών αλλαγών.",
+    "de": "Dies verbessert auch die Leistung. Ein Modell, das um die analytische Frage herum strukturiert ist, kann unnötige Komplexität reduzieren, die Lesbarkeit von DAX verbessern und das Testen zukünftiger Änderungen erleichtern."
   },
   "This belongs in the practical overlap between <a href=\"/services/digital-transformation-cloud-migration\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">cloud migration</a> and <a href=\"/services/mlops-model-monitoring\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">productionization</a>.": {
     "el": "Αυτό ανήκει στην πρακτική αλληλεπικάλυψη μεταξύ της <a href=\"/services/digital-transformation-cloud-migration\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">μεταφοράς στο σύννεφο</a> και της <a href=\"/services/mlopit0extor-linegdel\" dekoration-grey-300 underline-offset-4 hover:text-gray-600\">productionization</a>.",
@@ -6277,6 +7153,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Αυτό είναι ιδιαίτερα σημαντικό για τις εταιρείες παροχής υπηρεσιών στην Αθήνα, τη Θεσσαλονίκη και τις περιφερειακές αγορές όπου η εμπιστοσύνη, η ταχύτητα, η χρηστικότητα των κινητών και η τοπική αξιοπιστία επηρεάζουν την επαφή του επισκέπτη. Ο ιστότοπος θα πρέπει να απαντά γρήγορα σε πρακτικές ερωτήσεις: τι κάνει η εταιρεία, ποιον βοηθά, ποια αποτελέσματα ή εμπειρία μπορεί να δείξει και ποιο είναι το επόμενο βήμα.",
     "de": "Dies ist besonders wichtig für Dienstleistungsunternehmen in Athen, Thessaloniki und regionalen Märkten, in denen Vertrauen, Geschwindigkeit, mobile Benutzerfreundlichkeit und lokale Glaubwürdigkeit Einfluss darauf haben, ob ein Besucher Kontakt aufnimmt. Die Seite sollte praktische Fragen schnell beantworten: Was macht das Unternehmen, wem es hilft, welche Ergebnisse oder Erfahrungen es vorweisen kann und was der nächste Schritt ist."
   },
+  "This is the real shift behind Power BI Solutions. The product is not just describing semantic model best practices; it is operationalizing them. A structured upload flow, integrated diagnostics, AI guidance, and dedicated authentication make the experience more consistent for teams that need repeatable review rather than one-off commentary.": {
+    "el": "Αυτή είναι η πραγματική αλλαγή πίσω από τις λύσεις Power BI. Το προϊόν δεν περιγράφει απλώς βέλτιστες πρακτικές σημασιολογικού μοντέλου. τους θέτει σε λειτουργία. Η δομημένη ροή μεταφόρτωσης, τα ενσωματωμένα διαγνωστικά, η καθοδήγηση με τεχνητή νοημοσύνη και ο αποκλειστικός έλεγχος ταυτότητας κάνουν την εμπειρία πιο συνεπή για ομάδες που χρειάζονται επαναλαμβανόμενο έλεγχο και όχι μεμονωμένο σχολιασμό.",
+    "de": "Dies ist der eigentliche Wandel hinter Power BI-Lösungen. Das Produkt beschreibt nicht nur Best Practices für semantische Modelle; es ist ihre Operationalisierung. Ein strukturierter Upload-Ablauf, integrierte Diagnose, KI-Anleitung und dedizierte Authentifizierung machen das Erlebnis konsistenter für Teams, die eine wiederholbare Überprüfung statt einmaliger Kommentare benötigen."
+  },
   "This is where <a href=\"/services/ai-governance-literacy-adoption\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">AI literacy and change management</a> becomes part of delivery. Teams do not only need a working AI tool. They need the judgment to use it well, reject weak outputs, and improve the workflow over time.": {
     "el": "Εδώ είναι που η <a href=\"/services/ai-governance-literacy-adoption\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">Εγγραφή τεχνητής νοημοσύνης και διαχείριση αλλαγών</a> γίνεται μέρος της προβολής. Οι ομάδες δεν χρειάζονται μόνο ένα λειτουργικό εργαλείο AI. Χρειάζονται την κρίση για να το χρησιμοποιήσουν καλά, να απορρίψουν αδύναμα αποτελέσματα και να βελτιώσουν τη ροή εργασίας με την πάροδο του χρόνου.",
     "de": "Hier werden <a href=\"/services/ai-governance-literacy-adoption\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">KI-Kompetenz und Änderungsmanagement</a> Teil der Bereitstellung. Teams benötigen nicht nur ein funktionierendes KI-Tool. Sie benötigen das Urteilsvermögen, um es sinnvoll zu nutzen, schwache Ergebnisse abzulehnen und den Arbeitsablauf im Laufe der Zeit zu verbessern."
@@ -6284,6 +7164,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "This is why <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">BI and semantic modeling</a> should be treated together. If the model is weak, better visuals only hide the problem. If the model is strong, each new report becomes easier to build, explain, and govern.": {
     "el": "Αυτός είναι ο λόγος για τον οποίο το <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">BI και η σημασιολογική μοντελοποίηση</a> πρέπει να αντιμετωπίζονται μαζί. Εάν το μοντέλο είναι αδύναμο, καλύτερα οπτικά μόνο κρύβουν το πρόβλημα. Εάν το μοντέλο είναι ισχυρό, κάθε νέα αναφορά γίνεται πιο εύκολη στη δημιουργία, επεξήγηση και διαχείριση.",
     "de": "Aus diesem Grund sollten <a href=\"/services/business-intelligence-semantic-modeling\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">BI und semantische Modellierung</a> gemeinsam behandelt werden. Wenn das Modell schwach ist, verbirgt eine bessere Optik das Problem nur. Wenn das Modell stark ist, lässt sich jeder neue Bericht einfacher erstellen, erklären und verwalten."
+  },
+  "This is why semantic modeling matters. The model is the layer where raw data becomes business meaning. If that layer is weak, every dashboard built on top of it inherits the weakness.": {
+    "el": "Αυτός είναι ο λόγος για τον οποίο η σημασιολογική μοντελοποίηση έχει σημασία. Το μοντέλο είναι το επίπεδο όπου τα ακατέργαστα δεδομένα αποκτούν επιχειρηματικό νόημα. Εάν αυτό το επίπεδο είναι αδύναμο, κάθε πίνακας εργαλείων που είναι χτισμένος πάνω του κληρονομεί την αδυναμία.",
+    "de": "Aus diesem Grund ist semantische Modellierung wichtig. Das Modell ist die Ebene, auf der Rohdaten geschäftliche Bedeutung erlangen. Wenn diese Schicht schwach ist, erbt jedes darauf aufbauende Dashboard die Schwäche."
   },
   "This matters for GDPR, but it also matters for business trust. Teams will not adopt AI outputs if they cannot understand where the information came from or why the recommendation was produced.": {
     "el": "Αυτό έχει σημασία για τον GDPR, αλλά έχει επίσης σημασία για την επιχειρηματική εμπιστοσύνη. Οι ομάδες δεν θα υιοθετήσουν αποτελέσματα τεχνητής νοημοσύνης εάν δεν μπορούν να κατανοήσουν από πού προέρχονται οι πληροφορίες ή γιατί δημιουργήθηκε η σύσταση.",
@@ -6296,6 +7180,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "This may mean a narrow internal assistant, a document workflow, a reporting companion, or a customer-facing product. In each case, the implementation should include human review, privacy awareness, and clear limits.": {
     "el": "Αυτό μπορεί να σημαίνει έναν στενό εσωτερικό βοηθό, μια ροή εργασίας εγγράφων, έναν σύντροφο αναφοράς ή ένα προϊόν που απευθύνεται σε πελάτες. Σε κάθε περίπτωση, η εφαρμογή θα πρέπει να περιλαμβάνει ανθρώπινη επανεξέταση, επίγνωση του απορρήτου και σαφή όρια.",
     "de": "Dies kann ein enger interner Assistent, ein Dokumenten-Workflow, ein Reporting-Begleiter oder ein kundenorientiertes Produkt sein. In jedem Fall sollte die Umsetzung eine menschliche Überprüfung, Datenschutzbewusstsein und klare Grenzen umfassen."
+  },
+  "This review is especially valuable before a model spreads across multiple dashboards. Once teams copy unclear logic into new reports, the cost of cleanup increases. A structured semantic model review turns model quality into a repeatable process instead of a one-off expert opinion.": {
+    "el": "Αυτή η κριτική είναι ιδιαίτερα πολύτιμη προτού ένα μοντέλο εξαπλωθεί σε πολλούς πίνακες εργαλείων. Μόλις οι ομάδες αντιγράψουν ασαφή λογική σε νέες αναφορές, το κόστος της εκκαθάρισης αυξάνεται. Μια δομημένη ανασκόπηση σημασιολογικού μοντέλου μετατρέπει την ποιότητα του μοντέλου σε επαναλαμβανόμενη διαδικασία αντί για μια εφάπαξ γνώμη ειδικού.",
+    "de": "Diese Überprüfung ist besonders wertvoll, bevor sich ein Modell über mehrere Dashboards erstreckt. Sobald Teams unklare Logik in neue Berichte kopieren, steigen die Kosten für die Bereinigung. Eine strukturierte semantische Modellüberprüfung macht die Modellqualität zu einem wiederholbaren Prozess und nicht zu einer einmaligen Expertenmeinung."
   },
   "This sits naturally inside <a href=\"/services/data-strategy-governance\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">data strategy and governance</a> because customer data requires quality, privacy, and ownership.": {
     "el": "Αυτό βρίσκεται φυσικά μέσα στη <a href=\"/services/data-strategy-governance\" class=\"text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600\">στρατηγική δεδομένων και διακυβέρνηση</a> επειδή τα δεδομένα πελατών απαιτούν ποιότητα, απόρρητο και ιδιοκτησία.",
@@ -6349,6 +7237,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Εκπαίδευση",
     "de": "Ausbildung"
   },
+  "Training and career development": {
+    "el": "Κατάρτιση και εξέλιξη σταδιοδρομίας",
+    "de": "Ausbildung und Karriereentwicklung"
+  },
   "Training helps teams move from random experimentation to useful operating patterns.": {
     "el": "Η εκπαίδευση βοηθά τις ομάδες να περάσουν από τον τυχαίο πειραματισμό σε χρήσιμα πρότυπα λειτουργίας.",
     "de": "Durch Schulungen können Teams von zufälligen Experimenten zu nützlichen Betriebsmustern übergehen."
@@ -6356,6 +7248,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Training makes policy real": {
     "el": "Η εκπαίδευση κάνει την πολιτική πραγματικότητα",
     "de": "Durch Schulung wird Politik Wirklichkeit"
+  },
+  "Training und Karriereentwicklung": {
+    "el": "Training und Karriereentwicklung",
+    "de": "Ausbildung und Karriereentwicklung"
   },
   "Transfer ownership with operational runbooks, governance forums, and a measurable roadmap": {
     "el": "Μεταβιβάστε την ιδιοκτησία με επιχειρησιακά runbook, φόρουμ διακυβέρνησης και έναν μετρήσιμο οδικό χάρτη",
@@ -6437,6 +7333,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "UX",
     "de": "UX"
   },
+  "Umsetzungsprojekt": {
+    "el": "Umsetzungsprojekt",
+    "de": "Umsetzungsprojekt"
+  },
+  "Unable to submit project enquiry:": {
+    "el": "Δεν είναι δυνατή η υποβολή αιτήματος έργου:",
+    "de": "Projektanfrage konnte nicht eingereicht werden:"
+  },
   "Under €5,000": {
     "el": "Κάτω από 5.000 €",
     "de": "Unter 5.000 €"
@@ -6448,6 +7352,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "University of Athens": {
     "el": "Πανεπιστήμιο Αθηνών",
     "de": "Universität Athen"
+  },
+  "Universität Athen": {
+    "el": "Universität Athens",
+    "de": "Universität Athen"
+  },
+  "Unter 5.000 €": {
+    "el": "Κάτω από 5.000 €",
+    "de": "Unter 5.000 €"
+  },
+  "Unternehmen": {
+    "el": "Unternehmen",
+    "de": "Unternehmen"
   },
   "Updated": {
     "el": "Ενημερώθηκε",
@@ -6525,6 +7441,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Διανυσματικές βάσεις δεδομένων",
     "de": "Vektordatenbanken"
   },
+  "Verlässliches Reporting, semantische Modelle und Entscheidungssysteme.": {
+    "el": "Verlässliches Reporting, semantische Modelle und Entscheidungssysteme.",
+    "de": "Verlässliches Reporting, semantische Modelle und Entscheidungssysteme."
+  },
+  "Vernetzen": {
+    "el": "Vernetzen",
+    "de": "Vernetzen"
+  },
+  "Vielen Dank für den Kontext. BI Solutions Group prüft die Anfrage und meldet sich über die von Ihnen angegebene E-Mail-Adresse.": {
+    "el": "Vielen Dank für den Kontext. Ο Όμιλος BI Solutions παρέχει τη Διεύθυνση E-Mail.",
+    "de": "Vielen Dank für den Kontext. BI Solutions Group prüft die Anfrage und meldet sich über die von Ihnen angegebene E-Mail-Adresse."
+  },
   "View live website": {
     "el": "Δείτε ζωντανή ιστοσελίδα",
     "de": "Live-Website ansehen"
@@ -6569,6 +7497,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Τα προειδοποιητικά σημάδια περιλαμβάνουν επαναλαμβανόμενες μη αυτόματες ανανεώσεις, εκδόσεις αρχείων σε διένεξη, κρυφούς τύπους, αργούς κύκλους αναφορών και ευαίσθητα δεδομένα που αντιγράφονται πολύ ευρέως.",
     "de": "Zu den Warnzeichen gehören wiederholte manuelle Aktualisierungen, widersprüchliche Dateiversionen, versteckte Formeln, langsame Berichtszyklen und zu häufig kopierte sensible Daten."
   },
+  "Was möchten Sie erreichen?": {
+    "el": "Ήταν το möchten Sie erreichen;",
+    "de": "Was möchten Sie erreichen?"
+  },
+  "Was soll verbessert werden, wer wird das Ergebnis nutzen und wie sähe ein hilfreiches Ergebnis aus?": {
+    "el": "Ήταν soll verbessert werden, wer wird das Ergebnis nutzen und wie sähe ein hilfreiches Ergebnis aus;",
+    "de": "Was soll verbessert werden, wer wird das Ergebnis nutzen und wie sähe ein hilfreiches Ergebnis aus?"
+  },
   "Ways to work together": {
     "el": "Τρόποι συνεργασίας",
     "de": "Möglichkeiten der Zusammenarbeit"
@@ -6601,6 +7537,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Κατασκευάζουμε περιβάλλοντα Power BI, σημασιολογικά μοντέλα πινάκων και πλαίσια KPI που αντικαθιστούν ανταγωνιστικά υπολογιστικά φύλλα με γρήγορες, εξηγήσιμες αναφορές που μπορούν να χρησιμοποιηθούν με σιγουριά.",
     "de": "Wir entwickeln Power BI-Umgebungen, tabellarische semantische Modelle und KPI-Frameworks, die konkurrierende Tabellenkalkulationen durch schnelle, erklärbare Berichte ersetzen, die Führungskräfte mit Zuversicht verwenden können."
   },
+  "We may collect the following categories of data:": {
+    "el": "Ενδέχεται να συλλέξουμε τις ακόλουθες κατηγορίες δεδομένων:",
+    "de": "Wir können die folgenden Kategorien von Daten erfassen:"
+  },
   "We may suspend or terminate access to our services if these terms are violated or if doing so is necessary to protect our platform, users, or legal interests. You may stop using the services at any time.": {
     "el": "Ενδέχεται να αναστείλουμε ή να τερματίσουμε την πρόσβαση στις υπηρεσίες μας εάν παραβιαστούν αυτοί οι όροι ή εάν κάτι τέτοιο είναι απαραίτητο για την προστασία της πλατφόρμας, των χρηστών ή των νομικών συμφερόντων μας. Μπορείτε να σταματήσετε να χρησιμοποιείτε τις υπηρεσίες ανά πάσα στιγμή.",
     "de": "Wir können den Zugriff auf unsere Dienste sperren oder beenden, wenn gegen diese Bedingungen verstoßen wird oder dies zum Schutz unserer Plattform, Benutzer oder rechtlichen Interessen erforderlich ist. Sie können die Nutzung der Dienste jederzeit beenden."
@@ -6612,6 +7552,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "We may update this privacy policy from time to time. Updates will be posted on this page with the revised update date.": {
     "el": "Ενδέχεται να ενημερώνουμε αυτή την πολιτική απορρήτου από καιρό σε καιρό. Οι ενημερώσεις θα δημοσιεύονται σε αυτήν τη σελίδα με την αναθεωρημένη ημερομηνία ενημέρωσης.",
     "de": "Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Aktualisierungen werden auf dieser Seite mit dem geänderten Aktualisierungsdatum veröffentlicht."
+  },
+  "We may use third-party providers that process data on our behalf:": {
+    "el": "Μπορούμε να χρησιμοποιήσουμε τρίτους παρόχους που επεξεργάζονται δεδομένα για λογαριασμό μας:",
+    "de": "Wir können Drittanbieter einsetzen, die Daten in unserem Auftrag verarbeiten:"
+  },
+  "We process personal data under the GDPR on the following legal bases:": {
+    "el": "Επεξεργαζόμαστε προσωπικά δεδομένα βάσει του GDPR στις ακόλουθες νομικές βάσεις:",
+    "de": "Wir verarbeiten personenbezogene Daten im Rahmen der DSGVO auf folgenden Rechtsgrundlagen:"
   },
   "We use cookies to operate the website, improve the user experience, and understand service usage.": {
     "el": "Χρησιμοποιούμε cookies για τη λειτουργία του ιστότοπου, τη βελτίωση της εμπειρίας χρήστη και την κατανόηση της χρήσης της υπηρεσίας.",
@@ -6629,9 +7577,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ορατότητα ιστού και αναζήτησης",
     "de": "Web- und Suchsichtbarkeit"
   },
+  "Web & Suchsichtbarkeit": {
+    "el": "Web & Suchsichtbarkeit",
+    "de": "Web & Suchsichtbarkeit"
+  },
   "Web & search visibility": {
     "el": "Ορατότητα ιστού και αναζήτησης",
     "de": "Sichtbarkeit im Internet und in der Suche"
+  },
+  "Web & ορατότητα αναζήτησης": {
+    "el": "Web & ορατότητα αναζήτησης",
+    "de": "Web- und Webbrowser"
   },
   "Web Analytics": {
     "el": "Web Analytics",
@@ -6697,6 +7653,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Επανασχεδιασμός Ιστοσελίδας",
     "de": "Neugestaltung der Website"
   },
+  "Website oder Webanwendung": {
+    "el": "Ιστότοπος από το Webanwendung",
+    "de": "Website oder Webanwendung"
+  },
   "Website projects": {
     "el": "Έργα ιστοσελίδων",
     "de": "Website-Projekte"
@@ -6713,9 +7673,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Ιστότοποι σχεδιασμένοι γύρω από ένα ξεκάθαρο ταξίδι πελατών.",
     "de": "Websites, die auf eine klare Customer Journey ausgerichtet sind."
   },
+  "Websites und Anwendungen mit technischem SEO und Grundlagen für KI-Suche.": {
+    "el": "Ιστότοποι και Anwendungen mit technischem SEO και Grundlagen für KI-Suche.",
+    "de": "Websites und Anwendungen mit technischem SEO und Grundlagen für KI-Suche."
+  },
   "Websites, portals, and bespoke apps": {
     "el": "Ιστότοποι, πύλες και προσαρμοσμένες εφαρμογές",
     "de": "Websites, Portale und maßgeschneiderte Apps"
+  },
+  "Welche Erfahrung haben Sie, wohin möchten Sie sich entwickeln und wobei wünschen Sie Unterstützung?": {
+    "el": "Welche Erfahrung haben Sie, whin möchten Sie sich entwickeln und wobei wünschen Sie Unterstützung;",
+    "de": "Welche Erfahrung haben Sie, wohin möchten Sie sich entwickeln und wo wünschen Sie sich Unterstützung?"
   },
   "What AI literacy should cover": {
     "el": "Τι πρέπει να καλύπτει ο αλφαβητισμός AI",
@@ -6744,6 +7712,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "What are you trying to improve?": {
     "el": "Τι προσπαθείτε να βελτιώσετε;",
     "de": "Was versuchen Sie zu verbessern?"
+  },
+  "What clean modeling changes": {
+    "el": "Τι αλλάζει το καθαρό μόντελινγκ",
+    "de": "Was für saubere Modellierung sich ändert"
   },
   "What cloud migration should improve": {
     "el": "Τι πρέπει να βελτιωθεί η μετανάστευση cloud",
@@ -6853,6 +7825,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Όταν τα κριτήρια αναθεώρησης είναι σαφή, η χρήση της τεχνητής νοημοσύνης γίνεται ευκολότερο να κυβερνηθεί. Η ομάδα γνωρίζει σε τι μπορεί να βοηθήσει ο βοηθός και τι απαιτεί ακόμα ανθρώπινη κρίση.",
     "de": "Wenn die Überprüfungskriterien explizit sind, lässt sich der KI-Einsatz leichter steuern. Das Team weiß, womit der Assistent helfen kann und was noch menschliches Urteilsvermögen erfordert."
   },
+  "When to refactor a Power BI model": {
+    "el": "Πότε να αναδιαμορφώσετε ένα μοντέλο Power BI",
+    "de": "Wann sollte ein Power BI-Modell umgestaltet werden?"
+  },
   "When using our services, you agree not to:": {
     "el": "Όταν χρησιμοποιείτε τις υπηρεσίες μας, συμφωνείτε να μην:",
     "de": "Wenn Sie unsere Dienste nutzen, erklären Sie sich damit einverstanden, Folgendes nicht zu tun:"
@@ -6884,6 +7860,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "Why tool access is not enough": {
     "el": "Γιατί η πρόσβαση στο εργαλείο δεν είναι αρκετή",
     "de": "Warum Werkzeugzugriff nicht ausreicht"
+  },
+  "Wird gesendet…": {
+    "el": "Wird gesendet…",
+    "de": "Wird gesendet…"
   },
   "With great data comes great responsibility. Google is simultaneously testing a \"Likeness\" feature. While details are still emerging, it appears linked to video verification tools, likely a proactive step to help users identify and report unauthorized AI-generated content using their face or voice.": {
     "el": "Με τα μεγάλα δεδομένα έρχεται μεγάλη ευθύνη. Η Google δοκιμάζει ταυτόχρονα μια λειτουργία \"Likeness\". Ενώ οι λεπτομέρειες εξακολουθούν να εμφανίζονται, φαίνεται ότι συνδέεται με εργαλεία επαλήθευσης βίντεο, πιθανότατα ένα προληπτικό βήμα για να βοηθήσει τους χρήστες να εντοπίσουν και να αναφέρουν μη εξουσιοδοτημένο περιεχόμενο που δημιουργείται από AI χρησιμοποιώντας το πρόσωπο ή τη φωνή τους.",
@@ -6917,6 +7897,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Παγκοσμίως",
     "de": "Weltweit"
   },
+  "Wählen Sie die passendste Option": {
+    "el": "Wählen Sie die passendste Option",
+    "de": "Wählen Sie die passende Option"
+  },
   "You are an experienced professional preparing for deeper technical work, consulting, or leadership responsibility": {
     "el": "Είστε ένας έμπειρος επαγγελματίας που προετοιμάζεται για βαθύτερη τεχνική εργασία, συμβουλευτική ή ηγετική ευθύνη",
     "de": "Sie sind ein erfahrener Fachmann, der sich auf eine vertiefte technische Arbeit, Beratung oder Führungsverantwortung vorbereitet"
@@ -6937,6 +7921,26 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "Το έργο σας",
     "de": "Ihr Projekt"
   },
+  "Zeitrahmen auswählen": {
+    "el": "Zeitrahmen auswählen",
+    "de": "Zeitrahmen auswählen"
+  },
+  "Zertifizierungen": {
+    "el": "Zertifizierungen",
+    "de": "Zertifizierungen"
+  },
+  "Zum Beispiel: Berufseinstieg, Data Analyst, BI Developer": {
+    "el": "Zum Beispiel: Berufseinstieg, Data Analyst, BI Developer",
+    "de": "Zum Beispiel: Berufseinstieg, Data Analyst, BI Developer"
+  },
+  "Zurück zur Startseite": {
+    "el": "Zurück zur Startseite",
+    "de": "Zurück zur Startseite"
+  },
+  "[data-dropdown-trigger=\"": {
+    "el": "[data-dropdown-trigger=\"",
+    "de": "[data-dropdown-trigger=\""
+  },
   "[tabindex]:not([tabindex=\"-1\"])": {
     "el": "[tabindex]:not([tabindex=\"-1\"])",
     "de": "[tabindex]:not([tabindex=\"-1\"])"
@@ -6948,6 +7952,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "a[href]": {
     "el": "a[href]",
     "de": "a[href]"
+  },
+  "absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full": {
+    "el": "απόλυτη -κάτω-0,5 αριστερά-0 h-0,5 w-0 bg-μαύρο μετάβαση-όλη η διάρκεια-300 ομάδα-hover:w-full",
+    "de": "absolut -bottom-0.5 left-0 h-0.5 w-0 bg-black Transition-All Duration-300 Group-Hover:W-Full"
   },
   "active-indicator": {
     "el": "ενεργός-δείκτης",
@@ -7053,6 +8061,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "άρθρο",
     "de": "Artikel"
   },
+  "article-": {
+    "el": "άρθρο-",
+    "de": "Artikel-"
+  },
+  "article:": {
+    "el": "άρθρο:",
+    "de": "Artikel:"
+  },
   "article_to_contact": {
     "el": "άρθρο_προς_επαφή",
     "de": "Article_to_contact"
@@ -7125,6 +8141,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "bg-gray-50 border border-grey-200 rounded-xl p-6 mb-4",
     "de": "bg-gray-50 Rand border-gray-200 abgerundet-xl p-6 mb-4"
   },
+  "bg-transparent py-4 sm:py-6": {
+    "el": "bg-διαφανές py-4 sm:py-6",
+    "de": "bg-transparent py-4 sm:py-6"
+  },
   "bg-white px-6 py-6": {
     "el": "bg-λευκό px-6 py-6",
     "de": "bg-weiß px-6 py-6"
@@ -7136,6 +8156,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24": {
     "el": "bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24",
     "de": "bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24"
+  },
+  "bi-solutions-logo.png": {
+    "el": "bi-solutions-logo.png",
+    "de": "bi-solutions-logo.png"
   },
   "blade-and-comb": {
     "el": "λεπίδα και χτένα",
@@ -7153,6 +8177,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "μπλοκ h-full δρομέα-δείκτη",
     "de": "Block h-voller Cursor-Zeiger"
   },
+  "block min-h-11 py-2.5 text-base font-medium text-gray-600 transition-colors hover:text-black": {
+    "el": "μπλοκ min-h-11 py-2.5 γραμματοσειρά βάσης κειμένου-μέσο κείμενο-γκρι-600 μετάβαση-χρώματα hover:text-black",
+    "de": "Block min-h-11 py-2.5 Textbasis Schriftart-Medium Text-Grau-600 Übergangsfarben Hover:Text-Schwarz"
+  },
   "block min-h-11 py-2.5 text-base font-semibold text-black": {
     "el": "μπλοκ min-h-11 py-2.5 γραμματοσειρά βάσης κειμένου-ημιέντονο κείμενο-μαύρο",
     "de": "Block min-h-11 py-2.5 Textbasis Schriftart-Halbfett Text-Schwarz"
@@ -7161,9 +8189,25 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "μπλοκ min-h-14 py-4 text-2xl font-bold font-heading",
     "de": "Block min-h-14 py-4 text-2xl Schriftart-Bold Schriftart-Überschrift"
   },
+  "block rounded-2xl px-3 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2": {
+    "el": "μπλοκ στρογγυλεμένο-2xl px-3 py-3 κείμενο-γραμματοσειρά sm-ημιέντονο κείμενο-γκρι-900 μετάβαση-χρώματα hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
+    "de": "Block abgerundet-2xl px-3 py-3 Text-sm Schriftart-halbfett Text-Grau-900 Übergangsfarben Hover:bg-gray-50 Fokus-sichtbar:bg-gray-50 Fokus-sichtbar:Ring-2 Fokus-sichtbar:Ring-Schwarz Fokus-sichtbar:Ring-Offset-2"
+  },
+  "block rounded-2xl px-4 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2": {
+    "el": "μπλοκ στρογγυλεμένο-2xl px-4 py-3 μετάβαση-χρώματα hover:bg-grey-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
+    "de": "Block abgerundet-2xl px-4 py-3 Übergangsfarben hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+  },
   "block text-sm font-medium text-gray-800": {
     "el": "μπλοκ κείμενο-γραμματοσειρά sm-μέσο κείμενο-γκρι-800",
     "de": "Blocktext-sm Schriftart-Medium Text-Grau-800"
+  },
+  "blog-card-grid mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3": {
+    "el": "blog-card-grid mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3",
+    "de": "blog-card-grid mt-10 Grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3"
+  },
+  "blog-card-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3": {
+    "el": "blog-card-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3",
+    "de": "blog-card-grid mt-10 Grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3"
   },
   "blog-library-hero min-[2200px]:py-12": {
     "el": "blog-library-hero min-[2200px]:py-12",
@@ -7173,13 +8217,13 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "κρατήσεις-ροές-υπηρεσίες-επιχειρήσεις",
     "de": "Buchungsflüsse-Service-Unternehmen"
   },
-  "border-b border-gray-100 bg-white/90 py-3 shadow-sm backdrop-blur-md": {
-    "el": "border-b border-gray-100 bg-white/90 py-3 shadow-sm backdrop-blur-md",
-    "de": "Rand-B Rand-Grau-100 BG-Weiß/90 Py-3 Schatten-SM Hintergrund-Unschärfe-MD"
-  },
   "border-black bg-black text-white": {
     "el": "περίγραμμα-μαύρο bg-μαύρο κείμενο-άσπρο",
     "de": "Rand-schwarz, Hintergrund-schwarz, Text-weiß"
+  },
+  "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-black": {
+    "el": "border-gray-200 bg-white text-grey-600 hover:border-grey-400 hover:text-black",
+    "de": "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-black"
   },
   "border-l border-gray-200 pb-3 pl-4": {
     "el": "περίγραμμα-l περίγραμμα-γκρι-200 pb-3 pl-4",
@@ -7549,6 +8593,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "dbt",
     "de": "dbt"
   },
+  "dbt and Airflow: When Analytics Teams Need Automation": {
+    "el": "dbt και ροή αέρα: Όταν οι ομάδες του Analytics χρειάζονται αυτοματισμό",
+    "de": "dbt und Airflow: Wenn Analytics-Teams Automatisierung benötigen"
+  },
   "dbt improves transformation discipline": {
     "el": "Το dbt βελτιώνει την πειθαρχία του μετασχηματισμού",
     "de": "dbt verbessert die Transformationsdisziplin"
@@ -7572,6 +8620,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "demo": {
     "el": "επίδειξη",
     "de": "Demo"
+  },
+  "demo:": {
+    "el": "επίδειξη:",
+    "de": "Demo:"
   },
   "description": {
     "el": "περιγραφή",
@@ -7604,10 +8656,6 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "direct": {
     "el": "άμεσο",
     "de": "direkt"
-  },
-  "divide-y divide-gray-950/10 border-t border-gray-950/10": {
-    "el": "divide-y divide-gray-950/10 border-t border-grey-950/10",
-    "de": "Divide-Y Divide-Grau-950/10 Rand-T Rand-Grau-950/10"
   },
   "document workflow automation": {
     "el": "αυτοματοποίηση ροής εργασιών εγγράφων",
@@ -7657,6 +8705,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "χρηματοδότηση",
     "de": "Finanzen"
   },
+  "fixed left-0 right-0 top-0 z-50 px-4 transition-all duration-300 ease-in-out sm:px-6 md:px-12": {
+    "el": "σταθερό αριστερά-0 δεξιά-0 top-0 z-50 px-4 μετάβαση-όλη η διάρκεια-300 ευκολία εισόδου sm:px-6 md:px-12",
+    "de": "fest links-0 rechts-0 oben-0 z-50 px-4 Übergang-alle Dauer-300 einfaches Ein-Aus sm:px-6 md:px-12"
+  },
   "fixed top-0 left-0 right-0 h-1 bg-black origin-left z-50": {
     "el": "σταθερό πάνω-0 αριστερά-0 δεξιά-0 h-1 bg-μαύρο προέλευση-αριστερά z-50",
     "de": "fest oben-0 links-0 rechts-0 h-1 bg-schwarz Ursprung-links z-50"
@@ -7669,9 +8721,29 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "flex flex-1 flex-col p-6",
     "de": "Flex Flex-1 Flex-Col S-6"
   },
+  "flex flex-1 flex-col p-6 sm:p-8": {
+    "el": "flex flex-1 flex-col p-6 sm:p-8",
+    "de": "Flex Flex-1 Flex-Col p-6 sm:p-8"
+  },
   "flex flex-1 flex-col px-6 py-6": {
     "el": "flex flex-1 flex-col px-6 py-6",
     "de": "Flex Flex-1 Flex-Col PX-6 Py-6"
+  },
+  "flex flex-col gap-3 sm:flex-row lg:flex-col": {
+    "el": "flex flex-col gap-3 sm:flex-row lg:flex-col",
+    "de": "flex flex-col Lücke-3 sm:flex-row lg:flex-col"
+  },
+  "flex flex-col items-center justify-between pt-8 text-sm text-gray-500 md:flex-row": {
+    "el": "flex flex-col items-center justify-between pt-8 text-sm text-grey-500 md:flex-row",
+    "de": "flex flex-col items-center justify-between pt-8 text-sm text-gray-500 md:flex-row"
+  },
+  "flex flex-col justify-between px-6 py-8 md:px-8": {
+    "el": "flex flex-col justify-between px-6 py-8 md:px-8",
+    "de": "flex flex-col justify-between px-6 py-8 md:px-8"
+  },
+  "flex flex-col justify-center p-7 sm:p-10 lg:p-12": {
+    "el": "flex flex-col justify-center p-7 sm:p-10 lg:p-12",
+    "de": "flex flex-col justify-center p-7 sm:p-10 lg:p-12"
   },
   "flex flex-col space-y-4": {
     "el": "flex flex-col space-y-4",
@@ -7713,17 +8785,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "flex gap-4",
     "de": "Flexspalt-4"
   },
-  "flex h-10 w-10 items-center justify-center rounded-full border border-gray-950/20": {
-    "el": "flex h-10 w-10 items-center justify-center στρογγυλεμένο-γεμάτο περίγραμμα-γκρι-950/20",
-    "de": "Flex H-10 W-10 Artikel-Mitte Justify-Center abgerundet-voller Rand Rand-Grau-950/20"
+  "flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2": {
+    "el": "flex h-11 w-11 shrink-0 items-center justify-center στρογγυλεμένα-πλήρη μετάβαση-χρώματα hover:bg-grey-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2",
+    "de": "Flex H-11 W-11 Shrink-0 Items-Center Justify-Center Rounded-Full Transition-Colors Hover:bg-gray-100 Focus-Visible:Outline-None Focus-Visible:Ring-2 Focus-Visible:Ring-Black Focus-Visible:Ring-Offset-2"
   },
   "flex h-11 w-6 items-center justify-center": {
     "el": "flex h-11 w-6 items-center justify-center",
     "de": "Flex H-11 W-6 Items-Center Justify-Center"
   },
-  "flex h-8 w-8 items-center justify-center rounded-xl bg-black text-white shadow-lg shadow-black/10": {
-    "el": "flex h-8 w-8 αντικείμενα-κέντρο δικαιολογία-κέντρο στρογγυλεμένο-xl bg-μαύρο κείμενο-λευκό σκιά-lg σκιά-μαύρο/10",
-    "de": "Flex H-8 W-8 Items-Center Justify-Center Rounded-XL BG-Black Text-White Shadow-LG Shadow-Black/10"
+  "flex h-8 w-8 items-center justify-center rounded-full border border-gray-700 transition-colors group-hover:border-white": {
+    "el": "flex h-8 w-8 items-center justify-center στρογγυλεμένο-πλήρως περιγράμματος-γκρι-700 transition-colors group-hover:border-white",
+    "de": "Flex H-8 W-8 Items-Center Justify-Center Rounded-Full Border Border-Gray-700 Übergangsfarben Group-Hover: Border-White"
   },
   "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-black": {
     "el": "flex h-9 w-9 shrink-0 items-center justify-center στρογγυλεμένο-πλήρες bg-λευκό κείμενο-γραμματοσειρά sm-ημιέντονο κείμενο-μαύρο",
@@ -7740,6 +8812,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "flex items-center gap-3 text-gray-500": {
     "el": "flex αντικείμενα-κενό κέντρου-3 κείμενο-γκρι-500",
     "de": "Flex Items-Center Gap-3 Text-Gray-500"
+  },
+  "flex items-center gap-4 md:w-40 md:flex-col md:items-start md:gap-6": {
+    "el": "flex items-center gap-4 md:w-40 md:flex-col md:items-start md:gap-6",
+    "de": "Flex Items-Center Gap-4 md:w-40 md:flex-col md:items-start md:gap-6"
   },
   "flex items-center gap-4 text-gray-500": {
     "el": "flex αντικείμενα-κενό κέντρο-4 κείμενο-γκρι-500",
@@ -7761,6 +8837,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "flex αντικείμενα-κενό εκκίνησης-3",
     "de": "Flex-Items-Startlücke-3"
   },
+  "flex justify-center pt-32 px-6 md:px-12 pb-20": {
+    "el": "flex justify-center pt-32 px-6 md:px-12 pb-20",
+    "de": "Flex justify-center pt-32 px-6 md:px-12 pb-20"
+  },
   "flex min-h-11 cursor-pointer items-center gap-3 text-sm": {
     "el": "flex min-h-11 cursor-pointer items-center gap-3 text-sm",
     "de": "Flex Min-H-11 Cursor-Zeiger Items-Center Lücke-3 Text-SM"
@@ -7772,6 +8852,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "flex min-w-0 items-center gap-3": {
     "el": "flex min-w-0 items-center gap-3",
     "de": "Flex min-w-0 items-center Gap-3"
+  },
+  "flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110": {
+    "el": "ευέλικτο μέγεθος-12 συρρίκνωση-0 στοιχεία-κέντρο δικαιολογία-κέντρο στρογγυλεμένο-πλήρες bg-μαύρο κείμενο-λευκό μετάβαση-μεταμόρφωση ομάδα-ανάρτηση: κλίμακα-110",
+    "de": "Flex Size-12 Shrink-0 Items-Center Justify-Center Rounded-Full BG-Black Text-White Transition-Transform Group-Hover: Scale-110"
   },
   "flex space-x-1": {
     "el": "flex space-x-1",
@@ -7869,17 +8953,45 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "διακυβέρνηση",
     "de": "Regierungsführung"
   },
+  "grid auto-rows-fr gap-8 md:grid-cols-2": {
+    "el": "grid auto-rows-fr gap-8 md:grid-cols-2",
+    "de": "Grid Auto-rows-fr Gap-8 md:grid-cols-2"
+  },
   "grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end": {
     "el": "grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end",
     "de": "Gitterlücke-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end"
+  },
+  "grid gap-6": {
+    "el": "κενό πλέγματος-6",
+    "de": "Gitterlücke-6"
+  },
+  "grid gap-6 sm:grid-cols-2": {
+    "el": "grid gap-6 sm:grid-cols-2",
+    "de": "Rasterlücke-6 sm:grid-cols-2"
   },
   "grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end": {
     "el": "grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end",
     "de": "Gitterlücke-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end"
   },
+  "grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3": {
+    "el": "grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3",
+    "de": "Grid Grid-Spalten-1 Lücke-10 md: Grid-Spalten-2 LG: Grid-Spalten-3"
+  },
   "grid grid-cols-2 gap-2": {
     "el": "πλέγμα grid-cols-2 gap-2",
     "de": "Gitter Gitterspalten-2 Lücke-2"
+  },
+  "grid md:grid-cols-1 gap-12": {
+    "el": "grid md:grid-cols-1 gap-12",
+    "de": "Raster md:grid-cols-1 Lücke-12"
+  },
+  "grid md:grid-cols-1 gap-8": {
+    "el": "grid md:grid-cols-1 gap-8",
+    "de": "Raster md:grid-cols-1 Lücke-8"
+  },
+  "grid md:grid-cols-2 gap-12": {
+    "el": "grid md:grid-cols-2 gap-12",
+    "de": "Raster md:grid-cols-2 Lücke-12"
   },
   "grid min-w-0 gap-10": {
     "el": "πλέγμα min-w-0 gap-10",
@@ -7897,6 +9009,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "ομαδικό μπλοκ h-full",
     "de": "Gruppenblock h-voll"
   },
+  "group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg": {
+    "el": "ομαδικά εύκαμπτα στοιχεία-κενό στο κέντρο-4 κείμενο-χl γραμματοσειρά-μέσο αιώρηση:κείμενο-γκρι-600 μετάβαση-χρώματα p-2 στρογγυλεμένα-lg",
+    "de": "Group Flex Items-Center Gap-4 Text-XL Font-Medium Hover:Text-Gray-600 Transition-Colors P-2 Rounded-LG"
+  },
   "group flex items-center justify-between text-left text-sm font-medium transition-all duration-300": {
     "el": "ομάδα ευέλικτων στοιχείων-κέντρο δικαιολογία-μεταξύ κειμένου-αριστερό κείμενο-γραμματοσειρά sm-μέση μετάβαση-όλη διάρκεια-300",
     "de": "Group Flex Items-Center Justify-between Text-Left Text-SM Font-Medium Transition-All Dauer-300"
@@ -7908,6 +9024,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "group grid overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]": {
     "el": "ομαδικό πλέγμα υπερχείλισης-κρυμμένο στρογγυλεμένο-[2rem] περίγραμμα-γκρι-200 bg-λευκό σκιά-xl σκιά-μαύρο/[0,04] lg:grid-cols-[minmax(0,0,9fr)_minmax(0,1,1fr)]",
     "de": "Group Grid Overflow-hidden Rounded-[2rem] Border Border-Gray-200 BG-White Shadow-XL Shadow-Black/[0.04] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
+  },
+  "group mt-4 flex min-h-11 items-center gap-2 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black md:mt-0": {
+    "el": "ομάδα mt-4 flex min-h-11 items-center gap-2 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black md:mt-0",
+    "de": "Gruppe mt-4 Flex min-h-11 items-center Gap-2 Übergangsfarben hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black md:mt-0"
+  },
+  "group relative flex min-h-11 items-center gap-1 text-sm font-medium transition-colors hover:text-black": {
+    "el": "ομαδική σχετική ευκαμψία min-h-11 στοιχεία-κενό κέντρο-1 κείμενο-sm γραμματοσειρά-μέση μετάβαση-χρώματα αιώρηση:κείμενο-μαύρο",
+    "de": "Gruppe relative Flex min-h-11 items-center Lücke-1 Text-sm Schriftart-Medium Übergangsfarben Hover:Text-Schwarz"
+  },
+  "group relative flex min-h-11 items-center text-sm font-medium transition-colors hover:text-black": {
+    "el": "ομαδική σχετική ευκαμψία min-h-11 στοιχεία-κείμενο κέντρο-γραμματοσειρά sm-μέση μετάβαση-χρώματα αιώρηση:κείμενο-μαύρο",
+    "de": "Gruppe relativer Flex min-h-11 items-center text-sm Schriftart-Medium Übergangsfarben Hover:Text-Schwarz"
   },
   "h-1.5 w-1.5 rounded-full bg-black": {
     "el": "h-1,5 w-1,5 στρογγυλεμένο-γεμάτο bg-μαύρο",
@@ -7921,6 +9049,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "h-10 w-10 shrink-0 αντικείμενο-περιέχει",
     "de": "h-10 w-10 Shrink-0 Objekt enthalten"
   },
+  "h-12 rounded-full bg-black px-7 text-white hover:bg-gray-800": {
+    "el": "h-12 στρογγυλεμένο-πλήρες bg-μαύρο px-7 κείμενο-λευκό αιώρηση:bg-γκρι-800",
+    "de": "h-12 abgerundet-voll bg-schwarz px-7 text-weiß hover:bg-gray-800"
+  },
+  "h-12 rounded-full bg-white px-7 text-base text-black hover:bg-gray-200": {
+    "el": "h-12 στρογγυλεμένο-πλήρες bg-λευκό px-7 κείμενο βάσης κειμένου-μαύρο hover:bg-gray-200",
+    "de": "h-12 abgerundet-voll bg-weiß px-7 text-base text-schwarz hover:bg-gray-200"
+  },
+  "h-12 rounded-full bg-white px-7 text-black hover:bg-gray-200": {
+    "el": "h-12 στρογγυλεμένο-πλήρες bg-λευκό px-7 κείμενο-μαύρο αιώρηση:bg-γκρι-200",
+    "de": "h-12 abgerundet-voll bg-weiß px-7 text-schwarz hover:bg-gray-200"
+  },
   "h-12 rounded-full border-gray-300 px-7": {
     "el": "h-12 στρογγυλεμένο-γεμάτο περίγραμμα-γκρι-300 px-7",
     "de": "h-12 abgerundeter voller Rand-grau-300 px-7"
@@ -7928,6 +9068,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "h-12 w-full rounded-full text-base": {
     "el": "h-12 w-πλήρης στρογγυλεμένη-πλήρης βάση κειμένου",
     "de": "h-12 w-vollständig gerundet-vollständige Textbasis"
+  },
+  "h-12 w-full rounded-full text-base sm:w-auto sm:px-7": {
+    "el": "h-12 w-πλήρες στρογγυλεμένο-πλήρες κείμενο-βάση sm:w-auto sm:px-7",
+    "de": "h-12 w-full abgerundet-volltextbasis sm:w-auto sm:px-7"
+  },
+  "h-14 w-full rounded-full border border-gray-200 bg-gray-50 pl-12 pr-6 text-base outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-black": {
+    "el": "h-14 w-πλήρες στρογγυλεμένο-πλήρες περιθώριο-γκρι-200 bg-γκρι-50 pl-12 pr-6 περίγραμμα βάσης κειμένου-καμία μετάβαση-όλα εστίαση: περίγραμμα-διαφανή εστίαση: δαχτυλίδι-2 εστίαση: δαχτυλίδι-μαύρο",
+    "de": "h-14 w-full abgerundet-voller Rand border-gray-200 bg-gray-50 pl-12 pr-6 text-base Outline-none transit-all focus:border-transparent focus:ring-2 focus:ring-black"
   },
   "h-3 w-3": {
     "el": "h-3 w-3",
@@ -7940,6 +9088,18 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "h-4 w-4 transition-transform": {
     "el": "h-4 w-4 μετάβαση-μετασχηματισμός",
     "de": "h-4 w-4 Übergangstransformation"
+  },
+  "h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5": {
+    "el": "h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
+    "de": "h-4 w-4 Transition-Transform Group-Hover:-Translate-Y-0.5 Group-Hover:Translate-X-0.5"
+  },
+  "h-4 w-4 transition-transform group-hover:translate-x-1": {
+    "el": "h-4 w-4 transition-transform group-hover:translate-x-1",
+    "de": "h-4 w-4 Transition-Transform Group-Hover:Translate-X-1"
+  },
+  "h-4 w-4 transition-transform group-hover:translate-y-1": {
+    "el": "h-4 w-4 ομάδα μετάβασης-μεταμόρφωσης-hover:translate-y-1",
+    "de": "h-4 w-4 Transition-Transform Group-Hover:Translate-Y-1"
   },
   "h-5 w-5": {
     "el": "h-5 w-5",
@@ -7965,6 +9125,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "h-6 w-6 κείμενο-γκρι-400",
     "de": "h-6 w-6 text-grau-400"
   },
+  "h-6 w-6 text-gray-950 transition-transform duration-500 group-hover:scale-110": {
+    "el": "h-6 w-6 text-grey-950 transition-transform duration-500 group-hover:scale-110",
+    "de": "h-6 w-6 text-gray-950 Transition-Transform Duration-500 Group-Hover:Scale-110"
+  },
+  "h-9 w-9 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-10 sm:w-10": {
+    "el": "h-9 w-9 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-10 sm:w-10",
+    "de": "h-9 w-9 Shrink-0 Object-Contain Transition-Transform Duration-300 Group-Hover: Scale-105 SM: H-10 SM: W-10"
+  },
   "h-auto w-full": {
     "el": "h-auto w-full",
     "de": "h-auto w-voll"
@@ -7985,6 +9153,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "h-πλήρες w-πλήρες αντικείμενο-κάλυμμα",
     "de": "h-vollständige w-vollständige Objektabdeckung"
   },
+  "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105": {
+    "el": "h-full w-full object-cover transition-transform duration-700 group-hover:scale-105",
+    "de": "h-voll w-voll Objektabdeckung Übergangstransformation Dauer-700 Gruppenhover: Skala-105"
+  },
   "h-full w-full overflow-hidden bg-gray-100": {
     "el": "h-full w-full overflow-hidden bg-grey-100",
     "de": "h-full w-full overflow-hidden bg-gray-100"
@@ -7992,10 +9164,6 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "header": {
     "el": "κεφαλίδα",
     "de": "Kopfzeile"
-  },
-  "helping organizations leverage state-of-the-art tooling, modern data stacks, and emerging AI frameworks": {
-    "el": "βοηθώντας τους οργανισμούς να αξιοποιήσουν υπερσύγχρονα εργαλεία, σύγχρονες στοίβες δεδομένων και αναδυόμενα πλαίσια τεχνητής νοημοσύνης",
-    "de": "Unterstützung von Organisationen bei der Nutzung modernster Tools, moderner Datenstapel und neuer KI-Frameworks"
   },
   "hero-need": {
     "el": "ήρωας-ανάγκη",
@@ -8020,6 +9188,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "hidden": {
     "el": "κρυμμένο",
     "de": "versteckt"
+  },
+  "hidden items-center gap-5 xl:flex": {
+    "el": "κρυφά στοιχεία-κενό κέντρου-5 xl:flex",
+    "de": "Hidden Items-Center Gap-5 xl:flex"
+  },
+  "hidden lg:block w-64 flex-shrink-0": {
+    "el": "κρυφό lg:block w-64 flex-shrink-0",
+    "de": "versteckt lg:block w-64 flex-shrink-0"
+  },
+  "hidden truncate text-xs font-medium text-gray-500 sm:block": {
+    "el": "κρυφό περικομμένο κείμενο-γραμματοσειρά xs-μέσο κείμενο-γκρι-500 sm:block",
+    "de": "Versteckt, Text abschneiden-xs, Schriftart-medium, Text-Grau-500, sm:block"
+  },
+  "hidden w-64 shrink-0 py-20 lg:block": {
+    "el": "κρυφό w-64 shrink-0 py-20 lg:block",
+    "de": "versteckter W-64 Shrink-0 Py-20 LG:Block"
   },
   "high": {
     "el": "ψηλά",
@@ -8077,6 +9261,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "img",
     "de": "Bild"
   },
+  "in": {
+    "el": "σε",
+    "de": "in"
+  },
   "index,follow": {
     "el": "ευρετήριο, ακολουθήστε",
     "de": "Index, folgen"
@@ -8089,21 +9277,29 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "πληροφορίες σχετικά με δεδομένα από ιστότοπους συνεργατών",
     "de": "Informationen zu Daten von Partnerseiten"
   },
+  "inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white": {
+    "el": "inline-flex h-10 w-10 items-center justify-center στρογγυλεμένο-πλήρες bg-γκρι-100 transition-colors hover:bg-black hover:text-white",
+    "de": "inline-flex h-10 w-10 items-center justify-center abgerundet-voll bg-gray-100 Übergangsfarben hover:bg-black hover:text-white"
+  },
   "inline-flex items-center gap-1": {
     "el": "inline-flex στοιχεία-κενό κέντρου-1",
     "de": "Inline-Flex-Items-Center-Lücke-1"
+  },
+  "inline-flex items-center gap-2 rounded-full border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-black": {
+    "el": "inline-flex στοιχεία-κεντρικό κενό-2 στρογγυλεμένο-πλήρες περιθώριο-γκρι-300 px-5 py-3 κείμενο-γραμματοσειρά sm-μέσο κείμενο-γκρι-700 μετάβαση-χρώματα hover:border-grey-400 hover:text-black",
+    "de": "inline-flex items-center gap-2 abgerundet-voller Rand border-gray-300 px-5 py-3 text-sm Schriftart-Medium text-gray-700 Übergangsfarben hover:border-gray-400 hover:text-black"
+  },
+  "inline-flex items-center gap-2 text-sm font-semibold text-gray-950 md:pt-2": {
+    "el": "inline-flex items-center gap-2 text-sm font-semibold text-grey-950 md:pt-2",
+    "de": "inline-flex items-center gap-2 text-sm font-semibold text-gray-950 md:pt-2"
   },
   "inline-flex items-center gap-2 text-sm text-gray-500": {
     "el": "inline-flex αντικείμενα-κεντρικό κενό-2 κείμενο-sm κείμενο-γκρι-500",
     "de": "inline-flex items-center gap-2 text-sm text-gray-500"
   },
-  "inline-flex items-center rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600": {
-    "el": "inline-flex στοιχεία-κέντρο στρογγυλεμένο-πλήρες bg-μαύρο/5 px-4 py-2 κείμενο-γραμματοσειρά sm-μέσο κείμενο-γκρι-600",
-    "de": "inline-flex items-center abgerundet-voll bg-schwarz/5 px-4 py-2 text-sm Schriftart-Medium Text-Grau-600"
-  },
-  "inline-flex max-w-full items-center gap-3 rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600": {
-    "el": "inline-flex max-w-full items-center gap-3 στρογγυλεμένο-πλήρες bg-μαύρο/5 px-4 py-2 κείμενο-γραμματοσειρά sm-μέσο κείμενο-γκρι-600",
-    "de": "inline-flex max-w-full items-center Lücke-3 abgerundet-voll bg-schwarz/5 px-4 py-2 text-sm Schriftart-Medium Text-Grau-600"
+  "inline-flex items-center justify-center rounded-md bg-black px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors": {
+    "el": "inline-flex items-center justify-center στρογγυλεμένο-md bg-μαύρο px-6 py-2,5 κείμενο- γραμματοσειρά sm-μέσο κείμενο-λευκό hover:bg-gray-800 transition-colors",
+    "de": "inline-flex items-center justify-center abgerundet-md bg-black px-6 py-2.5 text-sm font-medium text-white hover:bg-gray-800 Übergangsfarben"
   },
   "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-2 text-xs font-semibold uppercase transition-colors": {
     "el": "inline-flex min-h-11 min-w-11 items-center justify-center στρογγυλεμένο-πλήρες px-2 κείμενο-γραμματοσειρά xs-ημιέντονα κεφαλαία μετάβαση-χρώματα",
@@ -8177,6 +9373,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "ανάπτυξη διεθνών εφαρμογών ιστού",
     "de": "Internationale Web-App-Entwicklung"
   },
+  "internationaler KI-Berater": {
+    "el": "διεθνής KI-Berater",
+    "de": "internationaler KI-Berater"
+  },
   "introduction": {
     "el": "εισαγωγή",
     "de": "Einführung"
@@ -8233,6 +9433,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "σύνδεσμος",
     "de": "Link"
   },
+  "link-": {
+    "el": "σύνδεσμος-",
+    "de": "Link-"
+  },
   "link[rel=\"alternate\"][data-seo-alternate]": {
     "el": "σύνδεσμος[rel=\"alternate\"][data-seo-alternate]",
     "de": "link[rel=\"alternate\"][data-seo-alternate]"
@@ -8285,6 +9489,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "διαχειριζόμενες λειτουργίες",
     "de": "Managed-Operations"
   },
+  "matching “": {
+    "el": "ταίριασμα \"",
+    "de": "passend zu „"
+  },
   "max-w-2xl": {
     "el": "max-w-2xl",
     "de": "max-w-2xl"
@@ -8316,6 +9524,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "max-w-xl min-[2200px]:max-w-none": {
     "el": "max-w-xl min-[2200px]:max-w-none",
     "de": "max-w-xl min-[2200px]:max-w-none"
+  },
+  "mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between": {
+    "el": "mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between",
+    "de": "mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
+  },
+  "mb-12 flex flex-col gap-5 md:mb-16 md:flex-row md:items-end md:justify-between": {
+    "el": "mb-12 flex flex-col gap-5 md:mb-16 md:flex-row md:items-end md:justify-between",
+    "de": "mb-12 flex flex-col gap-5 md:mb-16 md:flex-row md:items-end md:justify-between"
   },
   "mb-12 scroll-mt-32": {
     "el": "mb-12 scroll-mt-32",
@@ -8357,13 +9573,29 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "md:h-full rounded-[1,5rem] border-grey-200 bg-white shadow-sm shadow-black/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.06]",
     "de": "md:h-fullrounded-[1.5rem] border-gray-200 bg-whiteshadow-smshadow-black/[0.03] Transition-all-Dauer-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.06]"
   },
+  "mentoring καριέρας δεδομένων": {
+    "el": "mentoring καριέρας δεδομένων",
+    "de": "Mentoring"
+  },
   "meta": {
     "el": "μετα",
     "de": "Meta"
   },
+  "meta[": {
+    "el": "μετα[",
+    "de": "Meta["
+  },
   "middle": {
     "el": "μέση",
     "de": "Mitte"
+  },
+  "min-h-11 rounded-full border px-4 py-2 text-sm font-medium transition-colors": {
+    "el": "min-h-11 στρογγυλεμένο-πλήρες περιθώριο px-4 py-2 κείμενο-sm γραμματοσειρά-μέση μετάβαση-χρώματα",
+    "de": "min-h-11 abgerundeter voller Rand px-4 py-2 Text-SM Schriftart-mittlere Übergangsfarben"
+  },
+  "min-h-44 resize-y py-3 leading-relaxed": {
+    "el": "min-h-44 αλλαγή μεγέθους-y py-3 οδηγώντας-χαλαρά",
+    "de": "min-h-44 Größe ändern-y py-3 führend-entspannt"
   },
   "min-h-screen bg-background": {
     "el": "min-h-οθόνη bg-φόντο",
@@ -8461,10 +9693,6 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mr-1 h-4 w-4 αδιαφάνεια-60",
     "de": "mr-1 h-4 w-4 Deckkraft-60"
   },
-  "mr-3 font-mono text-xs text-white/30": {
-    "el": "mr-3 γραμματοσειρά-μονοφωνικό κείμενο-xs κείμενο-λευκό/30",
-    "de": "mr-3 Schriftart-Mono Text-XS Text-Weiß/30"
-  },
   "mt-0.5 h-4 w-4 shrink-0": {
     "el": "mt-0,5 h-4 w-4 shrink-0",
     "de": "mt-0,5 h-4 w-4 schrumpfen-0"
@@ -8501,6 +9729,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-10 border-t περίγραμμα-γκρι-100 pt-6",
     "de": "mt-10 border-t border-gray-100 pt-6"
   },
+  "mt-10 grid auto-rows-fr gap-6 md:grid-cols-2": {
+    "el": "mt-10 grid auto-rows-fr gap-6 md:grid-cols-2",
+    "de": "mt-10 Raster auto-rows-fr Lücke-6 md:grid-cols-2"
+  },
+  "mt-10 grid gap-6 lg:grid-cols-3": {
+    "el": "mt-10 grid gap-6 lg:grid-cols-3",
+    "de": "mt-10 Rasterlücke-6 lg:grid-cols-3"
+  },
   "mt-10 min-w-0 max-w-full": {
     "el": "mt-10 min-w-0 max-w-full",
     "de": "mt-10 min-w-0 max-w-voll"
@@ -8532,10 +9768,6 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "mt-12 pt-12 border-t border-gray-100": {
     "el": "mt-12 pt-12 border-t περίγραμμα-γκρι-100",
     "de": "mt-12 pt-12 border-t border-gray-100"
-  },
-  "mt-16 border-y border-gray-950/15": {
-    "el": "mt-16 border-y border-gray-950/15",
-    "de": "mt-16 border-y border-grey-950/15"
   },
   "mt-2": {
     "el": "mt-2",
@@ -8573,6 +9805,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-3 max-w-3xl text-sm lead-relaxed text-grey-600",
     "de": "mt-3 max-w-3xl text-sm führender entspannter text-grau-600"
   },
+  "mt-3 text-2xl font-bold font-heading leading-tight text-white transition-colors group-hover:text-gray-300": {
+    "el": "mt-3 κείμενο-2xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κορυφαία-σφιχτό κείμενο-λευκό μετάβαση-ομάδα χρωμάτων-hover:text-gray-300",
+    "de": "mt-3 text-2xl Font-Bold Font-Heading Leading-Tight Text-White Transition-Colors Group-Hover: Text-Gray-300"
+  },
+  "mt-3 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700": {
+    "el": "mt-3 text-2xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτό κείμενο-γκρι-950 μετάβαση-ομάδα χρωμάτων-hover:text-gray-700",
+    "de": "mt-3 Text-2XL Font-Bold Font-Heading Tracking-Tight Text-Gray-950 Übergangsfarben Group-Hover: Text-Gray-700"
+  },
   "mt-3 text-base leading-relaxed text-gray-600": {
     "el": "mt-3 με βάση το κείμενο, με κορυφαίο-χαλαρό κείμενο-γκρι-600",
     "de": "mt-3 Textbasis Leading-Relaxed Text-Gray-600"
@@ -8596,6 +9836,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "mt-4": {
     "el": "mt-4",
     "de": "mt-4"
+  },
+  "mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between": {
+    "el": "mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between",
+    "de": "mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
   },
   "mt-4 flex flex-wrap gap-2": {
     "el": "mt-4 flex flex-wrap gap-2",
@@ -8633,6 +9877,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-4 κείμενο-2xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτό κείμενο-γκρι-950",
     "de": "mt-4 Text-2XL Font-Bold Font-Heading Tracking-Tight Text-Gray-950"
   },
+  "mt-4 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700": {
+    "el": "mt-4 κείμενο-2xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτό κείμενο-γκρι-950 transition-colors group-hover:text-gray-700",
+    "de": "mt-4 Text-2XL Font-Bold Font-Heading Tracking-Tight Text-Gray-950 Übergangsfarben Group-Hover: Text-Gray-700"
+  },
   "mt-4 text-3xl font-bold font-heading tracking-tight": {
     "el": "mt-4 κείμενο-3xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτή",
     "de": "mt-4 Text-3XL Font-Bold Font-Heading Tracking-Tight"
@@ -8640,6 +9888,22 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "mt-4 text-3xl font-bold font-heading tracking-tight text-gray-950": {
     "el": "mt-4 κείμενο-3xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτό κείμενο-γκρι-950",
     "de": "mt-4 Text-3XL Font-Bold Font-Heading Tracking-Tight Text-Gray-950"
+  },
+  "mt-4 text-4xl font-bold font-heading leading-tight text-gray-950 md:text-5xl": {
+    "el": "mt-4 κείμενο-4xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κορυφαία-σφιχτό κείμενο-γκρι-950 md:text-5xl",
+    "de": "mt-4 text-4xl Font-Bold Font-Heading Leading-Tight Text-Gray-950 md:text-5xl"
+  },
+  "mt-4 text-4xl font-bold font-heading tracking-tight md:text-5xl": {
+    "el": "mt-4 κείμενο-4xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτή md:text-5xl",
+    "de": "mt-4 text-4xl Font-Bold Font-Heading Tracking-Tight MD: Text-5XL"
+  },
+  "mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl": {
+    "el": "mt-4 κείμενο-4xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτό κείμενο-γκρι-950 md:text-5xl",
+    "de": "mt-4 text-4xl Font-Bold Font-Heading Tracking-Tight Text-Gray-950 MD: Text-5XL"
+  },
+  "mt-4 text-4xl md:text-5xl font-bold font-heading text-white": {
+    "el": "mt-4 κείμενο-4xl md:text-5xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κείμενο-λευκό",
+    "de": "mt-4 text-4xl md:text-5xl Schriftart-Bold Schriftart-Überschrift Text-Weiß"
   },
   "mt-4 text-base leading-relaxed text-gray-600": {
     "el": "mt-4 βάσης κειμένου lead-relaxed text-grey-600",
@@ -8661,13 +9925,13 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-4 κείμενο-sm οδηγό-χαλαρό κείμενο-γκρι-400",
     "de": "mt-4 Text-SM Leading-Relaxed Text-Gray-400"
   },
-  "mt-5 border-t border-white/10 pt-5": {
-    "el": "mt-5 περίγραμμα-t περίγραμμα-λευκό/10 pt-5",
-    "de": "mt-5 Rand-t Rand-weiß/10 pt-5"
+  "mt-4 text-xl font-bold font-heading leading-tight text-gray-950 md:text-2xl": {
+    "el": "mt-4 text-xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κύρια-σφιχτό κείμενο-γκρι-950 md:text-2xl",
+    "de": "mt-4 Text-XL Font-Bold Font-Heading Leading-Tight Text-Gray-950 md:text-2xl"
   },
-  "mt-5 divide-y divide-gray-950/15 border-y border-gray-950/15": {
-    "el": "mt-5 divide-y divide-gray-950/15 border-y border-gray-950/15",
-    "de": "mt-5 Divide-Y Divide-Gray-950/15 Border-Y Border-Gray-950/15"
+  "mt-4 text-xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700": {
+    "el": "mt-4 text-xl font-bold font-heading tracking-tight text-grey-950 transition-colors group-hover:text-grey-700",
+    "de": "mt-4 Text-XL Font-Bold Font-Heading Tracking-Tight Text-Grau-950 Übergangsfarben Group-Hover: Text-Grau-700"
   },
   "mt-5 flex flex-wrap gap-2": {
     "el": "mt-5 flex flex-wrap gap-2",
@@ -8681,6 +9945,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-5 max-w-3xl text-lg lead-relaxed text-grey-600",
     "de": "mt-5 max-w-3xl Text-LG Leading-Relaxed Text-Gray-600"
   },
+  "mt-5 max-w-full break-words text-lg leading-relaxed text-gray-600 sm:max-w-3xl": {
+    "el": "mt-5 max-w-full break-words text-lg lead-relaxed text-grey-600 sm:max-w-3xl",
+    "de": "mt-5 max-w-full break-words text-lgleading-relaxed text-gray-600 sm:max-w-3xl"
+  },
   "mt-5 space-y-5": {
     "el": "mt-5 space-y-5",
     "de": "mt-5 Leertaste-y-5"
@@ -8692,6 +9960,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "mt-5 text-3xl font-bold font-heading leading-tight text-gray-950": {
     "el": "mt-5 κείμενο-3xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κορυφαία-σφιχτό κείμενο-γκρι-950",
     "de": "mt-5 text-3xl Font-Bold Font-Heading Leading-Tight Text-Gray-950"
+  },
+  "mt-5 text-3xl font-bold font-heading leading-tight text-gray-950 md:text-4xl": {
+    "el": "mt-5 κείμενο-3xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κορυφαία-σφιχτό κείμενο-γκρι-950 md:text-4xl",
+    "de": "mt-5 text-3xl Font-Bold Font-Heading Leading-Tight Text-Gray-950 md:text-4xl"
+  },
+  "mt-5 text-3xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700 md:text-4xl": {
+    "el": "mt-5 κείμενο-3xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτό κείμενο-γκρι-950 μετάβαση-ομάδα χρωμάτων-hover:text-gray-700 md:text-4xl",
+    "de": "mt-5 text-3xl Font-Bold Font-Heading Tracking-Tight Text-Gray-950 Übergangsfarben Group-Hover:Text-Gray-700 MD:Text-4XL"
   },
   "mt-5 text-base leading-relaxed text-gray-600": {
     "el": "mt-5 βάσης κειμένου lead-relaxed text-grey-600",
@@ -8729,9 +10005,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline διακόσμηση-γκρι-300 underline-offset-4",
     "de": "mt-6 Inline-Flex Items-Center Gap-2 Text-SM Font-Semibold Text-Gray-950 Unterstreichung Dekoration-Grau-300 Unterstreichung-Offset-4"
   },
+  "mt-6 inline-flex rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800": {
+    "el": "mt-6 inline-flex στρογγυλεμένο-πλήρες bg-μαύρο px-5 py-3 κείμενο-γραμματοσειρά sm-μέσο κείμενο-λευκό μετάβαση-χρώματα hover:bg-γκρι-800",
+    "de": "mt-6 inline-flex abgerundet-voll bg-schwarz px-5 py-3 text-sm schriftart-mittel text-weiß übergangsfarben hover:bg-gray-800"
+  },
   "mt-6 max-w-3xl text-lg leading-relaxed text-gray-600": {
     "el": "mt-6 max-w-3xl text-lg lead-relaxed text-grey-600",
     "de": "mt-6 max-w-3xl Text-LG Leading-Relaxed Text-Gray-600"
+  },
+  "mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl": {
+    "el": "mt-6 max-w-3xl text-lg lead-relaxed text-grey-600 md:text-xl",
+    "de": "mt-6 max-w-3xl text-lgleading-relaxed text-gray-600 md:text-xl"
   },
   "mt-6 max-w-xl text-lg leading-relaxed text-gray-600": {
     "el": "mt-6 max-w-xl text-lg lead-relaxed text-grey-600",
@@ -8749,6 +10033,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mt-7 flex flex-wrap gap-3",
     "de": "MT-7 Flex Flex-Wrap Gap-3"
   },
+  "mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl": {
+    "el": "mt-7 max-w-4xl text-2xl lead-snant tracking-tight text-gray-800 md:text-3xl",
+    "de": "MT-7 Max-W-4XL Text-2XL Leading-Snug Tracking-Tight Text-Gray-800 MD:Text-3XL"
+  },
   "mt-8 flex flex-wrap gap-4": {
     "el": "mt-8 flex flex-wrap gap-4",
     "de": "MT-8 Flex Flex-Wrap Gap-4"
@@ -8760,6 +10048,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "mt-8 flex justify-center gap-2": {
     "el": "mt-8 flex justify-center gap-2",
     "de": "mt-8 Flex justify-center Lücke-2"
+  },
+  "mt-8 grid gap-5 md:grid-cols-3": {
+    "el": "mt-8 grid gap-5 md:grid-cols-3",
+    "de": "mt-8 Rasterlücke-5 md:grid-cols-3"
   },
   "mt-8 h-11 rounded-full px-6": {
     "el": "mt-8 h-11 στρογγυλεμένο-γεμάτο px-6",
@@ -8805,9 +10097,17 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-grey-100",
     "de": "MX-Auto Flex H-14 W-14 Items-Center Justify-Center Rounded-2XL BG-Gray-100"
   },
+  "mx-auto max-w-5xl px-6 md:px-12": {
+    "el": "mx-auto max-w-5xl px-6 md:px-12",
+    "de": "mx-auto max-w-5xl px-6 md:px-12"
+  },
   "mx-auto max-w-xl divide-y divide-gray-100": {
     "el": "mx-auto max-w-xl divide-y divide-gray-100",
     "de": "mx-auto max-w-xl teile-y teile-grau-100"
+  },
+  "mx-auto mt-16 max-w-5xl px-6 md:px-12": {
+    "el": "mx-auto mt-16 max-w-5xl px-6 md:px-12",
+    "de": "mx-auto mt-16 max-w-5xl px-6 md:px-12"
   },
   "my-4 space-y-3": {
     "el": "my-4 space-y-3",
@@ -8829,6 +10129,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "ροή εργασιών παραγωγής ενημερωτικών δελτίων",
     "de": "Newsletter-Produktionsworkflow"
   },
+  "no": {
+    "el": "όχι",
+    "de": "Nein"
+  },
   "noindex,follow": {
     "el": "noindex, ακολουθώ",
     "de": "noindex,folge"
@@ -8849,6 +10153,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "κανένας παραπέμπων",
     "de": "noreferrer"
   },
+  "not-sure": {
+    "el": "δεν είναι σίγουρος",
+    "de": "nicht sicher"
+  },
   "not_provided": {
     "el": "δεν_παρέχεται",
     "de": "nicht_bereitgestellt"
@@ -8856,6 +10164,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "not_requested": {
     "el": "δεν_ζήτησε",
     "de": "nicht_angefordert"
+  },
+  "of": {
+    "el": "του",
+    "de": "von"
   },
   "off": {
     "el": "εκτός λειτουργίας",
@@ -8889,6 +10201,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "og:url",
     "de": "og:URL"
   },
+  "optional": {
+    "el": "προαιρετική",
+    "de": "optional"
+  },
   "organization": {
     "el": "οργάνωση",
     "de": "Organisation"
@@ -8900,6 +10216,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "overflow-hidden bg-black pb-10 pt-20 text-white": {
     "el": "υπερχείλιση-κρυμμένο bg-μαύρο pb-10 pt-20 κείμενο-λευκό",
     "de": "Überlauf-versteckt bg-schwarz pb-10 pt-20 Text-weiß"
+  },
+  "p-8 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors": {
+    "el": "p-8 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors",
+    "de": "p-8 bg-gray-50 abgerundet-2xl hover:bg-gray-100 Übergangsfarben"
   },
   "p-8 border border-gray-100 rounded-2xl": {
     "el": "p-8 περίγραμμα-γκρι-100 στρογγυλεμένα-2xl",
@@ -8920,10 +10240,6 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "pointer-events-none absolute inset-0 overflow-hidden bi-hero-backdrop": {
     "el": "δείκτης-γεγονότα-κανένα απόλυτο ένθετο-0 υπερχείλιση-κρυμμένο σκηνικό με δύο ήρωες",
     "de": "pointer-events-none absolute inset-0 overflow-hidden bi-hero-backdrop"
-  },
-  "pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400": {
-    "el": "pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-grey-400",
-    "de": "pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
   },
   "pointerdown": {
     "el": "δείκτης προς τα κάτω",
@@ -8980,6 +10296,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "product-walkthrough": {
     "el": "παρουσίαση προϊόντος",
     "de": "Produkt-Komplettlösung"
+  },
+  "product:": {
+    "el": "προϊόν:",
+    "de": "Produkt:"
   },
   "professional upskilling": {
     "el": "επαγγελματική αναβάθμιση",
@@ -9069,9 +10389,21 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "συγγενής",
     "de": "relativ"
   },
+  "relative max-w-full overflow-hidden px-4 pb-10 sm:px-6 md:px-12": {
+    "el": "σχετικό μέγιστο-β-πλήρη υπερχείλιση-κρυφό px-4 pb-10 sm:px-6 md:px-12",
+    "de": "relative max-w-full overflow-hidden px-4 pb-10 sm:px-6 md:px-12"
+  },
   "relative mt-3": {
     "el": "σχετική mt-3",
     "de": "relative mt-3"
+  },
+  "relative overflow-hidden pb-24 pt-32 md:pb-32 md:pt-40": {
+    "el": "σχετική υπερχείλιση-κρυμμένη pb-24 pt-32 md:pb-32 md:pt-40",
+    "de": "relativer Überlauf-versteckt pb-24 pt-32 md:pb-32 md:pt-40"
+  },
+  "relative px-8 md:px-12": {
+    "el": "σχετικό px-8 md:px-12",
+    "de": "relativ px-8 md:px-12"
   },
   "relative z-10 -mt-10 rounded-t-[2.5rem] bg-[#efece7] pb-24 pt-14 shadow-[0_-28px_70px_rgba(15,17,20,0.35)] scroll-mt-24 md:-mt-14 md:rounded-t-[3rem] md:pt-20": {
     "el": "σχετικό z-10 -mt-10 στρογγυλεμένο-t-[2,5rem] bg-[#efece7] pb-24 pt-14 shadow-[0_-28px_70px_rgba(15,17,20,0,35)] scroll-mt-24 md:-mt-14 md-md:-mt-14 md-md:",
@@ -9113,10 +10445,6 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "στρογγυλεμένο-2xl περίγραμμα-κόκκινο-200 bg-κόκκινο-50 p-4 κείμενο-sm lead-relaxed text-red-900",
     "de": "abgerundeter 2xl-Rand border-red-200 bg-red-50 p-4 Text-sm führender entspannter Text-red-900"
   },
-  "rounded-3xl border border-gray-200 bg-white p-3 shadow-2xl shadow-black/10": {
-    "el": "στρογγυλεμένο-3xl περίγραμμα-γκρι-200 bg-λευκό p-3 σκιά-2xl σκιά-μαύρο/10",
-    "de": "abgerundeter Rand 3XL Rand-Grau-200 BG-Weiß P-3 Schatten-2XL Schatten-Schwarz/10"
-  },
   "rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16": {
     "el": "στρογγυλεμένο-[2rem] bg-μαύρο px-7 py-12 κείμενο-λευκό σκιά-2xl σκιά-μαύρο/[0,12] sm:px-10 md:px-14 md:py-16",
     "de": "abgerundet-[2rem] bg-schwarz px-7 py-12 text-weiß schatten-2xl schatten-schwarz/[0,12] sm:px-10 md:px-14 md:py-16"
@@ -9153,17 +10481,33 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "στρογγυλεμένο-πλήρες bg-μαύρο px-3 py-1 κείμενο- γραμματοσειρά xs-ημιέντονο κείμενο-λευκό",
     "de": "abgerundet-voll bg-schwarz px-3 py-1 text-xs Schriftart-halbfett Text-weiß"
   },
+  "rounded-full bg-black px-8 text-white hover:bg-gray-800": {
+    "el": "στρογγυλεμένο-πλήρες bg-μαύρο px-8 κείμενο-λευκό hover:bg-grey-800",
+    "de": "abgerundet-voll bg-schwarz px-8 text-weiß hover:bg-gray-800"
+  },
   "rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600": {
     "el": "στρογγυλεμένο-πλήρες bg-γκρι-100 px-3 py-1 κείμενο-γραμματοσειρά sm-μέσο κείμενο-γκρι-600",
     "de": "abgerundet-voll bg-gray-100 px-3 py-1 text-sm Schriftart-Medium text-gray-600"
   },
-  "rounded-full border border-gray-950/12 px-3 py-1 text-xs font-medium text-gray-600": {
-    "el": "στρογγυλεμένο-γεμάτο περίγραμμα περίγραμμα-γκρι-950/12 px-3 py-1 γραμματοσειρά κειμένου-xs-μέσο κείμενο-γκρι-600",
-    "de": "abgerundeter voller Rand border-gray-950/12 px-3 py-1 text-xs font-medium text-gray-600"
+  "rounded-full bg-gray-950 px-6 text-white hover:bg-gray-800": {
+    "el": "στρογγυλεμένο-γεμάτο bg-gray-950 px-6 text-white hover:bg-grey-800",
+    "de": "abgerundet-voll bg-gray-950 px-6 text-weiß hover:bg-gray-800"
   },
-  "rounded-full border border-gray-950/15 px-3 py-1.5 text-xs font-medium text-gray-700": {
-    "el": "στρογγυλεμένο-γεμάτο περίγραμμα περίγραμμα-γκρι-950/15 px-3 py-1,5 γραμματοσειρά κειμένου-xs-μέσο κείμενο-γκρι-700",
-    "de": "abgerundeter voller Rand border-gray-950/15 px-3 py-1.5 text-xs font-medium text-gray-700"
+  "rounded-full bg-white px-8 text-black hover:bg-gray-100": {
+    "el": "στρογγυλεμένο-πλήρες bg-λευκό px-8 κείμενο-μαύρο hover:bg-grey-100",
+    "de": "abgerundet-voll bg-weiß px-8 text-schwarz hover:bg-gray-100"
+  },
+  "rounded-full px-8 h-12 bg-black hover:bg-gray-800 text-white": {
+    "el": "στρογγυλεμένα-πλήρη px-8 h-12 bg-μαύρο αιώρηση:bg-γκρι-800 κείμενο-λευκό",
+    "de": "abgerundet-voll px-8 h-12 bg-schwarz hover:bg-gray-800 text-weiß"
+  },
+  "rounded-full px-8 h-12 border-gray-200 hover:bg-gray-50": {
+    "el": "στρογγυλεμένο-γεμάτο px-8 h-12 border-gray-200 hover:bg-gray-50",
+    "de": "abgerundet-voll px-8 h-12 border-gray-200 hover:bg-gray-50"
+  },
+  "rounded-full px-8 h-12 gap-2 bg-black hover:bg-gray-800 text-white transition-all hover:pr-6": {
+    "el": "στρογγυλεμένο-πλήρες px-8 h-12 κενό-2 bg-μαύρο δείκτη του ποντικιού:bg-γκρι-800 κείμενο-λευκό μετάβαση-όλα το δείκτη του ποντικιού:pr-6",
+    "de": "abgerundet-voll px-8 h-12 Lücke-2 bg-schwarz hover:bg-gray-800 text-weiß Übergang-alle hover:pr-6"
   },
   "sRGB": {
     "el": "sRGB",
@@ -9180,6 +10524,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "scroll-mt-28 grid gap-5 border-b border-gray-950/15 py-7 last:border-b-0 md:grid-cols-[3rem_3rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-7": {
     "el": "scroll-mt-28 grid gap-5 border-b border-gray-950/15 py-7 last:border-b-0 md:grid-cols-[3rem_3rem_minmax(0,0,8fr)_minmax(0,1,2fr)] md:items-start md:gap-7",
     "de": "scroll-mt-28 Grid Gap-5 Border-b Border-Gray-950/15 py-7 last:border-b-0 md:grid-cols-[3rem_3rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-7"
+  },
+  "scroll-world-v4/posters/clip-01-mobile.webp": {
+    "el": "scroll-world-v4/posters/clip-01-mobile.webp",
+    "de": "scroll-world-v4/posters/clip-01-mobile.webp"
+  },
+  "scroll-world-v4/posters/clip-01.webp": {
+    "el": "scroll-world-v4/posters/clip-01.webp",
+    "de": "scroll-world-v4/posters/clip-01.webp"
   },
   "search engine optimization": {
     "el": "βελτιστοποίηση μηχανών αναζήτησης",
@@ -9217,6 +10569,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "υπηρεσία-ευρετήριο",
     "de": "Service-Index"
   },
+  "service:": {
+    "el": "υπηρεσία:",
+    "de": "Service:"
+  },
   "service_card_click": {
     "el": "service_card_click",
     "de": "service_card_click"
@@ -9237,13 +10593,53 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "πλοίο",
     "de": "Schiff"
   },
+  "site-container flex flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between": {
+    "el": "site-container flex flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between",
+    "de": "Site-Container Flex Flex-Col Gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between"
+  },
   "site-container flex items-center justify-between": {
     "el": "site-container flex items-center justify-between",
     "de": "Site-Container Flex Items-Center Justify-Between"
   },
+  "site-container mt-12 px-6 md:px-12": {
+    "el": "site-container mt-12 px-6 md:px-12",
+    "de": "Site-Container mt-12 px-6 md:px-12"
+  },
+  "site-container mt-14 px-6 md:px-12": {
+    "el": "site-container mt-14 px-6 md:px-12",
+    "de": "Site-Container mt-14 px-6 md:px-12"
+  },
+  "site-container mt-16 flex gap-16 px-6 md:mt-24 md:px-12 xl:gap-20": {
+    "el": "site-container mt-16 flex gap-16 px-6 md:mt-24 md:px-12 xl:gap-20",
+    "de": "Site-Container mt-16 Flex Gap-16 px-6 md:mt-24 md:px-12 xl:gap-20"
+  },
+  "site-container mt-16 px-6 md:px-12": {
+    "el": "site-container mt-16 px-6 md:px-12",
+    "de": "Site-Container mt-16 px-6 md:px-12"
+  },
+  "site-container mt-20 grid gap-6 px-6 md:px-12 lg:grid-cols-2": {
+    "el": "site-container mt-20 grid gap-6 px-6 md:px-12 lg:grid-cols-2",
+    "de": "site-container mt-20 Grid Gap-6 px-6 md:px-12 lg:grid-cols-2"
+  },
+  "site-container mt-20 grid gap-8 px-6 md:px-12 lg:grid-cols-2": {
+    "el": "site-container mt-20 grid gap-8 px-6 md:px-12 lg:grid-cols-2",
+    "de": "Site-Container mt-20 Grid Gap-8 px-6 md:px-12 lg:grid-cols-2"
+  },
+  "site-container mt-20 px-6 md:px-12": {
+    "el": "site-container mt-20 px-6 md:px-12",
+    "de": "Site-Container mt-20 px-6 md:px-12"
+  },
   "site-container mt-24 grid gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]": {
     "el": "site-container mt-24 grid gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0,8fr)]",
     "de": "site-container mt-24 Grid Gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]"
+  },
+  "site-container px-4 md:px-8": {
+    "el": "site-container px-4 md:px-8",
+    "de": "Site-Container px-4 md:px-8"
+  },
+  "site-container px-6 md:px-12": {
+    "el": "site-container px-6 md:px-12",
+    "de": "Site-Container px-6 md:px-12"
   },
   "site-container relative flex gap-16": {
     "el": "site-container σχετικό flex gap-16",
@@ -9293,6 +10689,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "space-y-6 lg:col-span-2",
     "de": "space-y-6 lg:col-span-2"
   },
+  "space-y-6 sm:col-span-2 lg:col-span-4": {
+    "el": "space-y-6 sm:col-span-2 lg:col-span-4",
+    "de": "space-y-6 sm:col-span-2 lg:col-span-4"
+  },
   "space-y-8": {
     "el": "space-y-8",
     "de": "Leerzeichen-y-8"
@@ -9336,6 +10736,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "story": {
     "el": "ιστορία",
     "de": "Geschichte"
+  },
+  "strong-": {
+    "el": "δυνατός-",
+    "de": "stark-"
   },
   "studios-kalliopi": {
     "el": "στούντιο-καλλιόπη",
@@ -9401,6 +10805,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "κείμενο",
     "de": "Text"
   },
+  "text-2xl font-bold font-heading leading-tight text-gray-950 md:text-3xl": {
+    "el": "text-2xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κύρια-σφιχτό κείμενο-γκρι-950 md:text-3xl",
+    "de": "text-2xl Font-Bold Font-Heading Leading-Tight Text-Gray-950 md:text-3xl"
+  },
   "text-2xl font-bold font-heading text-black mb-4": {
     "el": "κείμενο-2xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα κείμενο-μαύρο mb-4",
     "de": "text-2xl Schriftart-Bold Schriftart-Überschrift Text-Schwarz MB-4"
@@ -9425,9 +10833,29 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "text-2xl sm:text-3xl",
     "de": "text-2xl sm:text-3xl"
   },
+  "text-3xl font-bold font-heading tracking-tight md:text-4xl": {
+    "el": "κείμενο-3xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-σφιχτή md:text-4xl",
+    "de": "text-3xl Font-Bold Font-Heading Tracking-Tight MD: Text-4XL"
+  },
+  "text-3xl md:text-4xl font-bold font-heading mb-12": {
+    "el": "text-3xl md:text-4xl font-bold font-heading mb-12",
+    "de": "text-3xl md:text-4xl Schriftart-Bold Schriftart-Überschrift MB-12"
+  },
+  "text-3xl md:text-4xl font-bold font-heading mb-16": {
+    "el": "text-3xl md:text-4xl font-bold font-heading mb-16",
+    "de": "text-3xl md:text-4xl Schriftart-Bold Schriftart-Überschrift MB-16"
+  },
   "text-3xl sm:text-4xl": {
     "el": "text-3xl sm:text-4xl",
     "de": "text-3xl sm:text-4xl"
+  },
+  "text-4xl md:text-5xl font-bold font-heading mb-8": {
+    "el": "text-4xl md:text-5xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα mb-8",
+    "de": "text-4xl md:text-5xl Schriftart-Bold Schriftart-Überschrift MB-8"
+  },
+  "text-4xl md:text-5xl font-bold font-heading text-foreground mb-4": {
+    "el": "text-4xl md:text-5xl font-bold font-heading text-foreground mb-4",
+    "de": "text-4xl md:text-5xl Schriftart-Bold Schriftart-Überschrift Text-Vordergrund MB-4"
   },
   "text-8xl font-bold font-heading tracking-tighter": {
     "el": "κείμενο-8xl γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα παρακολούθηση-πιο σφιχτό",
@@ -9461,13 +10889,25 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "κείμενο-μαύρο μετάφραση-x-1",
     "de": "text-black Translate-x-1"
   },
+  "text-current opacity-60 hover:opacity-100": {
+    "el": "text-current opacity-60 hover:opacity-100",
+    "de": "text-current opacity-60 hover:opacity-100"
+  },
   "text-gray-400": {
     "el": "κείμενο-γκρι-400",
     "de": "text-grau-400"
   },
+  "text-gray-400 hover:text-black transition-colors": {
+    "el": "text-grey-400 hover:text-black transition-colors",
+    "de": "text-gray-400 hover:text-black-Übergangsfarben"
+  },
   "text-gray-400 hover:text-gray-900": {
     "el": "text-gray-400 hover:text-grey-900",
     "de": "text-gray-400 hover:text-gray-900"
+  },
+  "text-gray-400 transition-colors hover:text-white": {
+    "el": "text-grey-400 transition-colors hover:text-white",
+    "de": "text-gray-400 Übergangsfarben hover:text-white"
   },
   "text-gray-500": {
     "el": "κείμενο-γκρι-500",
@@ -9488,6 +10928,14 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "text-gray-800": {
     "el": "κείμενο-γκρι-800",
     "de": "text-grau-800"
+  },
+  "text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-gray-600": {
+    "el": "text-gray-900 underline διακόσμηση-grey-300 underline-offset-4 hover:text-grey-600",
+    "de": "text-gray-900 unterstreichen decoration-gray-300 underline-offset-4 hover:text-gray-600"
+  },
+  "text-left text-gray-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black": {
+    "el": "text-left text-grey-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+    "de": "text-left text-gray-400 Übergangsfarben hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
   },
   "text-lg font-bold font-heading": {
     "el": "text-lg γραμματοσειρά-έντονη γραμματοσειρά-επικεφαλίδα",
@@ -9537,6 +10985,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "κείμενο-sm κείμενο-γκρι-600",
     "de": "text-sm text-grau-600"
   },
+  "text-xl font-bold font-heading tracking-tight text-gray-950 md:text-2xl": {
+    "el": "text-xl font-bold font-heading tracking-tight text-grey-950 md:text-2xl",
+    "de": "text-xl Font-Bold Font-Heading Tracking-Tight Text-Gray-950 md:text-2xl"
+  },
   "text-xl font-bold tracking-tight font-heading": {
     "el": "κείμενο-xl γραμματοσειρά-έντονη παρακολούθηση-σφιχτή γραμματοσειρά-επικεφαλίδα",
     "de": "Text-XL Font-Bold Tracking-Tight Font-Heading"
@@ -9585,6 +11037,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "transition-colors hover:text-grey-950",
     "de": "Übergangsfarben hover:text-gray-950"
   },
+  "transition-transform duration-700 group-hover:scale-105": {
+    "el": "transition-transform duration-700 group-hover:scale-105",
+    "de": "Übergangstransformationsdauer-700 Gruppenhover: Skala-105"
+  },
   "translate(74 274)": {
     "el": "translate(74 274)",
     "de": "übersetzen(74 274)"
@@ -9600,6 +11056,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "truncate text-lg font-bold tracking-tight font-heading": {
     "el": "περικοπή κειμένου-γραμματοσειρά lg-έντονη παρακολούθηση-σφιχτή γραμματοσειρά-επικεφαλίδα",
     "de": "Text-LG Font-Bold Tracking-Tight Font-Heading abschneiden"
+  },
+  "truncate text-sm font-bold tracking-tight transition-colors font-heading group-hover:text-gray-700 sm:text-lg": {
+    "el": "περικοπή κειμένου-sm γραμματοσειρά-έντονη παρακολούθηση-σφιχτή μετάβαση-χρώματα γραμματοσειρά-επικεφαλίδα ομάδα-hover:text-gray-700 sm:text-lg",
+    "de": "Text abschneiden-sm, Schriftart-fett, Tracking-tight, Übergangsfarben, Schriftart-Überschrift, Gruppe-Hover: Text-Grau-700, SM: Text-LG"
   },
   "truncate text-xs font-medium text-gray-500": {
     "el": "περικοπή κειμένου-xs γραμματοσειρά-μέσο κείμενο-γκρι-500",
@@ -9636,6 +11096,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "unicef-audit-compliance": {
     "el": "unicef-audit-compliance",
     "de": "unicef-audit-compliance"
+  },
+  "url(#": {
+    "el": "url(#",
+    "de": "URL(#"
   },
   "userSpaceOnUse": {
     "el": "userSpaceOnUse",
@@ -9676,6 +11140,10 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
   "w-full": {
     "el": "w-γεμάτη",
     "de": "w-voll"
+  },
+  "w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700": {
+    "el": "w-full h-full object-cover κλίμακα του γκρι hover: grayscale-0 transition-all duration-700",
+    "de": "w-voll h-voll Objektabdeckung Graustufen-Hover:Graustufen-0 Übergangsdauer-700"
   },
   "ways-to-work-together": {
     "el": "τρόποι-συνεργασίας",
@@ -9741,24 +11209,164 @@ export const pageTranslations: Record<string, { el: string; de: string }> = {
     "el": "xMidYMid κομμάτι",
     "de": "xMidYMid-Slice"
   },
+  "Über Ioannis Bekas und BI Solutions": {
+    "el": "Über Ioannis Bekas und BI Solutions",
+    "de": "Über Ioannis Bekas und BI Solutions"
+  },
+  "Αίτημα mentoring": {
+    "el": "Αίτημα mentoring",
+    "de": "Αίτημα Mentoring"
+  },
+  "Αλλάξτε ή ανακαλέστε την άδεια από τις Ρυθμίσεις cookies. Η αλλαγή μιας αποθηκευμένης επιλογής ενδέχεται να επαναφορτώσει τη σελίδα.": {
+    "el": "Αλλάξτε ή ανακαλέστε την άδεια από τις Ρυθμίσεις cookies. Η αλλαγή μιας αποθηκευμένης επιλογής ενδέχεται να επαναφορτώσει τη σελίδα.",
+    "de": "Ich habe keine Cookies mehr verwendet. Das bedeutet, dass Sie nichts falsch machen können σελίδα."
+  },
+  "Αξιόπιστες βάσεις, διακυβέρνηση και υλοποίηση στο cloud.": {
+    "el": "Αξιόπιστες βάσεις, διακυβέρνηση και υλοποίηση στο cloud.",
+    "de": "Αξιόπιστες βάσεις, διακυβέρνηση και υλοποίηση στο cloud."
+  },
+  "Αποστολή αιτήματος mentoring": {
+    "el": "Αποστολή αιτήματος mentoring",
+    "de": "Professionelles Mentoring"
+  },
+  "Ατομικό mentoring καριέρας": {
+    "el": "Ατομικό mentoring καριέρας",
+    "de": "Ατομικό Mentoring-Aktivitäten"
+  },
+  "Για παράδειγμα: αρχικό επίπεδο, data analyst, BI developer": {
+    "el": "Για παράδειγμα: αρχικό επίπεδο, data analyst, BI developer",
+    "de": "Mitarbeiter: Datenanalyst, BI-Entwickler"
+  },
+  "Γνωρίστε τον Ιωάννη Μπέκα, τη BI Solutions Group και την εμπειρία πίσω από τις υπηρεσίες analytics, AI και στρατηγικής δεδομένων.": {
+    "el": "Γνωρίστε την Ιωάννη Μπέκα, τη BI Solutions Group και την εμπειρία πίσω από τις υπηρεσίες analytics, AI και στρατηγικές δεδομένων.",
+    "de": "Ich bin der Meinung, dass die BI Solutions Group eine Reihe von Projekten durchgeführt hat Analyse, KI und mehr."
+  },
+  "Διαγνωστικό ή στρατηγικό sprint": {
+    "el": "Διαγνωστικό ή στρατηγικό σπριντ",
+    "de": "Der erste Sprint"
+  },
+  "Διαχειριζόμενη υποστήριξη BI, δεδομένων ή AI": {
+    "el": "Διαχειριζόμενη υποστήριξη BI, δεδομένα ή AI",
+    "de": "Die Vorteile von BI, KI und KI"
+  },
+  "Είμαι διαθέσιμος για συζητήσεις σχετικά με στρατηγική δεδομένων, υλοποίηση AI και πιθανές συνεργασίες.": {
+    "el": "Είμαι διαθέσιμος για συζητήσεις σχετικά με τα στρατηγικά δεδομένα, υλοποίηση AI και πιθανές συνεργασίες.",
+    "de": "Είμαι διαθέσιμος για συζητήσεις σχετικά με στρατηγική δεδομένων, Die AI-Funktion ist nicht verfügbar."
+  },
+  "Εκπαίδευση & mentoring": {
+    "el": "Εκπαίδευση & καθοδήγηση",
+    "de": "Beratung & Mentoring"
+  },
+  "Επαγγελματικό email": {
+    "el": "Επαγγελματικό email",
+    "de": "Bitte E-Mail senden"
+  },
+  "Επαγγελματικό Πιστοποιητικό Data Science – HarvardX": {
+    "el": "Επαγγελματικό Πιστοποιητικό Data Science – HarvardX",
+    "de": "Weitere Informationen zu Data Science – HarvardX"
+  },
+  "Επαγγελματικό Πιστοποιητικό Google Data Analytics": {
+    "el": "Επαγγελματικό Πιστοποιητικό Google Data Analytics",
+    "de": "Nutzen Sie Google Data Analytics"
+  },
+  "Ευχαριστούμε για τις πληροφορίες. Η BI Solutions Group θα εξετάσει το αίτημα και θα επικοινωνήσει στη διεύθυνση email που δώσατε.": {
+    "el": "Ευχαριστούμε για τις πληροφορίες. Η BI Solutions Group θα εξετάσει το αίτημα και θα επικοινωνήσει στη διεύθυνση email που δώσατε.",
+    "de": "Ευχαριστούμε για τις πληροφορίες. Bitte kontaktieren Sie die BI Solutions Group per E-Mail δώσατε."
+  },
+  "Εφαρμοσμένη AI": {
+    "el": "Εφαρμοσμένη AI",
+    "de": "Εφαρμοσμένη KI"
+  },
+  "Η απαραίτητη αποθήκευση διατηρεί τον ιστότοπο λειτουργικό. Με την άδειά σας, το Google Analytics μας βοηθά να κατανοούμε τις επισκέψεις και το Google Ads μετρά ποιες διαφημίσεις οδηγούν σε αιτήματα έργων. Και τα δύο είναι προαιρετικά. Το περιεχόμενο των φορμών σας δεν αποστέλλεται στο Google Ads.": {
+    "el": "Η αποθήκευση διατηρεί το λειτουργικό. Με την άδειά σας, το Google Analytics μας βοηθά να κατανοήσουμε τις επισκέψεις και το Google Ads μετρά ποιες διαφημίσεις οδηγούν σε αιτήματα έργων. Και τα δύο είναι προαιρετικά. Το περιεχόμενο των φορμών σας δεν αποστέλλεται στο Google Ads.",
+    "de": "Sie haben die Möglichkeit, Ihre Daten zu löschen. Mit Google Analytics können Sie Google Ads nutzen Eine Reihe von Problemen mit der Zeit und der Sicherheit sind nicht möglich. Das ist nicht der Fall. Sie haben die Möglichkeit, Google Ads zu nutzen."
+  },
+  "Η εξειδίκευσή μου καλύπτει το data engineering, τη στατιστική ανάλυση, την τεχνητή νοημοσύνη και τη διαδραστική οπτικοποίηση δεδομένων, με έμφαση στη δημιουργία προηγμένων αναλυτικών εργαλείων και κλιμακούμενων μοντέλων για προβλέψεις και αυτοματοποίηση.": {
+    "el": "Η εξειδίκευσή μου καλύπτει το data engineering, τη στατιστική ανάλυση, την τεχνητή νοημοσύνη και τη διαδραστική οπτικοποίηση δεδομένων, με έμφαση στη δημιουργία προηγούμενων αναλυτικών εργαλείων και κλιμακούμενων μοντέλων για προβλέψεις και αυτοματοποίηση.",
+    "de": "In vielen Bereichen des Data Engineering, in der Datenverarbeitung und in der Datenverarbeitung νοημοσύνη και τη διαδραστική οπτικοποίηση δεδομένων, με έμφαση στη δημιουργία προηγμένων αναλυτικών εργαλείων και κλιμακούμενων μοντέλων για προβλέψεις και αυτοματοποίηση."
+  },
+  "Η επαγγελματική μου εμπειρία συνδέει μεγάλους διεθνείς οργανισμούς—όπως ο Διεθνής Οργανισμός Ατομικής Ενέργειας (IAEA), ο Διεθνής Οργανισμός Μετανάστευσης (IOM), το Γραφείο των Ηνωμένων Εθνών για τη Μείωση του Κινδύνου Καταστροφών (UNDRR) και ο οργανισμός UN Women—με επιχειρήσεις του ιδιωτικού τομέα. Σε αυτά τα περιβάλλοντα έχω οργανώσει δεδομένα μεγάλης κλίμακας, διαμορφώσει πλαίσια διακυβέρνησης δεδομένων και υλοποιήσει ολοκληρωμένες αρχιτεκτονικές business intelligence.": {
+    "el": "Η επαγγελματική μου εμπειρία συνδέει μεγάλους διεθνείς οργανισμούς—όπως ο Διεθνής Οργανισμός Ατομικής Ενέργειας (IAEA), ο Διεθνής Οργανισμός Μετανάστευσης (IOM), το Γραφείο των Ηνωμένων Εθνών για τη Μείωση του Κινδύνου Καταστροφών (UNDRR) και ο οργανισμός UN Women—με επιχειρήσεις του ιδιωτικού τομέα. Σε αυτά τα περιβάλλοντα έχω οργανώσει δεδομένα μεγάλης κλίμακας, διαμορφώσει πλαίσια διακυβέρνησης δεδομένων και ολοκληρωμένες αρχιτεκτονικές business intelligence.",
+    "de": "Das bedeutet, dass das Gerät nicht mehr benötigt wird οργανισμούς—όπως ο Διεθνής Οργανισμός Ατομικής Ενέργειας (IAEO), ο Διεθνής Οργανισμός Μετανάστευσης (IOM), το Γραφείο των Ηνωμένων Εθνών για τη Μείωση του Κινδύνου Καταστροφών (UNDRR) και ο οργανισμός UN Women—με επιχειρήσεις του ιδιωτικού τομέα. Wenn Sie die Möglichkeit haben, Ihre Daten zu ändern, διαμορφώσει πλαίσια διακυβέρνησης δεδομένων και υλοποιήσει Informationen zu Business Intelligence."
+  },
+  "Ιδρυτής της BI Solutions Group με αντικείμενο το business intelligence, την εφαρμοσμένη AI, τη στρατηγική δεδομένων και το analytics engineering.": {
+    "el": "Ιδρυτής BI Solutions Group με αντικείμενο το business intelligence, την εφαρμογή της AI, τη στρατηγική δεδομένων και το analytics engineering.",
+    "de": "Die BI Solutions Group hat sich auf die Bereiche Business Intelligence, KI und KI spezialisiert Technische Analysetechnik."
+  },
+  "Ιστότοποι και εφαρμογές με τεχνικό SEO και βάσεις για αναζήτηση AI.": {
+    "el": "Ιστότοποι και εφαρμογές με τεχνικό SEO και βάσεις για αναζήτηση AI.",
+    "de": "Sie haben die Möglichkeit, SEO und die KI-Technologie zu nutzen."
+  },
+  "Ιστότοπος ή web εφαρμογή": {
+    "el": "Ιστότοπος ή διαδικτυακή εφαρμογή",
+    "de": "Ιστότοπος ή web εφαρμογή"
+  },
+  "Μέτρηση διαφημίσεων (Google Ads)": {
+    "el": "Μέτρηση αναφοράς (Google Ads)",
+    "de": "Weitere Informationen (Google Ads)"
+  },
+  "Μοιραστείτε με τη BI Solutions Group μια ανάγκη για business intelligence, AI, στρατηγική δεδομένων, αυτοματοποίηση, ψηφιακό προϊόν, content operations, υποστήριξη, εκπαίδευση ή mentoring.": {
+    "el": "Μοιραστείτε με τη BI Solutions Group μια ανάγκη για επιχειρηματική ευφυΐα, AI, στρατηγική δεδομένων, αυτοματοποίηση, ψηφιακό προϊόν, λειτουργίες περιεχομένου, υποστήριξη, εκπαίδευση ή καθοδήγηση.",
+    "de": "Weitere Informationen zu BI Solutions Group und Business Intelligence, KI, Softwareentwicklung, Beratung, Beratung, Inhaltsoperationen, Beratung, Beratung und Mentoring."
+  },
+  "Μοιραστείτε τα βασικά για τις αναφορές, την AI, τα δεδομένα, την αυτοματοποίηση, το ψηφιακό προϊόν, το content operation, τις δυνατότητες της ομάδας ή τον στόχο καριέρας σας. Η σύντομη περιγραφή βοηθά η πρώτη συζήτηση να είναι εστιασμένη και χρήσιμη.": {
+    "el": "Μοιραστείτε τα βασικά για τις αναφορές, την AI, τα δεδομένα, την αυτοματοποίηση, το ψηφιακό προϊόν, το περιεχόμενο λειτουργίας, τις δυνατότητες της ομάδας ή τον στόχο καριέρας σας. Η σύντομη περιγραφή βοηθά η πρώτη συζήτηση να είναι εστιασμένη και χρήσιμη.",
+    "de": "Ich bin nicht mehr in der Lage, die KI, die KI, die Welt, die Welt zu entdecken Zum Beispiel, wenn Sie die Inhaltsoperation, die Inhaltsoperation oder den Inhaltsvorgang ausgeführt haben τον στόχο καριέρας σας. Sie müssen sich keine Gedanken darüber machen, ob Sie das Problem lösen oder nicht χρήσιμη."
+  },
+  "Ξεκινήστε ένα έργο με τη BI Solutions Group": {
+    "el": "Ξεκινήστε ένα έργο με τη BI Solutions Group",
+    "de": "Ein Mitglied der BI Solutions Group"
+  },
+  "Παράλληλα, συμβουλεύω διεπιστημονικές ομάδες και στελέχη στη Βόρεια Αμερική και την Ευρώπη σε πρωτοβουλίες δεδομένων υψηλού αντίκτυπου—αξιοποιώντας σύγχρονα εργαλεία, μοντέρνα data stacks και νέα πλαίσια AI—για διεθνή brands όπως Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola και PepsiCo, καθώς και αναπτυσσόμενες μικρομεσαίες επιχειρήσεις.": {
+    "el": "Παράλληλα, συμβουλεύω διεπιστημονικές ομάδες και στελέχη στη Βόρεια Αμερική και την Ευρώπη σε πρωτοβουλίες δεδομένων υψηλού αντίκτυπου—αξιοποιώντας σύγχρονα εργαλεία, μοντέρνα data stacks και νέα πλαίσια AI—για διεθνή brands όπως Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola και PepsiCo, καθώς και εταιρείες.",
+    "de": "Παράλληλα, συμβουλεύω διεπιστημονικές ομάδες και στελέχη στη Ich habe die Möglichkeit, meine Daten zu löschen Daten-Stacks und Daten-Stacks KI – viele Marken wie Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola und PepsiCo sowie andere Marken μικρομεσαίες επιχειρήσεις."
+  },
+  "Περιγράψτε στη BI Solutions Group την ανάγκη σας για BI, AI, δεδομένα, αυτοματοποίηση, web εφαρμογή ή mentoring και λάβετε μια τεκμηριωμένη πρόταση για το επόμενο βήμα.": {
+    "el": "Περιγράψτε στη BI Solutions Group την ανάγκη σας για BI, AI, δεδομένα, αυτοματοποίηση, web εφαρμογή ή mentoring και λάβετε μια τεκμηριωμένη πρόταση για το επόμενο βήμα.",
+    "de": "Die Website der BI Solutions Group ist für die Entwicklung von BI, AI, Technologie, Netzwerk, Web zuständig Die Mentoring-Methode ist die beste Lösung für Sie."
+  },
+  "Πρακτικές ροές AI, στρατηγική και υποστήριξη υιοθέτησης.": {
+    "el": "Πρακτικές ροές AI, στρατηγική και υποστήριξη υιοθέτησης.",
+    "de": "Wenn Sie AI verwenden, können Sie Ihre Daten ändern."
+  },
+  "Ροές AI και αυτοματοποίηση": {
+    "el": "Ροές AI και αυτοματοποίηση",
+    "de": "Die AI-Funktion ist nicht verfügbar"
+  },
+  "Στρατηγική δεδομένων & cloud": {
+    "el": "Στρατηγική δεδομένων & cloud",
+    "de": "Στρατηγική δεδομένων & Wolke"
+  },
+  "Συμβουλευτική AI & αυτοματοποίηση": {
+    "el": "Συμβουλευτική AI & αυτοματοποίηση",
+    "de": "Künstliche Intelligenz und künstliche Intelligenz"
+  },
+  "Συμφωνώ ότι η BI Solutions Group μπορεί να χρησιμοποιήσει αυτές τις πληροφορίες για να απαντήσει στο αίτημά μου. Δείτε την": {
+    "el": "Συμφωνώ ότι η BI Solutions Group μπορεί να χρησιμοποιήσει αυτές τις πληροφορίες για να απαντήσει στην αίτημά μου. Δείτε την",
+    "de": "Die Mitarbeiter der BI Solutions Group haben ihr gesamtes Portfolio erweitert Das Ergebnis ist ein kleiner Fehler. Δείτε την"
+  },
+  "Σχετικά με τον Ιωάννη Μπέκα και τη BI Solutions": {
+    "el": "Σχετικά με την Ιωάννη Μπέκα και τη BI Solutions",
+    "de": "Wir bieten Ihnen die Möglichkeit, BI-Lösungen zu nutzen"
+  },
+  "έργο business intelligence": {
+    "el": "έργο επιχειρηματική ευφυΐα",
+    "de": "Business Intelligence"
+  },
+  "διαχειριζόμενη υποστήριξη analytics": {
+    "el": "διαχειριζόμενη υποστήριξη analytics",
+    "de": "διαειριζόμενη υποστήριξη Analytics"
+  },
+  "εταιρική εκπαίδευση AI": {
+    "el": "εταιρική εκπαίδευση AI",
+    "de": "Die künstliche Intelligenz ist eine künstliche Intelligenz"
+  },
   "κατασκευή web εφαρμογών": {
     "el": "κατασκευή web εφαρμογών",
     "de": "Web-Inhalte"
   },
-  "—supporting global brands including Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola, and PepsiCo, as well as high-growth SMEs.": {
-    "el": "— υποστήριξη παγκόσμιων εμπορικών σημάτων, συμπεριλαμβανομένων των Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola και PepsiCo, καθώς και ΜΜΕ υψηλής ανάπτυξης.",
-    "de": "– Unterstützung globaler Marken wie Fujitsu, LG, Nespresso, Collins Aerospace, Coca-Cola und PepsiCo sowie wachstumsstarker KMU."
-  },
-  "• Exchange – Financial Mathematics, Stockholm University": {
-    "el": "• Exchange – Financial Mathematics, Πανεπιστήμιο Στοκχόλμης",
-    "de": "• Austausch – Finanzmathematik, Universität Stockholm"
-  },
-  "• GPA: 9.3/10": {
-    "el": "• ΣΔΣ: 9,3/10",
-    "de": "• Notendurchschnitt: 9,3/10"
-  },
-  "• Thesis: \"Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis\"": {
-    "el": "• Διατριβή: «Σημεία επαφής τεχνητής νοημοσύνης με ανάλυση πολλών κριτηρίων απόφασης»",
-    "de": "• Abschlussarbeit: „Artificial Intelligence Touchpoints with Multi-Criteria Decision Analysis“"
+  "σύμβουλος Power BI": {
+    "el": "σύμβουλος Power BI",
+    "de": "Nutzen Sie Power BI"
   }
 };
