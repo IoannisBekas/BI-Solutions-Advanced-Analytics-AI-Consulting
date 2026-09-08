@@ -67,7 +67,6 @@ The committed cinematic posters are sufficient for the production homepage. Larg
 
 - [Technical documentation](docs/technical-documentation.md)
 - [Blog-cover visual system](docs/blog-cover-style-guide.md)
-- [Directory listing guidance](docs/directory-listings.md)
 - [Bonusaki operations](docs/bonusaki/README.md)
 
 Pushes to `main` run validation and deploy the static site through GitHub Pages. Railway uses the same branch for the full production service.
