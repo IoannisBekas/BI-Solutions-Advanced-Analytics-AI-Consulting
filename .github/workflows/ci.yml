@@ -47,6 +47,9 @@ jobs:
       - name: Root type check
         run: npm run check
 
+      - name: Lead acquisition tests
+        run: node --import tsx --test script/lead-acquisition.test.ts
+
       - name: Install Quantus dependencies
         working-directory: apps/quantus
         run: npm ci

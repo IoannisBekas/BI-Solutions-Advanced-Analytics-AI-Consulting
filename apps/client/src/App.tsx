@@ -19,6 +19,7 @@ const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
 const StartProject = lazy(() => import("@/pages/StartProject"));
+const USConsulting = lazy(() => import("@/pages/USConsulting"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -103,6 +104,8 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/services" component={Services} />
+            <Route path="/us/power-bi-consulting"><USConsulting service="power-bi" /></Route>
+            <Route path="/us/ai-automation"><USConsulting service="ai-automation" /></Route>
             <Route path="/services/:slug">
               {(params) => <RetiredServiceRoute slug={params.slug} />}
             </Route>

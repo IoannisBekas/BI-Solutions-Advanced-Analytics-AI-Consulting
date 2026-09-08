@@ -37,7 +37,7 @@ async function events(page) {
 }
 
 async function submit(page, status) {
-  await page.route("**/api/contact", (route) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify({ ok: status === 200 }) }));
+  await page.route("**/api/contact", (route) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify({ success: status === 200, inquiryId: route.request().postDataJSON().inquiryId }) }));
   await page.locator('input[name="name"]').fill("Local QA example");
   await page.locator('input[name="email"]').fill("qa@example.invalid");
   await page.locator('input[name="company"]').fill("Test only");

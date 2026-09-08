@@ -61,13 +61,14 @@ async function readRoutesFromSitemap() {
     (route) => splitLocaleFromPath(route).locale === DEFAULT_LOCALE,
   );
 
-  // Every route ships under every locale prefix, not just the translated ones.
+  // General site routes ship under every locale prefix. US acquisition pages
+  // are English-only and link directly to the English inquiry flow.
   // Links inside a locale carry that prefix, so a route without a prerendered
   // file 404s on static hosting — the visitor is bounced through 404.html and a
   // crawler simply records a dead link. Untranslated pages still serve English
   // copy and canonicalise to the English URL, so nothing is indexed twice;
   // hreflang stays limited to TRANSLATED_ROUTES.
-  const localised = canonicalRoutes.flatMap((route) =>
+  const localised = canonicalRoutes.filter((route) => !route.startsWith("/us/")).flatMap((route) =>
     LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
       (locale) => `${localePrefix(locale)}${route === "/" ? "" : route}`,
     ),

@@ -99,7 +99,7 @@ function WebsiteProjectCard({
 }
 
 export default function Home() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   return (
     <div
@@ -314,6 +314,18 @@ export default function Home() {
         <div className="cinematic-hero-stage">
           <CinematicHero />
         </div>
+
+        {locale === "en" && (
+          <section className="border-y border-gray-200 bg-white py-8">
+            <div className="site-container flex flex-col gap-5 px-6 md:flex-row md:items-center md:justify-between md:px-12">
+              <p className="text-lg font-semibold">Remote consulting for US teams</p>
+              <div className="flex flex-wrap gap-x-8 gap-y-4">
+                <Link href="/us/power-bi-consulting" className="inline-flex items-center gap-2 font-medium underline underline-offset-4">Power BI consulting <ArrowRight className="h-4 w-4" /></Link>
+                <Link href="/us/ai-automation" className="inline-flex items-center gap-2 font-medium underline underline-offset-4">AI automation <ArrowRight className="h-4 w-4" /></Link>
+              </div>
+            </div>
+          </section>
+        )}
 
         <section
           id="case-studies"

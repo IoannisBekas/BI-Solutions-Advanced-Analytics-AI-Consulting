@@ -48,9 +48,9 @@ const uniqueEntries = canonicalEntries.filter(({ route }) => {
 });
 
 const body = uniqueEntries.flatMap((entry) =>
-  locales.map(({ prefix }) => {
+  (entry.route.startsWith("/us/") ? locales.slice(0, 1) : locales).map(({ prefix }) => {
     const alternates = [
-      ...locales.map(
+      ...(entry.route.startsWith("/us/") ? locales.slice(0, 1) : locales).map(
         (locale) =>
           `    <xhtml:link rel="alternate" hreflang="${locale.hreflang}" href="${urlFor(entry.route, locale.prefix)}" />`,
       ),
@@ -71,4 +71,4 @@ const body = uniqueEntries.flatMap((entry) =>
 const output = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${body}\n</urlset>\n`;
 
 await writeFile(sitemapPath, output, "utf8");
-console.log(`Wrote ${uniqueEntries.length * locales.length} localized sitemap URLs.`);
+console.log(`Wrote ${(output.match(/<loc>/g) || []).length} sitemap URLs.`);

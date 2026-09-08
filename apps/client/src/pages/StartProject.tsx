@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { LOCALE_TAGS, localePrefix, type Locale } from "@/i18n/config";
 import { trackEvent, trackLeadConversion } from "@/lib/analytics";
+import { campaignAttribution } from "@/lib/leadAttribution";
 import {
   projectNeedGroups,
   projectNeedOptions,
@@ -49,6 +50,8 @@ type FormValues = {
   description: string;
   timing: string;
   budget: string;
+  currency: "EUR" | "USD";
+  timeZone: string;
   consent: boolean;
 };
 
@@ -74,6 +77,8 @@ const initialFormValues: FormValues = {
   description: "",
   timing: "",
   budget: "",
+  currency: "EUR",
+  timeZone: "",
   consent: false,
 };
 
@@ -343,9 +348,16 @@ const startProjectCopy: Record<Locale, {
   },
 };
 
+const inquiryCopy = {
+  en: { currency: "Budget currency", timeZone: "Your time zone", timeZoneHint: "For example: Eastern Time (New York)", budgetHint: "A planning range helps scope the work. It is not a quote or a currency conversion.", reference: "Inquiry reference" },
+  el: { currency: "Νόμισμα προϋπολογισμού", timeZone: "Η ζώνη ώρας σας", timeZoneHint: "Για παράδειγμα: Αθήνα", budgetHint: "Το ενδεικτικό εύρος βοηθά στον καθορισμό του έργου. Δεν αποτελεί προσφορά ή μετατροπή νομίσματος.", reference: "Κωδικός αιτήματος" },
+  de: { currency: "Budgetwährung", timeZone: "Ihre Zeitzone", timeZoneHint: "Zum Beispiel: Berlin", budgetHint: "Ein Planungsrahmen hilft bei der Projektabgrenzung. Er ist weder ein Angebot noch eine Währungsumrechnung.", reference: "Anfragereferenz" },
+} as const;
+
 export default function StartProject() {
   const { locale } = useLocale();
   const copy = startProjectCopy[locale];
+  const extraCopy = inquiryCopy[locale];
   const structuredData = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "ContactPage",
@@ -356,13 +368,21 @@ export default function StartProject() {
   }), [copy.schemaDescription, copy.schemaName, locale]);
   const [form, setForm] = useState<FormValues>(initialFormValues);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
+  const [isUsInquiry, setIsUsInquiry] = useState(false);
+  const [inquiryReference, setInquiryReference] = useState("");
+  const submission = useRef({ payload: "", id: "" });
+  const campaign = useRef<Record<string, string>>({});
   const hasTrackedStart = useRef(false);
   const hasTrackedValidationError = useRef(false);
   const attribution = useRef({ source: "direct", context: "start-project-page" });
   const isMentorship = form.need === "career-mentorship";
+  const usService = locale === "en" && isUsInquiry
+    ? form.need === "business-intelligence" ? "Power BI" : form.need === "ai-automation" ? "AI automation" : ""
+    : "";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    setIsUsInquiry(params.get("market") === "US");
     const service = params.get("service")?.trim().toLowerCase() || "";
     const product = params.get("product")?.trim().toLowerCase() || "";
     const demo = params.get("demo")?.trim().toLowerCase() || "";
@@ -374,11 +394,13 @@ export default function StartProject() {
     );
     const matchingTiming = resolveProjectTiming(params.get("timing"));
 
-    if (matchingNeed || matchingTiming) {
+    campaign.current = campaignAttribution(window.location.search);
+    if (matchingNeed || matchingTiming || params.get("currency") === "USD") {
       setForm((current) => ({
         ...current,
         need: matchingNeed?.value ?? current.need,
         timing: matchingTiming?.label ?? current.timing,
+        currency: params.get("currency") === "USD" ? "USD" : "EUR",
       }));
     }
 
@@ -436,6 +458,7 @@ export default function StartProject() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (status === "submitting") return;
     setStatus("submitting");
     hasTrackedValidationError.current = false;
 
@@ -448,7 +471,8 @@ export default function StartProject() {
       `Desired timing: ${form.timing}`,
       isMentorship
         ? "Budget range: Not requested"
-        : `Budget range: ${form.budget || "Not provided"}`,
+        : `Budget range: ${form.budget ? form.budget.replaceAll("€", form.currency === "USD" ? "US$" : "€") : "Not provided"} (${form.currency})`,
+      `Time zone: ${form.timeZone || "Not provided"}`,
       "Privacy consent: Yes",
       "",
       "Enquiry details:",
@@ -458,9 +482,15 @@ export default function StartProject() {
       `Source: ${attribution.current.source}`,
       `Context: ${attribution.current.context}`,
       `Page: ${window.location.pathname}`,
+      ...Object.entries(campaign.current).map(([key, value]) => `${key}: ${value}`),
     ].join("\n");
 
     try {
+      const payload = JSON.stringify({ name: form.name, email: form.email, subject: `New enquiry — ${selectedNeed}`, message });
+      // Reuse the reference when retrying the same brief after a network failure.
+      if (submission.current.payload !== payload) {
+        submission.current = { payload, id: crypto.randomUUID() };
+      }
       const response = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: {
@@ -472,21 +502,30 @@ export default function StartProject() {
           email: form.email,
           subject: `New enquiry — ${selectedNeed}`,
           message,
+          inquiryId: submission.current.id,
         }),
       });
 
       if (!response.ok) {
         throw new Error(`Contact request failed with status ${response.status}`);
       }
+      if (CONTACT_ENDPOINT === "/api/contact") {
+        const result = await response.json();
+        if (result.success !== true || result.inquiryId !== submission.current.id) {
+          throw new Error("Contact endpoint did not confirm this inquiry.");
+        }
+      }
 
       setStatus("success");
-      trackLeadConversion();
+      setInquiryReference(submission.current.id);
+      trackLeadConversion(submission.current.id);
       trackEvent("contact_form_submit", {
         selected_need: form.need,
         desired_timing: form.timing,
         budget_range: isMentorship
           ? "not_requested"
           : form.budget || "not_provided",
+        budget_currency: form.currency,
         source: attribution.current.source,
         context: attribution.current.context,
       });
@@ -519,15 +558,15 @@ export default function StartProject() {
               {isMentorship ? copy.mentorshipEyebrow : copy.projectEyebrow}
             </p>
             <h1 className="mt-6 max-w-xl text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
-              {isMentorship
+              {usService ? `Tell us about your ${usService} project.` : isMentorship
                 ? copy.mentorshipTitle
                 : copy.projectTitle}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              {copy.introduction}
+              {usService ? "Share the problem, your current tools, and what a useful result would look like. Add a planning budget and time zone if you know them. We’ll review the fit and discuss the scope and next steps by email." : copy.introduction}
             </p>
 
-            <div className="mt-10 space-y-4">
+            {!usService && <div className="mt-10 space-y-4">
               <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
                 <h2 className="text-base font-semibold">{copy.startingPointTitle}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-gray-600">
@@ -540,7 +579,7 @@ export default function StartProject() {
                   {copy.responseBody}
                 </p>
               </div>
-            </div>
+            </div>}
 
           </section>
 
@@ -558,6 +597,7 @@ export default function StartProject() {
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-gray-600">
                   {copy.successBody}
                 </p>
+                <p className="mt-4 break-all text-sm text-gray-600">{extraCopy.reference}: {inquiryReference}</p>
                 <Button asChild variant="outline" className="mt-8 h-11 rounded-full px-6">
                   <Link href="/">{copy.returnHome}</Link>
                 </Button>
@@ -712,13 +752,32 @@ export default function StartProject() {
                           <option value="">{copy.preferNot}</option>
                           {budgetOptions.map((option) => (
                             <option key={option} value={option}>
-                              {copy.budgets[option]}
+                              {copy.budgets[option].replaceAll("€", form.currency === "USD" ? "US$" : "€")}
                             </option>
                           ))}
                         </select>
                       </label>
                     )}
                   </div>
+
+                  {!isMentorship && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-800">
+                        {extraCopy.currency}
+                        <select name="currency" value={form.currency} className={fieldClassName}
+                          onChange={(event) => setForm((current) => ({ ...current, currency: event.target.value as "EUR" | "USD", budget: "" }))}>
+                          <option value="USD">USD (US$)</option>
+                          <option value="EUR">EUR (€)</option>
+                        </select>
+                      </label>
+                      <p className="mt-2 text-sm leading-relaxed text-gray-500">{extraCopy.budgetHint}</p>
+                    </div>
+                  )}
+                  <label className="block text-sm font-medium text-gray-800">
+                    {extraCopy.timeZone} <span className="text-gray-400">({copy.optional})</span>
+                    <input name="timeZone" value={form.timeZone} maxLength={80} placeholder={extraCopy.timeZoneHint}
+                      className={fieldClassName} onChange={(event) => updateField("timeZone", event.target.value)} />
+                  </label>
 
                   <label className="flex cursor-pointer items-start gap-3 rounded-2xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-600">
                     <input

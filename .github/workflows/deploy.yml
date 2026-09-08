@@ -60,6 +60,9 @@ jobs:
       - name: Typecheck root app
         run: npm run check
 
+      - name: Lead acquisition tests
+        run: node --import tsx --test script/lead-acquisition.test.ts
+
       - name: Lint and test Quantus
         run: |
           cd apps/quantus
