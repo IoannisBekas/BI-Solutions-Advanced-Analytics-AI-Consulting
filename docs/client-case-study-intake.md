@@ -2,6 +2,8 @@
 
 Do not publish this document or convert it into a public case study until the client has approved the named facts, assets, quotation, and attribution in writing.
 
+Current priority candidate: Risen Fire Protection Inc. Use `docs/case-study-candidate-risen-fire.md`, which pre-fills the facts already stated in public LinkedIn posts while keeping every new claim and asset behind client approval.
+
 ## Client and permission
 
 - Client/legal entity:

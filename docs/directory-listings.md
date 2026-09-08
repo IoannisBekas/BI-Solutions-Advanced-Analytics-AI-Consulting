@@ -109,8 +109,10 @@ review invitation and let the client choose whether and what to write.
 
 ## Also worth fixing
 
-- The LinkedIn company page is still "BI Solutions by Bekas Ioannis". Rename
-  it to "BI Solutions Group" so every source agrees.
+- The LinkedIn company page's indexed display name is now `BI Solutions Group
+  — Advanced Analytics & AI Consulting`, checked 2026-09-08. Its legacy URL
+  slug still contains `bi-solutions-by-bekas-ioannis`, but this is not a
+  separate display name and does not require a rename task.
 - The Google Business Profile is currently unverified after a failed video
   verification. Complete verification before treating it as a stable citation.
 - Confirm that the listed address, hours, opening date, and five service-area

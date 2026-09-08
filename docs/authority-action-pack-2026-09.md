@@ -73,7 +73,9 @@ Before submission, Ioannis must confirm that the biography remains accurate, cho
 
 ## 3. Permissioned client reference and case study
 
-Priority candidate: Vasilis Antonakakis / likely Chania Tax, subject to identity and publication confirmation.
+Priority candidate: Dave Parfitt / Risen Fire Protection Inc., subject to client approval of the permanent case-study page, display name, screenshots, quotation, implementation details, and results. Existing indexed posts from both Ioannis Bekas and BI Solutions Group already describe the engagement publicly, making this the most evidence-complete candidate.
+
+Secondary candidate: Vasilis Antonakakis / likely Chania Tax, subject to identity and publication confirmation.
 
 Useful, non-transactional outcomes to request after approval:
 
@@ -81,7 +83,9 @@ Useful, non-transactional outcomes to request after approval:
 - a factual technology-provider acknowledgement on the client’s own partners, suppliers, news, or project page if that page is useful to its visitors;
 - an independent review invitation through Google or Clutch, written entirely by the client.
 
-Working evidence and permission pack: `docs/case-study-candidate-chania-tax.md`.
+Priority working evidence and permission pack: `docs/case-study-candidate-risen-fire.md`.
+
+Secondary working pack: `docs/case-study-candidate-chania-tax.md`.
 
 No client page, result, endorsement, organization name, or relationship detail should be requested publicly until the identity and scope are confirmed.
 

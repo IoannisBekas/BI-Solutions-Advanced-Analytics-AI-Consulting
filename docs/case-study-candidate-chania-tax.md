@@ -1,8 +1,8 @@
 # Client case-study candidate: accounting-firm analytics transformation
 
-Status: **internal working draft — do not publish**
+Status: **secondary internal candidate — do not publish**
 
-This candidate is the strongest current route to the first permissioned client case study because BI Solutions Group already publishes a named, source-linked review from Vasilis Antonakakis describing an accounting-firm automation and analytics transformation. The likely organization is Chania Tax, but that identity match is an inference and must be confirmed by Vasilis before it appears in a case study.
+This is a credible secondary candidate because BI Solutions Group already publishes a named, source-linked review from Vasilis Antonakakis describing an accounting-firm automation and analytics transformation. The likely organization is Chania Tax, but that identity match is an inference and must be confirmed by Vasilis before it appears in a case study. The Risen Fire candidate is prioritized first because its existing public posts contain substantially more implementation detail.
 
 ## Public evidence already available
 
