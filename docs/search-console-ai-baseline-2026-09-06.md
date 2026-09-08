@@ -99,6 +99,25 @@ After non-blocking font loading, deferred below-the-fold images, and removal of 
 
 The site still had no origin-level real-user field data. A responsive preload for the hero image was added after this recheck to reduce discovery delay for the remaining LCP image.
 
+### Services-page PageSpeed baseline — 2026-09-08
+
+The first successful mobile lab run for `/services` reported:
+
+- No page-level real-user field data was available.
+- Performance: **80**
+- Accessibility: **97**
+- Best Practices: **92**
+- SEO: **100**
+- First Contentful Paint: **3.2 s**
+- Largest Contentful Paint: **3.6 s**
+- Total Blocking Time: **0 ms**
+- Cumulative Layout Shift: **0**
+- Speed Index: **5.5 s**
+
+The LCP element was the hero heading, with **1,230 ms** of element render delay. Lighthouse also reported a CSP-blocked inline font-load handler. The hero reveal animation was removed and font activation was moved into the bundled application script.
+
+The first post-deployment mobile run reported Performance **77**, Accessibility **97**, Best Practices **100**, SEO **100**, FCP **3.6 s**, LCP **4.4 s**, TBT **0 ms**, CLS **0**, and Speed Index **3.6 s**. The throttled headline result varied, but the targeted LCP render-delay diagnostic improved to **820 ms** and the CSP console error disappeared. The remaining render-blocking item was the first-party stylesheet, with an estimated **380 ms** saving; unused JavaScript was estimated at **88 KiB**. Treat these as lab diagnostics, not a real-user Core Web Vitals failure, until Search Console or CrUX has enough field data.
+
 ## Monthly comparison rule
 
 Compare the same trailing three-month window once per month. Track total impressions, top landing pages, country mix, and device mix. Do not interpret day-to-day movement as a trend.
