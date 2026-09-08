@@ -451,7 +451,7 @@ export default function Services() {
                   className="group flex items-center justify-between gap-5 border-b border-white/15 py-5 text-sm font-semibold text-white/75 transition-colors hover:text-white sm:px-5 sm:first:pl-0 xl:border-b-0 xl:border-r xl:last:border-r-0"
                 >
                   <span>
-                    <span className="mr-3 font-mono text-xs text-white/30">
+                    <span className="mr-3 font-mono text-xs text-white/60">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     {service.shortTitle}

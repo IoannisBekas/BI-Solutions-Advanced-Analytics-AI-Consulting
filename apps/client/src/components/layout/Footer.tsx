@@ -190,7 +190,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between pt-8 text-sm text-gray-500 md:flex-row">
+        <div className="flex flex-col items-center justify-between pt-8 text-sm text-gray-400 md:flex-row">
           <p>&copy; 2026 BI Solutions Group. {t.footer.rights}</p>
           <button
             type="button"
