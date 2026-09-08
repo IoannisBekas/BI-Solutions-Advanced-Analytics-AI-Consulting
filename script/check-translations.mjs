@@ -122,3 +122,89 @@ if (prerenderLeaks.length > 0) {
 }
 
 console.log(`Prerender localization checks passed for ${prerenderChecks.length} priority pages.`);
+
+function visibleTextSegments(html) {
+  const withoutNonContent = html
+    .replace(/<(script|style|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(
+      /<([a-z][\w:-]*)\b[^>]*\btranslate=(['"])no\2[^>]*>[\s\S]*?<\/\1>/gi,
+      " ",
+    )
+    .replace(/<!--[\s\S]*?-->/g, " ");
+
+  return new Set(
+    [...withoutNonContent.matchAll(/>([^<>]+)</g)]
+      .map((match) => normalize(match[1]))
+      .filter(Boolean),
+  );
+}
+
+function isExpectedSharedText(segment) {
+  return (
+    segment === "BI Solutions Group" ||
+    segment === "Power BI Solutions" ||
+    /^© \d{4} BI Solutions Group\.$/.test(segment) ||
+    /^(?:https?:\/\/)?(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:\/\S*)?$/i.test(segment)
+  );
+}
+
+const localizedRoots = ["el", "de"];
+const shortCopyThatMustBeLocalized = new Set(["Previous slide", "Next slide"]);
+const sharedEnglishLeaks = [];
+let localizedPagesChecked = 0;
+
+async function collectIndexPages(directory) {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+  const pages = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) pages.push(...(await collectIndexPages(entryPath)));
+    else if (entry.name === "index.html") pages.push(entryPath);
+  }
+
+  return pages;
+}
+
+for (const locale of localizedRoots) {
+  const localeRoot = path.join(root, "dist", "public", locale);
+  const localizedPages = await collectIndexPages(localeRoot);
+
+  for (const localizedPage of localizedPages) {
+    const relativePath = path.relative(localeRoot, localizedPage);
+    const englishPage = path.join(root, "dist", "public", relativePath);
+    const [englishHtml, localizedHtml] = await Promise.all([
+      fs.readFile(englishPage, "utf8"),
+      fs.readFile(localizedPage, "utf8"),
+    ]);
+    const englishSegments = visibleTextSegments(englishHtml);
+    const localizedSegments = visibleTextSegments(localizedHtml);
+
+    for (const segment of englishSegments) {
+      if (!localizedSegments.has(segment) || isExpectedSharedText(segment)) continue;
+
+      const latinWords = segment
+        .replace(/&[a-z0-9#]+;/gi, " ")
+        .match(/[A-Za-z][A-Za-z'-]*/g);
+      if ((latinWords?.length ?? 0) >= 3 || shortCopyThatMustBeLocalized.has(segment)) {
+        sharedEnglishLeaks.push(`${locale}/${relativePath}: ${segment}`);
+      }
+    }
+
+    localizedPagesChecked += 1;
+  }
+}
+
+if (sharedEnglishLeaks.length > 0) {
+  throw new Error(
+    `English copy leaked into localized pages:\n${sharedEnglishLeaks.slice(0, 30).join("\n")}${
+      sharedEnglishLeaks.length > 30
+        ? `\n...and ${sharedEnglishLeaks.length - 30} more`
+        : ""
+    }`,
+  );
+}
+
+console.log(
+  `Full prerender localization audit passed for ${localizedPagesChecked} Greek and German pages.`,
+);

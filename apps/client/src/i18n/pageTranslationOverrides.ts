@@ -3,6 +3,94 @@ type PageTranslationOverrides = Record<string, { el: string; de: string }>;
 // Curated corrections for phrases where literal machine translation changes the
 // business meaning. These are applied after the generated translation catalogue.
 export const pageTranslationOverrides: PageTranslationOverrides = {
+  "Advanced Analytics & AI Consulting": {
+    el: "Προηγμένη ανάλυση δεδομένων & συμβουλευτική AI",
+    de: "Erweiterte Analytik und KI-Beratung",
+  },
+  "Analytics (Google Analytics)": {
+    el: "Ανάλυση επισκεψιμότητας (Google Analytics)",
+    de: "Analyse (Google Analytics)",
+  },
+  "Business Intelligence & Power BI": {
+    el: "Επιχειρηματική ευφυΐα & Power BI",
+    de: "Business Intelligence und Power BI",
+  },
+  "BI & Analytics": {
+    el: "BI & ανάλυση δεδομένων",
+    de: "BI & Analytik",
+  },
+  "Business Intelligence": {
+    el: "Επιχειρηματική ευφυΐα",
+    de: "Business Intelligence",
+  },
+  "AI Literacy": {
+    el: "Κατανόηση της AI",
+    de: "KI-Kompetenz",
+  },
+  "AI Literacy for Teams": {
+    el: "Κατανόηση της AI για ομάδες",
+    de: "KI-Kompetenz für Teams",
+  },
+  "AI Readiness": {
+    el: "Ετοιμότητα για AI",
+    de: "KI-Bereitschaft",
+  },
+  "AI Consulting": {
+    el: "Συμβουλευτική AI",
+    de: "KI-Beratung",
+  },
+  "Advanced Analytics": {
+    el: "Προηγμένη ανάλυση δεδομένων",
+    de: "Erweiterte Analytik",
+  },
+  "Cloud & Data": {
+    el: "Cloud & δεδομένα",
+    de: "Cloud & Daten",
+  },
+  "Cloud Migration": {
+    el: "Μετάβαση στο cloud",
+    de: "Cloud-Migration",
+  },
+  "Cloud Warehouse": {
+    el: "Αποθήκη δεδομένων στο cloud",
+    de: "Cloud-Warehouse",
+  },
+  "MLOps & AI": {
+    el: "MLOps & AI",
+    de: "MLOps und KI",
+  },
+  "Generative AI & LLMs": {
+    el: "Παραγωγική τεχνητή νοημοσύνη & LLMs",
+    de: "Generative KI und LLMs",
+  },
+  "Predictive Analytics": {
+    el: "Προγνωστική ανάλυση",
+    de: "Prädiktive Analytik",
+  },
+  "Predictive analytics & ML": {
+    el: "Προγνωστική ανάλυση & ML",
+    de: "Prädiktive Analysen und ML",
+  },
+  "Insights": {
+    el: "Άρθρα και γνώσεις",
+    de: "Einblicke",
+  },
+  "Cloud Data Warehouse vs Spreadsheets": {
+    el: "Αποθήκη δεδομένων cloud έναντι υπολογιστικών φύλλων",
+    de: "Cloud Data Warehouse vs. Tabellenkalkulationen",
+  },
+  "4. Bonusaki Demo and Merchant Pilots": {
+    el: "4. Επίδειξη του Bonusaki και πιλοτικές εφαρμογές με επιχειρήσεις",
+    de: "4. Bonusaki-Demo und Händlerpiloten",
+  },
+  "Previous slide": {
+    el: "Προηγούμενη διαφάνεια",
+    de: "Vorherige Folie",
+  },
+  "Next slide": {
+    el: "Επόμενη διαφάνεια",
+    de: "Nächste Folie",
+  },
   "Review quotations are shown in their original wording.": {
     el: "Τα αποσπάσματα των κριτικών εμφανίζονται στην αρχική τους διατύπωση.",
     de: "Rezensionszitate werden im Originalwortlaut angezeigt.",
