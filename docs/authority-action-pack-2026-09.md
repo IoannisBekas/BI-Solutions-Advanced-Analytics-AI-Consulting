@@ -38,6 +38,8 @@ Ioannis Bekas
 7. Document decisions where future builders will find them.
 8. A one-page review checklist.
 
+Complete editorial draft: `docs/fabric-community-article-draft.md`.
+
 Submission requires Ioannis to sign in, confirm the profile identity, approve the final text, and send the administrator message.
 
 ## 2. TDWI expert-speaker proposal
