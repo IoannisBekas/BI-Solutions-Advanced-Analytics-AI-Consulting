@@ -64,8 +64,20 @@ The report contained 45 country rows in total.
 - Search Console overview: **48 total web-search clicks**, **19 indexed pages**, and **34 not-indexed pages** in the reporting period displayed by the interface.
 - Now confirmed **URL is on Google** and **Page is indexed**: `/about`, `/blog/cloud-data-warehouse-vs-spreadsheets`, `/blog/dashboard-requirements-before-power-bi-build`, `/el/about`, `/de/about`, `/el/start-a-project`, and `/de/start-a-project`.
 - All seven inspected URLs were also reported as served over HTTPS.
-- No additional indexing requests were submitted because every inspected priority URL was already indexed.
+- No additional indexing requests were submitted during that first follow-up because every inspected priority URL was already indexed.
 - The Generative AI report was not re-baselined after only two days; retain the monthly comparison cadence below.
+
+### Exclusion audit and localized sitemap follow-up — 2026-09-08
+
+- The 34 excluded URLs in the report last updated 2026-09-04 were reviewed individually: 9 intentional `noindex` drafts, 5 retired or missing routes grouped by Google as 404s (including deliberate 410 responses), 3 expected canonical-host redirects, 1 alternate-language canonical, and 16 crawled-but-not-indexed URLs.
+- The 16 crawled-but-not-indexed examples contained 3 tracking-query duplicates, 3 intentional `noindex` drafts, 1 retired route, 2 stale rows for articles now confirmed indexed, and 7 genuinely actionable article URLs.
+- Exact inspection confirmed `/el/case-studies/ifc-talent-strategy` is indexed; the older alternate-canonical row is stale.
+- The sitemap was expanded from 31 URLs to **87 URLs**: 29 canonical routes in English, Greek, and German, each with reciprocal `en`, `el-GR`, `de-DE`, and `x-default` alternates.
+- `https://www.bisolutions.group/sitemap.xml` was resubmitted after deployment. Search Console immediately reported **Success**, last read 2026-09-08, with **87 discovered pages**.
+- Exact inspection confirmed these four English articles were still not on Google, and each was successfully added to the priority crawl queue: `/blog/data-governance-gdpr-scale-analytics-control`, `/blog/prompt-workflow-design-business-teams`, `/blog/mlops-small-mid-sized-teams-productionize-ai`, and `/blog/ai-assistant-governance-company-policy`.
+- Exact inspection confirmed the three priority German articles were not on Google. After the corrected localized article deployment was live, all three were successfully added to the priority crawl queue: `/de/blog/semantic-modeling-power-bi-clean-models`, `/de/blog/dashboard-requirements-before-power-bi-build`, and `/de/blog/power-bi-consulting-dashboards-business-infrastructure`.
+- The three strongest Greek counterparts were also confirmed not indexed and successfully added to the priority crawl queue: `/el/blog/semantic-modeling-power-bi-clean-models`, `/el/blog/dashboard-requirements-before-power-bi-build`, and `/el/blog/power-bi-consulting-dashboards-business-infrastructure`.
+- Ten requests were submitted in total during this follow-up: 4 English, 3 German, and 3 Greek article URLs. No query-string duplicates, intentional `noindex` pages, retired routes, redirects, or already-indexed pages were submitted.
 
 ## PageSpeed Insights
 
