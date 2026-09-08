@@ -42,11 +42,15 @@ Complete editorial draft: `docs/fabric-community-article-draft.md`.
 
 Submission requires Ioannis to sign in, confirm the profile identity, approve the final text, and send the administrator message.
 
-## 2. TDWI expert-speaker proposal
+## 2. TDWI expert-speaker proposal — parked for the next call
 
-Why this fits: TDWI’s current call invites vendor-neutral, actionable contributions from practitioners and provides a 2026 expert-speaker application. A methods session can use independent examples and does not need a named client case study.
+Why this fits: TDWI invites vendor-neutral, actionable contributions from practitioners. A methods session can use independent examples and does not need a named client case study.
 
 Official call: https://tdwi.org/pages/about-tdwi/call-for-speakers.aspx
+
+Status checked 2026-09-08: the linked **2026 Masterclasses & Expert Speakers** form says the Data & AI Leaders Summit at TDWI Anaheim call is closed. The separate **2026 Case Studies** form still opens, but this proposal is not a client case study and should not be submitted through that route. Keep the abstract ready for TDWI's next announced expert-speaker call.
+
+TDWI also accepts proposals for unpublished, vendor-neutral contributed articles. Do not send the Microsoft Fabric draft there simultaneously: TDWI requires the article to be unpublished, offered exclusively during evaluation, and exclusive to TDWI for at least 90 days if accepted.
 
 ### Proposed session
 
@@ -71,7 +75,7 @@ Speaker biography:
 
 Ioannis Bekas is the founder of BI Solutions Group and a data scientist and AI developer with more than nine years of experience across business intelligence, applied AI, data strategy, analytics engineering, and project delivery. He builds decision-focused reporting systems, semantic models, controlled AI workflows, and maintainable digital products.
 
-Before submission, Ioannis must confirm that the biography remains accurate, choose the permitted public examples, review the form’s recording and content-licensing terms, and authorize submission.
+Before a future submission, Ioannis must confirm that the biography remains accurate, choose the permitted public examples, review the then-current form’s recording and content-licensing terms, and authorize submission.
 
 ## 3. Permissioned client reference and case study
 
@@ -102,6 +106,7 @@ Do not purchase verification or visibility as a substitute for profile completen
 ## Excluded for this cycle
 
 - PyCon Greece 2026: the official proposal system shows submissions closed on 2026-05-18. Do not send a late pitch; prepare for the next announced cycle instead.
+- TDWI 2026 expert-speaker call: the linked form is closed. Retain the completed abstract for the next announced expert-speaker cycle; do not misclassify it as a case study.
 - Paid backlink placements, reciprocal-link schemes, fabricated partner pages, and mass directory submissions.
 - Repackaging the same article unchanged across multiple sites. External contributions should be original and useful to the destination audience.
 
@@ -109,8 +114,8 @@ Do not purchase verification or visibility as a substitute for profile completen
 
 1. Confirm the client-case-study candidate and send the permission request.
 2. Approve and send the Microsoft Fabric author-access request.
-3. Review the TDWI session abstract and application terms, then authorize submission.
-4. Confirm company facts and open or claim the Clutch profile.
-5. Repeat the confirmed facts on TechBehemoths and the verified Google Business Profile.
+3. Confirm company facts and open or claim the Clutch profile.
+4. Repeat the confirmed facts on TechBehemoths and the verified Google Business Profile.
+5. When TDWI announces a new expert-speaker call, review the saved abstract and current application terms before authorizing submission.
 
 Record every send, submission, acceptance, rejection, publication date, and live URL in `docs/authority-outreach-tracker.md`.
