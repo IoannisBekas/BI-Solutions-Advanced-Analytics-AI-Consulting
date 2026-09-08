@@ -398,7 +398,7 @@ export default function Services() {
       <main className="pt-28">
         <section className="site-container px-4 md:px-8">
           <div className="overflow-hidden rounded-[2rem] bg-[#0a0b0d] px-6 pb-8 pt-14 text-white md:rounded-[3rem] md:px-12 md:pb-12 md:pt-20 lg:px-16">
-            <ScrollReveal width="100%">
+            <div className="w-full">
               <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
@@ -438,7 +438,7 @@ export default function Services() {
                   </div>
                 </div>
               </div>
-            </ScrollReveal>
+            </div>
 
             <nav
               id="service-index"

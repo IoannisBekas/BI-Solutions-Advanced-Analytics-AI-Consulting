@@ -2,7 +2,20 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
+activateAsyncFonts();
 restoreGitHubPagesRoute();
+
+function activateAsyncFonts() {
+  const stylesheet = document.getElementById("site-fonts");
+  if (!(stylesheet instanceof HTMLLinkElement)) return;
+
+  const activate = () => {
+    stylesheet.media = "all";
+  };
+
+  stylesheet.addEventListener("load", activate, { once: true });
+  if (stylesheet.sheet) activate();
+}
 
 function restoreGitHubPagesRoute() {
   const redirectKey = "__bisolutions_redirect__";
