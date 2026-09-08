@@ -2,6 +2,39 @@ import type { Locale } from "./config";
 import { pageTranslations } from "./pageTranslations.generated";
 
 const translatedAttributes = ["alt", "aria-label", "placeholder", "title"];
+const protectedTerms = new Set([
+  "en",
+  "Airtable",
+  "Azure",
+  "Azure OpenAI",
+  "BigQuery",
+  "Cloud",
+  "CMS",
+  "Databricks",
+  "DAX",
+  "dbt",
+  "Excel",
+  "Git & GitHub",
+  "Make",
+  "Microsoft Fabric",
+  "MLOps",
+  "n8n",
+  "Next.js",
+  "Node.js",
+  "Notion",
+  "OpenAI",
+  "PostgreSQL",
+  "Power BI",
+  "Power Query",
+  "Python",
+  "RAG",
+  "React",
+  "Schema.org",
+  "Snowflake",
+  "SQL",
+  "Tabular Editor",
+  "TypeScript",
+]);
 const legacyTranslations: Record<string, { el: string; de: string }> = {
   "Cookies & Analytics": {
     el: "Cookies και αναλυτικά στοιχεία",
@@ -28,6 +61,7 @@ function shouldSkipTranslation(node: Node) {
 export function translatePageCopy(value: string, locale: Locale) {
   if (locale === "en") return value;
   const normalized = value.replace(/\s+/g, " ").trim();
+  if (protectedTerms.has(normalized)) return value;
   const translation =
     pageTranslations[normalized]?.[locale] ?? legacyTranslations[normalized]?.[locale];
   if (!translation) return value;
