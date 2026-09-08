@@ -85,7 +85,7 @@ export function hasAnalyticsConsent() {
 }
 
 // Only call after a successful enquiry response; never pass form contents.
-export function trackLeadConversion() {
+export function trackLeadConversion(inquiryId?: string) {
   if (readMeasurementConsent()?.ads !== true) return;
   try {
     initializeMeasurement();
@@ -93,6 +93,7 @@ export function trackLeadConversion() {
       send_to: LEAD_CONVERSION,
       value: 1.0,
       currency: "EUR",
+      ...(inquiryId ? { transaction_id: inquiryId } : {}),
     });
   } catch {
     // Blocked measurement must not turn a delivered enquiry into a form error.

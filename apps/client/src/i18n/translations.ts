@@ -69,9 +69,9 @@ const en: TranslationCatalogue = {
   },
   hero: {
     eyebrow: "Senior-led delivery · International",
-    title: "Clarity from complexity",
+    title: "Better reporting. Practical AI. Systems that last.",
     subtitle:
-      "Business intelligence, AI, data foundations, web applications, and content operations — from strategy through to a handoff your team can keep running.",
+      "Power BI consulting, AI automation, and data engineering for US and international teams. Work directly with a senior consultant, from a clear scope to a documented handoff.",
     needLabel: "I want to",
     timingLabel: "Timeline",
     submit: "Start a project",

@@ -11,16 +11,16 @@ export interface HomeInsight {
 /** Curated homepage cards; full article bodies stay in the blog route chunk. */
 export const homeInsights: HomeInsight[] = [
   {
-    slug: "website-web-app-development-greece-business-needs",
+    slug: "dashboard-requirements-before-power-bi-build",
     title:
-      "Website & Web App Development in Greece: What Businesses Actually Need",
+      "Dashboard Requirements: What to Define Before a Power BI Build",
     excerpt:
-      "What Greek businesses should expect from modern website and web app development: positioning, speed, conversion paths, and maintainable delivery.",
+      "Strong dashboards start before design. Define decisions, users, KPIs, sources, refresh needs, and ownership before building visuals.",
     date: "April 22, 2026",
-    readTime: "8 min read",
-    category: "Web Development",
+    readTime: "6 min read",
+    category: "BI & Analytics",
     featuredImage:
-      "/blog/article-covers-v4/06-website-web-app-development-greece-business-needs.png",
+      "/blog/article-covers-v4/03-dashboard-requirements-before-power-bi-build.png",
   },
   {
     slug: "power-bi-consulting-dashboards-business-infrastructure",
@@ -46,15 +46,15 @@ export const homeInsights: HomeInsight[] = [
       "/blog/article-covers-v4/02-semantic-modeling-power-bi-clean-models.png",
   },
   {
-    slug: "ai-consulting-greek-businesses-practical-use-cases",
+    slug: "ai-document-workflows-professional-services",
     title:
-      "AI Consulting for Greek Businesses: Practical Use Cases Beyond Hype",
+      "AI Document Workflows for Professional Services",
     excerpt:
-      "AI consulting should help businesses choose useful workflows, not chase generic trends. Here are practical AI use cases for Greek companies.",
-    date: "April 18, 2026",
-    readTime: "8 min read",
+      "Professional-service teams can use AI to summarize, classify, draft, and review documents when the workflow includes human control and privacy rules.",
+    date: "July 11, 2026",
+    readTime: "5 min read",
     category: "AI & Technology",
     featuredImage:
-      "/blog/article-covers-v4/05-ai-consulting-greek-businesses-practical-use-cases.png",
+      "/blog/article-covers-v4/13-ai-document-workflows-professional-services.png",
   },
 ];

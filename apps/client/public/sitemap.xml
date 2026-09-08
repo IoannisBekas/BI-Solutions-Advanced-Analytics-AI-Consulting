@@ -870,4 +870,20 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://www.bisolutions.group/us/power-bi-consulting</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/us/power-bi-consulting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/us/power-bi-consulting" />
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/us/ai-automation</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/us/ai-automation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/us/ai-automation" />
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

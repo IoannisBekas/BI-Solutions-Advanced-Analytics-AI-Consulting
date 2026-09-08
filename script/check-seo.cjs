@@ -123,8 +123,14 @@ for (const entry of sitemapEntries) {
     ["de-DE", localizedUrl(basePath, "de")],
     ["x-default", localizedUrl(basePath, "en")],
   ]);
+  // US acquisition pages are intentionally English-only.
+  if (basePath.startsWith("/us/")) {
+    expectedAlternates.delete("el-GR");
+    expectedAlternates.delete("de-DE");
+    if (locale !== "en") fail(`${entry.loc} must use the English US landing page.`);
+  }
   if (alternates.length !== expectedAlternates.size) {
-    fail(`${entry.loc} must have four reciprocal hreflang entries.`);
+    fail(`${entry.loc} must have ${expectedAlternates.size} reciprocal hreflang entries.`);
   }
   for (const alternate of alternates) {
     if (expectedAlternates.get(alternate.hreflang) !== alternate.href) {
@@ -134,6 +140,7 @@ for (const entry of sitemapEntries) {
 }
 
 for (const [basePath, locales] of localeGroups) {
+  if (basePath.startsWith("/us/")) continue;
   if (!["en", "el", "de"].every((locale) => locales.has(locale))) {
     fail(`${basePath} is missing an English, Greek, or German sitemap URL.`);
   }

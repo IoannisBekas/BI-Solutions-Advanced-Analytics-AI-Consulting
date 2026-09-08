@@ -6,13 +6,27 @@ const publicRoutes = [
   {
     path: "/",
     title: "AI, BI & Web App Development",
-    body: "Clarity from complexity",
+    body: "Better reporting. Practical AI. Systems that last.",
     absent: [
       "AI Products",
       "How engagements work",
       "Two focused workspaces",
       "Why BI Solutions Group",
     ],
+  },
+  {
+    path: "/us/power-bi-consulting",
+    title: "Power BI Consulting for US Teams",
+    body: "Power BI consulting for US teams.",
+    canonical: "https://www.bisolutions.group/us/power-bi-consulting",
+    robots: "index,follow",
+  },
+  {
+    path: "/us/ai-automation",
+    title: "AI Automation Consulting for US Teams",
+    body: "AI automation for work that repeats.",
+    canonical: "https://www.bisolutions.group/us/ai-automation",
+    robots: "index,follow",
   },
   {
     path: "/services",

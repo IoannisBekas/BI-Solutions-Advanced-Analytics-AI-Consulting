@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
 
 function getResendApiKey() {
   return (process.env.RESEND_API_KEY || "").trim();
@@ -29,6 +30,7 @@ const contactBodySchema = z.object({
   email: z.string().trim().email().max(254),
   subject: z.string().trim().min(1).max(200),
   message: z.string().trim().min(1).max(5000),
+  inquiryId: z.string().uuid().optional(),
 });
 
 export function registerContactRoute(app: Express) {
@@ -48,6 +50,7 @@ export function registerContactRoute(app: Express) {
       return;
     }
     const { name, email, subject, message } = parsed.data;
+    const inquiryId = parsed.data.inquiryId ?? randomUUID();
 
     try {
       const { Resend } = await import("resend");
@@ -57,15 +60,15 @@ export function registerContactRoute(app: Express) {
         from: fromEmail,
         to: recipient,
         replyTo: email,
-        subject: `[Contact] ${subject}`,
-        html: `<p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p><p><strong>Subject:</strong> ${escapeHtml(subject)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`,
-      });
+        subject: `[Contact ${inquiryId.slice(0, 8)}] ${subject}`,
+        html: `<p><strong>Reference:</strong> ${inquiryId}</p><p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p><p><strong>Subject:</strong> ${escapeHtml(subject)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`,
+      }, { idempotencyKey: `contact/${inquiryId}` });
 
       if (error) {
         console.error("Resend error:", error);
         res.status(502).json({ message: "Failed to deliver message. Please try again." });
       } else {
-        res.json({ success: true });
+        res.json({ success: true, inquiryId });
       }
     } catch (error) {
       console.error("Contact form proxy failed:", error);
