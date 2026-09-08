@@ -1,6 +1,8 @@
 import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { DEFAULT_LOCALE, splitLocaleFromPath } from "./i18n/config";
+import { setPageTranslations } from "./i18n/localizeDocument";
 
 activateAsyncFonts();
 restoreGitHubPagesRoute();
@@ -43,11 +45,23 @@ function restoreGitHubPagesRoute() {
 
 const container = document.getElementById("root")!;
 
-// Prerendered pages ship real HTML in #root — hydrate it instead of
-// discarding it. Non-prerendered routes (e.g. after the 404.html redirect)
-// still start from an empty container.
-if (container.hasChildNodes()) {
-  hydrateRoot(container, <App />);
-} else {
-  createRoot(container).render(<App />);
+async function renderApp() {
+  const { locale } = splitLocaleFromPath(window.location.pathname);
+  if (locale !== DEFAULT_LOCALE) {
+    const { pageTranslations } = await import(
+      "./i18n/pageTranslations.generated"
+    );
+    setPageTranslations(pageTranslations);
+  }
+
+  // Prerendered pages ship real HTML in #root — hydrate it instead of
+  // discarding it. Non-prerendered routes (e.g. after the 404.html redirect)
+  // still start from an empty container.
+  if (container.hasChildNodes()) {
+    hydrateRoot(container, <App />);
+  } else {
+    createRoot(container).render(<App />);
+  }
 }
+
+void renderApp();

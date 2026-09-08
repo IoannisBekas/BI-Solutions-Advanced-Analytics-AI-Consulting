@@ -13,6 +13,7 @@ const POSTER = withAssetBase("scroll-world-v4/posters/clip-01.webp");
 const POSTER_MOBILE = withAssetBase(
   "scroll-world-v4/posters/clip-01-mobile.webp",
 );
+const POSTER_TABLET = withAssetBase("scroll-world-v4/posters/clip-01-900.webp");
 
 const timingValues = projectTimingOptions.map((option) => option.value);
 
@@ -41,7 +42,7 @@ export function CinematicHero() {
         <img
           className="cinematic-hero__poster"
           src={POSTER}
-          srcSet={`${POSTER_MOBILE} 600w, ${POSTER} 1280w`}
+          srcSet={`${POSTER_MOBILE} 600w, ${POSTER_TABLET} 900w, ${POSTER} 1280w`}
           sizes="100vw"
           alt=""
           fetchPriority="high"

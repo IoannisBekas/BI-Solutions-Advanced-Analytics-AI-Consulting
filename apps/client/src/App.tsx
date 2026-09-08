@@ -1,20 +1,15 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { useBrowserLocation } from "wouter/use-browser-location";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
 import { SITE_BASE_PATH } from "@/lib/site";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import { localePrefix, splitLocaleFromPath, type Locale } from "@/i18n/config";
-// Eagerly load the landing page for instant first paint
-import Home from "@/pages/Home";
 
-// Lazy-load all other pages only when navigated to.
+// Prerendering provides the first paint. Hydrate only the active route's code.
+const Home = lazy(() => import("@/pages/Home"));
 const Services = lazy(() => import("@/pages/Services"));
 const CaseStudyDetail = lazy(() => import("@/pages/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/Blog"));
@@ -49,15 +44,10 @@ function App({ ssrPath }: AppProps = {}) {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <LocaleProvider locale={locale}>
-          <TooltipProvider>
-            <Toaster />
-            <Router ssrPath={ssrPath} locale={locale} />
-            <CookieConsent />
-          </TooltipProvider>
-        </LocaleProvider>
-      </QueryClientProvider>
+      <LocaleProvider locale={locale}>
+        <Router ssrPath={ssrPath} locale={locale} />
+        <CookieConsent />
+      </LocaleProvider>
     </ErrorBoundary>
   );
 }

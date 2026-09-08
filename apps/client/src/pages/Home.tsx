@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages } from "@/lib/servicePages";
-import { blogPosts } from "@/data/blogData";
+import { homeInsights } from "@/data/homeInsights";
 import { caseStudies } from "@/data/caseStudies";
 import {
   websiteProjects,
@@ -18,8 +18,8 @@ import { trackEvent } from "@/lib/analytics";
 import { withAssetBase } from "@/lib/site";
 import { useLocale } from "@/i18n/LocaleProvider";
 
-const latestInsight = blogPosts[0];
-const moreInsights = blogPosts.slice(1, 4);
+const latestInsight = homeInsights[0];
+const moreInsights = homeInsights.slice(1);
 
 interface WebsiteProjectCardProps {
   project: WebsiteProject;
@@ -49,6 +49,7 @@ function WebsiteProjectCard({
           <div className="relative aspect-[16/9] overflow-hidden border-b border-gray-200 bg-[#07121f]">
             <img
               src={project.image}
+              srcSet={`${project.mobileImage} 800w, ${project.image} 2880w`}
               alt={project.imageAlt}
               width={2880}
               height={1620}

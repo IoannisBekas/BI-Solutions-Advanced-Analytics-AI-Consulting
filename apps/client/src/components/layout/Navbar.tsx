@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "wouter";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
@@ -263,15 +262,10 @@ export function Navbar() {
     typeof document === "undefined"
       ? null
       : createPortal(
-          <AnimatePresence>
-            {isMobileMenuOpen ? (
-              <motion.div
+          isMobileMenuOpen ? (
+              <div
                 id="mobile-site-menu"
                 ref={mobileDialogRef}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
                 className="fixed inset-0 z-[150] flex flex-col bg-white xl:hidden"
                 role="dialog"
                 aria-modal="true"
@@ -405,9 +399,8 @@ export function Navbar() {
                     </Link>
                   </Button>
                 </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>,
+              </div>
+            ) : null,
           document.body,
         );
 

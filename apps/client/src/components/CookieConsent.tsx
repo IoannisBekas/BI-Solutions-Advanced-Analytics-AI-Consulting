@@ -75,7 +75,7 @@ export function CookieConsent() {
   const { locale } = useLocale();
   const localizedHref = useLocalizedHref();
   const copy = cookieCopy[locale];
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [choices, setChoices] = useState<MeasurementConsent>({ analytics: false, ads: false });
   const [error, setError] = useState("");
 
@@ -89,6 +89,7 @@ export function CookieConsent() {
     };
     const openSettings = () => {
       setChoices(readMeasurementConsent() || { analytics: false, ads: false });
+      document.documentElement.removeAttribute("data-cookie-consent");
       setVisible(true);
     };
 
@@ -104,10 +105,12 @@ export function CookieConsent() {
   useEffect(() => {
     const consent = readMeasurementConsent();
     if (!consent) {
+      document.documentElement.removeAttribute("data-cookie-consent");
       setVisible(true);
       return;
     }
     setChoices(consent);
+    document.documentElement.setAttribute("data-cookie-consent", "saved");
     initializeMeasurement();
     if (consent.analytics) {
       captureAiSearchReferral();
@@ -128,6 +131,7 @@ export function CookieConsent() {
     setChoices(consent);
     if (consent.analytics) captureAiSearchReferral();
     else clearAiSearchReferral();
+    document.documentElement.setAttribute("data-cookie-consent", "saved");
     setVisible(false);
     setError("");
     applyMeasurementConsent(consent);
@@ -139,6 +143,7 @@ export function CookieConsent() {
 
   return (
     <section
+      data-cookie-consent-banner
       className="fixed inset-x-3 bottom-3 z-[120] max-h-[85dvh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-950 p-5 text-white shadow-2xl sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[26rem]"
       role="dialog"
       aria-labelledby="cookie-consent-title"

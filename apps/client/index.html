@@ -24,7 +24,7 @@
     rel="preload"
     as="image"
     href="%BASE_URL%scroll-world-v4/posters/clip-01.webp"
-    imagesrcset="%BASE_URL%scroll-world-v4/posters/clip-01-mobile.webp 600w, %BASE_URL%scroll-world-v4/posters/clip-01.webp 1280w"
+    imagesrcset="%BASE_URL%scroll-world-v4/posters/clip-01-mobile.webp 600w, %BASE_URL%scroll-world-v4/posters/clip-01-900.webp 900w, %BASE_URL%scroll-world-v4/posters/clip-01.webp 1280w"
     imagesizes="100vw"
     fetchpriority="high">
 
@@ -32,6 +32,20 @@
        animations serialize opacity:0 into the prerendered HTML; clients clear
        this instantly, while JS-less crawlers keep the content visible. -->
   <script>document.documentElement.setAttribute("data-js", "");</script>
+  <script>
+    try {
+      const savedConsent = JSON.parse(localStorage.getItem("bi-measurement-consent-v2") || "null");
+      if (
+        savedConsent &&
+        typeof savedConsent.analytics === "boolean" &&
+        typeof savedConsent.ads === "boolean" &&
+        typeof savedConsent.savedAt === "number" &&
+        Date.now() - savedConsent.savedAt <= 180 * 86400000
+      ) {
+        document.documentElement.setAttribute("data-cookie-consent", "saved");
+      }
+    } catch {}
+  </script>
 
   <!-- Fonts: Plus Jakarta Sans (Headings) and Inter (Body), supporting Greek -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

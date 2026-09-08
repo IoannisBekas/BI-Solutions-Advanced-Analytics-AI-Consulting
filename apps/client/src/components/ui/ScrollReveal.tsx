@@ -1,5 +1,4 @@
-import { motion, useInView, useReducedMotion, Variant } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -18,59 +17,55 @@ export const ScrollReveal = ({
   className = "",
   duration = 0.5
 }: ScrollRevealProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const shouldReduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
-  // Animating starts only after hydration. Rendering the hidden state during
-  // prerendering would bake opacity:0 into the static HTML that search and AI
-  // crawlers read, hiding the very content the prerender exists to expose.
-  const [canAnimate, setCanAnimate] = useState(false);
   useEffect(() => {
-    setCanAnimate(true);
-  }, []);
-
-  const animateState =
-    canAnimate && !shouldReduceMotion && !isInView ? "hidden" : "visible";
-
-  const getVariants = (): { hidden: Variant; visible: Variant } => {
-    const distance = 50;
-    let initial = {};
-
-    switch (direction) {
-      case "up": initial = { y: distance, opacity: 0 }; break;
-      case "down": initial = { y: -distance, opacity: 0 }; break;
-      case "left": initial = { x: distance, opacity: 0 }; break;
-      case "right": initial = { x: -distance, opacity: 0 }; break;
-      case "none": initial = { opacity: 0, scale: 0.95 }; break;
+    const element = ref.current;
+    if (
+      !element ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
     }
 
-    return {
-      hidden: initial,
-      visible: {
-        x: 0,
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        transition: { duration, delay, ease: "easeOut" }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        } else {
+          setIsVisible(false);
+        }
       },
-    };
-  };
+      { rootMargin: "-50px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  const hiddenTransform = {
+    up: "translateY(50px)",
+    down: "translateY(-50px)",
+    left: "translateX(50px)",
+    right: "translateX(-50px)",
+    none: "scale(0.95)",
+  }[direction];
+  const style = {
+    width,
+    position: "relative",
+    "--reveal-delay": `${delay}s`,
+    "--reveal-duration": `${duration}s`,
+    "--reveal-transform": hiddenTransform,
+  } as CSSProperties;
 
   const rootClassName = className ? `h-full ${className}` : "h-full";
 
   return (
-    <div ref={ref} style={{ width, position: "relative" }} className={rootClassName}>
-      <motion.div
-        className="h-full"
-        variants={getVariants()}
-        // `initial={false}` starts from the animate state, so the first client
-        // render matches the server markup exactly and hydration stays clean.
-        initial={false}
-        animate={animateState}
-      >
+    <div ref={ref} style={style} className={rootClassName}>
+      <div className="scroll-reveal__content h-full" data-visible={isVisible}>
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 };

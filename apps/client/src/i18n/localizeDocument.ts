@@ -1,5 +1,12 @@
 import type { Locale } from "./config";
-import { pageTranslations } from "./pageTranslations.generated";
+
+type PageTranslations = Record<string, { el: string; de: string }>;
+
+let pageTranslations: PageTranslations = {};
+
+export function setPageTranslations(translations: PageTranslations) {
+  pageTranslations = translations;
+}
 
 const translatedAttributes = ["alt", "aria-label", "placeholder", "title"];
 const protectedTerms = new Set([

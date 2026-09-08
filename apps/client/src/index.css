@@ -1721,6 +1721,31 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+html[data-cookie-consent="saved"] [data-cookie-consent-banner] {
+  display: none;
+}
+
+.scroll-reveal__content {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--reveal-duration, 0.5s) ease-out var(--reveal-delay, 0s),
+    transform var(--reveal-duration, 0.5s) ease-out var(--reveal-delay, 0s);
+}
+
+.scroll-reveal__content[data-visible="false"] {
+  opacity: 0;
+  transform: var(--reveal-transform, translateY(50px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal__content {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Cinematic hero — stays pinned while the services panel scrolls over it. */
 .cinematic-hero {
   position: sticky;

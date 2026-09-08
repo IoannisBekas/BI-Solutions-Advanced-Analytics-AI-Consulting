@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { ArrowDown, ArrowRight, Check, Globe2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
@@ -487,11 +486,9 @@ export default function Services() {
                 >
                   <span>{section.label}</span>
                   {activeSection === section.id && (
-                    <motion.span
-                      layoutId="services-active-indicator"
+                    <span
                       aria-hidden="true"
                       className="h-1.5 w-1.5 rounded-full bg-black"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
                 </button>

@@ -1,10 +1,14 @@
 import { prerenderToNodeStream } from "react-dom/static";
 import App from "./App";
+import { setPageTranslations } from "@/i18n/localizeDocument";
+import { pageTranslations } from "@/i18n/pageTranslations.generated";
 import {
   SsrHeadContext,
   type SsrHeadCollector,
   type SsrHeadData,
 } from "@/components/seo/ssrHead";
+
+setPageTranslations(pageTranslations);
 
 export interface PrerenderedPage {
   appHtml: string;

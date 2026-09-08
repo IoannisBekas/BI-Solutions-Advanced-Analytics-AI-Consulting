@@ -1,7 +1,11 @@
 import bladeAndCombCover from "@/assets/case-studies/blade-and-comb-cover.webp";
+import bladeAndCombCover800 from "@/assets/case-studies/blade-and-comb-cover-800.webp";
 import paroliCover from "@/assets/case-studies/paroli-cover.webp";
+import paroliCover800 from "@/assets/case-studies/paroli-cover-800.webp";
 import studiosKalliopiCover from "@/assets/case-studies/studios-kalliopi-cover.webp";
+import studiosKalliopiCover800 from "@/assets/case-studies/studios-kalliopi-cover-800.webp";
 import vantaMotorsCover from "@/assets/case-studies/vanta-motors-cover.webp";
+import vantaMotorsCover800 from "@/assets/case-studies/vanta-motors-cover-800.webp";
 
 export interface WebsiteProject {
   slug: string;
@@ -11,6 +15,7 @@ export interface WebsiteProject {
   summary: string;
   value: string;
   image: string;
+  mobileImage: string;
   imageAlt: string;
   href: string;
 }
@@ -26,6 +31,7 @@ export const websiteProjects: WebsiteProject[] = [
     value:
       "Guests can understand the property and reach the booking step with fewer distractions.",
     image: studiosKalliopiCover,
+    mobileImage: studiosKalliopiCover800,
     imageAlt:
       "Studios Kalliopi hospitality website presented in a high-resolution browser frame",
     href: "https://ioannisbekas.github.io/StudioKalliopiKoufonisia/?lang=en#top",
@@ -40,6 +46,7 @@ export const websiteProjects: WebsiteProject[] = [
     value:
       "The buying journey becomes easier to scan, compare, and act on.",
     image: vantaMotorsCover,
+    mobileImage: vantaMotorsCover800,
     imageAlt:
       "VANTA Motors automotive website presented in a high-resolution browser frame",
     href: "https://ioannisbekas.github.io/Car/?lang=en",
@@ -54,6 +61,7 @@ export const websiteProjects: WebsiteProject[] = [
     value:
       "Visitors need fewer steps to move from interest to appointment.",
     image: bladeAndCombCover,
+    mobileImage: bladeAndCombCover800,
     imageAlt:
       "Blade and Comb barbershop website presented in a high-resolution browser frame",
     href: "https://ioannisbekas.github.io/Barber/",
@@ -68,6 +76,7 @@ export const websiteProjects: WebsiteProject[] = [
     value:
       "The business keeps more control over margin, customer journey, and brand experience.",
     image: paroliCover,
+    mobileImage: paroliCover800,
     imageAlt:
       "PAROLI direct-ordering website presented in a high-resolution browser frame",
     href: "https://ioannisbekas.github.io/paroli/",
