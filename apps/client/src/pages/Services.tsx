@@ -144,7 +144,7 @@ function ServiceChapter({ service }: { service: ServicePage }) {
               {copy.eyebrow}
             </p>
           </div>
-          <h2 className="mt-6 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
+          <h2 className="mt-6 max-w-4xl break-words hyphens-auto text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
             {service.title}
           </h2>
           <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
@@ -250,7 +250,7 @@ function AiChapter({ service }: { service: ServicePage }) {
                 Applied AI
               </p>
             </div>
-            <h2 className="mt-6 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
+            <h2 className="mt-6 max-w-4xl break-words hyphens-auto text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
               {service.title}
             </h2>
             <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
@@ -399,11 +399,11 @@ export default function Services() {
           <div className="overflow-hidden rounded-[2rem] bg-[#0a0b0d] px-6 pb-8 pt-14 text-white md:rounded-[3rem] md:px-12 md:pb-12 md:pt-20 lg:px-16">
             <div className="w-full">
               <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end">
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
                     The complete service atlas
                   </p>
-                  <h1 className="mt-6 max-w-5xl text-5xl font-bold font-heading leading-[0.92] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-[6.5rem]">
+                  <h1 className="mt-6 max-w-5xl break-words hyphens-auto text-4xl font-bold font-heading leading-[0.96] tracking-[-0.055em] sm:text-6xl sm:leading-[0.92] md:text-7xl lg:text-[6.5rem]">
                     One partner for better data systems, decisions, and careers.
                   </h1>
                 </div>

@@ -9,7 +9,13 @@ import {
   localePrefix,
   splitLocaleFromPath,
 } from "../apps/client/src/i18n/config";
-import { translatePageCopy } from "../apps/client/src/i18n/localizeDocument";
+import {
+  setPageTranslations,
+  translatePageCopy,
+} from "../apps/client/src/i18n/localizeDocument";
+import { pageTranslations } from "../apps/client/src/i18n/pageTranslations.generated";
+
+setPageTranslations(pageTranslations);
 
 // Kept in sync with apps/client/src/components/seo/ssrHead.ts. Declared here
 // too because the SSR bundle is loaded dynamically, without type info.

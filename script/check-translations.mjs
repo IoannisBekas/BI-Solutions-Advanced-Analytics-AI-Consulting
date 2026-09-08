@@ -91,3 +91,26 @@ if (missing.length > 0) {
 }
 
 console.log(`Translation checks passed for ${checked} blog fields and content blocks.`);
+
+const prerenderChecks = [
+  ["el/index.html", ["Selected case studies", "Client Reviews", "Start a project"]],
+  ["de/index.html", ["Selected case studies", "Client Reviews", "Start a project"]],
+  ["el/services/index.html", ["The complete service atlas", "One partner for better"]],
+  ["de/services/index.html", ["The complete service atlas", "One partner for better"]],
+  ["el/blog/index.html", ["Start a project"]],
+  ["de/blog/index.html", ["Start a project"]],
+];
+const prerenderLeaks = [];
+
+for (const [relativePath, markers] of prerenderChecks) {
+  const html = await fs.readFile(path.join(root, "dist", "public", relativePath), "utf8");
+  for (const marker of markers) {
+    if (html.includes(marker)) prerenderLeaks.push(`${relativePath}: ${marker}`);
+  }
+}
+
+if (prerenderLeaks.length > 0) {
+  throw new Error(`English copy leaked into localized prerender output:\n${prerenderLeaks.join("\n")}`);
+}
+
+console.log(`Prerender localization checks passed for ${prerenderChecks.length} priority pages.`);

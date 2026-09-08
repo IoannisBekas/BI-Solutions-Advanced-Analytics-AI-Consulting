@@ -131,6 +131,9 @@ export function ReviewsSection() {
                     <p className="text-muted-foreground text-lg max-w-2xl">
                         See what our clients say about our data and AI consultancy services.
                     </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Review quotations are shown in their original wording.
+                    </p>
                 </ScrollReveal>
 
                 <div
@@ -170,10 +173,10 @@ export function ReviewsSection() {
                                                         </div>
                                                         <span className="text-xs text-muted-foreground">{review.date}</span>
                                                     </div>
-                                                    <CardTitle className="text-lg font-bold uppercase">{review.author}</CardTitle>
+                                                    <CardTitle className="text-lg font-bold uppercase" translate="no">{review.author}</CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
-                                                    <p className="text-muted-foreground text-sm leading-relaxed">
+                                                    <p className="text-muted-foreground text-sm leading-relaxed" translate="no">
                                                         "{review.text}"
                                                     </p>
                                                 </CardContent>

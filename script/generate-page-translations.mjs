@@ -65,6 +65,13 @@ async function collectFiles(entry) {
 }
 
 function collectFromNode(node, values) {
+  if (
+    ts.isPropertyAssignment(node) &&
+    (node.name.getText() === "el" || node.name.getText() === "de")
+  ) {
+    return;
+  }
+
   if (ts.isJsxText(node)) addCopy(values, node.text);
 
   if (ts.isJsxAttribute(node) && translatableAttributes.has(node.name.text)) {

@@ -1,11 +1,12 @@
 import type { Locale } from "./config";
+import { pageTranslationOverrides } from "./pageTranslationOverrides";
 
 type PageTranslations = Record<string, { el: string; de: string }>;
 
 let pageTranslations: PageTranslations = {};
 
 export function setPageTranslations(translations: PageTranslations) {
-  pageTranslations = translations;
+  pageTranslations = { ...translations, ...pageTranslationOverrides };
 }
 
 const translatedAttributes = ["alt", "aria-label", "placeholder", "title"];
