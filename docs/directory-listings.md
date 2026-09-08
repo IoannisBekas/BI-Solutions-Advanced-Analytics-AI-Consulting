@@ -80,8 +80,8 @@ Answer Engine Optimization · Generative Engine Optimization
 
 | Directory | URL | Notes |
 | --- | --- | --- |
-| TechBehemoths | https://techbehemoths.com/companies/get-listed | Registration starts by searching the company name. If an existing TechBehemoths-managed profile is claimed, its official FAQ says a corporate-domain email is required. Complete, current profile information contributes to the platform's internal profile score. |
-| Clutch | https://clutch.co/get-listed | A Basic profile is free and is reviewed before publishing. Clutch asks for company details including headcount, minimum project size, hourly rate, location, overview, contact details, and service focus. Paid Clutch Verification is optional and distinct from the free profile review. |
+| TechBehemoths | https://techbehemoths.com/companies/get-listed | The platform's own company-name search returned **“BI Solutions Group — Not Listed on our Website”** on 2026-09-08. Continuing to submission requires login or account registration. If an existing TechBehemoths-managed profile is claimed later, its official FAQ says a corporate-domain email is required. |
+| Clutch | https://clutch.co/get-listed | A Basic profile is free and requires sign-in or joining. The current plan comparison says Basic includes company information, basic analytics, and limited case studies, but **no link to the website from directory pages**. Clutch markets verification, directory links, and “AI Visibility” in its paid Verified tier at $499/year. Do not buy this as an SEO, backlink, or AI-citation tactic. |
 
 Official guidance checked on 2026-09-06:
 
@@ -90,11 +90,22 @@ Official guidance checked on 2026-09-06:
 - Clutch methodology: https://clutch.co/methodology
 - TechBehemoths registration and claim FAQ: https://techbehemoths.com/faq
 
-An exact-match web search on 2026-09-06 found no indexed Clutch or
+An exact-match web search on 2026-09-08 found no indexed Clutch or
 TechBehemoths result for `BI Solutions Group`, `Ioannis Bekas`, or
-`bisolutions.group`. This is not proof that no private or unindexed managed
-profile exists; search each platform during signup and claim a match instead of
-creating a duplicate.
+`bisolutions.group`. TechBehemoths' own onboarding search then explicitly
+reported that BI Solutions Group was not listed. Clutch's public search still
+showed no exact match, but its onboarding moves directly to authentication;
+recheck inside the authenticated dashboard before creating the profile.
+
+Recommended order:
+
+1. Complete the free TechBehemoths registration after the owner confirms the
+   required company facts and approves account creation.
+2. Treat a free Clutch profile as optional buyer discovery and independent
+   review infrastructure, not as a backlink source.
+3. Do not purchase Clutch Verified solely for its marketed AI visibility or
+   directory link. Reconsider only if there is a separate, measurable lead-
+   generation case.
 
 ## Reviews
 
@@ -115,6 +126,9 @@ review invitation and let the client choose whether and what to write.
   separate display name and does not require a rename task.
 - The Google Business Profile is currently unverified after a failed video
   verification. Complete verification before treating it as a stable citation.
+- TechBehemoths account creation and Clutch sign-in/join are not complete.
+  Creating either account requires owner approval at the final registration
+  step.
 - Confirm that the listed address, hours, opening date, and five service-area
   countries describe the business as it operates today.
 - Consider contributing a practical case study or talk to the IIBA Greece
