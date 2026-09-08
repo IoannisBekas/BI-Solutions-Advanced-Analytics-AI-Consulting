@@ -78,12 +78,66 @@ function expectedSchemaType(routePath) {
   return null;
 }
 
+function splitLocalizedPath(routePath) {
+  const match = /^\/(el|de)(?=\/|$)/.exec(routePath);
+  const pathWithoutLocale = match ? routePath.slice(match[0].length) || "/" : routePath;
+  return { locale: match?.[1] || "en", path: pathWithoutLocale };
+}
+
+function localizedUrl(routePath, locale) {
+  const prefix = locale === "en" ? "" : `/${locale}`;
+  const suffix = routePath === "/" ? "/" : routePath;
+  return `${siteOrigin}${prefix}${suffix}`;
+}
+
 const sitemap = read(path.join(publicSource, "sitemap.xml"));
-const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
-  (match) => match[1].trim(),
+const sitemapEntries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(
+  (match) => ({
+    block: match[1],
+    loc: match[1].match(/<loc>([^<]+)<\/loc>/)?.[1]?.trim(),
+  }),
 );
+const sitemapUrls = sitemapEntries.map((entry) => entry.loc).filter(Boolean);
 
 if (sitemapUrls.length === 0) fail("The sitemap contains no URLs.");
+
+const localeGroups = new Map();
+for (const entry of sitemapEntries) {
+  if (!entry.loc) fail("A sitemap entry is missing <loc>.");
+  const url = new URL(entry.loc);
+  const routePath = url.pathname === "/" ? "/" : url.pathname.replace(/\/$/, "");
+  const { locale, path: basePath } = splitLocalizedPath(routePath);
+  const group = localeGroups.get(basePath) ?? new Set();
+  group.add(locale);
+  localeGroups.set(basePath, group);
+
+  const alternates = [...entry.block.matchAll(/<xhtml:link\b[^>]*>/g)].map(
+    (match) => ({
+      hreflang: attribute(match[0], "hreflang"),
+      href: attribute(match[0], "href"),
+    }),
+  );
+  const expectedAlternates = new Map([
+    ["en", localizedUrl(basePath, "en")],
+    ["el-GR", localizedUrl(basePath, "el")],
+    ["de-DE", localizedUrl(basePath, "de")],
+    ["x-default", localizedUrl(basePath, "en")],
+  ]);
+  if (alternates.length !== expectedAlternates.size) {
+    fail(`${entry.loc} must have four reciprocal hreflang entries.`);
+  }
+  for (const alternate of alternates) {
+    if (expectedAlternates.get(alternate.hreflang) !== alternate.href) {
+      fail(`${entry.loc} has an incorrect ${alternate.hreflang || "blank"} alternate.`);
+    }
+  }
+}
+
+for (const [basePath, locales] of localeGroups) {
+  if (!["en", "el", "de"].every((locale) => locales.has(locale))) {
+    fail(`${basePath} is missing an English, Greek, or German sitemap URL.`);
+  }
+}
 
 for (const canonicalUrl of sitemapUrls) {
   const url = new URL(canonicalUrl);
@@ -115,7 +169,7 @@ for (const canonicalUrl of sitemapUrls) {
     fail(`${routePath} contains FAQPage schema, which is not useful for this commercial site.`);
   }
 
-  const expectedType = expectedSchemaType(routePath);
+  const expectedType = expectedSchemaType(splitLocalizedPath(routePath).path);
   if (expectedType && !schemaTypes.has(expectedType)) {
     fail(`${routePath} is missing ${expectedType} structured data.`);
   }

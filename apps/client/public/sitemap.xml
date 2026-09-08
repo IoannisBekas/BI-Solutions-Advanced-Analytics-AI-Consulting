@@ -18,7 +18,7 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/" />
     <lastmod>2026-08-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/de/</loc>
@@ -28,172 +28,844 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/" />
     <lastmod>2026-08-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services" />
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services" />
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services" />
     <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/case-studies/unicef-audit-compliance</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/case-studies/unicef-audit-compliance</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/case-studies/unicef-audit-compliance</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/unicef-audit-compliance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/case-studies/iaea-scientific-analysis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/iaea-scientific-analysis" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/case-studies/iaea-scientific-analysis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/iaea-scientific-analysis" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/case-studies/iaea-scientific-analysis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/iaea-scientific-analysis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/iaea-scientific-analysis" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/case-studies/ifc-talent-strategy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/ifc-talent-strategy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/case-studies/ifc-talent-strategy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/ifc-talent-strategy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/case-studies/ifc-talent-strategy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/case-studies/ifc-talent-strategy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/case-studies/ifc-talent-strategy" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/about" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/about" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/about" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/about" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/about" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/about" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/about" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/about" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/about" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/start-a-project</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/start-a-project" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/start-a-project</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/start-a-project" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/start-a-project</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/start-a-project" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/start-a-project" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/website-web-app-development-greece-business-needs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/website-web-app-development-greece-business-needs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/website-web-app-development-greece-business-needs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/website-web-app-development-greece-business-needs" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/power-bi-consulting-dashboards-business-infrastructure</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/power-bi-consulting-dashboards-business-infrastructure</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/power-bi-consulting-dashboards-business-infrastructure" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/power-bi-consulting-dashboards-business-infrastructure" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/semantic-modeling-power-bi-clean-models</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/semantic-modeling-power-bi-clean-models</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/semantic-modeling-power-bi-clean-models" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/semantic-modeling-power-bi-clean-models" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/ai-consulting-greek-businesses-practical-use-cases</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/ai-consulting-greek-businesses-practical-use-cases</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-consulting-greek-businesses-practical-use-cases" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-consulting-greek-businesses-practical-use-cases" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/ai-document-workflows-professional-services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-document-workflows-professional-services" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/ai-document-workflows-professional-services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-document-workflows-professional-services" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/ai-document-workflows-professional-services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-document-workflows-professional-services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-document-workflows-professional-services" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/prompt-workflow-design-business-teams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/prompt-workflow-design-business-teams" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/prompt-workflow-design-business-teams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/prompt-workflow-design-business-teams" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/prompt-workflow-design-business-teams</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/prompt-workflow-design-business-teams" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/prompt-workflow-design-business-teams" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/ai-assistant-governance-company-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-assistant-governance-company-policy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/ai-assistant-governance-company-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-assistant-governance-company-policy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/ai-assistant-governance-company-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-assistant-governance-company-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-assistant-governance-company-policy" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/predictive-analytics-forecasting-mistakes</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/predictive-analytics-forecasting-mistakes</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/predictive-analytics-forecasting-mistakes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/predictive-analytics-forecasting-mistakes" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/ai-literacy-teams-adopt-ai-without-operational-risk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/ai-literacy-teams-adopt-ai-without-operational-risk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/ai-literacy-teams-adopt-ai-without-operational-risk" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/mlops-small-mid-sized-teams-productionize-ai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/mlops-small-mid-sized-teams-productionize-ai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/mlops-small-mid-sized-teams-productionize-ai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/mlops-small-mid-sized-teams-productionize-ai" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/model-monitoring-ai-workflows</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/model-monitoring-ai-workflows" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/model-monitoring-ai-workflows</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/model-monitoring-ai-workflows" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/model-monitoring-ai-workflows</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/model-monitoring-ai-workflows" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/model-monitoring-ai-workflows" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/data-strategy-before-ai-better-foundations</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/data-strategy-before-ai-better-foundations</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-strategy-before-ai-better-foundations" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-strategy-before-ai-better-foundations" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/dashboard-requirements-before-power-bi-build</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/dashboard-requirements-before-power-bi-build</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/dashboard-requirements-before-power-bi-build" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/dashboard-requirements-before-power-bi-build" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/kpi-dictionary-business-intelligence</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/kpi-dictionary-business-intelligence</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/kpi-dictionary-business-intelligence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/kpi-dictionary-business-intelligence" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/data-quality-checklist-analytics-projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/data-quality-checklist-analytics-projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-quality-checklist-analytics-projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-quality-checklist-analytics-projects" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/analytics-roadmap-first-90-days</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/analytics-roadmap-first-90-days" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/analytics-roadmap-first-90-days</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/analytics-roadmap-first-90-days" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/analytics-roadmap-first-90-days</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/analytics-roadmap-first-90-days" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/analytics-roadmap-first-90-days" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/data-governance-gdpr-scale-analytics-control</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/data-governance-gdpr-scale-analytics-control</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/data-governance-gdpr-scale-analytics-control" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/data-governance-gdpr-scale-analytics-control" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/cloud-data-warehouse-vs-spreadsheets</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/cloud-data-warehouse-vs-spreadsheets</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/cloud-data-warehouse-vs-spreadsheets" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/cloud-data-warehouse-vs-spreadsheets" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/blog/internal-tools-vs-saas-build-buy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/blog/internal-tools-vs-saas-build-buy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/blog/internal-tools-vs-saas-build-buy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/blog/internal-tools-vs-saas-build-buy" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/privacy-policy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/privacy-policy" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/privacy-policy" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/terms-of-service</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/terms-of-service" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/terms-of-service</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/terms-of-service" />
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/terms-of-service</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/terms-of-service" />
     <lastmod>2026-07-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

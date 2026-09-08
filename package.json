@@ -11,6 +11,7 @@
     "start:all": "node script/start-all.cjs",
     "start:main": "node ./node_modules/cross-env/dist/bin/cross-env.js PORT=5001 NODE_ENV=production node dist/index.cjs",
     "check": "node ./node_modules/typescript/bin/tsc",
+    "generate:sitemap": "node script/generate-sitemap.mjs",
     "check:seo": "node script/check-seo.cjs",
     "scan:env": "node script/scan-env-secrets.cjs",
     "check:encoding": "node script/check-encoding.cjs",
