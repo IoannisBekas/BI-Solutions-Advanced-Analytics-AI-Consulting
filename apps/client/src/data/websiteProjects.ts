@@ -6,8 +6,6 @@ import kidsFromTheBlockCover from "@/assets/case-studies/kids-from-the-block-cov
 import kidsFromTheBlockCover800 from "@/assets/case-studies/kids-from-the-block-cover-800.webp";
 import marginApparelCover from "@/assets/case-studies/margin-apparel-cover.webp";
 import marginApparelCover800 from "@/assets/case-studies/margin-apparel-cover-800.webp";
-import nikiGigourtakiCoachingCover from "@/assets/case-studies/niki-gigourtaki-coaching-cover.webp";
-import nikiGigourtakiCoachingCover800 from "@/assets/case-studies/niki-gigourtaki-coaching-cover-800.webp";
 import paroliCover from "@/assets/case-studies/paroli-cover.webp";
 import paroliCover800 from "@/assets/case-studies/paroli-cover-800.webp";
 import studiosKalliopiCover from "@/assets/case-studies/studios-kalliopi-cover.webp";
@@ -118,21 +116,6 @@ export const websiteProjects: WebsiteProject[] = [
     imageAlt:
       "Bark n' Groom dog grooming website presented in a high-resolution browser frame",
     href: "https://ioannisbekas.github.io/bark-n-groom/",
-  },
-  {
-    slug: "niki-gigourtaki-coaching",
-    title: "Niki Gigourtaki Coaching",
-    category: "Personal brand website",
-    relationship: "Independent web project",
-    summary:
-      "A bilingual coaching presence that organizes programs, methodology, proof, and consultation paths around a confident personal brand.",
-    value:
-      "Visitors can understand the coaching approach and choose the most relevant next step with less friction.",
-    image: nikiGigourtakiCoachingCover,
-    mobileImage: nikiGigourtakiCoachingCover800,
-    imageAlt:
-      "Niki Gigourtaki Coaching website presented in a high-resolution browser frame",
-    href: "https://ioannisbekas.github.io/niki-gigourtaki-coaching/",
   },
   {
     slug: "margin-apparel",
