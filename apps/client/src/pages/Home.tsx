@@ -1,11 +1,12 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { CinematicHero } from "@/components/sections/CinematicHero";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Pause, Play } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages } from "@/lib/servicePages";
 import { homeInsights } from "@/data/homeInsights";
@@ -63,22 +64,22 @@ function WebsiteProjectCard({
             </span>
           </div>
 
-          <div className="flex flex-1 flex-col p-6 sm:p-8">
+          <div className="flex flex-1 flex-col p-6">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold uppercase tracking-[0.14em]">
               <span className="text-[#a51f25]">{project.category}</span>
               <span className="h-1 w-1 rounded-full bg-[#f2bd2f]" aria-hidden="true" />
               <span className="text-gray-500">{project.relationship}</span>
             </div>
             <h3
-              className="mt-5 text-3xl font-bold font-heading leading-tight text-gray-950"
+              className="mt-4 text-3xl font-bold font-heading leading-tight text-gray-950"
               translate="no"
             >
               {project.title}
             </h3>
-            <p className="mt-4 text-base leading-relaxed text-gray-600">
+            <p className="mt-3 text-base leading-relaxed text-gray-600">
               {project.summary}
             </p>
-            <div className="mt-6 border-t border-gray-200 pt-5">
+            <div className="mt-4 border-t border-gray-200 pt-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
                 Why it matters
               </p>
@@ -86,7 +87,7 @@ function WebsiteProjectCard({
                 {project.value}
               </p>
             </div>
-            <div className="mt-auto flex items-center gap-2 pt-7 text-sm font-semibold text-gray-950">
+            <div className="mt-auto flex items-center gap-2 pt-4 text-sm font-semibold text-gray-950">
               View live website
               <ExternalLink className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               <span className="sr-only">Opens in a new tab</span>
@@ -100,6 +101,39 @@ function WebsiteProjectCard({
 
 export default function Home() {
   const { t, locale } = useLocale();
+  const [activeProject, setActiveProject] = useState(0);
+  const [manualPause, setManualPause] = useState(false);
+  const [interactionPause, setInteractionPause] = useState(false);
+  const [analyticsHeight, setAnalyticsHeight] = useState<number>();
+  const analyticsSectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (
+      manualPause ||
+      interactionPause ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) return;
+    const interval = window.setInterval(() => {
+      setActiveProject((current) => (current + 1) % websiteProjects.length);
+    }, 5500);
+    return () => window.clearInterval(interval);
+  }, [manualPause, interactionPause]);
+
+  useEffect(() => {
+    const section = analyticsSectionRef.current;
+    if (!section) return;
+    const observer = new ResizeObserver(() => setAnalyticsHeight(section.offsetHeight));
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  const visibleProjects = Array.from(
+    { length: Math.min(3, websiteProjects.length) },
+    (_, offset) => {
+      const index = (activeProject + offset) % websiteProjects.length;
+      return { project: websiteProjects[index], number: index + 1 };
+    },
+  );
 
   return (
     <div
@@ -329,10 +363,13 @@ export default function Home() {
 
         <section
           id="case-studies"
-          className="overflow-hidden bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28"
+          className="overflow-hidden bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28 lg:h-[var(--analytics-section-height)] lg:py-12"
+          style={{
+            "--analytics-section-height": analyticsHeight ? `${analyticsHeight}px` : "auto",
+          } as CSSProperties}
         >
           <div className="site-container px-6 md:px-12">
-            <ScrollReveal className="mb-14 max-w-4xl">
+            <ScrollReveal className="mb-10 max-w-4xl">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Website projects
               </p>
@@ -345,20 +382,71 @@ export default function Home() {
               </p>
             </ScrollReveal>
 
-            <div className="grid auto-rows-fr gap-8 md:grid-cols-2">
-              {websiteProjects.map((project, index) => (
-                <WebsiteProjectCard
-                  key={project.slug}
-                  project={project}
-                  number={index + 1}
-                />
-              ))}
+            <div
+              onMouseEnter={() => setInteractionPause(true)}
+              onMouseLeave={() => setInteractionPause(false)}
+              onFocusCapture={() => setInteractionPause(true)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setInteractionPause(false);
+                }
+              }}
+              aria-label="Website projects carousel"
+            >
+              <div className="grid auto-rows-fr gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {visibleProjects.map(({ project, number }, offset) => (
+                  <div
+                    key={project.slug}
+                    className={
+                      offset === 1
+                        ? "hidden h-full md:block"
+                        : offset === 2
+                          ? "hidden h-full lg:block"
+                          : "h-full"
+                    }
+                  >
+                    <WebsiteProjectCard project={project} number={number} />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 flex items-center justify-between gap-4">
+                <p className="text-sm text-gray-600" aria-live="polite">
+                  {activeProject + 1} of {websiteProjects.length} website projects
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    aria-label={manualPause ? "Play website projects" : "Pause website projects"}
+                    onClick={() => setManualPause((paused) => !paused)}
+                    className="rounded-full border border-gray-300 bg-white p-3 text-gray-950 transition hover:border-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950"
+                  >
+                    {manualPause ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Previous website project"
+                    onClick={() => setActiveProject((current) => (current - 1 + websiteProjects.length) % websiteProjects.length)}
+                    className="rounded-full border border-gray-300 bg-white p-3 text-gray-950 transition hover:border-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next website project"
+                    onClick={() => setActiveProject((current) => (current + 1) % websiteProjects.length)}
+                    className="rounded-full border border-gray-300 bg-white p-3 text-gray-950 transition hover:border-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950"
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         <section
           id="analytics-case-studies"
+          ref={analyticsSectionRef}
           className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24"
         >
           <div className="site-container px-6 md:px-12">
