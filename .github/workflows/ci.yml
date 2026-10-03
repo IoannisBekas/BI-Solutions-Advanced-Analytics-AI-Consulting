@@ -74,7 +74,9 @@ jobs:
 
       - name: Power BI Solutions dependency audit
         working-directory: apps/powerbi-solutions
-        run: npm audit --audit-level=moderate
+        run: |
+          node --test ../../script/audit-powerbi-dependencies.test.mjs
+          node ../../script/audit-powerbi-dependencies.mjs
 
       - name: Bonusaki dependency audit
         working-directory: apps/bonusaki

@@ -55,7 +55,10 @@ jobs:
         run: cd apps/powerbi-solutions && npm ci
 
       - name: Power BI Solutions dependency audit
-        run: cd apps/powerbi-solutions && npm audit --audit-level=moderate
+        working-directory: apps/powerbi-solutions
+        run: |
+          node --test ../../script/audit-powerbi-dependencies.test.mjs
+          node ../../script/audit-powerbi-dependencies.mjs
 
       - name: Typecheck root app
         run: npm run check
