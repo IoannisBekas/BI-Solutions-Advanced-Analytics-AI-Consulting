@@ -101,6 +101,7 @@ const sitemapUrls = sitemapEntries.map((entry) => entry.loc).filter(Boolean);
 
 if (sitemapUrls.length === 0) fail("The sitemap contains no URLs.");
 
+const standaloneDashboards = new Set(["/bnb-companies", "/sol-companies"]);
 const localeGroups = new Map();
 for (const entry of sitemapEntries) {
   if (!entry.loc) fail("A sitemap entry is missing <loc>.");
@@ -110,6 +111,16 @@ for (const entry of sitemapEntries) {
   const group = localeGroups.get(basePath) ?? new Set();
   group.add(locale);
   localeGroups.set(basePath, group);
+
+  if (standaloneDashboards.has(basePath)) {
+    if (locale !== "en" || url.pathname !== `${basePath}/`) {
+      fail(`${entry.loc} must use the standalone dashboard's trailing-slash URL.`);
+    }
+    if (entry.block.includes("<xhtml:link")) {
+      fail(`${entry.loc} must not advertise unavailable localized dashboards.`);
+    }
+    continue;
+  }
 
   const alternates = [...entry.block.matchAll(/<xhtml:link\b[^>]*>/g)].map(
     (match) => ({
@@ -140,7 +151,7 @@ for (const entry of sitemapEntries) {
 }
 
 for (const [basePath, locales] of localeGroups) {
-  if (basePath.startsWith("/us/")) continue;
+  if (basePath.startsWith("/us/") || standaloneDashboards.has(basePath)) continue;
   if (!["en", "el", "de"].every((locale) => locales.has(locale))) {
     fail(`${basePath} is missing an English, Greek, or German sitemap URL.`);
   }

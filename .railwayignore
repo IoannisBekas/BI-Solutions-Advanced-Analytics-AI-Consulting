@@ -9,7 +9,7 @@ output/
 outputs/
 
 # Runtime data, caches, and local secrets
-data/
+/data/
 *.db
 *.db-shm
 *.db-wal

@@ -1,0 +1,303 @@
+/* CESE Tracker — styled to match bisolutions.group */
+
+:root {
+  --ink: #09090b;
+  --night: #10141a;
+  --paper: #f5f3f0;
+  --line: #e5e7eb;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Eyebrow labels */
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 44rem;
+}
+
+.section-lead {
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(9, 9, 11, 0.62);
+  max-width: 40rem;
+}
+
+/* Surfaces */
+.hero-grid {
+  background-image:
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.09), transparent 40%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: auto, 128px 128px, 128px 128px;
+}
+
+.proof-grid {
+  background-image:
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(rgba(255, 255, 255, 0.043) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.043) 1px, transparent 1px);
+  background-size: auto, 128px 128px, 128px 128px;
+}
+
+.glass-dark {
+  background: rgba(10, 13, 18, 0.66);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+}
+
+.method {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 1.5rem;
+  background: var(--paper);
+}
+
+.formula {
+  display: block;
+  margin: 0.85rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* KPI strip */
+.kpi { padding: 1.5rem 1rem; }
+.kpi-grid > .kpi + .kpi { border-left: 1px solid var(--line); }
+@media (max-width: 1023px) {
+  .kpi-grid > .kpi:nth-child(odd) { border-left: 0; }
+  .kpi-grid > .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+.kpi-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(9, 9, 11, 0.5);
+}
+.kpi-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  margin-top: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-sub {
+  font-size: 0.75rem;
+  color: rgba(9, 9, 11, 0.55);
+  margin-top: 0.2rem;
+}
+
+/* Buttons — pill style */
+.btn-light, .btn-outline-light, .btn-ghost, .btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.7rem 1.4rem;
+  transition: background-color .2s, color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.btn-light { background: #fff; color: #10141a; border: 1px solid #10141a; }
+.btn-light:hover { background: #f3f4f6; }
+.btn-outline-light { color: #fff; border: 1px solid rgba(255, 255, 255, 0.4); }
+.btn-outline-light:hover { background: #fff; color: #10141a; }
+.btn-ghost { font-size: 0.75rem; padding: 0.45rem 0.95rem; border: 1px solid var(--line); color: var(--ink); background: #fff; }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn-dark { background: var(--ink); color: #fff; border: 1px solid var(--ink); font-size: 0.75rem; padding: 0.5rem 1.1rem; }
+.btn-dark:hover { background: #27272a; }
+
+.chip {
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.45rem 0.95rem;
+  transition: border-color .2s, background-color .2s;
+}
+.chip:hover { border-color: var(--ink); }
+
+/* Segmented filter */
+.seg {
+  border-radius: 9999px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 500;
+  color: rgba(9, 9, 11, 0.6);
+  white-space: nowrap;
+  transition: all .2s;
+}
+.seg:hover { color: var(--ink); }
+.seg-active { background: var(--ink); color: #fff; }
+.seg-active:hover { color: #fff; }
+
+/* Form fields */
+.field {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s;
+}
+.field:focus { border-color: var(--ink); }
+
+/* Links */
+.link-light { color: rgba(255, 255, 255, 0.8); text-underline-offset: 4px; }
+.link-light:hover { color: #fff; text-decoration: underline; }
+.link-ink { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; font-weight: 500; }
+
+/* Live tick flashes */
+@keyframes flashGreen { 0% { background-color: rgba(52, 211, 153, 0.25); } 100% { background-color: transparent; } }
+@keyframes flashRed { 0% { background-color: rgba(251, 113, 133, 0.25); } 100% { background-color: transparent; } }
+.tick-flash-up { animation: flashGreen 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.tick-flash-down { animation: flashRed 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Pulsing live dot */
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6); }
+  70% { box-shadow: 0 0 0 7px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+.pulse-indicator { animation: livePulse 2s infinite ease-in-out; }
+
+/* Calculation ledger: one column per company, read top to bottom */
+.ledger th, .ledger td { padding: 0.5rem 0.75rem; vertical-align: top; }
+.ledger td { text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+/* Company names stay pinned to the top of the screen while scrolling down the ledger */
+.ledger thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  vertical-align: bottom;
+  box-shadow: inset 0 -1px 0 var(--line);
+  padding-top: 1rem;
+  padding-bottom: 0.85rem;
+}
+.ledger-corner {
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(9, 9, 11, 0.5);
+}
+.ledger-head { text-align: right; cursor: pointer; }
+.ledger-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.875rem; line-height: 1.2; color: var(--ink); }
+.ledger-head:hover .ledger-name { text-decoration: underline; text-underline-offset: 3px; }
+.ledger-label { text-align: left; font-weight: 500; color: var(--ink); }
+.ledger-op { display: inline-block; width: 1rem; color: rgba(9, 9, 11, 0.4); font-weight: 600; }
+.ledger-hint { font-size: 0.7rem; font-weight: 400; line-height: 1.3; color: rgba(9, 9, 11, 0.45); margin-left: 1rem; margin-top: 0.1rem; }
+.ledger-label-btn { text-align: left; font-weight: 500; }
+.ledger-label-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+.ledger-sort { margin-left: 0.3rem; font-size: 0.7rem; color: rgba(9, 9, 11, 0.3); }
+.ledger-sort-active { color: var(--ink); }
+.ledger-section th {
+  padding-top: 1.1rem;
+  text-align: left;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(9, 9, 11, 0.45);
+  border-bottom: 1px solid var(--line);
+}
+.ledger tbody tr:not(.ledger-section) { border-bottom: 1px solid #f3f2f0; }
+.ledger tbody tr:not(.ledger-section):hover { background: #faf9f7; }
+.ledger-total th, .ledger-total td { border-top: 1px solid rgba(9, 9, 11, 0.2); font-weight: 600; }
+.ledger-key th, .ledger-key td { background: var(--paper); }
+
+.ledger-card { border: 1px solid var(--line); border-radius: 18px; overflow: clip; }
+/* Each card's company header stays pinned while scrolling through that card */
+.ledger-card > [data-company] { position: sticky; top: 0; z-index: 1; box-shadow: inset 0 -1px 0 var(--line); }
+.ledger-card-section {
+  padding: 0.9rem 0 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(9, 9, 11, 0.45);
+  border-bottom: 1px solid var(--line);
+}
+.ledger-card-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 0.4rem 0; border-bottom: 1px solid #f3f2f0; }
+.ledger-card-row dd { text-align: right; white-space: nowrap; }
+.ledger-card-total { border-top: 1px solid rgba(9, 9, 11, 0.2); font-weight: 600; }
+.ledger-card-key { background: var(--paper); margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; }
+
+/* Range slider */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e7e5e4;
+  border-radius: 9999px;
+  height: 4px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px var(--ink);
+  cursor: pointer;
+  transition: transform .1s;
+}
+input[type=range]::-moz-range-thumb {
+  height: 16px; width: 16px; border-radius: 50%;
+  background: var(--ink); border: 3px solid #fff; box-shadow: 0 0 0 1px var(--ink); cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+
+/* Status badges (light surfaces) */
+.badge-discount-deep { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.badge-discount { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.badge-premium { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.badge-severe-premium { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+.badge-excluded { background: #f5f5f4; color: #57534e; border: 1px solid #e7e5e4; }
+.badge-underwater { background: #881337; color: #fff; border: 1px solid #881337; }

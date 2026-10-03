@@ -11,6 +11,8 @@ Monorepo for the BI Solutions Group website and its hosted product experiences.
 | `apps/quantus` | Quantus research workspace and API |
 | `apps/powerbi-solutions` | Power BI Solutions workspace |
 | `apps/bonusaki` | Bonusaki pilot experience |
+| `apps/bnb-companies` | BNB treasury and CEBE dashboard at `/bnb-companies/` |
+| `apps/sol-companies` | Solana treasury and CESE dashboard at `/sol-companies/` |
 | `shared` | Shared schemas used across applications |
 | `script` | Build, prerender, validation, and operations scripts |
 | `docs` | Technical, operational, and editorial documentation |
@@ -35,6 +37,10 @@ Editable blog-cover masters live in `apps/client/design/blog-covers/v4`; publish
    ```
 
 The main site is available at `http://127.0.0.1:5001`.
+
+The treasury dashboards are included by `npm run build` and served by both the development and production server. Their public build includes only `index.html`, `css/`, `js/`, and `data/`; updater scripts and local credentials are not published. The homepage's Treasury trackers section and footer link to both dashboards.
+
+Token prices refresh directly from public market feeds. Stock closes come from the checked-in `data/market.json` snapshots, refreshed at 22:00 UTC on weekdays by `.github/workflows/update-treasury-market-data.yml`. The optional repository secret `UW_API_KEY` enables Unusual Whales quotes; the update scripts also support Yahoo Finance. See each dashboard's README for manual refresh commands.
 
 ## Verification
 

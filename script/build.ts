@@ -38,6 +38,16 @@ async function buildAll() {
   );
   await buildNestedApp("Bonusaki", path.resolve("apps", "bonusaki"), path.join("bonusaki", "demo"));
 
+  for (const appName of ["bnb-companies", "sol-companies"]) {
+    console.log(`copying ${appName} dashboard...`);
+    const source = path.resolve("apps", appName);
+    const target = path.resolve("dist", "public", appName);
+    // Only dashboard assets are public; updater scripts and local credentials stay out.
+    for (const asset of ["index.html", "css", "js", "data"]) {
+      await cp(path.join(source, asset), path.join(target, asset), { recursive: true });
+    }
+  }
+
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
   const allDeps = [

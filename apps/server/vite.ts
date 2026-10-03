@@ -6,6 +6,7 @@ import viteConfig from "../../vite.config";
 import fs from "fs";
 import path from "path";
 import { nanoid } from "nanoid";
+import { serveProductSpa } from "./static";
 
 const viteLogger = createLogger();
 const REMOVED_PRODUCT_PAGE_ROUTES = new Set([
@@ -97,6 +98,9 @@ export async function setupVite(server: Server, app: Express) {
   // These must be mounted before Vite middleware and the root catch-all so
   // product workspace routes do not render the marketing app during local QA.
   const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
+  for (const appName of ["bnb-companies", "sol-companies"]) {
+    serveProductSpa(app, `/${appName}`, path.resolve(import.meta.dirname, "..", appName), true);
+  }
   app.use((req, res, next) => {
     if (req.method === "GET" && req.originalUrl === "/quantus/sectors") {
       res.redirect(308, "/quantus/workspace/sectors");

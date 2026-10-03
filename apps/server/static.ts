@@ -291,13 +291,26 @@ function serveGoneExactPath(app: Express, removedPath: string) {
   });
 }
 
-function serveProductSpa(app: Express, mountPath: string, productDistPath: string) {
+export function serveProductSpa(app: Express, mountPath: string, productDistPath: string, trailingSlash = false) {
   if (!fs.existsSync(productDistPath)) {
     return;
   }
 
   const indexPath = path.resolve(productDistPath, "index.html");
   const indexHtml = fs.existsSync(indexPath) ? fs.readFileSync(indexPath, "utf-8") : "";
+
+  if (trailingSlash) {
+    app.use(mountPath, (req, res, next) => {
+      const queryStart = req.originalUrl.indexOf("?");
+      const pathname = queryStart < 0 ? req.originalUrl : req.originalUrl.slice(0, queryStart);
+      const query = queryStart < 0 ? "" : req.originalUrl.slice(queryStart);
+      if ((req.method === "GET" || req.method === "HEAD") && req.path === "/" && !pathname.endsWith("/")) {
+        res.redirect(308, `${pathname}/${query}`);
+        return;
+      }
+      next();
+    });
+  }
 
   app.use(mountPath, (req, res, next) => {
     if ((req.method !== "GET" && req.method !== "HEAD") || path.posix.extname(req.path).toLowerCase() !== ".html") {
@@ -781,6 +794,10 @@ export function serveStatic(app: Express) {
 
   if (bonusakiDir) {
     serveProductSpa(app, "/bonusaki/demo", bonusakiDir);
+  }
+
+  for (const appName of ["bnb-companies", "sol-companies"]) {
+    serveProductSpa(app, `/${appName}`, path.resolve(distPath, appName), true);
   }
 
   // Marketing routes are prerendered as <route>/index.html. Serve those files

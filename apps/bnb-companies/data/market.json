@@ -1,0 +1,27 @@
+{
+  "currency": "USD",
+  "source": "Daily closes from Unusual Whales, Yahoo Finance",
+  "updatedAt": "2026-10-02T21:39:25.440Z",
+  "quotes": {
+    "BNC": {
+      "close": 5.85,
+      "date": "2026-10-02",
+      "source": "Unusual Whales"
+    },
+    "NA": {
+      "close": 2.2,
+      "date": "2026-10-02",
+      "source": "Unusual Whales"
+    },
+    "BNBX": {
+      "close": 0.1301,
+      "date": "2026-10-02",
+      "source": "Yahoo Finance"
+    },
+    "LIMN": {
+      "close": 3.9,
+      "date": "2026-10-02",
+      "source": "Unusual Whales"
+    }
+  }
+}

@@ -45,15 +45,17 @@ const PUBLIC_OUT_DIR = path.resolve("dist", "public");
 const SITEMAP_PATH = path.resolve("apps", "client", "public", "sitemap.xml");
 const ROOT_DIV = '<div id="root"></div>';
 
-/** The sitemap is the canonical list of indexable routes — prerender exactly those. */
+/** Prerender sitemap marketing routes; static treasury dashboards are copied by build.ts. */
 async function readRoutesFromSitemap() {
   const xml = await readFile(SITEMAP_PATH, "utf-8");
   const routes = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
     (match) => new URL(match[1].trim()).pathname,
   );
-  const normalized = routes.map((route) =>
-    route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route,
-  );
+  const normalized = routes
+    .filter((route) => !/^\/(?:bnb-companies|sol-companies)\/?$/.test(route))
+    .map((route) =>
+      route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route,
+    );
 
   // The sitemap already lists the localised homepages, so prefixing every entry
   // blindly would emit /el/el and /de/el. Localise only the unprefixed routes.

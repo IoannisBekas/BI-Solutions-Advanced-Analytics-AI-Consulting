@@ -1,0 +1,80 @@
+name: Update Treasury Market Data
+
+on:
+  schedule:
+    # 22:00 UTC on weekdays, after the US regular-session close in EDT and EST.
+    - cron: '0 22 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: treasury-market-data-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Optional: each updater falls back to Yahoo Finance without this key.
+      UW_API_KEY: ${{ secrets.UW_API_KEY }}
+      BNB_MARKET_FILE: apps/bnb-companies/data/market.json
+      SOL_MARKET_FILE: apps/sol-companies/data/market.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      # Keep these independent so one unavailable feed does not discard the other update.
+      - name: Refresh BNB stock closes
+        id: bnb
+        continue-on-error: true
+        run: node apps/bnb-companies/scripts/update-market-data.mjs
+
+      - name: Refresh SOL stock closes and company feeds
+        id: sol
+        continue-on-error: true
+        run: node apps/sol-companies/scripts/update-market-data.mjs
+
+      - name: Commit changed snapshots
+        id: commit
+        run: |
+          if [ -z "$(git status --porcelain -- "$BNB_MARKET_FILE" "$SOL_MARKET_FILE")" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -- "$BNB_MARKET_FILE" "$SOL_MARKET_FILE"
+            git commit -m "Update treasury market data"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # GITHUB_TOKEN pushes do not trigger push-based Actions, so dispatch deployment explicitly.
+      - name: Redeploy changed snapshots
+        if: steps.commit.outputs.changed == 'true'
+        run: gh workflow run deploy.yml --ref "$REF_NAME"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF_NAME: ${{ github.ref_name }}
+
+      - name: Report failed refreshes
+        if: always() && (steps.bnb.outcome == 'failure' || steps.sol.outcome == 'failure')
+        run: |
+          if [ "$BNB_OUTCOME" = "failure" ]; then
+            echo "::error::BNB refresh failed. Its previous snapshot was retained; any successful SOL update was processed separately."
+          fi
+          if [ "$SOL_OUTCOME" = "failure" ]; then
+            echo "::error::SOL refresh failed. Its previous snapshot was retained; any successful BNB update was processed separately."
+          fi
+          exit 1
+        env:
+          BNB_OUTCOME: ${{ steps.bnb.outcome }}
+          SOL_OUTCOME: ${{ steps.sol.outcome }}

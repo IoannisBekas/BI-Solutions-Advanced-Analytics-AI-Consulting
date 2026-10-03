@@ -16,7 +16,7 @@ import {
   type WebsiteProject,
 } from "@/data/websiteProjects";
 import { trackEvent } from "@/lib/analytics";
-import { withAssetBase } from "@/lib/site";
+import { withAssetBase, withSiteBase } from "@/lib/site";
 import { useLocale } from "@/i18n/LocaleProvider";
 
 const latestInsight = homeInsights[0];
@@ -440,6 +440,79 @@ export default function Home() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="treasury-trackers"
+          className="overflow-hidden border-t border-gray-200 bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28"
+        >
+          <div className="site-container px-6 md:px-12">
+            <ScrollReveal className="mb-12 max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                {t.nav.treasuryTrackers}
+              </p>
+              <h2 className="mt-4 text-4xl font-bold font-heading leading-tight text-gray-950 md:text-5xl">
+                {t.home.treasuryHeading}
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-gray-600">
+                {t.home.treasuryDescription}
+              </p>
+            </ScrollReveal>
+
+            <div className="grid auto-rows-fr gap-8 md:grid-cols-2">
+              {[
+                {
+                  name: "BNB Treasury Tracker",
+                  model: "CEBE",
+                  asset: "BNB",
+                  href: withSiteBase("/bnb-companies/"),
+                  description: t.home.bnbTreasuryDescription,
+                },
+                {
+                  name: "Solana Treasury Tracker",
+                  model: "CESE",
+                  asset: "SOL",
+                  href: withSiteBase("/sol-companies/"),
+                  description: t.home.solTreasuryDescription,
+                },
+              ].map((tracker, index) => (
+                <ScrollReveal key={tracker.model} className="h-full" delay={index * 0.06} width="100%">
+                  <a
+                    href={tracker.href}
+                    className="group block h-full rounded-[2rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f3f0]"
+                    onClick={() =>
+                      trackEvent("treasury_tracker_open", {
+                        tracker: tracker.model,
+                        placement: "homepage",
+                        target: tracker.href,
+                      })
+                    }
+                  >
+                    <article className="flex h-full flex-col rounded-[2rem] border border-black bg-black p-8 text-white transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-black/10 group-focus-visible:-translate-y-1 sm:p-10">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                          {tracker.model}
+                        </span>
+                        <span className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold tracking-[0.12em]">
+                          {tracker.asset}
+                        </span>
+                      </div>
+                      <h3 className="mt-8 text-3xl font-bold font-heading leading-tight" translate="no">
+                        {tracker.name}
+                      </h3>
+                      <p className="mt-4 text-base leading-relaxed text-gray-400">
+                        {tracker.description}
+                      </p>
+                      <div className="mt-auto flex items-center justify-between gap-4 pt-8 text-sm font-semibold">
+                        {t.home.openDashboard}
+                        <ArrowRight aria-hidden="true" className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </article>
+                  </a>
+                </ScrollReveal>
+              ))}
             </div>
           </div>
         </section>

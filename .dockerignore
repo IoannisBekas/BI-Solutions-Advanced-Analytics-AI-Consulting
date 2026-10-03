@@ -7,7 +7,7 @@ output/
 outputs/
 
 # Runtime state and local secrets
-data/
+/data/
 *.db
 *.db-shm
 *.db-wal

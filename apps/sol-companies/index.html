@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CESE Tracker | BI Solutions Group</title>
+  <meta name="description" content="Live Solana treasury monitor and Common Equity Solana Equivalent (CESE) analytics for public companies. By BI Solutions Group.">
+  <link rel="icon" href="../assets/brand/bi-solutions-group-mark.png">
+  <link rel="canonical" href="https://www.bisolutions.group/sol-companies/">
+  <meta name="robots" content="index,follow">
+
+  <!-- Fonts (matching bisolutions.group) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          colors: {
+            ink: '#09090b',
+            night: '#10141a',
+            paper: '#f5f3f0',
+            sand: '#f6f3ef'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-white text-ink font-sans antialiased">
+
+  <!-- SIMULATOR ACTIVE BANNER (Toggled during simulation) -->
+  <div id="simulatorActiveBanner" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-xl glass-dark rounded-full pl-5 pr-2 py-2 text-xs text-white flex items-center justify-between gap-3">
+    <span>
+      <span class="eyebrow text-white/70 mr-1">Scenario mode</span>
+      SOL at <span id="simulatedBannerPrice" class="num font-semibold">$150.00</span> · live updates paused
+    </span>
+    <button id="resetToLiveBtn" class="btn-light shrink-0 !py-1.5 !px-4 !text-xs">Return to live</button>
+  </div>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero-grid relative bg-night text-white overflow-hidden">
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between gap-4">
+      <a href="../" class="group flex items-center gap-3">
+        <img src="../assets/brand/bi-solutions-group-mark.png" alt="" class="h-9 w-9 sm:h-10 sm:w-10 object-contain invert transition-transform duration-300 group-hover:scale-105">
+        <div class="leading-tight">
+          <div class="font-display font-bold text-[15px] tracking-tight">BI Solutions Group</div>
+          <div class="text-[11px] text-white/60">CESE Tracker · Solana Treasury Analytics</div>
+        </div>
+      </a>
+      <div class="flex items-center gap-3 sm:gap-5 text-xs">
+        <div class="hidden sm:flex items-center gap-2 text-white/70">
+          <span id="connectionStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 pulse-indicator"></span>
+          <span id="connectionStatusText">Connecting to live feed…</span>
+        </div>
+        <a href="../start-a-project" class="btn-outline-light !py-2 !px-4 !text-xs">Start a project</a>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-16 sm:pb-24 grid lg:grid-cols-12 gap-10 items-end">
+      <div class="lg:col-span-7">
+        <p class="eyebrow text-white/70">Live treasury monitor · CESE analytics</p>
+        <h1 class="font-display font-medium text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] tracking-[-0.01em] mt-4">
+          What common shareholders actually own in Solana.
+        </h1>
+        <p class="text-white/75 text-base sm:text-lg leading-relaxed mt-5 max-w-2xl">
+          Gross token holdings overstate exposure when a company carries debt. The Common Equity Solana Equivalent (CESE) nets out senior claims, then reprices every treasury against the live SOL spot price.
+        </p>
+      </div>
+
+      <!-- Live price panel -->
+      <div class="lg:col-span-5">
+        <div class="glass-dark rounded-[28px] p-6 sm:p-7">
+          <div class="flex items-center justify-between">
+            <p class="eyebrow text-white/85">SOL / USD spot</p>
+            <span id="feedSourceBadge" class="text-[11px] text-white/60">Coinbase SOL/USD</span>
+          </div>
+          <div class="flex items-end justify-between gap-4 mt-3">
+            <div id="liveSolPriceDisplay" class="num font-display font-semibold text-5xl tracking-tight rounded-lg px-1 -mx-1">$117.98</div>
+            <div id="liveSolPriceChange" class="num text-sm font-medium text-emerald-400 pb-2">+0.00%</div>
+          </div>
+          <div class="h-px bg-white/10 my-5"></div>
+          <div class="flex items-center justify-between gap-3">
+            <span id="liveSolHighLow" class="num text-xs text-white/60">24h H: — | L: —</span>
+            <button id="toggleLiveFeedBtn" class="btn-light !py-2 !px-4 !text-xs">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-indicator"></span>
+              <span>Live stream</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== KPI STRIP ========== -->
+  <section class="border-y border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-5 divide-gray-200 kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Gross treasury tracked</div>
+        <div id="kpiGrossSol" class="kpi-value">—</div>
+        <div id="kpiGrossValue" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Common equity SOL</div>
+        <div id="kpiCommonSol" class="kpi-value text-emerald-700">—</div>
+        <div id="kpiCommonPct" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Net senior claims</div>
+        <div id="kpiTotalDebt" class="kpi-value text-rose-700">—</div>
+        <div id="kpiTotalDebtSol" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Capital efficiency leader</div>
+        <div id="kpiBestDiscount" class="kpi-value">—</div>
+        <div id="kpiBestDiscountSub" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi col-span-2 lg:col-span-1">
+        <div class="kpi-label">Highest premium</div>
+        <div id="kpiHighestPremium" class="kpi-value">—</div>
+        <div id="kpiHighestPremiumSub" class="kpi-sub">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MATRIX ========== -->
+  <section id="matrix" class="bg-paper py-20 sm:py-24 scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-ink/50">CESE matrix</p>
+      <h2 class="section-title mt-3">Corporate Solana treasuries, net of senior claims.</h2>
+      <p class="section-lead">Every step of the math is shown, from SOL held to wipe-out price, so you can check each result against the rows above it. Status follows EV mNAV, which prices the whole balance sheet. Select a company for its sources.</p>
+
+      <!-- Scenario sandbox -->
+      <div class="card mt-10 p-5 sm:p-7">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div>
+            <p class="eyebrow text-ink/50">Scenario sandbox</p>
+            <h3 class="font-display font-bold text-xl tracking-tight mt-2">Move the SOL price and watch claims compress.</h3>
+          </div>
+          <label class="flex items-center gap-2 text-xs text-ink/60">
+            <span class="font-medium">Debt logic</span>
+            <select id="calculationModeSelect" class="field">
+              <option value="dynamic">Dynamic balance sheet (debt in USD)</option>
+              <option value="fixed_ratio">Fixed baseline claims % ratio</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mt-6">
+          <div class="lg:col-span-7 space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-ink/60 font-medium">Simulated SOL price ($20 – $400)</span>
+              <div class="flex items-center gap-1">
+                <span class="text-ink/50">$</span>
+                <input type="number" id="simPriceInput" step="0.1" min="1" max="1000" class="field num w-24 text-right font-semibold">
+              </div>
+            </div>
+            <input type="range" id="simPriceSlider" min="20" max="400" step="0.5" value="117.98" class="w-full">
+          </div>
+          <div class="lg:col-span-5 flex flex-wrap gap-2 lg:justify-end">
+            <button data-scenario-price="117.98" class="chip">Baseline $117.98</button>
+            <button data-scenario-price="75" class="chip">Stress $75</button>
+            <button data-scenario-price="150" class="chip">Breakout $150</button>
+            <button data-scenario-price="250" class="chip">ATH $250</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table card (overflow-clip, not hidden, so the company header can stick to the viewport) -->
+      <div class="card mt-6 overflow-clip">
+        <div class="p-4 sm:p-5 border-b border-gray-200 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+          <div class="flex flex-wrap gap-1 rounded-3xl bg-paper p-1 text-xs w-fit max-w-full">
+            <button data-filter="all" class="seg seg-active">All</button>
+            <button data-filter="discounts" class="seg">Discounts (&lt;1.0x EV)</button>
+            <button data-filter="premiums" class="seg">Premiums (≥1.0x EV)</button>
+          </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <label class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="font-medium">Order by</span>
+              <select id="sortSelect" class="field">
+                <option value="evMNav">EV mNAV</option>
+                <option value="ceseMNav">CESE mNAV</option>
+                <option value="solPer100">SOL per $100</option>
+                <option value="leverage">Leverage</option>
+                <option value="wipeoutPrice">Wipe-out price</option>
+                <option value="seniorClaimsPct">Senior claims %</option>
+                <option value="totalSolHeld">SOL held</option>
+                <option value="marketCap">Market cap</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+            <button id="sortDirectionBtn" class="btn-ghost" title="Reverse the order">Low → high</button>
+            <div class="relative w-full sm:w-56">
+              <input type="text" id="tableSearchInput" placeholder="Search company or ticker" class="field !rounded-full pl-9 pr-4 w-full">
+              <svg class="w-3.5 h-3.5 text-ink/40 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-ink/60 cursor-pointer select-none">
+              <input type="checkbox" id="toggleExcludedEntities" class="accent-ink">
+              <span id="excludedToggleLabel">Show excluded</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Calculation ledger: one column per company on wide screens, one card per company below that -->
+        <div id="ceseMatrix" aria-label="Calculation ledger, one column per company"></div>
+
+        <div class="p-4 sm:p-5 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
+          <p id="dataAsOfNote" class="text-xs text-ink/50">All figures in USD.</p>
+          <div class="flex items-center gap-2">
+            <button id="copyMarkdownBtn" class="btn-ghost"><span>Copy Markdown</span></button>
+            <button id="exportCsvBtn" class="btn-ghost"><span>CSV</span></button>
+            <button id="exportJsonBtn" class="btn-ghost"><span>JSON</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CHARTS (dark grid) ========== -->
+  <section class="proof-grid bg-black text-white py-20 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-white/60">Analysis</p>
+      <h2 class="section-title !text-white mt-3">The gap between gross and common equity.</h2>
+      <p class="section-lead !text-white/65">Debt-heavy issuers look cheap on gross holdings. Pricing the whole balance sheet shows what they really cost, and leverage shows how fast that changes.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
+        <div class="glass-dark rounded-3xl p-5 sm:p-6">
+          <h3 class="font-display font-semibold text-base">Gross vs. common equity SOL</h3>
+          <p class="text-xs text-white/55 mt-1">Unencumbered SOL against SOL matched by debt and preferred stock.</p>
+          <div class="h-64 sm:h-72 mt-5"><canvas id="stackBreakdownChart"></canvas></div>
+        </div>
+        <div class="glass-dark rounded-3xl p-5 sm:p-6">
+          <h3 class="font-display font-semibold text-base">Gross vs. EV vs. CESE mNAV</h3>
+          <p class="text-xs text-white/55 mt-1">Gross ignores debt; CESE magnifies the EV premium by leverage.</p>
+          <div class="h-64 sm:h-72 mt-5"><canvas id="mnavDistortionChart"></canvas></div>
+        </div>
+      </div>
+      <div class="glass-dark rounded-3xl p-5 sm:p-6 mt-6">
+        <h3 class="font-display font-semibold text-base">Capital efficiency: SOL per $100 invested</h3>
+        <p class="text-xs text-white/55 mt-1">Unencumbered SOL acquired per $100 of equity.</p>
+        <div class="h-64 mt-5"><canvas id="solPer100Chart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TAKEAWAYS ========== -->
+  <section class="bg-sand py-20 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-ink/50">Strategic takeaways</p>
+      <h2 class="section-title mt-3">Four balance sheets, four different stories.</h2>
+      <p class="section-lead">Figures at $117.98 SOL, the Sep 30, 2026 close. All amounts in US dollars.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+        <article class="card p-6">
+          <p class="eyebrow text-rose-700">The illusion of gross holdings</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">Upexi <span class="text-ink/40 font-medium text-base">UPXI</span></h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">
+            Upexi holds about <strong class="text-ink">2.34M SOL</strong> and is the cheapest name on gross mNAV (0.35x), but <strong class="text-ink">$223.7M of debt</strong> matches <strong class="text-ink">79%</strong> of the treasury. Priced on the whole balance sheet it trades at <strong class="text-ink">1.14x EV</strong>, a modest premium. The bigger story is <strong class="text-ink">4.75x leverage</strong>: it lifts the CESE mNAV to 1.68x, and equity NAV is wiped out if SOL falls to about <strong class="text-ink">$93</strong>, roughly 21% lower.
+          </p>
+        </article>
+        <article class="card p-6">
+          <p class="eyebrow text-rose-700">Preferred stock counts too</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">DeFi Dev. Corp <span class="text-ink/40 font-medium text-base">DFDV</span></h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">
+            DFDV's headline SOL per share counts all <strong class="text-ink">2,538,010 SOL</strong>. Its new CHAD preferred lifts that figure because no common shares are issued, but <strong class="text-ink">$15.8M of CHAD</strong> ranks ahead of common shareholders, alongside <strong class="text-ink">$126.1M of convertible notes</strong>, a $23.0M DeFi loan and <strong class="text-ink">562,000 SOL of SOL loans</strong>. Together they match <strong class="text-ink">74%</strong> of the treasury: <strong class="text-ink">1.32x EV</strong> (DFDV's own dashboard shows 1.27x), 3.83x leverage and a wipe-out price near $78.
+          </p>
+        </article>
+        <article class="card p-6">
+          <p class="eyebrow text-emerald-700">Pure unencumbered exposure</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">SkyAI <span class="text-ink/40 font-medium text-base">SKYA</span></h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">
+            SkyAI holds <strong class="text-ink">2,003,676 SOL</strong> with no debt and <strong class="text-ink">$12.1M of cash</strong>, so common shareholders own the whole stack. Even with its 27.9M pre-funded warrants in the market cap, it is the cheapest name at <strong class="text-ink">0.53x EV</strong> and the most capital-efficient at <strong class="text-ink">1.52 SOL-equivalent per $100</strong>. A quarter of its SOL is locked until the end of 2028.
+          </p>
+        </article>
+        <article class="card p-6">
+          <p class="eyebrow text-ink/50">Leverage vs. liquidity</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">Forward Ind. <span class="text-ink/40 font-medium text-base">FWDI</span></h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">
+            Forward Industries leads total accumulation with about <strong class="text-ink">8.16M SOL</strong>. Net senior claims match just <strong class="text-ink">5%</strong> of the treasury (<strong class="text-ink">1.05x leverage</strong>), so the measures barely diverge: 0.72x gross, <strong class="text-ink">0.77x EV</strong> and 0.76x CESE mNAV, all at a discount.
+          </p>
+        </article>
+      </div>
+
+      <div class="card mt-5 p-5 flex items-start gap-4">
+        <div class="w-9 h-9 shrink-0 rounded-full border border-gray-200 flex items-center justify-center text-ink/60">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Excluded from the matrix</h4>
+          <p class="text-sm text-ink/65 leading-relaxed mt-1">
+            <strong class="text-ink">Galaxy Digital (GLXY)</strong> is a diversified financial firm whose filings don't break out SOL (about 775,289 SOL per CoinGecko), so a single-asset deduction would misrepresent its capital structure. <strong class="text-ink">Yueda Digital (YDKG)</strong> announced 749,965 SOL in 2025, but its June 30, 2026 statements show no SOL.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== METHODOLOGY ========== -->
+  <section id="methodology" class="bg-white py-20 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-ink/50">Methodology</p>
+      <h2 class="section-title mt-3">One question: what is left for common equity, and how fragile is it?</h2>
+      <p class="section-lead">Adapted from institutional Bitcoin treasury models. Net senior claims = debt + preferred stock − cash, with any debt owed in SOL valued at the SOL price; net cash counts in shareholders' favor. All figures in US dollars.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+        <div class="method">
+          <p class="eyebrow text-ink/50">01 · Senior claims %</p>
+          <code class="formula">Net senior claims / (Total SOL × SOL price)</code>
+          <p class="text-sm text-ink/65">The share of the Solana treasury matched by claims that rank ahead of common shareholders.</p>
+        </div>
+        <div class="method">
+          <p class="eyebrow text-ink/50">02 · Common equity SOL</p>
+          <code class="formula">Total SOL − Net senior claims / SOL price</code>
+          <p class="text-sm text-ink/65">The SOL-equivalent value left for common shareholders once senior claims are paid.</p>
+        </div>
+        <div class="method">
+          <p class="eyebrow text-ink/50">03 · EV mNAV · sets the status</p>
+          <code class="formula">(Market cap + Debt + Preferred − Cash) / (Total SOL × SOL price)</code>
+          <p class="text-sm text-ink/65">What the whole capital structure pays per $1 of SOL. Leverage doesn't distort it, so it drives the discount and premium labels.</p>
+        </div>
+        <div class="method">
+          <p class="eyebrow text-ink/50">04 · CESE mNAV</p>
+          <code class="formula">Market cap / (Common equity SOL × SOL price) = 1 + (EV mNAV − 1) × Leverage</code>
+          <p class="text-sm text-ink/65">What shareholders pay per $1 of their own net asset value. Leverage magnifies the EV premium or discount.</p>
+        </div>
+        <div class="method">
+          <p class="eyebrow text-ink/50">05 · SOL per $100</p>
+          <code class="formula">(Common equity SOL × 100) / Market cap = 100 / (CESE mNAV × SOL price)</code>
+          <p class="text-sm text-ink/65">Like sats per $100: the SOL-equivalent value behind every $100 of stock.</p>
+        </div>
+        <div class="method">
+          <p class="eyebrow text-ink/50">06 · Leverage &amp; wipe-out price</p>
+          <code class="formula">Leverage = SOL value / (SOL value − Net senior claims)<br>Wipe-out = (USD debt + Preferred − Cash) / (Total SOL − SOL owed)</code>
+          <p class="text-sm text-ink/65">How much harder equity value moves than SOL, and the SOL price at which it reaches zero.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-black text-white pt-16 pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <div class="max-w-md">
+          <a href="https://www.bisolutions.group/" class="flex items-center gap-3">
+            <img src="../assets/brand/bi-solutions-group-mark.png" alt="" class="h-9 w-9 object-contain invert">
+            <div class="leading-tight">
+              <div class="font-display font-bold text-[15px] tracking-tight">BI Solutions Group</div>
+              <div class="text-[11px] text-white/60">Advanced Analytics &amp; AI Consulting</div>
+            </div>
+          </a>
+          <p class="text-sm text-white/60 leading-relaxed mt-5">
+            CESE Tracker is an analytics tool for informational purposes only and is not investment advice.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <a href="https://www.bisolutions.group/services" class="link-light">Services</a>
+          <a href="https://www.bisolutions.group/blog" class="link-light">Insights</a>
+          <a href="https://www.bisolutions.group/start-a-project" class="link-light">Start a project</a>
+        </div>
+      </div>
+      <div class="h-px bg-white/10 my-8"></div>
+      <div class="flex flex-col sm:flex-row justify-between gap-2 text-xs text-white/45">
+        <span>© 2026 BI Solutions Group. All rights reserved.</span>
+        <span>All figures in US dollars. SOL/USD via Coinbase and CoinGecko public feeds.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ENTITY DRILLDOWN MODAL -->
+  <div id="entityDetailModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+    <div id="entityModalContent" class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl border border-gray-200">
+      <!-- Dynamically filled by JS -->
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

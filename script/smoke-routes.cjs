@@ -6,7 +6,7 @@ const publicRoutes = [
   {
     path: "/",
     title: "AI, BI & Web App Development",
-    body: "Better reporting. Practical AI. Systems that last.",
+    body: ["Better reporting. Practical AI. Systems that last.", "BNB Treasury Tracker", "Solana Treasury Tracker", "/bnb-companies/", "/sol-companies/"],
     absent: [
       "AI Products",
       "How engagements work",
@@ -140,6 +140,18 @@ const hiddenRoutes = [
 
 const workspaceRoutes = [
   {
+    path: "/bnb-companies/",
+    title: "CEBE Tracker",
+    body: "What common shareholders actually own in BNB.",
+    canonical: "https://www.bisolutions.group/bnb-companies/",
+  },
+  {
+    path: "/sol-companies/",
+    title: "CESE Tracker",
+    body: "What common shareholders actually own in Solana.",
+    canonical: "https://www.bisolutions.group/sol-companies/",
+  },
+  {
     path: "/quantus/workspace/",
     title: "Quantus Research Platform",
     clientShell: true,
@@ -191,6 +203,11 @@ const redirectRoutes = Object.entries(serviceRedirectAnchors).map(
     path: `/services/${slug}`,
     location: `/services#${anchor}`,
   }),
+);
+
+redirectRoutes.push(
+  { path: "/bnb-companies?utm_source=smoke", location: "/bnb-companies/?utm_source=smoke" },
+  { path: "/sol-companies", location: "/sol-companies/" },
 );
 
 const goneRoutes = [

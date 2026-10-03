@@ -3,6 +3,7 @@ import path from "node:path";
 
 const sitemapPath = path.resolve("apps", "client", "public", "sitemap.xml");
 const siteOrigin = "https://www.bisolutions.group";
+const standaloneRoutes = new Set(["/bnb-companies", "/sol-companies"]);
 const locales = [
   { hreflang: "en", prefix: "" },
   { hreflang: "el-GR", prefix: "/el" },
@@ -15,6 +16,7 @@ function tagValue(block, tagName) {
 
 function routeForLocale(route, prefix) {
   if (route === "/") return prefix ? `${prefix}/` : "/";
+  if (standaloneRoutes.has(route)) return `${route}/`;
   return `${prefix}${route}`;
 }
 
@@ -48,8 +50,8 @@ const uniqueEntries = canonicalEntries.filter(({ route }) => {
 });
 
 const body = uniqueEntries.flatMap((entry) =>
-  (entry.route.startsWith("/us/") ? locales.slice(0, 1) : locales).map(({ prefix }) => {
-    const alternates = [
+  (entry.route.startsWith("/us/") || standaloneRoutes.has(entry.route) ? locales.slice(0, 1) : locales).map(({ prefix }) => {
+    const alternates = standaloneRoutes.has(entry.route) ? "" : [
       ...(entry.route.startsWith("/us/") ? locales.slice(0, 1) : locales).map(
         (locale) =>
           `    <xhtml:link rel="alternate" hreflang="${locale.hreflang}" href="${urlFor(entry.route, locale.prefix)}" />`,
@@ -64,7 +66,7 @@ const body = uniqueEntries.flatMap((entry) =>
       .filter(Boolean)
       .join("\n");
 
-    return `  <url>\n    <loc>${urlFor(entry.route, prefix)}</loc>\n${alternates}\n${metadata}\n  </url>`;
+    return `  <url>\n    <loc>${urlFor(entry.route, prefix)}</loc>\n${alternates ? `${alternates}\n` : ""}${metadata}\n  </url>`;
   }),
 ).join("\n");
 
