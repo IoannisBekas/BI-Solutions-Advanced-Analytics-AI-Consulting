@@ -3,7 +3,7 @@ import path from "node:path";
 
 const sitemapPath = path.resolve("apps", "client", "public", "sitemap.xml");
 const siteOrigin = "https://www.bisolutions.group";
-const standaloneRoutes = new Set(["/bnb-companies", "/sol-companies"]);
+const standaloneRoutes = new Set(["/bnb-companies", "/sol-companies", "/btc-companies"]);
 const locales = [
   { hreflang: "en", prefix: "" },
   { hreflang: "el-GR", prefix: "/el" },

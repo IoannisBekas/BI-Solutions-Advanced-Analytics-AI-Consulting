@@ -169,7 +169,7 @@ app.use(
               "'self'",
               (req: unknown) => {
                 const requestPath = (req as { path: string }).path;
-                return /^\/(?:bnb-companies|sol-companies)(?:\/|$)/.test(requestPath)
+                return /^\/(?:bnb-companies|sol-companies|btc-companies)(?:\/|$)/.test(requestPath)
                   ? "wss://ws-feed.exchange.coinbase.com https://api.exchange.coinbase.com https://api.coinbase.com https://api.coingecko.com https://api.kraken.com"
                   : "'self'";
               },

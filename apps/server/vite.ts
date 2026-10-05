@@ -98,7 +98,7 @@ export async function setupVite(server: Server, app: Express) {
   // These must be mounted before Vite middleware and the root catch-all so
   // product workspace routes do not render the marketing app during local QA.
   const distPath = path.resolve(import.meta.dirname, "..", "..", "dist", "public");
-  for (const appName of ["bnb-companies", "sol-companies"]) {
+  for (const appName of ["bnb-companies", "sol-companies", "btc-companies"]) {
     serveProductSpa(app, `/${appName}`, path.resolve(import.meta.dirname, "..", appName), true);
   }
   app.use((req, res, next) => {

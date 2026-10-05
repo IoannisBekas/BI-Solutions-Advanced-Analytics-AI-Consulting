@@ -796,7 +796,7 @@ export function serveStatic(app: Express) {
     serveProductSpa(app, "/bonusaki/demo", bonusakiDir);
   }
 
-  for (const appName of ["bnb-companies", "sol-companies"]) {
+  for (const appName of ["bnb-companies", "sol-companies", "btc-companies"]) {
     serveProductSpa(app, `/${appName}`, path.resolve(distPath, appName), true);
   }
 

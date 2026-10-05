@@ -41,6 +41,7 @@ The following are independent portfolio analyses built with synthetic or represe
 
 - BNB treasury dashboard and Common Equity BNB Equivalent (CEBE): https://www.bisolutions.group/bnb-companies/
 - Solana treasury dashboard and Common Equity Solana Equivalent (CESE): https://www.bisolutions.group/sol-companies/
+- Bitcoin treasury dashboard and Common Equity Bitcoin Equivalent (CEBTC): https://www.bisolutions.group/btc-companies/
 
 ## Project Enquiries
 

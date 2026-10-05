@@ -38,7 +38,7 @@ async function buildAll() {
   );
   await buildNestedApp("Bonusaki", path.resolve("apps", "bonusaki"), path.join("bonusaki", "demo"));
 
-  for (const appName of ["bnb-companies", "sol-companies"]) {
+  for (const appName of ["bnb-companies", "sol-companies", "btc-companies"]) {
     console.log(`copying ${appName} dashboard...`);
     const source = path.resolve("apps", appName);
     const target = path.resolve("dist", "public", appName);

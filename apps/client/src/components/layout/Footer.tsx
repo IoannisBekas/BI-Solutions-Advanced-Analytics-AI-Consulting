@@ -151,6 +151,7 @@ export function Footer() {
               {[
                 { label: "BNB Treasury Tracker", href: withSiteBase("/bnb-companies/") },
                 { label: "Solana Treasury Tracker", href: withSiteBase("/sol-companies/") },
+                { label: "Bitcoin Treasury Tracker", href: withSiteBase("/btc-companies/") },
               ].map((item) => (
                 <li key={item.href}>
                   <a

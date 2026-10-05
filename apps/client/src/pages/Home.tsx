@@ -461,7 +461,7 @@ export default function Home() {
               </p>
             </ScrollReveal>
 
-            <div className="grid auto-rows-fr gap-8 md:grid-cols-2">
+            <div className="grid auto-rows-fr gap-8 lg:grid-cols-3">
               {[
                 {
                   name: "BNB Treasury Tracker",
@@ -476,6 +476,13 @@ export default function Home() {
                   asset: "SOL",
                   href: withSiteBase("/sol-companies/"),
                   description: t.home.solTreasuryDescription,
+                },
+                {
+                  name: "Bitcoin Treasury Tracker",
+                  model: "CEBTC",
+                  asset: "BTC",
+                  href: withSiteBase("/btc-companies/"),
+                  description: t.home.btcTreasuryDescription,
                 },
               ].map((tracker, index) => (
                 <ScrollReveal key={tracker.model} className="h-full" delay={index * 0.06} width="100%">

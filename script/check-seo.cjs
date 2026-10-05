@@ -101,7 +101,7 @@ const sitemapUrls = sitemapEntries.map((entry) => entry.loc).filter(Boolean);
 
 if (sitemapUrls.length === 0) fail("The sitemap contains no URLs.");
 
-const standaloneDashboards = new Set(["/bnb-companies", "/sol-companies"]);
+const standaloneDashboards = new Set(["/bnb-companies", "/sol-companies", "/btc-companies"]);
 const localeGroups = new Map();
 for (const entry of sitemapEntries) {
   if (!entry.loc) fail("A sitemap entry is missing <loc>.");

@@ -15,6 +15,7 @@ export interface TranslationCatalogue {
     treasuryDescription: string;
     bnbTreasuryDescription: string;
     solTreasuryDescription: string;
+    btcTreasuryDescription: string;
     openDashboard: string;
   };
   nav: {
@@ -66,11 +67,13 @@ const en: TranslationCatalogue = {
       "BI Solutions Group builds BI, AI, data foundations and web applications for organizations worldwide — from strategy through to training and handover.",
     treasuryHeading: "Explore corporate crypto treasuries.",
     treasuryDescription:
-      "Two interactive dashboards connecting public-company holdings with debt-adjusted equity exposure, mNAV, and price scenarios.",
+      "Three interactive dashboards connecting public-company holdings with debt-adjusted equity exposure, mNAV, and price scenarios.",
     bnbTreasuryDescription:
       "Explore public companies holding BNB, compare debt-adjusted equity exposure and mNAV, and model different BNB prices with CEBE.",
     solTreasuryDescription:
       "Explore public companies holding SOL, compare debt-adjusted equity exposure and mNAV, and model different SOL prices with CESE.",
+    btcTreasuryDescription:
+      "Explore public companies holding BTC, compare debt-adjusted equity exposure and mNAV, and model different Bitcoin prices with CEBTC.",
     openDashboard: "Open dashboard",
   },
   nav: {
@@ -150,11 +153,13 @@ const el: TranslationCatalogue = {
       "Η BI Solutions Group χτίζει BI, τεχνητή νοημοσύνη, υποδομές δεδομένων και web εφαρμογές — από τη στρατηγική έως την παράδοση και την εκπαίδευση.",
     treasuryHeading: "Εξερευνήστε τα εταιρικά αποθέματα κρυπτονομισμάτων.",
     treasuryDescription:
-      "Δύο διαδραστικά dashboards συνδέουν τα αποθέματα εισηγμένων εταιρειών με την έκθεση των μετόχων μετά την αφαίρεση χρέους, το mNAV και σενάρια τιμών.",
+      "Τρία διαδραστικά dashboards συνδέουν τα αποθέματα εισηγμένων εταιρειών με την έκθεση των μετόχων μετά την αφαίρεση χρέους, το mNAV και σενάρια τιμών.",
     bnbTreasuryDescription:
       "Εξερευνήστε εισηγμένες εταιρείες με αποθέματα BNB, συγκρίνετε την έκθεση μετά την αφαίρεση χρέους και το mNAV και δοκιμάστε διαφορετικές τιμές BNB με το CEBE.",
     solTreasuryDescription:
       "Εξερευνήστε εισηγμένες εταιρείες με αποθέματα SOL, συγκρίνετε την έκθεση μετά την αφαίρεση χρέους και το mNAV και δοκιμάστε διαφορετικές τιμές SOL με το CESE.",
+    btcTreasuryDescription:
+      "Εξερευνήστε εισηγμένες εταιρείες με αποθέματα BTC, συγκρίνετε την έκθεση μετά την αφαίρεση χρέους και το mNAV και δοκιμάστε διαφορετικές τιμές Bitcoin με το CEBTC.",
     openDashboard: "Ανοίξτε το dashboard",
   },
   nav: {
@@ -254,11 +259,13 @@ const de: TranslationCatalogue = {
       "BI Solutions Group baut BI, KI, Datenfundamente und Webanwendungen für Unternehmen weltweit — von der Strategie bis zu Übergabe und Training.",
     treasuryHeading: "Krypto-Bestände von Unternehmen verstehen.",
     treasuryDescription:
-      "Zwei interaktive Dashboards verbinden die Bestände börsennotierter Unternehmen mit schuldenbereinigtem Eigenkapital-Exposure, mNAV und Preisszenarien.",
+      "Drei interaktive Dashboards verbinden die Bestände börsennotierter Unternehmen mit schuldenbereinigtem Eigenkapital-Exposure, mNAV und Preisszenarien.",
     bnbTreasuryDescription:
       "Analysieren Sie börsennotierte Unternehmen mit BNB-Beständen, vergleichen Sie schuldenbereinigtes Eigenkapital-Exposure und mNAV und simulieren Sie BNB-Preise mit CEBE.",
     solTreasuryDescription:
       "Analysieren Sie börsennotierte Unternehmen mit SOL-Beständen, vergleichen Sie schuldenbereinigtes Eigenkapital-Exposure und mNAV und simulieren Sie SOL-Preise mit CESE.",
+    btcTreasuryDescription:
+      "Analysieren Sie börsennotierte Unternehmen mit BTC-Beständen, vergleichen Sie schuldenbereinigtes Eigenkapital-Exposure und mNAV und simulieren Sie Bitcoin-Preise mit CEBTC.",
     openDashboard: "Dashboard öffnen",
   },
   nav: {

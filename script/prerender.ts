@@ -52,7 +52,7 @@ async function readRoutesFromSitemap() {
     (match) => new URL(match[1].trim()).pathname,
   );
   const normalized = routes
-    .filter((route) => !/^\/(?:bnb-companies|sol-companies)\/?$/.test(route))
+    .filter((route) => !/^\/(?:bnb-companies|sol-companies|btc-companies)\/?$/.test(route))
     .map((route) =>
       route !== "/" && route.endsWith("/") ? route.slice(0, -1) : route,
     );

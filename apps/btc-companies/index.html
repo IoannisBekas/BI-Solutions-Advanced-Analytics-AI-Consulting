@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitcoin Treasury Tracker | BI Solutions Group</title>
+  <meta name="description" content="Live BTC treasury monitor and Common Equity BTC Equivalent (CEBTC) analytics for public companies. By BI Solutions Group.">
+  <link rel="icon" href="../assets/brand/bi-solutions-group-mark.png">
+  <link rel="canonical" href="https://www.bisolutions.group/btc-companies/">
+  <meta name="robots" content="index,follow">
+
+  <!-- Fonts (matching bisolutions.group) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          colors: {
+            ink: '#09090b',
+            night: '#10141a',
+            paper: '#f5f3f0',
+            sand: '#f6f3ef',
+            btc: '#f7931a'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-white text-ink font-sans antialiased">
+
+  <!-- SIMULATOR ACTIVE BANNER (Toggled during simulation) -->
+  <div id="simulatorActiveBanner" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-xl glass-dark rounded-full pl-5 pr-2 py-2 text-xs text-white flex items-center justify-between gap-3">
+    <span>
+      <span class="eyebrow text-white/70 mr-1">Scenario mode</span>
+      BTC at <span id="simulatedBannerPrice" class="num font-semibold">$84,292.32</span> · live updates paused
+    </span>
+    <button id="resetToLiveBtn" class="btn-light shrink-0 !py-1.5 !px-4 !text-xs">Return to live</button>
+  </div>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero-grid relative bg-night text-white overflow-hidden">
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-4">
+      <a href="../" class="group flex items-center gap-3">
+        <img src="../assets/brand/bi-solutions-group-mark.png" alt="" class="h-9 w-9 sm:h-10 sm:w-10 object-contain invert transition-transform duration-300 group-hover:scale-105">
+        <div class="leading-tight">
+          <div class="font-display font-bold text-[15px] tracking-tight">BI Solutions Group</div>
+          <div class="text-[11px] text-white/60">CEBTC Tracker · BTC Treasury Analytics</div>
+        </div>
+      </a>
+      <div class="flex items-center gap-3 sm:gap-5 text-xs">
+        <div class="hidden sm:flex items-center gap-2 text-white/70">
+          <span id="connectionStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 pulse-indicator"></span>
+          <span id="connectionStatusText">Connecting to live feed…</span>
+        </div>
+        <a href="../start-a-project" class="btn-outline-light !py-2 !px-4 !text-xs">Start a project</a>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-16 sm:pb-24 grid lg:grid-cols-12 gap-10 items-end">
+      <div class="lg:col-span-7">
+        <p class="eyebrow text-white/70"><span class="text-btc">●</span> Live treasury monitor · CEBTC analytics</p>
+        <h1 class="font-display font-medium text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] tracking-[-0.01em] mt-4">
+          Bitcoin backing for common shareholders.
+        </h1>
+        <p class="text-white/75 text-base sm:text-lg leading-relaxed mt-5 max-w-2xl">
+          Gross token holdings overstate exposure when a company carries debt. The Common Equity BTC Equivalent (CEBTC) nets out senior claims, then reprices every treasury against the live BTC spot price.
+        </p>
+      </div>
+
+      <!-- Live price panel -->
+      <div class="lg:col-span-5">
+        <div class="glass-dark rounded-[28px] p-6 sm:p-7">
+          <div class="flex items-center justify-between">
+            <p class="eyebrow text-white/85">BTC / USD spot</p>
+            <span id="feedSourceBadge" class="text-[11px] text-white/60">Coinbase BTC/USD</span>
+          </div>
+          <div class="flex flex-wrap items-end justify-between gap-4 mt-3">
+            <div id="liveBtcPriceDisplay" class="num font-display font-semibold text-5xl tracking-tight rounded-lg px-1 -mx-1">$84,292.32</div>
+            <div id="liveBtcPriceChange" class="num text-sm font-medium text-emerald-400 pb-2">+0.00%</div>
+          </div>
+          <div class="h-px bg-white/10 my-5"></div>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <span id="liveBtcHighLow" class="num text-xs text-white/60">24h H: — | L: —</span>
+            <button id="toggleLiveFeedBtn" class="btn-light !py-2 !px-4 !text-xs">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-indicator"></span>
+              <span>Live stream</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== KPI STRIP ========== -->
+  <section class="border-y border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-5 divide-gray-200 kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Gross treasury tracked</div>
+        <div id="kpiGrossBtc" class="kpi-value">—</div>
+        <div id="kpiGrossValue" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Common equity BTC</div>
+        <div id="kpiCommonBtc" class="kpi-value text-emerald-700">—</div>
+        <div id="kpiCommonPct" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Net senior claims</div>
+        <div id="kpiTotalDebt" class="kpi-value text-rose-700">—</div>
+        <div id="kpiTotalDebtBtc" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Capital efficiency leader</div>
+        <div id="kpiBestDiscount" class="kpi-value">—</div>
+        <div id="kpiBestDiscountSub" class="kpi-sub">—</div>
+      </div>
+      <div class="kpi col-span-2 lg:col-span-1">
+        <div class="kpi-label">Highest premium</div>
+        <div id="kpiHighestPremium" class="kpi-value">—</div>
+        <div id="kpiHighestPremiumSub" class="kpi-sub">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MATRIX ========== -->
+  <section id="matrix" class="bg-paper py-20 sm:py-24 scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-ink/50">CEBTC matrix</p>
+      <h2 class="section-title mt-3">Corporate BTC treasuries, net of senior claims.</h2>
+      <p class="section-lead">Every step of the math is shown, from BTC held to wipe-out price, so you can check each result against the rows above it. Status follows treasury-only EV mNAV. It excludes operating assets and business earnings. Select a company for its sources.</p>
+
+      <!-- Scenario sandbox -->
+      <div class="card mt-10 p-5 sm:p-7">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div>
+            <p class="eyebrow text-ink/50">Scenario sandbox</p>
+            <h3 class="font-display font-bold text-xl tracking-tight mt-2">Move the BTC price and watch claims compress.</h3>
+          </div>
+          <label class="scenario-mode-label flex items-center gap-2 text-xs text-ink/60">
+            <span class="font-medium">Debt logic</span>
+            <select id="calculationModeSelect" class="field">
+              <option value="dynamic">Dynamic balance sheet (debt in USD)</option>
+              <option value="fixed_ratio">Fixed baseline claims % ratio</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mt-6">
+          <div class="lg:col-span-7 space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-ink/60 font-medium">Simulated BTC price ($20,000 – $200,000)</span>
+              <div class="flex items-center gap-1">
+                <span class="text-ink/50">$</span>
+                <input type="number" id="simPriceInput" step="100" min="1" max="1000000" class="field num w-24 text-right font-semibold">
+              </div>
+            </div>
+            <input type="range" id="simPriceSlider" min="20000" max="200000" step="100" value="84292.32" class="w-full">
+          </div>
+          <div class="lg:col-span-5 flex flex-wrap gap-2 lg:justify-end">
+            <button data-scenario-price="84292.32" class="chip">Baseline $84,292.32</button>
+            <button data-scenario-price="40000" class="chip">Stress $40,000</button>
+            <button data-scenario-price="100000" class="chip">Recovery $100,000</button>
+            <button data-scenario-price="150000" class="chip">Rally $150,000</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table card (overflow-clip, not hidden, so the company header can stick to the viewport) -->
+      <div class="card mt-6 overflow-clip">
+        <div class="p-4 sm:p-5 border-b border-gray-200 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+          <div class="flex flex-wrap gap-1 rounded-3xl bg-paper p-1 text-xs w-fit max-w-full">
+            <button data-filter="all" class="seg seg-active">All</button>
+            <button data-filter="discounts" class="seg">Discounts (&lt;1.0x EV)</button>
+            <button data-filter="premiums" class="seg">Premiums (≥1.0x EV)</button>
+          </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <label class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="font-medium">Order by</span>
+              <select id="sortSelect" class="field">
+                <option value="evMNav">EV mNAV</option>
+                <option value="cebtcMNav">CEBTC mNAV</option>
+                <option value="btcPer1000">BTC per $1,000</option>
+                <option value="leverage">Leverage</option>
+                <option value="wipeoutPrice">Wipe-out price</option>
+                <option value="seniorClaimsPct">Senior claims %</option>
+                <option value="totalBtcHeld">BTC held</option>
+                <option value="marketCap">Market cap</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+            <button id="sortDirectionBtn" class="btn-ghost" title="Reverse the order">Low → high</button>
+            <div class="relative w-full sm:w-56">
+              <input type="text" id="tableSearchInput" placeholder="Search company or ticker" class="field !rounded-full pl-9 pr-4 w-full">
+              <svg class="w-3.5 h-3.5 text-ink/40 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-ink/60 cursor-pointer select-none">
+              <input type="checkbox" id="toggleExcludedEntities" class="accent-ink">
+              <span id="excludedToggleLabel">Show excluded</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Calculation ledger: one column per company on wide screens, one card per company below that -->
+        <div id="cebtcMatrix" aria-label="Calculation ledger, one column per company"></div>
+
+        <div class="p-4 sm:p-5 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
+          <p id="dataAsOfNote" class="text-xs text-ink/50">All figures in USD.</p>
+          <div class="flex items-center gap-2">
+            <button id="copyMarkdownBtn" class="btn-ghost"><span>Copy Markdown</span></button>
+            <button id="exportCsvBtn" class="btn-ghost"><span>CSV</span></button>
+            <button id="exportJsonBtn" class="btn-ghost"><span>JSON</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CHARTS (dark grid) ========== -->
+  <section class="proof-grid bg-black text-white py-20 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-white/60">Analysis</p>
+      <h2 class="section-title !text-white mt-3">The gap between gross and common equity.</h2>
+      <p class="section-lead !text-white/65">Senior claims change the BTC backing of common shares. Compare gross, enterprise-value and common-equity multiples on the same dated inputs.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
+        <div class="glass-dark rounded-3xl p-5 sm:p-6">
+          <h3 class="font-display font-semibold text-base">Gross vs. common equity BTC</h3>
+          <p class="text-xs text-white/55 mt-1">Modeled BTC value unmatched vs. matched by net senior claims, rather than a pledged/unpledged custody split.</p>
+          <div class="h-64 sm:h-72 mt-5"><canvas id="stackBreakdownChart"></canvas></div>
+        </div>
+        <div class="glass-dark rounded-3xl p-5 sm:p-6">
+          <h3 class="font-display font-semibold text-base">Gross vs. EV vs. CEBTC mNAV</h3>
+          <p class="text-xs text-white/55 mt-1">Gross ignores senior claims; leverage scales the EV premium or discount for common equity.</p>
+          <div class="h-64 sm:h-72 mt-5"><canvas id="mnavDistortionChart"></canvas></div>
+        </div>
+      </div>
+      <div class="glass-dark rounded-3xl p-5 sm:p-6 mt-6">
+        <h3 class="font-display font-semibold text-base">Capital efficiency: BTC per $1,000 invested</h3>
+          <p class="text-xs text-white/55 mt-1">Modeled BTC-equivalent backing per $1,000 of equity. Green bars indicate more backing than spot; business risks and fees remain.</p>
+        <div class="h-48 mt-5"><canvas id="btcPer1000Chart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DATA COVERAGE ========== -->
+  <section class="bg-sand py-20 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-ink/50">Read the inputs</p>
+      <h2 class="section-title mt-3">Bitcoin backing, with the balance sheet in view.</h2>
+      <p class="section-lead">Holdings and financial inputs are a June 30, 2026 report snapshot. Stock closes refresh on weekdays and BTC spot streams live. Open a company in the ledger for its filing links and share-count assumptions.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+        <article class="card p-6">
+          <p class="eyebrow text-amber-700">Treasury companies</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">Debt and preferred shares rank ahead of common.</h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">Strategy, Strive and Twenty One use different capital structures. The ledger deducts debt principal and preferred liquidation claims, net of cash, before calculating common-equity BTC backing. Announced financing capacity is not treated as cash or holdings.</p>
+        </article>
+        <article class="card p-6">
+          <p class="eyebrow text-emerald-700">Mining businesses</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">BTC is one part of an operating company.</h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">Riot and CleanSpark also own mining infrastructure and earn operating revenue. This treasury-only model excludes that business value, equipment, working capital and other non-cash assets. Its discount and premium labels describe BTC backing, not a valuation of the entire business.</p>
+        </article>
+        <article class="card p-6">
+          <p class="eyebrow text-ink/50">Date discipline</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">Live price does not mean live balance sheet.</h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">New BTC purchases, share issuance, dividends, conversions and repayments after the reported dates can materially change these results. Each company shows the dates of its holdings, financial inputs and shares. The scenario sandbox holds stock market caps constant.</p>
+        </article>
+        <article class="card p-6">
+          <p class="eyebrow text-ink/50">Coverage</p>
+          <h3 class="font-display font-bold text-xl tracking-tight mt-3">Five companies in the common-equity matrix.</h3>
+          <p class="text-sm text-ink/70 leading-relaxed mt-3">This initial selection includes three treasury issuers and two miners with comparable USD reporting. MARA appears under “Show excluded” with gross holdings only because subsidiary claims require additional attribution. International listings are outside this selection.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== METHODOLOGY ========== -->
+  <section id="methodology" class="bg-white py-20 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="eyebrow text-ink/50">Methodology</p>
+      <h2 class="section-title mt-3">One question: what is left for common equity, and how fragile is it?</h2>
+      <p class="section-lead">Net senior claims = USD debt + preferred stock − cash. Net cash counts in shareholders' favor. All monetary amounts are in US dollars.</p>
+      <p class="section-lead">Treasury value = disclosed BTC exposure × BTC price; equity NAV = treasury value − net senior claims. Net senior claims include debt principal and preferred liquidation claims plus declared unpaid dividends, less unrestricted cash. Operating assets and liabilities are outside this model. These definitions use dynamic mode; fixed-ratio scenarios keep claims at their baseline share of treasury value.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+        <div class="method">
+          <h3 class="method-title">01 · Senior claims %</h3>
+          <p class="text-sm text-ink/65">Percentage of the gross treasury matched by debt and preferred obligations, net of cash. A net-cash balance displays as 0%.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Senior claims percentage equals the greater of net senior claims and zero, divided by treasury value, multiplied by 100.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Senior claims %</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mrow><mfrac><mrow><mtext>max</mtext><mo>(</mo><mtext>Net senior claims</mtext><mo>,</mo><mn>0</mn><mo>)</mo></mrow><mtext>Treasury value</mtext></mfrac><mo class="math-operator">×</mo><mn>100</mn></mrow></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method">
+          <h3 class="method-title">02 · Common equity BTC (CEBTC)</h3>
+          <p class="text-sm text-ink/65">The BTC-equivalent value left for common shareholders after net senior claims. Net cash can raise it above tokens held; the dashboard floors underwater equity at zero and retains eight decimal places (one satoshi).</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Common equity BTC equals the greater of equity NAV and zero, divided by BTC price.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Common equity BTC</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>max</mtext><mo>(</mo><mtext>Equity NAV</mtext><mo>,</mo><mn>0</mn><mo>)</mo></mrow><mtext>BTC price</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method">
+          <h3 class="method-title">03 · EV mNAV · Enterprise Value modified NAV</h3>
+          <p class="text-sm text-ink/65">What the whole capital structure pays per $1 of gross BTC treasury. When equity NAV is positive, it sets the status: below 1× is a discount; above 1× is a premium.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="EV mNAV equals market cap plus net senior claims, divided by treasury value.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>EV mNAV</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>Market cap</mtext><mo class="math-operator">+</mo><mtext>Net senior claims</mtext></mrow><mtext>Treasury value</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method">
+          <h3 class="method-title">04 · CEBTC mNAV · Common Equity Shareholder mNAV</h3>
+          <p class="text-sm text-ink/65">What common shareholders pay per $1 of their modeled net asset backing. Leverage scales the EV premium or discount. Not meaningful when equity NAV is zero or negative.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="CEBTC mNAV equals market cap divided by equity NAV, which equals one plus the product of leverage and the quantity EV mNAV minus one.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>CEBTC mNAV</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mtext>Market cap</mtext><mtext>Equity NAV</mtext></mfrac></mtd></mtr>
+                <mtr><mtd><mrow class="math-identity"><mo class="math-operator">=</mo><mn>1</mn><mo class="math-operator">+</mo><mo>(</mo><mtext>EV mNAV</mtext><mo class="math-operator">−</mo><mn>1</mn><mo>)</mo><mo class="math-operator">×</mo><mtext>Leverage</mtext></mrow></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method">
+          <h3 class="method-title">05 · BTC per $1,000</h3>
+          <p class="text-sm text-ink/65">The common-equity BTC-equivalent backing each $1,000 invested in the stock, analogous to sats per dollar. The mNAV identity applies when equity NAV is positive and is approximate because displayed token equivalents are rounded.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="BTC per 1,000 dollars equals common equity BTC multiplied by 1,000, divided by market cap. It approximately equals 1,000 divided by the product of CEBTC mNAV and BTC price because token equivalents are rounded.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>BTC per $1,000</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>Common equity BTC</mtext><mo class="math-operator">×</mo><mn>1,000</mn></mrow><mtext>Market cap</mtext></mfrac></mtd></mtr>
+                <mtr><mtd><mrow><mo class="math-operator">≈</mo><mfrac><mn>1,000</mn><mrow><mtext>CEBTC mNAV</mtext><mo class="math-operator">×</mo><mtext>BTC price</mtext></mrow></mfrac></mrow></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method">
+          <h3 class="method-title">06 · Leverage</h3>
+          <p class="text-sm text-ink/65">Gross token treasury value per $1 of common equity NAV. Senior claims raise this ratio; net cash can lower it below 1×. Not meaningful when equity NAV is zero or negative.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Leverage equals gross treasury value divided by common equity NAV.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Leverage</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mtext>Treasury value</mtext><mtext>Equity NAV</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method md:col-span-2">
+          <h3 class="method-title">07 · Wipe-out BTC price</h3>
+          <p class="text-sm text-ink/65">The positive spot price at which modeled treasury-only common equity NAV reaches zero in dynamic mode. Shown only when USD net claims and BTC exposure are positive. This threshold does not establish company insolvency.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Wipe-out BTC price equals USD debt plus preferred stock minus cash, divided by total BTC held.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Wipe-out BTC price</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>USD debt</mtext><mo class="math-operator">+</mo><mtext>Preferred</mtext><mo class="math-operator">−</mo><mtext>Cash</mtext></mrow><mtext>Total BTC</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-black text-white pt-16 pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <div class="max-w-md">
+          <a href="https://www.bisolutions.group/" class="flex items-center gap-3">
+            <img src="../assets/brand/bi-solutions-group-mark.png" alt="" class="h-9 w-9 object-contain invert">
+            <div class="leading-tight">
+              <div class="font-display font-bold text-[15px] tracking-tight">BI Solutions Group</div>
+              <div class="text-[11px] text-white/60">Advanced Analytics &amp; AI Consulting</div>
+            </div>
+          </a>
+          <p class="text-sm text-white/60 leading-relaxed mt-5">
+            CEBTC Tracker is an analytics tool for informational purposes only and is not investment advice.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <a href="https://www.bisolutions.group/services" class="link-light">Services</a>
+          <a href="https://www.bisolutions.group/blog" class="link-light">Insights</a>
+          <a href="https://www.bisolutions.group/start-a-project" class="link-light">Start a project</a>
+        </div>
+      </div>
+      <div class="h-px bg-white/10 my-8"></div>
+      <div class="flex flex-col sm:flex-row justify-between gap-2 text-xs text-white/45">
+        <span>© 2026 BI Solutions Group. All rights reserved.</span>
+        <span>All figures in US dollars. BTC/USD via Coinbase, Kraken and CoinGecko public feeds.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ENTITY DRILLDOWN MODAL -->
+  <div id="entityDetailModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4">
+    <div id="entityModalContent" class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl border border-gray-200">
+      <!-- Dynamically filled by JS -->
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
