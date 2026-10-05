@@ -37,12 +37,6 @@ The following are independent portfolio analyses built with synthetic or represe
 - Scientific monitoring Power BI case study: https://www.bisolutions.group/case-studies/iaea-scientific-analysis
 - Talent analytics Power BI case study: https://www.bisolutions.group/case-studies/ifc-talent-strategy
 
-## Treasury Trackers
-
-- BNB treasury dashboard and Common Equity BNB Equivalent (CEBE): https://www.bisolutions.group/bnb-companies/
-- Solana treasury dashboard and Common Equity Solana Equivalent (CESE): https://www.bisolutions.group/sol-companies/
-- Bitcoin treasury dashboard and Common Equity Bitcoin Equivalent (CEBTC): https://www.bisolutions.group/btc-companies/
-
 ## Project Enquiries
 
 - Start a project: https://www.bisolutions.group/start-a-project

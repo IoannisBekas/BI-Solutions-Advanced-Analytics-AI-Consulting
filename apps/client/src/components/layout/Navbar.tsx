@@ -133,7 +133,6 @@ export function Navbar() {
   const [location] = useLocation();
   const { locale, t } = useLocale();
   const localizedHref = useLocalizedHref();
-  const treasuryTrackersHref = localizedHref("/#treasury-trackers");
   const localizedServiceLinks = serviceLinks.map((item, index) => ({
     ...item,
     ...serviceLinkCopy[locale][index],
@@ -365,16 +364,6 @@ export function Navbar() {
                       </div>
                     </div>
 
-                    <a
-                      href={treasuryTrackersHref}
-                      className="block min-h-14 py-4 text-2xl font-bold font-heading"
-                      onClick={() =>
-                        handleNavClick(t.nav.treasuryTrackers, treasuryTrackersHref, "mobile_menu")
-                      }
-                    >
-                      {t.nav.treasuryTrackers}
-                    </a>
-
                     {[
                       { name: t.nav.insights, href: "/blog" },
                       { name: t.nav.about, href: "/about" },
@@ -525,17 +514,6 @@ export function Navbar() {
                 </div>
               </div>
             </div>
-
-            <a
-              href={treasuryTrackersHref}
-              className="group relative flex min-h-11 items-center text-sm font-medium text-gray-500 transition-colors hover:text-black"
-              onClick={() =>
-                handleNavClick(t.nav.treasuryTrackers, treasuryTrackersHref, "header")
-              }
-            >
-              {t.nav.treasuryTrackers}
-              <span className="absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full" />
-            </a>
 
             {[
               { name: t.nav.insights, href: "/blog" },

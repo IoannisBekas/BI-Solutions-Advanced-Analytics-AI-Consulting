@@ -6,12 +6,20 @@ const publicRoutes = [
   {
     path: "/",
     title: "AI, BI & Web App Development",
-    body: ["Better reporting. Practical AI. Systems that last.", "BNB Treasury Tracker", "Solana Treasury Tracker", "Bitcoin Treasury Tracker", "/bnb-companies/", "/sol-companies/", "/btc-companies/"],
+    body: "Better reporting. Practical AI. Systems that last.",
     absent: [
       "AI Products",
       "How engagements work",
       "Two focused workspaces",
       "Why BI Solutions Group",
+      "treasury-trackers",
+      "Treasury trackers",
+      "BNB Treasury Tracker",
+      "Solana Treasury Tracker",
+      "Bitcoin Treasury Tracker",
+      "/bnb-companies/",
+      "/sol-companies/",
+      "/btc-companies/",
     ],
   },
   {

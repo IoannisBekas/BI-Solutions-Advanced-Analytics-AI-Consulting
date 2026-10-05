@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { OPEN_COOKIE_SETTINGS_EVENT } from "@/components/CookieConsent";
 import { trackEvent, trackNavClick } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
-import { withAssetBase, withSiteBase } from "@/lib/site";
+import { withAssetBase } from "@/lib/site";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
 /** Service slugs whose footer labels come from the locale catalogue. */
@@ -146,22 +146,6 @@ export function Footer() {
                   >
                     {item.label}
                   </Link>
-                </li>
-              ))}
-              {[
-                { label: "BNB Treasury Tracker", href: withSiteBase("/bnb-companies/") },
-                { label: "Solana Treasury Tracker", href: withSiteBase("/sol-companies/") },
-                { label: "Bitcoin Treasury Tracker", href: withSiteBase("/btc-companies/") },
-              ].map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="text-gray-400 transition-colors hover:text-white"
-                    onClick={() => trackNavClick(item.label, item.href, "footer")}
-                    translate="no"
-                  >
-                    {item.label}
-                  </a>
                 </li>
               ))}
               <li>
