@@ -82,23 +82,49 @@ h1, h2, h3, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
 }
 
 .method {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 24px;
   padding: 1.5rem;
   background: var(--paper);
 }
 
+.method-title {
+  margin-bottom: 0.75rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .formula {
-  display: block;
-  margin: 0.85rem 0;
-  padding: 0.75rem 1rem;
+  max-width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 0.5rem;
   border-radius: 14px;
   background: #fff;
   border: 1px solid var(--line);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8rem;
   color: var(--ink);
-  overflow-wrap: anywhere;
+  overflow-x: auto;
+}
+
+.formula math {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', math;
+  font-size: 1.125rem;
+}
+
+.formula mtd { padding: 0.25rem 0.1rem; }
+.formula .math-operator { margin-inline: 0.2em; }
+
+@media (max-width: 639px) {
+  .method { padding: 1rem; }
+  .formula math { font-size: 1rem; }
+}
+
+@media (max-width: 374px) {
+  .formula math { font-size: 0.95rem; }
+  .formula .math-identity { font-size: 0.875rem; }
+  .formula .math-identity .math-operator { margin-inline: 0.15em; }
 }
 
 /* KPI strip */

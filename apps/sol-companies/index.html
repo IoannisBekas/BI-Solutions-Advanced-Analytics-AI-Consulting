@@ -315,38 +315,95 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <p class="eyebrow text-ink/50">Methodology</p>
       <h2 class="section-title mt-3">One question: what is left for common equity, and how fragile is it?</h2>
-      <p class="section-lead">Adapted from institutional Bitcoin treasury models. Net senior claims = debt + preferred stock − cash, with any debt owed in SOL valued at the SOL price; net cash counts in shareholders' favor. All figures in US dollars.</p>
+      <p class="section-lead">Net senior claims = USD debt + (SOL owed × SOL price) + preferred stock − cash. Net cash counts in shareholders' favor. All monetary amounts are in US dollars.</p>
+      <p class="section-lead">In the formulas below, treasury value = total SOL held × SOL price, and equity NAV = treasury value − net senior claims. These definitions use dynamic balance-sheet mode; fixed-ratio scenarios instead keep claims at their baseline share of treasury value.</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
         <div class="method">
-          <p class="eyebrow text-ink/50">01 · Senior claims %</p>
-          <code class="formula">Net senior claims / (Total SOL × SOL price)</code>
-          <p class="text-sm text-ink/65">The share of the Solana treasury matched by claims that rank ahead of common shareholders.</p>
+          <h3 class="method-title">01 · Senior claims %</h3>
+          <p class="text-sm text-ink/65">Percentage of the gross treasury matched by debt and preferred obligations, net of cash. A net-cash balance displays as 0%.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Senior claims percentage equals the greater of net senior claims and zero, divided by treasury value, multiplied by 100.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Senior claims %</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mrow><mfrac><mrow><mtext>max</mtext><mo>(</mo><mtext>Net senior claims</mtext><mo>,</mo><mn>0</mn><mo>)</mo></mrow><mtext>Treasury value</mtext></mfrac><mo class="math-operator">×</mo><mn>100</mn></mrow></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
         </div>
         <div class="method">
-          <p class="eyebrow text-ink/50">02 · Common equity SOL</p>
-          <code class="formula">Total SOL − Net senior claims / SOL price</code>
-          <p class="text-sm text-ink/65">The SOL-equivalent value left for common shareholders once senior claims are paid.</p>
+          <h3 class="method-title">02 · Common equity SOL (CESE)</h3>
+          <p class="text-sm text-ink/65">The SOL-equivalent value left for common shareholders after net senior claims. Net cash can raise it above tokens held; the dashboard floors underwater equity at zero and rounds to the nearest token.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Common equity SOL equals the greater of equity NAV and zero, divided by SOL price.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Common equity SOL</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>max</mtext><mo>(</mo><mtext>Equity NAV</mtext><mo>,</mo><mn>0</mn><mo>)</mo></mrow><mtext>SOL price</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
         </div>
         <div class="method">
-          <p class="eyebrow text-ink/50">03 · EV mNAV · sets the status</p>
-          <code class="formula">(Market cap + Debt + Preferred − Cash) / (Total SOL × SOL price)</code>
-          <p class="text-sm text-ink/65">What the whole capital structure pays per $1 of SOL. Leverage doesn't distort it, so it drives the discount and premium labels.</p>
+          <h3 class="method-title">03 · EV mNAV · Enterprise Value modified NAV</h3>
+          <p class="text-sm text-ink/65">What the whole capital structure pays per $1 of gross SOL treasury. When equity NAV is positive, it sets the status: below 1× is a discount; above 1× is a premium.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="EV mNAV equals market cap plus net senior claims, divided by treasury value.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>EV mNAV</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>Market cap</mtext><mo class="math-operator">+</mo><mtext>Net senior claims</mtext></mrow><mtext>Treasury value</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
         </div>
         <div class="method">
-          <p class="eyebrow text-ink/50">04 · CESE mNAV</p>
-          <code class="formula">Market cap / (Common equity SOL × SOL price) = 1 + (EV mNAV − 1) × Leverage</code>
-          <p class="text-sm text-ink/65">What shareholders pay per $1 of their own net asset value. Leverage magnifies the EV premium or discount.</p>
+          <h3 class="method-title">04 · CESE mNAV · Common Equity Shareholder mNAV</h3>
+          <p class="text-sm text-ink/65">What common shareholders pay per $1 of their net asset backing. Leverage magnifies the EV premium or discount. Not meaningful when equity NAV is zero or negative.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="CESE mNAV equals market cap divided by equity NAV, which equals one plus the product of leverage and the quantity EV mNAV minus one.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>CESE mNAV</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mtext>Market cap</mtext><mtext>Equity NAV</mtext></mfrac></mtd></mtr>
+                <mtr><mtd><mrow class="math-identity"><mo class="math-operator">=</mo><mn>1</mn><mo class="math-operator">+</mo><mo>(</mo><mtext>EV mNAV</mtext><mo class="math-operator">−</mo><mn>1</mn><mo>)</mo><mo class="math-operator">×</mo><mtext>Leverage</mtext></mrow></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
         </div>
         <div class="method">
-          <p class="eyebrow text-ink/50">05 · SOL per $100</p>
-          <code class="formula">(Common equity SOL × 100) / Market cap = 100 / (CESE mNAV × SOL price)</code>
-          <p class="text-sm text-ink/65">Like sats per $100: the SOL-equivalent value behind every $100 of stock.</p>
+          <h3 class="method-title">05 · SOL per $100</h3>
+          <p class="text-sm text-ink/65">The common-equity SOL-equivalent backing each $100 invested in the stock, analogous to sats per dollar. The mNAV identity applies when equity NAV is positive and is approximate because displayed token equivalents are rounded.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="SOL per 100 dollars equals common equity SOL multiplied by 100, divided by market cap. It approximately equals 100 divided by the product of CESE mNAV and SOL price because token equivalents are rounded.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>SOL per $100</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>Common equity SOL</mtext><mo class="math-operator">×</mo><mn>100</mn></mrow><mtext>Market cap</mtext></mfrac></mtd></mtr>
+                <mtr><mtd><mrow><mo class="math-operator">≈</mo><mfrac><mn>100</mn><mrow><mtext>CESE mNAV</mtext><mo class="math-operator">×</mo><mtext>SOL price</mtext></mrow></mfrac></mrow></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
         </div>
         <div class="method">
-          <p class="eyebrow text-ink/50">06 · Leverage &amp; wipe-out price</p>
-          <code class="formula">Leverage = SOL value / (SOL value − Net senior claims)<br>Wipe-out = (USD debt + Preferred − Cash) / (Total SOL − SOL owed)</code>
-          <p class="text-sm text-ink/65">How much harder equity value moves than SOL, and the SOL price at which it reaches zero.</p>
+          <h3 class="method-title">06 · Leverage</h3>
+          <p class="text-sm text-ink/65">Gross token treasury value per $1 of common equity NAV. Senior claims raise this ratio; net cash can lower it below 1×. Not meaningful when equity NAV is zero or negative.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Leverage equals gross treasury value divided by common equity NAV.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Leverage</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mtext>Treasury value</mtext><mtext>Equity NAV</mtext></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
+        </div>
+        <div class="method md:col-span-2">
+          <h3 class="method-title">07 · Wipe-out SOL price</h3>
+          <p class="text-sm text-ink/65">The positive spot price at which modeled common equity NAV reaches zero in dynamic balance-sheet mode. Shown only when USD net claims and the token denominator are positive. SOL owed is deducted from SOL held because those obligations move with the SOL price.</p>
+          <div class="formula">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Wipe-out SOL price equals USD debt plus preferred stock minus cash, divided by total SOL held minus SOL owed.">
+              <mtable displaystyle="true">
+                <mtr><mtd><mtext>Wipe-out SOL price</mtext><mo class="math-operator">=</mo></mtd></mtr>
+                <mtr><mtd><mfrac><mrow><mtext>USD debt</mtext><mo class="math-operator">+</mo><mtext>Preferred</mtext><mo class="math-operator">−</mo><mtext>Cash</mtext></mrow><mrow><mtext>Total SOL</mtext><mo class="math-operator">−</mo><mtext>SOL owed</mtext></mrow></mfrac></mtd></mtr>
+              </mtable>
+            </math>
+          </div>
         </div>
       </div>
     </div>
