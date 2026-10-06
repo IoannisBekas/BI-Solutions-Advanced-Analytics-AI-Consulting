@@ -1,60 +1,60 @@
 {
   "currency": "USD",
-  "source": "Daily closes from Unusual Whales; company dashboard feeds",
-  "updatedAt": "2026-10-02T20:51:09.251Z",
+  "source": "Daily closes from Yahoo Finance; company dashboard feeds",
+  "updatedAt": "2026-10-06T02:01:18.379Z",
   "quotes": {
     "SKYA": {
-      "close": 1.84,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "close": 1.87,
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "DFDV": {
-      "close": 5.25,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "close": 5.47,
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "FWDI": {
-      "close": 8.16,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "close": 8.11,
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "HSDT": {
-      "close": 2.63,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "close": 2.65,
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "UPXI": {
-      "close": 1.17,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "close": 1.15,
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "STKE": {
       "close": 1.71,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "GLXY": {
-      "close": 23.06,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "close": 22.65,
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     },
     "YDKG": {
       "close": 0.93,
-      "date": "2026-10-02",
-      "source": "Unusual Whales"
+      "date": "2026-10-05",
+      "source": "Yahoo Finance"
     }
   },
   "companies": {
     "dfdv": {
-      "totalSolHeld": 2538010,
+      "totalSolHeld": 2564212,
       "debtUsd": 149051982,
       "solDebt": 562000,
       "preferredUsd": 15812500,
       "cashUsd": 9978000,
       "marketCapShares": 32620790,
       "asOf": {
-        "sol": "2026-09-28",
-        "balanceSheet": "2026-10-02",
+        "sol": "2026-10-05",
+        "balanceSheet": "2026-10-06",
         "shares": "2026-08-31"
       }
     }
