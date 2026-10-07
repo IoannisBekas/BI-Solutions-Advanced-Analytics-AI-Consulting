@@ -1,11 +1,11 @@
 {
   "currency": "USD",
   "source": "Daily closes from Yahoo Finance",
-  "updatedAt": "2026-10-06T02:01:18.770Z",
+  "updatedAt": "2026-10-07T01:10:34.786Z",
   "quotes": {
     "MSTR": {
-      "close": 164.43,
-      "date": "2026-10-05",
+      "close": 164.55,
+      "date": "2026-10-06",
       "source": "Yahoo Finance"
     },
     "ASST": {
