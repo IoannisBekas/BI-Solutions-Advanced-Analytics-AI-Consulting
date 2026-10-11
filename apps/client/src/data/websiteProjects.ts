@@ -1,3 +1,5 @@
+import accountingFirmCover from "@/assets/case-studies/accounting-firm-cover.webp";
+import accountingFirmCover800 from "@/assets/case-studies/accounting-firm-cover-800.webp";
 import bladeAndCombCover from "@/assets/case-studies/blade-and-comb-cover.webp";
 import bladeAndCombCover800 from "@/assets/case-studies/blade-and-comb-cover-800.webp";
 import barkNGroomCover from "@/assets/case-studies/bark-n-groom-cover.webp";
@@ -131,5 +133,20 @@ export const websiteProjects: WebsiteProject[] = [
     imageAlt:
       "MARGIN apparel ecommerce concept presented in a high-resolution browser frame",
     href: "https://ioannisbekas.github.io/margin-apparel/",
+  },
+  {
+    slug: "accounting-website-template",
+    title: "Accounting Firm",
+    category: "Accounting & advisory website",
+    relationship: "Independent web project",
+    summary:
+      "A multilingual accounting website with clear bookkeeping, payroll, tax, and advisory services, a green-and-cream visual system, and a demo consultation enquiry form.",
+    value:
+      "Visitors can explore services in their preferred language and preview the consultation enquiry journey.",
+    image: accountingFirmCover,
+    mobileImage: accountingFirmCover800,
+    imageAlt:
+      "Accounting Firm multilingual accounting website presented in a high-resolution browser frame",
+    href: "https://ioannisbekas.github.io/accounting-website-template/",
   },
 ];
