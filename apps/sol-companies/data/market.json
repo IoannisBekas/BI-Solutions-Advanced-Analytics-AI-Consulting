@@ -1,7 +1,7 @@
 {
   "currency": "USD",
   "source": "Daily closes from Yahoo Finance; company dashboard feeds",
-  "updatedAt": "2026-10-13T02:48:04.004Z",
+  "updatedAt": "2026-10-14T00:48:51.724Z",
   "quotes": {
     "SKYA": {
       "close": 2.6,
@@ -54,7 +54,7 @@
       "marketCapShares": 32620790,
       "asOf": {
         "sol": "2026-10-12",
-        "balanceSheet": "2026-10-13",
+        "balanceSheet": "2026-10-14",
         "shares": "2026-08-31"
       }
     }
