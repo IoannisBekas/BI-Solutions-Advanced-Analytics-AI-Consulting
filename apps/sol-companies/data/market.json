@@ -1,46 +1,46 @@
 {
   "currency": "USD",
   "source": "Daily closes from Yahoo Finance; company dashboard feeds",
-  "updatedAt": "2026-10-14T00:48:51.724Z",
+  "updatedAt": "2026-10-15T00:15:19.485Z",
   "quotes": {
     "SKYA": {
-      "close": 2.6,
-      "date": "2026-10-12",
+      "close": 2.61,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "DFDV": {
-      "close": 4.32,
-      "date": "2026-10-12",
+      "close": 4.24,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "FWDI": {
       "close": 7.19,
-      "date": "2026-10-12",
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "HSDT": {
-      "close": 2.39,
-      "date": "2026-10-12",
+      "close": 2.35,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "UPXI": {
-      "close": 1.09,
-      "date": "2026-10-12",
+      "close": 1.08,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "STKE": {
-      "close": 1.41,
-      "date": "2026-10-12",
+      "close": 1.46,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "GLXY": {
-      "close": 19.87,
-      "date": "2026-10-12",
+      "close": 19.71,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     },
     "YDKG": {
-      "close": 0.89,
-      "date": "2026-10-12",
+      "close": 0.86,
+      "date": "2026-10-13",
       "source": "Yahoo Finance"
     }
   },
@@ -54,7 +54,7 @@
       "marketCapShares": 32620790,
       "asOf": {
         "sol": "2026-10-12",
-        "balanceSheet": "2026-10-14",
+        "balanceSheet": "2026-10-15",
         "shares": "2026-08-31"
       }
     }
