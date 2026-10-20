@@ -19,6 +19,7 @@ const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
 const StartProject = lazy(() => import("@/pages/StartProject"));
+const AiLearningProducts = lazy(() => import("@/pages/AiLearningProducts"));
 const USConsulting = lazy(() => import("@/pages/USConsulting"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
@@ -114,6 +115,7 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
             <Route path="/blog/:slug" component={BlogPost} />
             <Route path="/about" component={About} />
             <Route path="/start-a-project" component={StartProject} />
+          <Route path="/resources/ai-prompt-packs" component={AiLearningProducts} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route path="/terms-of-service" component={TermsOfService} />
             <Route component={NotFound} />

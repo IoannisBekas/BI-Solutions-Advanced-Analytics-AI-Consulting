@@ -47,6 +47,9 @@ jobs:
       - name: Root type check
         run: npm run check
 
+      - name: AI learning product delivery tests
+        run: npm run test:ai-learning
+
       - name: Lead acquisition tests
         run: node --import tsx --test script/lead-acquisition.test.ts
 

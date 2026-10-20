@@ -904,4 +904,22 @@
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.bisolutions.group/resources/ai-prompt-packs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/resources/ai-prompt-packs" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/resources/ai-prompt-packs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/resources/ai-prompt-packs" />
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/resources/ai-prompt-packs</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/resources/ai-prompt-packs" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/resources/ai-prompt-packs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/resources/ai-prompt-packs" />
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

@@ -47,6 +47,7 @@ interface SeoProps {
   robots?: string;
   keywords?: string[];
   structuredData?: StructuredData;
+  translatedLocales?: readonly Locale[];
 }
 
 function toAbsoluteUrl(pathOrUrl: string) {
@@ -107,8 +108,11 @@ function setAlternateLinks(alternates: Array<{ hreflang: string; href: string }>
  * the English page, so they must canonicalise to the English URL rather than
  * claim to be a separate page.
  */
-function canonicalFor(routePath: string, locale: Locale) {
-  const prefix = isTranslatedRoute(routePath)
+function canonicalFor(routePath: string, locale: Locale, translatedLocales?: readonly Locale[]) {
+  const isTranslated = translatedLocales
+    ? translatedLocales.includes(locale)
+    : isTranslatedRoute(routePath);
+  const prefix = isTranslated
     ? localePrefix(locale)
     : localePrefix(DEFAULT_LOCALE);
 
@@ -119,14 +123,15 @@ function canonicalFor(routePath: string, locale: Locale) {
  * Only routes with genuine translations advertise alternates — pointing search
  * engines at untranslated duplicates is worse than staying silent.
  */
-function buildAlternates(routePath: string) {
-  if (!isTranslatedRoute(routePath)) return [];
+function buildAlternates(routePath: string, translatedLocales?: readonly Locale[]) {
+  const locales = translatedLocales ?? (isTranslatedRoute(routePath) ? LOCALES : []);
+  if (locales.length === 0) return [];
 
   const urlFor = (prefix: string) =>
     `${SITE_URL}${prefix}${routePath === "/" ? "/" : routePath}`;
 
   return [
-    ...LOCALES.map((candidate) => ({
+    ...locales.map((candidate) => ({
       hreflang: LOCALE_TAGS[candidate],
       href: urlFor(localePrefix(candidate)),
     })),
@@ -143,16 +148,20 @@ export function Seo({
   robots = "index,follow",
   keywords,
   structuredData,
+  translatedLocales,
 }: SeoProps) {
   const ssrHead = useContext(SsrHeadContext);
   const { locale } = useLocale();
-  const localizedTitle = translatePageCopy(title, locale);
-  const localizedDescription = translatePageCopy(description, locale);
+  const metadataLocale = translatedLocales && !translatedLocales.includes(locale)
+    ? DEFAULT_LOCALE
+    : locale;
+  const localizedTitle = translatePageCopy(title, metadataLocale);
+  const localizedDescription = translatePageCopy(description, metadataLocale);
 
   useEffect(() => {
     const pageTitle = composeTitle(localizedTitle);
     const routePath = path ?? splitLocaleFromPath(window.location.pathname).path;
-    const canonicalUrl = canonicalFor(routePath, locale);
+    const canonicalUrl = canonicalFor(routePath, locale, translatedLocales);
     const imageUrl = toAbsoluteUrl(image);
     const structuredDataId = "seo-structured-data";
 
@@ -164,7 +173,7 @@ export function Seo({
       setMetaTag("name", "keywords", keywords.join(", "));
     }
     setMetaTag("property", "og:site_name", SITE_NAME);
-    setMetaTag("property", "og:locale", LOCALE_TAGS[locale].replace("-", "_"));
+    setMetaTag("property", "og:locale", LOCALE_TAGS[metadataLocale].replace("-", "_"));
     setMetaTag("property", "og:title", pageTitle);
     setMetaTag("property", "og:description", localizedDescription);
     setMetaTag("property", "og:url", canonicalUrl);
@@ -175,7 +184,7 @@ export function Seo({
     setMetaTag("name", "twitter:description", localizedDescription);
     setMetaTag("name", "twitter:image", imageUrl);
     setCanonicalLink(canonicalUrl);
-    setAlternateLinks(buildAlternates(routePath));
+    setAlternateLinks(buildAlternates(routePath, translatedLocales));
 
     const existingScript = document.getElementById(structuredDataId);
     if (existingScript) {
@@ -202,9 +211,11 @@ export function Seo({
     image,
     keywords,
     locale,
+    metadataLocale,
     path,
     robots,
     structuredData,
+    translatedLocales,
     type,
   ]);
 
@@ -218,12 +229,12 @@ export function Seo({
       description: localizedDescription,
       robots,
       keywords: keywords && keywords.length > 0 ? keywords.join(", ") : undefined,
-      canonicalUrl: canonicalFor(routePath, locale),
+      canonicalUrl: canonicalFor(routePath, locale, translatedLocales),
       imageUrl: toAbsoluteUrl(image),
       ogType: type,
-      ogLocale: LOCALE_TAGS[locale].replace("-", "_"),
-      htmlLang: LOCALE_TAGS[locale],
-      alternates: buildAlternates(routePath),
+      ogLocale: LOCALE_TAGS[metadataLocale].replace("-", "_"),
+      htmlLang: LOCALE_TAGS[metadataLocale],
+      alternates: buildAlternates(routePath, translatedLocales),
       structuredDataJson: structuredData ? JSON.stringify(structuredData) : undefined,
     };
   }

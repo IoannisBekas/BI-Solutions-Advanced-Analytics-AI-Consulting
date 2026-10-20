@@ -446,7 +446,7 @@ function summarizeResponseBody(body: unknown): string | null {
 
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
+  const path = req.path.replace(/^(\/api\/ai-learning\/download\/)[^/]+/, "$1[redacted]");
   let capturedJsonResponse: unknown;
 
   const originalResJson = res.json;

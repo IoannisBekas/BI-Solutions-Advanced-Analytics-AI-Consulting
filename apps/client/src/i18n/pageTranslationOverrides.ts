@@ -3,6 +3,22 @@ type PageTranslationOverrides = Record<string, { el: string; de: string }>;
 // Curated corrections for phrases where literal machine translation changes the
 // business meaning. These are applied after the generated translation catalogue.
 export const pageTranslationOverrides: PageTranslationOverrides = {
+  "Last updated: October 20, 2026": {
+    el: "Τελευταία ενημέρωση: 20 Οκτωβρίου 2026",
+    de: "Zuletzt aktualisiert: 20. Oktober 2026",
+  },
+  "Digital product delivery:": {
+    el: "Παράδοση ψηφιακών προϊόντων:",
+    de: "Bereitstellung digitaler Produkte:",
+  },
+  "Your email, selected pack, AI experience, PDF language, request time, and download time when you request an AI learning product. We use these details to send your selected PDF through Resend and support access. Requesting a pack does not subscribe you to marketing emails.": {
+    el: "Το email σας, το επιλεγμένο pack, η εμπειρία σας με την AI, η γλώσσα του PDF, η ώρα αιτήματος και η ώρα λήψης όταν ζητάτε ένα προϊόν εκμάθησης AI. Χρησιμοποιούμε αυτά τα στοιχεία για να σας στείλουμε το επιλεγμένο PDF μέσω του Resend και να υποστηρίξουμε την πρόσβασή σας. Το αίτημα για ένα pack δεν σας εγγράφει σε διαφημιστικά email.",
+    de: "Ihre E-Mail-Adresse, das ausgewählte Paket, Ihre KI-Erfahrung, die PDF-Sprache sowie die Zeitpunkte der Anfrage und des Downloads, wenn Sie ein KI-Lernprodukt anfordern. Wir verwenden diese Angaben, um Ihnen das ausgewählte PDF über Resend zu senden und den Zugriff zu unterstützen. Die Anforderung eines Pakets meldet Sie nicht für Werbe-E-Mails an.",
+  },
+  "Digital product download links expire after 7 days. Delivery records become eligible for deletion after 30 days and are removed on the next product access or download request.": {
+    el: "Οι σύνδεσμοι λήψης ψηφιακών προϊόντων λήγουν μετά από 7 ημέρες. Τα αρχεία παράδοσης μπορούν να διαγραφούν μετά από 30 ημέρες και αφαιρούνται στο επόμενο αίτημα πρόσβασης ή λήψης προϊόντος.",
+    de: "Downloadlinks für digitale Produkte laufen nach 7 Tagen ab. Zustellungsdatensätze werden nach 30 Tagen zur Löschung freigegeben und bei der nächsten Zugriffs- oder Downloadanfrage entfernt.",
+  },
   "Advanced Analytics & AI Consulting": {
     el: "Προηγμένη ανάλυση δεδομένων & συμβουλευτική AI",
     de: "Erweiterte Analytik und KI-Beratung",

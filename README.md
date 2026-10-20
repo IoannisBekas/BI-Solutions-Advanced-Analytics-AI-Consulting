@@ -47,6 +47,7 @@ Token prices refresh directly from public market feeds. Stock closes come from t
 
 ```powershell
 npm run check
+npm run test:ai-learning
 npm --prefix apps/quantus run lint
 npm --prefix apps/quantus test
 npm --prefix apps/powerbi-solutions run lint
@@ -73,6 +74,7 @@ The committed cinematic posters are sufficient for the production homepage. Larg
 ## Documentation
 
 - [Technical documentation](docs/technical-documentation.md)
+- [AI Learning products and email delivery](docs/ai-learning-products.md)
 - [Blog-cover visual system](docs/blog-cover-style-guide.md)
 - [Bonusaki operations](docs/bonusaki/README.md)
 

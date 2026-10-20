@@ -134,6 +134,11 @@ for (const entry of sitemapEntries) {
     ["de-DE", localizedUrl(basePath, "de")],
     ["x-default", localizedUrl(basePath, "en")],
   ]);
+  // The AI learning packs ship in English and Greek.
+  if (basePath === "/resources/ai-prompt-packs") {
+    expectedAlternates.delete("de-DE");
+    if (locale === "de") fail(`${entry.loc} must use an available learning-pack language.`);
+  }
   // US acquisition pages are intentionally English-only.
   if (basePath.startsWith("/us/")) {
     expectedAlternates.delete("el-GR");
@@ -152,7 +157,8 @@ for (const entry of sitemapEntries) {
 
 for (const [basePath, locales] of localeGroups) {
   if (basePath.startsWith("/us/") || standaloneDashboards.has(basePath)) continue;
-  if (!["en", "el", "de"].every((locale) => locales.has(locale))) {
+  const expectedLocales = basePath === "/resources/ai-prompt-packs" ? ["en", "el"] : ["en", "el", "de"];
+  if (!expectedLocales.every((locale) => locales.has(locale))) {
     fail(`${basePath} is missing an English, Greek, or German sitemap URL.`);
   }
 }

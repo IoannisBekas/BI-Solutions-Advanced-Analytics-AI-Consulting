@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
           eyebrow="Legal"
           title="Privacy Policy"
           description="How BI Solutions Group handles personal data, cookies, analytics, and service information."
-          footer={<p className="text-sm text-gray-400">Last updated: September 5, 2026</p>}
+          footer={<p className="text-sm text-gray-400">Last updated: October 20, 2026</p>}
         />
 
         <section className="mx-auto max-w-5xl px-6 md:px-12">
@@ -80,6 +80,17 @@ export default function PrivacyPolicy() {
                     <span>
                       <strong>Contact data:</strong> Information you provide
                       through contact forms or direct email.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
+                      <strong>Digital product delivery:</strong> Your email,
+                      selected pack, AI experience, PDF language, request time,
+                      and download time when you request an AI learning product.
+                      We use these details to send your selected PDF through
+                      Resend and support access. Requesting a pack does not
+                      subscribe you to marketing emails.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -148,6 +159,11 @@ export default function PrivacyPolicy() {
                   personal data is deleted within 30 days unless a longer
                   retention period is required by law or necessary to resolve a
                   dispute.
+                </p>
+                <p className="mt-3">
+                  Digital product download links expire after 7 days. Delivery
+                  records become eligible for deletion after 30 days and are
+                  removed on the next product access or download request.
                 </p>
               </section>
             </ScrollReveal>

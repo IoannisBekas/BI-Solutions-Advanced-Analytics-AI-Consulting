@@ -365,6 +365,7 @@ export function Navbar() {
                     </div>
 
                     {[
+                      { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
                       { name: t.nav.insights, href: "/blog" },
                       { name: t.nav.about, href: "/about" },
                     ].map((item) => (
@@ -516,6 +517,7 @@ export function Navbar() {
             </div>
 
             {[
+              { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
               { name: t.nav.insights, href: "/blog" },
               { name: t.nav.about, href: "/about" },
             ].map((item) => {

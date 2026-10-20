@@ -26,7 +26,7 @@ const serviceFallbackLabels: Record<string, string> = {
 };
 
 export function Footer() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const localizedHref = useLocalizedHref();
 
   const serviceLinks = [
@@ -38,6 +38,7 @@ export function Footer() {
   ];
 
   const resourceLinks = [
+    { label: locale === "el" ? "Μάθε AI στην πράξη" : locale === "de" ? "KI praktisch lernen" : "Learn AI by doing", href: "/resources/ai-prompt-packs" },
     { label: t.footer.insights, href: "/blog" },
     { label: t.footer.privacy, href: "/privacy-policy" },
     { label: t.footer.terms, href: "/terms-of-service" },

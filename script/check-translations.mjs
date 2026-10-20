@@ -172,6 +172,16 @@ for (const locale of localizedRoots) {
 
   for (const localizedPage of localizedPages) {
     const relativePath = path.relative(localeRoot, localizedPage);
+    // Learning packs ship in English and Greek. The German route deliberately
+    // serves an English fallback with English metadata and canonical URL.
+    if (locale === "de" && relativePath.split(path.sep).join("/") === "resources/ai-prompt-packs/index.html") {
+      const fallbackHtml = await fs.readFile(localizedPage, "utf8");
+      if (!fallbackHtml.includes('<html lang="en"') ||
+          !fallbackHtml.includes('rel="canonical" href="https://www.bisolutions.group/resources/ai-prompt-packs"')) {
+        throw new Error("The German AI learning fallback must declare its English language and canonical URL.");
+      }
+      continue;
+    }
     const englishPage = path.join(root, "dist", "public", relativePath);
     const [englishHtml, localizedHtml] = await Promise.all([
       fs.readFile(englishPage, "utf8"),
