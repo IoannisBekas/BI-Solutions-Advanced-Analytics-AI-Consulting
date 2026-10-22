@@ -4,6 +4,20 @@ const baseUrl = (process.argv[2] || process.env.SMOKE_BASE_URL || "http://localh
 
 const publicRoutes = [
   {
+    path: "/services/power-bi-consulting",
+    title: "Power BI Consulting",
+    body: ["Semantic models and DAX", "What determines scope and fees", "Based in Greece"],
+    canonical: "https://www.bisolutions.group/services/power-bi-consulting",
+    robots: "index,follow",
+  },
+  {
+    path: "/services/ai-automation",
+    title: "AI Workflow Automation",
+    body: ["Integration and human review", "What determines scope and fees", "Based in Greece"],
+    canonical: "https://www.bisolutions.group/services/ai-automation",
+    robots: "index,follow",
+  },
+  {
     path: "/",
     title: "AI, BI & Web App Development",
     body: "Better reporting. Practical AI. Systems that last.",
@@ -215,11 +229,17 @@ const serviceRedirectAnchors = {
 const redirectRoutes = Object.entries(serviceRedirectAnchors).map(
   ([slug, anchor]) => ({
     path: `/services/${slug}`,
-    location: `/services#${anchor}`,
+    location: slug === "business-intelligence-semantic-modeling"
+      ? "/services/power-bi-consulting"
+      : slug === "ai-automation-consulting"
+        ? "/services/ai-automation"
+        : `/services#${anchor}`,
   }),
 );
 
 redirectRoutes.push(
+  { path: "/el/services/power-bi-consulting?ref=test", location: "/services/power-bi-consulting?ref=test" },
+  { path: "/de/services/ai-automation?ref=test", location: "/services/ai-automation?ref=test" },
   { path: "/bnb-companies?utm_source=smoke", location: "/bnb-companies/?utm_source=smoke" },
   { path: "/sol-companies", location: "/sol-companies/" },
   { path: "/btc-companies?utm_source=smoke", location: "/btc-companies/?utm_source=smoke" },

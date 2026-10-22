@@ -14,6 +14,7 @@ import { localePrefix, splitLocaleFromPath, type Locale } from "@/i18n/config";
 // Prerendering provides the first paint. Hydrate only the active route's code.
 const Home = lazy(() => import("@/pages/Home"));
 const Services = lazy(() => import("@/pages/Services"));
+const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const CaseStudyDetail = lazy(() => import("@/pages/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
@@ -105,6 +106,8 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/services" component={Services} />
+            <Route path="/services/power-bi-consulting"><ServiceDetail slug="power-bi-consulting" /></Route>
+            <Route path="/services/ai-automation"><ServiceDetail slug="ai-automation" /></Route>
             <Route path="/us/power-bi-consulting"><USConsulting service="power-bi" /></Route>
             <Route path="/us/ai-automation"><USConsulting service="ai-automation" /></Route>
             <Route path="/services/:slug">

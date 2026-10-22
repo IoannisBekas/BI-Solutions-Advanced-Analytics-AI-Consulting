@@ -7,6 +7,7 @@ import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/i18n/LocaleProvider";
 import {
   aiCapabilityPages,
   servicePillarPages,
@@ -123,6 +124,7 @@ const servicesStructuredData = {
 };
 
 function ServiceChapter({ service }: { service: ServicePage }) {
+  const { locale } = useLocale();
   const copy = pillarCopy[service.slug];
   const Icon = service.icon;
 
@@ -211,6 +213,14 @@ function ServiceChapter({ service }: { service: ServicePage }) {
                   </div>
                 )}
 
+                {locale === "en" && service.slug === "business-intelligence-semantic-modeling" && (
+                  <Link
+                    href="/services/power-bi-consulting"
+                    className="mt-8 flex min-h-11 items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4"
+                  >
+                    Explore Power BI consulting <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  </Link>
+                )}
                 <Link
                   href={`/start-a-project?source=services&service=${service.slug}`}
                   className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4"
@@ -229,6 +239,7 @@ function ServiceChapter({ service }: { service: ServicePage }) {
 }
 
 function AiChapter({ service }: { service: ServicePage }) {
+  const { locale } = useLocale();
   const Icon = service.icon;
 
   return (
@@ -259,6 +270,11 @@ function AiChapter({ service }: { service: ServicePage }) {
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
               {service.description}
             </p>
+            {locale === "en" && (
+              <Link href="/services/ai-automation" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">
+                Explore AI workflow automation <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            )}
           </div>
         </ScrollReveal>
 

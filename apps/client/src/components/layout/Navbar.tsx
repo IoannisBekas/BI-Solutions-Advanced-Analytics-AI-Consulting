@@ -136,6 +136,11 @@ export function Navbar() {
   const localizedServiceLinks = serviceLinks.map((item, index) => ({
     ...item,
     ...serviceLinkCopy[locale][index],
+    href: locale === "en" && item.href === "/services#business-intelligence-semantic-modeling"
+      ? "/services/power-bi-consulting"
+      : locale === "en" && item.href === "/services#advanced-analytics-ai"
+        ? "/services/ai-automation"
+        : item.href,
   }));
   const navCopy = navigationCopy[locale];
   const desktopNavRef = useRef<HTMLElement>(null);
