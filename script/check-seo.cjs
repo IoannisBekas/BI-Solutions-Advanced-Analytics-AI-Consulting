@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { inventory, assertSitemapCoverage } = require("./sitemap.cjs");
 
 const workspaceRoot = path.resolve(__dirname, "..");
 const publicSource = path.join(workspaceRoot, "apps", "client", "public");
@@ -73,6 +74,7 @@ function expectedSchemaType(routePath) {
   if (routePath === "/") return "ProfessionalService";
   if (routePath === "/about") return "Person";
   if (routePath === "/services") return "Service";
+  if (routePath.startsWith("/services/")) return "Service";
   if (routePath.startsWith("/blog/")) return "BlogPosting";
   if (routePath.startsWith("/case-studies/")) return "CreativeWork";
   return null;
@@ -91,6 +93,7 @@ function localizedUrl(routePath, locale) {
 }
 
 const sitemap = read(path.join(publicSource, "sitemap.xml"));
+assertSitemapCoverage(sitemap);
 const sitemapEntries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(
   (match) => ({
     block: match[1],
@@ -102,6 +105,9 @@ const sitemapUrls = sitemapEntries.map((entry) => entry.loc).filter(Boolean);
 if (sitemapUrls.length === 0) fail("The sitemap contains no URLs.");
 
 const standaloneDashboards = new Set(["/bnb-companies", "/sol-companies", "/btc-companies"]);
+const englishOnlyRoutes = new Set(inventory.routes
+  .filter((route) => route.render === "react" && route.locales.length === 1 && route.locales[0] === "en")
+  .map((route) => route.path));
 const localeGroups = new Map();
 for (const entry of sitemapEntries) {
   if (!entry.loc) fail("A sitemap entry is missing <loc>.");
@@ -139,11 +145,11 @@ for (const entry of sitemapEntries) {
     expectedAlternates.delete("de-DE");
     if (locale === "de") fail(`${entry.loc} must use an available learning-pack language.`);
   }
-  // US acquisition pages are intentionally English-only.
-  if (basePath.startsWith("/us/")) {
+  // US acquisition and focused service pages are intentionally English-only.
+  if (englishOnlyRoutes.has(basePath)) {
     expectedAlternates.delete("el-GR");
     expectedAlternates.delete("de-DE");
-    if (locale !== "en") fail(`${entry.loc} must use the English US landing page.`);
+    if (locale !== "en") fail(`${entry.loc} must use the available English page.`);
   }
   if (alternates.length !== expectedAlternates.size) {
     fail(`${entry.loc} must have ${expectedAlternates.size} reciprocal hreflang entries.`);
@@ -156,7 +162,7 @@ for (const entry of sitemapEntries) {
 }
 
 for (const [basePath, locales] of localeGroups) {
-  if (basePath.startsWith("/us/") || standaloneDashboards.has(basePath)) continue;
+  if (englishOnlyRoutes.has(basePath) || standaloneDashboards.has(basePath)) continue;
   const expectedLocales = basePath === "/resources/ai-prompt-packs" ? ["en", "el"] : ["en", "el", "de"];
   if (!expectedLocales.every((locale) => locales.has(locale))) {
     fail(`${basePath} is missing an English, Greek, or German sitemap URL.`);

@@ -18,6 +18,8 @@ import {
 } from "@/lib/projectIntent";
 
 const serviceNeedMap: Record<string, FormValues["need"]> = {
+  "power-bi-consulting": "business-intelligence",
+  "ai-automation": "ai-automation",
   "business-intelligence-semantic-modeling": "business-intelligence",
   "ai-business-intelligence": "business-intelligence",
   "advanced-analytics-ai": "ai-automation",

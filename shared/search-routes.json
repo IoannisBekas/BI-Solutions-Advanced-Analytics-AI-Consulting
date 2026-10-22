@@ -1,0 +1,434 @@
+{
+  "origin": "https://www.bisolutions.group",
+  "routes": [
+    {
+      "path": "/",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-08-10",
+      "changefreq": "weekly",
+      "priority": "1.0"
+    },
+    {
+      "path": "/services",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-08-18",
+      "changefreq": "monthly",
+      "priority": "0.9"
+    },
+    {
+      "path": "/case-studies/unicef-audit-compliance",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.7"
+    },
+    {
+      "path": "/case-studies/iaea-scientific-analysis",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.7"
+    },
+    {
+      "path": "/case-studies/ifc-talent-strategy",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.7"
+    },
+    {
+      "path": "/about",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.7"
+    },
+    {
+      "path": "/start-a-project",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/website-web-app-development-greece-business-needs",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog/power-bi-consulting-dashboards-business-infrastructure",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog/semantic-modeling-power-bi-clean-models",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog/ai-consulting-greek-businesses-practical-use-cases",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog/ai-document-workflows-professional-services",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/prompt-workflow-design-business-teams",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/ai-assistant-governance-company-policy",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/predictive-analytics-forecasting-mistakes",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/ai-literacy-teams-adopt-ai-without-operational-risk",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/mlops-small-mid-sized-teams-productionize-ai",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/model-monitoring-ai-workflows",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.5"
+    },
+    {
+      "path": "/blog/data-strategy-before-ai-better-foundations",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog/dashboard-requirements-before-power-bi-build",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/blog/kpi-dictionary-business-intelligence",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/blog/data-quality-checklist-analytics-projects",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/blog/analytics-roadmap-first-90-days",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/blog/data-governance-gdpr-scale-analytics-control",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/blog/cloud-data-warehouse-vs-spreadsheets",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/blog/internal-tools-vs-saas-build-buy",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/privacy-policy",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "yearly",
+      "priority": "0.3"
+    },
+    {
+      "path": "/terms-of-service",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-07-22",
+      "changefreq": "yearly",
+      "priority": "0.3"
+    },
+    {
+      "path": "/us/power-bi-consulting",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "lastmod": "2026-09-09",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/us/ai-automation",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "lastmod": "2026-09-09",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/bnb-companies/",
+      "locales": [
+        "en"
+      ],
+      "render": "static",
+      "lastmod": "2026-10-03",
+      "changefreq": "daily",
+      "priority": "0.7"
+    },
+    {
+      "path": "/sol-companies/",
+      "locales": [
+        "en"
+      ],
+      "render": "static",
+      "lastmod": "2026-10-03",
+      "changefreq": "daily",
+      "priority": "0.7"
+    },
+    {
+      "path": "/btc-companies/",
+      "locales": [
+        "en"
+      ],
+      "render": "static",
+      "lastmod": "2026-10-05",
+      "changefreq": "daily",
+      "priority": "0.7"
+    },
+    {
+      "path": "/resources/ai-prompt-packs",
+      "locales": [
+        "en",
+        "el"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-20",
+      "changefreq": "monthly",
+      "priority": "0.7"
+    },
+    {
+      "path": "/services/power-bi-consulting",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-22",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/services/ai-automation",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-22",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    }
+  ]
+}

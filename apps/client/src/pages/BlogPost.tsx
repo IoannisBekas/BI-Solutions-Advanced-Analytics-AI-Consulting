@@ -37,17 +37,17 @@ const ARTICLE_AUTHOR = {
   bio: "Founder of BI Solutions Group and a data scientist and AI developer with 9+ years of experience across business intelligence, applied AI, data strategy, and analytics engineering.",
 };
 
-function getRelatedService(category: string) {
+function getRelatedService(category: string, locale: Locale) {
   if (category.includes("BI")) {
     return {
-      href: "/services#business-intelligence-semantic-modeling",
+      href: locale === "en" ? "/services/power-bi-consulting" : "/services#business-intelligence-semantic-modeling",
       label: "Explore BI & Power BI services",
     };
   }
 
   if (category.includes("AI") || category.includes("MLOps")) {
     return {
-      href: "/services#advanced-analytics-ai",
+      href: locale === "en" ? "/services/ai-automation" : "/services#advanced-analytics-ai",
       label: "Explore AI consulting",
     };
   }
@@ -264,7 +264,7 @@ export default function BlogPost() {
   // Canonical URL rather than window.location.href: identical on server and
   // client, so prerendered pages hydrate without mismatches.
   const shareUrl = withPublicSiteOrigin(`${localePrefix(locale)}/blog/${post.slug}`);
-  const relatedService = getRelatedService(post.category);
+  const relatedService = getRelatedService(post.category, locale);
   const robots = isBlogPostIndexable(post.slug) ? "index,follow" : "noindex,follow";
   const localizedTitle = translatePageCopy(post.title, locale);
   const localizedSeoTitle = translatePageCopy(post.seoTitle ?? post.title, locale);

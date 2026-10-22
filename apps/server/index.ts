@@ -9,6 +9,7 @@ import path from "path";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { APEX_HOST, canonicalHostRedirect } from "./canonicalHost";
 
 function loadLocalEnvFiles() {
   const mode = process.env.NODE_ENV || "development";
@@ -70,7 +71,6 @@ loadLocalEnvFiles();
 const app = express();
 const httpServer = createServer(app);
 const isProduction = process.env.NODE_ENV === "production";
-const APEX_HOST = "bisolutions.group";
 const CANONICAL_HOST = process.env.CANONICAL_HOST?.trim() || "www.bisolutions.group";
 
 declare module "http" {
@@ -122,20 +122,9 @@ if (trustProxyHops > 0) {
 
 // If the app ever receives traffic on the bare domain, preserve the full path
 // and move users onto the canonical host instead of serving duplicate origins.
-app.use((req, res, next) => {
-  if (!isProduction) {
-    next();
-    return;
-  }
-
-  const host = req.hostname?.toLowerCase();
-  if (host !== APEX_HOST || !CANONICAL_HOST) {
-    next();
-    return;
-  }
-
-  res.redirect(308, `https://${CANONICAL_HOST}${req.originalUrl}`);
-});
+if (isProduction) {
+  app.use(canonicalHostRedirect(CANONICAL_HOST));
+}
 
 // Generate a per-request CSP nonce for inline <script> tags.
 app.use((_req, res, next) => {

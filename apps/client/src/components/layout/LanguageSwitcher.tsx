@@ -1,7 +1,8 @@
 import { Globe } from "lucide-react";
+import { useLocation } from "wouter";
 
 import { useLocale } from "@/i18n/LocaleProvider";
-import { LOCALES, LOCALE_NAMES, pathForLocale, type Locale } from "@/i18n/config";
+import { LOCALES, LOCALE_NAMES, pathForLocale, splitLocaleFromPath, type Locale } from "@/i18n/config";
 import { trackEvent } from "@/lib/analytics";
 import { SITE_BASE_PATH } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,8 @@ import { cn } from "@/lib/utils";
  * together.
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
-  const { currentPath, locale, t } = useLocale();
+  const { locale, t } = useLocale();
+  const [currentPath] = useLocation();
 
   const hrefFor = (target: Locale) => {
     const withoutBase =
@@ -20,7 +22,14 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         ? currentPath.slice(SITE_BASE_PATH.length) || "/"
         : currentPath;
 
-    return `${SITE_BASE_PATH}${pathForLocale(withoutBase, target)}`;
+    const { path: localePath } = splitLocaleFromPath(withoutBase);
+    const path = localePath !== "/" && localePath.endsWith("/")
+      ? localePath.slice(0, -1)
+      : localePath;
+    const englishOnlyService = path === "/services/power-bi-consulting" || path === "/services/ai-automation";
+    const targetPath = englishOnlyService && target !== "en" ? "/services" : path;
+
+    return `${SITE_BASE_PATH}${pathForLocale(targetPath, target)}`;
   };
 
   return (

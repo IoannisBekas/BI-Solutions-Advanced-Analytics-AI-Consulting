@@ -28,6 +28,7 @@ const aboutCopy: Record<Locale, {
   founderProfile: string;
   role: string;
   introduction: string;
+  businessIdentity: string;
   contactButton: string;
   experienceTitle: string;
   experience: string[];
@@ -56,6 +57,7 @@ const aboutCopy: Record<Locale, {
     founderProfile: "Founder profile",
     role: "Data Scientist & AI Developer",
     introduction: "Data Scientist & AI Developer with 9+ years of experience delivering high-impact analytical, customer-insight, and product-innovation work. Responsible for managing projects and implementing solutions.",
+    businessIdentity: "BI Solutions Group is a consulting practice based in Greece, founded by Ioannis Bekas. It provides business intelligence, applied AI, and data consulting through remote delivery for teams in Greece and internationally.",
     contactButton: "Get in Touch",
     experienceTitle: "Experience",
     experience: [
@@ -94,6 +96,7 @@ const aboutCopy: Record<Locale, {
     founderProfile: "Προφίλ ιδρυτή",
     role: "Data Scientist & Προγραμματιστής AI",
     introduction: "Data Scientist και προγραμματιστής AI με περισσότερα από 9 χρόνια εμπειρίας σε έργα ανάλυσης, κατανόησης πελατών και καινοτομίας προϊόντων, με ευθύνη διαχείρισης έργων και υλοποίησης λύσεων.",
+    businessIdentity: "Η BI Solutions Group είναι μια συμβουλευτική επιχείρηση με έδρα την Ελλάδα, την οποία ίδρυσε ο Ioannis Bekas. Παρέχει συμβουλευτικές υπηρεσίες επιχειρηματικής ευφυΐας, εφαρμοσμένης τεχνητής νοημοσύνης και δεδομένων, εξ αποστάσεως, σε ομάδες στην Ελλάδα και διεθνώς.",
     contactButton: "Επικοινωνήστε",
     experienceTitle: "Εμπειρία",
     experience: [
@@ -132,6 +135,7 @@ const aboutCopy: Record<Locale, {
     founderProfile: "Gründerprofil",
     role: "Data Scientist & KI-Entwickler",
     introduction: "Data Scientist und KI-Entwickler mit mehr als 9 Jahren Erfahrung in wirkungsvollen Analytics-, Customer-Insight- und Produktinnovationsprojekten sowie in Projektleitung und Lösungsumsetzung.",
+    businessIdentity: "BI Solutions Group ist eine von Ioannis Bekas gegründete Beratung mit Sitz in Griechenland. Sie unterstützt Teams in Griechenland und international per Remote-Zusammenarbeit bei Business Intelligence, angewandter KI und Datenprojekten.",
     contactButton: "Kontakt aufnehmen",
     experienceTitle: "Erfahrung",
     experience: [
@@ -336,6 +340,10 @@ export default function About() {
                     <h2 className="text-2xl font-medium text-gray-800 mb-6">{copy.role}</h2>
                     <p className="text-xl text-gray-600 leading-relaxed mb-8">
                       {copy.introduction}
+                    </p>
+
+                    <p className="text-base text-gray-600 leading-relaxed mb-8">
+                      {copy.businessIdentity}
                     </p>
 
                     <div className="flex gap-4">

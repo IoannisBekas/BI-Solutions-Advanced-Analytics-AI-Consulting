@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response } from "express";
 import fs from "fs";
 import path from "path";
+import { serviceDetails } from "../client/src/data/serviceDetails";
 
 function injectScriptNonce(html: string, nonce: string): string {
   // Add nonce="..." to every <script tag that doesn't already have one.
@@ -368,6 +369,11 @@ const WEBSITE_ID = `${BASE_URL}/#website`;
 const FOUNDER_ID = `${BASE_URL}/about#ioannis-bekas`;
 
 const routeMetaMap: Record<string, RouteMeta> = {
+  ...Object.fromEntries(serviceDetails.map((service) => [service.path, {
+    title: `${service.seoTitle} | BI Solutions Group`,
+    description: service.description,
+    path: service.path,
+  }])),
   "/": {
     title: "AI, BI & Web App Development - BI Solutions Group",
     description: "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, modern web applications, and stronger data careers through personalized mentorship.",
@@ -432,6 +438,7 @@ function getOrganizationSchema() {
     description:
       "AI, business intelligence, data strategy, cloud foundations, web app development, and data career mentorship for organizations and professionals worldwide.",
     areaServed: "Worldwide",
+    address: { "@type": "PostalAddress", addressCountry: "GR" },
     founder: {
       "@id": FOUNDER_ID,
     },
@@ -722,7 +729,17 @@ export function serveStatic(app: Express) {
   // Preserve the Quantus workspace redirect after retiring the marketing root.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
 
-  // Service detail pages now resolve to sections of the single service atlas.
+  // Keep old service links useful, routing focused topics to their detail pages.
+  const focusedServiceAliases: Record<string, string> = {
+    "business-intelligence-semantic-modeling": "/services/power-bi-consulting",
+    "ai-automation-consulting": "/services/ai-automation",
+  };
+  for (const slug of ["power-bi-consulting", "ai-automation"]) {
+    for (const locale of ["el", "de"]) {
+      redirectLegacyProductPath(app, `/${locale}/services/${slug}`, `/services/${slug}`);
+    }
+  }
+
   const retiredServiceRoutes: Record<string, string> = {
     "advanced-analytics-ai": "advanced-analytics-ai",
     "ai-strategy-readiness": "ai-strategy-readiness",
@@ -745,7 +762,7 @@ export function serveStatic(app: Express) {
     redirectLegacyProductPath(
       app,
       `/services/${routeSlug}`,
-      `/services#${anchor}`,
+      focusedServiceAliases[routeSlug] ?? `/services#${anchor}`,
     );
   });
 

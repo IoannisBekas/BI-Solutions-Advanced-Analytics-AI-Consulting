@@ -70,7 +70,10 @@ async function readRoutesFromSitemap() {
   // crawler simply records a dead link. Untranslated pages still serve English
   // copy and canonicalise to the English URL, so nothing is indexed twice;
   // hreflang stays limited to TRANSLATED_ROUTES.
-  const localised = canonicalRoutes.filter((route) => !route.startsWith("/us/")).flatMap((route) =>
+  const localised = canonicalRoutes.filter((route) =>
+    !route.startsWith("/us/") &&
+    !/^\/services\/(?:power-bi-consulting|ai-automation)$/.test(route),
+  ).flatMap((route) =>
     LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
       (locale) => `${localePrefix(locale)}${route === "/" ? "" : route}`,
     ),

@@ -1,10 +1,11 @@
 # BI Solutions Group
 
-BI Solutions Group is an international AI consulting, analytics, business intelligence, data strategy, web app development, and data career mentorship practice. It helps organizations move from strategy through implementation and helps professionals build practical capability from entry level through senior career stages.
+BI Solutions Group is a consultancy based in Greece and founded by Ioannis Bekas, providing AI consulting, analytics, business intelligence, data strategy, web app development, and data career mentorship through remote international delivery. It helps organizations move from strategy through implementation and helps professionals build practical capability from entry level through senior career stages.
 
 Primary website: https://www.bisolutions.group/
 Greek homepage: https://www.bisolutions.group/el/
 German homepage: https://www.bisolutions.group/de/
+Founder profile: https://www.bisolutions.group/about
 Project enquiries: https://www.bisolutions.group/start-a-project
 LinkedIn: https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/
 GitHub: https://github.com/IoannisBekas
@@ -12,7 +13,7 @@ Instagram: https://www.instagram.com/bisolutions.group/
 
 ## Core Services
 
-- Business intelligence consulting and semantic modeling: https://www.bisolutions.group/services#business-intelligence-semantic-modeling
+- Power BI consulting, semantic models, and dashboards: https://www.bisolutions.group/services/power-bi-consulting
 - AI consulting services and implementation: https://www.bisolutions.group/services#advanced-analytics-ai
 - Data strategy and governance: https://www.bisolutions.group/services#data-strategy-governance
 - Web development and technical search visibility: https://www.bisolutions.group/services#website-app-development
@@ -21,7 +22,7 @@ Instagram: https://www.instagram.com/bisolutions.group/
 ## AI Consulting Capabilities
 
 - AI strategy and readiness consulting: https://www.bisolutions.group/services#ai-strategy-readiness
-- AI automation and workflow consulting: https://www.bisolutions.group/services#ai-automation-consulting
+- AI automation and workflow consulting: https://www.bisolutions.group/services/ai-automation
 - Generative AI and LLM consulting: https://www.bisolutions.group/services#generative-ai-llm-consulting
 - Predictive analytics and machine learning consulting: https://www.bisolutions.group/services#predictive-analytics-machine-learning
 - AI governance, literacy, and adoption consulting: https://www.bisolutions.group/services#ai-governance-literacy-adoption
