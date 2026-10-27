@@ -1,60 +1,60 @@
 {
   "currency": "USD",
   "source": "Daily closes from Yahoo Finance; company dashboard feeds",
-  "updatedAt": "2026-10-24T00:11:28.867Z",
+  "updatedAt": "2026-10-27T01:02:49.522Z",
   "quotes": {
     "SKYA": {
-      "close": 2.87,
-      "date": "2026-10-22",
+      "close": 2.89,
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "DFDV": {
-      "close": 3.755,
-      "date": "2026-10-22",
+      "close": 3.705,
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "FWDI": {
-      "close": 6.99,
-      "date": "2026-10-22",
+      "close": 6.8,
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "HSDT": {
       "close": 2.26,
-      "date": "2026-10-22",
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "UPXI": {
-      "close": 0.801,
-      "date": "2026-10-22",
+      "close": 0.766,
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "STKE": {
-      "close": 1.26,
-      "date": "2026-10-22",
+      "close": 1.25,
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "GLXY": {
-      "close": 15.29,
-      "date": "2026-10-22",
+      "close": 14.68,
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     },
     "YDKG": {
       "close": 0.89,
-      "date": "2026-10-22",
+      "date": "2026-10-23",
       "source": "Yahoo Finance"
     }
   },
   "companies": {
     "dfdv": {
-      "totalSolHeld": 2590266,
+      "totalSolHeld": 2595612,
       "debtUsd": 149051982,
       "solDebt": 562000,
       "preferredUsd": 15812500,
       "cashUsd": 9978000,
       "marketCapShares": 32620790,
       "asOf": {
-        "sol": "2026-10-19",
-        "balanceSheet": "2026-10-24",
+        "sol": "2026-10-26",
+        "balanceSheet": "2026-10-27",
         "shares": "2026-08-31"
       }
     }
