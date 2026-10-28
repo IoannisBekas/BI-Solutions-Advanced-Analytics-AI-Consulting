@@ -5,7 +5,6 @@ import {
   ArrowRight,
   Calendar,
   Clock,
-  Newspaper,
   RefreshCw,
   Share2,
   Linkedin,
@@ -17,7 +16,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ArticleVisual } from "@/components/blog/ArticleVisual";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PublicPageHero } from "@/components/sections/PublicPageHero";
+import { ResourcePageHero } from "@/components/sections/ResourcePageHero";
 import { Button } from "@/components/ui/button";
 import {
   getBlogPostBySlug,
@@ -241,16 +240,16 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background font-sans text-foreground">
+      <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-foreground" data-hero-overlay="true">
         <Navbar />
-        <main className="pt-32 pb-20">
-          <PublicPageHero
-            icon={Newspaper}
+        <main className="pb-20">
+          <ResourcePageHero
             eyebrow="Insights"
             title="Article not found."
             description="The article you are looking for is not available at this route."
-            actions={
-              <Button asChild className="rounded-full bg-black px-8 text-white hover:bg-gray-800">
+            className="resource-page-hero--article"
+            footer={
+              <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
                 <Link href="/blog">Back to blog</Link>
               </Button>
             }
@@ -324,7 +323,7 @@ export default function BlogPost() {
     },
   };
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-foreground" data-hero-overlay="true">
       <Seo
         title={localizedSeoTitle}
         description={localizedExcerpt}
@@ -336,48 +335,48 @@ export default function BlogPost() {
       />
       <Navbar />
 
-      <main className="pt-32 pb-20">
-        <PublicPageHero
-          icon={Newspaper}
+      <main className="pb-20">
+        <ResourcePageHero
           eyebrow={localizedCategory}
           title={localizedTitle}
           description={localizedExcerpt}
-          actions={
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-black"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to blog
-            </Link>
-          }
+          className="resource-page-hero--article"
           footer={
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-              <span className="inline-flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                Published {post.date}
-              </span>
-              {post.updatedDate ? (
+            <div className="flex flex-col items-center gap-6">
+              <Link
+                href="/blog"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 px-5 py-3 text-sm font-medium text-white/80 transition-colors hover:border-white/60 hover:bg-white/10 hover:text-white"
+              >
+                <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+                Back to blog
+              </Link>
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-sm text-white/75">
                 <span className="inline-flex items-center gap-1">
-                  <RefreshCw className="h-4 w-4" />
-                  Updated {post.updatedDate}
+                  <Calendar className="h-4 w-4" />
+                  Published {post.date}
                 </span>
-              ) : null}
-              <span className="inline-flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                {post.readTime}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <Tag className="h-4 w-4" />
-                By {ARTICLE_AUTHOR.name}
-              </span>
+                {post.updatedDate ? (
+                  <span className="inline-flex items-center gap-1">
+                    <RefreshCw className="h-4 w-4" />
+                    Updated {post.updatedDate}
+                  </span>
+                ) : null}
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-4 w-4" />
+                  {post.readTime}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Tag className="h-4 w-4" />
+                  By {ARTICLE_AUTHOR.name}
+                </span>
+              </div>
             </div>
           }
         />
 
-        <section className="site-container px-6 md:px-12">
+        <section className="site-container px-6 pt-10 md:px-12 md:pt-14">
           <ScrollReveal width="100%">
-            <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
+            <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
               <div className="aspect-[16/9] bg-gray-100">
                 <ArticleVisual post={post} />
               </div>
@@ -387,16 +386,16 @@ export default function BlogPost() {
 
         <section className="site-container mt-12 px-6 md:px-12">
           <ScrollReveal width="100%">
-            <article className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-8">
-              <div className="prose prose-gray max-w-none">
+            <article className="mx-auto max-w-5xl rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-sm shadow-black/[0.02] sm:px-8 md:px-12 md:py-12">
+              <div className="prose prose-gray mx-auto max-w-[74ch]">
                 {renderContent(localizedContent, locale)}
               </div>
 
               <aside
                 aria-label="About the author"
-                className="mt-10 rounded-3xl border border-gray-200 bg-gray-50 px-6 py-6"
+                className="mx-auto mt-10 max-w-[74ch] rounded-2xl border border-gray-200 bg-[#f5f3f0] px-6 py-6"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a51f25]">
                   About the author
                 </p>
                 <h2 className="mt-2 text-xl font-bold font-heading text-gray-950">
@@ -409,12 +408,12 @@ export default function BlogPost() {
                 </p>
               </aside>
 
-              <div className="mt-10 border-t border-gray-100 pt-6">
+              <div className="mx-auto mt-10 max-w-[74ch] border-t border-gray-200 pt-6">
                 <div className="flex flex-wrap items-center gap-2">
                   {localizedTags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600"
+                      className="rounded-full border border-gray-200 bg-[#f5f3f0] px-3 py-1 text-sm font-medium text-gray-700"
                     >
                       {tag}
                     </span>
@@ -422,7 +421,7 @@ export default function BlogPost() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <span className="inline-flex items-center gap-2 text-sm text-gray-500">
+                  <span className="inline-flex items-center gap-2 text-sm text-gray-600">
                     <Share2 className="h-4 w-4" />
                     Share article
                   </span>
@@ -431,7 +430,7 @@ export default function BlogPost() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Share this article on X"
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f3f0] text-gray-900 transition-colors hover:bg-black hover:text-white"
                   >
                     <Twitter className="h-4 w-4" />
                   </a>
@@ -440,7 +439,7 @@ export default function BlogPost() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Share this article on LinkedIn"
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-black hover:text-white"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f3f0] text-gray-900 transition-colors hover:bg-black hover:text-white"
                   >
                     <Linkedin className="h-4 w-4" />
                   </a>
@@ -451,9 +450,9 @@ export default function BlogPost() {
         </section>
 
         {relatedPosts.length > 0 ? (
-          <section className="mx-auto mt-16 max-w-5xl px-6 md:px-12">
+          <section className="mx-auto mt-20 max-w-5xl px-6 md:mt-24 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
                 Related articles
               </p>
               <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
@@ -465,7 +464,7 @@ export default function BlogPost() {
               {relatedPosts.map((relatedPost, index) => (
                 <ScrollReveal key={relatedPost.slug} delay={index * 0.08} width="100%">
                   <Link href={`/blog/${relatedPost.slug}`} className="group block h-full">
-                    <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
+                    <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300">
                       <div className="aspect-[16/10] overflow-hidden bg-gray-100">
                         <ArticleVisual
                           post={relatedPost}
@@ -473,7 +472,7 @@ export default function BlogPost() {
                         />
                       </div>
                       <div className="px-6 py-6">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a51f25]">
                           {relatedPost.category}
                         </p>
                         <h3 className="mt-3 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
@@ -488,10 +487,10 @@ export default function BlogPost() {
           </section>
         ) : null}
 
-        <section className="site-container mt-16 px-6 md:px-12">
+        <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+            <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f2bd2f]">
                 Need help applying this?
               </p>
               <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -506,7 +505,7 @@ export default function BlogPost() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Button asChild className="rounded-full bg-white px-8 text-black hover:bg-gray-100">
+                  <Button asChild className="h-auto min-h-11 max-w-full whitespace-normal rounded-full bg-white px-6 py-3 text-center text-black hover:bg-gray-100">
                     <Link
                       href={`/start-a-project?source=insight&article=${encodeURIComponent(post.slug)}`}
                       onClick={() => trackEvent("article_to_contact", { article: post.slug })}
@@ -515,7 +514,7 @@ export default function BlogPost() {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="rounded-full border-gray-600 bg-transparent px-8 text-white hover:bg-white/10 hover:text-white">
+                  <Button asChild variant="outline" className="h-auto min-h-11 max-w-full whitespace-normal rounded-full border-gray-600 bg-transparent px-6 py-3 text-center text-white hover:bg-white/10 hover:text-white">
                     <a
                       href={`${localizedPathPrefix}${relatedService.href}`}
                       onClick={() => trackEvent("article_to_service", { article: post.slug, target: relatedService.href })}

@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Calendar,
   Clock,
-  Newspaper,
   Search,
   Tag,
 } from "lucide-react";
@@ -13,7 +12,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ArticleVisual } from "@/components/blog/ArticleVisual";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PublicPageHero } from "@/components/sections/PublicPageHero";
+import { ResourcePageHero } from "@/components/sections/ResourcePageHero";
 import { Button } from "@/components/ui/button";
 import {
   featuredBlogPost,
@@ -64,7 +63,7 @@ export default function Blog() {
   );
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-foreground" data-hero-overlay="true">
       <Seo
         title="Insights"
         description="Curated BI Solutions resources on business intelligence, semantic modeling, AI workflows, data strategy, and web app delivery."
@@ -78,60 +77,58 @@ export default function Blog() {
       />
       <Navbar />
 
-      <main className="pb-20 pt-32 min-[2200px]:pt-28">
-        <PublicPageHero
-          icon={Newspaper}
+      <main className="pb-20">
+        <ResourcePageHero
           eyebrow="Curated resources"
           title="Practical guides for BI, AI, data strategy, and web app delivery."
           description="A smaller, higher-signal resource library for buyers comparing analytics, AI workflow, reporting, and web app consulting decisions."
-          className="blog-library-hero min-[2200px]:py-12"
-          footer={
-            <div>
-              <div className="max-w-xl min-[2200px]:max-w-none">
-              <label className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                Search articles
-              </label>
-              <div className="relative mt-3">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search articles, topics, and workflows..."
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  className="h-14 w-full rounded-full border border-gray-200 bg-gray-50 pl-12 pr-6 text-base outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-black"
-                />
-              </div>
-              </div>
-              <div className="mt-6 flex flex-wrap gap-2" aria-label="Filter insights by topic">
-                {topicFilters.map((topic) => (
-                  <button
-                    key={topic}
-                    type="button"
-                    aria-pressed={activeTopic === topic}
-                    onClick={() => {
-                      setActiveTopic(topic);
-                      trackEvent("insights_filter_click", { topic });
-                    }}
-                    className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                      activeTopic === topic
-                        ? "border-black bg-black text-white"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-black"
-                    }`}
-                  >
-                    {topic}
-                  </button>
-                ))}
-              </div>
-            </div>
-          }
         />
+
+        <section className="site-container px-6 pb-14 pt-10 md:px-12 md:pb-20 md:pt-14">
+          <div className="max-w-2xl">
+            <label htmlFor="insights-search" className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a51f25]">
+              Search articles
+            </label>
+            <div className="relative mt-3">
+              <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500" />
+              <input
+                id="insights-search"
+                type="text"
+                placeholder="Search articles, topics, and workflows..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="h-14 w-full rounded-full border border-gray-300 bg-white pl-12 pr-6 text-base text-gray-950 placeholder:text-gray-500 outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-black"
+              />
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter insights by topic">
+            {topicFilters.map((topic) => (
+              <button
+                key={topic}
+                type="button"
+                aria-pressed={activeTopic === topic}
+                onClick={() => {
+                  setActiveTopic(topic);
+                  trackEvent("insights_filter_click", { topic });
+                }}
+                className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  activeTopic === topic
+                    ? "border-[#f2bd2f] bg-[#f2bd2f] text-gray-950"
+                    : "border-gray-300 bg-transparent text-gray-700 hover:border-gray-500 hover:bg-white hover:text-black"
+                }`}
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        </section>
 
         {!isFiltering ? (
           <>
             {featuredPost ? (
               <section className="site-container px-6 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
                     Featured article
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
@@ -141,7 +138,7 @@ export default function Blog() {
 
                 <ScrollReveal className="mt-10" width="100%">
                   <Link href={`/blog/${featuredPost.slug}`} className="group block">
-                    <article className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-2xl shadow-black/[0.06]">
+                    <article className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300 group-hover:shadow-2xl group-hover:shadow-black/[0.08]">
                       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
                         <div className="aspect-video overflow-hidden bg-gray-100">
                           <ArticleVisual
@@ -153,7 +150,7 @@ export default function Blog() {
                         <div className="flex flex-col justify-between px-6 py-8 md:px-8">
                           <div>
                             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                              <span className="rounded-full bg-black px-3 py-1 text-xs font-semibold text-white">
+                              <span className="rounded-full bg-[#a51f25] px-3 py-1 text-xs font-semibold text-white">
                                 Featured
                               </span>
                               <span className="inline-flex items-center gap-1">
@@ -186,9 +183,9 @@ export default function Blog() {
             ) : null}
 
             {otherPosts.length > 0 ? (
-              <section className="site-container mt-16 px-6 md:px-12">
+              <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
                     More articles
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
@@ -200,7 +197,7 @@ export default function Blog() {
                   {otherPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
-                        <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
+                        <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300">
                           <div className="aspect-video overflow-hidden bg-gray-100">
                             <ArticleVisual
                               post={post}
@@ -209,7 +206,7 @@ export default function Blog() {
                           </div>
                           <div className="flex flex-1 flex-col px-6 py-6">
                             <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
-                              <span className="inline-flex items-center gap-1">
+                              <span className="inline-flex items-center gap-1 text-[#a51f25]">
                                 <Tag className="h-3 w-3" />
                                 {post.category}
                               </span>
@@ -235,9 +232,9 @@ export default function Blog() {
             ) : null}
 
             {secondaryBlogPosts.length > 0 ? (
-              <section className="site-container mt-16 px-6 md:px-12">
+              <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
                 <ScrollReveal className="max-w-3xl" width="100%">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
                     Specialist resources
                   </p>
                   <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
@@ -249,8 +246,8 @@ export default function Blog() {
                   {secondaryBlogPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.04} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
-                        <article className="flex h-full flex-col rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-6 transition-colors hover:bg-white">
-                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        <article className="flex h-full flex-col rounded-[2rem] border border-gray-200 bg-white px-6 py-6 shadow-sm shadow-black/[0.02] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300 group-hover:shadow-xl group-hover:shadow-black/[0.04]">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#a51f25]">
                             {post.category}
                           </p>
                           <h3 className="mt-4 text-xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
@@ -274,7 +271,7 @@ export default function Blog() {
         ) : (
           <section className="site-container px-6 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
                   Filtered insights
                 </p>
                 <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
@@ -289,8 +286,8 @@ export default function Blog() {
                 {filteredPosts.map((post, index) => (
                   <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                     <Link href={`/blog/${post.slug}`} className="group block h-full">
-                      <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
-                        <div className="aspect-[16/10] overflow-hidden bg-gray-100">
+                      <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300">
+                        <div className="aspect-video overflow-hidden bg-gray-100">
                           <ArticleVisual
                             post={post}
                             className="transition-transform duration-700 group-hover:scale-105"
@@ -298,7 +295,7 @@ export default function Blog() {
                         </div>
                         <div className="flex flex-1 flex-col px-6 py-6">
                           <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
-                            <span className="inline-flex items-center gap-1">
+                            <span className="inline-flex items-center gap-1 text-[#a51f25]">
                               <Tag className="h-3 w-3" />
                               {post.category}
                             </span>
@@ -321,9 +318,9 @@ export default function Blog() {
               </div>
             ) : (
               <ScrollReveal className="mt-10" width="100%">
-                <div className="rounded-[2rem] border border-gray-200 bg-white px-8 py-12 text-center shadow-xl shadow-black/[0.04]">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100">
-                    <Search className="h-6 w-6 text-gray-400" />
+                <div className="rounded-[2rem] border border-gray-200 bg-white px-8 py-12 text-center shadow-sm shadow-black/[0.02]">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f2bd2f]/20">
+                    <Search className="h-6 w-6 text-[#a51f25]" />
                   </div>
                   <h3 className="mt-5 text-2xl font-bold font-heading tracking-tight text-gray-950">
                     No articles found
@@ -346,10 +343,10 @@ export default function Blog() {
           </section>
         )}
 
-        <section className="site-container mt-16 px-6 md:px-12">
+        <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] bg-gray-950 px-8 py-10 text-white shadow-2xl shadow-black/[0.14] md:px-12">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
+            <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f2bd2f]">
                 Want to discuss the practical side?
               </p>
               <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

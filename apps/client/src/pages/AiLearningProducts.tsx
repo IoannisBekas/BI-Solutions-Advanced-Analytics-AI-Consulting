@@ -11,11 +11,11 @@ import {
   Languages,
   Loader2,
   Mail,
-  Sparkles,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
+import { ResourcePageHero } from "@/components/sections/ResourcePageHero";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { cn } from "@/lib/utils";
 import {
@@ -310,7 +310,7 @@ export default function AiLearningProducts() {
     "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500";
 
   return (
-    <div className="min-h-screen bg-[#f8f7f4] text-gray-950">
+    <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-gray-950" data-hero-overlay="true">
       <Seo
         title={c.title}
         description={c.description}
@@ -318,38 +318,31 @@ export default function AiLearningProducts() {
         translatedLocales={PRODUCT_LOCALES}
       />
       <Navbar />
-      <main className="pb-20 pt-32 sm:pt-40" lang={locale === "de" ? "en" : undefined} translate={locale === "de" ? "no" : undefined}>
-        <section className="mx-auto max-w-6xl px-6 pb-12 sm:pb-16 lg:px-8">
-          <div className="mb-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-gray-600">
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-            {c.eyebrow}
-          </div>
-          <div className="grid items-end gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
-            <h1 className="max-w-3xl font-heading text-[clamp(2.6rem,5vw,4.5rem)] font-bold leading-[1.08] tracking-[-0.045em]">
-              {c.heading}
-            </h1>
-            <p className="max-w-lg text-base leading-relaxed text-gray-600 sm:text-lg">
-              {c.intro}
-            </p>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-black/10 pt-6 text-sm text-gray-600">
-            {[
-              { icon: BookOpen, label: c.roles },
-              { icon: FileText, label: c.prompts },
-              { icon: Languages, label: c.languages },
-            ].map(({ icon: Icon, label }) => (
-              <span key={label} className="flex items-center gap-2">
-                <Icon className="h-4 w-4 text-gray-900" aria-hidden="true" />
-                {label}
-              </span>
-            ))}
-          </div>
-        </section>
+      <main lang={locale === "de" ? "en" : undefined} translate={locale === "de" ? "no" : undefined}>
+        <ResourcePageHero
+          eyebrow={c.eyebrow}
+          title={c.heading}
+          description={c.intro}
+          footer={
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-white/75">
+              {[
+                { icon: BookOpen, label: c.roles },
+                { icon: FileText, label: c.prompts },
+                { icon: Languages, label: c.languages },
+              ].map(({ icon: Icon, label }) => (
+                <span key={label} className="flex items-center gap-2">
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  {label}
+                </span>
+              ))}
+            </div>
+          }
+        />
 
         <section
           ref={finderRef}
           id="find-your-pack"
-          className="mx-auto max-w-6xl scroll-mt-28 px-6 lg:px-8"
+          className="site-container scroll-mt-28 px-6 py-20 md:px-12 md:py-24"
           aria-label={c.finder}
         >
           <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.03]">
@@ -402,9 +395,9 @@ export default function AiLearningProducts() {
             </div>
 
             {step < 3 ? (
-              <div className="grid lg:grid-cols-[1.45fr_1fr]">
+              <div className="grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
                 <form
-                  className="p-6 sm:p-9"
+                  className="min-w-0 p-6 sm:p-9"
                   onSubmit={(event) => {
                     event.preventDefault();
                     if (
@@ -470,7 +463,7 @@ export default function AiLearningProducts() {
                       <div className="relative">
                         <select
                           id="learning-role"
-                          className="min-h-14 w-full appearance-none rounded-xl border border-gray-300 bg-white py-3 pl-4 pr-11 text-sm"
+                          className="min-h-14 w-full appearance-none rounded-xl border border-gray-300 bg-white py-3 pl-4 pr-11 text-sm text-gray-950"
                           value={role}
                           onChange={(event) =>
                             setRole(event.target.value as typeof role)
@@ -558,32 +551,32 @@ export default function AiLearningProducts() {
                     </button>
                   </div>
                 </form>
-                <aside className="border-t border-gray-200 bg-[#eeece6] p-6 sm:p-9 lg:border-l lg:border-t-0">
+                <aside className="bi-proof-grid border-t border-white/10 bg-black p-6 text-white sm:p-9 lg:border-l lg:border-t-0">
                   <BookOpen
                     className="mb-6 h-8 w-8"
                     strokeWidth={1.4}
                     aria-hidden="true"
                   />
-                  <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight">
+                  <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight text-white">
                     {c.sideTitle}
                   </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                  <p className="mt-4 text-sm leading-relaxed text-gray-300">
                     {c.sideIntro}
                   </p>
                   <ol className="my-7 space-y-5">
                     {c.sideSteps.map((text, index) => (
                       <li
-                        className="flex items-start gap-3 text-sm leading-relaxed"
+                        className="flex items-start gap-3 text-sm leading-relaxed text-gray-200"
                         key={text}
                       >
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-black/20 text-xs font-semibold">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/25 text-xs font-semibold text-white">
                           {index + 1}
                         </span>
                         {text}
                       </li>
                     ))}
                   </ol>
-                  <p className="border-t border-black/10 pt-5 text-xs leading-relaxed text-gray-600">
+                  <p className="border-t border-white/15 pt-5 text-xs leading-relaxed text-gray-300">
                     {c.sideNote}
                   </p>
                 </aside>
@@ -591,8 +584,8 @@ export default function AiLearningProducts() {
             ) : (
               product &&
               recommendation && (
-                <div className="grid lg:grid-cols-[1.45fr_1fr]">
-                  <div className="p-6 sm:p-9">
+                <div className="grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+                  <div className="min-w-0 p-6 sm:p-9">
                     <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-medium text-gray-600">
                       <span className="rounded-full bg-stone-100 px-3 py-1.5">
                         {c.format}
@@ -673,7 +666,7 @@ export default function AiLearningProducts() {
                       {c.change}
                     </button>
                   </div>
-                  <aside className="border-t border-gray-200 bg-[#eeece6] p-6 sm:p-9 lg:border-l lg:border-t-0">
+                  <aside className="bi-proof-grid min-w-0 border-t border-white/10 bg-black p-6 text-white sm:p-9 lg:border-l lg:border-t-0">
                     {status === "sent" ? (
                       <div role="status" aria-live="polite">
                         <CheckCircle2
@@ -681,18 +674,18 @@ export default function AiLearningProducts() {
                           strokeWidth={1.4}
                           aria-hidden="true"
                         />
-                        <h3 className="font-heading text-2xl font-bold">
+                        <h3 className="font-heading text-2xl font-bold text-white">
                           {c.sentTitle}
                         </h3>
-                        <p className="mt-4 break-words text-sm leading-relaxed text-gray-700">
+                        <p className="mt-4 break-words text-sm leading-relaxed text-gray-200">
                           {c.sent} <strong>{email.trim()}</strong>.
                         </p>
-                        <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                        <p className="mt-4 text-sm leading-relaxed text-gray-300">
                           {c.sentNote}
                         </p>
                         <button
                           type="button"
-                          className="mt-6 min-h-11 text-sm font-semibold underline underline-offset-4"
+                          className="mt-6 min-h-11 text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
                           onClick={() => setStatus("idle")}
                         >
                           {c.resend}
@@ -708,10 +701,10 @@ export default function AiLearningProducts() {
                           strokeWidth={1.4}
                           aria-hidden="true"
                         />
-                        <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight">
+                        <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight text-white">
                           {c.emailTitle}
                         </h3>
-                        <p className="mb-6 mt-4 text-sm leading-relaxed text-gray-600">
+                        <p className="mb-6 mt-4 text-sm leading-relaxed text-gray-300">
                           {c.emailIntro}
                         </p>
                         <label
@@ -722,7 +715,7 @@ export default function AiLearningProducts() {
                         </label>
                         <select
                           id="pack-switch"
-                          className="mb-5 min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm disabled:opacity-60"
+                          className="mb-5 min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm text-gray-950 disabled:opacity-60"
                           value={product.role}
                           disabled={status === "sending"}
                           onChange={(event) => {
@@ -744,7 +737,7 @@ export default function AiLearningProducts() {
                         </label>
                         <select
                           id="pdf-language"
-                          className="mb-5 min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm disabled:opacity-60"
+                          className="mb-5 min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm text-gray-950 disabled:opacity-60"
                           value={language}
                           disabled={status === "sending"}
                           onChange={(event) => {
@@ -772,7 +765,7 @@ export default function AiLearningProducts() {
                           disabled={status === "sending"}
                           onChange={(event) => setEmail(event.target.value)}
                           placeholder={c.emailPlaceholder}
-                          className="min-h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-base disabled:opacity-60"
+                          className="min-h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-base text-gray-950 placeholder:text-gray-500 disabled:opacity-60"
                           aria-describedby={
                             error
                               ? "learning-email-error learning-email-privacy"
@@ -793,7 +786,7 @@ export default function AiLearningProducts() {
                         {error && (
                           <p
                             id="learning-email-error"
-                            className="mt-3 text-sm leading-relaxed text-red-700"
+                            className="mt-3 text-sm leading-relaxed text-red-300"
                             role="alert"
                           >
                             {error}
@@ -801,7 +794,7 @@ export default function AiLearningProducts() {
                         )}
                         <button
                           type="submit"
-                          className={cn(buttonClass, "mt-4 w-full")}
+                          className={cn(buttonClass, "mt-4 w-full bg-white text-gray-950 hover:bg-gray-200 disabled:bg-white/20 disabled:text-white/70")}
                           disabled={status === "sending"}
                         >
                           {status === "sending" ? (
@@ -816,7 +809,7 @@ export default function AiLearningProducts() {
                         </button>
                         <p
                           id="learning-email-privacy"
-                          className="mt-4 text-xs leading-relaxed text-gray-600"
+                          className="mt-4 text-xs leading-relaxed text-gray-300"
                         >
                           {c.privacy}{" "}
                           <Link
@@ -837,50 +830,52 @@ export default function AiLearningProducts() {
         </section>
 
         <section
-          className="mx-auto mt-14 max-w-6xl px-6 lg:px-8"
+          className="bi-proof-grid bg-black py-20 text-white md:py-24"
           aria-label={c.catalog}
         >
-          <details className="group rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
-            <summary className="cursor-pointer text-xl font-bold font-heading">
-              <span className="inline-block align-middle">{c.browse}</span>
-            </summary>
-            <p className="mb-6 mt-3 text-sm leading-relaxed text-gray-600">
-              {c.browseNote}
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {aiLearningProducts.map((item, index) => (
-                <article
-                  key={item.id}
-                  className="flex flex-col rounded-2xl border border-gray-200 p-5"
-                >
-                  <span className="mb-5 text-xs font-semibold text-gray-500">
-                    {String(index + 1).padStart(2, "0")} / PDF
-                  </span>
-                  <h3 className="font-heading text-lg font-bold">
-                    {isGreek ? item.nameEl : item.name}
-                  </h3>
-                  <p className="mb-6 mt-3 flex-1 text-sm leading-relaxed text-gray-600">
-                    {isGreek ? item.descriptionEl : item.description}
-                  </p>
-                  <button
-                    type="button"
-                    className="inline-flex min-h-11 items-center justify-between gap-2 text-left text-sm font-semibold underline underline-offset-4"
-                    onClick={() => chooseProduct(item.role)}
-                    disabled={status === "sending"}
+          <div className="site-container px-6 md:px-12">
+            <details className="group rounded-[2rem] border border-white/15 bg-white/[0.03] p-6 sm:p-9">
+              <summary className="cursor-pointer font-heading text-2xl font-bold leading-tight text-white marker:text-gray-400 sm:text-3xl">
+                <span className="inline-block align-middle">{c.browse}</span>
+              </summary>
+              <p className="mb-8 mt-4 text-sm leading-relaxed text-gray-300">
+                {c.browseNote}
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {aiLearningProducts.map((item, index) => (
+                  <article
+                    key={item.id}
+                    className="flex min-w-0 flex-col rounded-[1.5rem] border border-white/15 bg-white/[0.04] p-6 transition-colors hover:border-white/30 hover:bg-white/[0.07]"
                   >
-                    {c.choose}
-                    <ArrowRight
-                      className="h-4 w-4 shrink-0"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </article>
-              ))}
-            </div>
+                    <span className="mb-5 text-xs font-semibold tracking-[0.16em] text-gray-400">
+                      {String(index + 1).padStart(2, "0")} / PDF
+                    </span>
+                    <h3 className="font-heading text-lg font-bold leading-tight text-white">
+                      {isGreek ? item.nameEl : item.name}
+                    </h3>
+                    <p className="mb-6 mt-3 flex-1 text-sm leading-relaxed text-gray-300">
+                      {isGreek ? item.descriptionEl : item.description}
+                    </p>
+                    <button
+                      type="button"
+                      className="inline-flex min-h-11 items-center justify-between gap-2 text-left text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white disabled:cursor-not-allowed disabled:text-gray-400"
+                      onClick={() => chooseProduct(item.role)}
+                      disabled={status === "sending"}
+                    >
+                      {c.choose}
+                      <ArrowRight
+                        className="h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </article>
+                ))}
+              </div>
           </details>
-          <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-relaxed text-gray-500">
-            {c.footnote}
-          </p>
+            <p className="mx-auto mt-6 max-w-3xl text-center text-xs leading-relaxed text-gray-400">
+              {c.footnote}
+            </p>
+          </div>
         </section>
       </main>
       <Footer />

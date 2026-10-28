@@ -93,17 +93,6 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 104rem;
   }
 
-  .blog-library-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(30rem, 0.75fr);
-    align-items: center;
-    column-gap: clamp(4rem, 6vw, 8rem);
-  }
-
-  .blog-library-hero > :last-child {
-    margin-top: 0;
-  }
-
   .blog-card-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -2058,7 +2047,7 @@ html:not([data-js]) [style*="opacity: 0"] {
   z-index: 10;
 }
 
-/* Header sits over the dark hero on the homepage until the page is scrolled.
+/* Header sits over dark page heroes until the page is scrolled.
    Dropdown surfaces keep their own palette instead of inheriting white text. */
 [data-hero-overlay] [data-site-header][data-transparent="true"] {
   color: #fff;
@@ -2086,4 +2075,88 @@ html:not([data-js]) [style*="opacity: 0"] {
 
 [data-hero-overlay] [data-site-header][data-transparent="true"] .bg-black:not([data-site-dropdown] *):hover {
   background-color: #e8e6e1;
+}
+
+/* Resources share the homepage's architecture, type and warm reading canvas. */
+.resource-page {
+  min-height: 100vh;
+  background: #f5f3f0;
+  color: #111827;
+}
+
+.resource-page :is(h1, h2, h3) {
+  overflow-wrap: anywhere;
+}
+
+.resource-page-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 31rem;
+  overflow: hidden;
+  padding: 9.5rem 1.5rem 4.5rem;
+  background: #10141a;
+  color: #fff;
+}
+
+.resource-page-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.resource-page-hero__poster {
+  object-position: 50% 48%;
+  animation: none;
+}
+
+.resource-page-hero__content {
+  width: min(100%, 68rem);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.resource-page-hero__title {
+  max-width: 24ch;
+  margin: 1.4rem auto 0;
+  font-family: var(--font-heading, inherit);
+  font-size: clamp(2.6rem, 5.2vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.resource-page-hero__description {
+  max-width: 43rem;
+  margin: 1.5rem auto 0;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: pretty;
+}
+
+.resource-page-hero__footer {
+  margin: 2rem auto 0;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.resource-page-hero--article .resource-page-hero__title {
+  max-width: 26ch;
+  font-size: clamp(2.4rem, 4.6vw, 4.25rem);
+}
+
+@media (max-width: 639px) {
+  .resource-page-hero {
+    min-height: 0;
+    padding-top: 8rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .resource-page-hero--article .resource-page-hero__title {
+    font-size: clamp(2rem, 8vw, 2.4rem);
+  }
 }
