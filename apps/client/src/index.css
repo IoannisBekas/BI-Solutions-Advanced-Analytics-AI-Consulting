@@ -2058,31 +2058,32 @@ html:not([data-js]) [style*="opacity: 0"] {
   z-index: 10;
 }
 
-/* Header sits over the dark hero on the homepage until the page is scrolled. */
+/* Header sits over the dark hero on the homepage until the page is scrolled.
+   Dropdown surfaces keep their own palette instead of inheriting white text. */
 [data-hero-overlay] [data-site-header][data-transparent="true"] {
   color: #fff;
 }
 
 /* The logo mark is dark artwork, so it disappears against the hero unless it
    is inverted along with the header text. */
-[data-hero-overlay] [data-site-header][data-transparent="true"] img {
+[data-hero-overlay] [data-site-header][data-transparent="true"] img:not([data-site-dropdown] *) {
   filter: invert(1) brightness(1.8);
 }
 
-[data-hero-overlay] [data-site-header][data-transparent="true"] a,
-[data-hero-overlay] [data-site-header][data-transparent="true"] button {
+[data-hero-overlay] [data-site-header][data-transparent="true"] a:not([data-site-dropdown] *),
+[data-hero-overlay] [data-site-header][data-transparent="true"] button:not([data-site-dropdown] *) {
   color: inherit;
 }
 
-[data-hero-overlay] [data-site-header][data-transparent="true"] .text-gray-500 {
+[data-hero-overlay] [data-site-header][data-transparent="true"] .text-gray-500:not([data-site-dropdown] *) {
   color: rgba(255, 255, 255, 0.72);
 }
 
-[data-hero-overlay] [data-site-header][data-transparent="true"] .bg-black {
+[data-hero-overlay] [data-site-header][data-transparent="true"] .bg-black:not([data-site-dropdown] *) {
   background-color: #fff;
   color: #10141a;
 }
 
-[data-hero-overlay] [data-site-header][data-transparent="true"] .bg-black:hover {
+[data-hero-overlay] [data-site-header][data-transparent="true"] .bg-black:not([data-site-dropdown] *):hover {
   background-color: #e8e6e1;
 }

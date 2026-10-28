@@ -1,7 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "wouter";
-import { ChevronDown, Menu, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  BarChart3,
+  Bot,
+  ChevronDown,
+  Database,
+  Files,
+  Globe,
+  GraduationCap,
+  Menu,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
@@ -18,36 +29,43 @@ const serviceLinks = [
     name: "All services",
     href: "/services",
     description: "See every capability on one page.",
+    icon: ArrowUpRight,
   },
   {
     name: "Business Intelligence & Power BI",
     href: "/services#business-intelligence-semantic-modeling",
     description: "Trusted reporting, semantic models, and decision systems.",
+    icon: BarChart3,
   },
   {
     name: "AI Consulting & Automation",
     href: "/services#advanced-analytics-ai",
     description: "Practical AI workflows, strategy, and adoption.",
+    icon: Bot,
   },
   {
     name: "Data Strategy & Cloud",
     href: "/services#data-strategy-governance",
     description: "Reliable foundations, governance, and cloud delivery.",
+    icon: Database,
   },
   {
     name: "Web & Search Visibility",
     href: "/services#website-app-development",
     description: "Websites and apps with technical SEO and AI-search foundations.",
+    icon: Globe,
   },
   {
     name: "Content Operations & Digital Products",
     href: "/services#content-operations-automation",
     description: "Repurposing systems, distribution workflows, and digital assets.",
+    icon: Files,
   },
   {
     name: "Enablement & Mentorship",
     href: "/services#data-career-enablement-mentorship",
     description: "Team training, adoption support, and career development.",
+    icon: GraduationCap,
   },
 ] as const;
 
@@ -483,29 +501,44 @@ export function Navbar() {
               </button>
               <div
                 id="desktop-services-panel"
+                data-site-dropdown
                 hidden={openDesktopMenu !== "services"}
-                className="absolute left-1/2 top-full z-50 w-[26rem] -translate-x-1/2 pt-3"
+                className="absolute left-1/2 top-full z-50 w-[42rem] max-w-[calc(100vw-3rem)] -translate-x-1/2 pt-3"
               >
-                <div className="rounded-3xl border border-gray-200 bg-white p-3 shadow-2xl shadow-black/10">
-                  {localizedServiceLinks.map((item) => (
-                    <a
-                      key={item.href}
-                      href={localizedHref(item.href)}
-                      className="block rounded-2xl px-4 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-                      onClick={() => handleNavClick(item.name, item.href, "header")}
-                    >
-                      <div className="text-sm font-semibold text-gray-900">
-                        {item.name}
-                      </div>
-                      <div className="mt-1 text-xs leading-relaxed text-gray-500">
-                        {item.description}
-                      </div>
-                    </a>
-                  ))}
-                  <div className="mt-1 border-t border-gray-100 px-1 pt-2">
+                <div className="max-h-[calc(100dvh-7.5rem)] overflow-y-auto overscroll-contain rounded-2xl border border-gray-200 bg-white p-2 text-gray-900 shadow-xl shadow-black/15">
+                  <a
+                    href={localizedHref(localizedServiceLinks[0].href)}
+                    className="group flex items-center justify-between gap-6 rounded-xl px-4 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50"
+                    onClick={() =>
+                      handleNavClick(localizedServiceLinks[0].name, localizedServiceLinks[0].href, "header")
+                    }
+                  >
+                    <span className="text-sm font-semibold">{localizedServiceLinks[0].name}</span>
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-gray-500 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                  <div className="mx-2 border-t border-gray-100" />
+                  <div className="grid grid-cols-2 gap-1 py-2">
+                    {localizedServiceLinks.slice(1).map((item) => (
+                      <a
+                        key={item.href}
+                        href={localizedHref(item.href)}
+                        className="group flex items-start gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50"
+                        onClick={() => handleNavClick(item.name, item.href, "header")}
+                      >
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-700 transition-colors group-hover:bg-gray-200">
+                          <item.icon aria-hidden="true" className="h-4 w-4" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-semibold leading-snug">{item.name}</span>
+                          <span className="mt-1 block text-xs leading-relaxed text-gray-500">{item.description}</span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                  <div className="border-t border-gray-100 pt-1">
                     <Link
                       href={START_PROJECT_PATH}
-                      className="block rounded-2xl px-3 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                      className="block rounded-xl px-4 py-3 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 focus-visible:bg-gray-50"
                       onClick={() =>
                         handleNavClick(
                           navCopy.unsureShort,
