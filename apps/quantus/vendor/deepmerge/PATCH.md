@@ -1,6 +1,6 @@
 # Local deepmerge security patch
 
-This is **deepmerge 4.3.1-security.1**, a locally maintained copy of upstream
+This is **deepmerge 4.3.1-security.2**, a locally maintained copy of upstream
 deepmerge 4.3.1. It is not an upstream release. The package name and public API
 remain `deepmerge`; the local version identifies the actual source change.
 
@@ -45,8 +45,11 @@ The original inherited/non-enumerable property checks remain intact. Ordinary
 own `constructor` and `prototype` data keys retain upstream behavior: assigning
 them does not invoke that setter. The function export, `.all`, array merging,
 cloning options, callbacks, symbol handling and declaration file are unchanged.
-The package main remains the self-contained `dist/cjs.js`; the UMD build is
-patched as well. `index.js` is the original unbundled source and, as upstream,
+The package main is the self-contained `cjs.js`; the UMD build is patched as
+well. These two bundles are moved from upstream's `dist/` to the package root
+so Docker and Railway's generated-output exclusions cannot omit them. This is
+the packaging-only change from local version `4.3.1-security.1`; their code is
+unchanged. `index.js` is the original unbundled source and, as upstream,
 requires `is-mergeable-object` if used directly.
 
 ## Verification

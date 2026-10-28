@@ -1,3 +1,0 @@
-# These are the vendored package entrypoints, not application build output.
-!dist/
-!dist/*.js

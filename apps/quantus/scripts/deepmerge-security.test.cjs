@@ -9,7 +9,7 @@ const vendorDirectory = path.resolve(__dirname, '../vendor/deepmerge');
 const installedMerge = require('deepmerge');
 const implementations = [
   ['installed package entrypoint', installedMerge],
-  ['UMD CommonJS entrypoint', require(path.join(vendorDirectory, 'dist/umd.js'))],
+  ['UMD CommonJS entrypoint', require(path.join(vendorDirectory, 'umd.js'))],
 ];
 
 test('installed root and Rollup consumers resolve the patched vendor implementation', () => {
@@ -17,7 +17,7 @@ test('installed root and Rollup consumers resolve the patched vendor implementat
   assert.equal(installedMerge, require(vendorDirectory));
   assert.equal(rollupRequire('deepmerge'), installedMerge);
   assert.equal(rollupRequire.resolve('deepmerge'), require.resolve(vendorDirectory));
-  assert.equal(rollupRequire('deepmerge/package.json').version, '4.3.1-security.1');
+  assert.equal(rollupRequire('deepmerge/package.json').version, '4.3.1-security.2');
 });
 
 function assertUnpoisoned(value) {
