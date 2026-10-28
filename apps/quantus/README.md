@@ -46,3 +46,12 @@ View your app in AI Studio: https://ai.studio/apps/c7df1ca4-1417-4918-b88b-4fe75
 - Frontend/unit tests: `npm run test`
 - Python tests: `npm run test:python`
 - Full check: `npm run test:all`
+
+## Dependency security
+
+The build uses a [local deepmerge security patch](vendor/deepmerge/PATCH.md) for
+GHSA-gcqx-w48m-w2h4, which has no patched upstream release. The lockfile resolves
+all transitive deepmerge consumers to this copy. `npm run test` runs its security
+regressions before the application tests. Keep the override until a fixed
+upstream release or dependency update replaces it; the patch notes document
+provenance and removal checks. CI continues to run the normal dependency audit.

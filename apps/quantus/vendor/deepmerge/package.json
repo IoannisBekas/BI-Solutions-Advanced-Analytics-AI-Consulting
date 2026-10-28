@@ -1,0 +1,25 @@
+{
+  "name": "deepmerge",
+  "version": "4.3.1-security.1",
+  "private": true,
+  "description": "Local security-patched deepmerge 4.3.1; see PATCH.md for provenance and scope.",
+  "main": "dist/cjs.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TehShrike/deepmerge.git"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts",
+    "license.txt",
+    "readme.md",
+    "changelog.md",
+    "PATCH.md"
+  ]
+}

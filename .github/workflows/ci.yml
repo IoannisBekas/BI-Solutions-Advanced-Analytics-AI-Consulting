@@ -50,6 +50,9 @@ jobs:
       - name: AI learning product delivery tests
         run: npm run test:ai-learning
 
+      - name: Request validation migration tests
+        run: npm run test:validation
+
       - name: Lead acquisition tests
         run: node --import tsx --test script/lead-acquisition.test.ts
 

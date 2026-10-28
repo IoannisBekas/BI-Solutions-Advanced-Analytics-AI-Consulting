@@ -15,7 +15,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"server/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"server/**/*.ts\"",
-    "test": "vitest run",
+    "test": "node --test scripts/deepmerge-security.test.cjs && vitest run",
     "test:watch": "vitest",
     "test:python": "python -m pytest -q",
     "test:all": "npm run test && npm run test:python"
@@ -27,7 +27,7 @@
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.2",
+    "express": "^4.22.3",
     "express-rate-limit": "^8.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
@@ -48,6 +48,7 @@
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.4",
+    "deepmerge": "file:vendor/deepmerge",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^27.0.1",
@@ -62,8 +63,9 @@
     "workbox-window": "^7.4.0"
   },
   "overrides": {
+    "deepmerge": "$deepmerge",
     "ip-address": "^10.2.0",
-    "qs": "^6.16.0",
-    "serialize-javascript": "^7.0.3"
+    "qs": "^6.16.1",
+    "serialize-javascript": "^7.1.3"
   }
 }
