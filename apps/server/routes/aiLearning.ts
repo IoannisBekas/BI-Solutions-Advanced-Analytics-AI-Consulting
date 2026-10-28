@@ -6,6 +6,7 @@ import type { Express, Request, Response } from "express";
 import { rateLimit } from "express-rate-limit";
 import { Resend } from "resend";
 import { z } from "zod";
+import { composeAiLearningEmail } from "../emails/aiLearning";
 import {
   aiLearningProducts,
   learningExperiences,
@@ -189,26 +190,18 @@ export function registerAiLearningRoutes(app: Express) {
       const url = new URL(`/api/ai-learning/download/${token}`, configuration.origin).href;
       const finder = learningFinderUrl(language, configuration.websiteOrigin)!;
       const title = language === "el" ? product.nameEl : product.name;
-      const greek = language === "el";
-      const subject = greek ? `Το AI learning pack σου: ${title}` : `Your AI learning pack: ${title}`;
-      const introduction = greek
-        ? `Το ψηφιακό προϊόν «${title}» περιλαμβάνει 100 prompts για να μάθεις πρακτικές εφαρμογές AI στον ρόλο σου.`
-        : `Your ${title} digital product includes 100 prompts to help you learn practical AI for your role.`;
-      const action = greek ? "Λήψη ολόκληρου του PDF" : "Download the full PDF";
-      const expiry = greek
-        ? "Ο σύνδεσμος ισχύει για 7 ημέρες. Αν λήξει, μπορείς να ζητήσεις νέο από τη σελίδα AI Learning."
-        : "This link is valid for 7 days. If it expires, request a new one from the AI Learning page.";
-      const recoveryAction = greek ? "Διάλεξε pack ή ζήτησε νέο σύνδεσμο" : "Choose a pack or request a new link";
-      const privacy = greek
-        ? "Αυτό το email αφορά μόνο τη λήψη που ζήτησες. Δεν σε εγγράφει σε newsletter."
-        : "This email delivers the download you requested. It does not subscribe you to a newsletter.";
+      const message = composeAiLearningEmail({
+        language,
+        title,
+        downloadUrl: url,
+        finderUrl: finder,
+        websiteOrigin: configuration.websiteOrigin,
+      });
 
       const { data, error } = await new Resend(configuration.apiKey).emails.send({
         from: configuration.from,
         to: email,
-        subject,
-        html: `<p>${escapeHtml(introduction)}</p><p><a href="${escapeHtml(url)}">${action}</a></p><p>${expiry}</p><p><a href="${escapeHtml(finder)}">${recoveryAction}</a></p><p>${privacy}</p>`,
-        text: `${introduction}\n\n${action}: ${url}\n\n${expiry}\n\n${recoveryAction}: ${finder}\n\n${privacy}`,
+        ...message,
       }, { idempotencyKey: hash });
 
       if (error || !data?.id) {

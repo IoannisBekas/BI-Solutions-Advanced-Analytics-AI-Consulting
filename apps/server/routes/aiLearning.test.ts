@@ -8,6 +8,7 @@ import test from "node:test";
 import Database from "better-sqlite3";
 import express from "express";
 import { aiLearningProducts } from "../../../shared/aiLearningProducts";
+import { composeAiLearningEmail } from "../emails/aiLearning";
 
 const testDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "bisolutions-ai-learning-"));
 const originalEnvironment = { ...process.env };
@@ -153,6 +154,11 @@ test("AI learning email access and private full PDF delivery", async (t) => {
     assert.deepEqual(JSON.parse(result.body.toString()), { success: true });
     assert.equal(sent.length, 1);
     assert.equal(sent[0].to, "learner@example.com");
+    assert.equal(sent[0].subject, `Your 100 AI prompts: ${product.name}`);
+    assert.ok(sent[0].html.includes("Your PDF is ready. Choose one prompt and make it your own."));
+    assert.ok(sent[0].html.includes("100 prompts · English PDF"));
+    assert.ok(sent[0].html.includes('src="https://www.example.com/assets/email/ai-learning/ioannis-mascot.png"'));
+    assert.ok(sent[0].html.includes('src="https://www.example.com/assets/brand/bi-solutions-group-mark.png"'));
     assert.ok(sent[0].text.includes("100 prompts"));
     assert.ok(sent[0].text.includes("7 days"));
     assert.ok(sent[0].text.includes("https://www.example.com/api/ai-learning/download/"));
@@ -189,10 +195,36 @@ test("AI learning email access and private full PDF delivery", async (t) => {
     assert.equal((await request(server, "POST", "/api/ai-learning/access", { ...validBody, language: "el" })).status, 200);
     assert.match(sent[0].text, /https:\/\/api\.example\.com\/api\/ai-learning\/download\//);
     assert.match(sent[0].text, /7 ημέρες/);
-    assert.ok(sent[0].subject.includes(product.nameEl));
+    assert.equal(sent[0].subject, `Τα 100 AI prompts σου: ${product.nameEl}`);
+    assert.ok(sent[0].html.includes("Το PDF σου είναι έτοιμο. Διάλεξε ένα prompt και προσάρμοσέ το στα μέτρα σου."));
+    assert.ok(sent[0].html.includes("100 prompts · PDF στα Ελληνικά"));
+    assert.ok(sent[0].html.includes("Κατέβασε το PDF σου"));
+    assert.ok(sent[0].text.includes("Μια συμβουλή από τον Γιάννη"));
+    assert.ok(!sent[0].text.includes("Download your PDF"));
+    assert.ok(sent[0].html.includes('src="https://www.example.com/assets/email/ai-learning/ioannis-mascot.png"'));
+    assert.ok(!sent[0].html.includes('src="https://api.example.com/'));
     assert.ok(sent[0].text.includes("https://www.example.com/el/resources/ai-prompt-packs"));
     assert.ok(sent[0].html.includes('href="https://www.example.com/el/resources/ai-prompt-packs"'));
+    assert.match(sent[0].html, /href="https:\/\/api\.example\.com\/api\/ai-learning\/download\/[a-f0-9]{64}"/);
     assert.deepEqual((await request(server, "GET", downloadPath())).body, greekPdf);
+  });
+
+  await t.test("escapes pack titles and link attributes without corrupting the plain-text email", () => {
+    const title = 'Sales & "Revenue" <img src=x onerror="alert(1)">';
+    const downloadUrl = `https://api.example.com/api/ai-learning/download/${"a".repeat(64)}?one=1&two=2`;
+    const message = composeAiLearningEmail({
+      language: "en", title, downloadUrl,
+      finderUrl: "https://www.example.com/resources/ai-prompt-packs?one=1&two=2",
+      websiteOrigin: "https://www.example.com",
+    });
+    assert.equal(message.subject, `Your 100 AI prompts: ${title}`);
+    assert.ok(message.html.includes("Sales &amp; &quot;Revenue&quot; &lt;img src=x onerror=&quot;alert(1)&quot;&gt;"));
+    assert.ok(!message.html.includes('<img src=x'));
+    assert.ok(message.html.includes(`href="${downloadUrl.replace("&", "&amp;")}"`));
+    assert.ok(message.html.includes('href="https://www.example.com/resources/ai-prompt-packs?one=1&amp;two=2"'));
+    assert.ok(message.text.includes(title));
+    assert.ok(message.text.includes(downloadUrl));
+    assert.equal((message.html.match(/href="https:\/\/api\.example\.com\/api\/ai-learning\/download\//g) || []).length, 1);
   });
 
   await t.test("returns provider failures and removes the reservation so a retry can succeed", async () => {
