@@ -1,5 +1,7 @@
-import { ArrowDown, ArrowUpRight, Check, ClipboardCheck, MonitorSmartphone, ShoppingBag, Utensils } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Check } from "lucide-react";
+import { RestaurantIllustration } from "@/components/restaurant/RestaurantIllustration";
 import paroliCover from "@/assets/case-studies/paroli-cover.webp";
+import foodHero from "@/assets/restaurant/food-hero.webp";
 import {
   RestaurantAssessment,
   RestaurantCampaignLink,
@@ -9,11 +11,11 @@ import {
 } from "@/components/restaurant/RestaurantLandingLayout";
 
 const steps = [
-  { icon: Utensils, title: "Το μενού σου", description: "Προϊόντα, κατηγορίες και επιλογές, με την ταυτότητα του καταστήματός σου." },
-  { icon: ShoppingBag, title: "Η παραγγελία", description: "Καλάθι και σαφής ολοκλήρωση για διανομή ή παραλαβή από το κατάστημα." },
-  { icon: MonitorSmartphone, title: "Η λήψη στο κατάστημα", description: "Ο τρόπος ειδοποίησης και διαχείρισης σχεδιάζεται γύρω από τη λειτουργία σου." },
-  { icon: ClipboardCheck, title: "Η εξυπηρέτηση", description: "Η ομάδα σου ετοιμάζει την παραγγελία και αναλαμβάνει την παράδοση ή την παραλαβή." },
-];
+  { illustration: "menu", title: "Το μενού σου", description: "Προϊόντα, κατηγορίες και επιλογές, με την ταυτότητα του καταστήματός σου." },
+  { illustration: "order", title: "Η παραγγελία", description: "Καλάθι και σαφής ολοκλήρωση για διανομή ή παραλαβή από το κατάστημα." },
+  { illustration: "receive", title: "Η λήψη στο κατάστημα", description: "Ο τρόπος ειδοποίησης και διαχείρισης σχεδιάζεται γύρω από τη λειτουργία σου." },
+  { illustration: "fulfil", title: "Η εξυπηρέτηση", description: "Η ομάδα σου ετοιμάζει την παραγγελία και αναλαμβάνει την παράδοση ή την παραλαβή." },
+] as const;
 
 const faqs = [
   { question: "Πρέπει να φύγω αμέσως από efood, Wolt ή BOX;", answer: "Η αξιολόγηση μπορεί να αφορά είτε σταδιακή μείωση της εξάρτησης είτε πλήρη αποχώρηση. Πρώτα εξετάζουμε τη διανομή, τους επαναλαμβανόμενους πελάτες και το πραγματικό κόστος κάθε επιλογής. Η απόφαση εξαρτάται και από τις συμφωνίες που έχεις με τους σημερινούς συνεργάτες σου." },
@@ -29,29 +31,36 @@ export default function RestaurantOrdering() {
       <section className="restaurant-container restaurant-hero restaurant-hero--ordering" aria-labelledby="ordering-title">
         <div className="restaurant-hero__copy">
           <p className="restaurant-eyebrow"><span className="restaurant-status-dot" />Απευθείας παραγγελίες · Εστίαση</p>
-          <h1 id="ordering-title">Οι παραγγελίες σου.<br /><em>Στο δικό σου site.</em></h1>
-          <p className="restaurant-hero__description">Δώσε στους πελάτες σου έναν απευθείας τρόπο να παραγγέλνουν. Σχεδιάζουμε το σύστημα γύρω από το μενού, την ομάδα και τη λειτουργία του καταστήματός σου.</p>
-          <div className="restaurant-hero__actions"><RestaurantCta>Δες τι ταιριάζει στο κατάστημά σου</RestaurantCta><a href="#paradeigma" className="restaurant-text-link">Δες το παράδειγμα <ArrowDown size={16} aria-hidden="true" /></a></div>
+          <h1 id="ordering-title">Απόφυγε τις<br /><em>υπέρογκες χρεώσεις</em><br />των πλατφορμών.</h1>
+          <p className="restaurant-hero__description">Δικό σου site. Απευθείας παραγγελίες. Ένα κανάλι για τους πελάτες σου, με την επωνυμία σου και μια ροή που ταιριάζει στο κατάστημά σου.</p>
+          <div className="restaurant-hero__actions"><RestaurantCta>Ζήτησε το δικό σου σύστημα</RestaurantCta><a href="#paradeigma" className="restaurant-text-link">Δες το παράδειγμα <ArrowDown size={16} aria-hidden="true" /></a></div>
           <p className="restaurant-hero__footnote">Δωρεάν αρχική αξιολόγηση. Χωρίς δέσμευση υλοποίησης.</p>
         </div>
-        <figure className="restaurant-preview">
-          <div className="restaurant-preview__label"><span className="restaurant-status-dot" />Από το μενού μέχρι το καλάθι</div>
-          <a href="https://ioannisbekas.github.io/paroli/" target="_blank" rel="noopener noreferrer" aria-label="Άνοιγμα του ανεξάρτητου demo PAROLI σε νέα καρτέλα"><img src={paroliCover} alt="Δείγμα PAROLI: σελίδα ψητοπωλείου με μενού, επιλογή καταστήματος και καλάθι παραγγελίας" width="2880" height="1620" fetchPriority="high" /></a>
-          <figcaption><strong>PAROLI</strong><span>Ανεξάρτητο demo · Δεν στέλνει πραγματικές παραγγελίες</span></figcaption>
+        <figure className="restaurant-showcase">
+          <div className="restaurant-showcase__scene">
+            <img className="restaurant-showcase__food" src={foodHero} alt="Burger, πίτα, πατάτες και καφές σε πάγκο καταστήματος εστίασης" width="960" height="1200" fetchPriority="high" />
+            <span className="restaurant-showcase__badge">Το δικό σου φαγητό.</span>
+            <a className="restaurant-showcase__demo" href="https://ioannisbekas.github.io/paroli/" target="_blank" rel="noopener noreferrer" aria-label="Δες το ανεξάρτητο demo παραγγελιών PAROLI σε νέα καρτέλα">
+              <span className="restaurant-showcase__browser"><span aria-hidden="true">● ● ●</span>Το δικό σου site <ArrowUpRight size={13} aria-hidden="true" /></span>
+              <img src={paroliCover} alt="Προεπισκόπηση του demo PAROLI με μενού και καλάθι παραγγελίας" width="2880" height="1620" />
+              <span className="restaurant-showcase__demo-label"><Check size={15} aria-hidden="true" />Απευθείας στο κατάστημά σου.</span>
+            </a>
+          </div>
+          <figcaption><strong>Η επωνυμία σου. Σε κάθε παραγγελία.</strong><span>Ενδεικτική παρουσίαση με το demo PAROLI.</span></figcaption>
         </figure>
       </section>
 
       <div className="restaurant-audience-strip"><div className="restaurant-container"><span>Για καταστήματα με τη δική τους ταυτότητα.</span><strong>Καφέ</strong><strong>Ψητοπωλεία</strong><strong>Εστιατόρια</strong><strong>Takeaway</strong></div></div>
 
       <section className="restaurant-section restaurant-container" aria-labelledby="ordering-flow-title">
-        <div className="restaurant-section__heading"><div><p className="restaurant-eyebrow">Η διαδρομή της παραγγελίας</p><h2 id="ordering-flow-title">Απλό για τον πελάτη.<br />Πρακτικό για την ομάδα σου.</h2></div><p>Το site είναι η αρχή. Η πραγματική αξία βρίσκεται σε μια ροή που μπορείς να χρησιμοποιείς καθημερινά.</p></div>
-        <ol className="restaurant-flow">{steps.map(({ icon: Icon, title, description }, index) => <li key={title}><span className="restaurant-flow__number">0{index + 1}</span><Icon size={25} strokeWidth={1.5} aria-hidden="true" /><h3>{title}</h3><p>{description}</p></li>)}</ol>
+        <div className="restaurant-section__heading"><div><p className="restaurant-eyebrow">Η διαδρομή της παραγγελίας</p><h2 id="ordering-flow-title">Το δικό σου μενού.<br />Οι δικές σου παραγγελίες.</h2></div><p>Από την επιλογή του πελάτη μέχρι τη λήψη στο κατάστημα, σχεδιάζουμε μια ροή που μπορείς να χρησιμοποιείς καθημερινά.</p></div>
+        <ol className="restaurant-flow">{steps.map(({ illustration, title, description }, index) => <li key={title}><span className="restaurant-flow__number">0{index + 1}</span><RestaurantIllustration kind={illustration} /><h3>{title}</h3><p>{description}</p></li>)}</ol>
       </section>
 
       <section id="paradeigma" className="restaurant-demo-section" aria-labelledby="ordering-demo-title">
         <div className="restaurant-container restaurant-demo-section__grid">
           <div><p className="restaurant-eyebrow">Δες την ιδέα στην πράξη</p><h2 id="ordering-demo-title">Η δική σου επωνυμία,<br />σε κάθε βήμα.</h2><p>Το PAROLI δείχνει πώς μπορούν να συνδυαστούν παρουσίαση καταστήματος, κατάλογος και καλάθι σε μια ενιαία εμπειρία.</p><a className="restaurant-button restaurant-button--light" href="https://ioannisbekas.github.io/paroli/" target="_blank" rel="noopener noreferrer">Άνοιξε το demo PAROLI <ArrowUpRight size={18} aria-hidden="true" /></a><p className="restaurant-demo-section__disclaimer">Ανεξάρτητο δείγμα παρουσίασης. Δεν είναι ενεργό σύστημα παραγγελιών πελάτη.</p></div>
-          <div className="restaurant-demo-notes"><span className="restaurant-demo-notes__label">Τι σχεδιάζουμε μαζί</span><ul><li><span>01</span><div><h3>Το κατάστημά σου, καθαρά.</h3><p>Επωνυμία, μενού και πληροφορίες που βοηθούν τον πελάτη να επιλέξει.</p></div></li><li><span>02</span><div><h3>Τη ροή που χρειάζεσαι.</h3><p>Παραλαβή ή διανομή, ωράρια και τρόπος λήψης των παραγγελιών.</p></div></li><li><span>03</span><div><h3>Ένα συγκεκριμένο πλάνο.</h3><p>Εύρος έργου, κόστη και υποστήριξη πριν ξεκινήσει η κατασκευή.</p></div></li></ul></div>
+          <figure className="restaurant-demo-preview"><div className="restaurant-showcase__browser"><span aria-hidden="true">● ● ●</span>PAROLI · Δείγμα online παραγγελιών</div><a href="https://ioannisbekas.github.io/paroli/" target="_blank" rel="noopener noreferrer" aria-label="Άνοιγμα του ανεξάρτητου demo PAROLI σε νέα καρτέλα"><img src={paroliCover} alt="Σελίδα του demo PAROLI: μενού ψητοπωλείου, επιλογή καταστήματος και καλάθι" width="2880" height="1620" loading="lazy" /></a><figcaption>Μενού, επιλογές και καλάθι. Δες ολόκληρη την εμπειρία στο demo.</figcaption></figure>
         </div>
       </section>
 

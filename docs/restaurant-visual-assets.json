@@ -1,0 +1,15 @@
+{
+  "generator": "Built-in image_gen",
+  "purpose": "Original illustrative restaurant acquisition photography, inspired by user-provided food advertising references. Images do not depict actual customers or testimonials.",
+  "assets": [
+    {
+      "file": "apps/client/src/assets/restaurant/food-hero.webp",
+      "prompt": "Use case: ads-marketing. Asset type: premium restaurant website hero photograph, portrait 4:5 composition. Create an original photorealistic still life for a Greek independent restaurant owner campaign. A beautifully prepared generous beef burger on a dark ceramic plate with crisp golden fries, a small Greek souvlaki pita with tomato and tzatziki, an iced coffee with realistic condensation, and a plain kraft takeaway bag arranged on a charcoal brown restaurant countertop. Natural ingredients, appetizing texture, genuine boutique restaurant food photography with warm side lighting and deep soft shadows. Hero food and burger dominant in upper/middle area; lower right area has a little quiet dark tabletop for a website UI overlay that will be added separately. Rich food colors, restrained olive and cream details, premium earthy feeling, not glossy plastic. Inspired by the energy of Greek takeaway menu advertisements but an original editorial photographic composition, no collage borders. No people, no devices, no lettering, no words, no logos, no brand names, no watermarks. Image fills the whole frame."
+    },
+    {
+      "file": "apps/client/src/assets/restaurant/restaurant-owner.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: landscape 3:2 editorial photograph for a Greek restaurant business website. Original candid photograph of a confident Greek small restaurant owner in their late 30s to 40s, wearing a muted olive apron over a cream shirt, at their independent contemporary Greek takeaway restaurant counter. Owner looks naturally down at a black tablet held in both hands, tablet screen angled away from camera so no text is readable. A prepared wrapped pita and plain kraft takeaway bag on the counter foreground, compact professional kitchen in soft background focus. Authentic working moment, calm sense of being in charge of the business, not staged handshake or stock corporate pose. Warm late-afternoon natural window light, earth tones, cream, olive, wood, honest skin texture, editorial restaurant photography, anatomically natural hands and face. Owner mainly in right half, kitchen context on left. No lettering, no logos, no watermarks, no visible customer names or financial figures. This is an illustrative scene, not a customer testimonial."
+    }
+  ],
+  "optimization": "WebP resized and encoded with FFmpeg. Original generated PNGs preserved in output/imagegen/restaurant-campaign."
+}
