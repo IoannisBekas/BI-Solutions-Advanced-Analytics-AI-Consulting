@@ -8,10 +8,10 @@ export type RestaurantIllustrationKind =
   | "delivery"
   | "plan";
 
-const ink = "#263126";
-const paper = "#fffef8";
-const olive = "#e2e8d5";
-const citrus = "#d9ed86";
+const ink = "#172033";
+const paper = "#fff";
+const olive = "#e5e7eb";
+const citrus = "#dce6f3";
 
 const illustrations = {
   menu: (
@@ -111,7 +111,7 @@ export function RestaurantIllustration({ kind, className }: {
 }) {
   return (
     <svg className={className} width="80" height="80" viewBox="0 0 96 96" fill="none" aria-hidden="true" focusable="false">
-      <circle cx="48" cy="48" r="44" fill="#f2f2e8" />
+      <circle cx="48" cy="48" r="44" fill="#f1f5f9" />
       <g stroke={ink} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         {illustrations[kind]}
       </g>

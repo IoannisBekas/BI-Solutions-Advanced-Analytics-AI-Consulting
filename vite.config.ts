@@ -23,6 +23,7 @@ export default defineConfig({
 
   root: path.resolve(__dirname, "apps", "client"),
   build: {
+    manifest: true,
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },

@@ -26,11 +26,13 @@ async function open(path, width = 1280, measurement = false) {
   });
   const page = await context.newPage();
   const errors = [];
+  const requests = [];
+  page.on("request", (request) => requests.push(request.url()));
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(base + path, { waitUntil: "networkidle" });
   await page.locator(".restaurant-page h1").waitFor();
   await page.locator('form[aria-label="Αξιολόγηση καταστήματος για απευθείας παραγγελίες"]').waitFor();
-  return { page, context, errors, external };
+  return { page, context, errors, external, requests };
 }
 
 async function events(page) {
@@ -58,14 +60,19 @@ async function fillStepTwo(page) {
 
 try {
   for (const path of routes) {
-    for (const width of [1440, 390, 320]) {
-      const { page, context, errors, external } = await open(path, width);
+    for (const width of [1440, 1024, 768, 390, 320]) {
+      const { page, context, errors, external, requests } = await open(path, width);
       assert.equal(await page.locator("h1").count(), 1);
       assert.equal(await page.locator("html").getAttribute("lang"), "el-GR");
       assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), `https://www.bisolutions.group${path}`);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
       const brokenImages = await page.locator(".restaurant-page img").evaluateAll((images) => images.filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.src));
       assert.deepEqual(brokenImages, []);
+      assert.ok((await page.locator(".restaurant-brand img").getAttribute("src")).endsWith("/bi-solutions-logo.png"));
+      assert.equal(await page.locator(".restaurant-breadcrumb a").getAttribute("href"), "/el/");
+      assert.equal(requests.some((url) => url.includes("scroll-world-v4/posters/")), false);
+      assert.equal(await page.locator('head link[rel="stylesheet"][href*="RestaurantLandingLayout"]').count(), 1);
+      assert.equal(await page.locator(".restaurant-page > footer h2").first().evaluate((node) => parseFloat(getComputedStyle(node).fontSize) <= 24), true);
       await page.screenshot({ path: `${output}/${path.endsWith("online-paraggelies") ? "ordering" : "transition"}-${width}.png`, fullPage: true });
       if (width === 390) {
         await page.locator(".restaurant-assessment").screenshot({ path: `${output}/${path.endsWith("online-paraggelies") ? "ordering" : "transition"}-form-mobile.png` });
@@ -78,6 +85,25 @@ try {
       await context.close();
       results.push(`${path}: ${width}px, Greek metadata, images, no overflow or runtime errors`);
     }
+  }
+
+  for (const measurement of [false, true]) {
+    const { page, context, errors } = await open(routes[1], 390, measurement);
+    assert.equal(await page.locator(".restaurant-mobile-cta").count(), 0);
+    await page.locator("#plano-metavasis").evaluate((node) => node.scrollIntoView());
+    await page.locator(".restaurant-mobile-cta").waitFor({ state: "visible" });
+    await page.screenshot({ path: `${output}/transition-mobile-sticky-${measurement}.png` });
+    await page.locator(".restaurant-mobile-cta a").click();
+    await page.locator(".restaurant-mobile-cta").waitFor({ state: "hidden" });
+    assert.equal(await page.evaluate(() => document.querySelector("#axiologisi").getBoundingClientRect().top >= document.querySelector(".restaurant-header").getBoundingClientRect().bottom), true);
+    const recorded = await events(page);
+    const ctaClicks = recorded.filter((entry) => entry[0] === "event" && entry[1] === "restaurant_cta_click");
+    assert.equal(ctaClicks.length, measurement ? 1 : 0);
+    if (measurement) assert.equal(ctaClicks[0][2].placement, "mobile_sticky");
+    assert.equal(recorded.some((entry) => entry[0] === "event" && entry[1] === "conversion"), false);
+    assert.deepEqual(errors, []);
+    await context.close();
+    results.push(`measurement ${measurement}: mobile CTA appears between hero and form, clears the sticky header, respects consent and never counts as a lead`);
   }
 
   for (const measurement of [false, true]) {

@@ -1,8 +1,8 @@
 .restaurant-lead {
-  --lead-ink: #20251f;
-  --lead-muted: #5b635a;
-  --lead-line: #dedfd7;
-  --lead-accent: #e6edb5;
+  --lead-ink: #09090b;
+  --lead-muted: #626975;
+  --lead-line: #e5e7eb;
+  --lead-accent: #e8edf3;
   min-width: 0;
   width: 100%;
   padding: clamp(1.25rem, 4vw, 2.5rem);
@@ -28,26 +28,26 @@
 .restaurant-lead-fields input:not([type=checkbox]), .restaurant-lead-fields select { display: block; width: 100%; min-width: 0; min-height: 48px; margin-top: 7px; padding: 11px 12px; border: 1px solid var(--lead-line); border-radius: 10px; background: #fdfdfb; color: var(--lead-ink); font-size: 16px; line-height: 1.45; font-weight: 400; outline: none; }
 .restaurant-lead-fields select { padding-right: 30px; text-overflow: ellipsis; }
 .restaurant-lead-fields input::placeholder { color: #767b74; }
-.restaurant-lead input:focus-visible, .restaurant-lead select:focus-visible, .restaurant-lead button:focus-visible, .restaurant-lead a:focus-visible, .restaurant-lead-platforms:focus-visible { outline: 2px solid #4f643f; outline-offset: 3px; }
+.restaurant-lead input:focus-visible, .restaurant-lead select:focus-visible, .restaurant-lead button:focus-visible, .restaurant-lead a:focus-visible, .restaurant-lead-platforms:focus-visible { outline: 2px solid #334155; outline-offset: 3px; }
 .restaurant-lead-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; min-width: 0; }
 .restaurant-lead-platforms { min-width: 0; margin: 0; padding: 0; border: 0; }
 .restaurant-lead-platforms p { margin: 4px 0 10px; font-size: 11px; line-height: 1.5; color: var(--lead-muted); }
 .restaurant-lead-platform-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .restaurant-lead-platform-options label { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 9px 12px; border: 1px solid var(--lead-line); border-radius: 9px; cursor: pointer; }
-.restaurant-lead-platform-options label:has(input:checked) { border-color: #536343; background: #f0f4e6; }
-.restaurant-lead-platform-options input, .restaurant-lead-consent input { width: 17px; height: 17px; flex-shrink: 0; margin: 0; accent-color: #334b2c; }
+.restaurant-lead-platform-options label:has(input:checked) { border-color: #475569; background: #f1f5f9; }
+.restaurant-lead-platform-options input, .restaurant-lead-consent input { width: 17px; height: 17px; flex-shrink: 0; margin: 0; accent-color: #09090b; }
 .restaurant-lead-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.8; color: var(--lead-muted); }
 .restaurant-lead-consent input { margin-top: 4px; }
 .restaurant-lead a { color: inherit; text-underline-offset: 3px; text-decoration: underline; }
 .restaurant-lead-note, .restaurant-lead-footnote { font-size: 11px; line-height: 1.7; color: var(--lead-muted); }
 .restaurant-lead-note { margin: -7px 0 0; }
-.restaurant-lead-summary { display: grid; gap: 4px; padding: 14px 16px; border-radius: 10px; background: #f6f7f1; overflow-wrap: anywhere; }
+.restaurant-lead-summary { display: grid; gap: 4px; padding: 14px 16px; border-radius: 10px; background: #f4f4f5; overflow-wrap: anywhere; }
 .restaurant-lead-summary span { font-size: 11px; color: var(--lead-muted); }
 .restaurant-lead-summary strong { font-size: 14px; font-weight: 600; }
 .restaurant-lead-actions { display: flex; gap: 12px; align-items: center; margin-top: 25px; }
-.restaurant-lead-submit, .restaurant-lead-back { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 48px; border-radius: 10px; font-size: 13px; line-height: 1.5; font-weight: 600; cursor: pointer; }
+.restaurant-lead-submit, .restaurant-lead-back { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 48px; border-radius: 999px; font-size: 13px; line-height: 1.5; font-weight: 600; cursor: pointer; }
 .restaurant-lead-submit { flex: 1; min-width: 0; padding: 13px 15px; color: #fff; background: var(--lead-ink); border: 1px solid var(--lead-ink); }
-.restaurant-lead-submit:hover { background: #384431; }
+.restaurant-lead-submit:hover { background: #27272a; }
 .restaurant-lead-back { padding: 11px 4px; border: 0; background: transparent; color: var(--lead-muted); }
 .restaurant-lead-submit svg, .restaurant-lead-back svg { flex-shrink: 0; }
 .restaurant-lead button:disabled { opacity: .6; cursor: wait; }

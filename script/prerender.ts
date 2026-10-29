@@ -254,6 +254,9 @@ export async function prerenderClient() {
   });
 
   const template = await readFile(path.join(PUBLIC_OUT_DIR, "index.html"), "utf-8");
+  const manifest: Record<string, { css?: string[]; imports?: string[] }> = JSON.parse(
+    await readFile(path.join(PUBLIC_OUT_DIR, ".vite", "manifest.json"), "utf-8"),
+  );
   if (!template.includes(ROOT_DIV)) {
     throw new Error(`Prerender template is missing '${ROOT_DIV}' — cannot inject page HTML.`);
   }
@@ -280,7 +283,31 @@ export async function prerenderClient() {
         localized.attributeReversions,
       )}`,
     };
-    await writeFile(outFile, renderTemplate(template, localizedPage), "utf-8");
+    let routeTemplate = template;
+    if (route === "/el/online-paraggelies" || route === "/el/meiosi-kostous-delivery") {
+      // Campaign content is prerendered: its styles must arrive before the first paint,
+      // rather than waiting for the lazy page's JavaScript to load.
+      const entry = route.endsWith("online-paraggelies") ? "src/pages/RestaurantOrdering.tsx" : "src/pages/DeliveryTransition.tsx";
+      const styles = new Set<string>();
+      const visited = new Set<string>();
+      const collectStyles = (key: string) => {
+        if (visited.has(key)) return;
+        visited.add(key);
+        const chunk = manifest[key];
+        if (!chunk) throw new Error(`Missing campaign build entry: ${key}`);
+        for (const css of chunk.css ?? []) styles.add(css);
+        for (const dependency of chunk.imports ?? []) collectStyles(dependency);
+      };
+      collectStyles(entry);
+      const links = Array.from(styles)
+        .filter((css) => !template.includes(`href="${base}${css}"`))
+        .map((css) => `<link rel="stylesheet" href="${base}${css}" />`).join("\n");
+      routeTemplate = routeTemplate
+        .replace(/<link\b(?=[^>]*\brel="preload")(?=[^>]*\bhref="[^"]*scroll-world-v4\/posters\/clip-01\.webp")[^>]*>\s*/i, "")
+        .replaceAll("display=swap", "display=optional")
+        .replace("</head>", `${links}\n</head>`);
+    }
+    await writeFile(outFile, renderTemplate(routeTemplate, localizedPage), "utf-8");
     console.log(
       `prerendered ${route}${page.head ? "" : " (no <Seo> data — kept default head)"}`,
     );

@@ -1,7 +1,10 @@
 import { ArrowDown, ArrowUpRight, Check } from "lucide-react";
 import { RestaurantIllustration } from "@/components/restaurant/RestaurantIllustration";
 import paroliCover from "@/assets/case-studies/paroli-cover.webp";
+import paroliCoverMobile from "@/assets/case-studies/paroli-cover-800.webp";
 import foodHero from "@/assets/restaurant/food-hero.webp";
+import foodHeroMobile from "@/assets/restaurant/food-hero-800.webp";
+import { withSiteBase } from "@/lib/site";
 import {
   RestaurantAssessment,
   RestaurantCampaignLink,
@@ -28,27 +31,30 @@ const faqs = [
 export default function RestaurantOrdering() {
   return (
     <RestaurantLandingLayout page="ordering" title="Σύστημα online παραγγελιών για την εστίαση" description="Δικό σου site παραγγελιών για καφέ, ψητοπωλείο ή εστιατόριο. Δες το δείγμα, τις προϋποθέσεις και ζήτησε δωρεάν αρχική αξιολόγηση για το κατάστημά σου.">
+      <div className="restaurant-hero-stage">
+      <nav className="restaurant-container restaurant-breadcrumb" aria-label="Διαδρομή σελίδας"><a href={withSiteBase("/el/")}>BI Solutions Group</a><span aria-hidden="true">/</span><span aria-current="page">Λύσεις για την εστίαση</span></nav>
       <section className="restaurant-container restaurant-hero restaurant-hero--ordering" aria-labelledby="ordering-title">
         <div className="restaurant-hero__copy">
           <p className="restaurant-eyebrow"><span className="restaurant-status-dot" />Απευθείας παραγγελίες · Εστίαση</p>
           <h1 id="ordering-title">Απόφυγε τις<br /><em>υπέρογκες χρεώσεις</em><br />των πλατφορμών.</h1>
           <p className="restaurant-hero__description">Δικό σου site. Απευθείας παραγγελίες. Ένα κανάλι για τους πελάτες σου, με την επωνυμία σου και μια ροή που ταιριάζει στο κατάστημά σου.</p>
-          <div className="restaurant-hero__actions"><RestaurantCta>Ζήτησε το δικό σου σύστημα</RestaurantCta><a href="#paradeigma" className="restaurant-text-link">Δες το παράδειγμα <ArrowDown size={16} aria-hidden="true" /></a></div>
+          <div className="restaurant-hero__actions"><RestaurantCta landingPage="ordering">Ζήτησε το δικό σου σύστημα</RestaurantCta><a href="#paradeigma" className="restaurant-text-link">Δες το παράδειγμα <ArrowDown size={16} aria-hidden="true" /></a></div>
           <p className="restaurant-hero__footnote">Δωρεάν αρχική αξιολόγηση. Χωρίς δέσμευση υλοποίησης.</p>
         </div>
         <figure className="restaurant-showcase">
           <div className="restaurant-showcase__scene">
-            <img className="restaurant-showcase__food" src={foodHero} alt="Burger, πίτα, πατάτες και καφές σε πάγκο καταστήματος εστίασης" width="960" height="1200" fetchPriority="high" />
+            <img className="restaurant-showcase__food" src={foodHero} srcSet={`${foodHeroMobile} 800w, ${foodHero} 960w`} sizes="(min-width: 851px) 36vw, (min-width: 601px) 540px, calc(100vw - 40px)" alt="Burger, πίτα, πατάτες και καφές σε πάγκο καταστήματος εστίασης" width="960" height="1200" fetchPriority="high" />
             <span className="restaurant-showcase__badge">Το δικό σου φαγητό.</span>
             <a className="restaurant-showcase__demo" href="https://ioannisbekas.github.io/paroli/" target="_blank" rel="noopener noreferrer" aria-label="Δες το ανεξάρτητο demo παραγγελιών PAROLI σε νέα καρτέλα">
               <span className="restaurant-showcase__browser"><span aria-hidden="true">● ● ●</span>Το δικό σου site <ArrowUpRight size={13} aria-hidden="true" /></span>
-              <img src={paroliCover} alt="Προεπισκόπηση του demo PAROLI με μενού και καλάθι παραγγελίας" width="2880" height="1620" />
+              <img src={paroliCoverMobile} alt="Προεπισκόπηση του demo PAROLI με μενού και καλάθι παραγγελίας" width="800" height="450" />
               <span className="restaurant-showcase__demo-label"><Check size={15} aria-hidden="true" />Απευθείας στο κατάστημά σου.</span>
             </a>
           </div>
           <figcaption><strong>Η επωνυμία σου. Σε κάθε παραγγελία.</strong><span>Ενδεικτική παρουσίαση με το demo PAROLI.</span></figcaption>
         </figure>
       </section>
+      </div>
 
       <div className="restaurant-audience-strip"><div className="restaurant-container"><span>Για καταστήματα με τη δική τους ταυτότητα.</span><strong>Καφέ</strong><strong>Ψητοπωλεία</strong><strong>Εστιατόρια</strong><strong>Takeaway</strong></div></div>
 
