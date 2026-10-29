@@ -1,7 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, Check, Plus } from "lucide-react";
 import { Seo } from "@/components/seo/Seo";
-import { OPEN_COOKIE_SETTINGS_EVENT } from "@/components/CookieConsent";
+import { Footer } from "@/components/layout/Footer";
+import { trackEvent } from "@/lib/analytics";
 import { RestaurantLeadForm } from "./RestaurantLeadForm";
 import { restaurantCampaignHref } from "@/lib/restaurantLead";
 import { withAssetBase, withSiteBase } from "@/lib/site";
@@ -26,12 +27,16 @@ export function RestaurantCampaignLink({
 export function RestaurantCta({
   children = "Αξιολόγηση καταστήματος",
   secondary = false,
+  landingPage,
+  placement = "hero",
 }: {
   children?: ReactNode;
   secondary?: boolean;
+  landingPage: "ordering" | "transition";
+  placement?: "hero" | "header" | "mobile_sticky";
 }) {
   return (
-    <a className={`restaurant-button${secondary ? " restaurant-button--light" : ""}`} href="#axiologisi">
+    <a className={`restaurant-button${secondary ? " restaurant-button--light" : ""}`} href="#axiologisi" onClick={() => trackEvent("restaurant_cta_click", { landing_page: landingPage, placement })}>
       <span>{children}</span><ArrowRight size={18} aria-hidden="true" />
     </a>
   );
@@ -92,34 +97,44 @@ export function RestaurantLandingLayout({
   children: ReactNode;
 }) {
   const path = page === "ordering" ? "/online-paraggelies" : "/meiosi-kostous-delivery";
+  const [showMobileCta, setShowMobileCta] = useState(false);
+  useEffect(() => {
+    const hero = document.querySelector(".restaurant-hero__actions");
+    const assessment = document.getElementById("axiologisi");
+    if (!hero || !assessment) return;
+    let heroPassed = false;
+    let assessmentReached = false;
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === hero) heroPassed = entry.boundingClientRect.bottom <= 0;
+        if (entry.target === assessment) assessmentReached = entry.boundingClientRect.top <= window.innerHeight;
+      }
+      setShowMobileCta(heroPassed && !assessmentReached);
+    });
+    observer.observe(hero);
+    observer.observe(assessment);
+    return () => observer.disconnect();
+  }, [page]);
   return (
-    <div className="restaurant-page" lang="el" translate="no">
+    <div className="restaurant-page" lang="el">
       <Seo title={title} description={description} path={path} translatedLocales={["el"]} />
       <header className="restaurant-header">
         <div className="restaurant-container restaurant-header__inner">
           <a href={withSiteBase("/el/")} className="restaurant-brand" aria-label="BI Solutions Group — αρχική σελίδα">
-            <img src={withAssetBase("assets/brand/bi-solutions-group-mark.png")} width="38" height="38" alt="" />
-            <span>BI SOLUTIONS<span>GROUP</span></span>
+            <img src={withAssetBase("bi-solutions-logo.png")} width="40" height="40" alt="" />
+            <span>BI Solutions Group<span>Advanced Analytics & AI Consulting</span></span>
           </a>
           <nav className="restaurant-header__nav" aria-label="Σελίδες για την εστίαση">
+            <a href={withSiteBase("/el/")}>Αρχική</a>
             <RestaurantCampaignLink path="/el/online-paraggelies" className={page === "ordering" ? "is-active" : undefined}>Το δικό σου σύστημα</RestaurantCampaignLink>
             <RestaurantCampaignLink path="/el/meiosi-kostous-delivery" className={page === "transition" ? "is-active" : undefined}>Πλάνο μετάβασης</RestaurantCampaignLink>
           </nav>
-          <a href="#axiologisi" className="restaurant-header__cta">Ας μιλήσουμε <ArrowUpRight size={16} aria-hidden="true" /></a>
+          <div className="restaurant-header__cta"><RestaurantCta landingPage={page} placement="header"><span className="restaurant-header__cta-full">Δωρεάν αξιολόγηση</span><span className="restaurant-header__cta-short">Αξιολόγηση</span></RestaurantCta></div>
         </div>
       </header>
-      <main id="main-content" tabIndex={-1}>{children}</main>
-      <footer className="restaurant-footer">
-        <div className="restaurant-container restaurant-footer__inner">
-          <div><strong>BI Solutions Group</strong><p>Ψηφιακά συστήματα για πραγματικές επιχειρήσεις.</p></div>
-          <div className="restaurant-footer__links">
-            <a href={withSiteBase("/el/privacy-policy")}>Απόρρητο</a>
-            <a href={withSiteBase("/el/terms-of-service")}>Όροι χρήσης</a>
-            <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS_EVENT))}>Ρυθμίσεις cookies</button>
-            <a href={withSiteBase("/el/start-a-project")}>Επικοινωνία <ArrowUpRight size={14} aria-hidden="true" /></a>
-          </div>
-        </div>
-      </footer>
+      <main id="main-content" tabIndex={-1} translate="no">{children}</main>
+      <Footer />
+      {showMobileCta && <div className="restaurant-mobile-cta" role="region" aria-label="Αξιολόγηση καταστήματος"><RestaurantCta landingPage={page} placement="mobile_sticky">Ζήτησε δωρεάν αξιολόγηση</RestaurantCta></div>}
     </div>
   );
 }

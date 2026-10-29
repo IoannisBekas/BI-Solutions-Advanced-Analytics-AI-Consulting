@@ -7,6 +7,24 @@ The Greek restaurant campaign uses two entry pages and one shared enquiry flow:
 
 The pages qualify an enquiry; they do not themselves provide a production ordering system or demonstrate proven customer savings. PAROLI is an independent demonstration project.
 
+## Brand and campaign experience
+
+Both pages use the main site's logo, wordmark, heading font, dark navy hero, pill buttons and shared corporate footer. A breadcrumb and home link identify them as BI Solutions Group pages; the primary action stays focused on the restaurant assessment.
+
+On mobile, an assessment button appears after the hero's primary action has scrolled away and hides when the assessment enters the viewport. Its clicks, and header/hero CTA clicks, emit `restaurant_cta_click` with only the landing-page type and placement, subject to analytics consent. These clicks are never lead conversions.
+
+The production build reads Vite's manifest to include the restaurant route's CSS in the initial HTML. These pages omit the unrelated homepage poster preload, use responsive WebP photos, and request optional font display to avoid a late font swap on slow connections. The homepage keeps its existing preload and font behavior.
+
+The Express server negotiates Brotli/gzip for these campaign documents and shared `/assets/*.css` and `/assets/*.js` files. API and streaming responses are outside this compression scope. The public assets retain their existing cache policy.
+
+### Advertising readiness
+
+The technical funnel supports campaign parameters, qualified enquiries and consent-gated conversion events after acknowledged delivery. This establishes implementation readiness, not measured campaign performance. The real recipient inbox and the conversion action in Google Ads still need an end-to-end delivery/Tag Assistant check before paid traffic. Campaign keywords, exclusions, geographical targeting, budget and ad/landing-page message matching must be reviewed in the advertising account; those settings are not established by this repository.
+
+Google Ads conversion measurement is implemented in the site's existing consent system. No Meta Pixel integration is present: Instagram/Facebook traffic can carry UTMs into enquiries, but website Lead-event optimization in Meta is not configured by these pages.
+
+The form deliberately asks for business qualification. Its completion rate and the quality of the resulting enquiries should determine whether to shorten it; no A/B winner or guaranteed conversion rate has been established.
+
 ## Delivery
 
 The shared form uses `VITE_CONTACT_ENDPOINT` when explicitly configured, otherwise the existing same-origin `POST /api/contact`. The Express route accepts `name`, `email`, `subject`, and `message`. Restaurant details and campaign context fit within `message`; no additional email provider or CRM is required.

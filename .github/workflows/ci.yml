@@ -56,6 +56,9 @@ jobs:
       - name: Lead acquisition tests
         run: node --import tsx --test script/lead-acquisition.test.ts apps/client/src/lib/restaurantLead.test.ts
 
+      - name: Public content delivery tests
+        run: node --import tsx --test apps/server/publicCompression.test.ts
+
       - name: Install Quantus dependencies
         working-directory: apps/quantus
         run: npm ci

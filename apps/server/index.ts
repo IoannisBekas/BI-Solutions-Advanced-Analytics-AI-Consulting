@@ -10,6 +10,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { APEX_HOST, canonicalHostRedirect } from "./canonicalHost";
+import { publicAssetCompression } from "./publicCompression";
 
 function loadLocalEnvFiles() {
   const mode = process.env.NODE_ENV || "development";
@@ -189,6 +190,8 @@ app.use((_req, res, next) => {
   res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
   next();
 });
+
+app.use(publicAssetCompression());
 
 app.use(
   express.json({
