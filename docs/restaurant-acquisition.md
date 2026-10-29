@@ -15,9 +15,13 @@ On mobile, an assessment button appears after the hero's primary action has scro
 
 The production build reads Vite's manifest to include the restaurant route's CSS in the initial HTML. These pages omit the unrelated homepage poster preload, use responsive WebP photos, and request optional font display to avoid a late font swap on slow connections. The homepage keeps its existing preload and font behavior.
 
+The Express server negotiates Brotli/gzip for these campaign documents and shared `/assets/*.css` and `/assets/*.js` files. API and streaming responses are outside this compression scope. The public assets retain their existing cache policy.
+
 ### Advertising readiness
 
 The technical funnel supports campaign parameters, qualified enquiries and consent-gated conversion events after acknowledged delivery. This establishes implementation readiness, not measured campaign performance. The real recipient inbox and the conversion action in Google Ads still need an end-to-end delivery/Tag Assistant check before paid traffic. Campaign keywords, exclusions, geographical targeting, budget and ad/landing-page message matching must be reviewed in the advertising account; those settings are not established by this repository.
+
+Google Ads conversion measurement is implemented in the site's existing consent system. No Meta Pixel integration is present: Instagram/Facebook traffic can carry UTMs into enquiries, but website Lead-event optimization in Meta is not configured by these pages.
 
 The form deliberately asks for business qualification. Its completion rate and the quality of the resulting enquiries should determine whether to shorten it; no A/B winner or guaranteed conversion rate has been established.
 
