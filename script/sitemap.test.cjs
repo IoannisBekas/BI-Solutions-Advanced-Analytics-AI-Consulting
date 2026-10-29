@@ -11,10 +11,10 @@ test("the committed sitemap matches the maintained inventory and preserves the l
   assert.equal(sitemap.replace(/\r\n/g, "\n"), buildSitemap());
 });
 
-test("the release adds only the two approved English service pages to the live URL set", () => {
+test("the release adds the approved service and restaurant pages to the live URL set", () => {
   const baseline = new Set(liveBaseline.paths);
   const additions = canonicalRoutes().map((route) => route.path).filter((route) => !baseline.has(route));
-  assert.deepEqual(additions.sort(), ["/services/ai-automation", "/services/power-bi-consulting"]);
+  assert.deepEqual(additions.sort(), ["/el/meiosi-kostous-delivery", "/el/online-paraggelies", "/services/ai-automation", "/services/power-bi-consulting"]);
 });
 
 test("dropping a translated URL from XML fails coverage", () => {
@@ -48,6 +48,16 @@ test("focused services stay English-only while US pages retain their own canonic
       { hreflang: "x-default", href: `${inventory.origin}/services/${slug}` },
     ]);
     assert.ok(routes.some((route) => route.path === `/us/${slug}` && route.locale === "en"));
+  }
+});
+
+test("restaurant pages have only their Greek canonical URLs and no invented alternates", () => {
+  const routes = canonicalRoutes();
+  for (const slug of ["online-paraggelies", "meiosi-kostous-delivery"]) {
+    const entries = routes.filter((route) => route.path.endsWith(`/${slug}`));
+    assert.deepEqual(entries.map((route) => route.path), [`/el/${slug}`]);
+    assert.deepEqual(entries[0].alternates, []);
+    assert.equal(entries[0].render, "react");
   }
 });
 

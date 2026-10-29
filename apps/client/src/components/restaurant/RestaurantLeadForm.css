@@ -1,0 +1,74 @@
+.restaurant-lead {
+  --lead-ink: #20251f;
+  --lead-muted: #5b635a;
+  --lead-line: #dedfd7;
+  --lead-accent: #e6edb5;
+  min-width: 0;
+  width: 100%;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  border: 1px solid var(--lead-line);
+  border-radius: 24px;
+  background: #fff;
+  color: var(--lead-ink);
+  text-align: left;
+  box-shadow: 0 14px 50px #20251f06;
+}
+.restaurant-lead *, .restaurant-lead *::before, .restaurant-lead *::after { box-sizing: border-box; }
+.restaurant-lead-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; font-size: 12px; color: var(--lead-muted); }
+.restaurant-lead-progress > span:not(.restaurant-lead-progress-line) { display: flex; align-items: center; gap: 7px; line-height: 1.4; }
+.restaurant-lead-progress b { display: inline-grid; flex-shrink: 0; place-items: center; width: 26px; height: 26px; border: 1px solid var(--lead-line); border-radius: 50%; font-size: 11px; font-weight: 600; }
+.restaurant-lead-progress .is-current { color: var(--lead-ink); font-weight: 600; }
+.restaurant-lead-progress .is-current b, .restaurant-lead-progress .is-complete b { background: var(--lead-ink); border-color: var(--lead-ink); color: white; }
+.restaurant-lead-progress-line { width: 25px; height: 1px; background: var(--lead-line); flex-shrink: 0; }
+.restaurant-lead h3 { margin: 0; font-size: clamp(1.4rem, 3vw, 1.75rem); line-height: 1.25; font-weight: 600; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.restaurant-lead-intro { margin: 12px 0 0; font-size: 14px; line-height: 1.7; color: var(--lead-muted); }
+.restaurant-lead-required { margin: 16px 0 20px; font-size: 11px; color: var(--lead-muted); }
+.restaurant-lead-fields { display: grid; gap: 18px; min-width: 0; padding: 0; margin: 0; border: 0; }
+.restaurant-lead-fields label:not(.restaurant-lead-consent), .restaurant-lead-platforms legend { min-width: 0; font-size: 13px; font-weight: 600; line-height: 1.6; }
+.restaurant-lead-fields input:not([type=checkbox]), .restaurant-lead-fields select { display: block; width: 100%; min-width: 0; min-height: 48px; margin-top: 7px; padding: 11px 12px; border: 1px solid var(--lead-line); border-radius: 10px; background: #fdfdfb; color: var(--lead-ink); font-size: 16px; line-height: 1.45; font-weight: 400; outline: none; }
+.restaurant-lead-fields select { padding-right: 30px; text-overflow: ellipsis; }
+.restaurant-lead-fields input::placeholder { color: #767b74; }
+.restaurant-lead input:focus-visible, .restaurant-lead select:focus-visible, .restaurant-lead button:focus-visible, .restaurant-lead a:focus-visible, .restaurant-lead-platforms:focus-visible { outline: 2px solid #4f643f; outline-offset: 3px; }
+.restaurant-lead-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; min-width: 0; }
+.restaurant-lead-platforms { min-width: 0; margin: 0; padding: 0; border: 0; }
+.restaurant-lead-platforms p { margin: 4px 0 10px; font-size: 11px; line-height: 1.5; color: var(--lead-muted); }
+.restaurant-lead-platform-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.restaurant-lead-platform-options label { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 9px 12px; border: 1px solid var(--lead-line); border-radius: 9px; cursor: pointer; }
+.restaurant-lead-platform-options label:has(input:checked) { border-color: #536343; background: #f0f4e6; }
+.restaurant-lead-platform-options input, .restaurant-lead-consent input { width: 17px; height: 17px; flex-shrink: 0; margin: 0; accent-color: #334b2c; }
+.restaurant-lead-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.8; color: var(--lead-muted); }
+.restaurant-lead-consent input { margin-top: 4px; }
+.restaurant-lead a { color: inherit; text-underline-offset: 3px; text-decoration: underline; }
+.restaurant-lead-note, .restaurant-lead-footnote { font-size: 11px; line-height: 1.7; color: var(--lead-muted); }
+.restaurant-lead-note { margin: -7px 0 0; }
+.restaurant-lead-summary { display: grid; gap: 4px; padding: 14px 16px; border-radius: 10px; background: #f6f7f1; overflow-wrap: anywhere; }
+.restaurant-lead-summary span { font-size: 11px; color: var(--lead-muted); }
+.restaurant-lead-summary strong { font-size: 14px; font-weight: 600; }
+.restaurant-lead-actions { display: flex; gap: 12px; align-items: center; margin-top: 25px; }
+.restaurant-lead-submit, .restaurant-lead-back { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 48px; border-radius: 10px; font-size: 13px; line-height: 1.5; font-weight: 600; cursor: pointer; }
+.restaurant-lead-submit { flex: 1; min-width: 0; padding: 13px 15px; color: #fff; background: var(--lead-ink); border: 1px solid var(--lead-ink); }
+.restaurant-lead-submit:hover { background: #384431; }
+.restaurant-lead-back { padding: 11px 4px; border: 0; background: transparent; color: var(--lead-muted); }
+.restaurant-lead-submit svg, .restaurant-lead-back svg { flex-shrink: 0; }
+.restaurant-lead button:disabled { opacity: .6; cursor: wait; }
+.restaurant-lead-footnote { margin: 12px 0 0; text-align: center; }
+.restaurant-lead-error { margin-top: 20px; padding: 14px; border: 1px solid #d8a19a; border-radius: 10px; background: #fff7f5; color: #85352b; }
+.restaurant-lead-error p { margin: 0; font-size: 12px; line-height: 1.7; }
+.restaurant-lead-error a { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; font-weight: 600; }
+.restaurant-lead-sr-only, .restaurant-lead-honeypot { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.restaurant-lead-success { padding-block: clamp(2rem, 5vw, 4rem); }
+.restaurant-lead-success-icon { display: inline-grid; place-items: center; width: 50px; height: 50px; margin-bottom: 23px; border-radius: 50%; background: var(--lead-accent); }
+.restaurant-lead-eyebrow { margin: 0 0 10px; color: var(--lead-muted); font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; }
+.restaurant-lead-success > p:not(.restaurant-lead-eyebrow):not(.restaurant-lead-note) { margin: 18px 0; color: var(--lead-muted); font-size: 14px; line-height: 1.8; }
+.restaurant-lead-success .restaurant-lead-note { margin-top: 25px; }
+.restaurant-lead-spin { animation: restaurant-lead-spin 1s linear infinite; }
+@keyframes restaurant-lead-spin { to { transform: rotate(360deg); } }
+@media (max-width: 460px) {
+  .restaurant-lead { padding: 20px 16px; border-radius: 18px; }
+  .restaurant-lead-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .restaurant-lead-progress { gap: 8px; font-size: 11px; }
+  .restaurant-lead-progress-line { width: 12px; }
+  .restaurant-lead-actions { flex-wrap: wrap; }
+  .restaurant-lead-submit { padding-inline: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .restaurant-lead-spin { animation: none; } }

@@ -5,8 +5,10 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 export default function PrivacyPolicy() {
+  const { locale } = useLocale();
   return (
     <div className="min-h-screen bg-background">
       <Seo
@@ -21,7 +23,7 @@ export default function PrivacyPolicy() {
           eyebrow="Legal"
           title="Privacy Policy"
           description="How BI Solutions Group handles personal data, cookies, analytics, and service information."
-          footer={<p className="text-sm text-gray-400">Last updated: October 20, 2026</p>}
+          footer={<p className="text-sm text-gray-400">{locale === "el" ? "Τελευταία ενημέρωση: 30 Οκτωβρίου 2026" : locale === "de" ? "Zuletzt aktualisiert: 30. Oktober 2026" : "Last updated: October 30, 2026"}</p>}
         />
 
         <section className="mx-auto max-w-5xl px-6 md:px-12">
@@ -104,6 +106,13 @@ export default function PrivacyPolicy() {
                     </span>
                   </li>
                 </ul>
+                <p className="mt-4">
+                  {locale === "el"
+                    ? "Στα αιτήματα αξιολόγησης συστημάτων παραγγελιών συλλέγουμε τα στοιχεία επικοινωνίας σας, το κατάστημα, την περιοχή, τον ρόλο σας, τις πλατφόρμες που χρησιμοποιείτε, τον τρόπο διανομής και τον επιθυμητό χρόνο αλλαγής. Μαζί με το αίτημα αποστέλλονται η σελίδα προέλευσης και οι διαθέσιμες ενδείξεις καμπάνιας από το URL. Τα χρησιμοποιούμε για να αξιολογήσουμε και να απαντήσουμε στο αίτημά σας μέσω της υπηρεσίας αποστολής email. Η υποβολή δεν αποτελεί εγγραφή σε newsletter ή διαφημιστικό κοινό."
+                    : locale === "de"
+                      ? "Bei Anfragen zu Bestellsystemen erfassen wir Kontaktdaten, Betrieb, Standort, Rolle, verwendete Plattformen, Liefermöglichkeiten und den gewünschten Wechselzeitpunkt. Die Einstiegsseite und verfügbare Kampagnenangaben aus der URL werden mit der Anfrage übermittelt. Wir verwenden diese Informationen, um die Anfrage über unseren E-Mail-Dienst zu prüfen und zu beantworten. Die Anfrage meldet Sie weder für einen Newsletter noch für eine Werbezielgruppe an."
+                      : "Restaurant ordering enquiries include your contact details, business, area, role, current platforms, fulfilment arrangements and intended timing. The enquiry also includes its landing page and available campaign labels from the URL. We use this information to assess and respond to your enquiry through our email delivery service. Submitting an enquiry does not subscribe you to a newsletter or an advertising audience."}
+                </p>
               </section>
             </ScrollReveal>
 

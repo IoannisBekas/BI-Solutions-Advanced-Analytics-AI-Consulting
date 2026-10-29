@@ -4,7 +4,7 @@ import { useBrowserLocation } from "wouter/use-browser-location";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ScrollToTop from "@/utils/ScrollToTop";
 import { CookieConsent } from "@/components/CookieConsent";
-import { SITE_BASE_PATH } from "@/lib/site";
+import { SITE_BASE_PATH, withSiteBase } from "@/lib/site";
 import {
   DocumentLocalizer,
   LocaleProvider,
@@ -21,6 +21,8 @@ const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
 const StartProject = lazy(() => import("@/pages/StartProject"));
 const AiLearningProducts = lazy(() => import("@/pages/AiLearningProducts"));
+const RestaurantOrdering = lazy(() => import("@/pages/RestaurantOrdering"));
+const DeliveryTransition = lazy(() => import("@/pages/DeliveryTransition"));
 const USConsulting = lazy(() => import("@/pages/USConsulting"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
@@ -90,6 +92,20 @@ function RetiredServiceRoute({ slug }: { slug: string }) {
   return <PageFallback />;
 }
 
+function RestaurantRoute({ locale, page }: { locale: Locale; page: "ordering" | "transition" }) {
+  useEffect(() => {
+    if (locale === "el") return;
+    const path = page === "ordering" ? "/el/online-paraggelies" : "/el/meiosi-kostous-delivery";
+    const destination = new URL(withSiteBase(path), window.location.origin);
+    destination.search = window.location.search;
+    destination.hash = window.location.hash;
+    window.location.replace(destination.href);
+  }, [locale, page]);
+
+  if (locale !== "el") return <PageFallback />;
+  return page === "ordering" ? <RestaurantOrdering /> : <DeliveryTransition />;
+}
+
 function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
   return (
     <WouterRouter
@@ -118,6 +134,8 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
             <Route path="/blog/:slug" component={BlogPost} />
             <Route path="/about" component={About} />
             <Route path="/start-a-project" component={StartProject} />
+            <Route path="/online-paraggelies"><RestaurantRoute locale={locale} page="ordering" /></Route>
+            <Route path="/meiosi-kostous-delivery"><RestaurantRoute locale={locale} page="transition" /></Route>
           <Route path="/resources/ai-prompt-packs" component={AiLearningProducts} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route path="/terms-of-service" component={TermsOfService} />
