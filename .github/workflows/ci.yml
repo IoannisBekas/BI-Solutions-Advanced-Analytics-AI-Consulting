@@ -54,7 +54,7 @@ jobs:
         run: npm run test:validation
 
       - name: Lead acquisition tests
-        run: node --import tsx --test script/lead-acquisition.test.ts
+        run: node --import tsx --test script/lead-acquisition.test.ts apps/client/src/lib/restaurantLead.test.ts
 
       - name: Install Quantus dependencies
         working-directory: apps/quantus

@@ -125,7 +125,7 @@ function canonicalFor(routePath: string, locale: Locale, translatedLocales?: rea
  */
 function buildAlternates(routePath: string, translatedLocales?: readonly Locale[]) {
   const locales = translatedLocales ?? (isTranslatedRoute(routePath) ? LOCALES : []);
-  if (locales.length === 0) return [];
+  if (locales.length === 0 || (locales.length === 1 && locales[0] !== "en")) return [];
 
   const urlFor = (prefix: string) =>
     `${SITE_URL}${prefix}${routePath === "/" ? "/" : routePath}`;

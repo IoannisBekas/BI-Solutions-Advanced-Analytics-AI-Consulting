@@ -3,6 +3,10 @@ import path from "node:path";
 import ts from "typescript";
 
 const root = process.cwd();
+const routeInventory = JSON.parse(await fs.readFile(path.join(root, "shared", "search-routes.json"), "utf8"));
+const nativeLocaleRoutes = new Set(routeInventory.routes
+  .filter((route) => route.render === "react" && !route.locales.includes("en"))
+  .flatMap((route) => route.locales.map((locale) => `${locale}${route.path}/index.html`)));
 const blogDataPath = path.join(root, "apps", "client", "src", "data", "blogData.ts");
 const cataloguePath = path.join(
   root,
@@ -172,6 +176,8 @@ for (const locale of localizedRoots) {
 
   for (const localizedPage of localizedPages) {
     const relativePath = path.relative(localeRoot, localizedPage);
+    // Native localized pages have no English counterpart to compare against.
+    if (nativeLocaleRoutes.has(`${locale}/${relativePath.split(path.sep).join("/")}`)) continue;
     // Learning packs ship in English and Greek. The German route deliberately
     // serves an English fallback with English metadata and canonical URL.
     if (locale === "de" && relativePath.split(path.sep).join("/") === "resources/ai-prompt-packs/index.html") {

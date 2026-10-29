@@ -39,6 +39,7 @@ export function Footer() {
           ? "/services/ai-automation"
           : `/services#${slug}`,
     })),
+    ...(locale === "el" ? [{ label: "Online παραγγελίες για εστίαση", href: "/online-paraggelies" }] : []),
   ];
 
   const resourceLinks = [

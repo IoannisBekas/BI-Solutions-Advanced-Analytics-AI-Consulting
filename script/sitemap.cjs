@@ -11,7 +11,7 @@ function canonicalRoutes(source = inventory) {
     if (!route.path.startsWith("/") || /[?#]/.test(route.path)) {
       throw new Error(`Invalid canonical route: ${route.path}`);
     }
-    const alternates = route.render === "static" ? [] : [
+    const alternates = route.render === "static" || (route.locales.length === 1 && route.locales[0] !== "en") ? [] : [
       ...route.locales.map((locale) => ({
         hreflang: localeTags[locale],
         href: `${source.origin}${routeForLocale(route.path, locale)}`,
