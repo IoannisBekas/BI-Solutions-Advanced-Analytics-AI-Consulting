@@ -62,7 +62,7 @@ export function RestaurantAssessment({ landingPage }: { landingPage: "ordering" 
       <div className="restaurant-container restaurant-assessment__grid">
         <div className="restaurant-assessment__intro">
           <p className="restaurant-eyebrow">Ας δούμε το δικό σου κατάστημα</p>
-          <h2 id="restaurant-assessment-title">Το επόμενο βήμα<br />ξεκινά από εσένα.</h2>
+          <h2 id="restaurant-assessment-title">Το δικό σου κανάλι<br />ξεκινά εδώ.</h2>
           <p>Πες μας πώς λειτουργείς σήμερα και τι θέλεις να αλλάξεις. Θα εξετάσουμε μαζί αν ένα δικό σου κανάλι παραγγελιών ταιριάζει στην επιχείρησή σου.</p>
           <ul className="restaurant-checks">
             <li><Check size={18} aria-hidden="true" />Σύντομη αρχική αξιολόγηση, χωρίς χρέωση.</li>

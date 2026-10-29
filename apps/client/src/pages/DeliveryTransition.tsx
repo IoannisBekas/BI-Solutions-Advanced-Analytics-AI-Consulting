@@ -1,4 +1,6 @@
-import { ArrowDown, ArrowUpRight, Check, ClipboardList, Route, Scale } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Check } from "lucide-react";
+import { RestaurantIllustration } from "@/components/restaurant/RestaurantIllustration";
+import restaurantOwner from "@/assets/restaurant/restaurant-owner.webp";
 import {
   RestaurantAssessment,
   RestaurantCampaignLink,
@@ -20,22 +22,22 @@ export default function DeliveryTransition() {
       <section className="restaurant-container restaurant-hero restaurant-hero--transition" aria-labelledby="transition-title">
         <div className="restaurant-hero__copy">
           <p className="restaurant-eyebrow"><span className="restaurant-status-dot" />Ένα πλάνο πριν από την αλλαγή</p>
-          <h1 id="transition-title">Σκέφτεσαι να φύγεις<br />από τις πλατφόρμες<br /><em>delivery;</em></h1>
+          <h1 id="transition-title">Οι προμήθειες<br />κοστίζουν.<br /><em>Πάρε τον έλεγχο.</em></h1>
           <p className="restaurant-hero__description">Αν το κόστος σε κάνει να επανεξετάζεις efood, Wolt ή BOX, ξεκίνα από τα στοιχεία του δικού σου καταστήματος. Δες τι χρειάζεται για απευθείας παραγγελίες και αν η μετάβαση σε συμφέρει.</p>
-          <div className="restaurant-hero__actions"><RestaurantCta>Αξιολόγησε το επόμενο βήμα σου</RestaurantCta><a href="#plano-metavasis" className="restaurant-text-link">Πώς το εξετάζουμε <ArrowDown size={16} aria-hidden="true" /></a></div>
+          <div className="restaurant-hero__actions"><RestaurantCta>Ζήτησε πλάνο μετάβασης</RestaurantCta><a href="#plano-metavasis" className="restaurant-text-link">Πώς το εξετάζουμε <ArrowDown size={16} aria-hidden="true" /></a></div>
           <p className="restaurant-hero__footnote">Για ιδιοκτήτες και υπεύθυνους καταστημάτων εστίασης.</p>
         </div>
         <div className="restaurant-decision" aria-label="Οι τρεις πλευρές μιας απόφασης μετάβασης">
-          <div className="restaurant-decision__top"><span>Η απόφαση του καταστήματός σου</span><Scale size={22} strokeWidth={1.5} aria-hidden="true" /></div>
+          <figure className="restaurant-decision__photo"><img src={restaurantOwner} alt="Εικαστική απεικόνιση επαγγελματία εστίασης που χρησιμοποιεί tablet στον πάγκο του καταστήματός του" width="1200" height="800" fetchPriority="high" /><figcaption>Η δική σου επιχείρηση.<br /><strong>Οι δικές σου επιλογές.</strong></figcaption></figure>
           <p className="restaurant-decision__title">Πρώτα οι αριθμοί.<br /><em>Μετά η αλλαγή.</em></p>
-          <ul><li><span>01</span><div><strong>Οι πελάτες που μπορούν να ακολουθήσουν</strong><p>Πόσες παραγγελίες μπορούν ρεαλιστικά να μεταφερθούν;</p></div></li><li><span>02</span><div><strong>Η διανομή που μπορείς να στηρίξεις</strong><p>Δική σου ομάδα, συνεργάτης ή παραλαβή;</p></div></li><li><span>03</span><div><strong>Το συνολικό κόστος λειτουργίας</strong><p>Τι αποφεύγεις και τι χρειάζεται να αναλάβεις;</p></div></li></ul>
+          <ul><li><RestaurantIllustration kind="customers" /><div><strong>Οι πελάτες που μπορούν να ακολουθήσουν</strong><p>Πόσες παραγγελίες μπορούν ρεαλιστικά να μεταφερθούν;</p></div></li><li><RestaurantIllustration kind="delivery" /><div><strong>Η διανομή που μπορείς να στηρίξεις</strong><p>Δική σου ομάδα, συνεργάτης ή παραλαβή;</p></div></li><li><RestaurantIllustration kind="cost" /><div><strong>Το συνολικό κόστος λειτουργίας</strong><p>Τι αποφεύγεις και τι χρειάζεται να αναλάβεις;</p></div></li></ul>
           <div className="restaurant-decision__bottom"><Check size={17} aria-hidden="true" />Αξιολόγηση με τα δικά σου δεδομένα.</div>
         </div>
       </section>
 
       <section id="plano-metavasis" className="restaurant-section restaurant-container" aria-labelledby="transition-plan-title">
-        <div className="restaurant-section__heading"><div><p className="restaurant-eyebrow">Πώς σχεδιάζεται η μετάβαση</p><h2 id="transition-plan-title">Ένα βήμα τη φορά.<br />Με ξεκάθαρες προϋποθέσεις.</h2></div><p>Η μείωση της εξάρτησης και η πλήρης αποχώρηση είναι διαφορετικές αποφάσεις. Το πλάνο ξεκινά από αυτό που θέλεις να πετύχεις.</p></div>
-        <ol className="restaurant-transition-steps"><li><ClipboardList size={27} strokeWidth={1.5} aria-hidden="true" /><span>01 / Αποτύπωση</span><h3>Βλέπουμε πώς<br />λειτουργείς σήμερα.</h3><p>Παραγγελίες, χρεώσεις, δυνατότητα διανομής και επαναλαμβανόμενοι πελάτες. Συζητάμε τι θέλεις να αλλάξεις και πότε.</p></li><li><Scale size={27} strokeWidth={1.5} aria-hidden="true" /><span>02 / Σύγκριση</span><h3>Υπολογίζουμε<br />το πραγματικό κόστος.</h3><p>Συγκρίνουμε τις χρεώσεις που αποφεύγονται με τα πρόσθετα κόστη και τις παραγγελίες που ενδέχεται να μη μεταφερθούν.</p></li><li><Route size={27} strokeWidth={1.5} aria-hidden="true" /><span>03 / Πρόταση</span><h3>Ορίζουμε μια<br />συγκεκριμένη διαδρομή.</h3><p>Αν υπάρχει κατάλληλο σενάριο, προτείνουμε το σύστημα, τη ροή λήψης παραγγελιών και τα βήματα έναρξης.</p></li></ol>
+        <div className="restaurant-section__heading"><div><p className="restaurant-eyebrow">Πώς σχεδιάζεται η μετάβαση</p><h2 id="transition-plan-title">Λιγότερη εξάρτηση.<br />Με συγκεκριμένο πλάνο.</h2></div><p>Η μείωση της εξάρτησης και η πλήρης αποχώρηση είναι διαφορετικές αποφάσεις. Το πλάνο ξεκινά από αυτό που θέλεις να πετύχεις.</p></div>
+        <ol className="restaurant-transition-steps"><li><RestaurantIllustration kind="customers" /><span>01 / Αποτύπωση</span><h3>Βλέπουμε πώς<br />λειτουργείς σήμερα.</h3><p>Παραγγελίες, χρεώσεις, δυνατότητα διανομής και επαναλαμβανόμενοι πελάτες. Συζητάμε τι θέλεις να αλλάξεις και πότε.</p></li><li><RestaurantIllustration kind="cost" /><span>02 / Σύγκριση</span><h3>Υπολογίζουμε<br />το πραγματικό κόστος.</h3><p>Συγκρίνουμε τις χρεώσεις που αποφεύγονται με τα πρόσθετα κόστη και τις παραγγελίες που ενδέχεται να μη μεταφερθούν.</p></li><li><RestaurantIllustration kind="plan" /><span>03 / Πρόταση</span><h3>Ορίζουμε μια<br />συγκεκριμένη διαδρομή.</h3><p>Αν υπάρχει κατάλληλο σενάριο, προτείνουμε το σύστημα, τη ροή λήψης παραγγελιών και τα βήματα έναρξης.</p></li></ol>
       </section>
 
       <section className="restaurant-comparison-section" aria-labelledby="transition-comparison-title">
