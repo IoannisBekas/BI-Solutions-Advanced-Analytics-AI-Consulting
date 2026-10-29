@@ -1,0 +1,4 @@
+# Historical false positive: the public localStorage consent identifier in the
+# first restaurant smoke-test commit. The variable is now named for storage;
+# this exception covers only that exact historical finding, not future values.
+7fb71271cd200fa2bc7d2010b093e20bf63c2c47:script/restaurant-acquisition-smoke.mjs:generic-api-key:8

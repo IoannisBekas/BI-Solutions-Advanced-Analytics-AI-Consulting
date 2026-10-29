@@ -36,6 +36,7 @@ export function RestaurantLeadForm({ landingPage }: { landingPage: RestaurantLan
   const platformsField = useRef<HTMLFieldSetElement>(null);
   const hasStarted = useRef(false);
   const submitLock = useRef(false);
+  const submission = useRef({ payload: "", id: "" });
   const previousStep = useRef(step);
   const attribution = useRef<RestaurantAttribution>({ landingPath: "", campaign: {} });
 
@@ -111,16 +112,21 @@ export function RestaurantLeadForm({ landingPage }: { landingPage: RestaurantLan
     const timeout = window.setTimeout(() => controller.abort(), 20000);
 
     try {
+      const contactPayload = buildRestaurantLeadPayload(values, landingPage, attribution.current);
+      const serializedPayload = JSON.stringify(contactPayload);
+      if (submission.current.payload !== serializedPayload) {
+        submission.current = { payload: serializedPayload, id: crypto.randomUUID() };
+      }
       const response = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(buildRestaurantLeadPayload(values, landingPage, attribution.current)),
+        body: JSON.stringify({ ...contactPayload, inquiryId: submission.current.id }),
         signal: controller.signal,
       });
       const payload: unknown = await response.json().catch(() => null);
       if (!isRestaurantLeadAcknowledged(response.ok, payload)) throw new Error("Unconfirmed contact submission");
       setStatus("success");
-      trackLeadConversion();
+      trackLeadConversion(submission.current.id);
       trackEvent("restaurant_form_submit", { landing_page: landingPage });
     } catch {
       setError("Δεν επιβεβαιώθηκε η αποστολή του αιτήματος. Τα στοιχεία σου παραμένουν εδώ για να δοκιμάσεις ξανά. Μπορείς επίσης να επικοινωνήσεις μαζί μας στο Instagram.");

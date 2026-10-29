@@ -5,7 +5,7 @@ import { chromium } from "playwright";
 
 const base = (process.env.SMOKE_BASE_URL || "http://127.0.0.1:5178").replace(/\/$/, "");
 const output = "output/playwright/restaurant-acquisition";
-const consentKey = "bi-measurement-consent-v2";
+const consentStorageName = "bi-measurement-consent-v2";
 const routes = ["/el/online-paraggelies", "/el/meiosi-kostous-delivery"];
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: "chrome" });
@@ -13,9 +13,9 @@ const results = [];
 
 async function open(path, width = 1280, measurement = false) {
   const context = await browser.newContext({ viewport: { width, height: width < 500 ? 844 : 900 }, reducedMotion: "reduce" });
-  await context.addInitScript(({ consentKey, measurement }) => {
-    localStorage.setItem(consentKey, JSON.stringify({ analytics: measurement, ads: measurement, savedAt: Date.now() }));
-  }, { consentKey, measurement });
+  await context.addInitScript(({ consentStorageName, measurement }) => {
+    localStorage.setItem(consentStorageName, JSON.stringify({ analytics: measurement, ads: measurement, savedAt: Date.now() }));
+  }, { consentStorageName, measurement });
   const external = [];
   await context.route("**/*", async (route) => {
     const url = route.request().url();
@@ -126,11 +126,14 @@ try {
     await page.locator("form.restaurant-lead").dispatchEvent("submit");
     await page.locator(".restaurant-lead-success").waitFor();
     assert.equal(submissions.length, 3, "rapid duplicate submits must create one request");
+    assert.match(submissions[2].inquiryId, /^[a-f0-9-]{36}$/);
+    assert.equal(submissions[0].inquiryId, submissions[2].inquiryId, "unchanged retries reuse the provider idempotency reference");
     assert.match(submissions[2].message, /utm_campaign: restaurant-qa/);
     assert.match(submissions[2].message, /Πλατφόρμες: Wolt/);
     assert.doesNotMatch(submissions[2].message, /gclid|do-not-copy/);
     const queue = await events(page);
     assert.equal(queue.filter((entry) => entry[1] === "conversion").length, measurement ? 1 : 0);
+    if (measurement) assert.equal(queue.find((entry) => entry[1] === "conversion")[2].transaction_id, submissions[2].inquiryId);
     assert.doesNotMatch(JSON.stringify(queue), /qa@example.invalid|2100000000|QA Δοκιμή|restaurant-qa/);
     await page.locator(".restaurant-lead-success").screenshot({ path: `${output}/form-success-${measurement}.png` });
     await page.reload({ waitUntil: "networkidle" });
