@@ -260,12 +260,14 @@ export default function CaseStudyDetail() {
               Outcome
             </p>
             <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-              What the demonstration proves.
+              {caseStudy.evidenceSource === "linkedin"
+                ? "What the public project account documents."
+                : "What the demonstration proves."}
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Because this is an independent demonstration rather than a client
-              engagement, outcomes are described as delivered capabilities—not
-              invented performance metrics.
+              {caseStudy.evidenceSource === "linkedin"
+                ? "This client project account documents delivered capabilities using already public information. Quantified business results have not been published."
+                : "Because this is an independent demonstration rather than a client engagement, outcomes are described as delivered capabilities—not invented performance metrics."}
             </p>
           </ScrollReveal>
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
