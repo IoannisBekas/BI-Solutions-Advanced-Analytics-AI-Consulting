@@ -4,10 +4,11 @@ import paroliCover from "@/assets/case-studies/paroli-cover.webp";
 import paroliCoverMobile from "@/assets/case-studies/paroli-cover-800.webp";
 import foodHero from "@/assets/restaurant/food-hero.webp";
 import foodHeroMobile from "@/assets/restaurant/food-hero-800.webp";
+import restaurantOwner from "@/assets/restaurant/restaurant-owner.webp";
+import restaurantOwnerMobile from "@/assets/restaurant/restaurant-owner-800.webp";
 import { withSiteBase } from "@/lib/site";
 import {
   RestaurantAssessment,
-  RestaurantCampaignLink,
   RestaurantCta,
   RestaurantFaq,
   RestaurantLandingLayout,
@@ -25,20 +26,22 @@ const faqs = [
   { question: "Ποιος κάνει τη διανομή;", answer: "Το σύστημα παραγγελιών δεν περιλαμβάνει από μόνο του στόλο διανομέων. Χρειάζεται δική σου δυνατότητα διανομής, ξεχωριστή συνεργασία ή παραλαβή από το κατάστημα. Αυτό είναι από τα πρώτα θέματα της αξιολόγησης." },
   { question: "Πόσο κοστίζει η κατασκευή και η λειτουργία;", answer: "Η προσφορά διαχωρίζει εγκατάσταση, λειτουργία, υποστήριξη και τυχόν εξωτερικές υπηρεσίες. Οι πληρωμές, η διανομή και η διαφήμιση μπορεί να έχουν επιπλέον κόστος. Η τελική τιμή προκύπτει αφού οριστεί το εύρος του δικού σου έργου." },
   { question: "Μπορεί να συνδεθεί με το σύστημα που χρησιμοποιώ;", answer: "Οι συνδέσεις με POS, εκτυπωτές, ERP ή παρόχους πληρωμών εξετάζονται πριν την προσφορά. Η δυνατότητα και το κόστος εξαρτώνται από τα συγκεκριμένα συστήματα και τις διαθέσιμες διασυνδέσεις τους." },
+  { question: "Αν σταματήσω τις πλατφόρμες, θα κρατήσω όλες τις παραγγελίες;", answer: "Δεν μπορεί να δοθεί τέτοια εγγύηση. Ένα μέρος των πελατών μπορεί να μην ακολουθήσει στο δικό σου κανάλι. Γι’ αυτό εξετάζουμε ρεαλιστικά πόσες παραγγελίες μπορούν να μεταφερθούν και πώς επηρεάζεται το περιθώριο κέρδους σου." },
+  { question: "Πώς θα μάθουν οι πελάτες το νέο μου site;", answer: "Το πλάνο μπορεί να περιλαμβάνει τα δικά σου κανάλια, όπως το site, τα κοινωνικά δίκτυα και το Google Business Profile, καθώς και επικοινωνία προς πελάτες όπου επιτρέπεται. Η δημιουργία ενός site από μόνη της δεν φέρνει αυτόματα παραγγελίες." },
   { question: "Το PAROLI είναι πραγματικό έργο πελάτη;", answer: "Το PAROLI παρουσιάζεται εδώ ως ανεξάρτητο δείγμα σχεδιασμού και εμπειρίας απευθείας παραγγελίας. Δεν αποτελεί μαρτυρία πελάτη ή απόδειξη οικονομικών αποτελεσμάτων και το demo δεν αποστέλλει πραγματικές παραγγελίες." },
 ];
 
 export default function RestaurantOrdering() {
   return (
-    <RestaurantLandingLayout page="ordering" title="Σύστημα online παραγγελιών για την εστίαση" description="Δικό σου site παραγγελιών για καφέ, ψητοπωλείο ή εστιατόριο. Δες το δείγμα, τις προϋποθέσεις και ζήτησε δωρεάν αρχική αξιολόγηση για το κατάστημά σου.">
+    <RestaurantLandingLayout title="Δικό σου σύστημα παραγγελιών και πλάνο μετάβασης" description="Θέλεις να μειώσεις την εξάρτηση από efood, Wolt ή BOX; Δες το δικό σου σύστημα παραγγελιών, το demo και το πλάνο μετάβασης. Ζήτησε δωρεάν αρχική αξιολόγηση.">
       <div className="restaurant-hero-stage">
       <nav className="restaurant-container restaurant-breadcrumb" aria-label="Διαδρομή σελίδας"><a href={withSiteBase("/el/")}>BI Solutions Group</a><span aria-hidden="true">/</span><span aria-current="page">Λύσεις για την εστίαση</span></nav>
       <section className="restaurant-container restaurant-hero restaurant-hero--ordering" aria-labelledby="ordering-title">
         <div className="restaurant-hero__copy">
-          <p className="restaurant-eyebrow"><span className="restaurant-status-dot" />Απευθείας παραγγελίες · Εστίαση</p>
+          <p className="restaurant-eyebrow"><span className="restaurant-status-dot" />Για ιδιοκτήτες εστίασης · Απευθείας παραγγελίες</p>
           <h1 id="ordering-title">Απόφυγε τις<br /><em>υπέρογκες χρεώσεις</em><br />των πλατφορμών.</h1>
-          <p className="restaurant-hero__description">Δικό σου site. Απευθείας παραγγελίες. Ένα κανάλι για τους πελάτες σου, με την επωνυμία σου και μια ροή που ταιριάζει στο κατάστημά σου.</p>
-          <div className="restaurant-hero__actions"><RestaurantCta landingPage="ordering">Ζήτησε το δικό σου σύστημα</RestaurantCta><a href="#paradeigma" className="restaurant-text-link">Δες το παράδειγμα <ArrowDown size={16} aria-hidden="true" /></a></div>
+          <p className="restaurant-hero__description">Δικό σου site. Απευθείας παραγγελίες. Αν σκέφτεσαι να μειώσεις την εξάρτηση από efood, Wolt ή BOX, σχεδιάζουμε το σύστημα και τη μετάβαση γύρω από το δικό σου κατάστημα.</p>
+          <div className="restaurant-hero__actions"><RestaurantCta landingPage="ordering">Ζήτησε δωρεάν αξιολόγηση</RestaurantCta><a href="#paradeigma" className="restaurant-text-link">Δες το παράδειγμα <ArrowDown size={16} aria-hidden="true" /></a></div>
           <p className="restaurant-hero__footnote">Δωρεάν αρχική αξιολόγηση. Χωρίς δέσμευση υλοποίησης.</p>
         </div>
         <figure className="restaurant-showcase">
@@ -70,9 +73,12 @@ export default function RestaurantOrdering() {
         </div>
       </section>
 
-      <section className="restaurant-section restaurant-container restaurant-fit" aria-labelledby="ordering-fit-title">
-        <div><p className="restaurant-eyebrow">Πότε έχει περισσότερο νόημα</p><h2 id="ordering-fit-title">Έχεις ήδη πελάτες.<br />Δώσε τους μια άμεση διαδρομή.</h2><p>Ένα δικό σου site χρειάζεται και τρόπο να φέρνεις παραγγελίες σε αυτό. Στην αρχική αξιολόγηση εξετάζουμε τις προϋποθέσεις της δικής σου επιχείρησης.</p><RestaurantCampaignLink path="/el/meiosi-kostous-delivery" className="restaurant-text-link">Σκέφτεσαι αποχώρηση από τις πλατφόρμες; <ArrowUpRight size={17} aria-hidden="true" /></RestaurantCampaignLink></div>
-        <ul className="restaurant-fit__list"><li><Check size={20} aria-hidden="true" /><div><h3>Επαναλαμβανόμενη πελατεία</h3><p>Πελάτες που γνωρίζουν το κατάστημα και παραγγέλνουν ξανά.</p></div></li><li><Check size={20} aria-hidden="true" /><div><h3>Διανομή ή παραλαβή</h3><p>Πρακτικός τρόπος να εξυπηρετείς την παραγγελία εκτός πλατφόρμας.</p></div></li><li><Check size={20} aria-hidden="true" /><div><h3>Ομάδα που μπορεί να το λειτουργήσει</h3><p>Κάποιος που ενημερώνει το μενού και διαχειρίζεται τα νέα αιτήματα.</p></div></li></ul>
+      <section id="plano-metavasis" className="restaurant-section restaurant-container" aria-labelledby="transition-plan-title">
+        <div className="restaurant-section__heading restaurant-transition-heading">
+          <div><p className="restaurant-eyebrow">Πώς ξεκινάμε μαζί</p><h2 id="transition-plan-title">Λιγότερη εξάρτηση.<br />Με συγκεκριμένο πλάνο.</h2><p className="restaurant-transition-intro">Εξετάζουμε τους πελάτες σου, τη δυνατότητα διανομής ή παραλαβής και το συνολικό κόστος. Έτσι, το σύστημα και η μετάβαση σχεδιάζονται ως ένα έργο.</p></div>
+          <figure className="restaurant-transition-photo"><img src={restaurantOwner} srcSet={`${restaurantOwnerMobile} 800w, ${restaurantOwner} 1200w`} sizes="(min-width: 851px) 35vw, (min-width: 601px) 45vw, calc(100vw - 40px)" alt="Εικαστική απεικόνιση επαγγελματία εστίασης που οργανώνει τις παραγγελίες του με tablet" width="1200" height="800" loading="lazy" /></figure>
+        </div>
+        <ol className="restaurant-transition-steps"><li><RestaurantIllustration kind="customers" /><span>01 / Αποτύπωση</span><h3>Βλέπουμε πώς<br />λειτουργείς σήμερα.</h3><p>Παραγγελίες, πραγματικές χρεώσεις, επαναλαμβανόμενοι πελάτες και δυνατότητα διανομής. Συζητάμε τι θέλεις να αλλάξεις.</p></li><li><RestaurantIllustration kind="cost" /><span>02 / Σύγκριση</span><h3>Υπολογίζουμε<br />το συνολικό κόστος.</h3><p>Συγκρίνουμε τις χρεώσεις που αποφεύγονται με τα κόστη του δικού σου καναλιού και τις παραγγελίες που μπορεί να μη μεταφερθούν.</p></li><li><RestaurantIllustration kind="plan" /><span>03 / Υλοποίηση</span><h3>Σχεδιάζουμε σύστημα<br />και βήματα μετάβασης.</h3><p>Ορίζουμε μενού, λήψη παραγγελιών, διανομή ή παραλαβή, υποστήριξη και τρόπο ενημέρωσης των πελατών σου.</p></li></ol>
       </section>
 
       <RestaurantAssessment landingPage="ordering" />
