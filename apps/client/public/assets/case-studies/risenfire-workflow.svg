@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Risenfire workforce reporting workflow</title>
+  <desc id="desc">A workflow illustration based on the public project account. Dataverse operational data connects to a Power BI semantic model and workforce reporting. This is not a client dashboard screenshot.</desc>
+  <rect width="1200" height="675" fill="#0a101a"/>
+  <g font-family="Arial, sans-serif" fill="#fff">
+    <text x="70" y="90" font-size="18" letter-spacing="3" fill="#a8bfd9">BI SOLUTIONS GROUP · CLIENT PROJECT</text>
+    <text x="70" y="160" font-size="45" font-weight="700">Risenfire workforce reporting</text>
+    <text x="70" y="208" font-size="23" fill="#bfd0e3">Availability, scheduled work, and project capacity</text>
+    <g fill="#142337" stroke="#647e9c" stroke-width="2">
+      <rect x="70" y="294" width="300" height="180" rx="18"/>
+      <rect x="450" y="294" width="300" height="180" rx="18"/>
+      <rect x="830" y="294" width="300" height="180" rx="18"/>
+    </g>
+    <g stroke="#b5d7ff" stroke-width="3" fill="none">
+      <path d="M382 384h54m-12-10 12 10-12 10"/>
+      <path d="M762 384h54m-12-10 12 10-12 10"/>
+    </g>
+    <g text-anchor="middle">
+      <text x="220" y="352" font-size="27" font-weight="700">Dataverse</text>
+      <text x="220" y="397" font-size="21" fill="#bfd0e3">Operational data</text>
+      <text x="220" y="431" font-size="19" fill="#bfd0e3">Common Data Service</text>
+      <text x="600" y="352" font-size="27" font-weight="700">Power BI model</text>
+      <text x="600" y="397" font-size="21" fill="#bfd0e3">Validation and lineage</text>
+      <text x="600" y="431" font-size="19" fill="#bfd0e3">Scheduled refresh</text>
+      <text x="980" y="352" font-size="27" font-weight="700">Workforce reporting</text>
+      <text x="980" y="397" font-size="21" fill="#bfd0e3">Availability and workload</text>
+      <text x="980" y="431" font-size="19" fill="#bfd0e3">Assigned and remaining hours</text>
+    </g>
+    <text x="70" y="576" font-size="18" fill="#a8bfd9">Workflow illustration based on the public project account.</text>
+    <text x="70" y="610" font-size="18" fill="#a8bfd9">Not a client dashboard screenshot. No client data is shown.</text>
+  </g>
+</svg>

@@ -16,8 +16,8 @@ import {
   type WebsiteProject,
 } from "@/data/websiteProjects";
 import { trackEvent } from "@/lib/analytics";
-import { withAssetBase } from "@/lib/site";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { withAssetBase, withSiteBase } from "@/lib/site";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
 const latestInsight = homeInsights[0];
 const moreInsights = homeInsights.slice(1);
@@ -101,6 +101,7 @@ function WebsiteProjectCard({
 
 export default function Home() {
   const { t, locale } = useLocale();
+  const localizedHref = useLocalizedHref();
   const [activeProject, setActiveProject] = useState(0);
   const [manualPause, setManualPause] = useState(false);
   const [interactionPause, setInteractionPause] = useState(false);
@@ -232,7 +233,7 @@ export default function Home() {
               "professional upskilling",
             ],
             sameAs: [
-              "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
+              "https://www.linkedin.com/company/bi-solutions-group-bekas/",
               "https://github.com/IoannisBekas",
               "https://www.instagram.com/bisolutions.group/",
             ],
@@ -324,7 +325,7 @@ export default function Home() {
             sameAs: [
               "https://linkedin.com/in/ioannisbekas",
               "https://github.com/IoannisBekas",
-              "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
+              "https://www.linkedin.com/company/bi-solutions-group-bekas/",
             ],
             knowsAbout: [
               "business intelligence",
@@ -458,15 +459,18 @@ export default function Home() {
                 See the thinking, structure, and outputs behind the work.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-400">
-                These independent portfolio analyses use synthetic or
-                representative demonstration data to show how complex reporting
-                questions can become focused, usable Power BI experiences.
+                Explore a public client delivery account alongside independent
+                portfolio analyses. Each case explains the relationship, data
+                context, reporting problem, and delivered work.
               </p>
             </ScrollReveal>
 
             <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
               {caseStudies.map((caseStudy, index) => {
-                const href = `/case-studies/${caseStudy.slug}`;
+                const path = `/case-studies/${caseStudy.slug}`;
+                const href = caseStudy.translatedLocales && !caseStudy.translatedLocales.includes(locale)
+                  ? withSiteBase(path)
+                  : localizedHref(path);
 
                 return (
                   <ScrollReveal
@@ -475,7 +479,7 @@ export default function Home() {
                     className={index === 1 ? "lg:mt-10" : index === 2 ? "lg:mt-20" : undefined}
                     width="100%"
                   >
-                    <Link
+                    <a
                       href={href}
                       className="group block h-full"
                       onClick={() =>
@@ -518,7 +522,7 @@ export default function Home() {
                           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </div>
                       </article>
-                    </Link>
+                    </a>
                   </ScrollReveal>
                 );
               })}

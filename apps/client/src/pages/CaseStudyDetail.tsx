@@ -28,6 +28,7 @@ export default function CaseStudyDetail() {
         title={caseStudy.seoTitle}
         description={caseStudy.seoDescription}
         path={path}
+        translatedLocales={caseStudy.translatedLocales}
         image={caseStudy.image}
         keywords={[
           "Power BI case study",
@@ -125,12 +126,12 @@ export default function CaseStudyDetail() {
                     onClick={() =>
                       trackEvent("proof_source_click", {
                         case_study: caseStudy.slug,
-                        source: "github",
+                        source: caseStudy.evidenceSource ?? "github",
                         target: caseStudy.evidenceHref,
                       })
                     }
                   >
-                    View technical source
+                    {caseStudy.evidenceCtaLabel ?? "View technical source"}
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 </Button>
@@ -301,7 +302,7 @@ export default function CaseStudyDetail() {
                 onClick={() =>
                   trackEvent("proof_source_click", {
                     case_study: caseStudy.slug,
-                    source: "github",
+                    source: caseStudy.evidenceSource ?? "github",
                     target: caseStudy.evidenceHref,
                   })
                 }

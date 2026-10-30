@@ -11,10 +11,10 @@ test("the committed sitemap matches the maintained inventory and preserves the l
   assert.equal(sitemap.replace(/\r\n/g, "\n"), buildSitemap());
 });
 
-test("the release adds the approved service and restaurant pages to the live URL set", () => {
+test("the release adds the approved service, restaurant and client case pages to the live URL set", () => {
   const baseline = new Set(liveBaseline.paths);
   const additions = canonicalRoutes().map((route) => route.path).filter((route) => !baseline.has(route));
-  assert.deepEqual(additions.sort(), ["/el/online-paraggelies", "/services/ai-automation", "/services/power-bi-consulting"]);
+  assert.deepEqual(additions.sort(), ["/case-studies/risenfire-workforce-reporting", "/el/online-paraggelies", "/services/ai-automation", "/services/power-bi-consulting"]);
 });
 
 test("dropping a translated URL from XML fails coverage", () => {

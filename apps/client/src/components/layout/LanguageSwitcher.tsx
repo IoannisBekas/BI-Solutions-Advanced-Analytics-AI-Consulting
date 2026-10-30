@@ -27,7 +27,10 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       ? localePath.slice(0, -1)
       : localePath;
     const englishOnlyService = path === "/services/power-bi-consulting" || path === "/services/ai-automation";
-    const targetPath = englishOnlyService && target !== "en" ? "/services" : path;
+    const englishOnlyCase = path === "/case-studies/risenfire-workforce-reporting";
+    const targetPath = target !== "en" && englishOnlyCase
+      ? "/"
+      : englishOnlyService && target !== "en" ? "/services" : path;
 
     return `${SITE_BASE_PATH}${pathForLocale(targetPath, target)}`;
   };

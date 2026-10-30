@@ -175,7 +175,7 @@ export function Footer() {
                 <Instagram aria-hidden="true" className="h-5 w-5" />
               </a>
               <a
-                href="https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/"
+                href="https://www.linkedin.com/company/bi-solutions-group-bekas/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="BI Solutions Group on LinkedIn"

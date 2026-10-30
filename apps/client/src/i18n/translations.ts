@@ -57,7 +57,7 @@ const en: TranslationCatalogue = {
   home: {
     seoTitle: "AI, BI & Web App Development",
     seoDescription:
-      "BI Solutions Group builds BI, AI, data foundations and web applications for organizations worldwide — from strategy through to training and handover.",
+      "Data, Analytics & AI consulting from Greece: strategy, engineering, automation, web development, content operations and training for international teams.",
   },
   nav: {
     services: "Services",
@@ -132,7 +132,7 @@ const el: TranslationCatalogue = {
   home: {
     seoTitle: "Ανάπτυξη AI, BI & Web εφαρμογών",
     seoDescription:
-      "Η BI Solutions Group χτίζει BI, τεχνητή νοημοσύνη, υποδομές δεδομένων και web εφαρμογές — από τη στρατηγική έως την παράδοση και την εκπαίδευση.",
+      "Συμβουλευτική Data, Analytics & AI: στρατηγική, data engineering, αυτοματισμοί, websites και εφαρμογές, περιεχόμενο και εκπαίδευση από την Ελλάδα.",
   },
   nav: {
     services: "Υπηρεσίες",
@@ -227,7 +227,7 @@ const de: TranslationCatalogue = {
   home: {
     seoTitle: "KI-, BI- & Web-App-Entwicklung",
     seoDescription:
-      "BI Solutions Group baut BI, KI, Datenfundamente und Webanwendungen für Unternehmen weltweit — von der Strategie bis zu Übergabe und Training.",
+      "Daten-, Analytics- und KI-Beratung aus Griechenland: Strategie, Data Engineering, Automatisierung, Webentwicklung, Content und Schulungen für internationale Teams.",
   },
   nav: {
     services: "Leistungen",

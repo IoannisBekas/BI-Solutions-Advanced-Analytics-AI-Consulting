@@ -72,6 +72,7 @@ async function readRoutesFromSitemap() {
   // hreflang stays limited to TRANSLATED_ROUTES.
   const localised = canonicalRoutes.filter((route) =>
     !route.startsWith("/us/") &&
+    route !== "/case-studies/risenfire-workforce-reporting" &&
     !/^\/services\/(?:power-bi-consulting|ai-automation)$/.test(route),
   ).flatMap((route) =>
     LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(

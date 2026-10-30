@@ -439,6 +439,16 @@
       "lastmod": "2026-10-30",
       "changefreq": "monthly",
       "priority": "0.7"
+    },
+    {
+      "path": "/case-studies/risenfire-workforce-reporting",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-30",
+      "changefreq": "monthly",
+      "priority": "0.7"
     }
   ]
 }

@@ -509,7 +509,7 @@ export default function About() {
                         </span>
                         github.com/IoannisBekas
                       </a>
-                      <a href="https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
+                      <a href="https://www.linkedin.com/company/bi-solutions-group-bekas/" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
                         <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
                           <Linkedin aria-hidden="true" className="w-5 h-5" />
                         </span>

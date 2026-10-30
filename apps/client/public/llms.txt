@@ -1,13 +1,13 @@
 # BI Solutions Group
 
-BI Solutions Group is a consultancy based in Greece and founded by Ioannis Bekas, providing AI consulting, analytics, business intelligence, data strategy, web app development, and data career mentorship through remote international delivery. It helps organizations move from strategy through implementation and helps professionals build practical capability from entry level through senior career stages.
+BI Solutions Group is a Greece-based Data, Analytics & AI consultancy led by Ioannis Bekas. Its six service areas are Business Intelligence & Power BI, AI Consulting & Automation, Data Strategy & Cloud, Web & Search Visibility, Content Operations & Digital Products, and Enablement & Mentorship. Work spans strategy, advanced analytics, statistics and machine learning, data engineering and integration, implementation, training, documentation and ongoing support for teams in Greece and internationally.
 
 Primary website: https://www.bisolutions.group/
 Greek homepage: https://www.bisolutions.group/el/
 German homepage: https://www.bisolutions.group/de/
 Founder profile: https://www.bisolutions.group/about
 Project enquiries: https://www.bisolutions.group/start-a-project
-LinkedIn: https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/
+LinkedIn: https://www.linkedin.com/company/bi-solutions-group-bekas/
 GitHub: https://github.com/IoannisBekas
 Instagram: https://www.instagram.com/bisolutions.group/
 
@@ -31,6 +31,11 @@ Instagram: https://www.instagram.com/bisolutions.group/
 - International AI consulting services: https://www.bisolutions.group/services#advanced-analytics-ai
 
 ## Case Studies and Delivery Evidence
+
+Public client project account (first-party evidence, using already public information; no quantified outcomes claimed):
+
+- Risenfire workforce and capacity reporting: https://www.bisolutions.group/case-studies/risenfire-workforce-reporting
+- Public source: https://www.linkedin.com/posts/ioannisbekas_heres-what-we-managed-to-do-with-dave-parfitt-activity-7482097945606062080-MgQz
 
 The following are independent portfolio analyses built with synthetic or representative data. They are not commissioned by or endorsed by the organizations referenced in their titles.
 

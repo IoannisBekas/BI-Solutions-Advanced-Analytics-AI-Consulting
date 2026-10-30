@@ -9,6 +9,7 @@ export interface CaseStudySnapshotItem {
 
 export interface CaseStudy {
   slug: string;
+  translatedLocales?: readonly ("en" | "el" | "de")[];
   title: string;
   cardTitle: string;
   seoTitle: string;
@@ -25,6 +26,8 @@ export interface CaseStudy {
   delivered: string[];
   outcomes: string[];
   evidenceLabel: string;
+  evidenceSource?: "github" | "linkedin";
+  evidenceCtaLabel?: string;
   evidenceHref: string;
   evidenceDescription: string;
   relatedService: {
@@ -34,6 +37,51 @@ export interface CaseStudy {
 }
 
 export const caseStudies: CaseStudy[] = [
+  {
+    slug: "risenfire-workforce-reporting",
+    title: "Power BI workforce and capacity reporting for Risenfire",
+    cardTitle: "Risenfire workforce & capacity reporting",
+    seoTitle: "Risenfire Power BI Workforce Reporting Case Study",
+    seoDescription: "How BI Solutions Group built Power BI workload and availability reporting for Risenfire, connecting Dataverse data with a refreshed reporting layer.",
+    relationship: "Client project · Public delivery account",
+    relationshipNote: "Risenfire is a fire safety and suppression company in Orangeville, Ontario. This account uses only the project information already published by BI Solutions Group on LinkedIn. The illustration explains the reported workflow; it is not a client dashboard screenshot. No quantified business outcome is claimed.",
+    summary: "A Power BI workload and availability dashboard connecting operational data from Common Data Service / Dataverse to a centralized reporting layer for team capacity, scheduled work, and project workload.",
+    challenge: "Risenfire needed a clearer view of who was booked, who had hours available, and where the workload was coming from. The project addressed an HR analytics and workload-management challenge, with the goal of replacing manual tracking with a refreshed reporting process.",
+    image: "/assets/case-studies/risenfire-workflow.svg",
+    imageAlt: "Workflow illustration of Dataverse operational data feeding a Power BI semantic model and workforce reporting for Risenfire; not a dashboard screenshot",
+    snapshot: [
+      { label: "Client", value: "Risenfire · Orangeville, Ontario" },
+      { label: "Sector context", value: "Fire safety and suppression" },
+      { label: "Platform", value: "Power BI Service and Dataverse" },
+      { label: "Reporting focus", value: "Worker availability and project capacity" },
+    ],
+    constraints: [
+      "Bring availability, scheduled work, and project workload into one reporting view.",
+      "Keep operational reporting connected to its data source and refresh status.",
+      "Make the reporting usable for executive review and mobile access.",
+    ],
+    approach: [
+      "Designed the Power BI semantic model and connected Common Data Service / Dataverse as the backend data source.",
+      "Worked on database management and data validation, scheduled refresh configuration, and Power BI Service lineage review.",
+      "Organized worker availability, capacity, scheduled planned work, assigned hours, remaining workload, and project details into a centralized reporting layer.",
+    ],
+    delivered: [
+      "A Power BI workforce workload and availability dashboard.",
+      "Dataverse connectivity, a semantic model, and scheduled refresh configuration.",
+      "Capacity and project reporting with executive usability and mobile friendliness considered in delivery.",
+    ],
+    outcomes: [
+      "The published project account describes a centralized view of worker availability, scheduled work, assigned hours, remaining workload, project details, and refresh status.",
+      "The intended operational benefit was to replace manual tracking with refreshed reporting. Time savings, financial returns, and adoption results have not been quantified in this public account.",
+    ],
+    evidenceLabel: "Read the public project account",
+    evidenceSource: "linkedin",
+    evidenceCtaLabel: "View the LinkedIn project account",
+    evidenceHref: "https://www.linkedin.com/posts/ioannisbekas_heres-what-we-managed-to-do-with-dave-parfitt-activity-7482097945606062080-MgQz",
+    evidenceDescription: "The founder's public LinkedIn post shares the BI Solutions Group delivery account. It is a first-party account of the project, rather than an independent review or a public dashboard.",
+    translatedLocales: ["en"],
+    relatedService: { label: "Power BI consulting", href: "/services/power-bi-consulting" },
+  },
   {
     slug: "unicef-audit-compliance",
     title: "A clearer way to explore country-office audit risk and implementation",
