@@ -4,25 +4,8 @@ import { Seo } from "@/components/seo/Seo";
 import { Footer } from "@/components/layout/Footer";
 import { trackEvent } from "@/lib/analytics";
 import { RestaurantLeadForm } from "./RestaurantLeadForm";
-import { restaurantCampaignHref } from "@/lib/restaurantLead";
 import { withAssetBase, withSiteBase } from "@/lib/site";
 import "./restaurant-landing.css";
-
-export function RestaurantCampaignLink({
-  path,
-  children,
-  className,
-}: {
-  path: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  const [href, setHref] = useState(withSiteBase(path));
-  useEffect(() => {
-    setHref(restaurantCampaignHref(withSiteBase(path), window.location.search));
-  }, [path]);
-  return <a href={href} className={className}>{children}</a>;
-}
 
 export function RestaurantCta({
   children = "Αξιολόγηση καταστήματος",
@@ -86,17 +69,14 @@ export function RestaurantAssessment({ landingPage }: { landingPage: "ordering" 
 }
 
 export function RestaurantLandingLayout({
-  page,
   title,
   description,
   children,
 }: {
-  page: "ordering" | "transition";
   title: string;
   description: string;
   children: ReactNode;
 }) {
-  const path = page === "ordering" ? "/online-paraggelies" : "/meiosi-kostous-delivery";
   const [showMobileCta, setShowMobileCta] = useState(false);
   useEffect(() => {
     const hero = document.querySelector(".restaurant-hero__actions");
@@ -114,27 +94,27 @@ export function RestaurantLandingLayout({
     observer.observe(hero);
     observer.observe(assessment);
     return () => observer.disconnect();
-  }, [page]);
+  }, []);
   return (
     <div className="restaurant-page" lang="el">
-      <Seo title={title} description={description} path={path} translatedLocales={["el"]} />
+      <Seo title={title} description={description} path="/online-paraggelies" translatedLocales={["el"]} />
       <header className="restaurant-header">
         <div className="restaurant-container restaurant-header__inner">
           <a href={withSiteBase("/el/")} className="restaurant-brand" aria-label="BI Solutions Group — αρχική σελίδα">
             <img src={withAssetBase("bi-solutions-logo.png")} width="40" height="40" alt="" />
             <span>BI Solutions Group<span>Advanced Analytics & AI Consulting</span></span>
           </a>
-          <nav className="restaurant-header__nav" aria-label="Σελίδες για την εστίαση">
+          <nav className="restaurant-header__nav" aria-label="Πλοήγηση για την εστίαση">
             <a href={withSiteBase("/el/")}>Αρχική</a>
-            <RestaurantCampaignLink path="/el/online-paraggelies" className={page === "ordering" ? "is-active" : undefined}>Το δικό σου σύστημα</RestaurantCampaignLink>
-            <RestaurantCampaignLink path="/el/meiosi-kostous-delivery" className={page === "transition" ? "is-active" : undefined}>Πλάνο μετάβασης</RestaurantCampaignLink>
+            <a href="#paradeigma">Δες το demo</a>
+            <a href="#plano-metavasis">Πώς ξεκινάμε</a>
           </nav>
-          <div className="restaurant-header__cta"><RestaurantCta landingPage={page} placement="header"><span className="restaurant-header__cta-full">Δωρεάν αξιολόγηση</span><span className="restaurant-header__cta-short">Αξιολόγηση</span></RestaurantCta></div>
+          <div className="restaurant-header__cta"><RestaurantCta landingPage="ordering" placement="header"><span className="restaurant-header__cta-full">Δωρεάν αξιολόγηση</span><span className="restaurant-header__cta-short">Αξιολόγηση</span></RestaurantCta></div>
         </div>
       </header>
       <main id="main-content" tabIndex={-1} translate="no">{children}</main>
       <Footer />
-      {showMobileCta && <div className="restaurant-mobile-cta" role="region" aria-label="Αξιολόγηση καταστήματος"><RestaurantCta landingPage={page} placement="mobile_sticky">Ζήτησε δωρεάν αξιολόγηση</RestaurantCta></div>}
+      {showMobileCta && <div className="restaurant-mobile-cta" role="region" aria-label="Αξιολόγηση καταστήματος"><RestaurantCta landingPage="ordering" placement="mobile_sticky">Ζήτησε δωρεάν αξιολόγηση</RestaurantCta></div>}
     </div>
   );
 }

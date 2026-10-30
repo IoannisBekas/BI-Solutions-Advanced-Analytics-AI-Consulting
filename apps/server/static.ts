@@ -207,7 +207,7 @@ const indexableBlogSlugs = new Set([
   "model-monitoring-ai-workflows",
 ]);
 
-function redirectLegacyProductPath(app: Express, fromPath: string, toPath: string) {
+export function redirectLegacyProductPath(app: Express, fromPath: string, toPath: string) {
   // Compare raw and decoded paths so URL-encoded variants and their decoded
   // equivalents both normalize to the canonical URL.
   // Query strings are preserved in the redirect destination.
@@ -728,6 +728,11 @@ export function serveStatic(app: Express) {
 
   // Preserve the Quantus workspace redirect after retiring the marketing root.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
+
+  // The restaurant offer and transition plan now share one canonical landing page.
+  for (const suffix of ["", "/", "/index.html"]) {
+    redirectLegacyProductPath(app, `/el/meiosi-kostous-delivery${suffix}`, "/el/online-paraggelies");
+  }
 
   // Keep old service links useful, routing focused topics to their detail pages.
   const focusedServiceAliases: Record<string, string> = {

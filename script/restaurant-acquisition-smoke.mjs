@@ -6,7 +6,8 @@ import { chromium } from "playwright";
 const base = (process.env.SMOKE_BASE_URL || "http://127.0.0.1:5178").replace(/\/$/, "");
 const output = "output/playwright/restaurant-acquisition";
 const consentStorageName = "bi-measurement-consent-v2";
-const routes = ["/el/online-paraggelies", "/el/meiosi-kostous-delivery"];
+const routes = ["/el/online-paraggelies"];
+const legacyPath = "/el/meiosi-kostous-delivery";
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: "chrome" });
 const results = [];
@@ -71,7 +72,11 @@ try {
       assert.ok((await page.locator(".restaurant-brand img").getAttribute("src")).endsWith("/bi-solutions-logo.png"));
       assert.equal(await page.locator(".restaurant-breadcrumb a").getAttribute("href"), "/el/");
       assert.equal(requests.some((url) => url.includes("scroll-world-v4/posters/")), false);
-      assert.equal(await page.locator('head link[rel="stylesheet"][href*="RestaurantLandingLayout"]').count(), 1);
+      assert.equal(await page.locator('head link[rel="stylesheet"][href*="Restaurant"]').count(), 1);
+      assert.equal(await page.locator("form.restaurant-lead").count(), 1);
+      assert.equal(await page.locator("#paradeigma").count(), 1);
+      assert.equal(await page.locator("#plano-metavasis").count(), 1);
+      assert.equal(await page.locator('a[href*="meiosi-kostous-delivery"]').count(), 0);
       assert.equal(await page.locator(".restaurant-page > footer h2").first().evaluate((node) => parseFloat(getComputedStyle(node).fontSize) <= 24), true);
       await page.screenshot({ path: `${output}/${path.endsWith("online-paraggelies") ? "ordering" : "transition"}-${width}.png`, fullPage: true });
       if (width === 390) {
@@ -88,7 +93,7 @@ try {
   }
 
   for (const measurement of [false, true]) {
-    const { page, context, errors } = await open(routes[1], 390, measurement);
+    const { page, context, errors } = await open(routes[0], 390, measurement);
     assert.equal(await page.locator(".restaurant-mobile-cta").count(), 0);
     await page.locator("#plano-metavasis").evaluate((node) => node.scrollIntoView());
     await page.locator(".restaurant-mobile-cta").waitFor({ state: "visible" });
@@ -104,6 +109,22 @@ try {
     assert.deepEqual(errors, []);
     await context.close();
     results.push(`measurement ${measurement}: mobile CTA appears between hero and form, clears the sticky header, respects consent and never counts as a lead`);
+  }
+
+  {
+    const query = "?utm_source=meta&utm_campaign=legacy_switch&gclid=keep-for-tag&tag=one&tag=two";
+    const { page, context, errors } = await open(`${legacyPath}${query}#plano-metavasis`, 390);
+    assert.equal(new URL(page.url()).pathname, routes[0]);
+    assert.equal(new URL(page.url()).search, query);
+    assert.equal(new URL(page.url()).hash, "#plano-metavasis");
+    for (const suffix of ["", "/", "/index.html"]) {
+      const response = await context.request.get(base + legacyPath + suffix + query, { maxRedirects: 0 });
+      assert.equal(response.status(), 308);
+      assert.equal(response.headers().location, routes[0] + query);
+    }
+    assert.deepEqual(errors, []);
+    await context.close();
+    results.push("legacy URLs permanently redirect to the unified page, preserving campaign parameters and browser fragments");
   }
 
   for (const measurement of [false, true]) {
@@ -164,14 +185,14 @@ try {
     await page.locator(".restaurant-lead-success").screenshot({ path: `${output}/form-success-${measurement}.png` });
     await page.reload({ waitUntil: "networkidle" });
     assert.equal((await events(page)).filter((entry) => entry[1] === "conversion").length, 0);
-    const crossLink = page.locator('a.restaurant-text-link[href*="meiosi-kostous-delivery"]');
-    await crossLink.click();
-    await page.locator("#transition-title").waitFor();
+    await page.locator('.restaurant-hero__actions a[href="#paradeigma"]').click();
+    await page.locator("#ordering-demo-title").waitFor();
+    assert.equal(new URL(page.url()).pathname, routes[0]);
+    assert.equal(new URL(page.url()).hash, "#paradeigma");
     assert.equal(new URL(page.url()).searchParams.get("utm_campaign"), "restaurant-qa");
-    assert.equal(new URL(page.url()).searchParams.has("gclid"), false);
     assert.deepEqual(errors, []);
     await context.close();
-    results.push(`measurement ${measurement}: validation, retained input, HTML rejection, single submission/conversion, attribution and cross-page navigation`);
+    results.push(`measurement ${measurement}: validation, retained input, HTML rejection, single submission/conversion, attribution and same-page navigation`);
   }
 
   const report = { ok: true, base, delivery: "mocked; no message sent", results };

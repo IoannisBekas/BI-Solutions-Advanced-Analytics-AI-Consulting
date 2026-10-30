@@ -178,6 +178,16 @@ for (const locale of localizedRoots) {
     const relativePath = path.relative(localeRoot, localizedPage);
     // Native localized pages have no English counterpart to compare against.
     if (nativeLocaleRoutes.has(`${locale}/${relativePath.split(path.sep).join("/")}`)) continue;
+    // The former restaurant page is an unindexed static redirect, not a translation.
+    if (locale === "el" && relativePath.split(path.sep).join("/") === "meiosi-kostous-delivery/index.html") {
+      const redirectHtml = await fs.readFile(localizedPage, "utf8");
+      if (!redirectHtml.includes('rel="canonical" href="https://www.bisolutions.group/el/online-paraggelies"') ||
+          !redirectHtml.includes('content="noindex,follow"') ||
+          !redirectHtml.includes("window.location.search") || !redirectHtml.includes("window.location.hash")) {
+        throw new Error("The legacy restaurant redirect must retain its canonical destination and campaign context.");
+      }
+      continue;
+    }
     // Learning packs ship in English and Greek. The German route deliberately
     // serves an English fallback with English metadata and canonical URL.
     if (locale === "de" && relativePath.split(path.sep).join("/") === "resources/ai-prompt-packs/index.html") {

@@ -439,16 +439,6 @@
       "lastmod": "2026-10-30",
       "changefreq": "monthly",
       "priority": "0.7"
-    },
-    {
-      "path": "/meiosi-kostous-delivery",
-      "locales": [
-        "el"
-      ],
-      "render": "react",
-      "lastmod": "2026-10-30",
-      "changefreq": "monthly",
-      "priority": "0.6"
     }
   ]
 }

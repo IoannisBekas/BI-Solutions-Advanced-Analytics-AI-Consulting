@@ -1,19 +1,19 @@
-# Restaurant acquisition pages
+# Restaurant acquisition landing page
 
-The Greek restaurant campaign uses two entry pages and one shared enquiry flow:
+The Greek restaurant campaign uses one canonical page and one enquiry flow:
 
-- `/el/online-paraggelies`: direct online-ordering service for businesses already looking for a solution.
-- `/el/meiosi-kostous-delivery`: readiness and cost assessment for businesses considering reducing their dependence on delivery platforms.
+- `/el/online-paraggelies`: platform-cost message, the ordering system, PAROLI demo, transition plan and assessment form in one flow.
+- `/el/meiosi-kostous-delivery` permanently redirects to that page with its query string intact. Browser fragments such as `#plano-metavasis` remain useful. A noindex HTML redirect also preserves old links on static hosting.
 
-The pages qualify an enquiry; they do not themselves provide a production ordering system or demonstrate proven customer savings. PAROLI is an independent demonstration project.
+The page qualifies an enquiry; it does not itself provide a production ordering system or demonstrate proven customer savings. PAROLI is an independent demonstration project.
 
 ## Brand and campaign experience
 
-Both pages use the main site's logo, wordmark, heading font, dark navy hero, pill buttons and shared corporate footer. A breadcrumb and home link identify them as BI Solutions Group pages; the primary action stays focused on the restaurant assessment.
+The page uses the main site's logo, wordmark, heading font, dark navy hero, pill buttons and shared corporate footer. A breadcrumb and home link identify it as a BI Solutions Group page. Navigation to the demo and transition plan stays on the same page, with one assessment form and one canonical URL in the sitemap.
 
 On mobile, an assessment button appears after the hero's primary action has scrolled away and hides when the assessment enters the viewport. Its clicks, and header/hero CTA clicks, emit `restaurant_cta_click` with only the landing-page type and placement, subject to analytics consent. These clicks are never lead conversions.
 
-The production build reads Vite's manifest to include the restaurant route's CSS in the initial HTML. These pages omit the unrelated homepage poster preload, use responsive WebP photos, and request optional font display to avoid a late font swap on slow connections. The homepage keeps its existing preload and font behavior.
+The production build reads Vite's manifest to include the restaurant route's CSS in the initial HTML. The landing page omits the unrelated homepage poster preload, uses responsive WebP photos, and requests optional font display to avoid a late font swap on slow connections. The homepage keeps its existing preload and font behavior.
 
 The Express server negotiates Brotli/gzip for these campaign documents and shared `/assets/*.css` and `/assets/*.js` files. API and streaming responses are outside this compression scope. The public assets retain their existing cache policy.
 
@@ -60,7 +60,7 @@ The existing measurement implementation separates analytics permission from adve
 
 ## Release verification
 
-1. Open both canonical URLs directly and refresh them. Check their Greek title, description, canonical URL, prerendered content, and sitemap inclusion.
+1. Open the canonical page directly and refresh it. Check its Greek metadata, prerendered content and sitemap inclusion. Check the legacy URL, trailing slash and index.html aliases return308 and retain repeated/encoded query parameters; check a browser preserves its fragment.
 2. Inspect 320px/390px mobile widths and desktop: headings, screenshot labels, input controls, focus states, and primary actions must remain readable without horizontal overflow.
 3. Test invalid input, server rejection, unavailable network, and success. Failed submissions must retain input; repeated clicks must not create duplicate requests or conversions.
 4. Before purchasing traffic, send one clearly labelled delivery test through the published form and confirm arrival in the configured recipient inbox. Provider acceptance alone does not establish inbox arrival.

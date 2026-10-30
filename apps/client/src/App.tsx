@@ -22,7 +22,6 @@ const About = lazy(() => import("@/pages/About"));
 const StartProject = lazy(() => import("@/pages/StartProject"));
 const AiLearningProducts = lazy(() => import("@/pages/AiLearningProducts"));
 const RestaurantOrdering = lazy(() => import("@/pages/RestaurantOrdering"));
-const DeliveryTransition = lazy(() => import("@/pages/DeliveryTransition"));
 const USConsulting = lazy(() => import("@/pages/USConsulting"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("@/pages/legal/TermsOfService"));
@@ -92,18 +91,17 @@ function RetiredServiceRoute({ slug }: { slug: string }) {
   return <PageFallback />;
 }
 
-function RestaurantRoute({ locale, page }: { locale: Locale; page: "ordering" | "transition" }) {
+function RestaurantRoute({ locale, legacy = false }: { locale: Locale; legacy?: boolean }) {
   useEffect(() => {
-    if (locale === "el") return;
-    const path = page === "ordering" ? "/el/online-paraggelies" : "/el/meiosi-kostous-delivery";
-    const destination = new URL(withSiteBase(path), window.location.origin);
+    if (locale === "el" && !legacy) return;
+    const destination = new URL(withSiteBase("/el/online-paraggelies"), window.location.origin);
     destination.search = window.location.search;
     destination.hash = window.location.hash;
     window.location.replace(destination.href);
-  }, [locale, page]);
+  }, [locale, legacy]);
 
-  if (locale !== "el") return <PageFallback />;
-  return page === "ordering" ? <RestaurantOrdering /> : <DeliveryTransition />;
+  if (locale !== "el" || legacy) return <PageFallback />;
+  return <RestaurantOrdering />;
 }
 
 function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
@@ -134,8 +132,8 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
             <Route path="/blog/:slug" component={BlogPost} />
             <Route path="/about" component={About} />
             <Route path="/start-a-project" component={StartProject} />
-            <Route path="/online-paraggelies"><RestaurantRoute locale={locale} page="ordering" /></Route>
-            <Route path="/meiosi-kostous-delivery"><RestaurantRoute locale={locale} page="transition" /></Route>
+            <Route path="/online-paraggelies"><RestaurantRoute locale={locale} /></Route>
+            <Route path="/meiosi-kostous-delivery"><RestaurantRoute locale={locale} legacy /></Route>
           <Route path="/resources/ai-prompt-packs" component={AiLearningProducts} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route path="/terms-of-service" component={TermsOfService} />

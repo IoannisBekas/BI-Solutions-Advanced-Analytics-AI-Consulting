@@ -284,10 +284,10 @@ export async function prerenderClient() {
       )}`,
     };
     let routeTemplate = template;
-    if (route === "/el/online-paraggelies" || route === "/el/meiosi-kostous-delivery") {
+    if (route === "/el/online-paraggelies") {
       // Campaign content is prerendered: its styles must arrive before the first paint,
       // rather than waiting for the lazy page's JavaScript to load.
-      const entry = route.endsWith("online-paraggelies") ? "src/pages/RestaurantOrdering.tsx" : "src/pages/DeliveryTransition.tsx";
+      const entry = "src/pages/RestaurantOrdering.tsx";
       const styles = new Set<string>();
       const visited = new Set<string>();
       const collectStyles = (key: string) => {
