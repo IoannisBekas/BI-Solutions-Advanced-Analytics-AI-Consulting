@@ -12,8 +12,8 @@ export default function NotFound() {
         robots="noindex,follow"
       />
       <div className="max-w-md text-center space-y-6">
-        <h1 className="text-8xl font-bold font-heading tracking-tighter">404</h1>
-        <h2 className="text-2xl font-semibold">Page Not Found</h2>
+        <h1 className="page-title">404</h1>
+        <h2 className="article-heading">Page Not Found</h2>
         <p className="text-gray-500 leading-relaxed">
           The page you are looking for doesn't exist or has been moved.
           Let's get you back on track.

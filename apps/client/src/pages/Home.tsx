@@ -1,133 +1,18 @@
 import { Navbar } from "@/components/layout/Navbar";
-import { useEffect, useState } from "react";
 import { CinematicHero } from "@/components/sections/CinematicHero";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ExternalLink, Pause, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages } from "@/lib/servicePages";
-import { caseStudies } from "@/data/caseStudies";
-import {
-  websiteProjects,
-  type WebsiteProject,
-} from "@/data/websiteProjects";
 import { trackEvent } from "@/lib/analytics";
-import { withSiteBase } from "@/lib/site";
-import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
-
-const projectsLinkCopy = {
-  en: "Explore all website & app projects",
-  el: "Δείτε όλα τα έργα ιστοσελίδων & εφαρμογών",
-  de: "Alle Website- & App-Projekte entdecken",
-};
-
-interface WebsiteProjectCardProps {
-  project: WebsiteProject;
-  number: number;
-}
-
-function WebsiteProjectCard({
-  project,
-  number,
-}: WebsiteProjectCardProps) {
-  return (
-    <ScrollReveal className="h-full" delay={(number % 2) * 0.06} width="100%">
-      <a
-        href={project.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block h-full rounded-[2rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f3f0]"
-        onClick={() =>
-          trackEvent("website_project_open", {
-            project: project.slug,
-            placement: "homepage",
-            target: project.href,
-          })
-        }
-      >
-        <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300 group-hover:shadow-2xl group-hover:shadow-black/[0.08] group-focus-visible:-translate-y-1">
-          <div className="relative aspect-[16/9] overflow-hidden border-b border-gray-200 bg-[#07121f]">
-            <img
-              src={project.image}
-              srcSet={`${project.mobileImage} 800w, ${project.image} 2880w`}
-              alt={project.imageAlt}
-              width={2880}
-              height={1620}
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="h-full w-full object-cover transition-[filter] duration-300 group-hover:brightness-105"
-              loading="lazy"
-              decoding="async"
-            />
-            <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/70 px-3 py-1.5 text-xs font-semibold tracking-[0.16em] text-white backdrop-blur-md">
-              {String(number).padStart(2, "0")}
-            </span>
-          </div>
-
-          <div className="flex flex-1 flex-col p-6">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold uppercase tracking-[0.14em]">
-              <span className="text-[#a51f25]">{project.category}</span>
-              <span className="h-1 w-1 rounded-full bg-[#f2bd2f]" aria-hidden="true" />
-              <span className="text-gray-500">{project.relationship}</span>
-            </div>
-            <h3
-              className="mt-4 text-3xl font-bold font-heading leading-tight text-gray-950"
-              translate="no"
-            >
-              {project.title}
-            </h3>
-            <p className="mt-3 text-base leading-relaxed text-gray-600">
-              {project.summary}
-            </p>
-            <div className="mt-4 border-t border-gray-200 pt-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">
-                Why it matters
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-gray-700">
-                {project.value}
-              </p>
-            </div>
-            <div className="mt-auto flex items-center gap-2 pt-4 text-sm font-semibold text-gray-950">
-              View live website
-              <ExternalLink className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              <span className="sr-only">Opens in a new tab</span>
-            </div>
-          </div>
-        </article>
-      </a>
-    </ScrollReveal>
-  );
-}
+import { useLocale } from "@/i18n/LocaleProvider";
 
 export default function Home() {
   const { t, locale } = useLocale();
-  const localizedHref = useLocalizedHref();
-  const [activeProject, setActiveProject] = useState(0);
-  const [manualPause, setManualPause] = useState(false);
-  const [interactionPause, setInteractionPause] = useState(false);
-
-  useEffect(() => {
-    if (
-      manualPause ||
-      interactionPause ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) return;
-    const interval = window.setInterval(() => {
-      setActiveProject((current) => (current + 1) % websiteProjects.length);
-    }, 5500);
-    return () => window.clearInterval(interval);
-  }, [manualPause, interactionPause]);
-
-  const visibleProjects = Array.from(
-    { length: Math.min(3, websiteProjects.length) },
-    (_, offset) => {
-      const index = (activeProject + offset) % websiteProjects.length;
-      return { project: websiteProjects[index], number: index + 1 };
-    },
-  );
-
   return (
     <div
       className="min-h-screen bg-background font-sans text-foreground"
@@ -344,7 +229,7 @@ export default function Home() {
 
         {locale === "en" && (
           <section className="border-y border-gray-200 bg-white py-8">
-            <div className="site-container flex flex-col gap-5 px-6 md:flex-row md:items-center md:justify-between md:px-12">
+            <div className="site-container flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
               <p className="text-lg font-semibold">Remote consulting for US teams</p>
               <div className="flex flex-wrap gap-x-8 gap-y-4">
                 <Link href="/us/power-bi-consulting" className="inline-flex items-center gap-2 font-medium underline underline-offset-4">Power BI consulting <ArrowRight className="h-4 w-4" /></Link>
@@ -354,185 +239,18 @@ export default function Home() {
           </section>
         )}
 
-        <section
-          id="case-studies"
-          className="overflow-hidden bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28 lg:py-12"
-        >
-          <div className="site-container px-6 md:px-12">
-            <ScrollReveal className="mb-10 max-w-4xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                Website projects
-              </p>
-              <h2 className="mt-4 text-4xl font-bold font-heading leading-tight text-gray-950 md:text-5xl">
-                Websites designed around a clear customer journey.
-              </h2>
-              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-600">
-                From discovery and comparison to booking and direct orders, each
-                interface prioritizes clear navigation and an obvious next step.
-              </p>
-            </ScrollReveal>
-
-            <Link href="/projects" className="mb-8 inline-flex min-h-11 items-center gap-2 font-semibold text-gray-950 underline underline-offset-4">
-              {projectsLinkCopy[locale]} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <div
-              onMouseEnter={() => setInteractionPause(true)}
-              onMouseLeave={() => setInteractionPause(false)}
-              onFocusCapture={() => setInteractionPause(true)}
-              onBlurCapture={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  setInteractionPause(false);
-                }
-              }}
-              aria-label="Website projects carousel"
-            >
-              <div className="grid auto-rows-fr gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {visibleProjects.map(({ project, number }, offset) => (
-                  <div
-                    key={project.slug}
-                    className={
-                      offset === 1
-                        ? "hidden h-full md:block"
-                        : offset === 2
-                          ? "hidden h-full lg:block"
-                          : "h-full"
-                    }
-                  >
-                    <WebsiteProjectCard project={project} number={number} />
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 flex items-center justify-between gap-4">
-                <p className="text-sm text-gray-600" aria-live="polite">
-                  {activeProject + 1} of {websiteProjects.length} website projects
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    aria-label={manualPause ? "Play website projects" : "Pause website projects"}
-                    onClick={() => setManualPause((paused) => !paused)}
-                    className="rounded-full border border-gray-300 bg-white p-3 text-gray-950 transition hover:border-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950"
-                  >
-                    {manualPause ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Previous website project"
-                    onClick={() => setActiveProject((current) => (current - 1 + websiteProjects.length) % websiteProjects.length)}
-                    className="rounded-full border border-gray-300 bg-white p-3 text-gray-950 transition hover:border-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950"
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Next website project"
-                    onClick={() => setActiveProject((current) => (current + 1) % websiteProjects.length)}
-                    className="rounded-full border border-gray-300 bg-white p-3 text-gray-950 transition hover:border-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950"
-                  >
-                    <ArrowRight className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="analytics-case-studies"
-          className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24"
-        >
-          <div className="site-container px-6 md:px-12">
-            <ScrollReveal className="mb-16 max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Selected case studies
-              </p>
-              <h2 className="mt-4 text-4xl md:text-5xl font-bold font-heading text-white">
-                See the thinking, structure, and outputs behind the work.
-              </h2>
-              <p className="mt-4 text-lg leading-relaxed text-gray-400">
-                Explore a public client delivery account alongside independent
-                portfolio analyses. Each case explains the relationship, data
-                context, reporting problem, and delivered work.
-              </p>
-            </ScrollReveal>
-
-            <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-              {caseStudies.map((caseStudy, index) => {
-                const path = `/case-studies/${caseStudy.slug}`;
-                const href = caseStudy.translatedLocales && !caseStudy.translatedLocales.includes(locale)
-                  ? withSiteBase(path)
-                  : localizedHref(path);
-
-                return (
-                  <ScrollReveal
-                    key={caseStudy.slug}
-                    delay={index * 0.1}
-                    className={index === 1 ? "lg:mt-10" : index === 2 ? "lg:mt-20" : undefined}
-                    width="100%"
-                  >
-                    <a
-                      href={href}
-                      className="group block h-full"
-                      onClick={() =>
-                        trackEvent("case_study_open", {
-                          case_study: caseStudy.slug,
-                          placement: "homepage",
-                          target: href,
-                        })
-                      }
-                    >
-                      <article className="flex h-full flex-col">
-                        <div className="aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                          <img
-                            src={caseStudy.image}
-                            alt={caseStudy.imageAlt}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </div>
-                        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
-                          {caseStudy.relationship}
-                        </p>
-                        <h3 className="mt-3 text-2xl font-bold font-heading leading-tight text-white transition-colors group-hover:text-gray-300">
-                          {caseStudy.cardTitle}
-                        </h3>
-                        <p className="mt-4 text-sm leading-relaxed text-gray-400">
-                          {caseStudy.summary}
-                        </p>
-                        <div className="mt-5 border-t border-white/10 pt-5">
-                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">
-                            Delivered
-                          </p>
-                          <p className="mt-2 text-sm leading-relaxed text-gray-300">
-                            {caseStudy.delivered[0]}
-                          </p>
-                        </div>
-                        <div className="mt-auto flex items-center gap-2 pt-6 text-sm font-semibold text-white">
-                          Read the case study
-                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                      </article>
-                    </a>
-                  </ScrollReveal>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
         <ReviewsSection />
 
-        <section className="bg-[#f6f3ef] py-24">
-          <div className="site-container px-6 md:px-12">
+        <section className="section-space bg-[var(--surface-paper)]">
+          <div className="site-container">
             <ScrollReveal width="100%">
-              <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
+              <div className="content-panel border-black bg-black text-white">
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
                   <div className="max-w-3xl">
                     <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
                       Start a project
                     </p>
-                    <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight md:text-5xl">
+                    <h2 className="section-title mt-4">
                       What are you trying to improve?
                     </h2>
                     <p className="mt-5 text-lg leading-relaxed text-gray-400">

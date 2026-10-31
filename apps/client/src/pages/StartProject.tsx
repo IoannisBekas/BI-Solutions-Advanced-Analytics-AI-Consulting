@@ -85,7 +85,7 @@ const initialFormValues: FormValues = {
 };
 
 const fieldClassName =
-  "mt-2 min-h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-base text-gray-950 shadow-sm shadow-black/[0.02] outline-none transition-colors placeholder:text-gray-400 hover:border-gray-300 focus:border-black focus:ring-2 focus:ring-black/10";
+  "form-control mt-2";
 
 const startProjectCopy: Record<Locale, {
   seoTitle: string;
@@ -552,30 +552,30 @@ export default function StartProject() {
       />
       <Navbar />
 
-      <main className="relative overflow-hidden pb-24 pt-32 md:pb-32 md:pt-40">
+      <main className="page-main relative overflow-hidden">
         <div className="bi-hero-backdrop pointer-events-none absolute inset-x-0 top-0 h-[34rem]" />
-        <div className="site-container relative grid gap-12 px-6 md:px-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        <div className="site-container relative grid gap-[var(--space-grid)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <section className="lg:sticky lg:top-36 lg:self-start">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
               {isMentorship ? copy.mentorshipEyebrow : copy.projectEyebrow}
             </p>
-            <h1 className="mt-6 max-w-xl text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
+            <h1 className="page-title mt-6">
               {usService ? `Tell us about your ${usService} project.` : isMentorship
                 ? copy.mentorshipTitle
                 : copy.projectTitle}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
+            <p className="body-lead reading-width mt-6 text-gray-600">
               {usService ? "Share the problem, your current tools, and what a useful result would look like. Add a planning budget and time zone if you know them. We’ll review the fit and discuss the scope and next steps by email." : copy.introduction}
             </p>
 
             {!usService && <div className="mt-10 space-y-4">
-              <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
+              <div className="surface-card card-padding">
                 <h2 className="text-base font-semibold">{copy.startingPointTitle}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-gray-600">
                   {copy.startingPointBody}
                 </p>
               </div>
-              <div className="rounded-3xl border border-gray-200 bg-white/80 p-5 shadow-sm shadow-black/[0.03] backdrop-blur-sm">
+              <div className="surface-card card-padding">
                 <h2 className="text-base font-semibold">{copy.responseTitle}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-gray-600">
                   {copy.responseBody}
@@ -587,7 +587,7 @@ export default function StartProject() {
 
           <section
             aria-labelledby="project-form-title"
-            className="rounded-[2rem] border border-gray-200 bg-white p-6 shadow-2xl shadow-black/[0.06] sm:p-8 lg:p-10"
+            className="content-panel"
           >
             {status === "success" ? (
               <div
@@ -595,7 +595,7 @@ export default function StartProject() {
                 role="status"
                 aria-live="polite"
               >
-                <h2 className="text-3xl sm:text-4xl">{copy.successTitle}</h2>
+                <h2 className="section-title">{copy.successTitle}</h2>
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-gray-600">
                   {copy.successBody}
                 </p>
@@ -606,7 +606,7 @@ export default function StartProject() {
               </div>
             ) : (
               <>
-                <h2 id="project-form-title" className="text-2xl sm:text-3xl">
+                <h2 id="project-form-title" className="section-title">
                   {isMentorship
                     ? copy.mentorshipFormTitle
                     : copy.projectFormTitle}

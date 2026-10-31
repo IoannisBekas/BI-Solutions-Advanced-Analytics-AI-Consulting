@@ -63,7 +63,7 @@ export default function Blog() {
   );
 
   return (
-    <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-foreground" data-hero-overlay="true">
+    <div className="resource-page min-h-screen bg-[var(--surface-paper)] font-sans text-foreground" data-hero-overlay="true">
       <Seo
         title="Insights"
         description="Curated BI Solutions resources on business intelligence, semantic modeling, AI workflows, data strategy, and web app delivery."
@@ -84,9 +84,9 @@ export default function Blog() {
           description="A smaller, higher-signal resource library for buyers comparing analytics, AI workflow, reporting, and web app consulting decisions."
         />
 
-        <section className="site-container px-6 pb-14 pt-10 md:px-12 md:pb-20 md:pt-14">
+        <section className="site-container pb-14 pt-10 md:pb-20 md:pt-14">
           <div className="max-w-2xl">
-            <label htmlFor="insights-search" className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a51f25]">
+            <label htmlFor="insights-search" className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)]">
               Search articles
             </label>
             <div className="relative mt-3">
@@ -126,19 +126,19 @@ export default function Blog() {
         {!isFiltering ? (
           <>
             {featuredPost ? (
-              <section className="site-container px-6 md:px-12">
+              <section className="site-container">
                 <ScrollReveal className="max-w-3xl" width="100%">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                     Featured article
                   </p>
-                  <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                  <h2 className="section-title mt-4 text-gray-950">
                     Start with a practical buyer question.
                   </h2>
                 </ScrollReveal>
 
                 <ScrollReveal className="mt-10" width="100%">
                   <Link href={`/blog/${featuredPost.slug}`} className="group block">
-                    <article className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300 group-hover:shadow-2xl group-hover:shadow-black/[0.08]">
+                    <article className="surface-card surface-card--interactive overflow-hidden">
                       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
                         <div className="aspect-video overflow-hidden bg-gray-100">
                           <ArticleVisual
@@ -150,7 +150,7 @@ export default function Blog() {
                         <div className="flex flex-col justify-between px-6 py-8 md:px-8">
                           <div>
                             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                              <span className="rounded-full bg-[#a51f25] px-3 py-1 text-xs font-semibold text-white">
+                              <span className="rounded-full bg-[var(--brand-accent)] px-3 py-1 text-xs font-semibold text-white">
                                 Featured
                               </span>
                               <span className="inline-flex items-center gap-1">
@@ -162,7 +162,7 @@ export default function Blog() {
                                 {featuredPost.readTime}
                               </span>
                             </div>
-                            <h3 className="mt-5 text-3xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700 md:text-4xl">
+                            <h3 className="card-title mt-5 text-gray-950 transition-colors group-hover:text-gray-700">
                               {featuredPost.title}
                             </h3>
                             <p className="mt-5 text-base leading-relaxed text-gray-600">
@@ -183,39 +183,39 @@ export default function Blog() {
             ) : null}
 
             {otherPosts.length > 0 ? (
-              <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
+              <section className="site-container section-gap">
                 <ScrollReveal className="max-w-3xl" width="100%">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                     More articles
                   </p>
-                  <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                  <h2 className="section-title mt-4 text-gray-950">
                     Explore the decisions behind better reporting, AI, and digital delivery.
                   </h2>
                 </ScrollReveal>
 
-                <div className="blog-card-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="card-grid mt-10">
                   {otherPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
-                        <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300">
+                        <article className="surface-card surface-card--interactive flex h-full flex-col overflow-hidden">
                           <div className="aspect-video overflow-hidden bg-gray-100">
                             <ArticleVisual
                               post={post}
                               className="transition-transform duration-700 group-hover:scale-105"
                             />
                           </div>
-                          <div className="flex flex-1 flex-col px-6 py-6">
+                          <div className="card-padding flex flex-1 flex-col">
                             <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
-                              <span className="inline-flex items-center gap-1 text-[#a51f25]">
+                              <span className="inline-flex items-center gap-1 text-[var(--brand-accent)]">
                                 <Tag className="h-3 w-3" />
                                 {post.category}
                               </span>
                               <span>{post.readTime}</span>
                             </div>
-                            <h3 className="mt-4 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
+                            <h3 className="card-title mt-4 text-gray-950 transition-colors group-hover:text-gray-700">
                               {post.title}
                             </h3>
-                            <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-600">
+                            <p className="mt-4 flex-1 text-base leading-relaxed text-gray-600">
                               {post.excerpt}
                             </p>
                             <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-black">
@@ -232,28 +232,28 @@ export default function Blog() {
             ) : null}
 
             {secondaryBlogPosts.length > 0 ? (
-              <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
+              <section className="site-container section-gap">
                 <ScrollReveal className="max-w-3xl" width="100%">
-                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                     Specialist resources
                   </p>
-                  <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                  <h2 className="section-title mt-4 text-gray-950">
                     Deeper guides for teams planning AI, analytics, and delivery work.
                   </h2>
                 </ScrollReveal>
 
-                <div className="blog-card-grid mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div className="card-grid mt-10">
                   {secondaryBlogPosts.map((post, index) => (
                     <ScrollReveal key={post.slug} delay={index * 0.04} width="100%">
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
-                        <article className="flex h-full flex-col rounded-[2rem] border border-gray-200 bg-white px-6 py-6 shadow-sm shadow-black/[0.02] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300 group-hover:shadow-xl group-hover:shadow-black/[0.04]">
-                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#a51f25]">
+                        <article className="surface-card surface-card--interactive flex h-full flex-col card-padding">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-accent)]">
                             {post.category}
                           </p>
-                          <h3 className="mt-4 text-xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
+                          <h3 className="card-title mt-4 text-gray-950 transition-colors group-hover:text-gray-700">
                             {post.title}
                           </h3>
-                          <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600">
+                          <p className="mt-3 flex-1 text-base leading-relaxed text-gray-600">
                             {post.excerpt}
                           </p>
                           <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-black">
@@ -269,12 +269,12 @@ export default function Blog() {
             ) : null}
           </>
         ) : (
-          <section className="site-container px-6 md:px-12">
+          <section className="site-container">
             <ScrollReveal className="max-w-3xl" width="100%">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                   Filtered insights
                 </p>
-                <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+                <h2 className="section-title mt-4 text-gray-950">
                   {filteredPosts.length} article{filteredPosts.length === 1 ? "" : "s"}
                   {searchQuery.trim() ? ` matching “${searchQuery.trim()}”` : ""}
                   {activeTopic !== "All" ? ` in ${activeTopic}` : ""}
@@ -282,20 +282,20 @@ export default function Blog() {
             </ScrollReveal>
 
             {filteredPosts.length > 0 ? (
-              <div className="blog-card-grid mt-10 grid auto-rows-fr gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="card-grid mt-10">
                 {filteredPosts.map((post, index) => (
                   <ScrollReveal key={post.slug} delay={index * 0.06} width="100%">
                     <Link href={`/blog/${post.slug}`} className="group block h-full">
-                      <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300">
+                      <article className="surface-card surface-card--interactive flex h-full flex-col overflow-hidden">
                         <div className="aspect-video overflow-hidden bg-gray-100">
                           <ArticleVisual
                             post={post}
                             className="transition-transform duration-700 group-hover:scale-105"
                           />
                         </div>
-                        <div className="flex flex-1 flex-col px-6 py-6">
+                        <div className="card-padding flex flex-1 flex-col">
                           <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
-                            <span className="inline-flex items-center gap-1 text-[#a51f25]">
+                            <span className="inline-flex items-center gap-1 text-[var(--brand-accent)]">
                               <Tag className="h-3 w-3" />
                               {post.category}
                             </span>
@@ -304,10 +304,10 @@ export default function Blog() {
                               {post.date}
                             </span>
                           </div>
-                          <h3 className="mt-4 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
+                          <h3 className="card-title mt-4 text-gray-950 transition-colors group-hover:text-gray-700">
                             {post.title}
                           </h3>
-                          <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-600">
+                          <p className="mt-4 flex-1 text-base leading-relaxed text-gray-600">
                             {post.excerpt}
                           </p>
                         </div>
@@ -318,11 +318,11 @@ export default function Blog() {
               </div>
             ) : (
               <ScrollReveal className="mt-10" width="100%">
-                <div className="rounded-[2rem] border border-gray-200 bg-white px-8 py-12 text-center shadow-sm shadow-black/[0.02]">
+                <div className="content-panel text-center">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f2bd2f]/20">
-                    <Search className="h-6 w-6 text-[#a51f25]" />
+                    <Search className="h-6 w-6 text-[var(--brand-accent)]" />
                   </div>
-                  <h3 className="mt-5 text-2xl font-bold font-heading tracking-tight text-gray-950">
+                  <h3 className="card-title mt-5 text-gray-950">
                     No articles found
                   </h3>
                   <p className="mt-3 text-base leading-relaxed text-gray-600">
@@ -343,15 +343,15 @@ export default function Blog() {
           </section>
         )}
 
-        <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
+        <section className="site-container section-gap">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
+            <div className="content-panel border-black bg-black text-white">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f2bd2f]">
                 Want to discuss the practical side?
               </p>
               <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-3xl">
-                  <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                  <h2 className="section-title">
                     Turn the ideas into a scoped BI, analytics, or AI workflow.
                   </h2>
                   <p className="mt-4 text-lg leading-relaxed text-gray-300">

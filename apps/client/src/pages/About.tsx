@@ -273,11 +273,11 @@ export default function About() {
         style={{ scaleX }}
       />
 
-      <main className="flex justify-center pt-32 px-6 md:px-12 pb-20">
-        <div className="site-container relative flex gap-16">
+      <main className="page-main">
+        <div className="site-container relative flex gap-8 xl:gap-10">
 
           {/* Left Sidebar - Sticky Navigation */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
+          <aside className="hidden xl:block w-48 flex-shrink-0">
             <div className="sticky top-32">
               <nav className="flex flex-col space-y-4">
                 {sections.map((section) => (
@@ -288,7 +288,7 @@ export default function About() {
                       "group flex items-center justify-between text-left text-sm font-medium transition-all duration-300",
                       activeSection === section.id
                         ? "text-black translate-x-1"
-                        : "text-gray-400 hover:text-gray-900"
+                        : "text-gray-500 hover:text-gray-900"
                     )}
                   >
                     <span>{section.label}</span>
@@ -305,11 +305,11 @@ export default function About() {
 
               <div className="mt-12 pt-12 border-t border-gray-100">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 block">{copy.connect}</span>
-                <div className="flex gap-4">
-                  <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" aria-label="Ioannis Bekas on LinkedIn" className="text-gray-400 hover:text-black transition-colors">
+                <div className="flex flex-wrap gap-4">
+                  <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" aria-label="Ioannis Bekas on LinkedIn" className="text-gray-500 hover:text-black transition-colors">
                     <Linkedin aria-hidden="true" className="w-5 h-5" />
                   </a>
-                  <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" aria-label="Ioannis Bekas on GitHub" className="text-gray-400 hover:text-black transition-colors">
+                  <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" aria-label="Ioannis Bekas on GitHub" className="text-gray-500 hover:text-black transition-colors">
                     <Github aria-hidden="true" className="w-5 h-5" />
                   </a>
                 </div>
@@ -321,24 +321,24 @@ export default function About() {
           <div className="flex-1 min-w-0">
 
             {/* Introduction Section */}
-            <section ref={sections[0].ref} id="introduction" className="mb-32 scroll-mt-32">
+            <section ref={sections[0].ref} id="introduction" className="section-stack scroll-mt-32">
               <motion.div
                 initial={canAnimate ? "hidden" : false}
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
-                className="rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/[0.05] sm:px-8 md:px-12 md:py-12"
+                className="content-panel"
               >
-                <div className="grid md:grid-cols-[1fr_350px] gap-12 items-start">
+                <div className="grid min-w-0 gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-start">
                   <div>
                     <div className="inline-flex items-center rounded-full bg-black/5 px-4 py-2 text-sm font-medium text-gray-600">
                       {copy.founderProfile}
                     </div>
-                    <h1 className="mt-6 text-[2.75rem] sm:text-5xl md:text-6xl font-bold font-heading mb-8 tracking-tight leading-[1.05]">
+                    <h1 className="page-title mt-6 mb-8">
                       Ioannis Bekas
                     </h1>
-                    <h2 className="text-2xl font-medium text-gray-800 mb-6">{copy.role}</h2>
-                    <p className="text-xl text-gray-600 leading-relaxed mb-8">
+                    <h2 className="article-heading font-medium text-gray-800 mb-6">{copy.role}</h2>
+                    <p className="body-lead text-gray-600 mb-6">
                       {copy.introduction}
                     </p>
 
@@ -346,7 +346,7 @@ export default function About() {
                       {copy.businessIdentity}
                     </p>
 
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                       <Button
                         onClick={() => scrollToSection('contact')}
                         className="rounded-full px-8 h-12 bg-black hover:bg-gray-800 text-white"
@@ -366,7 +366,7 @@ export default function About() {
                     initial={canAnimate ? { opacity: 0, scale: 0.95 } : false}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
-                    className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] bg-gray-100 shadow-xl shadow-black/[0.08]"
+                    className="surface-card relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden bg-gray-100"
                   >
                     <img
                       src={founderPhoto}
@@ -379,12 +379,12 @@ export default function About() {
             </section>
 
             {/* Experience Section */}
-            <section ref={sections[1].ref} id="experience" className="mb-32 scroll-mt-32">
+            <section ref={sections[1].ref} id="experience" className="section-stack scroll-mt-32">
               <motion.h2
                 initial={canAnimate ? { opacity: 0, x: -20 } : false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-12"
+                className="section-title mb-12"
               >
                 {copy.experienceTitle}
               </motion.h2>
@@ -405,12 +405,12 @@ export default function About() {
             </section>
 
             {/* Education Section */}
-            <section ref={sections[2].ref} id="education" className="mb-32 scroll-mt-32">
+            <section ref={sections[2].ref} id="education" className="section-stack scroll-mt-32">
               <motion.h2
                 initial={canAnimate ? { opacity: 0, x: -20 } : false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-16"
+                className="section-title mb-8"
               >
                 {copy.educationTitle}
               </motion.h2>
@@ -423,7 +423,7 @@ export default function About() {
                   variants={fadeInUp}
                   className="p-8 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                 >
-                  <h3 className="text-2xl font-bold mb-2">{copy.mastersTitle}</h3>
+                  <h3 className="card-title mb-2">{copy.mastersTitle}</h3>
                   <p className="text-gray-600 mb-4 text-lg">{copy.mastersInstitution}</p>
                   <div className="text-base text-gray-500 space-y-2">
                     <p>• {copy.gpa}</p>
@@ -438,7 +438,7 @@ export default function About() {
                   variants={fadeInUp}
                   className="p-8 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                 >
-                  <h3 className="text-2xl font-bold mb-2">{copy.bachelorsTitle}</h3>
+                  <h3 className="card-title mb-2">{copy.bachelorsTitle}</h3>
                   <p className="text-gray-600 mb-4 text-lg">{copy.bachelorsInstitution}</p>
                   <div className="text-base text-gray-500 space-y-2">
                     <p>• {copy.exchange}</p>
@@ -448,12 +448,12 @@ export default function About() {
             </section>
 
             {/* Certifications Section */}
-            <section ref={sections[3].ref} id="certifications" className="mb-32 scroll-mt-32">
+            <section ref={sections[3].ref} id="certifications" className="section-stack scroll-mt-32">
               <motion.h2
                 initial={canAnimate ? { opacity: 0, x: -20 } : false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="text-3xl md:text-4xl font-bold font-heading mb-16"
+                className="section-title mb-8"
               >
                 {copy.certificationsTitle}
               </motion.h2>
@@ -489,9 +489,9 @@ export default function About() {
                 variants={fadeInUp}
                 className="border-t border-gray-200 pt-24"
               >
-                <div className="grid md:grid-cols-2 gap-12">
+                <div className="min-w-0 max-w-3xl">
                   <div>
-                    <h2 className="text-4xl md:text-5xl font-bold font-heading mb-8">{copy.connectTitle}</h2>
+                    <h2 className="section-title mb-8">{copy.connectTitle}</h2>
                     <p className="text-xl text-gray-600 mb-12">
                       {copy.connectDescription}
                     </p>
@@ -501,19 +501,19 @@ export default function About() {
                         <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
                           <Linkedin aria-hidden="true" className="w-5 h-5" />
                         </span>
-                        linkedin.com/in/ioannisbekas
+                        <span className="min-w-0 [overflow-wrap:anywhere]">linkedin.com/in/ioannisbekas</span>
                       </a>
                       <a href="https://github.com/IoannisBekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
                         <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
                           <Github aria-hidden="true" className="w-5 h-5" />
                         </span>
-                        github.com/IoannisBekas
+                        <span className="min-w-0 [overflow-wrap:anywhere]">github.com/IoannisBekas</span>
                       </a>
                       <a href="https://www.linkedin.com/company/bi-solutions-group-bekas/" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">
                         <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform group-hover:scale-110">
                           <Linkedin aria-hidden="true" className="w-5 h-5" />
                         </span>
-                        {copy.companyLinkedIn}
+                        <span className="min-w-0 [overflow-wrap:anywhere]">{copy.companyLinkedIn}</span>
                       </a>
                     </div>
                   </div>

@@ -1,17 +1,17 @@
 .restaurant-lead {
   --lead-ink: #09090b;
   --lead-muted: #626975;
-  --lead-line: #e5e7eb;
+  --lead-line: var(--surface-line);
   --lead-accent: #e8edf3;
   min-width: 0;
   width: 100%;
-  padding: clamp(1.25rem, 4vw, 2.5rem);
+  padding: var(--space-panel);
   border: 1px solid var(--lead-line);
-  border-radius: 24px;
+  border-radius: var(--radius-bi-panel);
   background: #fff;
   color: var(--lead-ink);
   text-align: left;
-  box-shadow: 0 14px 50px #20251f06;
+  box-shadow: var(--shadow-panel);
 }
 .restaurant-lead *, .restaurant-lead *::before, .restaurant-lead *::after { box-sizing: border-box; }
 .restaurant-lead-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; font-size: 12px; color: var(--lead-muted); }
@@ -20,7 +20,7 @@
 .restaurant-lead-progress .is-current { color: var(--lead-ink); font-weight: 600; }
 .restaurant-lead-progress .is-current b, .restaurant-lead-progress .is-complete b { background: var(--lead-ink); border-color: var(--lead-ink); color: white; }
 .restaurant-lead-progress-line { width: 25px; height: 1px; background: var(--lead-line); flex-shrink: 0; }
-.restaurant-lead h3 { margin: 0; font-size: clamp(1.4rem, 3vw, 1.75rem); line-height: 1.25; font-weight: 600; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.restaurant-lead h3 { margin: 0; font-size: var(--type-card); line-height: 1.25; font-weight: 600; letter-spacing: -.03em; overflow-wrap: anywhere; }
 .restaurant-lead-intro { margin: 12px 0 0; font-size: 14px; line-height: 1.7; color: var(--lead-muted); }
 .restaurant-lead-required { margin: 16px 0 20px; font-size: 11px; color: var(--lead-muted); }
 .restaurant-lead-fields { display: grid; gap: 18px; min-width: 0; padding: 0; margin: 0; border: 0; }

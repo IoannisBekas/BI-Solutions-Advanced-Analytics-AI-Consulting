@@ -1,5 +1,6 @@
 import projects from "@shared/portfolio-projects.json";
 import { localePrefix, type Locale } from "@/i18n/config";
+import type { CaseStudy } from "@/data/caseStudies";
 
 export const portfolioProjects = projects;
 export type PortfolioProject = (typeof projects)[number];
@@ -75,21 +76,47 @@ export const portfolioCategories = [
 
 export const portfolioCopy = {
   title: {
-    en: "Website & app projects",
-    el: "Έργα ιστοσελίδων & εφαρμογών",
-    de: "Website- & App-Projekte",
+    en: "Projects & case studies",
+    el: "Έργα & μελέτες περίπτωσης",
+    de: "Projekte & Fallstudien",
   },
   heading: {
-    en: "Digital experiences, built around real journeys.",
-    el: "Ψηφιακές εμπειρίες με σαφή διαδρομή χρήστη.",
-    de: "Digitale Erlebnisse mit klaren Nutzerwegen.",
+    en: "Work across data, applications and the web.",
+    el: "Έργα σε δεδομένα, εφαρμογές και ιστοσελίδες.",
+    de: "Projekte für Daten, Anwendungen und Websites.",
   },
   description: {
-    en: "Explore websites, ecommerce concepts and interactive dashboards by BI Solutions Group, organised by industry with real interface previews and live project links.",
-    el: "Εξερευνήστε ιστοσελίδες, concepts ηλεκτρονικού εμπορίου και διαδραστικά dashboards της BI Solutions Group, ανά κλάδο, με πραγματικά screenshots και συνδέσμους έργων.",
-    de: "Entdecken Sie Websites, E-Commerce-Konzepte und interaktive Dashboards der BI Solutions Group, nach Branche geordnet und mit echten Vorschauen und Projektlinks.",
+    en: "Explore Power BI case studies, websites, ecommerce concepts and interactive applications by BI Solutions Group, with project context, interface previews and delivery details.",
+    el: "Εξερευνήστε μελέτες περίπτωσης Power BI, ιστοσελίδες, concepts ηλεκτρονικού εμπορίου και διαδραστικές εφαρμογές της BI Solutions Group, με περιγραφή έργου, προεπισκοπήσεις και στοιχεία υλοποίησης.",
+    de: "Entdecken Sie Power-BI-Fallstudien, Websites, E-Commerce-Konzepte und interaktive Anwendungen der BI Solutions Group mit Projektkontext, Vorschauen und Umsetzungsdetails.",
+  },
+  caseStudiesDescription: {
+    en: "Client delivery and independent Power BI demonstrations, with the reporting challenge, approach and delivered capabilities.",
+    el: "Έργο πελάτη και ανεξάρτητες επιδείξεις Power BI, με το πρόβλημα αναφορών, την προσέγγιση και τις δυνατότητες που παραδόθηκαν.",
+    de: "Kundenprojekte und unabhängige Power-BI-Demonstrationen mit Aufgabenstellung, Vorgehen und gelieferten Funktionen.",
+  },
+  caseStudyDetails: {
+    en: "Read the case study",
+    el: "Δείτε τη μελέτη περίπτωσης",
+    de: "Fallstudie lesen",
   },
   all: { en: "All projects", el: "Όλα τα έργα", de: "Alle Projekte" },
+  view: { en: "Project view", el: "Προβολή έργων", de: "Projektansicht" },
+  browseCategory: { en: "Browse by industry", el: "Επιλογή κλάδου έργων", de: "Nach Branche auswählen" },
+  compact: { en: "Compact", el: "Σύνοψη", de: "Kompakt" },
+  cards: { en: "Cards", el: "Κάρτες", de: "Karten" },
+  search: { en: "Search projects", el: "Αναζήτηση έργων", de: "Projekte durchsuchen" },
+  searchPlaceholder: {
+    en: "Search by name, industry or service…",
+    el: "Αναζήτηση με όνομα, κλάδο ή υπηρεσία…",
+    de: "Nach Name, Branche oder Leistung suchen…",
+  },
+  clearSearch: { en: "Clear search", el: "Καθαρισμός αναζήτησης", de: "Suche löschen" },
+  noResults: {
+    en: "No projects match your search.",
+    el: "Δεν βρέθηκαν έργα για αυτή την αναζήτηση.",
+    de: "Keine Projekte entsprechen Ihrer Suche.",
+  },
   details: {
     en: "Explore the project",
     el: "Δείτε το έργο",
@@ -168,6 +195,13 @@ export function projectImage(
 // Search metadata describes the production domain, even in a mounted preview.
 export function portfolioCanonicalUrl(path: string, locale: Locale) {
   return `https://www.bisolutions.group${localePrefix(locale)}${path}`;
+}
+
+export function caseStudyLocale(caseStudy: CaseStudy, locale: Locale): Locale {
+  return caseStudy.translatedLocales &&
+    !caseStudy.translatedLocales.includes(locale)
+    ? "en"
+    : locale;
 }
 
 export function projectCategory(project: PortfolioProject) {

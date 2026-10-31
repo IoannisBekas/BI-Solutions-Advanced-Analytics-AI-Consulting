@@ -44,7 +44,7 @@ const copy = {
     languages: "English & Greek",
     finder: "Find your starting point",
     finderNote:
-      "Three quick choices. See your recommendation before sharing your email.",
+      "Each choice takes you to the next step. See your recommendation before sharing your email.",
     steps: ["Your experience", "Your interests", "Your language"],
     step: "Step",
     of: "of",
@@ -64,8 +64,6 @@ const copy = {
     greek: "Ελληνικά",
     languageHelp: "Your PDF and delivery email will use this language.",
     back: "Back",
-    next: "Continue",
-    recommend: "Find my pack",
     change: "Change my choices",
     sideTitle: "A practical way to learn.",
     sideIntro:
@@ -129,7 +127,7 @@ const copy = {
     languages: "Ελληνικά & αγγλικά",
     finder: "Βρες από πού να ξεκινήσεις",
     finderNote:
-      "Τρεις σύντομες επιλογές. Δες την πρότασή μας πριν δώσεις το email σου.",
+      "Κάθε επιλογή σε μεταφέρει στο επόμενο βήμα. Δες την πρότασή μας πριν δώσεις το email σου.",
     steps: ["Η εμπειρία σου", "Τα ενδιαφέροντά σου", "Η γλώσσα σου"],
     step: "Βήμα",
     of: "από",
@@ -151,8 +149,6 @@ const copy = {
     greek: "Ελληνικά",
     languageHelp: "Το PDF και το email αποστολής θα είναι σε αυτή τη γλώσσα.",
     back: "Πίσω",
-    next: "Συνέχεια",
-    recommend: "Βρες το πακέτο μου",
     change: "Άλλαξε τις επιλογές μου",
     sideTitle: "Μαθαίνεις μέσα από την πράξη.",
     sideIntro:
@@ -310,7 +306,7 @@ export default function AiLearningProducts() {
     "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500";
 
   return (
-    <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-gray-950" data-hero-overlay="true">
+    <div className="resource-page min-h-screen bg-[var(--surface-paper)] font-sans text-gray-950" data-hero-overlay="true">
       <Seo
         title={c.title}
         description={c.description}
@@ -342,17 +338,17 @@ export default function AiLearningProducts() {
         <section
           ref={finderRef}
           id="find-your-pack"
-          className="site-container scroll-mt-28 px-6 py-20 md:px-12 md:py-24"
+          className="site-container section-space scroll-mt-28"
           aria-label={c.finder}
         >
-          <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.03]">
+          <div className="content-panel overflow-hidden p-0">
             <div className="border-b border-gray-200 px-6 py-6 sm:px-9">
               <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">
                 {step < 3 ? c.finder : c.result}
               </p>
               {step < 3 ? (
                 <>
-                  <p className="text-sm leading-relaxed text-gray-600">
+                  <p id="learning-selection-help" className="text-sm leading-relaxed text-gray-600">
                     {c.finderNote}
                   </p>
                   <ol
@@ -396,25 +392,14 @@ export default function AiLearningProducts() {
 
             {step < 3 ? (
               <div className="grid lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
-                <form
-                  className="min-w-0 p-6 sm:p-9"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    if (
-                      (step === 0 && experience) ||
-                      (step === 1 && role) ||
-                      step === 2
-                    )
-                      goTo(step + 1);
-                  }}
-                >
+                <div className="min-w-0 p-6 sm:p-9">
                   <p className="mb-3 text-xs font-semibold text-gray-500">
                     {c.step} {step + 1} {c.of} 3
                   </p>
                   <h2
                     ref={headingRef}
                     tabIndex={-1}
-                    className="font-heading text-2xl font-bold leading-tight tracking-tight outline-none sm:text-3xl"
+                    className="section-title outline-none"
                   >
                     {[c.experienceTitle, c.roleTitle, c.languageTitle][step]}
                   </h2>
@@ -422,7 +407,7 @@ export default function AiLearningProducts() {
                     {[c.experienceNote, c.roleNote, c.languageNote][step]}
                   </p>
                   {step === 0 && (
-                    <fieldset className="space-y-3">
+                    <fieldset className="space-y-3" aria-describedby="learning-selection-help">
                       <legend className="sr-only">{c.experienceTitle}</legend>
                       {learningExperienceOptions.map((option) => (
                         <label
@@ -435,7 +420,13 @@ export default function AiLearningProducts() {
                             name="experience"
                             value={option.value}
                             checked={experience === option.value}
-                            onChange={() => setExperience(option.value)}
+                            onChange={() => {
+                              setExperience(option.value);
+                              goTo(1);
+                            }}
+                            onClick={() => {
+                              if (experience === option.value) goTo(1);
+                            }}
                             required
                           />
                           <span>
@@ -461,13 +452,16 @@ export default function AiLearningProducts() {
                         {c.roleLabel}
                       </label>
                       <div className="relative">
+                        {/* Reset on Back so choosing the same interest also advances. */}
                         <select
                           id="learning-role"
-                          className="min-h-14 w-full appearance-none rounded-xl border border-gray-300 bg-white py-3 pl-4 pr-11 text-sm text-gray-950"
-                          value={role}
-                          onChange={(event) =>
-                            setRole(event.target.value as typeof role)
-                          }
+                          className="form-control appearance-none pl-4 pr-11"
+                          defaultValue=""
+                          onChange={(event) => {
+                            setRole(event.target.value as typeof role);
+                            goTo(2);
+                          }}
+                          aria-describedby="learning-selection-help"
                           required
                         >
                           <option value="" disabled>
@@ -485,16 +479,16 @@ export default function AiLearningProducts() {
                           aria-hidden="true"
                         />
                       </div>
-                      {role === "exploring" && (
-                        <p className="mt-4 rounded-xl bg-stone-50 p-4 text-sm leading-relaxed text-gray-600">
-                          {c.exploringNote}
-                        </p>
-                      )}
                     </div>
                   )}
                   {step === 2 && (
-                    <fieldset className="space-y-3">
+                    <fieldset className="space-y-3" aria-describedby="learning-selection-help">
                       <legend className="sr-only">{c.languageTitle}</legend>
+                      {role === "exploring" && (
+                        <p className="rounded-xl bg-stone-50 p-4 text-sm leading-relaxed text-gray-600">
+                          {c.exploringNote}
+                        </p>
+                      )}
                       {(
                         [
                           { value: "en", label: c.english },
@@ -511,7 +505,13 @@ export default function AiLearningProducts() {
                             name="language"
                             value={option.value}
                             checked={language === option.value}
-                            onChange={() => setLanguage(option.value)}
+                            onChange={() => {
+                              setLanguage(option.value);
+                              goTo(3);
+                            }}
+                            onClick={() => {
+                              if (language === option.value) goTo(3);
+                            }}
                           />
                           <span
                             className="text-base font-semibold"
@@ -526,8 +526,8 @@ export default function AiLearningProducts() {
                       </p>
                     </fieldset>
                   )}
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-6">
-                    {step > 0 ? (
+                  {step > 0 && (
+                    <div className="mt-8 border-t border-gray-100 pt-6">
                       <button
                         type="button"
                         className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-gray-600 hover:text-black"
@@ -536,28 +536,16 @@ export default function AiLearningProducts() {
                         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                         {c.back}
                       </button>
-                    ) : (
-                      <span />
-                    )}
-                    <button
-                      type="submit"
-                      className={buttonClass}
-                      disabled={
-                        (step === 0 && !experience) || (step === 1 && !role)
-                      }
-                    >
-                      {step === 2 ? c.recommend : c.next}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                  </div>
-                </form>
+                    </div>
+                  )}
+                </div>
                 <aside className="bi-proof-grid border-t border-white/10 bg-black p-6 text-white sm:p-9 lg:border-l lg:border-t-0">
                   <BookOpen
                     className="mb-6 h-8 w-8"
                     strokeWidth={1.4}
                     aria-hidden="true"
                   />
-                  <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight text-white">
+                  <h3 className="card-title text-white">
                     {c.sideTitle}
                   </h3>
                   <p className="mt-4 text-sm leading-relaxed text-gray-300">
@@ -597,7 +585,7 @@ export default function AiLearningProducts() {
                     <h2
                       ref={headingRef}
                       tabIndex={-1}
-                      className="font-heading text-3xl font-bold leading-tight tracking-tight outline-none sm:text-4xl"
+                      className="section-title outline-none"
                     >
                       {isGreek ? product.nameEl : product.name}
                     </h2>
@@ -674,7 +662,7 @@ export default function AiLearningProducts() {
                           strokeWidth={1.4}
                           aria-hidden="true"
                         />
-                        <h3 className="font-heading text-2xl font-bold text-white">
+                        <h3 className="card-title text-white">
                           {c.sentTitle}
                         </h3>
                         <p className="mt-4 break-words text-sm leading-relaxed text-gray-200">
@@ -701,7 +689,7 @@ export default function AiLearningProducts() {
                           strokeWidth={1.4}
                           aria-hidden="true"
                         />
-                        <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight text-white">
+                        <h3 className="card-title text-white">
                           {c.emailTitle}
                         </h3>
                         <p className="mb-6 mt-4 text-sm leading-relaxed text-gray-300">
@@ -715,7 +703,7 @@ export default function AiLearningProducts() {
                         </label>
                         <select
                           id="pack-switch"
-                          className="mb-5 min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm text-gray-950 disabled:opacity-60"
+                          className="form-control mb-5 disabled:opacity-60"
                           value={product.role}
                           disabled={status === "sending"}
                           onChange={(event) => {
@@ -737,7 +725,7 @@ export default function AiLearningProducts() {
                         </label>
                         <select
                           id="pdf-language"
-                          className="mb-5 min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3 py-3 text-sm text-gray-950 disabled:opacity-60"
+                          className="form-control mb-5 disabled:opacity-60"
                           value={language}
                           disabled={status === "sending"}
                           onChange={(event) => {
@@ -830,11 +818,11 @@ export default function AiLearningProducts() {
         </section>
 
         <section
-          className="bi-proof-grid bg-black py-20 text-white md:py-24"
+          className="bi-proof-grid section-space bg-black text-white"
           aria-label={c.catalog}
         >
-          <div className="site-container px-6 md:px-12">
-            <details className="group rounded-[2rem] border border-white/15 bg-white/[0.03] p-6 sm:p-9">
+          <div className="site-container">
+            <details className="group rounded-[var(--radius-bi-panel)] border border-white/15 bg-white/[0.03] p-6 sm:p-9">
               <summary className="cursor-pointer font-heading text-2xl font-bold leading-tight text-white marker:text-gray-400 sm:text-3xl">
                 <span className="inline-block align-middle">{c.browse}</span>
               </summary>
@@ -845,7 +833,7 @@ export default function AiLearningProducts() {
                 {aiLearningProducts.map((item, index) => (
                   <article
                     key={item.id}
-                    className="flex min-w-0 flex-col rounded-[1.5rem] border border-white/15 bg-white/[0.04] p-6 transition-colors hover:border-white/30 hover:bg-white/[0.07]"
+                    className="surface-card card-padding flex flex-col border-white/15 bg-white/[0.04] text-white transition-colors hover:border-white/30 hover:bg-white/[0.07]"
                   >
                     <span className="mb-5 text-xs font-semibold tracking-[0.16em] text-gray-400">
                       {String(index + 1).padStart(2, "0")} / PDF

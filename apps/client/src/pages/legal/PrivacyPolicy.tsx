@@ -17,21 +17,21 @@ export default function PrivacyPolicy() {
         path="/privacy-policy"
       />
       <Navbar />
-      <main className="pt-32 pb-20">
+      <main className="page-main">
         <PublicPageHero
           icon={ShieldCheck}
           eyebrow="Legal"
           title="Privacy Policy"
           description="How BI Solutions Group handles personal data, cookies, analytics, and service information."
-          footer={<p className="text-sm text-gray-400">{locale === "el" ? "Τελευταία ενημέρωση: 30 Οκτωβρίου 2026" : locale === "de" ? "Zuletzt aktualisiert: 30. Oktober 2026" : "Last updated: October 30, 2026"}</p>}
+          footer={<p className="text-sm text-gray-600">{locale === "el" ? "Τελευταία ενημέρωση: 30 Οκτωβρίου 2026" : locale === "de" ? "Zuletzt aktualisiert: 30. Oktober 2026" : "Last updated: October 30, 2026"}</p>}
         />
 
-        <section className="mx-auto max-w-5xl px-6 md:px-12">
-          <div className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-10 md:py-10">
-            <div className="space-y-12 text-gray-700 leading-relaxed">
+        <section className="site-container reading-panel">
+          <div className="content-panel">
+            <div className="reading-width mx-auto space-y-12 text-gray-700 leading-relaxed">
             <ScrollReveal delay={0.05}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   1. Data Controller
                 </h2>
                 <p>
@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   2. Personal Data We Collect
                 </h2>
                 <p className="mb-3">We may collect the following categories of data:</p>
@@ -118,7 +118,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   3. Legal Bases for Processing
                 </h2>
                 <p className="mb-3">
@@ -159,7 +159,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   4. Data Retention
                 </h2>
                 <p>
@@ -179,7 +179,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   5. Your GDPR Rights
                 </h2>
                 <p className="mb-3">
@@ -223,7 +223,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   6. Cookies
                 </h2>
                 <p className="mb-3">
@@ -289,7 +289,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   7. Third-Party Services
                 </h2>
                 <p className="mb-3">
@@ -337,7 +337,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   8. Data Security
                 </h2>
                 <p>
@@ -350,7 +350,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   9. Changes to This Policy
                 </h2>
                 <p>
@@ -362,7 +362,7 @@ export default function PrivacyPolicy() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   10. Contact
                 </h2>
                 <p>

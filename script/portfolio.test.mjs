@@ -10,6 +10,11 @@ const manifest = JSON.parse(
   read("apps/client/public/assets/projects/manifest.json"),
 );
 const inventory = JSON.parse(read("shared/search-routes.json"));
+const caseStudySlugs = [
+  ...read("apps/client/src/data/caseStudies.ts").matchAll(
+    /^\s*slug:\s*"([^"]+)"/gm,
+  ),
+].map((match) => match[1]);
 const canonicalOrigin = "https://www.bisolutions.group";
 const moduleScript = read("dist/public/index.html").match(
   /<script\b[^>]*\btype="module"[^>]*\bsrc="([^"]+)"/,
@@ -46,6 +51,14 @@ const requestedUrls = [
 ];
 const localPath = (locale, route) =>
   `${locale === "en" ? "" : `/${locale}`}${route}`;
+const caseStudyPath = (locale, slug) => {
+  const route = `/case-studies/${slug}`;
+  const available = inventory.routes.find(
+    (item) => item.path === route,
+  )?.locales;
+  assert.ok(available, `missing case-study route: ${slug}`);
+  return localPath(available.includes(locale) ? locale : "en", route);
+};
 const htmlFor = (locale, route) =>
   read(`dist/public${localPath(locale, route)}/index.html`);
 const schemas = (html) =>
@@ -89,6 +102,56 @@ test("all 24 requested URLs are represented once, with the existing PAROLI retai
   );
 });
 
+test("all eight websites formerly featured on the homepage remain in the project directory", () => {
+  const featuredUrls = [
+    ...read("apps/client/src/data/websiteProjects.ts").matchAll(
+      /href:\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+  assert.equal(featuredUrls.length, 8);
+  const normalise = (href) => {
+    const url = new URL(href);
+    return `${url.origin}${url.pathname.replace(/\/$/, "")}`;
+  };
+  const urls = new Set(projects.map((project) => normalise(project.url)));
+  for (const href of featuredUrls) assert.ok(urls.has(normalise(href)), href);
+});
+
+test("the homepage omits both portfolio sections while every case study is preserved in Projects", () => {
+  assert.deepEqual(caseStudySlugs, [
+    "risenfire-workforce-reporting",
+    "unicef-audit-compliance",
+    "iaea-scientific-analysis",
+    "ifc-talent-strategy",
+  ]);
+  for (const locale of ["en", "el", "de"]) {
+    const home = htmlFor(locale, "");
+    assert.ok(!home.includes('id="case-studies"'));
+    assert.ok(!home.includes('id="analytics-case-studies"'));
+    const directory = htmlFor(locale, "/projects");
+    const list = schemas(directory).find(
+      (item) => item["@type"] === "ItemList",
+    );
+    for (const slug of caseStudySlugs) {
+      const route = caseStudyPath(locale, slug);
+      assert.ok(
+        directory.includes(`href="${buildBase}${route}"`),
+        `missing case card: ${locale}/${slug}`,
+      );
+      assert.ok(
+        list.itemListElement.some(
+          (item) => item.url === `${canonicalOrigin}${route}`,
+        ),
+      );
+      const detail = read(`dist/public${route}/index.html`);
+      assert.ok(
+        detail.includes(`/projects#case-studies`),
+        `missing return to Projects: ${route}`,
+      );
+    }
+  }
+});
+
 test("each project has verified real screenshots and three complete content languages", () => {
   for (const project of projects) {
     const entry = manifest.find((item) => item.slug === project.slug);
@@ -119,8 +182,11 @@ test("the complete directory is crawlable without JavaScript in each language", 
   for (const locale of ["en", "el", "de"]) {
     const html = htmlFor(locale, "/projects");
     const list = schemas(html).find((schema) => schema["@type"] === "ItemList");
-    assert.equal(list.numberOfItems, projects.length);
-    assert.equal(list.itemListElement.length, projects.length);
+    assert.equal(list.numberOfItems, projects.length + caseStudySlugs.length);
+    assert.equal(
+      list.itemListElement.length,
+      projects.length + caseStudySlugs.length,
+    );
     for (const project of projects) {
       const route = localPath(locale, `/projects/${project.slug}`);
       assert.ok(

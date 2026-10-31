@@ -36,7 +36,7 @@ export default function ProjectDetail() {
       ? "/services#business-intelligence-semantic-modeling"
       : "/services#website-app-development";
   return (
-    <div className="min-h-screen bg-[#f5f3f0] font-sans text-foreground [overflow-wrap:anywhere]">
+    <div className="min-h-screen bg-[var(--surface-paper)] font-sans text-foreground [overflow-wrap:anywhere]">
       <Seo
         title={`${project.title} — ${copy.overview[locale]}`}
         description={project.summary[locale]}
@@ -102,8 +102,8 @@ export default function ProjectDetail() {
         ]}
       />
       <Navbar />
-      <main id="main-content" tabIndex={-1} className="pb-24 pt-32">
-        <div className="site-container px-6 md:px-12">
+      <main id="main-content" tabIndex={-1} className="page-main">
+        <div className="site-container">
           <nav
             aria-label={copy.all[locale]}
             className="mb-10 flex flex-wrap gap-x-5 gap-y-3 text-sm text-gray-600"
@@ -123,16 +123,16 @@ export default function ProjectDetail() {
             </Link>
           </nav>
           <header className="max-w-4xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-[#a51f25]">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[var(--brand-accent)]">
               {category.name[locale]}
             </p>
             <h1
-              className="mt-5 font-heading text-4xl font-bold leading-tight tracking-tight text-gray-950 sm:text-5xl lg:text-6xl"
+              className="page-title mt-5 text-gray-950"
               translate="no"
             >
               {project.title}
             </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
+            <p className="body-lead reading-width mt-6 text-gray-600">
               {project.summary[locale]}
             </p>
             <a
@@ -162,15 +162,15 @@ export default function ProjectDetail() {
               height={810}
               alt={`${project.title} — ${copy.alt[locale]}`}
               fetchPriority="high"
-              className="aspect-video w-full rounded-[2rem] border border-gray-200 bg-white object-cover"
+              className="aspect-video w-full rounded-[var(--radius-bi-panel)] border border-gray-200 bg-white object-cover"
             />
             <figcaption className="mt-4 text-sm leading-relaxed text-gray-500">
               {copy.captureNote[locale]}
             </figcaption>
           </figure>
           <div className="mt-16 grid gap-10 lg:grid-cols-2">
-            <section className="rounded-[2rem] border border-gray-200 bg-white p-7 sm:p-10">
-              <h2 className="font-heading text-2xl font-bold">
+            <section className="content-panel">
+              <h2 className="article-heading">
                 {copy.overview[locale]}
               </h2>
               <p className="mt-5 leading-relaxed text-gray-600">
@@ -180,8 +180,8 @@ export default function ProjectDetail() {
                 {copy.note[locale]}
               </p>
             </section>
-            <section className="rounded-[2rem] border border-gray-200 bg-white p-7 sm:p-10">
-              <h2 className="font-heading text-2xl font-bold">
+            <section className="content-panel">
+              <h2 className="article-heading">
                 {copy.features[locale]}
               </h2>
               <ul className="mt-5 space-y-4">
@@ -191,7 +191,7 @@ export default function ProjectDetail() {
                     className="flex gap-3 leading-relaxed text-gray-700"
                   >
                     <span
-                      className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#a51f25]"
+                      className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--brand-accent)]"
                       aria-hidden="true"
                     />
                     {feature}
@@ -207,10 +207,10 @@ export default function ProjectDetail() {
             </section>
           </div>
           <section className="mt-16">
-            <h2 className="mb-8 font-heading text-3xl font-bold">
+            <h2 className="section-title mb-8">
               {copy.related[locale]}
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="card-grid">
               {related.map((item) => (
                 <ProjectCard key={item.slug} project={item} />
               ))}

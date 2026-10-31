@@ -15,21 +15,21 @@ export default function TermsOfService() {
         path="/terms-of-service"
       />
       <Navbar />
-      <main className="pt-32 pb-20">
+      <main className="page-main">
         <PublicPageHero
           icon={FileText}
           eyebrow="Legal"
           title="Terms of Service"
           description="The service terms for BI Solutions Group consulting, products, AI workflows, and website use."
-          footer={<p className="text-sm text-gray-400">Last updated: June 2026</p>}
+          footer={<p className="text-sm text-gray-600">Last updated: June 2026</p>}
         />
 
-        <section className="mx-auto max-w-5xl px-6 md:px-12">
-          <div className="rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-xl shadow-black/[0.04] md:px-10 md:py-10">
-            <div className="space-y-12 text-gray-700 leading-relaxed">
+        <section className="site-container reading-panel">
+          <div className="content-panel">
+            <div className="reading-width mx-auto space-y-12 text-gray-700 leading-relaxed">
             <ScrollReveal delay={0.05}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   1. Services
                 </h2>
                 <p>
@@ -44,7 +44,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   2. User Accounts
                 </h2>
                 <p>
@@ -58,7 +58,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   3. Acceptable Use
                 </h2>
                 <p className="mb-3">When using our services, you agree not to:</p>
@@ -89,7 +89,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   4. Bonusaki Demo and Merchant Pilots
                 </h2>
                 <p>
@@ -108,7 +108,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   5. AI-Generated Content
                 </h2>
                 <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-4">
@@ -133,7 +133,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   6. Intellectual Property
                 </h2>
                 <p>
@@ -148,7 +148,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   7. Limitation of Liability
                 </h2>
                 <p>
@@ -163,7 +163,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   8. Termination
                 </h2>
                 <p>
@@ -177,7 +177,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   9. Governing Law and Disputes
                 </h2>
                 <p>
@@ -196,7 +196,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   10. Changes to These Terms
                 </h2>
                 <p>
@@ -209,7 +209,7 @@ export default function TermsOfService() {
 
             <ScrollReveal delay={0.1}>
               <section>
-                <h2 className="text-2xl font-bold font-heading text-black mb-4">
+                <h2 className="article-heading text-black mb-4">
                   11. Contact
                 </h2>
                 <p>For questions about these terms, contact us:</p>

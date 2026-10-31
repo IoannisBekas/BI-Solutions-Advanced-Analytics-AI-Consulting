@@ -11,6 +11,12 @@ const origin = process.env.PORTFOLIO_QA_ORIGIN || "http://127.0.0.1:5177";
 const projects = JSON.parse(
   await fs.readFile("shared/portfolio-projects.json", "utf8"),
 );
+const caseStudyCount = [
+  ...(
+    await fs.readFile("apps/client/src/data/caseStudies.ts", "utf8")
+  ).matchAll(/^\s*slug:\s*"([^"]+)"/gm),
+].length;
+const directoryCount = projects.length + caseStudyCount;
 const directory = "output/portfolio/qa";
 await fs.mkdir(directory, { recursive: true });
 const browser = await chromium.launch({ headless: true });
@@ -53,7 +59,7 @@ try {
         name: /^(Reject optional|Απόρριψη προαιρετικών|Optionale ablehnen)$/,
       });
       if (await rejectCookies.isVisible()) await rejectCookies.click();
-      assert.equal(await page.locator("main article").count(), 25);
+      assert.equal(await page.locator("main article").count(), directoryCount);
       const fit = await overflow();
       assert.ok(fit.scroll <= width + 1, JSON.stringify({ locale, ...fit }));
       assert.equal(fit.offenders.length, 0, JSON.stringify({ locale, ...fit }));
@@ -71,7 +77,7 @@ try {
         locale,
         width,
         type: "directory",
-        cards: 25,
+        cards: directoryCount,
         overflow: false,
       });
     }
@@ -143,26 +149,39 @@ try {
     await page.keyboard.press("Escape");
     await dialog.waitFor({ state: "hidden" });
     report.checks.push({ locale, type: "navigation" });
-    await page.goto(url(locale, "/projects/e-synergo"), { waitUntil: "networkidle" });
+    await page.goto(url(locale, "/projects/e-synergo"), {
+      waitUntil: "networkidle",
+    });
     const enquiry = page.locator('main a[href*="/start-a-project?"]').last();
-    assert.equal(new URL(await enquiry.getAttribute("href"), origin).searchParams.get("need"), "web-app");
+    assert.equal(
+      new URL(await enquiry.getAttribute("href"), origin).searchParams.get(
+        "need",
+      ),
+      "web-app",
+    );
     await enquiry.click();
     await page.waitForURL(url(locale, "/start-a-project?need=web-app"));
     report.checks.push({ locale, type: "enquiry-navigation", need: "web-app" });
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(url(locale, "/"), { waitUntil: "networkidle" });
-    const featured = page.locator("#case-studies");
-    await featured.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(300);
-    const featuredFit = await featured.evaluate(section => {
-      const bounds = section.getBoundingClientRect();
-      const buttons = section.querySelectorAll("button");
-      return { bottom: bounds.bottom, controlsBottom: buttons[buttons.length - 1].getBoundingClientRect().bottom };
+    assert.equal(
+      await page
+        .locator("main #case-studies, main #analytics-case-studies")
+        .count(),
+      0,
+    );
+    assert.equal(
+      await page
+        .locator(
+          `header nav > a[href="${locale === "en" ? "" : `/${locale}`}/projects"]`,
+        )
+        .count(),
+      1,
+    );
+    report.checks.push({
+      locale,
+      type: "homepage-projects-moved-to-directory",
     });
-    assert.ok(featuredFit.controlsBottom <= featuredFit.bottom, JSON.stringify({ locale, featuredFit }));
-    assert.equal(await featured.locator(`a[href="${locale === "en" ? "" : `/${locale}`}/projects"]`).count(), 1);
-    await page.screenshot({ path: `${directory}/${locale}-homepage-projects-1440.png` });
-    report.checks.push({ locale, type: "homepage-project-link", controlsClipped: false });
     console.log(
       `${locale}: directory, categories, all 25 details and navigation passed.`,
     );
@@ -182,8 +201,8 @@ try {
   const noJsContext = await browser.newContext({ javaScriptEnabled: false });
   const noJsPage = await noJsContext.newPage();
   await noJsPage.goto(url("el", "/projects"));
-  assert.equal(await noJsPage.locator("main article").count(), 25);
-  report.checks.push({ type: "no-JavaScript", cards: 25 });
+  assert.equal(await noJsPage.locator("main article").count(), directoryCount);
+  report.checks.push({ type: "no-JavaScript", cards: directoryCount });
   await noJsContext.close();
   assert.deepEqual(report.errors, []);
   console.log(

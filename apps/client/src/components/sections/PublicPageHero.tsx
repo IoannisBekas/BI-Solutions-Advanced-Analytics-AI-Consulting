@@ -28,13 +28,13 @@ export function PublicPageHero({
   descriptionClassName,
 }: PublicPageHeroProps) {
   return (
-    <section className="relative max-w-full overflow-hidden px-4 pb-10 sm:px-6 md:px-12">
+    <section className="relative max-w-full overflow-hidden pb-10">
       <div className="pointer-events-none absolute inset-0 overflow-hidden bi-hero-backdrop" />
 
       <div className="site-container relative z-10 min-w-0">
         <div
           className={cn(
-            "w-full min-w-0 rounded-[2rem] border border-gray-200 bg-white/90 px-6 py-10 shadow-xl shadow-black/[0.06] sm:px-8 sm:py-12 md:px-12 md:py-16",
+            "content-panel w-full",
             className,
           )}
         >
@@ -58,7 +58,7 @@ export function PublicPageHero({
 
               <h1
                 className={cn(
-                  "mt-6 max-w-full break-words text-[2.55rem] font-bold font-heading leading-[1.05] tracking-tight text-gray-950 sm:max-w-5xl sm:text-5xl sm:leading-tight md:text-6xl",
+                  "page-title mt-6 text-gray-950",
                   titleClassName,
                 )}
               >
@@ -68,7 +68,7 @@ export function PublicPageHero({
               {description ? (
                 <p
                   className={cn(
-                    "mt-5 max-w-full break-words text-lg leading-relaxed text-gray-600 sm:max-w-3xl",
+                    "body-lead reading-width mt-5 text-gray-600",
                     descriptionClassName,
                   )}
                 >

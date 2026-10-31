@@ -59,8 +59,8 @@ export default function CaseStudyDetail() {
       />
       <Navbar />
 
-      <main className="pb-24 pt-32">
-        <section className="site-container px-6 md:px-12">
+      <main className="page-main">
+        <section className="site-container">
           <ScrollReveal width="100%">
             <nav
               aria-label="Breadcrumb"
@@ -71,7 +71,7 @@ export default function CaseStudyDetail() {
               </Link>
               <span aria-hidden="true">/</span>
               <a
-                href={localizedHref("/#case-studies")}
+                href={localizedHref("/projects#case-studies")}
                 className="transition-colors hover:text-gray-950"
               >
                 Case Studies
@@ -87,10 +87,10 @@ export default function CaseStudyDetail() {
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                   {caseStudy.relationship}
                 </p>
-                <h1 className="mt-5 max-w-5xl text-4xl font-bold font-heading leading-[1.08] tracking-tight text-gray-950 sm:text-5xl md:text-6xl lg:text-7xl">
+                <h1 className="page-title mt-5 text-gray-950">
                   {caseStudy.title}
                 </h1>
-                <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 md:text-xl">
+                <p className="body-lead reading-width mt-6 text-gray-600">
                   {caseStudy.summary}
                 </p>
               </div>
@@ -145,9 +145,9 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-14 px-6 md:px-12">
+        <section className="site-container mt-14">
           <ScrollReveal width="100%">
-            <div className="grid gap-px overflow-hidden rounded-[2rem] border border-gray-200 bg-gray-200 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-px overflow-hidden rounded-[var(--radius-bi-panel)] border border-gray-200 bg-gray-200 sm:grid-cols-2 lg:grid-cols-4">
               {caseStudy.snapshot.map((item) => (
                 <div key={item.label} className="bg-white px-6 py-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.17em] text-gray-400">
@@ -162,9 +162,9 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-14 px-6 md:px-12">
+        <section className="site-container mt-14">
           <ScrollReveal width="100%">
-            <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-gray-100 shadow-2xl shadow-black/[0.08]">
+            <div className="overflow-hidden rounded-[var(--radius-bi-panel)] border border-gray-200 bg-gray-100 shadow-2xl shadow-black/[0.08]">
               <img
                 src={caseStudy.image}
                 alt={caseStudy.imageAlt}
@@ -174,12 +174,12 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-24 grid gap-8 px-6 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]">
+        <section className="site-container section-gap grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]">
           <ScrollReveal width="100%">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
               The problem
             </p>
-            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+            <h2 className="section-title mt-4 text-gray-950">
               The reporting question behind the interface.
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-gray-600">
@@ -188,7 +188,7 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.08} width="100%">
-            <div className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-7 sm:p-8">
+            <div className="h-full content-panel bg-gray-50">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Constraints
               </p>
@@ -207,13 +207,13 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-20 grid gap-8 px-6 md:px-12 lg:grid-cols-2">
+        <section className="site-container section-gap grid gap-8 lg:grid-cols-2">
           <ScrollReveal width="100%">
-            <div className="h-full rounded-[2rem] bg-gray-950 p-7 text-white sm:p-9">
+            <div className="h-full content-panel border-gray-950 bg-gray-950 text-white">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
                 Approach
               </p>
-              <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight">
+              <h2 className="section-title mt-4">
                 How the analysis was structured
               </h2>
               <div className="mt-8 space-y-6">
@@ -232,11 +232,11 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.08} width="100%">
-            <div className="h-full rounded-[2rem] border border-gray-200 bg-white p-7 shadow-xl shadow-black/[0.04] sm:p-9">
+            <div className="h-full content-panel">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Delivered
               </p>
-              <h2 className="mt-4 text-3xl font-bold font-heading tracking-tight text-gray-950">
+              <h2 className="section-title mt-4 text-gray-950">
                 Concrete report outputs
               </h2>
               <ul className="mt-8 space-y-5">
@@ -254,12 +254,12 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-20 px-6 md:px-12">
+        <section className="site-container section-gap">
           <ScrollReveal className="max-w-3xl" width="100%">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
               Outcome
             </p>
-            <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+            <h2 className="section-title mt-4 text-gray-950">
               {caseStudy.evidenceSource === "linkedin"
                 ? "What the public project account documents."
                 : "What the demonstration proves."}
@@ -273,7 +273,7 @@ export default function CaseStudyDetail() {
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {caseStudy.outcomes.map((outcome, index) => (
               <ScrollReveal key={outcome} delay={index * 0.08} width="100%">
-                <article className="h-full rounded-[1.75rem] border border-gray-200 bg-gray-50 p-7">
+                <article className="h-full surface-card card-padding bg-gray-50">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
                     Capability {index + 1}
                   </p>
@@ -284,13 +284,13 @@ export default function CaseStudyDetail() {
           </div>
         </section>
 
-        <section className="site-container mt-20 grid gap-6 px-6 md:px-12 lg:grid-cols-2">
+        <section className="site-container section-gap grid gap-6 lg:grid-cols-2">
           <ScrollReveal width="100%">
-            <div className="h-full rounded-[2rem] border border-gray-200 bg-gray-50 p-7 sm:p-8">
+            <div className="h-full content-panel bg-gray-50">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Public evidence
               </p>
-              <h2 className="mt-4 text-2xl font-bold font-heading text-gray-950">
+              <h2 className="article-heading mt-4 text-gray-950">
                 Project notes and technical context
               </h2>
               <p className="mt-4 leading-relaxed text-gray-600">
@@ -316,11 +316,11 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.08} width="100%">
-            <div className="flex h-full flex-col rounded-[2rem] border border-gray-200 bg-white p-7 shadow-xl shadow-black/[0.04] sm:p-8">
+            <div className="flex h-full flex-col content-panel">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Related service
               </p>
-              <h2 className="mt-4 text-2xl font-bold font-heading text-gray-950">
+              <h2 className="article-heading mt-4 text-gray-950">
                 {caseStudy.relatedService.label}
               </h2>
               <p className="mt-4 leading-relaxed text-gray-600">
@@ -338,15 +338,15 @@ export default function CaseStudyDetail() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-20 px-6 md:px-12">
+        <section className="site-container section-gap">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] bg-black px-7 py-12 text-white sm:px-10 md:px-14 md:py-14">
+            <div className="content-panel border-black bg-black text-white">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
                 <div className="max-w-3xl">
                   <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-500">
                     Your project
                   </p>
-                  <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight md:text-5xl">
+                  <h2 className="section-title mt-4">
                     Need a reporting experience built around your decisions?
                   </h2>
                   <p className="mt-5 text-lg leading-relaxed text-gray-400">

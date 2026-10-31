@@ -169,6 +169,9 @@ export function Navbar() {
 
   const isServicesActive =
     location === "/services" || location.startsWith("/services/");
+  const isProjectsActive =
+    location === "/projects" || location.startsWith("/projects/") || location.startsWith("/case-studies/");
+  const projectsLabel = locale === "el" ? "Έργα" : locale === "de" ? "Projekte" : "Projects";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -333,6 +336,14 @@ export function Navbar() {
                   aria-label={navCopy.mobile}
                 >
                   <div className="mx-auto max-w-xl divide-y divide-gray-100">
+                    <Link
+                      href="/projects"
+                      className="block min-h-14 py-4 text-2xl font-bold font-heading"
+                      aria-current={isProjectsActive ? "page" : undefined}
+                      onClick={() => handleNavClick(projectsLabel, "/projects", "mobile_menu")}
+                    >
+                      {projectsLabel}
+                    </Link>
                     <div className="py-2">
                       <button
                         type="button"
@@ -389,7 +400,6 @@ export function Navbar() {
 
                     {[
                       { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
-                      { name: locale === "el" ? "Έργα" : locale === "de" ? "Projekte" : "Projects", href: "/projects" },
                       { name: t.nav.insights, href: "/blog" },
                       { name: t.nav.about, href: "/about" },
                     ].map((item) => (
@@ -435,7 +445,7 @@ export function Navbar() {
         data-site-header
         data-transparent={isScrolled ? "false" : "true"}
         className={cn(
-          "fixed left-0 right-0 top-0 z-50 px-4 transition-all duration-300 ease-in-out sm:px-6 md:px-12",
+          "fixed left-0 right-0 top-0 z-50 transition-all duration-300 ease-in-out",
           isScrolled
             ? "border-b border-gray-100 bg-white/90 py-3 shadow-sm backdrop-blur-md"
             : "bg-transparent py-4 sm:py-6",
@@ -472,6 +482,23 @@ export function Navbar() {
               }
             }}
           >
+            <Link
+              href="/projects"
+              className={cn(
+                "group relative flex min-h-11 items-center text-sm font-medium transition-colors hover:text-black",
+                isProjectsActive ? "text-black" : "text-gray-500",
+              )}
+              aria-current={isProjectsActive ? "page" : undefined}
+              onClick={() => handleNavClick(projectsLabel, "/projects", "header")}
+            >
+              {projectsLabel}
+              <span
+                className={cn(
+                  "absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full",
+                  isProjectsActive && "w-full",
+                )}
+              />
+            </Link>
             <div className="relative">
               <button
                 type="button"
@@ -557,14 +584,12 @@ export function Navbar() {
 
             {[
               { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
-              { name: locale === "el" ? "Έργα" : locale === "de" ? "Projekte" : "Projects", href: "/projects" },
               { name: t.nav.insights, href: "/blog" },
               { name: t.nav.about, href: "/about" },
             ].map((item) => {
               const isActive =
                 location === item.href ||
-                (item.href === "/blog" && location.startsWith("/blog/")) ||
-                (item.href === "/projects" && location.startsWith("/projects/"));
+                (item.href === "/blog" && location.startsWith("/blog/"));
               return (
                 <Link
                   key={item.href}

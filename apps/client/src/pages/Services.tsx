@@ -1,13 +1,15 @@
 import { Link } from "wouter";
-import { ArrowDown, ArrowRight, Check, Globe2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowDown, ArrowRight, Check, ChevronDown, Globe2, List, Rows3, Search, X, type LucideIcon } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { translatePageCopy } from "@/i18n/localizeDocument";
+import type { Locale } from "@/i18n/config";
+import { normalizeSearch } from "@/lib/search";
 import {
   aiCapabilityPages,
   servicePillarPages,
@@ -123,35 +125,70 @@ const servicesStructuredData = {
   })),
 };
 
-function ServiceChapter({ service }: { service: ServicePage }) {
+const browserCopy = {
+  en: { compact: "Compact", details: "Details", view: "Service view", search: "Search services", placeholder: "Search services or capabilities…", clear: "Clear search", empty: "No services match your search.", sections: "sections" },
+  el: { compact: "Σύνοψη", details: "Αναλυτικά", view: "Προβολή υπηρεσιών", search: "Αναζήτηση υπηρεσιών", placeholder: "Αναζήτηση υπηρεσιών ή δυνατοτήτων…", clear: "Καθαρισμός αναζήτησης", empty: "Δεν βρέθηκαν υπηρεσίες για αυτή την αναζήτηση.", sections: "ενότητες" },
+  de: { compact: "Kompakt", details: "Details", view: "Leistungsansicht", search: "Leistungen durchsuchen", placeholder: "Leistungen oder Funktionen suchen…", clear: "Suche löschen", empty: "Keine Leistungen entsprechen Ihrer Suche.", sections: "Bereiche" },
+};
+
+function matchesText(values: string[], query: string, locale: Locale) {
+  return normalizeSearch(values.flatMap((value) => [value, translatePageCopy(value, locale)]).join(" ")).includes(query);
+}
+
+function matchesService(service: ServicePage, query: string, locale: Locale) {
+  return matchesText([
+    service.title, service.shortTitle, service.navLabel, service.description,
+    pillarCopy[service.slug]?.promise ?? "", ...service.items, ...service.outcomes,
+    ...service.keywords, ...(service.techStack ?? []),
+  ], query, locale);
+}
+
+type ChapterProps = {
+  service: ServicePage;
+  expanded: boolean;
+  hidden: boolean;
+  onToggle: (open: boolean) => void;
+};
+
+function ServiceSection({ id, number, eyebrow, title, icon: Icon, expanded, hidden, onToggle, children }: {
+  id: string;
+  number?: string;
+  eyebrow: string;
+  title: string;
+  icon?: LucideIcon;
+  expanded: boolean;
+  hidden: boolean;
+  onToggle: (open: boolean) => void;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} hidden={hidden} className="service-section surface-card">
+      <div className="service-section__eyebrow flex items-center gap-3 text-gray-500">
+        {number && <span className="shrink-0 whitespace-nowrap font-mono text-xs tracking-[0.2em]">{number} / 06</span>}
+        {Icon && <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />}
+        <p className="text-xs font-semibold uppercase tracking-[0.16em]">{eyebrow}</p>
+      </div>
+      <details open={expanded} onToggle={(event) => onToggle(event.currentTarget.open)}>
+        <summary tabIndex={0} className="service-section__summary">
+          <h2 className="service-section__title section-title">
+            <span>{title}</span>
+            <ChevronDown aria-hidden="true" className="service-section__chevron h-5 w-5 shrink-0" />
+          </h2>
+        </summary>
+        <div className="service-section__content">{children}</div>
+      </details>
+    </section>
+  );
+}
+
+function ServiceChapter({ service, expanded, hidden, onToggle }: ChapterProps) {
   const { locale } = useLocale();
   const copy = pillarCopy[service.slug];
-  const Icon = service.icon;
-
   return (
-    <section
-      id={service.slug}
-      className="scroll-mt-28 border-t border-gray-950/15 py-20 md:py-28"
-    >
+    <ServiceSection id={service.slug} number={copy.number} eyebrow={copy.eyebrow} title={service.title} icon={service.icon} expanded={expanded} hidden={hidden} onToggle={onToggle}>
       <ScrollReveal width="100%">
         <div>
-          <div className="flex items-center gap-4 text-gray-500">
-            <span className="font-mono text-xs tracking-[0.2em]">
-              {copy.number} / 06
-            </span>
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-950/20">
-              <Icon aria-hidden="true" className="h-4 w-4" />
-            </span>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em]">
-              {copy.eyebrow}
-            </p>
-          </div>
-          <h2 className="mt-6 max-w-4xl break-words hyphens-auto text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
-            {service.title}
-          </h2>
-          <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
-            {copy.promise}
-          </p>
+          <p className="service-section__promise body-lead text-gray-800">{copy.promise}</p>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
             {service.description}
           </p>
@@ -240,39 +277,19 @@ function ServiceChapter({ service }: { service: ServicePage }) {
           </div>
         </div>
       </ScrollReveal>
-    </section>
+    </ServiceSection>
   );
 }
 
-function AiChapter({ service }: { service: ServicePage }) {
+function AiChapter({ service, expanded, hidden, onToggle, query }: ChapterProps & { query: string }) {
   const { locale } = useLocale();
-  const Icon = service.icon;
-
+  const matchingCapabilities = aiCapabilityPages.filter((capability) => matchesService(capability, query, locale));
   return (
-    <section
-      id={service.slug}
-      className="scroll-mt-28 border-t border-gray-950/15 py-20 md:py-28"
-    >
+    <ServiceSection id={service.slug} number="02" eyebrow="Applied AI" title={service.title} icon={service.icon} expanded={expanded} hidden={hidden} onToggle={onToggle}>
       <div>
         <ScrollReveal width="100%">
           <div>
-            <div className="flex items-center gap-4 text-gray-500">
-              <span className="font-mono text-xs tracking-[0.2em]">
-                02 / 06
-              </span>
-              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-950/20">
-                <Icon aria-hidden="true" className="h-4 w-4" />
-              </span>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em]">
-                Applied AI
-              </p>
-            </div>
-            <h2 className="mt-6 max-w-4xl break-words hyphens-auto text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 sm:text-5xl md:text-6xl">
-              {service.title}
-            </h2>
-            <p className="mt-7 max-w-4xl text-2xl leading-snug tracking-tight text-gray-800 md:text-3xl">
-              {pillarCopy[service.slug].promise}
-            </p>
+            <p className="service-section__promise body-lead text-gray-800">{pillarCopy[service.slug].promise}</p>
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
               {service.description}
             </p>
@@ -289,9 +306,10 @@ function AiChapter({ service }: { service: ServicePage }) {
             const CapabilityIcon = capability.icon;
 
             return (
-              <ScrollReveal key={capability.slug} width="100%">
                 <article
+                  key={capability.slug}
                   id={capability.slug}
+                  hidden={query !== "" && matchingCapabilities.length > 0 && !matchingCapabilities.includes(capability)}
                   className="scroll-mt-28 grid gap-5 border-b border-gray-950/15 py-7 last:border-b-0 md:grid-cols-[3rem_3rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-7"
                 >
                   <span className="font-mono text-xs text-gray-400">
@@ -301,7 +319,7 @@ function AiChapter({ service }: { service: ServicePage }) {
                     aria-hidden="true"
                     className="h-5 w-5 text-gray-500"
                   />
-                  <h3 className="text-xl font-bold font-heading tracking-tight text-gray-950 md:text-2xl">
+                  <h3 className="card-title text-gray-950">
                     {capability.navLabel}
                   </h3>
                   <div>
@@ -320,13 +338,12 @@ function AiChapter({ service }: { service: ServicePage }) {
                     </ul>
                   </div>
                 </article>
-              </ScrollReveal>
             );
           })}
         </div>
 
         <ScrollReveal width="100%">
-          <div className="mt-12 grid gap-8 border border-gray-950/15 p-6 md:grid-cols-[1fr_auto] md:items-end md:p-8">
+          <div className="content-panel mt-12 grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
             <div>
               <div className="flex items-center gap-3 text-gray-500">
                 <Globe2 aria-hidden="true" className="h-4 w-4" />
@@ -334,7 +351,7 @@ function AiChapter({ service }: { service: ServicePage }) {
                   International delivery
                 </p>
               </div>
-              <h3 className="mt-4 text-2xl font-bold font-heading tracking-tight text-gray-950">
+              <h3 className="card-title mt-4 text-gray-950">
                 AI consulting for organizations worldwide
               </h3>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-gray-600">
@@ -355,59 +372,86 @@ function AiChapter({ service }: { service: ServicePage }) {
           </div>
         </ScrollReveal>
       </div>
-    </section>
+    </ServiceSection>
   );
 }
 
 export default function Services() {
-  const [activeSection, setActiveSection] = useState(
-    serviceNavigation[0]?.id ?? "",
-  );
-  const [
-    businessIntelligence,
-    ai,
-    dataStrategy,
-    webDevelopment,
-    contentOperations,
-    careerMentorship,
-  ] = servicePillarPages;
+  const { locale } = useLocale();
+  const copy = browserCopy[locale];
+  const [query, setQuery] = useState("");
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const pendingAnchor = useRef<{ target: string; section: string } | null>(null);
+
+  const matchingSections = (search: string) => [
+    ...servicePillarPages.filter((service) => matchesService(service, search, locale) ||
+      (service.slug === "advanced-analytics-ai" && aiCapabilityPages.some((capability) => matchesService(capability, search, locale))))
+      .map((service) => service.slug),
+    ...(matchesText(["Ways to work together", "Choose the level of support the work actually needs.", ...deliveryFlow.flatMap((item) => [item.title, item.description])], search, locale) ? ["ways-to-work-together"] : []),
+  ];
+  const search = normalizeSearch(query.trim());
+  const visibleSections = matchingSections(search);
+  const allExpanded = serviceNavigation.every((section) => expandedSections.includes(section.id));
+  const setSectionOpen = (id: string, open: boolean) => setExpandedSections((current) => {
+    if (current.includes(id) === open) return current;
+    return open ? [...current, id] : current.filter((value) => value !== id);
+  });
+  const updateSearch = (value: string) => {
+    setQuery(value);
+    const normalized = normalizeSearch(value.trim());
+    setExpandedSections(normalized ? matchingSections(normalized) : []);
+    if (resultsRef.current) {
+      const top = resultsRef.current.getBoundingClientRect().top + window.scrollY;
+      if (window.scrollY > top) resultsRef.current.scrollIntoView({ block: "start", behavior: "instant" });
+    }
+  };
+  const clearSearch = () => { updateSearch(""); searchRef.current?.focus({ preventScroll: true }); };
 
   useEffect(() => {
-    const hashSection = serviceNavigation.find(
-      (section) => section.id === window.location.hash.slice(1),
-    );
-
-    if (hashSection) {
-      setActiveSection(hashSection.id);
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-20% 0px -55% 0px", threshold: 0 },
-    );
-
-    serviceNavigation.forEach((section) => {
-      const element = document.getElementById(section.id);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
+    const revealAnchor = (target = window.location.hash.slice(1)) => {
+      const section = serviceNavigation.some((item) => item.id === target) ? target
+        : aiCapabilityPages.some((item) => item.slug === target) ? "advanced-analytics-ai" : null;
+      if (!section) return;
+      pendingAnchor.current = { target, section };
+      setQuery("");
+      setExpandedSections((current) => current.includes(section) ? [...current] : [...current, section]);
+    };
+    const handleHashChange = () => revealAnchor();
+    const handleAnchorClick = (event: MouseEvent) => {
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+      const destination = new URL(anchor.href, window.location.href);
+      if (destination.origin === window.location.origin &&
+          destination.pathname.replace(/\/$/, "") === window.location.pathname.replace(/\/$/, "") &&
+          destination.hash && destination.hash === window.location.hash) {
+        revealAnchor(destination.hash.slice(1));
+      }
+    };
+    revealAnchor();
+    window.addEventListener("hashchange", handleHashChange);
+    document.addEventListener("click", handleAnchorClick, true);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+      document.removeEventListener("click", handleAnchorClick, true);
+    };
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    document
-      .getElementById(sectionId)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  useEffect(() => {
+    const pending = pendingAnchor.current;
+    if (!pending || !expandedSections.includes(pending.section)) return;
+    pendingAnchor.current = null;
+    const frame = requestAnimationFrame(() => document.getElementById(pending.target)?.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    }));
+    return () => cancelAnimationFrame(frame);
+  }, [expandedSections]);
 
   return (
-    <div className="min-h-screen bg-[#f3f0ea] font-sans text-foreground">
+    <div className="services-page min-h-screen bg-[var(--surface-paper)] font-sans text-foreground" data-view={allExpanded ? "details" : "compact"}>
       <Seo
         title="BI, AI, Data, Web & Search Services"
         description="Business intelligence, AI, data and cloud foundations, web development, technical SEO and AI-search visibility, digital products, training, and mentorship."
@@ -415,22 +459,21 @@ export default function Services() {
         structuredData={servicesStructuredData}
       />
       <Navbar />
-
-      <main className="pt-28">
-        <section className="site-container px-4 md:px-8">
-          <div className="overflow-hidden rounded-[2rem] bg-[#0a0b0d] px-6 pb-8 pt-14 text-white md:rounded-[3rem] md:px-12 md:pb-12 md:pt-20 lg:px-16">
+      <main className="page-main">
+        <section className="site-container">
+          <div className="services-hero content-panel overflow-hidden border-gray-950 bg-gray-950 text-white">
             <div className="w-full">
-              <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end">
+              <div className="services-hero__layout grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:items-end">
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">
                     The complete service atlas
                   </p>
-                  <h1 className="mt-6 max-w-5xl break-words hyphens-auto text-4xl font-bold font-heading leading-[0.96] tracking-[-0.055em] sm:text-6xl sm:leading-[0.92] md:text-7xl lg:text-[6.5rem]">
+                  <h1 className="services-hero__title page-title mt-6 break-words">
                     One partner for better data systems, decisions, and careers.
                   </h1>
                 </div>
                 <div className="max-w-xl lg:pb-2">
-                  <p className="text-lg leading-relaxed text-white/65 md:text-xl">
+                  <p className="services-hero__description text-lg leading-relaxed text-white/65 md:text-xl">
                     Business intelligence, applied AI, data foundations, web
                     applications, content operations, digital products, and
                     enablement—presented in one place and shaped around
@@ -462,9 +505,8 @@ export default function Services() {
             </div>
 
             <nav
-              id="service-index"
               aria-label="Services on this page"
-              className="mt-16 grid scroll-mt-28 border-t border-white/15 sm:grid-cols-2 xl:grid-cols-6"
+              className="services-hero__index mt-16 grid scroll-mt-28 border-t border-white/15 sm:grid-cols-2 xl:grid-cols-6"
             >
               {servicePillarPages.map((service, index) => (
                 <a
@@ -487,67 +529,36 @@ export default function Services() {
             </nav>
           </div>
         </section>
-
-        <div className="site-container mt-16 flex gap-16 px-6 md:mt-24 md:px-12 xl:gap-20">
-          <aside className="hidden w-64 shrink-0 py-20 lg:block">
-            <nav
-              aria-label="Navigate services"
-              className="sticky top-32 flex flex-col space-y-4"
-            >
-              {serviceNavigation.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => scrollToSection(section.id)}
-                  className={cn(
-                    "group flex items-center justify-between text-left text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-black/30 focus-visible:ring-offset-4 focus-visible:ring-offset-[#f3f0ea]",
-                    activeSection === section.id
-                      ? "translate-x-1 text-black"
-                      : "text-gray-400 hover:text-gray-900",
-                  )}
-                >
-                  <span>{section.label}</span>
-                  {activeSection === section.id && (
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 rounded-full bg-black"
-                    />
-                  )}
-                </button>
-              ))}
-            </nav>
-          </aside>
-
-          <div className="min-w-0 flex-1">
-            {businessIntelligence && (
-              <ServiceChapter service={businessIntelligence} />
-            )}
-            {ai && <AiChapter service={ai} />}
-            {dataStrategy && <ServiceChapter service={dataStrategy} />}
-            {webDevelopment && <ServiceChapter service={webDevelopment} />}
-            {contentOperations && <ServiceChapter service={contentOperations} />}
-            {careerMentorship && <ServiceChapter service={careerMentorship} />}
-
-            <section
-              id="ways-to-work-together"
-              className="scroll-mt-24 border-t border-gray-950/15 py-20 md:py-28"
-            >
-              <ScrollReveal width="100%">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                  Ways to work together
-                </p>
-                <h2 className="mt-5 max-w-4xl text-4xl font-bold font-heading tracking-[-0.045em] text-gray-950 md:text-6xl">
-                  Choose the level of support the work actually needs.
-                </h2>
-              </ScrollReveal>
-              <div className="mt-12 grid border-y border-gray-950/15 md:grid-cols-2 2xl:grid-cols-3 min-[2200px]:grid-cols-5">
+        <div className="site-container section-gap">
+          <div id="service-index" className="catalog-toolbar services-toolbar">
+            <div className="relative min-w-0">
+              <label htmlFor="service-search" className="sr-only">{copy.search}</label>
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" aria-hidden="true" />
+              <input ref={searchRef} id="service-search" type="search" value={query} onChange={(event) => updateSearch(event.target.value)} placeholder={copy.placeholder} aria-controls="service-results" className="form-control pl-11 pr-14" />
+              {query && <button type="button" onClick={clearSearch} aria-label={copy.clear} className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-gray-600 hover:text-black"><X className="h-4 w-4" aria-hidden="true" /></button>}
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div role="group" aria-label={copy.view} className="flex gap-2">
+                <Button type="button" variant={allExpanded ? "outline" : "default"} aria-pressed={!allExpanded} aria-controls="service-results" className="px-3" onClick={() => setExpandedSections([])}><List aria-hidden="true" />{copy.compact}</Button>
+                <Button type="button" variant={allExpanded ? "default" : "outline"} aria-pressed={allExpanded} aria-controls="service-results" className="px-3" onClick={() => setExpandedSections(serviceNavigation.map((section) => section.id))}><Rows3 aria-hidden="true" />{copy.details}</Button>
+              </div>
+              <p role="status" aria-live="polite" aria-atomic="true" className="whitespace-nowrap text-xs text-gray-600">{visibleSections.length} / {serviceNavigation.length} · {copy.sections}</p>
+            </div>
+          </div>
+          <div ref={resultsRef} id="service-results" className="services-list">
+            {servicePillarPages.map((service) => {
+              const props = { service, expanded: expandedSections.includes(service.slug), hidden: !visibleSections.includes(service.slug), onToggle: (open: boolean) => setSectionOpen(service.slug, open) };
+              return service.slug === "advanced-analytics-ai" ? <AiChapter key={service.slug} {...props} query={search} /> : <ServiceChapter key={service.slug} {...props} />;
+            })}
+            <ServiceSection id="ways-to-work-together" eyebrow="Ways to work together" title="Choose the level of support the work actually needs." expanded={expandedSections.includes("ways-to-work-together")} hidden={!visibleSections.includes("ways-to-work-together")} onToggle={(open) => setSectionOpen("ways-to-work-together", open)}>
+              <div className="service-delivery-grid grid border-y border-gray-950/15 md:grid-cols-2 2xl:grid-cols-3 min-[2200px]:grid-cols-5">
                 {deliveryFlow.map((item) => (
                   <ScrollReveal key={item.number} width="100%">
                     <article className="flex h-full flex-col border-b border-gray-950/15 py-8 md:px-6 min-[2200px]:min-h-80 min-[2200px]:border-b-0 min-[2200px]:border-r min-[2200px]:first:pl-0 min-[2200px]:last:border-r-0">
                       <p className="font-mono text-xs text-gray-400">
                         {item.number}
                       </p>
-                      <h3 className="mt-8 text-2xl font-bold font-heading tracking-tight text-gray-950">
+                      <h3 className="card-title mt-8 text-gray-950">
                         {item.title}
                       </h3>
                       <p className="mt-4 max-w-sm text-base leading-relaxed text-gray-600">
@@ -564,18 +575,18 @@ export default function Services() {
                   </ScrollReveal>
                 ))}
               </div>
-            </section>
+            </ServiceSection>
+            {visibleSections.length === 0 && <div className="content-panel text-center"><p>{copy.empty}</p><Button type="button" variant="outline" className="mt-4" onClick={clearSearch}>{copy.clear}</Button></div>}
           </div>
         </div>
-
         <section className="bg-[#0a0b0d] py-20 text-white md:py-24">
           <ScrollReveal width="100%">
-            <div className="site-container flex flex-col gap-8 px-6 md:px-12 lg:flex-row lg:items-end lg:justify-between">
+            <div className="site-container flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-4xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
                   Not sure where your need belongs?
                 </p>
-                <h2 className="mt-5 text-4xl font-bold font-heading tracking-[-0.045em] text-white md:text-6xl">
+                <h2 className="section-title mt-5 text-white">
                   Tell us what should become clearer, faster, stronger, or
                   easier to use.
                 </h2>

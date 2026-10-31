@@ -80,7 +80,7 @@ export default function USConsulting({ service }: { service: keyof typeof offers
         provider: { "@type": "Organization", name: "BI Solutions Group", url: "https://www.bisolutions.group/" },
       }} />
       <header className="border-b border-gray-200 bg-white">
-        <div className="site-container flex items-center justify-between gap-4 px-6 py-5 md:px-12">
+        <div className="site-container flex items-center justify-between gap-4 py-5">
           <Link href="/" aria-label="BI Solutions Group home" className="flex items-center gap-3 font-semibold">
             <img src={withAssetBase("bi-solutions-logo.png")} alt="" width={42} height={42} />
             <span className="text-sm sm:text-base">BI Solutions Group</span>
@@ -89,10 +89,10 @@ export default function USConsulting({ service }: { service: keyof typeof offers
         </div>
       </header>
       <main>
-        <section className="site-container grid items-center gap-12 px-6 py-14 md:px-12 md:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:gap-20">
+        <section className="site-container grid items-center gap-12 py-14 md:py-20 lg:grid-cols-[1.2fr_0.8fr] lg:gap-20">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.17em] text-gray-600">{offer.eyebrow}</p>
-            <h1 className="mt-6 max-w-3xl text-4xl leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">{offer.headline}</h1>
+            <h1 className="page-title mt-6">{offer.headline}</h1>
             <p className="mt-6 max-w-xl text-xl font-medium leading-relaxed">{offer.promise}</p>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-600 sm:text-lg">{offer.introduction}</p>
             <Button asChild className="mt-8 h-auto min-h-12 w-full whitespace-normal rounded-full px-6 py-3 text-base sm:w-auto">
@@ -100,11 +100,11 @@ export default function USConsulting({ service }: { service: keyof typeof offers
             </Button>
             <p className="mt-4 text-sm text-gray-600">{offer.scope}</p>
           </div>
-          <aside className="overflow-hidden rounded-3xl border border-gray-200 bg-white">
+          <aside className="surface-card overflow-hidden">
             <img src={founderPhoto} alt="Ioannis Bekas, founder of BI Solutions Group" width={700} height={800} className="aspect-[5/4] w-full object-cover object-top" fetchPriority="high" />
             <div className="p-6 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Your consulting partner</p>
-              <h2 className="mt-3 text-2xl">Ioannis Bekas</h2>
+              <h2 className="article-heading mt-3">Ioannis Bekas</h2>
               <p className="mt-3 text-sm leading-relaxed text-gray-600">Founder of BI Solutions Group. Data, analytics, and AI consulting with a clear scope, direct communication, and documented delivery.</p>
               <Link href="/about" className="mt-5 inline-flex items-center text-sm font-semibold underline underline-offset-4">Read experience and background<ChevronRight className="ml-1 h-4 w-4" /></Link>
             </div>
@@ -112,23 +112,23 @@ export default function USConsulting({ service }: { service: keyof typeof offers
         </section>
 
         <section className="border-y border-gray-200 bg-white">
-          <div className="site-container px-6 py-14 md:px-12 md:py-20">
+          <div className="site-container py-14 md:py-20">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">A clear scope, from the start</p>
-            <h2 className="mt-4 text-3xl sm:text-4xl">What we can deliver.</h2>
+            <h2 className="section-title mt-4">What we can deliver.</h2>
             <div className="mt-10 grid gap-8 md:grid-cols-3">
               {offer.deliverables.map(([title, description], index) => <article key={title} className="border-t border-gray-300 pt-6">
                 <span className="text-sm font-semibold text-gray-500">0{index + 1}</span>
-                <h3 className="mt-4 text-xl font-semibold">{title}</h3>
+                <h3 className="card-title mt-4">{title}</h3>
                 <p className="mt-3 text-base leading-relaxed text-gray-600">{description}</p>
               </article>)}
             </div>
           </div>
         </section>
 
-        <section className="site-container grid gap-10 px-6 py-14 md:px-12 md:py-20 lg:grid-cols-2">
+        <section className="site-container grid gap-10 py-14 md:py-20 lg:grid-cols-2">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Start with a real business problem</p>
-            <h2 className="mt-4 text-3xl sm:text-4xl">Where should we begin?</h2>
+            <h2 className="section-title mt-4">Where should we begin?</h2>
             <p className="mt-5 max-w-xl leading-relaxed text-gray-600">{offer.brief}</p>
           </div>
           <ul className="space-y-4">
@@ -136,12 +136,12 @@ export default function USConsulting({ service }: { service: keyof typeof offers
           </ul>
         </section>
 
-        {service === "power-bi" && <section className="site-container px-6 pb-14 md:px-12 md:pb-20" aria-labelledby="portfolio-title">
-          <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white">
+        {service === "power-bi" && <section className="site-container pb-14 md:pb-20" aria-labelledby="portfolio-title">
+          <div className="surface-card overflow-hidden">
             <div className="grid gap-8 p-6 sm:p-9 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Independent portfolio demonstration</p>
-                <h2 id="portfolio-title" className="mt-4 text-3xl">See a reporting problem made explorable.</h2>
+                <h2 id="portfolio-title" className="section-title mt-4">See a reporting problem made explorable.</h2>
                 <p className="mt-5 leading-relaxed text-gray-600">Explore an audit-compliance dashboard covering risk, expenditure, and recommendation progress. This uses mock data and was not commissioned by or endorsed by UNICEF.</p>
                 <Link href="/case-studies/unicef-audit-compliance" className="mt-6 inline-flex items-center font-semibold underline underline-offset-4">Explore the Power BI demo<ArrowRight className="ml-2 h-4 w-4" /></Link>
               </div>
@@ -151,9 +151,9 @@ export default function USConsulting({ service }: { service: keyof typeof offers
         </section>}
 
         <section id="remote-delivery" className="bg-[#102033] text-white">
-          <div className="site-container px-6 py-14 md:px-12 md:py-20">
+          <div className="site-container py-14 md:py-20">
             <p className="text-xs font-semibold uppercase tracking-widest text-white/70">Working together from the US</p>
-            <h2 className="mt-4 max-w-2xl text-3xl sm:text-4xl">Remote delivery, with the details agreed upfront.</h2>
+            <h2 className="section-title mt-4 max-w-2xl">Remote delivery, with the details agreed upfront.</h2>
             <div className="mt-10 grid gap-8 md:grid-cols-3">
               {[
                 ["01 / Share the essentials", "Send your problem, current tools, and preferred timing. You can express your planning budget in US dollars or euros."],
@@ -164,8 +164,8 @@ export default function USConsulting({ service }: { service: keyof typeof offers
           </div>
         </section>
 
-        <section className="site-container px-6 py-14 md:px-12 md:py-20">
-          <h2 className="text-3xl sm:text-4xl">Before we start.</h2>
+        <section className="site-container py-14 md:py-20">
+          <h2 className="section-title">Before we start.</h2>
           <div className="mt-8 max-w-4xl divide-y divide-gray-200 border-y border-gray-200">
             {offer.faqs.map(([question, answer]) => <details key={question} className="group py-5">
               <summary className="cursor-pointer text-lg font-semibold focus-visible:outline-offset-4">{question}</summary>
@@ -173,9 +173,9 @@ export default function USConsulting({ service }: { service: keyof typeof offers
             </details>)}
           </div>
         </section>
-        <section className="site-container px-6 pb-16 md:px-12 md:pb-24">
-          <div className="rounded-3xl border border-gray-200 bg-white p-7 sm:p-12">
-            <h2 className="max-w-2xl text-3xl sm:text-4xl">Tell us what needs to work better.</h2>
+        <section className="site-container pb-16 md:pb-24">
+          <div className="content-panel">
+            <h2 className="section-title max-w-2xl">Tell us what needs to work better.</h2>
             <p className="mt-4 max-w-2xl leading-relaxed text-gray-600">A short brief is enough to start. We review the context and suggest the next step before you commit to a project.</p>
             <Button asChild className="mt-7 h-auto min-h-12 w-full whitespace-normal rounded-full px-6 py-3 sm:w-auto"><Link href={inquiryHref} onClick={inquiryClick}>{offer.cta}<ArrowRight className="ml-2 h-4 w-4 shrink-0" /></Link></Button>
           </div>

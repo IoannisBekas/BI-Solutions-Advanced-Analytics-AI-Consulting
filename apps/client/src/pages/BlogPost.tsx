@@ -181,7 +181,7 @@ function renderContent(content: string, locale: Locale) {
       return (
         <h2
           key={index}
-          className="mt-10 text-2xl font-bold font-heading tracking-tight text-gray-950"
+          className="article-heading mt-10 text-gray-950"
         >
           {section.replace("## ", "")}
         </h2>
@@ -192,7 +192,7 @@ function renderContent(content: string, locale: Locale) {
       return (
         <blockquote
           key={index}
-          className="my-8 rounded-[1.5rem] border border-gray-200 bg-gray-50 px-6 py-5"
+          className="my-8 rounded-[var(--radius-bi-card)] border border-gray-200 bg-gray-50 px-6 py-5"
         >
           <p
             className="text-base leading-relaxed text-gray-700"
@@ -240,7 +240,7 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-foreground" data-hero-overlay="true">
+      <div className="resource-page min-h-screen bg-[var(--surface-paper)] font-sans text-foreground" data-hero-overlay="true">
         <Navbar />
         <main className="pb-20">
           <ResourcePageHero
@@ -323,7 +323,7 @@ export default function BlogPost() {
     },
   };
   return (
-    <div className="resource-page min-h-screen bg-[#f5f3f0] font-sans text-foreground" data-hero-overlay="true">
+    <div className="resource-page min-h-screen bg-[var(--surface-paper)] font-sans text-foreground" data-hero-overlay="true">
       <Seo
         title={localizedSeoTitle}
         description={localizedExcerpt}
@@ -374,9 +374,9 @@ export default function BlogPost() {
           }
         />
 
-        <section className="site-container px-6 pt-10 md:px-12 md:pt-14">
+        <section className="site-container pt-10 md:pt-14">
           <ScrollReveal width="100%">
-            <div className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04]">
+            <div className="content-panel reading-panel overflow-hidden p-0">
               <div className="aspect-[16/9] bg-gray-100">
                 <ArticleVisual post={post} />
               </div>
@@ -384,18 +384,18 @@ export default function BlogPost() {
           </ScrollReveal>
         </section>
 
-        <section className="site-container mt-12 px-6 md:px-12">
+        <section className="site-container mt-12">
           <ScrollReveal width="100%">
-            <article className="mx-auto max-w-5xl rounded-[2rem] border border-gray-200 bg-white px-6 py-8 shadow-sm shadow-black/[0.02] sm:px-8 md:px-12 md:py-12">
+            <article className="content-panel reading-panel ">
               <div className="prose prose-gray mx-auto max-w-[74ch]">
                 {renderContent(localizedContent, locale)}
               </div>
 
               <aside
                 aria-label="About the author"
-                className="mx-auto mt-10 max-w-[74ch] rounded-2xl border border-gray-200 bg-[#f5f3f0] px-6 py-6"
+                className="mx-auto mt-10 max-w-[74ch] rounded-2xl border border-gray-200 bg-[var(--surface-paper)] px-6 py-6"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a51f25]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)]">
                   About the author
                 </p>
                 <h2 className="mt-2 text-xl font-bold font-heading text-gray-950">
@@ -413,7 +413,7 @@ export default function BlogPost() {
                   {localizedTags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-gray-200 bg-[#f5f3f0] px-3 py-1 text-sm font-medium text-gray-700"
+                      className="rounded-full border border-gray-200 bg-[var(--surface-paper)] px-3 py-1 text-sm font-medium text-gray-700"
                     >
                       {tag}
                     </span>
@@ -430,7 +430,7 @@ export default function BlogPost() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Share this article on X"
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f3f0] text-gray-900 transition-colors hover:bg-black hover:text-white"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--surface-paper)] text-gray-900 transition-colors hover:bg-black hover:text-white"
                   >
                     <Twitter className="h-4 w-4" />
                   </a>
@@ -439,7 +439,7 @@ export default function BlogPost() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Share this article on LinkedIn"
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f3f0] text-gray-900 transition-colors hover:bg-black hover:text-white"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--surface-paper)] text-gray-900 transition-colors hover:bg-black hover:text-white"
                   >
                     <Linkedin className="h-4 w-4" />
                   </a>
@@ -452,10 +452,10 @@ export default function BlogPost() {
         {relatedPosts.length > 0 ? (
           <section className="mx-auto mt-20 max-w-5xl px-6 md:mt-24 md:px-12">
             <ScrollReveal className="max-w-3xl" width="100%">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#a51f25]">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                 Related articles
               </p>
-              <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
+              <h2 className="section-title mt-4 text-gray-950">
                 Continue with adjacent reads.
               </h2>
             </ScrollReveal>
@@ -464,7 +464,7 @@ export default function BlogPost() {
               {relatedPosts.map((relatedPost, index) => (
                 <ScrollReveal key={relatedPost.slug} delay={index * 0.08} width="100%">
                   <Link href={`/blog/${relatedPost.slug}`} className="group block h-full">
-                    <article className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] transition duration-300 group-hover:-translate-y-1 group-hover:border-gray-300">
+                    <article className="surface-card surface-card--interactive flex h-full flex-col overflow-hidden">
                       <div className="aspect-[16/10] overflow-hidden bg-gray-100">
                         <ArticleVisual
                           post={relatedPost}
@@ -472,10 +472,10 @@ export default function BlogPost() {
                         />
                       </div>
                       <div className="px-6 py-6">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a51f25]">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)]">
                           {relatedPost.category}
                         </p>
-                        <h3 className="mt-3 text-2xl font-bold font-heading tracking-tight text-gray-950 transition-colors group-hover:text-gray-700">
+                        <h3 className="card-title mt-3 text-gray-950 transition-colors group-hover:text-gray-700">
                           {relatedPost.title}
                         </h3>
                       </div>
@@ -487,15 +487,15 @@ export default function BlogPost() {
           </section>
         ) : null}
 
-        <section className="site-container mt-20 px-6 md:mt-24 md:px-12">
+        <section className="site-container section-gap">
           <ScrollReveal width="100%">
-            <div className="rounded-[2rem] bg-black px-7 py-12 text-white shadow-2xl shadow-black/[0.12] sm:px-10 md:px-14 md:py-16">
+            <div className="content-panel border-black bg-black text-white">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#f2bd2f]">
                 Need help applying this?
               </p>
               <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-3xl">
-                  <h2 className="text-3xl font-bold font-heading tracking-tight md:text-4xl">
+                  <h2 className="section-title">
                     Move from the article into a scoped analytics or AI engagement.
                   </h2>
                   <p className="mt-4 text-lg leading-relaxed text-gray-300">
