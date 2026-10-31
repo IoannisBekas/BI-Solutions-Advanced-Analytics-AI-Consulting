@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { CinematicHero } from "@/components/sections/CinematicHero";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Footer } from "@/components/layout/Footer";
@@ -9,14 +9,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ExternalLink, Pause, Play } from "lucide-react";
 import { Link } from "wouter";
 import { aiCapabilityPages } from "@/lib/servicePages";
-import { homeInsights } from "@/data/homeInsights";
 import { caseStudies } from "@/data/caseStudies";
 import {
   websiteProjects,
   type WebsiteProject,
 } from "@/data/websiteProjects";
 import { trackEvent } from "@/lib/analytics";
-import { withAssetBase, withSiteBase } from "@/lib/site";
+import { withSiteBase } from "@/lib/site";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
 const projectsLinkCopy = {
@@ -24,9 +23,6 @@ const projectsLinkCopy = {
   el: "Δείτε όλα τα έργα ιστοσελίδων & εφαρμογών",
   de: "Alle Website- & App-Projekte entdecken",
 };
-
-const latestInsight = homeInsights[0];
-const moreInsights = homeInsights.slice(1);
 
 interface WebsiteProjectCardProps {
   project: WebsiteProject;
@@ -111,8 +107,6 @@ export default function Home() {
   const [activeProject, setActiveProject] = useState(0);
   const [manualPause, setManualPause] = useState(false);
   const [interactionPause, setInteractionPause] = useState(false);
-  const [analyticsHeight, setAnalyticsHeight] = useState<number>();
-  const analyticsSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (
@@ -125,14 +119,6 @@ export default function Home() {
     }, 5500);
     return () => window.clearInterval(interval);
   }, [manualPause, interactionPause]);
-
-  useEffect(() => {
-    const section = analyticsSectionRef.current;
-    if (!section) return;
-    const observer = new ResizeObserver(() => setAnalyticsHeight(section.offsetHeight));
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
 
   const visibleProjects = Array.from(
     { length: Math.min(3, websiteProjects.length) },
@@ -370,10 +356,7 @@ export default function Home() {
 
         <section
           id="case-studies"
-          className="overflow-hidden bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28 lg:h-[var(--analytics-section-height)] lg:py-12"
-          style={{
-            "--analytics-section-height": analyticsHeight ? `${analyticsHeight}px` : "auto",
-          } as CSSProperties}
+          className="overflow-hidden bg-[#f5f3f0] py-24 scroll-mt-24 md:py-28 lg:py-12"
         >
           <div className="site-container px-6 md:px-12">
             <ScrollReveal className="mb-10 max-w-4xl">
@@ -456,7 +439,6 @@ export default function Home() {
 
         <section
           id="analytics-case-studies"
-          ref={analyticsSectionRef}
           className="bi-proof-grid overflow-hidden bg-black py-24 text-white scroll-mt-24"
         >
           <div className="site-container px-6 md:px-12">
@@ -540,115 +522,6 @@ export default function Home() {
         </section>
 
         <ReviewsSection />
-
-        {/* Opaque, not translucent: a see-through section over a sticky hero
-            lets the hero bleed into the copy. */}
-        <section className="bg-[#f5f3f0] py-24">
-          <div className="site-container px-6 md:px-12">
-            <ScrollReveal className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between" width="100%">
-              <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-gray-400">
-                  Latest insights
-                </p>
-                <h2 className="mt-4 text-4xl font-bold font-heading tracking-tight text-gray-950 md:text-5xl">
-                  Practical thinking before the project starts.
-                </h2>
-              </div>
-              <Link
-                href="/blog"
-                className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-300 underline-offset-4"
-              >
-                Browse all insights
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </ScrollReveal>
-
-            <ScrollReveal width="100%">
-              <Link
-                href={`/blog/${latestInsight.slug}`}
-                className="group grid overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-xl shadow-black/[0.04] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
-                onClick={() =>
-                  trackEvent("insight_click", {
-                    article: latestInsight.slug,
-                    placement: "homepage",
-                    target: `/blog/${latestInsight.slug}`,
-                  })
-                }
-              >
-                <div className="aspect-[16/10] overflow-hidden bg-gray-100 lg:aspect-auto">
-                  <img
-                    src={withAssetBase(latestInsight.featuredImage)}
-                    alt=""
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">
-                    {latestInsight.category} · {latestInsight.date} · {latestInsight.readTime}
-                  </p>
-                  <h3 className="mt-5 text-3xl font-bold font-heading leading-tight text-gray-950 md:text-4xl">
-                    {latestInsight.title}
-                  </h3>
-                  <p className="mt-5 text-base leading-relaxed text-gray-600">
-                    {latestInsight.excerpt}
-                  </p>
-                  <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-gray-950">
-                    Read the insight
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </Link>
-            </ScrollReveal>
-
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {moreInsights.map((insight, index) => (
-                <ScrollReveal
-                  key={insight.slug}
-                  delay={index * 0.06}
-                  width="100%"
-                >
-                  <Link
-                    href={`/blog/${insight.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-gray-200 bg-white transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/[0.04]"
-                    onClick={() =>
-                      trackEvent("insight_click", {
-                        article: insight.slug,
-                        placement: "homepage_more_insights",
-                        target: `/blog/${insight.slug}`,
-                      })
-                    }
-                  >
-                    <div className="aspect-video overflow-hidden border-b border-gray-100 bg-gray-100">
-                      <img
-                        src={withAssetBase(insight.featuredImage)}
-                        alt=""
-                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-                        loading="lazy"
-                      />
-                    </div>
-                    <article className="flex flex-1 flex-col p-6">
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gray-600">
-                        {insight.category} · {insight.readTime}
-                      </p>
-                      <h3 className="mt-4 text-xl font-bold font-heading leading-tight text-gray-950 md:text-2xl">
-                        {insight.title}
-                      </h3>
-                      <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-600">
-                        {insight.excerpt}
-                      </p>
-                      <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-gray-950">
-                        Read article
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </div>
-                    </article>
-                  </Link>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
 
         <section className="bg-[#f6f3ef] py-24">
           <div className="site-container px-6 md:px-12">
