@@ -11,10 +11,14 @@ test("the committed sitemap matches the maintained inventory and preserves the l
   assert.equal(sitemap.replace(/\r\n/g, "\n"), buildSitemap());
 });
 
-test("the release adds the approved service, restaurant and client case pages to the live URL set", () => {
+test("the release adds the approved service, restaurant, client case and portfolio pages to the live URL set", () => {
   const baseline = new Set(liveBaseline.paths);
   const additions = canonicalRoutes().map((route) => route.path).filter((route) => !baseline.has(route));
-  assert.deepEqual(additions.sort(), ["/case-studies/risenfire-workforce-reporting", "/el/online-paraggelies", "/services/ai-automation", "/services/power-bi-consulting"]);
+  const projects = require("../shared/portfolio-projects.json");
+  const categories = [...new Set(projects.map((project) => project.category))];
+  const projectPaths = ["/projects", ...categories.map((category) => `/projects/category/${category}`), ...projects.map((project) => `/projects/${project.slug}`)];
+  const portfolioAdditions = projectPaths.flatMap((projectPath) => [projectPath, `/el${projectPath}`, `/de${projectPath}`]);
+  assert.deepEqual(additions.sort(), ["/case-studies/risenfire-workforce-reporting", "/el/online-paraggelies", "/services/ai-automation", "/services/power-bi-consulting", ...portfolioAdditions].sort());
 });
 
 test("dropping a translated URL from XML fails coverage", () => {

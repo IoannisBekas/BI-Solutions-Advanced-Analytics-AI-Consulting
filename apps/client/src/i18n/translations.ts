@@ -339,6 +339,8 @@ export function isTranslatedRoute(route: string) {
   return (
     TRANSLATED_ROUTES.has(route) ||
     route.startsWith("/blog/") ||
-    route.startsWith("/case-studies/")
+    route.startsWith("/case-studies/") ||
+    route === "/projects" ||
+    route.startsWith("/projects/")
   );
 }

@@ -43,6 +43,7 @@ export function Footer() {
   ];
 
   const resourceLinks = [
+    { label: locale === "el" ? "Έργα ιστοσελίδων & εφαρμογών" : locale === "de" ? "Website- & App-Projekte" : "Website & app projects", href: "/projects" },
     { label: locale === "el" ? "Μάθε AI στην πράξη" : locale === "de" ? "KI praktisch lernen" : "Learn AI by doing", href: "/resources/ai-prompt-packs" },
     { label: t.footer.insights, href: "/blog" },
     { label: t.footer.privacy, href: "/privacy-policy" },

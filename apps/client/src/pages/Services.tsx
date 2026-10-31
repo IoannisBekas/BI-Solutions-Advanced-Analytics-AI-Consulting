@@ -155,6 +155,12 @@ function ServiceChapter({ service }: { service: ServicePage }) {
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
             {service.description}
           </p>
+          {service.slug === "website-app-development" && (
+            <Link href="/projects" className="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-gray-950 underline underline-offset-4">
+              {locale === "el" ? "Δείτε όλα τα έργα ιστοσελίδων & εφαρμογών" : locale === "de" ? "Alle Website- & App-Projekte entdecken" : "Explore all website & app projects"}
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
+          )}
 
           <div className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
               <div>

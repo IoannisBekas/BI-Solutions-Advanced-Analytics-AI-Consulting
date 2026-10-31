@@ -1,0 +1,702 @@
+[
+  {
+    "slug": "e-synergo",
+    "title": "e-synergo",
+    "category": "health-wellness",
+    "url": "https://e-synergo.gr/",
+    "summary": {
+      "en": "A welcoming website for a children's special therapy centre in Acharnes, with detailed therapy programmes and a direct contact form.",
+      "el": "Ιστοσελίδα για κέντρο ειδικών θεραπειών παιδιών στις Αχαρνές, με ζεστή αισθητική, αναλυτική παρουσίαση θεραπευτικών προγραμμάτων και άμεση φόρμα επικοινωνίας.",
+      "de": "Eine einladende Website für ein Kindertherapiezentrum in Acharnes mit ausführlichen Therapieprogrammen und direktem Kontaktformular."
+    },
+    "features": {
+      "en": [
+        "Therapy programme presentation",
+        "Warm, approachable visual identity",
+        "Direct contact form"
+      ],
+      "el": [
+        "Παρουσίαση θεραπευτικών προγραμμάτων",
+        "Ζεστή και προσιτή οπτική ταυτότητα",
+        "Άμεση φόρμα επικοινωνίας"
+      ],
+      "de": [
+        "Darstellung der Therapieprogramme",
+        "Warme, zugängliche Gestaltung",
+        "Direktes Kontaktformular"
+      ]
+    }
+  },
+  {
+    "slug": "stavros-flamouridis",
+    "title": "Σταύρος Φλαμουρίδης · Psychologist MSc",
+    "category": "health-wellness",
+    "url": "https://stavrosflamouridis.gr/",
+    "summary": {
+      "en": "A professional website for psychologist Stavros Flamouridis MSc. Minimal design gives specialisations, the therapeutic approach and session enquiries a clear place.",
+      "el": "Επαγγελματική ιστοσελίδα του ψυχολόγου Σταύρου Φλαμουρίδη MSc. Η λιτή αισθητική δίνει σαφή θέση στις εξειδικεύσεις, τη θεραπευτική προσέγγιση και την επικοινωνία για συνεδρία.",
+      "de": "Eine professionelle Website für den Psychologen Stavros Flamouridis MSc. Die minimalistische Gestaltung stellt Fachgebiete, Therapieansatz und Sitzungsanfragen übersichtlich dar."
+    },
+    "features": {
+      "en": [
+        "Psychology specialisations",
+        "Minimal professional presentation",
+        "Session enquiry journey"
+      ],
+      "el": [
+        "Παρουσίαση εξειδικεύσεων ψυχολογίας",
+        "Λιτή επαγγελματική παρουσίαση",
+        "Διαδρομή επικοινωνίας για συνεδρία"
+      ],
+      "de": [
+        "Psychologische Fachgebiete",
+        "Minimalistische professionelle Darstellung",
+        "Kontaktweg für Sitzungsanfragen"
+      ]
+    }
+  },
+  {
+    "slug": "boutique-pilates-wellness",
+    "title": "Boutique Pilates & Wellness Studio",
+    "category": "health-wellness",
+    "url": "https://boutique-pilates-wellness-studio.vercel.app/",
+    "summary": {
+      "en": "A premium Pilates and wellness studio experience with contemporary art direction, programme discovery and a responsive booking journey.",
+      "el": "Premium εμπειρία για boutique studio pilates και ευεξίας, με σύγχρονη αισθητική, παρουσίαση προγραμμάτων και προσαρμοζόμενη διαδρομή κράτησης.",
+      "de": "Ein hochwertiger Auftritt für ein Pilates- und Wellnessstudio mit zeitgemäßer Gestaltung, Programmübersicht und responsivem Buchungsablauf."
+    },
+    "features": {
+      "en": [
+        "Pilates and wellness programmes",
+        "Premium studio identity",
+        "Responsive booking interface"
+      ],
+      "el": [
+        "Προγράμματα pilates και ευεξίας",
+        "Premium ταυτότητα studio",
+        "Περιβάλλον κράτησης για κάθε οθόνη"
+      ],
+      "de": [
+        "Pilates- und Wellnessprogramme",
+        "Hochwertige Studioidentität",
+        "Responsives Buchungsinterface"
+      ]
+    }
+  },
+  {
+    "slug": "dental-clinic",
+    "title": "Dental Clinic",
+    "category": "health-wellness",
+    "url": "https://ioannisbekas.github.io/Dental-Clinic-Website/",
+    "summary": {
+      "en": "A contemporary dental practice website that presents treatments, professional identity and a clear route for patients to contact the clinic.",
+      "el": "Σύγχρονη ιστοσελίδα οδοντιατρείου με παρουσίαση θεραπειών, επαγγελματική ταυτότητα και σαφή διαδρομή επικοινωνίας του ασθενή με το ιατρείο.",
+      "de": "Eine moderne Zahnarztwebsite mit Behandlungsübersicht, professionellem Profil und einem klaren Kontaktweg für Patienten."
+    },
+    "features": {
+      "en": [
+        "Dental treatment overview",
+        "Professional practice presentation",
+        "Patient contact information"
+      ],
+      "el": [
+        "Επισκόπηση οδοντιατρικών θεραπειών",
+        "Επαγγελματική παρουσίαση ιατρείου",
+        "Πληροφορίες επικοινωνίας ασθενών"
+      ],
+      "de": [
+        "Übersicht der Zahnbehandlungen",
+        "Professionelle Praxisdarstellung",
+        "Kontaktinformationen für Patienten"
+      ]
+    }
+  },
+  {
+    "slug": "patty-gang",
+    "title": "Patty Gang",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/patty-gang/",
+    "summary": {
+      "en": "An urban smash-burger landing page with scroll-driven ingredient storytelling, a visual menu and a direct WhatsApp ordering path.",
+      "el": "Urban landing page για smash burgers, με ανάλυση υλικών κατά το scroll, οπτικό κατάλογο και άμεση διαδρομή παραγγελίας μέσω WhatsApp.",
+      "de": "Eine urbane Smash-Burger-Seite mit scrollgesteuerter Zutatenpräsentation, visueller Speisekarte und direktem Bestellweg über WhatsApp."
+    },
+    "features": {
+      "en": [
+        "Scroll-driven burger anatomy",
+        "Visual food menu",
+        "WhatsApp ordering link"
+      ],
+      "el": [
+        "Ανάλυση burger κατά το scroll",
+        "Οπτικός κατάλογος φαγητού",
+        "Σύνδεσμος παραγγελίας WhatsApp"
+      ],
+      "de": [
+        "Scrollgesteuerter Burger-Aufbau",
+        "Visuelle Speisekarte",
+        "Bestelllink zu WhatsApp"
+      ]
+    }
+  },
+  {
+    "slug": "kids-from-the-block",
+    "title": "Kids From The Block",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/kids-from-the-block/",
+    "summary": {
+      "en": "A specialty coffee and street-brunch experience in Tambouria, Piraeus. Streetwear-inspired art direction connects the brand, menu discovery and product selection.",
+      "el": "Εμπειρία specialty coffee και street brunch στα Ταμπούρια Πειραιά. Η αισθητική streetwear συνδέει την ταυτότητα του brand, την εξερεύνηση του καταλόγου και την επιλογή προϊόντων.",
+      "de": "Ein Specialty-Coffee- und Street-Brunch-Auftritt in Tambouria, Piräus. Streetwear-inspirierte Gestaltung verbindet Markenidentität, Speisekarte und Produktauswahl."
+    },
+    "features": {
+      "en": [
+        "Distinctive streetwear-inspired identity",
+        "Coffee and brunch menu",
+        "Product customisation journey"
+      ],
+      "el": [
+        "Ταυτότητα με αναφορές στο streetwear",
+        "Κατάλογος καφέ και brunch",
+        "Διαδρομή προσαρμογής προϊόντων"
+      ],
+      "de": [
+        "Eigenständige Streetwear-Markenidentität",
+        "Kaffee- und Brunchkarte",
+        "Ablauf zur Produktanpassung"
+      ]
+    }
+  },
+  {
+    "slug": "meat-the-block",
+    "title": "Meat the Block",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/meat-the-block/",
+    "summary": {
+      "en": "A modern butcher and grill deli website combining traditional food craftsmanship with contemporary design, a digital menu and practical business information.",
+      "el": "Ιστοσελίδα για μοντέρνο κρεοπωλείο και grill deli που συνδυάζει την παράδοση με σύγχρονο σχεδιασμό, ψηφιακό κατάλογο και χρήσιμες πληροφορίες επιχείρησης.",
+      "de": "Eine moderne Metzgerei- und Grill-Deli-Website, die traditionelles Handwerk mit zeitgemäßem Design, digitaler Speisekarte und praktischen Geschäftsinformationen verbindet."
+    },
+    "features": {
+      "en": [
+        "Butcher and grill deli identity",
+        "Digital product menu",
+        "Local business information"
+      ],
+      "el": [
+        "Ταυτότητα κρεοπωλείου και grill deli",
+        "Ψηφιακός κατάλογος προϊόντων",
+        "Πληροφορίες τοπικής επιχείρησης"
+      ],
+      "de": [
+        "Metzgerei- und Grill-Deli-Identität",
+        "Digitale Produktkarte",
+        "Lokale Geschäftsinformationen"
+      ]
+    }
+  },
+  {
+    "slug": "kalamaki-club",
+    "title": "Kalamaki Club",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/kalamaki-club/",
+    "summary": {
+      "en": "A mobile-first grill restaurant website with quick menu discovery and a one-tap telephone ordering path for visitors on the move.",
+      "el": "Ιστοσελίδα ψητοπωλείου με προτεραιότητα στο κινητό, γρήγορη εύρεση του μενού και τηλεφωνική παραγγελία με ένα πάτημα.",
+      "de": "Eine mobilorientierte Grillrestaurant-Website mit schnell zugänglicher Speisekarte und telefonischer Bestellung per Fingertipp."
+    },
+    "features": {
+      "en": [
+        "Mobile-first restaurant layout",
+        "Quick menu access",
+        "Tap-to-call ordering"
+      ],
+      "el": [
+        "Σχεδιασμός εστίασης για κινητό",
+        "Γρήγορη πρόσβαση στο μενού",
+        "Τηλεφωνική παραγγελία με ένα πάτημα"
+      ],
+      "de": [
+        "Mobilorientiertes Restaurantlayout",
+        "Schneller Zugriff auf die Speisekarte",
+        "Bestellung per Anruflink"
+      ]
+    }
+  },
+  {
+    "slug": "bubbletale",
+    "title": "Bubbletale Concept",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/bubbletale/",
+    "summary": {
+      "en": "A playful bubble-tea concept website with custom illustrations, animated details and opening-hours information that supports an expressive brand experience.",
+      "el": "Παιχνιδιάρικο concept ιστοσελίδας bubble tea, με ειδικά σχεδιασμένες εικονογραφήσεις, animations και πληροφορίες ωραρίου που ενισχύουν τον χαρακτήρα του brand.",
+      "de": "Eine verspielte Bubble-Tea-Konzeptwebsite mit individuellen Illustrationen, Animationen und Öffnungszeiten für einen ausdrucksstarken Markenauftritt."
+    },
+    "features": {
+      "en": [
+        "Custom illustrative identity",
+        "Animated interface details",
+        "Opening-hours presentation"
+      ],
+      "el": [
+        "Ταυτότητα με ειδικές εικονογραφήσεις",
+        "Κινούμενες λεπτομέρειες διεπαφής",
+        "Παρουσίαση ωραρίου λειτουργίας"
+      ],
+      "de": [
+        "Individuelle illustrative Identität",
+        "Animierte Interfacedetails",
+        "Darstellung der Öffnungszeiten"
+      ]
+    }
+  },
+  {
+    "slug": "bark-n-groom",
+    "title": "Bark n’ Groom",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/bark-n-groom/",
+    "summary": {
+      "en": "A friendly pet-grooming website in Keratsini bringing together services, a price list, location directions and appointment contact details.",
+      "el": "Φιλική ιστοσελίδα περιποίησης κατοικιδίων στο Κερατσίνι, με συγκεντρωμένες υπηρεσίες, τιμοκατάλογο, οδηγίες πρόσβασης και επικοινωνία για ραντεβού.",
+      "de": "Eine freundliche Tierpflege-Website in Keratsini mit Leistungen, Preisliste, Anfahrt und Kontaktinformationen für Termine."
+    },
+    "features": {
+      "en": [
+        "Pet-grooming services and pricing",
+        "Location and access directions",
+        "Appointment contact journey"
+      ],
+      "el": [
+        "Υπηρεσίες και τιμές περιποίησης κατοικιδίων",
+        "Τοποθεσία και οδηγίες πρόσβασης",
+        "Επικοινωνία για ραντεβού"
+      ],
+      "de": [
+        "Tierpflegeleistungen und Preise",
+        "Standort und Anfahrt",
+        "Kontaktweg für Termine"
+      ]
+    }
+  },
+  {
+    "slug": "blade-and-comb",
+    "title": "Barber Shop · Blade & Comb",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/Barber/",
+    "summary": {
+      "en": "A typography-led barbershop website with a clean monochrome identity, clear service tiers and a prominent appointment path.",
+      "el": "Ιστοσελίδα barbershop με έμφαση στην τυπογραφία, καθαρή μονόχρωμη ταυτότητα, σαφείς κατηγορίες υπηρεσιών και εμφανή διαδρομή ραντεβού.",
+      "de": "Eine typografiebetonte Barbershop-Website mit klarer monochromer Identität, übersichtlichen Leistungsstufen und einem gut sichtbaren Terminweg."
+    },
+    "features": {
+      "en": [
+        "Monochrome typographic visual system",
+        "Grooming service tiers",
+        "Appointment enquiry path"
+      ],
+      "el": [
+        "Μονόχρωμη αισθητική με έμφαση στην τυπογραφία",
+        "Κατηγορίες υπηρεσιών περιποίησης",
+        "Διαδρομή επικοινωνίας για ραντεβού"
+      ],
+      "de": [
+        "Monochromes typografisches Gestaltungssystem",
+        "Abgestufte Pflegeleistungen",
+        "Kontaktweg für Terminanfragen"
+      ]
+    }
+  },
+  {
+    "slug": "real-estate-dubai",
+    "title": "Real Estate Dubai · Nivora Estates",
+    "category": "hospitality-real-estate",
+    "url": "https://ioannisbekas.github.io/Real-estate-Dubai/",
+    "summary": {
+      "en": "A cinematic residential-property demo with a fictional advisory brand, sample Dubai-area inventory, property filters, shortlists and an enquiry brief.",
+      "el": "Κινηματογραφικό demo κατοικιών με φανταστικό συμβουλευτικό brand, ενδεικτικό κατάλογο ακινήτων με αναφορές στο Ντουμπάι, φίλτρα, λίστα επιλογών και φόρμα ενδιαφέροντος.",
+      "de": "Eine filmische Immobilien-Demo mit fiktiver Beratungsmarke, beispielhaftem Dubai-Immobilienbestand, Filtern, Merkliste und Anfrageformular."
+    },
+    "features": {
+      "en": [
+        "Fictional residential advisory identity",
+        "Sample property filters and shortlists",
+        "Cinematic navigation and enquiry brief"
+      ],
+      "el": [
+        "Φανταστική ταυτότητα συμβουλευτικής ακινήτων",
+        "Φίλτρα και λίστα επιλογών ενδεικτικών ακινήτων",
+        "Κινηματογραφική πλοήγηση και φόρμα ενδιαφέροντος"
+      ],
+      "de": [
+        "Fiktive Immobilienberatungsmarke",
+        "Beispielhafte Immobilienfilter und Merkliste",
+        "Filmische Navigation und Anfrageformular"
+      ]
+    }
+  },
+  {
+    "slug": "kalokairi-boutique-residence",
+    "title": "Kalokairi Boutique Residence",
+    "category": "hospitality-real-estate",
+    "url": "https://ioannisbekas.github.io/Kalokairi-Boutique-Residence/",
+    "summary": {
+      "en": "An elegant boutique-apartment website with a Mediterranean palette, rich property photography and a clear direct-booking journey.",
+      "el": "Κομψή ιστοσελίδα boutique διαμερισμάτων με μεσογειακή παλέτα, πλούσια φωτογραφική παρουσίαση του καταλύματος και σαφή διαδρομή άμεσης κράτησης.",
+      "de": "Eine elegante Boutique-Apartment-Website mit mediterraner Farbpalette, umfangreicher Unterkunftsfotografie und einem klaren Direktbuchungsweg."
+    },
+    "features": {
+      "en": [
+        "Mediterranean visual identity",
+        "Apartment photography and amenities",
+        "Direct-booking journey"
+      ],
+      "el": [
+        "Μεσογειακή οπτική ταυτότητα",
+        "Φωτογραφίες διαμερισμάτων και παροχές",
+        "Διαδρομή άμεσης κράτησης"
+      ],
+      "de": [
+        "Mediterrane visuelle Identität",
+        "Apartmentfotos und Ausstattung",
+        "Direktbuchungsweg"
+      ]
+    }
+  },
+  {
+    "slug": "studios-kalliopi",
+    "title": "Studio Kalliopi · Koufonisia",
+    "category": "hospitality-real-estate",
+    "url": "https://ioannisbekas.github.io/StudioKalliopiKoufonisia/",
+    "summary": {
+      "en": "A Cycladic accommodation website for rooms in Koufonisia, with an image-led layout, simple navigation, amenities and local-area information.",
+      "el": "Κυκλαδίτικη ιστοσελίδα ενοικιαζόμενων δωματίων στα Κουφονήσια, με φωτογραφική παρουσίαση, απλή πλοήγηση, παροχές και πληροφορίες τοποθεσίας.",
+      "de": "Eine kykladische Unterkunftswebsite für Zimmer auf Koufonisia mit bildbetontem Layout, einfacher Navigation, Ausstattung und Ortsinformationen."
+    },
+    "features": {
+      "en": [
+        "Cycladic accommodation identity",
+        "Room and amenity presentation",
+        "Location and enquiry information"
+      ],
+      "el": [
+        "Κυκλαδίτικη ταυτότητα καταλύματος",
+        "Παρουσίαση δωματίων και παροχών",
+        "Τοποθεσία και πληροφορίες επικοινωνίας"
+      ],
+      "de": [
+        "Kykladische Unterkunftsidentität",
+        "Zimmer- und Ausstattungsübersicht",
+        "Standort und Anfrageinformationen"
+      ]
+    }
+  },
+  {
+    "slug": "summer-sail",
+    "title": "Summer Sail",
+    "category": "hospitality-real-estate",
+    "url": "https://ioannisbekas.github.io/summer-sail/",
+    "summary": {
+      "en": "A Greek and English yacht-charter website presenting the fleet, suggested Aegean sailing routes and a charter enquiry form.",
+      "el": "Δίγλωσση ιστοσελίδα ναύλωσης σκαφών σε ελληνικά και αγγλικά, με παρουσίαση στόλου, προτεινόμενες διαδρομές στο Αιγαίο και φόρμα ζήτησης ναύλωσης.",
+      "de": "Eine griechisch-englische Yachtcharter-Website mit Flottenübersicht, vorgeschlagenen Ägäisrouten und einem Charter-Anfrageformular."
+    },
+    "features": {
+      "en": [
+        "Greek and English content",
+        "Fleet and Aegean itinerary discovery",
+        "Charter enquiry form"
+      ],
+      "el": [
+        "Περιεχόμενο σε ελληνικά και αγγλικά",
+        "Εξερεύνηση στόλου και διαδρομών Αιγαίου",
+        "Φόρμα ζήτησης ναύλωσης"
+      ],
+      "de": [
+        "Griechische und englische Inhalte",
+        "Flotte und Ägäisrouten entdecken",
+        "Charter-Anfrageformular"
+      ]
+    }
+  },
+  {
+    "slug": "gnv-hellas",
+    "title": "G.N.V. Hellas",
+    "category": "corporate-commerce",
+    "url": "https://ioannisbekas.github.io/gnv-hellas/",
+    "summary": {
+      "en": "A multilingual corporate landing page in Greek, English and German, structured around a clear international B2B profile and business contact.",
+      "el": "Πολυγλωσσική εταιρική landing page σε ελληνικά, αγγλικά και γερμανικά, με σαφές διεθνές B2B προφίλ και στοιχεία επαγγελματικής επικοινωνίας.",
+      "de": "Eine mehrsprachige Unternehmensseite auf Griechisch, Englisch und Deutsch mit klarem internationalem B2B-Profil und Geschäftskontakt."
+    },
+    "features": {
+      "en": [
+        "Greek, English and German content",
+        "International B2B presentation",
+        "Corporate contact information"
+      ],
+      "el": [
+        "Περιεχόμενο σε ελληνικά, αγγλικά και γερμανικά",
+        "Διεθνής B2B παρουσίαση",
+        "Στοιχεία εταιρικής επικοινωνίας"
+      ],
+      "de": [
+        "Griechische, englische und deutsche Inhalte",
+        "Internationale B2B-Darstellung",
+        "Geschäftliche Kontaktinformationen"
+      ]
+    }
+  },
+  {
+    "slug": "accounting-website-template",
+    "title": "Accounting Office Template",
+    "category": "corporate-commerce",
+    "url": "https://ioannisbekas.github.io/accounting-website-template/",
+    "summary": {
+      "en": "A five-language accounting and advisory website template with clear service categories, a green-and-cream visual system and a demo consultation enquiry form.",
+      "el": "Πρότυπο ιστοσελίδας λογιστικού και συμβουλευτικού γραφείου σε πέντε γλώσσες, με σαφείς κατηγορίες υπηρεσιών, πράσινη και κρεμ παλέτα και δοκιμαστική φόρμα συμβουλευτικής.",
+      "de": "Eine fünfsprachige Websitevorlage für Buchhaltungs- und Beratungsbüros mit klaren Leistungskategorien, grün-cremefarbener Gestaltung und einem Demo-Anfrageformular."
+    },
+    "features": {
+      "en": [
+        "Five-language service presentation",
+        "Accounting, payroll and advisory sections",
+        "Demo consultation enquiry form"
+      ],
+      "el": [
+        "Παρουσίαση υπηρεσιών σε πέντε γλώσσες",
+        "Ενότητες λογιστικής, μισθοδοσίας και συμβουλευτικής",
+        "Δοκιμαστική φόρμα συμβουλευτικής"
+      ],
+      "de": [
+        "Leistungsdarstellung in fünf Sprachen",
+        "Buchhaltung, Lohnabrechnung und Beratung",
+        "Demo-Formular für Beratungsanfragen"
+      ]
+    }
+  },
+  {
+    "slug": "margin-apparel",
+    "title": "MARGIN® Apparel",
+    "category": "corporate-commerce",
+    "url": "https://ioannisbekas.github.io/margin-apparel/",
+    "summary": {
+      "en": "An editorial apparel ecommerce concept with Swiss-inspired minimalism, product discovery, quick view, cart interactions and a simulated checkout.",
+      "el": "Editorial concept ηλεκτρονικού καταστήματος ένδυσης, με ελβετική μίνιμαλ αισθητική, εξερεύνηση προϊόντων, γρήγορη προβολή, καλάθι και προσομοίωση checkout.",
+      "de": "Ein redaktionell gestaltetes Mode-Shop-Konzept mit Schweizer Minimalismus, Produktsuche, Schnellansicht, Warenkorb und simuliertem Checkout."
+    },
+    "features": {
+      "en": [
+        "Editorial product presentation",
+        "Product search and quick view",
+        "Cart and simulated checkout"
+      ],
+      "el": [
+        "Editorial παρουσίαση προϊόντων",
+        "Αναζήτηση και γρήγορη προβολή προϊόντων",
+        "Καλάθι και προσομοίωση ολοκλήρωσης αγοράς"
+      ],
+      "de": [
+        "Redaktionelle Produktdarstellung",
+        "Produktsuche und Schnellansicht",
+        "Warenkorb und simulierter Kaufabschluss"
+      ]
+    }
+  },
+  {
+    "slug": "vanta-motors",
+    "title": "Car Showroom 360° · VANTA Motors",
+    "category": "corporate-commerce",
+    "url": "https://ioannisbekas.github.io/Car/",
+    "summary": {
+      "en": "A premium used-car digital showroom with vehicle filtering, interactive 360-degree presentation and clear paths from inventory discovery to contact.",
+      "el": "Ψηφιακό showroom premium μεταχειρισμένων αυτοκινήτων με φίλτρα οχημάτων, διαδραστική παρουσίαση 360 μοιρών και σαφή διαδρομή από τον κατάλογο στην επικοινωνία.",
+      "de": "Ein digitaler Showroom für hochwertige Gebrauchtwagen mit Fahrzeugfiltern, interaktiver 360-Grad-Darstellung und klaren Wegen vom Bestand zum Kontakt."
+    },
+    "features": {
+      "en": [
+        "Premium vehicle inventory",
+        "Interactive 360-degree viewing",
+        "Vehicle filters and enquiry path"
+      ],
+      "el": [
+        "Κατάλογος premium οχημάτων",
+        "Διαδραστική προβολή 360 μοιρών",
+        "Φίλτρα οχημάτων και διαδρομή ενδιαφέροντος"
+      ],
+      "de": [
+        "Hochwertiger Fahrzeugbestand",
+        "Interaktive 360-Grad-Ansicht",
+        "Fahrzeugfilter und Anfrageweg"
+      ]
+    }
+  },
+  {
+    "slug": "niki-gigourtaki-coaching",
+    "title": "Niki Gigourtaki · Fitness Coach",
+    "category": "corporate-commerce",
+    "url": "https://ioannisbekas.github.io/niki-gigourtaki-coaching/",
+    "summary": {
+      "en": "A personal-brand website for fitness coach Niki Gigourtaki, combining dynamic imagery, training programme information and online coaching enquiries.",
+      "el": "Ιστοσελίδα προσωπικού brand για τη fitness coach Νίκη Γκιγκουρτάκη, με δυναμικά visuals, πληροφορίες προγραμμάτων προπόνησης και επικοινωνία για online coaching.",
+      "de": "Eine Personal-Brand-Website für Fitnesscoach Niki Gigourtaki mit dynamischen Bildern, Trainingsprogrammen und Anfragen für Online-Coaching."
+    },
+    "features": {
+      "en": [
+        "Fitness coach personal identity",
+        "Training programme presentation",
+        "Online coaching enquiry journey"
+      ],
+      "el": [
+        "Προσωπική ταυτότητα fitness coach",
+        "Παρουσίαση προγραμμάτων προπόνησης",
+        "Επικοινωνία για online coaching"
+      ],
+      "de": [
+        "Persönliche Fitnesscoach-Identität",
+        "Darstellung der Trainingsprogramme",
+        "Anfrageweg für Online-Coaching"
+      ]
+    }
+  },
+  {
+    "slug": "return-lab",
+    "title": "Return Lab",
+    "category": "web-apps-dashboards",
+    "url": "https://ioannisbekas.github.io/return-lab/",
+    "summary": {
+      "en": "An interactive finance learning platform with a 152-module curriculum, simulation tools and testing activities that connect concepts with hands-on exploration.",
+      "el": "Διαδραστική εκπαιδευτική πλατφόρμα χρηματοοικονομικών με πρόγραμμα 152 ενοτήτων, εργαλεία προσομοίωσης και δραστηριότητες αξιολόγησης για σύνδεση της θεωρίας με την πράξη.",
+      "de": "Eine interaktive Finanzlernplattform mit 152 Lernmodulen, Simulationen und Testaktivitäten, die Konzepte mit praktischer Erkundung verbinden."
+    },
+    "features": {
+      "en": [
+        "152-module finance curriculum",
+        "Interactive simulation tools",
+        "Learning tests and exercises"
+      ],
+      "el": [
+        "Πρόγραμμα χρηματοοικονομικών 152 ενοτήτων",
+        "Διαδραστικά εργαλεία προσομοίωσης",
+        "Τεστ και ασκήσεις μάθησης"
+      ],
+      "de": [
+        "Finanzlehrplan mit 152 Modulen",
+        "Interaktive Simulationswerkzeuge",
+        "Lerntests und Übungen"
+      ]
+    }
+  },
+  {
+    "slug": "everywatch-market-dashboard",
+    "title": "EveryWatch Market Dashboard",
+    "category": "web-apps-dashboards",
+    "url": "https://ioannisbekas.github.io/everywatch-market-dashboard/",
+    "summary": {
+      "en": "A secondary luxury-watch market research demo using 300 synthetic records, interactive 3D mapping and visual exploration of brands, channels and market relationships.",
+      "el": "Ερευνητικό demo για τη δευτερογενή αγορά πολυτελών ρολογιών με 300 συνθετικές εγγραφές, διαδραστική τρισδιάστατη χαρτογράφηση και εξερεύνηση brands, καναλιών και σχέσεων της αγοράς.",
+      "de": "Eine Forschungsdemo zum Zweitmarkt luxuriöser Uhren mit 300 synthetischen Datensätzen, interaktiver 3D-Kartierung und visueller Erkundung von Marken, Kanälen und Marktbeziehungen."
+    },
+    "features": {
+      "en": [
+        "Secondary watch-market research",
+        "Interactive 3D market mapping",
+        "Visual market exploration"
+      ],
+      "el": [
+        "Έρευνα δευτερογενούς αγοράς ρολογιών",
+        "Διαδραστική τρισδιάστατη χαρτογράφηση",
+        "Οπτική εξερεύνηση της αγοράς"
+      ],
+      "de": [
+        "Forschung zum Uhrenzweitmarkt",
+        "Interaktive 3D-Marktkartierung",
+        "Visuelle Markterkundung"
+      ]
+    }
+  },
+  {
+    "slug": "opendoor-telemetry",
+    "title": "Opendoor Telemetry Dashboard",
+    "category": "web-apps-dashboards",
+    "url": "https://ioannisbekas.github.io/opendoor-telemetry/",
+    "summary": {
+      "en": "A real-estate research dashboard and data pipeline using SEC and Redfin sources to bring property-market and company telemetry into a navigable interface.",
+      "el": "Ερευνητικό dashboard ακινήτων και pipeline δεδομένων από SEC και Redfin, που συγκεντρώνει στοιχεία αγοράς και εταιρικής παρακολούθησης σε εύχρηστη διεπαφή.",
+      "de": "Ein Immobilien-Forschungsdashboard mit Datenpipeline aus SEC- und Redfin-Quellen für eine übersichtliche Darstellung von Markt- und Unternehmenskennzahlen."
+    },
+    "features": {
+      "en": [
+        "SEC and Redfin source context",
+        "Real-estate telemetry views",
+        "Research dashboard navigation"
+      ],
+      "el": [
+        "Πλαίσιο πηγών SEC και Redfin",
+        "Προβολές παρακολούθησης αγοράς ακινήτων",
+        "Πλοήγηση ερευνητικού dashboard"
+      ],
+      "de": [
+        "Quellenkontext von SEC und Redfin",
+        "Immobilien-Telemetrieansichten",
+        "Navigation im Forschungsdashboard"
+      ]
+    }
+  },
+  {
+    "slug": "subscription-bizops-dashboard",
+    "title": "Subscription BizOps Dashboard",
+    "category": "web-apps-dashboards",
+    "url": "https://ioannisbekas.github.io/subscription-bizops-dashboard/",
+    "summary": {
+      "en": "An Economist-inspired subscription business dashboard using synthetic data to explore SaaS indicators, customer retention, acquisition and operating economics.",
+      "el": "Dashboard συνδρομητικής επιχείρησης με αισθητική εμπνευσμένη από τον Economist και συνθετικά δεδομένα για δείκτες SaaS, διατήρηση πελατών, απόκτηση χρηστών και λειτουργικά οικονομικά.",
+      "de": "Ein vom Economist inspiriertes Abonnement-Dashboard mit synthetischen Daten zu SaaS-Kennzahlen, Kundenbindung, Akquisition und Betriebswirtschaft."
+    },
+    "features": {
+      "en": [
+        "Subscription and SaaS indicators",
+        "Customer retention metrics",
+        "Editorial business analytics layout"
+      ],
+      "el": [
+        "Δείκτες συνδρομών και SaaS",
+        "Μετρήσεις διατήρησης πελατών",
+        "Editorial διάταξη επιχειρηματικών analytics"
+      ],
+      "de": [
+        "Abonnement- und SaaS-Kennzahlen",
+        "Kennzahlen zur Kundenbindung",
+        "Redaktionelles Layout für Geschäftsanalysen"
+      ]
+    }
+  },
+  {
+    "slug": "paroli-direct-ordering",
+    "title": "PAROLI",
+    "category": "food-local-business",
+    "url": "https://ioannisbekas.github.io/paroli/",
+    "summary": {
+      "en": "A branded direct-ordering experience with a digital menu, category browsing, cart and checkout, keeping the customer journey within the restaurant's own identity.",
+      "el": "Εμπειρία άμεσης παραγγελίας με ψηφιακό μενού, περιήγηση σε κατηγορίες, καλάθι και checkout, μέσα στην οπτική ταυτότητα του εστιατορίου.",
+      "de": "Ein markeneigener Direktbestellauftritt mit digitaler Speisekarte, Kategorien, Warenkorb und Checkout innerhalb der Restaurantidentität."
+    },
+    "features": {
+      "en": [
+        "Branded digital menu",
+        "Category browsing and cart",
+        "Direct-ordering checkout journey"
+      ],
+      "el": [
+        "Ψηφιακό μενού με ταυτότητα brand",
+        "Περιήγηση κατηγοριών και καλάθι",
+        "Διαδρομή ολοκλήρωσης άμεσης παραγγελίας"
+      ],
+      "de": [
+        "Markeneigene digitale Speisekarte",
+        "Kategorien und Warenkorb",
+        "Kaufabschluss für Direktbestellungen"
+      ]
+    }
+  }
+]

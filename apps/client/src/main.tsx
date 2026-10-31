@@ -5,7 +5,7 @@ import { DEFAULT_LOCALE, splitLocaleFromPath } from "./i18n/config";
 import { setPageTranslations } from "./i18n/localizeDocument";
 
 activateAsyncFonts();
-restoreGitHubPagesRoute();
+const routeWasRestored = restoreGitHubPagesRoute();
 
 function activateAsyncFonts() {
   const stylesheet = document.getElementById("site-fonts");
@@ -25,22 +25,24 @@ function restoreGitHubPagesRoute() {
   try {
     const pendingRoute = sessionStorage.getItem(redirectKey);
     if (!pendingRoute) {
-      return;
+      return false;
     }
 
     sessionStorage.removeItem(redirectKey);
     const redirectUrl = new URL(pendingRoute, window.location.origin);
     if (redirectUrl.origin !== window.location.origin) {
-      return;
+      return false;
     }
 
     const restoredRoute = `${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`;
     if (restoredRoute !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
       window.history.replaceState(null, "", restoredRoute);
+      return true;
     }
   } catch (error) {
     console.warn("Unable to restore GitHub Pages route for the BI Solutions site.", error);
   }
+  return false;
 }
 
 const container = document.getElementById("root")!;
@@ -54,10 +56,10 @@ async function renderApp() {
     setPageTranslations(pageTranslations);
   }
 
-  // Prerendered pages ship real HTML in #root — hydrate it instead of
-  // discarding it. Non-prerendered routes (e.g. after the 404.html redirect)
-  // still start from an empty container.
-  if (container.hasChildNodes()) {
+  // Hydrate prerendered HTML only when it belongs to the requested route.
+  // A Pages 404 redirect loads homepage HTML before restoring a different URL,
+  // so that route needs a fresh render rather than homepage hydration.
+  if (container.hasChildNodes() && !routeWasRestored) {
     hydrateRoot(container, <App />);
   } else {
     createRoot(container).render(<App />);

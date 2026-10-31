@@ -43,6 +43,20 @@ The following are independent portfolio analyses built with synthetic or represe
 - Scientific monitoring Power BI case study: https://www.bisolutions.group/case-studies/iaea-scientific-analysis
 - Talent analytics Power BI case study: https://www.bisolutions.group/case-studies/ifc-talent-strategy
 
+## Website and App Projects
+
+Browse all 25 website, ecommerce and interactive application projects: https://www.bisolutions.group/projects
+Greek project directory: https://www.bisolutions.group/el/projects
+German project directory: https://www.bisolutions.group/de/projects
+
+- Health, wellness and medical: https://www.bisolutions.group/projects/category/health-wellness
+- Food and local businesses: https://www.bisolutions.group/projects/category/food-local-business
+- Travel, hospitality and real estate: https://www.bisolutions.group/projects/category/hospitality-real-estate
+- Corporate, ecommerce and personal brands: https://www.bisolutions.group/projects/category/corporate-commerce
+- Web apps and interactive dashboards: https://www.bisolutions.group/projects/category/web-apps-dashboards
+
+Each project page provides a real interface screenshot, a description, experience highlights and a link to the public project. The collection includes published websites, independent concepts and research demonstrations. Nivora Estates is a fictional real-estate demo; EveryWatch and Subscription BizOps use synthetic data. Portfolio inclusion does not imply client endorsement or measured business outcomes.
+
 ## Project Enquiries
 
 - Start a project: https://www.bisolutions.group/start-a-project

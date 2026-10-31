@@ -27,7 +27,7 @@ function extractAttributeTag(html, tagName, attributeName, attributeValue) {
 }
 
 function attribute(tag, name) {
-  return tag?.match(new RegExp(`\\b${name}=["']([^"']*)["']`, "i"))?.[1] || "";
+  return tag?.match(new RegExp(`\\b${name}=(["'])(.*?)\\1`, "i"))?.[2] || "";
 }
 
 function visibleTextLength(html) {
@@ -77,6 +77,8 @@ function expectedSchemaType(routePath) {
   if (routePath.startsWith("/services/")) return "Service";
   if (routePath.startsWith("/blog/")) return "BlogPosting";
   if (routePath.startsWith("/case-studies/")) return "CreativeWork";
+  if (routePath === "/projects" || routePath.startsWith("/projects/category/")) return "CollectionPage";
+  if (routePath.startsWith("/projects/")) return "CreativeWork";
   return null;
 }
 

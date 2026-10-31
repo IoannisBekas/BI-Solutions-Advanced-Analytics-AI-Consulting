@@ -7,7 +7,7 @@
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/" />
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/" />
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -17,7 +17,7 @@
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/" />
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/" />
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -27,7 +27,7 @@
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/" />
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/" />
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -37,7 +37,7 @@
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services" />
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/services" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services" />
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -47,7 +47,7 @@
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services" />
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/services" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services" />
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -57,7 +57,7 @@
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services" />
     <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/services" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services" />
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -952,5 +952,935 @@
     <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/category/health-wellness</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/health-wellness" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/category/health-wellness</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/health-wellness" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/category/health-wellness</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/health-wellness" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/health-wellness" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/category/food-local-business</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/food-local-business" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/category/food-local-business</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/food-local-business" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/category/food-local-business</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/food-local-business" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/food-local-business" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/category/hospitality-real-estate</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/hospitality-real-estate" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/category/hospitality-real-estate</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/hospitality-real-estate" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/category/hospitality-real-estate</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/hospitality-real-estate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/hospitality-real-estate" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/category/corporate-commerce</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/corporate-commerce" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/category/corporate-commerce</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/corporate-commerce" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/category/corporate-commerce</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/corporate-commerce" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/corporate-commerce" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/category/web-apps-dashboards</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/web-apps-dashboards" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/category/web-apps-dashboards</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/web-apps-dashboards" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/category/web-apps-dashboards</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/category/web-apps-dashboards" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/category/web-apps-dashboards" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/e-synergo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/e-synergo" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/e-synergo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/e-synergo" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/e-synergo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/e-synergo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/e-synergo" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/stavros-flamouridis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/stavros-flamouridis" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/stavros-flamouridis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/stavros-flamouridis" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/stavros-flamouridis</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/stavros-flamouridis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/stavros-flamouridis" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/boutique-pilates-wellness</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/boutique-pilates-wellness" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/boutique-pilates-wellness</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/boutique-pilates-wellness" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/boutique-pilates-wellness</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/boutique-pilates-wellness" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/boutique-pilates-wellness" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/dental-clinic</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/dental-clinic" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/dental-clinic</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/dental-clinic" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/dental-clinic</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/dental-clinic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/dental-clinic" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/patty-gang</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/patty-gang" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/patty-gang</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/patty-gang" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/patty-gang</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/patty-gang" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/patty-gang" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/kids-from-the-block</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kids-from-the-block" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/kids-from-the-block</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kids-from-the-block" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/kids-from-the-block</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kids-from-the-block" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kids-from-the-block" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/meat-the-block</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/meat-the-block" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/meat-the-block</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/meat-the-block" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/meat-the-block</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/meat-the-block" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/meat-the-block" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/kalamaki-club</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kalamaki-club" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/kalamaki-club</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kalamaki-club" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/kalamaki-club</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kalamaki-club" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kalamaki-club" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/bubbletale</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/bubbletale" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/bubbletale</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/bubbletale" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/bubbletale</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/bubbletale" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/bubbletale" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/bark-n-groom</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/bark-n-groom" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/bark-n-groom</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/bark-n-groom" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/bark-n-groom</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/bark-n-groom" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/bark-n-groom" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/blade-and-comb</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/blade-and-comb" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/blade-and-comb</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/blade-and-comb" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/blade-and-comb</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/blade-and-comb" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/blade-and-comb" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/real-estate-dubai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/real-estate-dubai" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/real-estate-dubai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/real-estate-dubai" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/real-estate-dubai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/real-estate-dubai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/real-estate-dubai" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/kalokairi-boutique-residence</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kalokairi-boutique-residence" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/kalokairi-boutique-residence</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kalokairi-boutique-residence" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/kalokairi-boutique-residence</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/kalokairi-boutique-residence" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/kalokairi-boutique-residence" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/studios-kalliopi</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/studios-kalliopi" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/studios-kalliopi</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/studios-kalliopi" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/studios-kalliopi</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/studios-kalliopi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/studios-kalliopi" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/summer-sail</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/summer-sail" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/summer-sail</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/summer-sail" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/summer-sail</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/summer-sail" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/summer-sail" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/gnv-hellas</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/gnv-hellas" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/gnv-hellas</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/gnv-hellas" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/gnv-hellas</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/gnv-hellas" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/gnv-hellas" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/accounting-website-template</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/accounting-website-template" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/accounting-website-template</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/accounting-website-template" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/accounting-website-template</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/accounting-website-template" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/accounting-website-template" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/margin-apparel</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/margin-apparel" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/margin-apparel</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/margin-apparel" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/margin-apparel</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/margin-apparel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/margin-apparel" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/vanta-motors</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/vanta-motors" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/vanta-motors</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/vanta-motors" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/vanta-motors</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/vanta-motors" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/vanta-motors" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/niki-gigourtaki-coaching</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/niki-gigourtaki-coaching" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/niki-gigourtaki-coaching</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/niki-gigourtaki-coaching" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/niki-gigourtaki-coaching</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/niki-gigourtaki-coaching" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/niki-gigourtaki-coaching" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/return-lab</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/return-lab" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/return-lab</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/return-lab" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/return-lab</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/return-lab" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/return-lab" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/everywatch-market-dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/everywatch-market-dashboard" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/everywatch-market-dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/everywatch-market-dashboard" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/everywatch-market-dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/everywatch-market-dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/everywatch-market-dashboard" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/opendoor-telemetry</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/opendoor-telemetry" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/opendoor-telemetry</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/opendoor-telemetry" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/opendoor-telemetry</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/opendoor-telemetry" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/opendoor-telemetry" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/subscription-bizops-dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/subscription-bizops-dashboard" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/subscription-bizops-dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/subscription-bizops-dashboard" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/subscription-bizops-dashboard</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/subscription-bizops-dashboard" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/subscription-bizops-dashboard" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/projects/paroli-direct-ordering</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/paroli-direct-ordering" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/projects/paroli-direct-ordering</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/paroli-direct-ordering" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/projects/paroli-direct-ordering</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/projects/paroli-direct-ordering" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/projects/paroli-direct-ordering" />
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

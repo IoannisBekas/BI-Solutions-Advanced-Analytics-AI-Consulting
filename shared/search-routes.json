@@ -9,7 +9,7 @@
         "de"
       ],
       "render": "react",
-      "lastmod": "2026-08-10",
+      "lastmod": "2026-10-31",
       "changefreq": "weekly",
       "priority": "1.0"
     },
@@ -21,7 +21,7 @@
         "de"
       ],
       "render": "react",
-      "lastmod": "2026-08-18",
+      "lastmod": "2026-10-31",
       "changefreq": "monthly",
       "priority": "0.9"
     },
@@ -449,6 +449,378 @@
       "lastmod": "2026-10-30",
       "changefreq": "monthly",
       "priority": "0.7"
+    },
+    {
+      "path": "/projects",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/projects/category/health-wellness",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/category/food-local-business",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/category/hospitality-real-estate",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/category/corporate-commerce",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/category/web-apps-dashboards",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/e-synergo",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/stavros-flamouridis",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/boutique-pilates-wellness",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/dental-clinic",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/patty-gang",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/kids-from-the-block",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/meat-the-block",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/kalamaki-club",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/bubbletale",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/bark-n-groom",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/blade-and-comb",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/real-estate-dubai",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/kalokairi-boutique-residence",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/studios-kalliopi",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/summer-sail",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/gnv-hellas",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/accounting-website-template",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/margin-apparel",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/vanta-motors",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/niki-gigourtaki-coaching",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/return-lab",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/everywatch-market-dashboard",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/opendoor-telemetry",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/subscription-bizops-dashboard",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/projects/paroli-direct-ordering",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "lastmod": "2026-10-31",
+      "changefreq": "monthly",
+      "priority": "0.6"
     }
   ]
 }

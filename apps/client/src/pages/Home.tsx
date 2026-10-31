@@ -19,6 +19,12 @@ import { trackEvent } from "@/lib/analytics";
 import { withAssetBase, withSiteBase } from "@/lib/site";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
+const projectsLinkCopy = {
+  en: "Explore all website & app projects",
+  el: "Δείτε όλα τα έργα ιστοσελίδων & εφαρμογών",
+  de: "Alle Website- & App-Projekte entdecken",
+};
+
 const latestInsight = homeInsights[0];
 const moreInsights = homeInsights.slice(1);
 
@@ -383,6 +389,9 @@ export default function Home() {
               </p>
             </ScrollReveal>
 
+            <Link href="/projects" className="mb-8 inline-flex min-h-11 items-center gap-2 font-semibold text-gray-950 underline underline-offset-4">
+              {projectsLinkCopy[locale]} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
             <div
               onMouseEnter={() => setInteractionPause(true)}
               onMouseLeave={() => setInteractionPause(false)}

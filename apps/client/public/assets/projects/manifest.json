@@ -1,0 +1,702 @@
+[
+  {
+    "slug": "e-synergo",
+    "sourceUrl": "https://e-synergo.gr/",
+    "finalUrl": "https://e-synergo.gr/",
+    "pageTitle": "e_synergo — Κέντρο Ειδικών Θεραπειών | Αχαρναί",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:18.184Z",
+    "assets": [
+      {
+        "file": "e-synergo/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 28618
+      },
+      {
+        "file": "e-synergo/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 13924
+      },
+      {
+        "file": "e-synergo/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 21830
+      }
+    ]
+  },
+  {
+    "slug": "stavros-flamouridis",
+    "sourceUrl": "https://stavrosflamouridis.gr/",
+    "finalUrl": "https://stavrosflamouridis.gr/",
+    "pageTitle": "Σταύρος Φλαμουρίδης · Ψυχολόγος MSc",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:18.250Z",
+    "assets": [
+      {
+        "file": "stavros-flamouridis/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 38642
+      },
+      {
+        "file": "stavros-flamouridis/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 16046
+      },
+      {
+        "file": "stavros-flamouridis/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 29818
+      }
+    ]
+  },
+  {
+    "slug": "boutique-pilates-wellness",
+    "sourceUrl": "https://boutique-pilates-wellness-studio.vercel.app/",
+    "finalUrl": "https://boutique-pilates-wellness-studio.vercel.app/",
+    "pageTitle": "Boutique Pilates & Wellness Studio",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:18.087Z",
+    "assets": [
+      {
+        "file": "boutique-pilates-wellness/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 71778
+      },
+      {
+        "file": "boutique-pilates-wellness/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 33824
+      },
+      {
+        "file": "boutique-pilates-wellness/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 55260
+      }
+    ]
+  },
+  {
+    "slug": "dental-clinic",
+    "sourceUrl": "https://ioannisbekas.github.io/Dental-Clinic-Website/",
+    "finalUrl": "https://ioannisbekas.github.io/Dental-Clinic-Website/",
+    "pageTitle": "Premium Dental Clinic | State of the Art Dentistry",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:23.555Z",
+    "assets": [
+      {
+        "file": "dental-clinic/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 49212
+      },
+      {
+        "file": "dental-clinic/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 23418
+      },
+      {
+        "file": "dental-clinic/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 40000
+      }
+    ]
+  },
+  {
+    "slug": "patty-gang",
+    "sourceUrl": "https://ioannisbekas.github.io/patty-gang/",
+    "finalUrl": "https://ioannisbekas.github.io/patty-gang/",
+    "pageTitle": "Patty Gang — Smash burgers & hand-cut fries · Πειραιάς",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:24.205Z",
+    "assets": [
+      {
+        "file": "patty-gang/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 90924
+      },
+      {
+        "file": "patty-gang/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 42070
+      },
+      {
+        "file": "patty-gang/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 68628
+      }
+    ]
+  },
+  {
+    "slug": "kids-from-the-block",
+    "sourceUrl": "https://ioannisbekas.github.io/kids-from-the-block/",
+    "finalUrl": "https://ioannisbekas.github.io/kids-from-the-block/",
+    "pageTitle": "Kids from the block — Cult coffee & street brunch · Ταμπούρια, Πειραιάς",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:24.371Z",
+    "assets": [
+      {
+        "file": "kids-from-the-block/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 89432
+      },
+      {
+        "file": "kids-from-the-block/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 42134
+      },
+      {
+        "file": "kids-from-the-block/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 63102
+      }
+    ]
+  },
+  {
+    "slug": "meat-the-block",
+    "sourceUrl": "https://ioannisbekas.github.io/meat-the-block/",
+    "finalUrl": "https://ioannisbekas.github.io/meat-the-block/",
+    "pageTitle": "Meat the Block — Old-school κρεοπωλείο & grill deli · Πειραιάς",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:29.595Z",
+    "assets": [
+      {
+        "file": "meat-the-block/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 97030
+      },
+      {
+        "file": "meat-the-block/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 43642
+      },
+      {
+        "file": "meat-the-block/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 66070
+      }
+    ]
+  },
+  {
+    "slug": "kalamaki-club",
+    "sourceUrl": "https://ioannisbekas.github.io/kalamaki-club/",
+    "finalUrl": "https://ioannisbekas.github.io/kalamaki-club/",
+    "pageTitle": "Kalamaki Club — Σουβλάκι στα κάρβουνα · Πειραιάς",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:30.019Z",
+    "assets": [
+      {
+        "file": "kalamaki-club/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 92478
+      },
+      {
+        "file": "kalamaki-club/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 42978
+      },
+      {
+        "file": "kalamaki-club/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 67790
+      }
+    ]
+  },
+  {
+    "slug": "bubbletale",
+    "sourceUrl": "https://ioannisbekas.github.io/bubbletale/",
+    "finalUrl": "https://ioannisbekas.github.io/bubbletale/",
+    "pageTitle": "Bubbletale — Το πρώτο ελληνικό bubble tea · since 2013",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:30.338Z",
+    "assets": [
+      {
+        "file": "bubbletale/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 110494
+      },
+      {
+        "file": "bubbletale/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 50598
+      },
+      {
+        "file": "bubbletale/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 82704
+      }
+    ]
+  },
+  {
+    "slug": "bark-n-groom",
+    "sourceUrl": "https://ioannisbekas.github.io/bark-n-groom/",
+    "finalUrl": "https://ioannisbekas.github.io/bark-n-groom/",
+    "pageTitle": "Bark n’ Groom — Κομμωτήριο Σκύλων στο Κερατσίνι",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:35.413Z",
+    "assets": [
+      {
+        "file": "bark-n-groom/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 78110
+      },
+      {
+        "file": "bark-n-groom/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 33242
+      },
+      {
+        "file": "bark-n-groom/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 59414
+      }
+    ]
+  },
+  {
+    "slug": "blade-and-comb",
+    "sourceUrl": "https://ioannisbekas.github.io/Barber/",
+    "finalUrl": "https://ioannisbekas.github.io/Barber/",
+    "pageTitle": "BLADE & COMB — Barbershop",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:35.447Z",
+    "assets": [
+      {
+        "file": "blade-and-comb/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 27332
+      },
+      {
+        "file": "blade-and-comb/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 13554
+      },
+      {
+        "file": "blade-and-comb/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 20112
+      }
+    ]
+  },
+  {
+    "slug": "real-estate-dubai",
+    "sourceUrl": "https://ioannisbekas.github.io/Real-estate-Dubai/",
+    "finalUrl": "https://ioannisbekas.github.io/Real-estate-Dubai/",
+    "pageTitle": "Nivora Estates — Residential property advisory",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:36.254Z",
+    "assets": [
+      {
+        "file": "real-estate-dubai/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 77304
+      },
+      {
+        "file": "real-estate-dubai/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 33584
+      },
+      {
+        "file": "real-estate-dubai/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 59494
+      }
+    ]
+  },
+  {
+    "slug": "kalokairi-boutique-residence",
+    "sourceUrl": "https://ioannisbekas.github.io/Kalokairi-Boutique-Residence/",
+    "finalUrl": "https://ioannisbekas.github.io/Kalokairi-Boutique-Residence/",
+    "pageTitle": "Kalokairi Boutique Residence | Σκόπελος",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:40.954Z",
+    "assets": [
+      {
+        "file": "kalokairi-boutique-residence/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 68796
+      },
+      {
+        "file": "kalokairi-boutique-residence/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 29238
+      },
+      {
+        "file": "kalokairi-boutique-residence/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 52254
+      }
+    ]
+  },
+  {
+    "slug": "studios-kalliopi",
+    "sourceUrl": "https://ioannisbekas.github.io/StudioKalliopiKoufonisia/",
+    "finalUrl": "https://ioannisbekas.github.io/StudioKalliopiKoufonisia/",
+    "pageTitle": "Studios Kalliopi Koufonisia | Ήσυχη κυκλαδίτικη διαμονή",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:46.262Z",
+    "assets": [
+      {
+        "file": "studios-kalliopi/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 56410
+      },
+      {
+        "file": "studios-kalliopi/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 27102
+      },
+      {
+        "file": "studios-kalliopi/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 43178
+      }
+    ]
+  },
+  {
+    "slug": "summer-sail",
+    "sourceUrl": "https://ioannisbekas.github.io/summer-sail/",
+    "finalUrl": "https://ioannisbekas.github.io/summer-sail/",
+    "pageTitle": "Summer Sail — Private yacht charters from Athens",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:47.408Z",
+    "assets": [
+      {
+        "file": "summer-sail/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 79250
+      },
+      {
+        "file": "summer-sail/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 31380
+      },
+      {
+        "file": "summer-sail/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 61170
+      }
+    ]
+  },
+  {
+    "slug": "gnv-hellas",
+    "sourceUrl": "https://ioannisbekas.github.io/gnv-hellas/",
+    "finalUrl": "https://ioannisbekas.github.io/gnv-hellas/",
+    "pageTitle": "G.N.V. HELLAS — The Invisible Rules of Wholesale",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:46.772Z",
+    "assets": [
+      {
+        "file": "gnv-hellas/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 45710
+      },
+      {
+        "file": "gnv-hellas/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 20990
+      },
+      {
+        "file": "gnv-hellas/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 35772
+      }
+    ]
+  },
+  {
+    "slug": "accounting-website-template",
+    "sourceUrl": "https://ioannisbekas.github.io/accounting-website-template/",
+    "finalUrl": "https://ioannisbekas.github.io/accounting-website-template/",
+    "pageTitle": "Redovisning & ekonomisk rådgivning | Din Redovisningsbyrå",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:51.713Z",
+    "assets": [
+      {
+        "file": "accounting-website-template/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 48682
+      },
+      {
+        "file": "accounting-website-template/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 21910
+      },
+      {
+        "file": "accounting-website-template/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 38474
+      }
+    ]
+  },
+  {
+    "slug": "margin-apparel",
+    "sourceUrl": "https://ioannisbekas.github.io/margin-apparel/",
+    "finalUrl": "https://ioannisbekas.github.io/margin-apparel/",
+    "pageTitle": "MARGIN® — Apparel for people who notice the kerning",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:52.706Z",
+    "assets": [
+      {
+        "file": "margin-apparel/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 47742
+      },
+      {
+        "file": "margin-apparel/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 21374
+      },
+      {
+        "file": "margin-apparel/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 34246
+      }
+    ]
+  },
+  {
+    "slug": "vanta-motors",
+    "sourceUrl": "https://ioannisbekas.github.io/Car/",
+    "finalUrl": "https://ioannisbekas.github.io/Car/?lang=el",
+    "pageTitle": "VANTA MOTORS. | Επιλεγμένα μεταχειρισμένα",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:52.980Z",
+    "assets": [
+      {
+        "file": "vanta-motors/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 68994
+      },
+      {
+        "file": "vanta-motors/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 29842
+      },
+      {
+        "file": "vanta-motors/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 45490
+      }
+    ]
+  },
+  {
+    "slug": "niki-gigourtaki-coaching",
+    "sourceUrl": "https://ioannisbekas.github.io/niki-gigourtaki-coaching/",
+    "finalUrl": "https://ioannisbekas.github.io/niki-gigourtaki-coaching/",
+    "pageTitle": "Νίκη Γιγουρτάκη | Fitness Coach & Personal Trainer",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:57.522Z",
+    "assets": [
+      {
+        "file": "niki-gigourtaki-coaching/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 64702
+      },
+      {
+        "file": "niki-gigourtaki-coaching/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 29116
+      },
+      {
+        "file": "niki-gigourtaki-coaching/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 47484
+      }
+    ]
+  },
+  {
+    "slug": "return-lab",
+    "sourceUrl": "https://ioannisbekas.github.io/return-lab/",
+    "finalUrl": "https://ioannisbekas.github.io/return-lab/",
+    "pageTitle": "Return Lab | Finance Learning App",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:58.486Z",
+    "assets": [
+      {
+        "file": "return-lab/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 75852
+      },
+      {
+        "file": "return-lab/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 35814
+      },
+      {
+        "file": "return-lab/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 54446
+      }
+    ]
+  },
+  {
+    "slug": "everywatch-market-dashboard",
+    "sourceUrl": "https://ioannisbekas.github.io/everywatch-market-dashboard/",
+    "finalUrl": "https://ioannisbekas.github.io/everywatch-market-dashboard/",
+    "pageTitle": "EveryWatch Secondary Market Pulse",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:32:58.857Z",
+    "assets": [
+      {
+        "file": "everywatch-market-dashboard/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 54906
+      },
+      {
+        "file": "everywatch-market-dashboard/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 22106
+      },
+      {
+        "file": "everywatch-market-dashboard/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 39334
+      }
+    ]
+  },
+  {
+    "slug": "opendoor-telemetry",
+    "sourceUrl": "https://ioannisbekas.github.io/opendoor-telemetry/",
+    "finalUrl": "https://ioannisbekas.github.io/opendoor-telemetry/",
+    "pageTitle": "Opendoor Balance Sheet Telemetry",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:33:02.954Z",
+    "assets": [
+      {
+        "file": "opendoor-telemetry/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 51460
+      },
+      {
+        "file": "opendoor-telemetry/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 21252
+      },
+      {
+        "file": "opendoor-telemetry/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 38922
+      }
+    ]
+  },
+  {
+    "slug": "subscription-bizops-dashboard",
+    "sourceUrl": "https://ioannisbekas.github.io/subscription-bizops-dashboard/",
+    "finalUrl": "https://ioannisbekas.github.io/subscription-bizops-dashboard/",
+    "pageTitle": "Subscription economics: a business review",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:33:04.024Z",
+    "assets": [
+      {
+        "file": "subscription-bizops-dashboard/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 68868
+      },
+      {
+        "file": "subscription-bizops-dashboard/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 26634
+      },
+      {
+        "file": "subscription-bizops-dashboard/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 48796
+      }
+    ]
+  },
+  {
+    "slug": "paroli-direct-ordering",
+    "sourceUrl": "https://ioannisbekas.github.io/paroli/",
+    "finalUrl": "https://ioannisbekas.github.io/paroli/",
+    "pageTitle": "Πάρολι — Demo online ordering",
+    "httpStatus": 200,
+    "capturedAt": "2026-10-31T11:33:04.358Z",
+    "assets": [
+      {
+        "file": "paroli-direct-ordering/cover.webp",
+        "width": 1440,
+        "height": 810,
+        "bytes": 109218
+      },
+      {
+        "file": "paroli-direct-ordering/800.webp",
+        "width": 800,
+        "height": 450,
+        "bytes": 46382
+      },
+      {
+        "file": "paroli-direct-ordering/social.webp",
+        "width": 1200,
+        "height": 630,
+        "bytes": 82150
+      }
+    ]
+  }
+]

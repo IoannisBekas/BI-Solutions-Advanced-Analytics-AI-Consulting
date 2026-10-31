@@ -389,6 +389,7 @@ export function Navbar() {
 
                     {[
                       { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
+                      { name: locale === "el" ? "Έργα" : locale === "de" ? "Projekte" : "Projects", href: "/projects" },
                       { name: t.nav.insights, href: "/blog" },
                       { name: t.nav.about, href: "/about" },
                     ].map((item) => (
@@ -556,12 +557,14 @@ export function Navbar() {
 
             {[
               { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
+              { name: locale === "el" ? "Έργα" : locale === "de" ? "Projekte" : "Projects", href: "/projects" },
               { name: t.nav.insights, href: "/blog" },
               { name: t.nav.about, href: "/about" },
             ].map((item) => {
               const isActive =
                 location === item.href ||
-                (item.href === "/blog" && location.startsWith("/blog/"));
+                (item.href === "/blog" && location.startsWith("/blog/")) ||
+                (item.href === "/projects" && location.startsWith("/projects/"));
               return (
                 <Link
                   key={item.href}

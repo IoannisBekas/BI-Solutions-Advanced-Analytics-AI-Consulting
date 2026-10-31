@@ -16,6 +16,8 @@ const Home = lazy(() => import("@/pages/Home"));
 const Services = lazy(() => import("@/pages/Services"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const CaseStudyDetail = lazy(() => import("@/pages/CaseStudyDetail"));
+const Projects = lazy(() => import("@/pages/Projects"));
+const ProjectDetail = lazy(() => import("@/pages/ProjectDetail"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
@@ -128,6 +130,11 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
               {(params) => <RetiredServiceRoute slug={params.slug} />}
             </Route>
             <Route path="/case-studies/:slug" component={CaseStudyDetail} />
+            <Route path="/projects"><Projects /></Route>
+            <Route path="/projects/category/:category">
+              {(params) => <Projects category={params.category} />}
+            </Route>
+            <Route path="/projects/:slug" component={ProjectDetail} />
             <Route path="/blog" component={Blog} />
             <Route path="/blog/:slug" component={BlogPost} />
             <Route path="/about" component={About} />
