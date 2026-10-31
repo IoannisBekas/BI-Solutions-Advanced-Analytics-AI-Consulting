@@ -75,6 +75,8 @@
     "vitest": "^4.1.8"
   },
   "overrides": {
-    "postcss-selector-parser": "7.1.6"
+    "postcss-selector-parser": "7.1.6",
+    "minimatch": "11.0.3",
+    "glob": "14.0.3"
   }
 }
