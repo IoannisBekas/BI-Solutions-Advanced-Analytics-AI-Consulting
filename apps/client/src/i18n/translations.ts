@@ -130,35 +130,35 @@ const en: TranslationCatalogue = {
 
 const el: TranslationCatalogue = {
   home: {
-    seoTitle: "Ανάπτυξη AI, BI & Web εφαρμογών",
+    seoTitle: "AI, BI και ανάπτυξη διαδικτυακών εφαρμογών",
     seoDescription:
-      "Συμβουλευτική Data, Analytics & AI: στρατηγική, data engineering, αυτοματισμοί, websites και εφαρμογές, περιεχόμενο και εκπαίδευση από την Ελλάδα.",
+      "Συμβουλευτική δεδομένων και AI από την Ελλάδα: BI, αυτοματισμοί, ανάπτυξη ιστοσελίδων, διαχείριση περιεχομένου και εκπαίδευση για διεθνείς ομάδες.",
   },
   nav: {
     services: "Υπηρεσίες",
     caseStudies: "Μελέτες περίπτωσης",
     insights: "Άρθρα",
     about: "Σχετικά",
-    startProject: "Ξεκινήστε έργο",
+    startProject: "Ξεκινήστε ένα έργο",
     language: "Γλώσσα",
   },
   hero: {
-    eyebrow: "Υλοποίηση από senior σύμβουλο · Διεθνώς",
+    eyebrow: "Υλοποίηση από έμπειρο σύμβουλο · Διεθνώς",
     title: "Καθαρή εικόνα μέσα από την πολυπλοκότητα",
     subtitle:
-      "Business intelligence, τεχνητή νοημοσύνη, υποδομές δεδομένων, web εφαρμογές και content operations — από τη στρατηγική μέχρι την παράδοση που η ομάδα σας μπορεί να συντηρεί.",
+      "Επιχειρηματική ευφυΐα, τεχνητή νοημοσύνη, υποδομές δεδομένων, διαδικτυακές εφαρμογές και διαχείριση περιεχομένου, από τη στρατηγική έως μια λύση που η ομάδα σας μπορεί να συντηρεί.",
     needLabel: "Θέλω να",
     timingLabel: "Χρονοδιάγραμμα",
-    submit: "Ξεκινήστε έργο",
+    submit: "Ξεκινήστε ένα έργο",
     scroll: "Κύλιση",
     needs: {
       "business-intelligence": "Κατανοήσω καλύτερα τα δεδομένα μου",
       "ai-automation": "Αυτοματοποιήσω μια διαδικασία με AI",
-      "data-strategy": "Δημιουργήσω αξιόπιστη βάση δεδομένων",
-      "web-app": "Δημιουργήσω site ή web εφαρμογή ή βελτιώσω την ορατότητα στην αναζήτηση",
-      "content-operations": "Κλιμακώσω περιεχόμενο ή ψηφιακό προϊόν",
+      "data-strategy": "Δημιουργήσω αξιόπιστη υποδομή δεδομένων",
+      "web-app": "Δημιουργήσω ιστοσελίδα ή εφαρμογή ή βελτιώσω την προβολή στην αναζήτηση",
+      "content-operations": "Αναπτύξω το περιεχόμενο ή ένα ψηφιακό προϊόν",
       "team-enablement": "Αναβαθμίσω τις δεξιότητες της ομάδας μου",
-      "career-mentorship": "Εξελίξω την καριέρα μου σε data ή AI",
+      "career-mentorship": "Εξελίξω την καριέρα μου στα δεδομένα ή την AI",
       "not-sure": "Ξεκαθαρίσω τι χρειάζομαι",
     },
     timings: {
@@ -176,14 +176,14 @@ const el: TranslationCatalogue = {
     explore: "Περισσότερα",
     items: {
       "business-intelligence-semantic-modeling": {
-        title: "Business intelligence",
+        title: "Επιχειρηματική ευφυΐα",
         description:
           "Σχεδιάζουμε επίπεδα αναφορών, σημασιολογικά μοντέλα και δομές διακυβέρνησης ώστε τα dashboards να είναι αξιόπιστα και εύκολα στη συντήρηση.",
       },
       "advanced-analytics-ai": {
         title: "Συμβουλευτική AI",
         description:
-          "Σχεδιάζουμε και υλοποιούμε προβλεπτικές και AI ροές εργασίας που περνούν από το πείραμα στην καθημερινή λειτουργία.",
+          "Σχεδιάζουμε και υλοποιούμε ροές προγνωστικής ανάλυσης και AI που περνούν από το πείραμα στην καθημερινή λειτουργία.",
       },
       "data-strategy-governance": {
         title: "Υποδομές δεδομένων",
@@ -191,25 +191,25 @@ const el: TranslationCatalogue = {
           "Θέτουμε την αρχιτεκτονική, την ποιότητα, την πρόσβαση και τη διακυβέρνηση ώστε η ανάλυση και η AI να κλιμακώνονται με έλεγχο.",
       },
       "website-app-development": {
-        title: "Web ανάπτυξη & ορατότητα αναζήτησης",
+        title: "Ιστοσελίδες και προβολή στην αναζήτηση",
         description:
-          "Δημιουργούμε γρήγορα, προσβάσιμα sites και web εφαρμογές με τεχνικό SEO, δομημένο περιεχόμενο και μέτρηση για ορατότητα στην Google και σε απαντήσεις AI.",
+          "Δημιουργούμε γρήγορες, προσβάσιμες ιστοσελίδες και διαδικτυακές εφαρμογές με τεχνικό SEO, οργανωμένο περιεχόμενο και μέτρηση απόδοσης για προβολή στην Google και στις απαντήσεις AI.",
       },
       "content-operations-automation": {
-        title: "Content operations & ψηφιακά προϊόντα",
+        title: "Διαχείριση περιεχομένου και ψηφιακά προϊόντα",
         description:
           "Συστήματα με υποστήριξη AI για επαναχρησιμοποίηση περιεχομένου, ροές έγκρισης, συντονισμένη διανομή και εξειδικευμένα ψηφιακά προϊόντα.",
       },
       "data-career-enablement-mentorship": {
-        title: "Εκπαίδευση & mentoring",
+        title: "Εκπαίδευση και επαγγελματική καθοδήγηση",
         description:
-          "Εκπαίδευση ομάδων ανά ρόλο, πρακτικά workshops, υποστήριξη υιοθέτησης και εξατομικευμένο mentoring καριέρας.",
+          "Εκπαίδευση ομάδων ανά ρόλο, πρακτικά εργαστήρια, υποστήριξη στην υιοθέτηση νέων εργαλείων και εξατομικευμένη επαγγελματική καθοδήγηση.",
       },
     },
   },
   footer: {
     tagline:
-      "Business intelligence, AI, υποδομές δεδομένων, web εφαρμογές, ορατότητα αναζήτησης, content operations, διαχειριζόμενη υποστήριξη, εκπαίδευση και mentoring.",
+      "Επιχειρηματική ευφυΐα, AI, υποδομές δεδομένων, διαδικτυακές εφαρμογές, προβολή στην αναζήτηση, διαχείριση περιεχομένου, συνεχής υποστήριξη, εκπαίδευση και επαγγελματική καθοδήγηση.",
     company: "Εταιρεία",
     services: "Υπηρεσίες",
     resources: "Πόροι",
@@ -232,16 +232,16 @@ const de: TranslationCatalogue = {
   nav: {
     services: "Leistungen",
     caseStudies: "Fallstudien",
-    insights: "Insights",
+    insights: "Einblicke",
     about: "Über uns",
     startProject: "Projekt starten",
     language: "Sprache",
   },
   hero: {
-    eyebrow: "Beratung durch Senior-Experten · International",
+    eyebrow: "Umsetzung durch Senior-Berater · International",
     title: "Klarheit statt Komplexität",
     subtitle:
-      "Business Intelligence, KI, Datenfundamente, Webanwendungen und Content Operations — von der Strategie bis zur Übergabe, die Ihr Team selbst weiterführen kann.",
+      "Business Intelligence, KI, Datengrundlagen, Webanwendungen und Content-Prozesse: von der Strategie bis zu einer Lösung, die Ihr Team selbst warten und weiterentwickeln kann.",
     needLabel: "Ich möchte",
     timingLabel: "Zeitrahmen",
     submit: "Projekt starten",
@@ -253,7 +253,7 @@ const de: TranslationCatalogue = {
       "web-app": "Eine Website oder Web-App starten oder die Suchsichtbarkeit verbessern",
       "content-operations": "Content oder ein digitales Produkt skalieren",
       "team-enablement": "Mein Team weiterbilden",
-      "career-mentorship": "Meine Daten- oder KI-Karriere entwickeln",
+      "career-mentorship": "Meine Karriere im Daten- oder KI-Bereich weiterentwickeln",
       "not-sure": "Klären, was ich brauche",
     },
     timings: {
@@ -281,7 +281,7 @@ const de: TranslationCatalogue = {
           "Wir entwickeln prädiktive und KI-gestützte Workflows, die vom Experiment in den produktiven Betrieb übergehen.",
       },
       "data-strategy-governance": {
-        title: "Datenfundamente",
+        title: "Datengrundlagen",
         description:
           "Wir legen Architektur, Qualität, Zugriff und Governance fest, damit Analytics und KI kontrolliert skalieren.",
       },
@@ -291,25 +291,25 @@ const de: TranslationCatalogue = {
           "Wir entwickeln schnelle, barrierearme Websites und Webanwendungen mit technischem SEO, strukturierten Inhalten und Messung für Sichtbarkeit in Google und KI-gestützten Antworten.",
       },
       "content-operations-automation": {
-        title: "Content Operations & digitale Produkte",
+        title: "Content-Prozesse und digitale Produkte",
         description:
-          "KI-gestützte Systeme für Content-Repurposing, redaktionelle Abläufe, koordinierte Distribution und spezialisierte digitale Produkte.",
+          "KI-gestützte Systeme zur Wiederverwendung von Inhalten, für redaktionelle Abläufe, koordinierte Verbreitung und spezialisierte digitale Produkte.",
       },
       "data-career-enablement-mentorship": {
-        title: "Enablement & Mentoring",
+        title: "Weiterbildung und Mentoring",
         description:
-          "Rollenbasierte Team-Workshops, praxisnahes Training, Adoptionsbegleitung und persönliches Karriere-Mentoring.",
+          "Rollenbezogene Team-Workshops, praxisnahe Schulungen, Unterstützung bei der Einführung neuer Werkzeuge und persönliches Karriere-Mentoring.",
       },
     },
   },
   footer: {
     tagline:
-      "Business Intelligence, KI, Datenfundamente, Webanwendungen, Suchsichtbarkeit, Content Operations, Managed Support, Enablement und Mentoring.",
+      "Business Intelligence, KI, Datengrundlagen, Webanwendungen, Sichtbarkeit in der Suche, Content-Prozesse, laufender Support, Weiterbildung und Mentoring.",
     company: "Unternehmen",
     services: "Leistungen",
     resources: "Ressourcen",
     servicesOverview: "Leistungsübersicht",
-    insights: "Insights",
+    insights: "Einblicke",
     privacy: "Datenschutzerklärung",
     terms: "Nutzungsbedingungen",
     cookieSettings: "Cookie-Einstellungen",

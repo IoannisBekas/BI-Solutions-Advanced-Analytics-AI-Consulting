@@ -58,8 +58,8 @@ export default function PrivacyPolicy() {
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
                     <span>
-                      <strong>Account data:</strong> Name, email address, and
-                      password stored in hashed form.
+                      <strong>Account data:</strong> Your name and email address,
+                      plus a password stored as a hash.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">

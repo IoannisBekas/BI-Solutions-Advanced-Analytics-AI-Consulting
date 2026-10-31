@@ -10,9 +10,14 @@ export function setPageTranslations(translations: PageTranslations) {
 }
 
 const translatedAttributes = ["alt", "aria-label", "placeholder", "title"];
+const translatedMetaFields = new Set([
+  "description", "keywords", "author", "twitter:title", "twitter:description",
+  "twitter:image:alt", "og:title", "og:description", "og:image:alt",
+]);
 const protectedTerms = new Set([
   "en",
   "Airtable",
+  "Anthropic AI",
   "Azure",
   "Azure OpenAI",
   "BigQuery",
@@ -37,6 +42,7 @@ const protectedTerms = new Set([
   "Python",
   "RAG",
   "React",
+  "Resend",
   "Schema.org",
   "Snowflake",
   "SQL",
@@ -87,6 +93,8 @@ function localizeElement(element: Element, locale: Exclude<Locale, "en">) {
   }
 
   if (element instanceof HTMLMetaElement && element.content) {
+    const field = element.getAttribute("property") ?? element.getAttribute("name") ?? "";
+    if (!translatedMetaFields.has(field.toLowerCase())) return;
     const localized = translatePageCopy(element.content, locale);
     if (localized !== element.content) element.content = localized;
   }

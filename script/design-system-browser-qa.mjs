@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 
 const phase = process.argv.includes("--before") ? "before" : "after";
 const baseUrl = process.env.DESIGN_QA_URL || "http://127.0.0.1:5001";
-const output = path.resolve("output/playwright/design-system");
+const output = path.resolve(process.env.DESIGN_QA_OUTPUT || "output/playwright/design-system");
 const inventory = JSON.parse(fs.readFileSync("shared/search-routes.json", "utf8"));
 const representativePaths = new Set([
   "/", "/projects", "/projects/category/health-wellness", "/projects/e-synergo",
@@ -17,7 +17,9 @@ const representativePaths = new Set([
 ]);
 const routes = inventory.routes.filter((route) => route.render === "react" &&
   (process.argv.includes("--full") || representativePaths.has(route.path)));
-const widths = process.argv.includes("--edges") ? [320, 1024, 1920] : [390, 768, 1440];
+const widths = process.env.DESIGN_QA_WIDTHS
+  ? process.env.DESIGN_QA_WIDTHS.split(",").map(Number)
+  : process.argv.includes("--edges") ? [320, 1024, 1920] : [390, 768, 1440];
 const jobs = routes.flatMap((route) => route.locales.flatMap((locale) =>
   widths.map((width) => ({
     path: `${locale === "en" ? "" : `/${locale}`}${route.path}`,
@@ -40,6 +42,9 @@ try {
     const page = await context.newPage();
     let errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => {
+      if (message.type() === "error" && /hydrat|Minified React error|did not match/i.test(message.text())) errors.push(message.text());
+    });
     while (cursor < jobs.length) {
       const job = jobs[cursor++];
       errors = [];
@@ -68,6 +73,8 @@ try {
             title: document.title,
             canonical: document.querySelector('link[rel="canonical"]')?.href,
             description: document.querySelector('meta[name="description"]')?.content,
+            robots: document.querySelector('meta[name="robots"]')?.content,
+            ogType: document.querySelector('meta[property="og:type"]')?.content,
             alternates: [...document.querySelectorAll('link[rel="alternate"]')].map((el) => el.outerHTML).sort(),
             schema: [...document.querySelectorAll('script[type="application/ld+json"]')].map((el) => el.textContent),
             h1Style: { font: style.fontFamily, size: style.fontSize, lineHeight: style.lineHeight },
@@ -76,6 +83,10 @@ try {
           };
         });
         const { text, ...details } = snapshot;
+        if (!/^(?:index|noindex),\s*(?:follow|nofollow)$/.test(details.robots ?? "") ||
+            !["website", "article", "profile"].includes(details.ogType)) {
+          errors.push(`Invalid technical metadata: robots=${details.robots}, og:type=${details.ogType}`);
+        }
         const textHash = createHash("sha256").update(text).digest("hex");
         const previous = baseline.find((r) => r.path === job.path && r.width === job.width);
         const preservation = previous ? ["textHash", "headings", "links", "title", "canonical", "description", "alternates", "schema"]

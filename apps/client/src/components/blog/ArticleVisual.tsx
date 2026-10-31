@@ -4,6 +4,7 @@ import { withAssetBase } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { translatePageCopy } from "@/i18n/localizeDocument";
+import type { Locale } from "@/i18n/config";
 
 type ArticleVisualPost = Pick<
   BlogPost,
@@ -196,6 +197,21 @@ function AxisChart({ p }: { p: Palette }) {
   );
 }
 
+const motifLabels = {
+  en: { finance: "finance", Date: "Date", Cust: "Cust", Prod: "Prod", Geo: "Geo", Fact: "Fact", input: "input", review: "review", train: "train", ship: "ship", monitor: "monitor", proof: "proof" },
+  el: { finance: "Οικονομικά", Date: "Ημ/νία", Cust: "Πελάτες", Prod: "Προϊόντα", Geo: "Περιοχές", Fact: "Γεγονότα", input: "Είσοδος", review: "Έλεγχος", train: "Εκπαίδευση", ship: "Διάθεση", monitor: "Έλεγχος", proof: "Τεκμήρια" },
+  de: { finance: "Finanzen", Date: "Datum", Cust: "Kunden", Prod: "Produkte", Geo: "Region", Fact: "Fakten", input: "Eingabe", review: "Prüfung", train: "Schulung", ship: "Freigabe", monitor: "Prüfung", proof: "Nachweis" },
+};
+
+function MotifLabel({ x, y, fill, term, maxWidth = 72, fontSize = 13 }: {
+  x: number; y: number; fill: string; term: keyof typeof motifLabels.en; maxWidth?: number; fontSize?: number;
+}) {
+  const { locale } = useLocale();
+  const text = motifLabels[locale][term];
+  const size = Math.min(fontSize, maxWidth / (text.length * 0.75));
+  return <text x={x} y={y} textAnchor="middle" fill={fill} fontFamily="Inter, Arial, sans-serif" fontSize={size} fontWeight="800" data-label-width={maxWidth}>{text}</text>;
+}
+
 function RiskMotif({ p }: { p: Palette }) {
   return (
     <g>
@@ -209,7 +225,7 @@ function RiskMotif({ p }: { p: Palette }) {
         <MiniText x={414} y={236} widths={[120, 78]} color={p.quiet} />
       </Panel>
       <Panel x={514} y={210} width={90} height={54} fill="#FFFFFF" stroke={p.accent2}>
-        <text x="559" y="243" textAnchor="middle" fill={p.accent2} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">finance</text>
+        <MotifLabel x={559} y={243} fill={p.accent2} term="finance" maxWidth={70} />
       </Panel>
     </g>
   );
@@ -245,11 +261,11 @@ function ModelMotif({ p }: { p: Palette }) {
   return (
     <g>
       <rect x="446" y="154" width="76" height="52" rx="12" fill={p.ink} />
-      <text x="484" y="186" textAnchor="middle" fill="#FFFFFF" fontFamily="Inter, Arial, sans-serif" fontSize="15" fontWeight="800">Fact</text>
+      <MotifLabel x={484} y={186} fill="#FFFFFF" term="Fact" maxWidth={60} fontSize={15} />
       {nodes.map(([x, y, label, color]) => (
         <g key={label}>
           <rect x={x} y={y} width="74" height="42" rx="10" fill="#FFFFFF" stroke={color} strokeWidth="2" />
-          <text x={x + 37} y={y + 27} textAnchor="middle" fill={color} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">{label}</text>
+          <MotifLabel x={x + 37} y={y + 27} fill={color} term={label} maxWidth={62} />
         </g>
       ))}
       <path d="M456 112L470 154M520 112L502 154M456 250L470 206M520 250L502 206" fill="none" stroke={p.quiet} strokeLinecap="round" strokeWidth="3" />
@@ -265,10 +281,10 @@ function AiMotif({ p }: { p: Palette }) {
       <circle cx="486" cy="164" r="17" fill={p.accent2} opacity="0.22" />
       <circle cx="486" cy="164" r="6" fill={p.accent2} />
       <Panel x={370} y={246} width={102} height={46} fill="#FFFFFF" stroke={p.accent}>
-        <text x="421" y="275" textAnchor="middle" fill={p.accent} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">input</text>
+        <MotifLabel x={421} y={275} fill={p.accent} term="input" maxWidth={82} />
       </Panel>
       <Panel x={500} y={246} width={102} height={46} fill="#FFFFFF" stroke={p.accent3}>
-        <text x="551" y="275" textAnchor="middle" fill={p.accent3} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">review</text>
+        <MotifLabel x={551} y={275} fill={p.accent3} term="review" maxWidth={82} />
       </Panel>
     </g>
   );
@@ -315,13 +331,13 @@ function MLOpsMotif({ p }: { p: Palette }) {
   return (
     <g>
       <Panel x={360} y={92} width={96} height={48} fill="#FFFFFF" stroke={p.accent}>
-        <text x="408" y="122" textAnchor="middle" fill={p.accent} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">train</text>
+        <MotifLabel x={408} y={122} fill={p.accent} term="train" />
       </Panel>
       <Panel x={498} y={92} width={96} height={48} fill="#FFFFFF" stroke={p.accent2}>
-        <text x="546" y="122" textAnchor="middle" fill={p.accent2} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">ship</text>
+        <MotifLabel x={546} y={122} fill={p.accent2} term="ship" />
       </Panel>
       <Panel x={430} y={218} width={96} height={48} fill="#FFFFFF" stroke={p.accent3}>
-        <text x="478" y="248" textAnchor="middle" fill={p.accent3} fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="800">monitor</text>
+        <MotifLabel x={478} y={248} fill={p.accent3} term="monitor" />
       </Panel>
       <path d="M456 116H498M540 140L498 218M430 238L384 140" fill="none" stroke={p.quiet} strokeLinecap="round" strokeWidth="4" />
     </g>
@@ -337,7 +353,7 @@ function ProofMotif({ p }: { p: Palette }) {
       </Panel>
       <Panel x={486} y={72} width={104} height={212} fill={p.ink} stroke={p.ink}>
         <path d="M518 176L538 196L568 148" fill="none" stroke={p.accent3} strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" />
-        <text x="538" y="122" textAnchor="middle" fill="#FFFFFF" fontFamily="Inter, Arial, sans-serif" fontSize="15" fontWeight="800">proof</text>
+        <MotifLabel x={538} y={122} fill="#FFFFFF" term="proof" maxWidth={80} fontSize={15} />
       </Panel>
     </g>
   );
@@ -371,7 +387,39 @@ function renderMotif(motif: Motif, palette: Palette) {
   }
 }
 
-function getCoverLabel(motif: Motif) {
+const localizedCoverLabels: Record<Exclude<Locale, "en">, Record<Motif, [string, string]>> = {
+  el: {
+    web: ["Ιστός", "εφαρμογές"],
+    dashboard: ["Σαφείς", "αναφορές"],
+    model: ["Μοντέλα", "δεδομένων"],
+    ai: ["Πρακτική", "AI"],
+    governance: ["Κανόνες", "δεδομένων"],
+    privacy: ["Δεδομένα", "απόρρητο"],
+    cloud: ["Υποδομές", "Cloud"],
+    mlops: ["Παραγωγική", "λειτουργία"],
+    roadmap: ["Πλάνο", "90 ημερών"],
+    proof: ["Έργα", "αποτελέσματα"],
+    risk: ["Κίνδυνοι", "προβλέψεις"],
+    decision: ["Σαφείς", "αποφάσεις"],
+  },
+  de: {
+    web: ["Web", "Entwicklung"],
+    dashboard: ["Klare", "Berichte"],
+    model: ["Semantische", "Modelle"],
+    ai: ["Praktische", "KI"],
+    governance: ["Daten", "Regeln"],
+    privacy: ["Daten", "Datenschutz"],
+    cloud: ["Cloud", "Grundlagen"],
+    mlops: ["Produktiver", "Betrieb"],
+    roadmap: ["90 Tage", "Planung"],
+    proof: ["Projekte", "Ergebnisse"],
+    risk: ["Risiken", "Prognosen"],
+    decision: ["Klare", "Entscheidungen"],
+  },
+};
+
+function getCoverLabel(motif: Motif, locale: Locale) {
+  if (locale !== "en") return localizedCoverLabels[locale][motif];
   switch (motif) {
     case "web":
       return ["Digital", "surface"];
@@ -407,12 +455,15 @@ function toSvgId(value: string) {
 export function ArticleVisual({ post, className }: ArticleVisualProps) {
   const { locale } = useLocale();
   const localizedTitle = translatePageCopy(post.title, locale);
-  const usesReviewedCover = post.featuredImage.startsWith(
+  const usesReviewedCover = locale === "en" && post.featuredImage.startsWith(
     "/blog/article-covers-v4/",
   );
   const palette = getPalette(post);
   const motif = getMotif(post);
-  const coverLabel = getCoverLabel(motif);
+  const coverLabel = getCoverLabel(motif, locale);
+  const categoryLabel = translatePageCopy(post.category, locale).toLocaleUpperCase(locale);
+  const categoryFontSize = Math.min(12, 210 / (categoryLabel.length * 0.7));
+  const coverFontSize = locale === "en" ? 38 : Math.min(38, 232 / (Math.max(...coverLabel.map(line => line.length)) * 0.7));
   const reactId = useId();
   const idBase = toSvgId(`article-${reactId}-${post.slug}`);
   const surfaceGradientId = `${idBase}-surface`;
@@ -438,7 +489,7 @@ export function ArticleVisual({ post, className }: ArticleVisualProps) {
   }
 
   return (
-    <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)}>
+    <div className={cn("h-full w-full overflow-hidden bg-gray-100", className)} translate="no">
       <svg
         role="img"
         aria-label={localizedTitle}
@@ -499,12 +550,12 @@ export function ArticleVisual({ post, className }: ArticleVisualProps) {
           ))}
         </g>
 
-        <rect x="72" y="82" width={Math.min(230, 84 + post.category.length * 8)} height="30" rx="15" fill={palette.ink} />
-        <text x="92" y="102" fill="#FFFFFF" fontFamily="Inter, Arial, sans-serif" fontSize="12" fontWeight="800" letterSpacing="0">
-          {post.category.toUpperCase()}
+        <rect x="72" y="82" width={Math.min(246, 40 + categoryLabel.length * categoryFontSize * 0.7)} height="30" rx="15" fill={palette.ink} />
+        <text x="92" y="102" fill="#FFFFFF" fontFamily="Inter, Arial, sans-serif" fontSize={categoryFontSize} fontWeight="800" letterSpacing="0">
+          {categoryLabel}
         </text>
 
-        <text x="72" y="166" fill={palette.ink} fontFamily="Inter, Arial, sans-serif" fontSize="38" fontWeight="850" letterSpacing="0">
+        <text x="72" y="166" fill={palette.ink} fontFamily="Inter, Arial, sans-serif" fontSize={coverFontSize} fontWeight="850" letterSpacing="0">
           {coverLabel.map((line, index) => (
             <tspan key={line} x="72" dy={index === 0 ? 0 : 44}>
               {line}

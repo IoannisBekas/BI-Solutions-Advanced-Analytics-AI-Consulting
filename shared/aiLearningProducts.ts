@@ -75,7 +75,7 @@ const productDefinitions: readonly Omit<AiLearningProduct, "filenames" | "prompt
       title: "Decide which deals deserve more sales effort",
       outcome: "A qualification map with clear priorities, resource limits and the next decision.",
       titleEl: "Διάλεξε ποιες συμφωνίες αξίζουν περισσότερη προσπάθεια πώλησης",
-      outcomeEl: "Χάρτη καταλληλότητας με σαφείς προτεραιότητες, όρια πόρων και την επόμενη απόφαση.",
+      outcomeEl: "Χάρτης αξιολόγησης ευκαιριών, με σαφείς προτεραιότητες, όρια πόρων και την επόμενη απόφαση.",
     },
   },
   {
@@ -118,12 +118,12 @@ const productDefinitions: readonly Omit<AiLearningProduct, "filenames" | "prompt
     description: "Learn to structure AI prompts for financial planning, variance reviews and decision-focused reporting.",
     descriptionEl: "Μάθε να οργανώνεις prompts για οικονομικό σχεδιασμό, έλεγχο αποκλίσεων και αναφορές που υποστηρίζουν αποφάσεις.",
     outcomes: ["Outline linked profit, balance-sheet and cash schedules.", "Investigate variance and business-driver assumptions.", "Prepare planning-model checks and decision-focused board packs."],
-    outcomesEl: ["Σχεδίασε συνδεδεμένους πίνακες κερδών, ισολογισμού και μετρητών.", "Διερεύνησε αποκλίσεις και παραδοχές επιχειρησιακών παραγόντων.", "Προετοίμασε ελέγχους μοντέλων και αναφορές διοίκησης με επίκεντρο τις αποφάσεις."],
+    outcomesEl: ["Σχεδίασε συνδεδεμένους πίνακες αποτελεσμάτων, ισολογισμού και ταμειακών ροών.", "Διερεύνησε αποκλίσεις και παραδοχές επιχειρησιακών παραγόντων.", "Προετοίμασε ελέγχους μοντέλων και αναφορές διοίκησης με επίκεντρο τις αποφάσεις."],
     sample: {
       title: "Plan a model linking profit, balance sheet and cash",
       outcome: "Linked schedules with clear priorities, resource limits and the next decision.",
-      titleEl: "Σχεδίασε μοντέλο που συνδέει κέρδη, ισολογισμό και μετρητά",
-      outcomeEl: "Συνδεδεμένους πίνακες με σαφείς προτεραιότητες, όρια πόρων και την επόμενη απόφαση.",
+      titleEl: "Σχεδίασε μοντέλο που συνδέει αποτελέσματα, ισολογισμό και ταμειακές ροές",
+      outcomeEl: "Συνδεδεμένοι πίνακες με σαφείς προτεραιότητες, όρια πόρων και την επόμενη απόφαση.",
     },
   },
   {
@@ -180,9 +180,9 @@ const productDefinitions: readonly Omit<AiLearningProduct, "filenames" | "prompt
     name: "Data Engineering",
     nameEl: "Μηχανική δεδομένων",
     description: "Practice AI prompting on data-model planning, pipeline reliability and data-quality checks.",
-    descriptionEl: "Εξασκήσου σε prompts για σχεδιασμό μοντέλων δεδομένων, αξιοπιστία αγωγών και ελέγχους ποιότητας δεδομένων.",
+    descriptionEl: "Εξασκήσου σε prompts για σχεδιασμό μοντέλων δεδομένων, αξιοπιστία ροών μεταφοράς και επεξεργασίας δεδομένων και ελέγχους ποιότητας.",
     outcomes: ["Plan dbt models and incremental data loads.", "Design data-quality checks and data contracts.", "Explore pipeline scheduling, incidents and freshness tradeoffs."],
-    outcomesEl: ["Σχεδίασε μοντέλα dbt και σταδιακές φορτώσεις δεδομένων.", "Οργάνωσε ελέγχους ποιότητας και συμβόλαια δεδομένων.", "Διερεύνησε προγραμματισμό αγωγών, περιστατικά και συμβιβασμούς ενημέρωσης δεδομένων."],
+    outcomesEl: ["Σχεδίασε μοντέλα dbt και σταδιακές φορτώσεις δεδομένων.", "Οργάνωσε ελέγχους ποιότητας και συμβόλαια δεδομένων.", "Διερεύνησε τον προγραμματισμό ροών δεδομένων, τη διαχείριση περιστατικών και τις επιλογές για την έγκαιρη ενημέρωση δεδομένων."],
     sample: {
       title: "Plan your dbt models",
       outcome: "A practical plan for your dbt models.",

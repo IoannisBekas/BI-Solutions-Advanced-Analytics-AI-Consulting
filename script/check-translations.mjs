@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import ts from "typescript";
+import { assertTranslationMarkup } from "./translation-protection.mjs";
 
 const root = process.cwd();
 const routeInventory = JSON.parse(await fs.readFile(path.join(root, "shared", "search-routes.json"), "utf8"));
@@ -41,7 +42,44 @@ const objectEnd = catalogueSource.lastIndexOf("};");
 if (assignmentStart < 0 || objectEnd < assignmentStart) {
   throw new Error("Could not parse the generated translation catalogue.");
 }
-const catalogue = JSON.parse(catalogueSource.slice(assignmentStart + 2, objectEnd + 1));
+const generatedCatalogue = JSON.parse(catalogueSource.slice(assignmentStart + 2, objectEnd + 1));
+const overridePath = path.join(root, "apps/client/src/i18n/pageTranslationOverrides.ts");
+const overrideFile = ts.createSourceFile(overridePath, await fs.readFile(overridePath, "utf8"), ts.ScriptTarget.Latest, true);
+const overrides = {};
+function readOverrides(node) {
+  if (ts.isVariableDeclaration(node) && node.name.getText(overrideFile) === "pageTranslationOverrides" && ts.isObjectLiteralExpression(node.initializer)) {
+    for (const property of node.initializer.properties) {
+      if (!ts.isPropertyAssignment(property) || !ts.isObjectLiteralExpression(property.initializer)) continue;
+      overrides[property.name.text] = Object.fromEntries(property.initializer.properties
+        .filter(item => ts.isPropertyAssignment(item) && ts.isStringLiteral(item.initializer))
+        .map(item => [item.name.text, item.initializer.text]));
+    }
+  }
+  ts.forEachChild(node, readOverrides);
+}
+readOverrides(overrideFile);
+const catalogue = { ...generatedCatalogue, ...overrides };
+let inlineTranslationsChecked = 0;
+for (const [source, translations] of Object.entries(catalogue)) {
+  if (!/<[a-z][^>]*>/i.test(source)) continue;
+  for (const locale of ["el", "de"]) {
+    assertTranslationMarkup(source, translations[locale]);
+    inlineTranslationsChecked++;
+  }
+}
+console.log(`Translation markup checks passed for ${inlineTranslationsChecked} Greek and German fragments.`);
+const reviewSource = await fs.readFile(path.join(root, "apps/client/src/components/sections/ReviewsSection.tsx"), "utf8");
+const reviewQuotes = [...reviewSource.matchAll(/text:\s*("(?:\\.|[^"\\])*")/g)].map(match => JSON.parse(match[1]));
+if (!reviewQuotes.length) throw new Error("No review quotations found for the prerender audit.");
+for (const locale of ["en", "el", "de"]) {
+  const html = await fs.readFile(path.join(root, "dist/public", locale === "en" ? "" : locale, "index.html"), "utf8");
+  const visibleHtml = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
+    .replaceAll("&#x27;", "'").replaceAll("&quot;", '"').replaceAll("&amp;", "&");
+  for (const quote of reviewQuotes) {
+    if (!visibleHtml.includes(quote)) throw new Error(`${locale}: prerendered review was translated or truncated: ${quote.slice(0, 60)}`);
+  }
+}
+console.log(`Verbatim review checks passed for ${reviewQuotes.length} complete quotations in three languages.`);
 const sourceFile = ts.createSourceFile(
   blogDataPath,
   blogSource,

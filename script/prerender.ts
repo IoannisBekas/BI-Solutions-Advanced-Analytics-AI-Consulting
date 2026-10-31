@@ -3,6 +3,7 @@ import { mkdir, readFile, rm, writeFile } from "fs/promises";
 import path from "path";
 import { pathToFileURL } from "url";
 import { getDeployBasePath } from "./deployBase";
+import { buildPreHydrationScript, protectUntranslatedHtml } from "./translation-protection.mjs";
 import {
   DEFAULT_LOCALE,
   LOCALES,
@@ -124,55 +125,37 @@ function localizeRenderedHtml(html: string, route: string): LocalizedHtml {
     (target[localized] ??= []).push(source);
   };
 
-  const localizedHtml = html
+  const protectedCopy = protectUntranslatedHtml(html);
+  const localizedHtml = protectedCopy.text
     .replace(/>([^<]+)</g, (match, text: string) => {
       const decoded = decodeReactText(text);
       const translated = translatePageCopy(decoded, locale);
-      if (translated !== decoded) {
-        rememberTranslation(textReversions, decoded, translated);
-      }
+      // Include unchanged native strings in the queue too: they may equal the
+      // translated output of a later English node (for example a shared CTA).
+      rememberTranslation(textReversions, decoded, translated);
       return translated === decoded ? match : `>${escapeHtmlAttribute(translated)}<`;
     })
     .replace(/\s(alt|aria-label|placeholder|title)="([^"]*)"/g, (match, attribute, value) => {
       const decoded = decodeReactText(value);
       const translated = translatePageCopy(decoded, locale);
-      if (translated !== decoded) {
-        rememberTranslation(attributeReversions, decoded, translated);
-      }
+      rememberTranslation(attributeReversions, decoded, translated);
       return translated === decoded
         ? match
         : ` ${attribute}="${escapeHtmlAttribute(translated)}"`;
     });
 
+  // Omit identity-only queues while retaining identity entries in mixed queues.
+  for (const reversions of [textReversions, attributeReversions]) {
+    for (const [localized, originals] of Object.entries(reversions)) {
+      if (originals.every((original) => original === localized)) delete reversions[localized];
+    }
+  }
+
   return {
-    html: localizedHtml,
+    html: protectedCopy.restore(localizedHtml),
     textReversions,
     attributeReversions,
   };
-}
-
-/**
- * React components still contain their English source strings. Restore those
- * strings immediately before hydration, then LocaleProvider reapplies the
- * localized catalogue after React attaches. The inline script runs during HTML
- * parsing, before deferred module scripts, so users never see the source copy.
- */
-function buildPreHydrationScript(
-  textReversions: Record<string, string[]>,
-  attributeReversions: Record<string, string[]>,
-) {
-  if (
-    Object.keys(textReversions).length === 0 &&
-    Object.keys(attributeReversions).length === 0
-  ) {
-    return "";
-  }
-
-  const serialized = JSON.stringify({
-    text: textReversions,
-    attributes: attributeReversions,
-  }).replace(/</g, "\\u003c");
-  return `<script id="i18n-prehydrate">(()=>{const m=${serialized};const r=document.getElementById("root");if(!r)return;const take=(b,k)=>{const q=b[k];return q?.shift()};const w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT);while(w.nextNode()){const n=w.currentNode;const k=n.data.replace(/\\s+/g," ").trim();const v=take(m.text,k);if(v!==undefined)n.data=n.data.replace(k,v)}for(const e of r.querySelectorAll("*"))for(const a of ["alt","aria-label","placeholder","title"]){const s=e.getAttribute(a);if(!s)continue;const k=s.replace(/\\s+/g," ").trim();const v=take(m.attributes,k);if(v!==undefined)e.setAttribute(a,s.replace(k,v))}document.currentScript?.remove()})();</script>`;
 }
 
 function buildHeadBlock(head: SsrHeadData) {

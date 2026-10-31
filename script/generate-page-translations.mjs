@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import ts from "typescript";
+import { protectTranslationTokens } from "./translation-protection.mjs";
 
 const root = process.cwd();
 const sourceRoots = [
@@ -94,8 +95,9 @@ function collectFromNode(node, values) {
 }
 
 async function translateBatch(batch, target) {
-  const source = batch
-    .map((text, index) => `${text}\n<<<${String(index).padStart(4, "0")}>>>`)
+  const protectedBatch = batch.map(protectTranslationTokens);
+  const source = protectedBatch
+    .map(({ text }, index) => `${text}\n<<<${String(index).padStart(4, "0")}>>>`)
     .join("\n");
   const params = new URLSearchParams({
     client: "gtx",
@@ -117,7 +119,7 @@ async function translateBatch(batch, target) {
   if (parts.length !== batch.length) {
     throw new Error(`Expected ${batch.length} translations, received ${parts.length}`);
   }
-  return parts.map(normalize);
+  return parts.map((value, index) => protectedBatch[index].restore(normalize(value)));
 }
 
 function makeBatches(values, maxCharacters = 5500) {

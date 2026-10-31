@@ -128,7 +128,7 @@ const servicesStructuredData = {
 const browserCopy = {
   en: { compact: "Compact", details: "Details", view: "Service view", search: "Search services", placeholder: "Search services or capabilities…", clear: "Clear search", empty: "No services match your search.", sections: "sections" },
   el: { compact: "Σύνοψη", details: "Αναλυτικά", view: "Προβολή υπηρεσιών", search: "Αναζήτηση υπηρεσιών", placeholder: "Αναζήτηση υπηρεσιών ή δυνατοτήτων…", clear: "Καθαρισμός αναζήτησης", empty: "Δεν βρέθηκαν υπηρεσίες για αυτή την αναζήτηση.", sections: "ενότητες" },
-  de: { compact: "Kompakt", details: "Details", view: "Leistungsansicht", search: "Leistungen durchsuchen", placeholder: "Leistungen oder Funktionen suchen…", clear: "Suche löschen", empty: "Keine Leistungen entsprechen Ihrer Suche.", sections: "Bereiche" },
+  de: { compact: "Kompakt", details: "Details", view: "Leistungsansicht", search: "Leistungen durchsuchen", placeholder: "Leistungen oder Kompetenzen suchen…", clear: "Suche löschen", empty: "Keine Leistungen entsprechen Ihrer Suche.", sections: "Bereiche" },
 };
 
 function matchesText(values: string[], query: string, locale: Locale) {

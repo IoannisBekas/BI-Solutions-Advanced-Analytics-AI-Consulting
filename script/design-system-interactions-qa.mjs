@@ -22,7 +22,7 @@ try {
     for (let index = 0; index < 9; index++) {
       const tab = reviews.getByRole("tab").nth(index);
       await tab.click();
-      await page.waitForFunction((label) => document.querySelector(`[aria-label="${label}"]`)?.getAttribute("aria-selected") === "true", `Review ${index + 1} of 9`);
+      await page.waitForFunction((slideIndex) => document.querySelectorAll('[role="tablist"] [role="tab"]')[slideIndex]?.getAttribute("aria-selected") === "true", index);
       await page.waitForFunction((slideIndex) => {
         const viewport = document.querySelector(".review-carousel__viewport");
         const slide = viewport.querySelectorAll('[aria-roledescription="slide"]')[slideIndex];
@@ -35,7 +35,7 @@ try {
       assert.match(await slide.locator("time").getAttribute("datetime"), /^\d{4}-\d{2}(?:-\d{2})?$/);
     }
     await reviews.locator("button").last().click();
-    await page.waitForFunction(() => document.querySelector('[aria-label="Review 1 of 9"]')?.getAttribute("aria-selected") === "true");
+    await page.waitForFunction(() => document.querySelector('[role="tablist"] [role="tab"]')?.getAttribute("aria-selected") === "true");
     console.log(`${locale}: review navigation and mobile heights passed`);
 
     await page.locator('header button[aria-controls="mobile-site-menu"]').click();

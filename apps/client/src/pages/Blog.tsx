@@ -21,6 +21,15 @@ import {
   visibleBlogPosts,
 } from "@/data/blogData";
 import { trackEvent } from "@/lib/analytics";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { translatePageCopy } from "@/i18n/localizeDocument";
+import { normalizeSearch } from "@/lib/search";
+
+const resultCopy = {
+  en: { heading: "Results", one: "article", many: "articles", matching: (query: string) => ` matching “${query}”`, topic: (topic: string) => ` in ${topic}` },
+  el: { heading: "Αποτελέσματα", one: "άρθρο", many: "άρθρα", matching: (query: string) => ` για «${query}»`, topic: (topic: string) => ` στην ενότητα «${topic}»` },
+  de: { heading: "Ergebnisse", one: "Beitrag", many: "Beiträge", matching: (query: string) => ` zu „${query}“`, topic: (topic: string) => ` im Bereich „${topic}“` },
+};
 
 const topicFilters = [
   "All",
@@ -40,18 +49,20 @@ function getPostTopic(category: string): Exclude<TopicFilter, "All"> {
 }
 
 export default function Blog() {
+  const { locale } = useLocale();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTopic, setActiveTopic] = useState<TopicFilter>("All");
+  const query = normalizeSearch(searchQuery.trim());
+  const labels = resultCopy[locale];
 
   const filteredPosts = visibleBlogPosts.filter((post) => {
-    const query = searchQuery.trim().toLowerCase();
     const matchesTopic = activeTopic === "All" || getPostTopic(post.category) === activeTopic;
 
     const matchesQuery =
       query.length === 0 ||
-      post.title.toLowerCase().includes(query) ||
-      post.excerpt.toLowerCase().includes(query) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(query));
+      [post.title, post.excerpt, ...post.tags].some(value =>
+        normalizeSearch(`${value} ${translatePageCopy(value, locale)}`).includes(query),
+      );
 
     return matchesTopic && matchesQuery;
   });
@@ -272,12 +283,12 @@ export default function Blog() {
           <section className="site-container">
             <ScrollReveal className="max-w-3xl" width="100%">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-                  Filtered insights
+                  {labels.heading}
                 </p>
                 <h2 className="section-title mt-4 text-gray-950">
-                  {filteredPosts.length} article{filteredPosts.length === 1 ? "" : "s"}
-                  {searchQuery.trim() ? ` matching “${searchQuery.trim()}”` : ""}
-                  {activeTopic !== "All" ? ` in ${activeTopic}` : ""}
+                  {filteredPosts.length} {filteredPosts.length === 1 ? labels.one : labels.many}
+                  {searchQuery.trim() ? labels.matching(searchQuery.trim()) : ""}
+                  {activeTopic !== "All" ? labels.topic(translatePageCopy(activeTopic, locale)) : ""}
                 </h2>
             </ScrollReveal>
 

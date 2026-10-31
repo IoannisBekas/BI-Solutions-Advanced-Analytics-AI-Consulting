@@ -1,6 +1,6 @@
 # BI Solutions Engineering Documentation
 
-Last updated: 2026-07-23
+Last updated: 2026-11-01
 Status: canonical engineer-facing project documentation
 
 ## Purpose
@@ -498,6 +498,14 @@ Behavior:
 - runs Power BI lint/tests
 - builds the repo
 - uploads `dist/public` to GitHub Pages
+
+### Prerendered translations
+
+- `apps/client/src/i18n/pageTranslationOverrides.ts` supplies reviewed Greek and German wording over the generated catalogue.
+- `script/translation-protection.mjs` protects HTML markup and product names during translation generation. Prerendering also preserves `translate="no"` blocks, including original review quotations and native localized graphics.
+- The prehydration bridge retains unchanged strings in mixed reversion queues so native translated labels cannot consume another node's reversion.
+- Browser metadata translation is restricted to readable fields; crawler directives, Open Graph types and technical values remain unchanged.
+- `npm run check:seo` validates translated markup and complete prerendered quotations, and runs translation-protection regression tests.
 
 ### Railway
 

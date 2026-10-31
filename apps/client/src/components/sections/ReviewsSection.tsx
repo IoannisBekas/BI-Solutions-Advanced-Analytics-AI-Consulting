@@ -110,8 +110,27 @@ reviews.sort((a, b) => b.date.localeCompare(a.date));
 
 const REVIEW_ROTATION_INTERVAL_MS = 4500;
 
+const reviewCopy = {
+    en: {
+        open: (source: string) => `Open this review on ${source}?`,
+        position: (index: number, total: number) => `Review ${index} of ${total}`,
+        rating: (value: number) => `${value} out of 5 stars`,
+    },
+    el: {
+        open: (source: string) => `Να ανοίξει αυτή η αξιολόγηση στο ${source};`,
+        position: (index: number, total: number) => `Αξιολόγηση ${index} από ${total}`,
+        rating: (value: number) => `${value} από 5 αστέρια`,
+    },
+    de: {
+        open: (source: string) => `Diese Bewertung auf ${source} öffnen?`,
+        position: (index: number, total: number) => `Bewertung ${index} von ${total}`,
+        rating: (value: number) => `${value} von 5 Sternen`,
+    },
+};
+
 export function ReviewsSection() {
     const { locale } = useLocale();
+    const copy = reviewCopy[locale];
     const dateFormatter = new Intl.DateTimeFormat(locale, {
         month: "short",
         year: "numeric",
@@ -196,7 +215,7 @@ export function ReviewsSection() {
                                     <div className="py-2 md:h-full">
                                         <div
                                             onClick={() => {
-                                                if (window.confirm(`Are you sure you want to open the ${review.source === "linkedin" ? "LinkedIn" : "Google"} Review?`)) {
+                                                if (window.confirm(copy.open(review.source === "linkedin" ? "LinkedIn" : "Google"))) {
                                                     window.open(review.link, "_blank", "noopener,noreferrer");
                                                 }
                                             }}
@@ -205,7 +224,7 @@ export function ReviewsSection() {
                                             <Card className="surface-card--interactive md:h-full">
                                                 <CardHeader>
                                                     <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
-                                                        <div className="flex shrink-0 space-x-1">
+                                                        <div className="flex shrink-0 space-x-1" role="img" aria-label={copy.rating(review.rating)}>
                                                             {[...Array(review.rating)].map((_, i) => (
                                                                 <Star key={i} className="w-4 h-4 text-gray-950 fill-gray-950" />
                                                             ))}
@@ -217,7 +236,7 @@ export function ReviewsSection() {
                                                     <CardTitle className="text-lg font-bold uppercase" translate="no">{review.author}</CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
-                                                    <p className="text-muted-foreground text-base leading-relaxed" translate="no">
+                                                    <p className="text-muted-foreground text-base leading-relaxed" translate="no" lang="en">
                                                         "{review.text}"
                                                     </p>
                                                 </CardContent>
@@ -235,7 +254,7 @@ export function ReviewsSection() {
                                         key={review.id}
                                         type="button"
                                         role="tab"
-                                        aria-label={`Review ${index + 1} of ${reviews.length}`}
+                                        aria-label={copy.position(index + 1, reviews.length)}
                                         aria-selected={index === selectedIndex}
                                         onClick={() => carouselApi?.scrollTo(index)}
                                         className="flex h-11 w-6 items-center justify-center"

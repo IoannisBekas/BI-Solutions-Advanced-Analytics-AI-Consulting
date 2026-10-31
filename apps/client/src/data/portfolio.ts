@@ -11,7 +11,7 @@ export const portfolioCategories = [
     slug: "health-wellness",
     name: {
       en: "Health, wellness & medical",
-      el: "Υγεία, ευεξία & ιατρικά",
+      el: "Υγεία, ευεξία και ιατρικές υπηρεσίες",
       de: "Gesundheit, Wellness & Medizin",
     },
     description: {
@@ -63,7 +63,7 @@ export const portfolioCategories = [
     slug: "web-apps-dashboards",
     name: {
       en: "Web apps & interactive dashboards",
-      el: "Web εφαρμογές & διαδραστικά dashboards",
+      el: "Διαδικτυακές εφαρμογές και διαδραστικά dashboards",
       de: "Webanwendungen & interaktive Dashboards",
     },
     description: {
@@ -87,13 +87,13 @@ export const portfolioCopy = {
   },
   description: {
     en: "Explore Power BI case studies, websites, ecommerce concepts and interactive applications by BI Solutions Group, with project context, interface previews and delivery details.",
-    el: "Εξερευνήστε μελέτες περίπτωσης Power BI, ιστοσελίδες, concepts ηλεκτρονικού εμπορίου και διαδραστικές εφαρμογές της BI Solutions Group, με περιγραφή έργου, προεπισκοπήσεις και στοιχεία υλοποίησης.",
+    el: "Εξερευνήστε μελέτες περίπτωσης Power BI, ιστοσελίδες, σχεδιαστικές προτάσεις ηλεκτρονικού εμπορίου και διαδραστικές εφαρμογές της BI Solutions Group, με περιγραφή έργου, προεπισκοπήσεις και στοιχεία υλοποίησης.",
     de: "Entdecken Sie Power-BI-Fallstudien, Websites, E-Commerce-Konzepte und interaktive Anwendungen der BI Solutions Group mit Projektkontext, Vorschauen und Umsetzungsdetails.",
   },
   caseStudiesDescription: {
     en: "Client delivery and independent Power BI demonstrations, with the reporting challenge, approach and delivered capabilities.",
-    el: "Έργο πελάτη και ανεξάρτητες επιδείξεις Power BI, με το πρόβλημα αναφορών, την προσέγγιση και τις δυνατότητες που παραδόθηκαν.",
-    de: "Kundenprojekte und unabhängige Power-BI-Demonstrationen mit Aufgabenstellung, Vorgehen und gelieferten Funktionen.",
+    el: "Έργο πελάτη και ανεξάρτητα δείγματα Power BI, με την ανάγκη αναφορών, την προσέγγιση και τις λειτουργίες που υλοποιήθηκαν.",
+    de: "Kundenprojekte und unabhängige Power-BI-Beispiele mit Aufgabenstellung, Vorgehen und umgesetzten Funktionen.",
   },
   caseStudyDetails: {
     en: "Read the case study",
@@ -139,22 +139,22 @@ export const portfolioCopy = {
   },
   features: {
     en: "Experience highlights",
-    el: "Χαρακτηριστικά της εμπειρίας",
-    de: "Merkmale des Erlebnisses",
+    el: "Βασικά χαρακτηριστικά",
+    de: "Wichtige Funktionen",
   },
   preview: {
     en: "Real interface preview",
-    el: "Πραγματική προεπισκόπηση διεπαφής",
-    de: "Echte Oberflächenvorschau",
+    el: "Προεπισκόπηση της πραγματικής διεπαφής",
+    de: "Vorschau der tatsächlichen Oberfläche",
   },
   captureNote: {
     en: "Captured from the public project on 31 October 2026. The live interface may change.",
-    el: "Λήψη από το δημόσιο έργο στις 31 Οκτωβρίου 2026. Η ζωντανή διεπαφή ενδέχεται να αλλάξει.",
+    el: "Στιγμιότυπο του δημοσιευμένου έργου στις 31 Οκτωβρίου 2026. Η τρέχουσα διεπαφή ενδέχεται να αλλάξει.",
     de: "Am 31. Oktober 2026 vom öffentlichen Projekt aufgenommen. Die Live-Oberfläche kann sich ändern.",
   },
   note: {
     en: "The collection includes published websites, independent concepts and research tools. Each entry describes the interface; it does not imply a client endorsement or a measured business result.",
-    el: "Η συλλογή περιλαμβάνει δημοσιευμένα websites, ανεξάρτητα concepts και ερευνητικά εργαλεία. Κάθε καταχώριση περιγράφει τη διεπαφή, χωρίς να υποδηλώνει σύσταση πελάτη ή μετρημένο επιχειρηματικό αποτέλεσμα.",
+    el: "Η συλλογή περιλαμβάνει δημοσιευμένες ιστοσελίδες, ανεξάρτητες σχεδιαστικές προτάσεις και ερευνητικά εργαλεία. Κάθε καταχώριση περιγράφει τη διεπαφή, χωρίς να υποδηλώνει έγκριση από πελάτη ή μετρημένο επιχειρηματικό αποτέλεσμα.",
     de: "Die Sammlung umfasst veröffentlichte Websites, unabhängige Konzepte und Forschungswerkzeuge. Jeder Eintrag beschreibt die Oberfläche, ohne eine Kundenempfehlung oder ein gemessenes Geschäftsergebnis zu behaupten.",
   },
   related: {
