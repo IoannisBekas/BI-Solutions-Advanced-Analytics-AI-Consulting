@@ -1,5 +1,5 @@
 import projects from "@shared/portfolio-projects.json";
-import type { Locale } from "@/i18n/config";
+import { localePrefix, type Locale } from "@/i18n/config";
 
 export const portfolioProjects = projects;
 export type PortfolioProject = (typeof projects)[number];
@@ -163,6 +163,11 @@ export function projectImage(
   variant: "cover" | "800" | "social" = "cover",
 ) {
   return `/assets/projects/${project.slug}/${variant}.webp`;
+}
+
+// Search metadata describes the production domain, even in a mounted preview.
+export function portfolioCanonicalUrl(path: string, locale: Locale) {
+  return `https://www.bisolutions.group${localePrefix(locale)}${path}`;
 }
 
 export function projectCategory(project: PortfolioProject) {

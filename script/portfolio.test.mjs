@@ -11,6 +11,11 @@ const manifest = JSON.parse(
 );
 const inventory = JSON.parse(read("shared/search-routes.json"));
 const canonicalOrigin = "https://www.bisolutions.group";
+const moduleScript = read("dist/public/index.html").match(
+  /<script\b[^>]*\btype="module"[^>]*\bsrc="([^"]+)"/,
+)?.[1];
+assert.ok(moduleScript, "the production entrypoint must be present");
+const buildBase = moduleScript.slice(0, moduleScript.indexOf("/assets/"));
 const requestedUrls = [
   "https://e-synergo.gr/",
   "https://stavrosflamouridis.gr/",
@@ -119,7 +124,7 @@ test("the complete directory is crawlable without JavaScript in each language", 
     for (const project of projects) {
       const route = localPath(locale, `/projects/${project.slug}`);
       assert.ok(
-        html.includes(`href="${route}"`),
+        html.includes(`href="${buildBase}${route}"`),
         `${locale}: missing visible ${project.slug} link`,
       );
       assert.ok(
@@ -134,7 +139,7 @@ test("the complete directory is crawlable without JavaScript in each language", 
     for (const category of categoryLinks)
       assert.ok(
         html.includes(
-          `href="${localPath(locale, `/projects/category/${category}`)}"`,
+          `href="${buildBase}${localPath(locale, `/projects/category/${category}`)}"`,
         ),
       );
   }

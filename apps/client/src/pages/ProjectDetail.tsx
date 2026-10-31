@@ -4,12 +4,13 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
 import { ProjectCard } from "@/components/projects/ProjectCard";
-import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { LOCALES } from "@/i18n/config";
 import {
   portfolioProjects,
   portfolioCopy as copy,
   projectImage,
+  portfolioCanonicalUrl,
   projectCategory,
 } from "@/data/portfolio";
 import { withAssetBase } from "@/lib/site";
@@ -19,12 +20,11 @@ import NotFound from "@/pages/NotFound";
 export default function ProjectDetail() {
   const [, params] = useRoute("/projects/:slug");
   const { locale } = useLocale();
-  const localizedHref = useLocalizedHref();
   const project = portfolioProjects.find((item) => item.slug === params?.slug);
   if (!project) return <NotFound />;
   const category = projectCategory(project);
   const path = `/projects/${project.slug}`;
-  const url = `https://www.bisolutions.group${localizedHref(path)}`;
+  const url = portfolioCanonicalUrl(path, locale);
   const related = portfolioProjects
     .filter(
       (item) =>
@@ -63,7 +63,7 @@ export default function ProjectDetail() {
             },
             isPartOf: {
               "@type": "CollectionPage",
-              url: `https://www.bisolutions.group${localizedHref("/projects")}`,
+              url: portfolioCanonicalUrl("/projects", locale),
             },
           },
           {
@@ -74,19 +74,22 @@ export default function ProjectDetail() {
                 "@type": "ListItem",
                 position: 1,
                 name: "BI Solutions Group",
-                item: `https://www.bisolutions.group${localizedHref("/")}`,
+                item: portfolioCanonicalUrl("/", locale),
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: copy.title[locale],
-                item: `https://www.bisolutions.group${localizedHref("/projects")}`,
+                item: portfolioCanonicalUrl("/projects", locale),
               },
               {
                 "@type": "ListItem",
                 position: 3,
                 name: category.name[locale],
-                item: `https://www.bisolutions.group${localizedHref(`/projects/category/${category.slug}`)}`,
+                item: portfolioCanonicalUrl(
+                  `/projects/category/${category.slug}`,
+                  locale,
+                ),
               },
               {
                 "@type": "ListItem",
