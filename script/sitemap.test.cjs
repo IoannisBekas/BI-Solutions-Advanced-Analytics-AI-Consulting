@@ -2,8 +2,39 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const test = require("node:test");
+const vm = require("node:vm");
 const liveBaseline = require("./fixtures/search-routes-live-2026-10-22.json");
-const { inventory, canonicalRoutes, buildSitemap, assertSitemapCoverage } = require("./sitemap.cjs");
+const { inventory, canonicalRoutes, buildSitemap, assertSitemapCoverage, publicRedirects, redirectDocument } = require("./sitemap.cjs");
+
+test("public migration aliases target existing pages and never replace the hidden URLs", () => {
+  const canonical = new Set(canonicalRoutes().map((route) => route.path));
+  const hidden = new Set(["/bnb-companies/", "/btc-companies/", "/sol-companies/", "/us/ai-automation", "/us/power-bi-consulting"]);
+  assert.equal(new Set(publicRedirects.map(({ from }) => from)).size, publicRedirects.length);
+  for (const { from, to } of publicRedirects) {
+    assert.ok(canonical.has(to), to);
+    assert.ok(!canonical.has(from), from);
+    assert.ok(!hidden.has(from), from);
+    assert.ok(!hidden.has(to), to);
+  }
+});
+
+test("static migration pages preserve query strings, fragments and deployment base paths", () => {
+  for (const base of ["/", "/BI-Solutions/"]) {
+    for (const { to } of publicRedirects) {
+      const html = redirectDocument(to, base);
+      assert.ok(html.includes(`rel="canonical" href="${inventory.origin}${to}"`));
+      assert.match(html, /name="robots" content="noindex,follow"/);
+      let destination;
+      vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], {
+        window: { location: {
+          search: "?source=old%2Blink&tag=one&tag=two", hash: "#details",
+          replace(value) { destination = value; },
+        } },
+      });
+      assert.equal(destination, `${base.replace(/\/$/, "")}${to}?source=old%2Blink&tag=one&tag=two#details`);
+    }
+  }
+});
 
 test("the committed sitemap matches the maintained inventory and preserves the live baseline", () => {
   const sitemap = fs.readFileSync(path.join(__dirname, "../apps/client/public/sitemap.xml"), "utf8");

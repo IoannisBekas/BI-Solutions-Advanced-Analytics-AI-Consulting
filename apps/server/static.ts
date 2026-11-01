@@ -2,6 +2,7 @@ import express, { type Express, type Request, type Response } from "express";
 import fs from "fs";
 import path from "path";
 import { serviceDetails } from "../client/src/data/serviceDetails";
+import publicRedirects from "../../shared/public-redirects.json";
 
 function injectScriptNonce(html: string, nonce: string): string {
   // Add nonce="..." to every <script tag that doesn't already have one.
@@ -728,6 +729,13 @@ export function serveStatic(app: Express) {
 
   // Preserve the Quantus workspace redirect after retiring the marketing root.
   redirectLegacyProductPath(app, "/quantus/sectors", "/quantus/workspace/sectors");
+
+  // Keep retired public links working without changing the hidden tracker/US URLs.
+  for (const { from, to } of publicRedirects) {
+    for (const suffix of ["", "/", "/index.html"]) {
+      redirectLegacyProductPath(app, `${from}${suffix}`, to);
+    }
+  }
 
   // The restaurant offer and transition plan now share one canonical landing page.
   for (const suffix of ["", "/", "/index.html"]) {

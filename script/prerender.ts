@@ -2,6 +2,7 @@ import { build as viteBuild } from "vite";
 import { mkdir, readFile, rm, writeFile } from "fs/promises";
 import path from "path";
 import { pathToFileURL } from "url";
+import { createRequire } from "node:module";
 import { getDeployBasePath } from "./deployBase";
 import { buildPreHydrationScript, protectUntranslatedHtml } from "./translation-protection.mjs";
 import {
@@ -17,6 +18,7 @@ import {
 import { pageTranslations } from "../apps/client/src/i18n/pageTranslations.generated";
 
 setPageTranslations(pageTranslations);
+const { publicRedirects, redirectDocument } = createRequire(import.meta.url)("./sitemap.cjs");
 
 // Kept in sync with apps/client/src/components/seo/ssrHead.ts. Declared here
 // too because the SSR bundle is loaded dynamically, without type info.
@@ -295,6 +297,14 @@ export async function prerenderClient() {
     console.log(
       `prerendered ${route}${page.head ? "" : " (no <Seo> data — kept default head)"}`,
     );
+  }
+
+  for (const { from, to } of publicRedirects as Array<{ from: string; to: string }>) {
+    const outFile = path.join(PUBLIC_OUT_DIR, ...from.slice(1).split("/"), "index.html");
+    await mkdir(path.dirname(outFile), { recursive: true });
+    const locale = to.startsWith("/el/") ? "el" : to.startsWith("/de/") ? "de" : "en";
+    await writeFile(outFile, redirectDocument(to, base, locale), "utf-8");
+    console.log(`generated redirect ${from} -> ${to}`);
   }
 
   await rm(SSR_OUT_DIR, { recursive: true, force: true });
