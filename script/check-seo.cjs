@@ -161,6 +161,14 @@ for (const [basePath, locales] of localeGroups) {
   }
 }
 
+// Built images may include the GitHub Pages mount prefix in their public URLs.
+const moduleScript = read(path.join(builtPublic, "index.html")).match(
+  /<script\b[^>]*\btype="module"[^>]*\bsrc="([^"]+)"/,
+)?.[1] || "";
+const buildBase = moduleScript.includes("/assets/")
+  ? new URL(moduleScript, siteOrigin).pathname.split("/assets/")[0]
+  : "";
+
 for (const canonicalUrl of sitemapUrls) {
   const url = new URL(canonicalUrl);
   if (url.origin !== siteOrigin) fail(`Unexpected sitemap origin: ${canonicalUrl}`);
@@ -179,7 +187,11 @@ for (const canonicalUrl of sitemapUrls) {
     const imageUrl = new URL(image, siteOrigin);
     if (imageUrl.origin === siteOrigin) {
       // Version query strings are not part of the deployed filename.
-      const imagePath = path.join(builtPublic, decodeURIComponent(imageUrl.pathname).replace(/^\/+/, ""));
+      const pathname = decodeURIComponent(imageUrl.pathname);
+      const assetPath = buildBase && pathname.startsWith(`${buildBase}/`)
+        ? pathname.slice(buildBase.length)
+        : pathname;
+      const imagePath = path.join(builtPublic, assetPath.replace(/^\/+/, ""));
       if (!fs.existsSync(imagePath) || !fs.statSync(imagePath).isFile() || fs.statSync(imagePath).size === 0) {
         fail(`${routePath} references a missing ${imageName} asset: ${imageUrl.pathname}`);
       }
