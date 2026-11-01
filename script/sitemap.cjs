@@ -1,5 +1,6 @@
 const inventory = require("../shared/search-routes.json");
 const liveBaseline = require("./fixtures/search-routes-live-2026-10-22.json");
+const publicRedirects = require("../shared/public-redirects.json");
 const localeTags = { en: "en", el: "el-GR", de: "de-DE" };
 
 function routeForLocale(route, locale) {
@@ -68,4 +69,29 @@ function assertSitemapCoverage(xml, source = inventory, baseline = liveBaseline)
   return routes;
 }
 
-module.exports = { inventory, canonicalRoutes, buildSitemap, assertSitemapCoverage };
+/** Static-host counterpart to the production server's permanent redirects. */
+function redirectDocument(destination, deployBase = "/", locale = "en") {
+  const target = `${inventory.origin}${destination}`;
+  const deploymentTarget = `${deployBase.replace(/\/$/, "")}${destination}`;
+  const copy = {
+    en: ["Page moved", "This page has moved.", "Continue to the page"],
+    el: ["Η σελίδα μεταφέρθηκε", "Αυτή η σελίδα έχει μεταφερθεί.", "Συνέχεια στη σελίδα"],
+    de: ["Seite verschoben", "Diese Seite wurde verschoben.", "Weiter zur Seite"],
+  }[locale];
+  return `<!doctype html>
+<html lang="${locale}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${copy[0]} | BI Solutions Group</title>
+  <meta name="robots" content="noindex,follow" />
+  <link rel="canonical" href="${target}" />
+  <script>window.location.replace(${JSON.stringify(deploymentTarget)} + window.location.search + window.location.hash);</script>
+  <noscript><meta http-equiv="refresh" content="0;url=${deploymentTarget}" /></noscript>
+</head>
+<body><p>${copy[1]} <a href="${deploymentTarget}">${copy[2]}</a>.</p></body>
+</html>
+`;
+}
+
+module.exports = { inventory, canonicalRoutes, buildSitemap, assertSitemapCoverage, publicRedirects, redirectDocument };

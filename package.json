@@ -16,7 +16,7 @@
     "check": "node ./node_modules/typescript/bin/tsc",
     "generate:translations": "node script/generate-page-translations.mjs",
     "generate:sitemap": "node script/generate-sitemap.mjs",
-    "test:search": "node --test script/sitemap.test.cjs && node --import tsx --test apps/server/canonicalHost.test.ts",
+    "test:search": "node --test script/sitemap.test.cjs && node --import tsx --test apps/server/canonicalHost.test.ts apps/server/publicRedirects.test.ts",
     "check:seo": "npm run test:search && node script/check-seo.cjs && node script/check-translations.mjs && node --test script/translation-quality.test.mjs script/portfolio.test.mjs",
     "scan:env": "node script/scan-env-secrets.cjs",
     "check:encoding": "node script/check-encoding.cjs",

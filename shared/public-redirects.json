@@ -1,0 +1,6 @@
+[
+  { "from": "/case-studies/subscription-bizops-dashboard", "to": "/projects/subscription-bizops-dashboard" },
+  { "from": "/el/case-studies/subscription-bizops-dashboard", "to": "/el/projects/subscription-bizops-dashboard" },
+  { "from": "/de/case-studies/subscription-bizops-dashboard", "to": "/de/projects/subscription-bizops-dashboard" },
+  { "from": "/de/resources/ai-prompt-packs", "to": "/resources/ai-prompt-packs" }
+]
