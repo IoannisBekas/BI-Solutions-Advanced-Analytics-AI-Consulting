@@ -25,6 +25,7 @@ test("lead conversion requires advertising consent and carries a non-personal de
   const events: unknown[][] = [];
   let consent: unknown = null;
   Object.defineProperty(globalThis, "window", { configurable: true, value: {
+    location: { hostname: "www.bisolutions.group" },
     localStorage: { getItem: (key: string) => key === COOKIE_CONSENT_KEY ? JSON.stringify(consent) : null },
     gtag: (...args: unknown[]) => events.push(args),
   } });
