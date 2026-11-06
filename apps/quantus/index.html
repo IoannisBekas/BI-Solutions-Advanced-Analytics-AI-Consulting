@@ -26,12 +26,17 @@
       content="Explore the Quantus workspace on bisolutions.group for cached research reports, signal review, and sector-pack workflows."
     />
     <meta name="twitter:image" content="https://www.bisolutions.group/bi-solutions-logo.png" />
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M1276CBX6M"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-M1276CBX6M');
+      if (["bisolutions.group", "www.bisolutions.group"].includes(window.location.hostname)) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-M1276CBX6M');
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-M1276CBX6M';
+        document.head.appendChild(script);
+      }
     </script>
   </head>
   <body>

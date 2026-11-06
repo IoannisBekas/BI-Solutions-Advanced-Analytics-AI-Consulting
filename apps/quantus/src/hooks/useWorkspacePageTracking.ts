@@ -28,7 +28,8 @@ export function useWorkspacePageTracking(route: RouteState) {
         const pageTitle = getWorkspacePageTitle(route);
         document.title = pageTitle;
 
-        if (typeof window.gtag === 'function') {
+        if (["bisolutions.group", "www.bisolutions.group"].includes(window.location.hostname) &&
+            typeof window.gtag === 'function') {
             window.gtag('config', 'G-M1276CBX6M', {
                 page_path: route.path,
                 page_title: pageTitle,

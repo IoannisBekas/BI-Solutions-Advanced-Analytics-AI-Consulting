@@ -10,6 +10,11 @@ export const ADS_ID = "AW-18432612818";
 export const LEAD_CONVERSION = `${ADS_ID}/QZdDCIrolO8cENKzrdVE`;
 export type MeasurementConsent = { analytics: boolean; ads: boolean };
 
+function isProductionMeasurementHost() {
+  return typeof window !== "undefined" &&
+    ["bisolutions.group", "www.bisolutions.group"].includes(window.location.hostname);
+}
+
 export function readMeasurementConsent(): MeasurementConsent | null {
   if (typeof window === "undefined") return null;
   try {
@@ -41,6 +46,7 @@ function consentSignals(consent: MeasurementConsent) {
 }
 
 export function initializeMeasurement() {
+  if (!isProductionMeasurementHost()) return;
   const consent = readMeasurementConsent();
   if (!consent || (!consent.analytics && !consent.ads)) return;
   const analyticsWindow = window as AnalyticsWindow;
@@ -65,6 +71,7 @@ export function initializeMeasurement() {
 }
 
 export function applyMeasurementConsent(consent: MeasurementConsent) {
+  if (!isProductionMeasurementHost()) return;
   const analyticsWindow = window as AnalyticsWindow;
   analyticsWindow.gtag?.("consent", "update", consentSignals(consent));
   for (const cookie of document.cookie.split(";")) {
@@ -86,7 +93,7 @@ export function hasAnalyticsConsent() {
 
 // Only call after a successful enquiry response; never pass form contents.
 export function trackLeadConversion(inquiryId?: string) {
-  if (readMeasurementConsent()?.ads !== true) return;
+  if (!isProductionMeasurementHost() || readMeasurementConsent()?.ads !== true) return;
   try {
     initializeMeasurement();
     (window as AnalyticsWindow).gtag?.("event", "conversion", {
@@ -109,7 +116,7 @@ export function trackEvent(
   name: string,
   params: AnalyticsParams = {},
 ) {
-  if (typeof window === "undefined") {
+  if (!isProductionMeasurementHost()) {
     return;
   }
 
