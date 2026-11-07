@@ -1,26 +1,26 @@
 {
   "currency": "USD",
   "source": "Daily closes from Yahoo Finance",
-  "updatedAt": "2026-11-06T01:57:06.497Z",
+  "updatedAt": "2026-11-07T01:30:31.252Z",
   "quotes": {
     "BNC": {
-      "close": 5.01,
-      "date": "2026-11-04",
+      "close": 4.57,
+      "date": "2026-11-05",
       "source": "Yahoo Finance"
     },
     "NA": {
-      "close": 1.62,
-      "date": "2026-11-04",
+      "close": 1.4,
+      "date": "2026-11-05",
       "source": "Yahoo Finance"
     },
     "BNBX": {
-      "close": 0.1,
-      "date": "2026-11-04",
+      "close": 0.08,
+      "date": "2026-11-05",
       "source": "Yahoo Finance"
     },
     "LIMN": {
-      "close": 2.794,
-      "date": "2026-11-04",
+      "close": 2.63,
+      "date": "2026-11-05",
       "source": "Yahoo Finance"
     }
   }
