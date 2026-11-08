@@ -33,9 +33,9 @@ export function Footer() {
     { label: t.footer.servicesOverview, href: "/services" },
     ...serviceSlugs.map((slug) => ({
       label: t.services.items[slug]?.title ?? serviceFallbackLabels[slug],
-      href: locale === "en" && slug === "business-intelligence-semantic-modeling"
+      href: locale !== "de" && slug === "business-intelligence-semantic-modeling"
         ? "/services/power-bi-consulting"
-        : locale === "en" && slug === "advanced-analytics-ai"
+        : locale !== "de" && slug === "advanced-analytics-ai"
           ? "/services/ai-automation"
           : `/services#${slug}`,
     })),

@@ -7,7 +7,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
 import { getServiceDetailBySlug } from "@/data/serviceDetails";
+import { greekServiceDetailLabels } from "@/data/serviceDetails.el";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { pathForLocale } from "@/i18n/config";
+import { translatePageCopy } from "@/i18n/localizeDocument";
 import { campaignAttribution } from "@/lib/leadAttribution";
+import { withSiteBase } from "@/lib/site";
 import NotFound from "@/pages/NotFound";
 
 const pageSections = [
@@ -15,13 +20,15 @@ const pageSections = [
   { id: "deliverables", label: "Deliverables" },
   { id: "process", label: "How we work" },
   { id: "scope", label: "Scope & support" },
+  { id: "client-case-study", label: "Client case study" },
   { id: "questions", label: "Questions" },
-];
+] as const;
 
 export default function ServiceDetail({ slug: providedSlug }: { slug?: string }) {
   const params = useParams<{ slug: string }>();
+  const { locale, t } = useLocale();
   const slug = providedSlug ?? params.slug;
-  const service = slug ? getServiceDetailBySlug(slug) : undefined;
+  const service = slug ? getServiceDetailBySlug(slug, locale) : undefined;
   const [campaignSearch, setCampaignSearch] = useState("");
   useEffect(() => {
     setCampaignSearch(window.location.search);
@@ -29,7 +36,11 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
 
   if (!service) return <NotFound />;
 
-  const url = `https://www.bisolutions.group${service.path}`;
+  const label = (value: keyof typeof greekServiceDetailLabels) =>
+    locale === "el" ? greekServiceDetailLabels[value] : value;
+  const origin = "https://www.bisolutions.group";
+  const url = `${origin}${pathForLocale(service.path, locale)}`;
+  const homeLabel = translatePageCopy("Home", locale);
   const projectParams = new URLSearchParams(campaignAttribution(campaignSearch));
   projectParams.set("source", "service-detail");
   projectParams.set("service", service.slug);
@@ -42,7 +53,7 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
         title={service.seoTitle}
         description={service.description}
         path={service.path}
-        translatedLocales={["en"]}
+        translatedLocales={["en", "el"]}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -63,8 +74,8 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.bisolutions.group/" },
-              { "@type": "ListItem", position: 2, name: "Services", item: "https://www.bisolutions.group/services" },
+              { "@type": "ListItem", position: 1, name: homeLabel, item: `${origin}${pathForLocale("/", locale)}` },
+              { "@type": "ListItem", position: 2, name: t.nav.services, item: `${origin}${pathForLocale("/services", locale)}` },
               { "@type": "ListItem", position: 3, name: service.title, item: url },
             ],
           },
@@ -74,10 +85,10 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
 
       <main>
         <section className="site-container page-top pb-12 md:pb-16">
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-            <Link href="/" className="underline-offset-4 hover:underline">Home</Link>
+          <nav aria-label={label("Breadcrumb")} className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+            <Link href="/" className="underline-offset-4 hover:underline">{homeLabel}</Link>
             <span aria-hidden="true">/</span>
-            <Link href="/services" className="underline-offset-4 hover:underline">Services</Link>
+            <Link href="/services" className="underline-offset-4 hover:underline">{t.nav.services}</Link>
             <span aria-hidden="true">/</span>
             <span aria-current="page" className="text-gray-950">{service.title}</span>
           </nav>
@@ -85,29 +96,29 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
           <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-end lg:gap-16">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{service.eyebrow}</p>
-              <h1 className="page-title mt-5">{service.title}</h1>
+              <h1 className={`page-title mt-5${locale === "el" ? " max-sm:text-[clamp(1.75rem,9vw,2.25rem)]" : ""}`}>{service.title}</h1>
               <p className="body-lead reading-width mt-7 text-gray-700">{service.introduction}</p>
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
                 <Button asChild className="min-h-12 rounded-full bg-black px-6 text-white hover:bg-gray-800">
-                  <Link href={projectHref}>Discuss your project <ArrowRight aria-hidden="true" /></Link>
+                  <Link href={projectHref}>{label("Discuss your project")} <ArrowRight aria-hidden="true" /></Link>
                 </Button>
                 <Link href="/about" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">
-                  Meet Ioannis <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  {label("Meet Ioannis")} <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
               </div>
             </div>
 
             <aside className="content-panel border-gray-950 bg-gray-950 text-white">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">A useful starting point</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">{label("A useful starting point")}</p>
               <p className="mt-6 text-xl leading-relaxed tracking-tight">{service.startingPoint}</p>
-              <p className="mt-7 border-t border-white/20 pt-5 text-sm leading-relaxed text-white/70">Clear scope, agreed fees, review points, and a documented handoff.</p>
+              <p className="mt-7 border-t border-white/20 pt-5 text-sm leading-relaxed text-white/70">{label("Clear scope, agreed fees, review points, and a documented handoff.")}</p>
             </aside>
           </div>
 
-          <nav aria-label="On this page" className="mt-14 flex flex-wrap gap-x-7 gap-y-1 border-y border-gray-950/20 py-3">
-            {pageSections.map((section) => (
+          <nav aria-label={label("On this page")} className="mt-14 flex flex-wrap gap-x-7 gap-y-1 border-y border-gray-950/20 py-3">
+            {pageSections.filter(({ id }) => id !== "client-case-study" || service.caseStudy).map((section) => (
               <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-gray-700 underline-offset-4 hover:underline">
-                {section.label}<ArrowDown aria-hidden="true" className="h-3.5 w-3.5" />
+                {label(section.label)}<ArrowDown aria-hidden="true" className="h-3.5 w-3.5" />
               </a>
             ))}
           </nav>
@@ -116,8 +127,8 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
         <div className="site-container">
           <section id="fit" className="grid scroll-mt-28 gap-8 pb-14 pt-3 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,1fr)] lg:gap-20">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">When to bring us in</p>
-              <h2 className="section-title mt-4">Start with a problem your team recognizes.</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("When to bring us in")}</p>
+              <h2 className="section-title mt-4">{label("Start with a problem your team recognizes.")}</h2>
             </div>
             <ul className="divide-y divide-gray-950/15 border-y border-gray-950/15">
               {service.fit.map((item) => (
@@ -129,9 +140,9 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
           </section>
 
           <section id="deliverables" className="scroll-mt-28 border-t border-gray-950/20 py-14 md:py-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">Deliverables</p>
-            <h2 className="section-title mt-4">What the engagement can include.</h2>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-700">Select the work that addresses your requirement. The agreed scope defines which deliverables are included.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Deliverables")}</p>
+            <h2 className="section-title mt-4">{label("What the engagement can include.")}</h2>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-700">{label("Select the work that addresses your requirement. The agreed scope defines which deliverables are included.")}</p>
             <div className="mt-9 grid gap-x-12 md:grid-cols-2">
               {service.deliverables.map((item, index) => (
                 <article key={item.title} className="border-t border-gray-950/15 py-7">
@@ -144,8 +155,8 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
           </section>
 
           <section id="process" className="scroll-mt-28 border-t border-gray-950/20 py-14 md:py-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">How we work</p>
-            <h2 className="section-title mt-4">From the first question to a usable handoff.</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("How we work")}</p>
+            <h2 className="section-title mt-4">{label("From the first question to a usable handoff.")}</h2>
             <ol className="mt-9 grid gap-x-8 sm:grid-cols-2 xl:grid-cols-4">
               {service.stages.map((stage, index) => (
                 <li key={stage.title} className="border-t border-gray-950/20 py-6">
@@ -158,44 +169,55 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
           </section>
 
           <section id="scope" className="scroll-mt-28 border-t border-gray-950/20 py-14 md:py-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">Scope & support</p>
-            <h2 className="section-title mt-4">Make the dependencies clear before the build.</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Scope & support")}</p>
+            <h2 className="section-title mt-4">{label("Make the dependencies clear before the build.")}</h2>
             <div className="mt-9 grid gap-10 lg:grid-cols-2 lg:gap-16">
               <div>
-                <h3 className="card-title">What to prepare</h3>
+                <h3 className="card-title">{label("What to prepare")}</h3>
                 <ul className="mt-5 space-y-4">
                   {service.prerequisites.map((item) => (
                     <li key={item} className="flex gap-3 text-sm leading-relaxed text-gray-700"><Check aria-hidden="true" className="mt-1 h-4 w-4 shrink-0" /><span>{item}</span></li>
                   ))}
                 </ul>
-                <p className="mt-6 text-sm leading-relaxed text-gray-600">A short description is enough for the initial enquiry. Share sensitive files only after access and data-handling arrangements are agreed.</p>
+                <p className="mt-6 text-sm leading-relaxed text-gray-600">{label("A short description is enough for the initial enquiry. Share sensitive files only after access and data-handling arrangements are agreed.")}</p>
               </div>
               <div>
-                <h3 className="card-title">What determines scope and fees</h3>
+                <h3 className="card-title">{label("What determines scope and fees")}</h3>
                 <ul className="mt-5 divide-y divide-gray-950/15 border-y border-gray-950/15">
                   {service.scopeDrivers.map((item) => <li key={item} className="py-3 text-sm leading-relaxed text-gray-700">{item}</li>)}
                 </ul>
               </div>
             </div>
             <div className="mt-10 grid gap-4 border-l-2 border-gray-950 pl-5 md:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)] md:gap-8 md:pl-7">
-              <h3 className="card-title">After the handoff</h3>
+              <h3 className="card-title">{label("After the handoff")}</h3>
               <p className="text-sm leading-relaxed text-gray-700">{service.maintenance}</p>
             </div>
           </section>
 
+          {service.caseStudy && (
+            <section id="client-case-study" className="content-panel mb-8 scroll-mt-28">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Client case study")}</p>
+              <h2 className="section-title mt-4">{service.caseStudy.title}</h2>
+              <p className="mt-4 max-w-3xl text-sm leading-relaxed text-gray-700">{service.caseStudy.description}</p>
+              <a href={withSiteBase(service.caseStudy.href)} hrefLang="en" className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">
+                {label("Read the case study in English")} <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+              </a>
+            </section>
+          )}
+
           {service.demonstration && (
             <section className="mb-14 rounded-2xl border border-gray-950/20 bg-white/45 p-6 sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">Independent portfolio demonstration</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Independent portfolio demonstration")}</p>
               <h2 className="section-title mt-4">{service.demonstration.title}</h2>
               <p className="mt-4 max-w-3xl text-sm leading-relaxed text-gray-700">{service.demonstration.description}</p>
-              <Link href={service.demonstration.href} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">Explore the demonstration <ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
+              <Link href={service.demonstration.href} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">{label("Explore the demonstration")} <ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
             </section>
           )}
 
           <section id="questions" className="grid scroll-mt-28 gap-8 border-t border-gray-950/20 py-14 md:py-16 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)] lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">Questions before we start</p>
-              <h2 className="section-title mt-4">The practical details.</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Questions before we start")}</p>
+              <h2 className="section-title mt-4">{label("The practical details.")}</h2>
             </div>
             <div className="divide-y divide-gray-950/20 border-y border-gray-950/20">
               {service.questions.map((item) => (
@@ -210,8 +232,8 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
           </section>
 
           <section className="border-t border-gray-950/20 py-14 md:py-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">Further reading</p>
-            <h2 className="section-title mt-4">Useful context for the next conversation.</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Further reading")}</p>
+            <h2 className="section-title mt-4">{label("Useful context for the next conversation.")}</h2>
             <div className="mt-9 grid gap-x-8 md:grid-cols-3">
               {service.resources.map((resource) => (
                 <Link key={resource.href} href={resource.href} className="group border-t border-gray-950/20 py-6">
@@ -220,19 +242,19 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
                 </Link>
               ))}
             </div>
-            <Link href={service.relatedService.href} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">Related service: {service.relatedService.label}<ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
+            <Link href={service.relatedService.href} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">{label("Related service:")} {service.relatedService.label}<ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
           </section>
         </div>
 
         <section className="bg-[#0a0b0d] py-14 text-white md:py-20">
           <div className="site-container grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Start with your requirement</p>
-              <h2 className="section-title mt-4 max-w-3xl">Tell us what needs to work better.</h2>
-              <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70">Describe the process, current tools, and the result your team needs. We review the context and agree the next step with you.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">{label("Start with your requirement")}</p>
+              <h2 className="section-title mt-4 max-w-3xl">{label("Tell us what needs to work better.")}</h2>
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70">{label("Describe the process, current tools, and the result your team needs. We review the context and agree the next step with you.")}</p>
             </div>
             <Button asChild className="min-h-12 w-fit rounded-full bg-white px-6 text-black hover:bg-gray-200">
-              <Link href={projectHref}>Discuss your project<ArrowRight aria-hidden="true" /></Link>
+              <Link href={projectHref}>{label("Discuss your project")}<ArrowRight aria-hidden="true" /></Link>
             </Button>
           </div>
         </section>

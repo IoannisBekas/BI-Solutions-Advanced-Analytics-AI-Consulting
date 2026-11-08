@@ -191,7 +191,7 @@ function buildHeadBlock(head: SsrHeadData) {
 
   for (const alternate of head.alternates ?? []) {
     lines.push(
-      `<link rel="alternate" hreflang="${escapeHtmlAttribute(alternate.hreflang)}" href="${escapeHtmlAttribute(alternate.href)}" />`,
+      `<link rel="alternate" hreflang="${escapeHtmlAttribute(alternate.hreflang)}" href="${escapeHtmlAttribute(alternate.href)}" data-seo-alternate="" />`,
     );
   }
 

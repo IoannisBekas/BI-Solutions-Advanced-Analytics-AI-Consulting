@@ -1,3 +1,6 @@
+import type { Locale } from "@/i18n/config";
+import { greekServiceDetails } from "./serviceDetails.el";
+
 export interface ServiceDetail {
   slug: string;
   path: string;
@@ -17,6 +20,7 @@ export interface ServiceDetail {
   questions: { question: string; answer: string }[];
   resources: { label: string; href: string; description: string }[];
   demonstration?: { title: string; href: string; description: string };
+  caseStudy?: { title: string; href: string; description: string };
   relatedService: { label: string; href: string };
 }
 
@@ -287,6 +291,8 @@ export const serviceDetails: ServiceDetail[] = [
   },
 ];
 
-export function getServiceDetailBySlug(slug: string) {
-  return serviceDetails.find((service) => service.slug === slug);
+export function getServiceDetailBySlug(slug: string, locale: Locale = "en") {
+  const service = serviceDetails.find((detail) => detail.slug === slug);
+  const localizedCopy = locale === "el" ? greekServiceDetails[slug] : undefined;
+  return service && localizedCopy ? { ...service, ...localizedCopy } : service;
 }

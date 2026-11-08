@@ -18,6 +18,20 @@ const publicRoutes = [
     robots: "index,follow",
   },
   {
+    path: "/el/services/power-bi-consulting",
+    title: "Συμβουλευτική Power BI & Dashboards",
+    body: ["Συμβουλευτική Power BI", "Risenfire", "Dataverse", "/case-studies/risenfire-workforce-reporting"],
+    canonical: "https://www.bisolutions.group/el/services/power-bi-consulting",
+    robots: "index,follow",
+  },
+  {
+    path: "/el/services/ai-automation",
+    title: "Αυτοματοποίηση ροών με AI για επιχειρήσεις",
+    body: ["Αυτοματοποίηση ροών εργασίας με AI", "Διασύνδεση συστημάτων και ανθρώπινη έγκριση"],
+    canonical: "https://www.bisolutions.group/el/services/ai-automation",
+    robots: "index,follow",
+  },
+  {
     path: "/",
     title: "AI, BI & Web App Development",
     body: "Better reporting. Practical AI. Systems that last.",
@@ -238,7 +252,8 @@ const redirectRoutes = Object.entries(serviceRedirectAnchors).map(
 );
 
 redirectRoutes.push(
-  { path: "/el/services/power-bi-consulting?ref=test", location: "/services/power-bi-consulting?ref=test" },
+  { path: "/el/services/business-intelligence-semantic-modeling?ref=test", location: "/el/services/power-bi-consulting?ref=test" },
+  { path: "/el/services/ai-automation-consulting/?ref=test", location: "/el/services/ai-automation?ref=test" },
   { path: "/de/services/ai-automation?ref=test", location: "/services/ai-automation?ref=test" },
   { path: "/bnb-companies?utm_source=smoke", location: "/bnb-companies/?utm_source=smoke" },
   { path: "/sol-companies", location: "/sol-companies/" },

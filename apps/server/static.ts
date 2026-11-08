@@ -748,9 +748,7 @@ export function serveStatic(app: Express) {
     "ai-automation-consulting": "/services/ai-automation",
   };
   for (const slug of ["power-bi-consulting", "ai-automation"]) {
-    for (const locale of ["el", "de"]) {
-      redirectLegacyProductPath(app, `/${locale}/services/${slug}`, `/services/${slug}`);
-    }
+    redirectLegacyProductPath(app, `/de/services/${slug}`, `/services/${slug}`);
   }
 
   const retiredServiceRoutes: Record<string, string> = {

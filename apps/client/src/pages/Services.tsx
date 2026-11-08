@@ -256,12 +256,12 @@ function ServiceChapter({ service, expanded, hidden, onToggle }: ChapterProps) {
                   </div>
                 )}
 
-                {locale === "en" && service.slug === "business-intelligence-semantic-modeling" && (
+                {locale !== "de" && service.slug === "business-intelligence-semantic-modeling" && (
                   <Link
                     href="/services/power-bi-consulting"
                     className="mt-8 flex min-h-11 items-center gap-2 text-sm font-semibold text-gray-950 underline decoration-gray-400 underline-offset-4"
                   >
-                    Explore Power BI consulting <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                    {locale === "el" ? "Συμβουλευτική Power BI" : "Explore Power BI consulting"} <ArrowRight aria-hidden="true" className="h-4 w-4" />
                   </Link>
                 )}
                 <Link
@@ -293,9 +293,9 @@ function AiChapter({ service, expanded, hidden, onToggle, query }: ChapterProps 
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600">
               {service.description}
             </p>
-            {locale === "en" && (
+            {locale !== "de" && (
               <Link href="/services/ai-automation" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">
-                Explore AI workflow automation <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                {locale === "el" ? "Αυτοματοποίηση ροών εργασίας με AI" : "Explore AI workflow automation"} <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </Link>
             )}
           </div>

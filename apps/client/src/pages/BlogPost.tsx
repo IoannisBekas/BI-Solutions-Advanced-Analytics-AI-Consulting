@@ -23,7 +23,7 @@ import {
   getRelatedPosts,
   isBlogPostIndexable,
 } from "@/data/blogData";
-import { getPublicSiteOrigin, withPublicSiteOrigin } from "@/lib/site";
+import { CANONICAL_SITE_ORIGIN, getPublicSiteOrigin, withPublicSiteOrigin, withSiteBase } from "@/lib/site";
 import { trackEvent } from "@/lib/analytics";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { translatePageCopy } from "@/i18n/localizeDocument";
@@ -39,15 +39,15 @@ const ARTICLE_AUTHOR = {
 function getRelatedService(category: string, locale: Locale) {
   if (category.includes("BI")) {
     return {
-      href: locale === "en" ? "/services/power-bi-consulting" : "/services#business-intelligence-semantic-modeling",
-      label: "Explore BI & Power BI services",
+      href: locale === "de" ? "/services#business-intelligence-semantic-modeling" : "/services/power-bi-consulting",
+      label: locale === "el" ? "Συμβουλευτική Power BI" : "Explore BI & Power BI services",
     };
   }
 
   if (category.includes("AI") || category.includes("MLOps")) {
     return {
-      href: locale === "en" ? "/services/ai-automation" : "/services#advanced-analytics-ai",
-      label: "Explore AI consulting",
+      href: locale === "de" ? "/services#advanced-analytics-ai" : "/services/ai-automation",
+      label: locale === "el" ? "Αυτοματοποίηση ροών εργασίας με AI" : "Explore AI consulting",
     };
   }
 
@@ -139,12 +139,30 @@ function renderBoldText(value: string, keyOffset: number): ReactNode[] {
     });
 }
 
+const greekServiceDetailPaths = new Map([
+  ["business-intelligence-semantic-modeling", "/el/services/power-bi-consulting"],
+  ["power-bi-consulting", "/el/services/power-bi-consulting"],
+  ["ai-automation-consulting", "/el/services/ai-automation"],
+  ["ai-consulting-greece", "/el/services/ai-automation"],
+  ["ai-automation", "/el/services/ai-automation"],
+]);
+
 function sanitizeHref(value: string, locale: Locale) {
   try {
-    const parsed = new URL(value, getPublicSiteOrigin());
+    const siteOrigin = getPublicSiteOrigin();
+    const parsed = new URL(value, siteOrigin);
     if (parsed.protocol === "http:" || parsed.protocol === "https:" || parsed.protocol === "mailto:") {
       const serviceMatch = parsed.pathname.match(/^\/services\/([^/]+)\/?$/);
       if (serviceMatch) {
+        const greekServicePath = greekServiceDetailPaths.get(serviceMatch[1]);
+        if (
+          locale === "el" &&
+          greekServicePath &&
+          (parsed.origin === siteOrigin || parsed.origin === CANONICAL_SITE_ORIGIN)
+        ) {
+          return withSiteBase(greekServicePath);
+        }
+
         const serviceAnchors: Record<string, string> = {
           "ai-consulting-greece": "advanced-analytics-ai",
           "digital-transformation-cloud-migration": "data-strategy-governance",

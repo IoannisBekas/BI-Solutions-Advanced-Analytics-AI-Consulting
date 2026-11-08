@@ -5,6 +5,8 @@ import { assertTranslationMarkup } from "./translation-protection.mjs";
 
 const root = process.cwd();
 const routeInventory = JSON.parse(await fs.readFile(path.join(root, "shared", "search-routes.json"), "utf8"));
+const publicRedirects = JSON.parse(await fs.readFile(path.join(root, "shared", "public-redirects.json"), "utf8"));
+const staticRedirectTargets = new Map(publicRedirects.map(({ from, to }) => [`${from}/index.html`, to]));
 const nativeLocaleRoutes = new Set(routeInventory.routes
   .filter((route) => route.render === "react" && !route.locales.includes("en"))
   .flatMap((route) => route.locales.map((locale) => `${locale}${route.path}/index.html`)));
@@ -214,8 +216,9 @@ for (const locale of localizedRoots) {
 
   for (const localizedPage of localizedPages) {
     const relativePath = path.relative(localeRoot, localizedPage);
+    const localizedRoute = `${locale}/${relativePath.split(path.sep).join("/")}`;
     // Native localized pages have no English counterpart to compare against.
-    if (nativeLocaleRoutes.has(`${locale}/${relativePath.split(path.sep).join("/")}`)) continue;
+    if (nativeLocaleRoutes.has(localizedRoute)) continue;
     // The former restaurant page is an unindexed static redirect, not a translation.
     if (locale === "el" && relativePath.split(path.sep).join("/") === "meiosi-kostous-delivery/index.html") {
       const redirectHtml = await fs.readFile(localizedPage, "utf8");
@@ -233,6 +236,16 @@ for (const locale of localizedRoots) {
       if (!fallbackHtml.includes('<html lang="en"') ||
           !fallbackHtml.includes('rel="canonical" href="https://www.bisolutions.group/resources/ai-prompt-packs"')) {
         throw new Error("The German AI learning fallback must declare its English language and canonical URL.");
+      }
+      continue;
+    }
+    // Registry aliases render a redirect document rather than a translated page.
+    const redirectTarget = staticRedirectTargets.get(`/${localizedRoute}`);
+    if (redirectTarget) {
+      const redirectHtml = await fs.readFile(localizedPage, "utf8");
+      if (!redirectHtml.includes(`rel="canonical" href="${routeInventory.origin}${redirectTarget}"`) ||
+          !redirectHtml.includes('content="noindex,follow"')) {
+        throw new Error(`${localizedRoute}: static redirect has incorrect canonical or robots metadata.`);
       }
       continue;
     }
