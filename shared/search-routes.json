@@ -413,20 +413,22 @@
     {
       "path": "/services/power-bi-consulting",
       "locales": [
-        "en"
+        "en",
+        "el"
       ],
       "render": "react",
-      "lastmod": "2026-10-22",
+      "lastmod": "2026-11-08",
       "changefreq": "monthly",
       "priority": "0.8"
     },
     {
       "path": "/services/ai-automation",
       "locales": [
-        "en"
+        "en",
+        "el"
       ],
       "render": "react",
-      "lastmod": "2026-10-22",
+      "lastmod": "2026-11-08",
       "changefreq": "monthly",
       "priority": "0.8"
     },

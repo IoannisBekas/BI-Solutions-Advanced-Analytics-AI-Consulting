@@ -926,16 +926,36 @@
   <url>
     <loc>https://www.bisolutions.group/services/power-bi-consulting</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/power-bi-consulting" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services/power-bi-consulting" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/power-bi-consulting" />
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/services/power-bi-consulting</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/power-bi-consulting" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services/power-bi-consulting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/power-bi-consulting" />
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.bisolutions.group/services/ai-automation</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/ai-automation" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services/ai-automation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/ai-automation" />
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/services/ai-automation</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/ai-automation" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/services/ai-automation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/ai-automation" />
+    <lastmod>2026-11-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

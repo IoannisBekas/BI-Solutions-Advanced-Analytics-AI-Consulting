@@ -202,6 +202,24 @@ for (const canonicalUrl of sitemapUrls) {
   if (attribute(canonicalTag, "href") !== canonicalUrl) {
     fail(`${routePath} has an incorrect canonical URL.`);
   }
+  const { path: basePath } = splitLocalizedPath(routePath);
+  if (/^\/services\/(?:power-bi-consulting|ai-automation)$/.test(basePath)) {
+    const expected = new Map([
+      ["en", localizedUrl(basePath, "en")],
+      ["el-GR", localizedUrl(basePath, "el")],
+      ["x-default", localizedUrl(basePath, "en")],
+    ]);
+    const alternates = (html.match(/<link\b[^>]*>/gi) || [])
+      .filter((tag) => attribute(tag, "rel") === "alternate");
+    for (const tag of alternates) {
+      const language = attribute(tag, "hreflang");
+      if (expected.get(language) !== attribute(tag, "href") || !tag.includes('data-seo-alternate=""')) {
+        fail(`${routePath} has an incorrect or duplicate ${language || "blank"} HTML alternate.`);
+      }
+      expected.delete(language);
+    }
+    if (expected.size) fail(`${routePath} is missing HTML alternates: ${[...expected.keys()].join(", ")}.`);
+  }
   if (attribute(robotsTag, "content") !== "index,follow") {
     fail(`${routePath} must be indexable because it is in the sitemap.`);
   }
@@ -217,7 +235,7 @@ for (const canonicalUrl of sitemapUrls) {
     fail(`${routePath} contains FAQPage schema, which is not useful for this commercial site.`);
   }
 
-  const expectedType = expectedSchemaType(splitLocalizedPath(routePath).path);
+  const expectedType = expectedSchemaType(basePath);
   if (expectedType && !schemaTypes.has(expectedType)) {
     fail(`${routePath} is missing ${expectedType} structured data.`);
   }

@@ -26,11 +26,11 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     const path = localePath !== "/" && localePath.endsWith("/")
       ? localePath.slice(0, -1)
       : localePath;
-    const englishOnlyService = path === "/services/power-bi-consulting" || path === "/services/ai-automation";
+    const focusedService = path === "/services/power-bi-consulting" || path === "/services/ai-automation";
     const englishOnlyCase = path === "/case-studies/risenfire-workforce-reporting";
     const targetPath = target !== "en" && englishOnlyCase
       ? "/"
-      : englishOnlyService && target !== "en" ? "/services" : path;
+      : focusedService && target === "de" ? "/services" : path;
 
     return `${SITE_BASE_PATH}${pathForLocale(targetPath, target)}`;
   };

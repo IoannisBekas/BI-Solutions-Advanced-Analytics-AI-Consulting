@@ -2,5 +2,7 @@
   { "from": "/case-studies/subscription-bizops-dashboard", "to": "/projects/subscription-bizops-dashboard" },
   { "from": "/el/case-studies/subscription-bizops-dashboard", "to": "/el/projects/subscription-bizops-dashboard" },
   { "from": "/de/case-studies/subscription-bizops-dashboard", "to": "/de/projects/subscription-bizops-dashboard" },
-  { "from": "/de/resources/ai-prompt-packs", "to": "/resources/ai-prompt-packs" }
+  { "from": "/de/resources/ai-prompt-packs", "to": "/resources/ai-prompt-packs" },
+  { "from": "/el/services/business-intelligence-semantic-modeling", "to": "/el/services/power-bi-consulting" },
+  { "from": "/el/services/ai-automation-consulting", "to": "/el/services/ai-automation" }
 ]

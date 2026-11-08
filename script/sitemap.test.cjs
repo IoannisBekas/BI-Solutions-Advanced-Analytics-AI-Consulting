@@ -49,7 +49,15 @@ test("the release adds the approved service, restaurant, client case and portfol
   const categories = [...new Set(projects.map((project) => project.category))];
   const projectPaths = ["/projects", ...categories.map((category) => `/projects/category/${category}`), ...projects.map((project) => `/projects/${project.slug}`)];
   const portfolioAdditions = projectPaths.flatMap((projectPath) => [projectPath, `/el${projectPath}`, `/de${projectPath}`]);
-  assert.deepEqual(additions.sort(), ["/case-studies/risenfire-workforce-reporting", "/el/online-paraggelies", "/services/ai-automation", "/services/power-bi-consulting", ...portfolioAdditions].sort());
+  assert.deepEqual(additions.sort(), [
+    "/case-studies/risenfire-workforce-reporting",
+    "/el/online-paraggelies",
+    "/services/ai-automation",
+    "/el/services/ai-automation",
+    "/services/power-bi-consulting",
+    "/el/services/power-bi-consulting",
+    ...portfolioAdditions,
+  ].sort());
 });
 
 test("dropping a translated URL from XML fails coverage", () => {
@@ -73,15 +81,18 @@ test("duplicate sitemap URLs and duplicate inventory routes fail", () => {
   assert.throws(() => assertSitemapCoverage(buildSitemap(changed), changed), /Duplicate routes/);
 });
 
-test("focused services stay English-only while US pages retain their own canonical URLs", () => {
+test("focused services have English and Greek alternates while US pages retain their own canonical URLs", () => {
   const routes = canonicalRoutes();
   for (const slug of ["power-bi-consulting", "ai-automation"]) {
     const focused = routes.filter((route) => route.path.endsWith(`/services/${slug}`));
-    assert.deepEqual(focused.map((route) => route.path), [`/services/${slug}`]);
-    assert.deepEqual(focused[0].alternates, [
-      { hreflang: "en", href: `${inventory.origin}/services/${slug}` },
-      { hreflang: "x-default", href: `${inventory.origin}/services/${slug}` },
-    ]);
+    assert.deepEqual(focused.map((route) => route.path), [`/services/${slug}`, `/el/services/${slug}`]);
+    for (const route of focused) {
+      assert.deepEqual(route.alternates, [
+        { hreflang: "en", href: `${inventory.origin}/services/${slug}` },
+        { hreflang: "el-GR", href: `${inventory.origin}/el/services/${slug}` },
+        { hreflang: "x-default", href: `${inventory.origin}/services/${slug}` },
+      ]);
+    }
     assert.ok(routes.some((route) => route.path === `/us/${slug}` && route.locale === "en"));
   }
 });
