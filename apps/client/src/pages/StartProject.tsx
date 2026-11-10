@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { LOCALE_TAGS, localePrefix, type Locale } from "@/i18n/config";
 import { trackEvent, trackLeadConversion } from "@/lib/analytics";
+import { CONTACT_ENDPOINT, DEFAULT_CONTACT_ENDPOINT, isContactSubmissionAcknowledged } from "@/lib/contact";
 import { campaignAttribution } from "@/lib/leadAttribution";
 import {
   projectNeedGroups,
@@ -58,18 +59,6 @@ type FormValues = {
 };
 
 type SubmissionStatus = "idle" | "submitting" | "success" | "error";
-
-/**
- * Where the brief is posted.
- *
- * The site is served as static files, so the bundled Express route at
- * /api/contact only exists when the server is deployed too — on static hosting
- * it answers 403 and every submission fails. Setting VITE_CONTACT_ENDPOINT to a
- * form service (Formspree, Web3Forms) points submissions at that instead, with
- * no code change. Both accept this JSON shape.
- */
-const CONTACT_ENDPOINT =
-  import.meta.env.VITE_CONTACT_ENDPOINT || "/api/contact";
 
 const initialFormValues: FormValues = {
   name: "",
@@ -508,14 +497,9 @@ export default function StartProject() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Contact request failed with status ${response.status}`);
-      }
-      if (CONTACT_ENDPOINT === "/api/contact") {
-        const result = await response.json();
-        if (result.success !== true || result.inquiryId !== submission.current.id) {
-          throw new Error("Contact endpoint did not confirm this inquiry.");
-        }
+      const expectedInquiryId = CONTACT_ENDPOINT === DEFAULT_CONTACT_ENDPOINT ? submission.current.id : undefined;
+      if (!(await isContactSubmissionAcknowledged(response, CONTACT_ENDPOINT, expectedInquiryId))) {
+        throw new Error(`Contact endpoint did not confirm this inquiry (status ${response.status}).`);
       }
 
       setStatus("success");

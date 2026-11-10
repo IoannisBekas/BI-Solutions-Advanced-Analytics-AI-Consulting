@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { DEFAULT_CONTACT_ENDPOINT, isContactSubmissionAcknowledged } from "./contact";
 import {
   buildRestaurantLeadPayload,
-  isRestaurantLeadAcknowledged,
   readRestaurantAttribution,
   restaurantCampaignHref,
   validateRestaurantLead,
@@ -73,10 +73,31 @@ test("contact payload stays inside existing backend limits and carries readable 
   assert.ok(largest.subject.length <= 200);
 });
 
-test("success requires a positive acknowledgement, not merely HTTP 200", () => {
-  assert.equal(isRestaurantLeadAcknowledged(true, { success: true }), true);
-  for (const payload of [null, "<html>Site fallback</html>", {}, { ok: true }, { success: false }, { success: "true" }]) {
-    assert.equal(isRestaurantLeadAcknowledged(true, payload), false);
+test("contact requires a positive acknowledgement as well as an HTTP success status", async () => {
+  assert.equal(await isContactSubmissionAcknowledged(Response.json({ success: true }), DEFAULT_CONTACT_ENDPOINT), true);
+  assert.equal(await isContactSubmissionAcknowledged(Response.json({ success: true }, { status: 502 }), DEFAULT_CONTACT_ENDPOINT), false);
+  for (const payload of [null, {}, { ok: true }, { success: false }, { success: "true" }, { next: "/thanks" }]) {
+    assert.equal(await isContactSubmissionAcknowledged(Response.json(payload), DEFAULT_CONTACT_ENDPOINT), false);
   }
-  assert.equal(isRestaurantLeadAcknowledged(false, { success: true }), false);
+});
+
+test("the first-party project form requires an acknowledgement matching its enquiry reference", async () => {
+  const inquiryId = "7cd7aa37-d632-497f-8954-57be6d2f9909";
+  const acknowledged = (payload: unknown) => isContactSubmissionAcknowledged(Response.json(payload), DEFAULT_CONTACT_ENDPOINT, inquiryId);
+  assert.equal(await acknowledged({ success: true, inquiryId }), true);
+  assert.equal(await acknowledged({ success: true, inquiryId: "unrelated" }), false);
+  assert.equal(await acknowledged({ success: true }), false);
+});
+
+test("external contact endpoints need an acknowledgement matching their JSON contract", async () => {
+  const formspreeEndpoint = "https://formspree.io/f/form-id";
+  assert.equal(await isContactSubmissionAcknowledged(Response.json({ next: "/thanks" }), formspreeEndpoint), true);
+  assert.equal(await isContactSubmissionAcknowledged(Response.json({ error: "Inactive form", next: "/thanks" }), formspreeEndpoint), false);
+  assert.equal(await isContactSubmissionAcknowledged(Response.json({ next: "/thanks" }), "https://formspree.io.example.com/f/form-id"), false);
+  const web3FormsEndpoint = "https://api.web3forms.com/submit/form-id";
+  assert.equal(await isContactSubmissionAcknowledged(Response.json({ success: true }), web3FormsEndpoint), true);
+  for (const endpoint of [formspreeEndpoint, web3FormsEndpoint]) {
+    const fallback = new Response("<html>Site fallback</html>", { headers: { "Content-Type": "text/html" } });
+    assert.equal(await isContactSubmissionAcknowledged(fallback, endpoint), false);
+  }
 });

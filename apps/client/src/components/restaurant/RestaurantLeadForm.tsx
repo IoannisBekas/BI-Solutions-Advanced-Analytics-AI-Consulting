@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { trackEvent, trackLeadConversion } from "@/lib/analytics";
+import { CONTACT_ENDPOINT, isContactSubmissionAcknowledged } from "@/lib/contact";
 import { withSiteBase } from "@/lib/site";
 import {
   buildRestaurantLeadPayload,
-  isRestaurantLeadAcknowledged,
   readRestaurantAttribution,
   restaurantFulfilmentOptions,
   restaurantGoalOptions,
@@ -23,7 +23,6 @@ const initialValues: RestaurantLeadValues = {
   goal: "", fulfilment: "", timing: "", consent: false, website: "",
 };
 
-const CONTACT_ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT || "/api/contact";
 const CONTACT_INSTAGRAM = "https://www.instagram.com/bisolutions.group/";
 
 export function RestaurantLeadForm({ landingPage }: { landingPage: RestaurantLandingPage }) {
@@ -123,8 +122,7 @@ export function RestaurantLeadForm({ landingPage }: { landingPage: RestaurantLan
         body: JSON.stringify({ ...contactPayload, inquiryId: submission.current.id }),
         signal: controller.signal,
       });
-      const payload: unknown = await response.json().catch(() => null);
-      if (!isRestaurantLeadAcknowledged(response.ok, payload)) throw new Error("Unconfirmed contact submission");
+      if (!(await isContactSubmissionAcknowledged(response, CONTACT_ENDPOINT))) throw new Error("Unconfirmed contact submission");
       setStatus("success");
       trackLeadConversion(submission.current.id);
       trackEvent("restaurant_form_submit", { landing_page: landingPage });

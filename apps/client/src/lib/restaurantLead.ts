@@ -144,8 +144,3 @@ export function buildRestaurantLeadPayload(values: RestaurantLeadValues, landing
     message,
   };
 }
-
-/** An HTTP 200 serving an HTML fallback is not a delivered contact enquiry. */
-export function isRestaurantLeadAcknowledged(httpOk: boolean, payload: unknown): boolean {
-  return httpOk && typeof payload === "object" && payload !== null && "success" in payload && payload.success === true;
-}
