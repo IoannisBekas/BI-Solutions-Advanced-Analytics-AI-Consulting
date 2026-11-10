@@ -102,12 +102,18 @@ for (const symbol of symbols) {
   const uwQuote = await fetchUwClose(symbol);
   const yahooQuote = !uwQuote || uwQuote.date < staleBefore ? await fetchClose(symbol) : null;
   const quote = [uwQuote, yahooQuote].filter(Boolean).sort((a, b) => b.date.localeCompare(a.date))[0];
-  if (quote) {
-    quotes[symbol] = quote;
-    fetched++;
-  } else {
+  if (!quote) {
     console.warn(`No USD close for ${symbol}; keeping the previous value`);
+    continue;
   }
+
+  fetched++;
+  const savedQuote = quotes[symbol];
+  if (savedQuote && quote.date < savedQuote.date) {
+    console.warn(`Older USD close for ${symbol} (${quote.date}); keeping ${savedQuote.date}`);
+    continue;
+  }
+  quotes[symbol] = quote;
 }
 
 if (fetched === 0) {
@@ -127,5 +133,5 @@ if (JSON.stringify(quotes) === JSON.stringify(previous.quotes)) {
     quotes
   };
   await writeFile(OUTPUT, JSON.stringify(market, null, 2) + '\n');
-  console.log(`Wrote ${fetched} of ${symbols.length} closes to data/market.json`);
+  console.log(`Updated data/market.json (${fetched} of ${symbols.length} closes fetched)`);
 }

@@ -150,12 +150,18 @@ let fetched = 0;
 
 for (const symbol of symbols) {
   const quote = (await fetchUwClose(symbol)) ?? (await fetchClose(symbol));
-  if (quote) {
-    quotes[symbol] = quote;
-    fetched++;
-  } else {
+  if (!quote) {
     console.warn(`No USD close for ${symbol}; keeping the previous value`);
+    continue;
   }
+
+  fetched++;
+  const savedQuote = quotes[symbol];
+  if (savedQuote && quote.date < savedQuote.date) {
+    console.warn(`Older USD close for ${symbol} (${quote.date}); keeping ${savedQuote.date}`);
+    continue;
+  }
+  quotes[symbol] = quote;
 }
 
 if (fetched === 0) {
@@ -191,5 +197,5 @@ if (JSON.stringify({ quotes, companies }) === JSON.stringify({ quotes: previous.
     companies
   };
   await writeFile(OUTPUT, JSON.stringify(market, null, 2) + '\n');
-  console.log(`Wrote ${fetched} of ${symbols.length} closes and ${Object.keys(companies).length} company feed(s) to data/market.json`);
+  console.log(`Updated data/market.json (${fetched} of ${symbols.length} closes fetched, ${Object.keys(companies).length} company feed(s) saved)`);
 }
