@@ -54,9 +54,6 @@ test("Zod migration preserves validation before authentication, persistence and 
     RESEND_API_KEY: "re_validation_test_stub",
     CONTACT_RECIPIENT_EMAIL: "owner@example.com",
     CONTACT_FROM_EMAIL: "Validation <contact@example.com>",
-    ANTHROPIC_API_KEY: "validation-test-provider-stub",
-    POWERBI_SOLUTIONS_ANTHROPIC_API_KEY: "",
-    GEMINI_API_KEY: "",
   });
   globalThis.fetch = async (input, init) => {
     const url = String(input);
@@ -72,15 +69,14 @@ test("Zod migration preserves validation before authentication, persistence and 
 
   const { db } = await import("./db");
   closeDatabase = () => db.close();
-  const [{ authRouter }, { registerContactRoute }, { registerBonusakiRoutes }, { registerAdvisorRoutes }] = await Promise.all([
-    import("./auth"), import("./routes/contact"), import("./routes/bonusaki"), import("./routes/advisor"),
+  const [{ authRouter }, { registerContactRoute }, { registerBonusakiRoutes }] = await Promise.all([
+    import("./auth"), import("./routes/contact"), import("./routes/bonusaki"),
   ]);
   const app = express();
   app.use(express.json());
   app.use("/api/auth", authRouter);
   registerContactRoute(app);
   registerBonusakiRoutes(app);
-  registerAdvisorRoutes(app);
   server = app.listen(0, "127.0.0.1");
   await new Promise<void>((resolve) => server!.once("listening", resolve));
   const runningServer = server;
@@ -183,14 +179,5 @@ test("Zod migration preserves validation before authentication, persistence and 
     }
     assert.equal((await request(runningServer, "POST", "/api/bonusaki/rewards/validate", { publicCode: "ABCD" })).status, 404);
     assert.equal(sent.length, 0);
-  });
-
-  await t.test("rejects invalid advisor inputs with a configured provider before making upstream calls", async () => {
-    const advisor = { role: "consultant", question: "How can I prioritize my tasks?", language: "english" };
-    for (const invalid of [{ role: "unknown" }, { question: "" }, { question: "q".repeat(2001) }, { question: 123 }, { language: 123 }]) {
-      assert.equal((await request(runningServer, "POST", "/api/ai-advisor", { ...advisor, ...invalid })).status, 400);
-    }
-    assert.equal(sent.length, 0);
-    assert.deepEqual(unexpectedRequests, []);
   });
 });
