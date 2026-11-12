@@ -9,6 +9,15 @@ function injectScriptNonce(html: string, nonce: string): string {
   return html.replace(/<script(?![^>]*\snonce=)([^>]*)>/gi, `<script nonce="${nonce}"$1>`);
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function sendHtmlWithNonce(res: Response, html: string) {
   const nonce = (res.locals.cspNonce as string) || "";
   const output = nonce ? injectScriptNonce(html, nonce) : html;
@@ -354,7 +363,7 @@ export function serveProductSpa(app: Express, mountPath: string, productDistPath
   });
 }
 
-interface RouteMeta {
+export interface RouteMeta {
   title: string;
   description: string;
   path: string;
@@ -658,49 +667,53 @@ function stripPrerenderedRootContent(html: string) {
 
 function injectMeta(html: string, meta: RouteMeta): string {
   html = stripRouteSeoTags(html);
-  const ogImage = meta.ogImage || DEFAULT_OG_IMAGE;
-  const fullUrl = `${BASE_URL}${meta.path}`;
-  const robots = meta.robots || "index,follow";
+  // meta.path can echo the request path, so every value is HTML-escaped and
+  // inserted through a replacer function, which keeps "$&"-style patterns literal.
+  const title = escapeHtml(meta.title);
+  const description = escapeHtml(meta.description);
+  const ogImage = escapeHtml(meta.ogImage || DEFAULT_OG_IMAGE);
+  const fullUrl = escapeHtml(`${BASE_URL}${meta.path}`);
+  const robots = escapeHtml(meta.robots || "index,follow");
   const structuredData = getServerStructuredData(meta);
 
   // Title
   html = html.replace(
     /<title>[^<]*<\/title>/,
-    `<title>${meta.title}</title>`,
+    () => `<title>${title}</title>`,
   );
 
   // Meta description
   html = html.replace(
     /<meta name="description"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="description" content="${meta.description}" />`,
+    () => `<meta name="description" content="${description}" />`,
   );
 
   // Open Graph
   html = html.replace(
     /<meta property="og:title" content="[^"]*"\s*\/?>/,
-    `<meta property="og:title" content="${meta.title}" />`,
+    () => `<meta property="og:title" content="${title}" />`,
   );
   html = html.replace(
     /<meta property="og:description"\s+content="[^"]*"\s*\/?>/,
-    `<meta property="og:description" content="${meta.description}" />`,
+    () => `<meta property="og:description" content="${description}" />`,
   );
   html = html.replace(
     /<meta property="og:image" content="[^"]*"\s*\/?>/,
-    `<meta property="og:image" content="${ogImage}" />`,
+    () => `<meta property="og:image" content="${ogImage}" />`,
   );
 
   // Twitter
   html = html.replace(
     /<meta name="twitter:title" content="[^"]*"\s*\/?>/,
-    `<meta name="twitter:title" content="${meta.title}" />`,
+    () => `<meta name="twitter:title" content="${title}" />`,
   );
   html = html.replace(
     /<meta name="twitter:description"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="twitter:description" content="${meta.description}" />`,
+    () => `<meta name="twitter:description" content="${description}" />`,
   );
   html = html.replace(
     /<meta name="twitter:image" content="[^"]*"\s*\/?>/,
-    `<meta name="twitter:image" content="${ogImage}" />`,
+    () => `<meta name="twitter:image" content="${ogImage}" />`,
   );
 
   // Canonical link - inject before </head>
@@ -709,10 +722,24 @@ function injectMeta(html: string, meta: RouteMeta): string {
     : "";
   html = html.replace(
     "</head>",
-    `  <meta name="robots" content="${robots}" />\n  <link rel="canonical" href="${fullUrl}" />\n${structuredDataScript}</head>`,
+    () => `  <meta name="robots" content="${robots}" />\n  <link rel="canonical" href="${fullUrl}" />\n${structuredDataScript}</head>`,
   );
 
   return html;
+}
+
+/**
+ * Fallback pages combine the build's own shell with route metadata that may
+ * echo the request path. The nonce is stamped on the shell's scripts first, so
+ * nothing added afterwards can inherit it.
+ */
+export function renderFallbackHtml(shellHtml: string, meta: RouteMeta, nonce: string): string {
+  return injectMeta(nonce ? injectScriptNonce(shellHtml, nonce) : shellHtml, meta);
+}
+
+function sendFallbackHtml(res: Response, shellHtml: string, meta: RouteMeta) {
+  res.setHeader("Cache-Control", "no-cache, must-revalidate");
+  res.type("html").send(renderFallbackHtml(shellHtml, meta, (res.locals.cspNonce as string) || ""));
 }
 
 export function serveStatic(app: Express) {
@@ -870,7 +897,8 @@ export function serveStatic(app: Express) {
       const blogMatch = routePath.match(/^\/blog\/(.+)$/);
       if (blogMatch) {
         const slug = blogMatch[1];
-        const postMeta = blogPostMeta[slug];
+        // hasOwn stops inherited names such as "constructor" from matching.
+        const postMeta = Object.hasOwn(blogPostMeta, slug) ? blogPostMeta[slug] : undefined;
         if (postMeta) {
           meta = {
             ...postMeta,
@@ -883,15 +911,15 @@ export function serveStatic(app: Express) {
 
     if (!meta) {
       res.status(404);
-      sendUncachedHtml(res, injectMeta(clientShellHtml, {
+      sendFallbackHtml(res, clientShellHtml, {
         title: "Page Not Found - BI Solutions Group",
         description: "The requested BI Solutions Group page could not be found.",
         path: routePath,
         robots: "noindex,follow",
-      }));
+      });
       return;
     }
 
-    sendUncachedHtml(res, injectMeta(clientShellHtml, meta));
+    sendFallbackHtml(res, clientShellHtml, meta);
   });
 }
