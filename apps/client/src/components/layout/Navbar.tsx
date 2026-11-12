@@ -451,10 +451,10 @@ export function Navbar() {
             : "bg-transparent py-4 sm:py-6",
         )}
       >
-        <div className="site-container flex items-center justify-between">
+        <div className="site-container flex items-center justify-between gap-2">
           <Link
             href="/"
-            className="group flex max-w-[calc(100%-3.5rem)] min-w-0 items-center gap-2.5 sm:max-w-none sm:gap-3"
+            className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
             onClick={() => trackNavClick("BI Solutions Group", "/", "header")}
           >
             <img
@@ -635,17 +635,31 @@ export function Navbar() {
             </Button>
           </nav>
 
-          <button
-            ref={mobileTriggerRef}
-            type="button"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 xl:hidden"
-            onClick={() => setIsMobileMenuOpen(true)}
-            aria-label={navCopy.open}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-site-menu"
-          >
-            <Menu aria-hidden="true" className="h-6 w-6" />
-          </button>
+          {/* Below the desktop breakpoint the full navigation is in the menu,
+              so keep one always-visible route to the enquiry page beside it. */}
+          <div className="flex shrink-0 items-center gap-1 xl:hidden">
+            <Link
+              href={START_PROJECT_PATH}
+              className="hidden h-11 items-center rounded-full bg-black px-2.5 text-xs font-semibold text-white transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 min-[360px]:inline-flex min-[400px]:px-3.5 min-[400px]:text-[13px] sm:px-5 sm:text-sm"
+              onClick={() =>
+                handleNavClick("Contact", START_PROJECT_PATH, "header")
+              }
+            >
+              <span className="sm:hidden">{t.nav.contact}</span>
+              <span className="hidden sm:inline">{t.nav.startProject}</span>
+            </Link>
+            <button
+              ref={mobileTriggerRef}
+              type="button"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label={navCopy.open}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-site-menu"
+            >
+              <Menu aria-hidden="true" className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </header>
       {mobileMenu}

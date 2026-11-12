@@ -2,7 +2,8 @@ import { ArrowUp, Github, Instagram, Linkedin } from "lucide-react";
 import { Link } from "wouter";
 import { OPEN_COOKIE_SETTINGS_EVENT } from "@/components/CookieConsent";
 import { trackEvent, trackNavClick } from "@/lib/analytics";
-import { START_PROJECT_PATH } from "@/lib/contact";
+import { BOOKING_URL, CONTACT_EMAIL, START_PROJECT_PATH } from "@/lib/contact";
+import { directContactCopy, trackDirectContact } from "@/components/contact/DirectContact";
 import { withAssetBase } from "@/lib/site";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
@@ -117,6 +118,30 @@ export function Footer() {
                   {t.nav.startProject}
                 </Link>
               </li>
+              {CONTACT_EMAIL && (
+                <li>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="break-all text-gray-400 transition-colors hover:text-white"
+                    onClick={() => trackDirectContact("email", "footer")}
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
+                </li>
+              )}
+              {BOOKING_URL && (
+                <li>
+                  <a
+                    href={BOOKING_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 transition-colors hover:text-white"
+                    onClick={() => trackDirectContact("booking", "footer")}
+                  >
+                    {directContactCopy[locale].booking}
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
 

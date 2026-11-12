@@ -18,6 +18,7 @@ export interface TranslationCatalogue {
     insights: string;
     about: string;
     startProject: string;
+    contact: string;
     language: string;
   };
   hero: {
@@ -65,6 +66,7 @@ const en: TranslationCatalogue = {
     insights: "Insights",
     about: "About",
     startProject: "Start a project",
+    contact: "Contact",
     language: "Language",
   },
   hero: {
@@ -140,6 +142,7 @@ const el: TranslationCatalogue = {
     insights: "Άρθρα",
     about: "Σχετικά",
     startProject: "Ξεκινήστε ένα έργο",
+    contact: "Επικοινωνία",
     language: "Γλώσσα",
   },
   hero: {
@@ -235,6 +238,7 @@ const de: TranslationCatalogue = {
     insights: "Einblicke",
     about: "Über uns",
     startProject: "Projekt starten",
+    contact: "Kontakt",
     language: "Sprache",
   },
   hero: {

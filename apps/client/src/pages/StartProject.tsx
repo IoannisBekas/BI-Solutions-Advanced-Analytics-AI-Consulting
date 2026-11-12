@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { DirectContactPanel } from "@/components/contact/DirectContact";
 import { Link } from "wouter";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -590,6 +591,8 @@ export default function StartProject() {
               </div>
             ) : (
               <>
+                {/* Sits above the form so the alternatives are seen before any field. */}
+                <DirectContactPanel placement="start_project" />
                 <h2 id="project-form-title" className="section-title">
                   {isMentorship
                     ? copy.mentorshipFormTitle

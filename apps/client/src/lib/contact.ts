@@ -1,5 +1,10 @@
 export const START_PROJECT_PATH = "/start-a-project";
 
+// Public direct-contact routes, shown beside the project form and in the
+// footer. Leave either one empty to hide it everywhere.
+export const CONTACT_EMAIL = "info@bisolutions.group";
+export const BOOKING_URL = "https://calendar.app.google/ZwmnXurUf9GJUZiWA";
+
 export const DEFAULT_CONTACT_ENDPOINT = "/api/contact";
 export const CONTACT_ENDPOINT = import.meta.env?.VITE_CONTACT_ENDPOINT || DEFAULT_CONTACT_ENDPOINT;
 

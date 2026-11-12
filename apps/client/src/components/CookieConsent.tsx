@@ -16,7 +16,10 @@ const cookieCopy: Record<
   Locale,
   {
     title: string;
+    summary: string;
     description: string;
+    customize: string;
+    hide: string;
     choices: string;
     analytics: string;
     ads: string;
@@ -30,6 +33,9 @@ const cookieCopy: Record<
 > = {
   en: {
     title: "Cookies & measurement",
+    summary: "We use Google Analytics and Google Ads measurement only with your permission. Both are optional.",
+    customize: "Customize",
+    hide: "Hide options",
     description: "Essential storage keeps the site working. With your permission, Google Analytics helps us understand visits and Google Ads measures which ads lead to project enquiries. Both are optional. Your form contents are not sent to Google Ads.",
     choices: "Optional measurement choices",
     analytics: "Analytics (Google Analytics)",
@@ -43,6 +49,9 @@ const cookieCopy: Record<
   },
   el: {
     title: "Cookies & μέτρηση",
+    summary: "Χρησιμοποιούμε το Google Analytics και τη μέτρηση Google Ads μόνο με την άδειά σας. Και τα δύο είναι προαιρετικά.",
+    customize: "Προσαρμογή",
+    hide: "Απόκρυψη επιλογών",
     description: "Η απαραίτητη αποθήκευση διατηρεί τον ιστότοπο λειτουργικό. Με την άδειά σας, το Google Analytics μας βοηθά να κατανοούμε τις επισκέψεις και το Google Ads μετρά ποιες διαφημίσεις οδηγούν σε αιτήματα έργων. Και τα δύο είναι προαιρετικά. Το περιεχόμενο των φορμών σας δεν αποστέλλεται στο Google Ads.",
     choices: "Προαιρετικές επιλογές μέτρησης",
     analytics: "Analytics (Google Analytics)",
@@ -56,6 +65,9 @@ const cookieCopy: Record<
   },
   de: {
     title: "Cookies & Messung",
+    summary: "Wir nutzen Google Analytics und die Google-Ads-Messung nur mit Ihrer Erlaubnis. Beides ist optional.",
+    customize: "Anpassen",
+    hide: "Optionen ausblenden",
     description: "Notwendige Speicherung hält die Website funktionsfähig. Mit Ihrer Erlaubnis hilft Google Analytics uns, Besuche zu verstehen, und Google Ads misst, welche Anzeigen zu Projektanfragen führen. Beides ist optional. Ihre Formularinhalte werden nicht an Google Ads gesendet.",
     choices: "Optionale Messeinstellungen",
     analytics: "Analyse (Google Analytics)",
@@ -76,6 +88,9 @@ export function CookieConsent() {
   const localizedHref = useLocalizedHref();
   const copy = cookieCopy[locale];
   const [visible, setVisible] = useState(true);
+  // The first-visit notice stays compact; the per-purpose options open on
+  // request, or straight away when the visitor asks for Cookie settings.
+  const [expanded, setExpanded] = useState(false);
   const [choices, setChoices] = useState<MeasurementConsent>({ analytics: false, ads: false });
   const [error, setError] = useState("");
 
@@ -90,6 +105,7 @@ export function CookieConsent() {
     const openSettings = () => {
       setChoices(readMeasurementConsent() || { analytics: false, ads: false });
       document.documentElement.removeAttribute("data-cookie-consent");
+      setExpanded(true);
       setVisible(true);
     };
 
@@ -133,6 +149,7 @@ export function CookieConsent() {
     else clearAiSearchReferral();
     document.documentElement.setAttribute("data-cookie-consent", "saved");
     setVisible(false);
+    setExpanded(false);
     setError("");
     applyMeasurementConsent(consent);
   };
@@ -141,38 +158,70 @@ export function CookieConsent() {
 
   if (!visible) return null;
 
+  // Collapsed, the notice is a compact card on phones and a short bar on wide
+  // screens, so it stays clear of the page's main call to action. Expanded, it
+  // becomes a settings card.
+  const layoutClass = expanded
+    ? "sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[26rem] sm:p-5"
+    : "sm:inset-x-5 sm:bottom-5 sm:p-5 lg:bottom-4 lg:mx-auto lg:max-w-6xl lg:py-3.5";
+
   return (
     <section
       data-cookie-consent-banner
-      className="fixed inset-x-3 bottom-3 z-[120] max-h-[85dvh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-950 p-5 text-white shadow-2xl sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[26rem]"
+      className={`fixed inset-x-3 bottom-3 z-[120] max-h-[85dvh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-950 p-4 text-white shadow-2xl ${layoutClass}`}
       role="dialog"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description"
     >
-      <h2 id="cookie-consent-title" className="text-base font-semibold">{copy.title}</h2>
-      <p id="cookie-consent-description" className="mt-2 text-sm leading-relaxed text-gray-200">
-        {copy.description}
-      </p>
-      <fieldset className="my-4 space-y-3">
-        <legend className="sr-only">{copy.choices}</legend>
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
-          <input type="checkbox" className="h-5 w-5 shrink-0 accent-white" checked={choices.analytics} onChange={(event) => setChoices({ ...choices, analytics: event.target.checked })} />
-          {copy.analytics}
-        </label>
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
-          <input type="checkbox" className="h-5 w-5 shrink-0 accent-white" checked={choices.ads} onChange={(event) => setChoices({ ...choices, ads: event.target.checked })} />
-          {copy.ads}
-        </label>
-      </fieldset>
-      <div className="grid grid-cols-2 gap-2">
-        <button type="button" className={buttonClass} onClick={() => save({ analytics: false, ads: false })}>{copy.reject}</button>
-        <button type="button" className={buttonClass} onClick={() => save({ analytics: true, ads: true })}>{copy.accept}</button>
-        <button type="button" className={buttonClass + " col-span-2"} onClick={() => save(choices)}>{copy.save}</button>
+      <div className={expanded ? undefined : "lg:flex lg:items-center lg:gap-6"}>
+        <div className="min-w-0 lg:flex-1">
+          {/* The wide bar drops the visible heading to stay short; it still names the dialog. */}
+          <h2 id="cookie-consent-title" className={expanded ? "text-base font-semibold" : "text-base font-semibold lg:sr-only"}>{copy.title}</h2>
+          <p id="cookie-consent-description" className={expanded ? "mt-1.5 text-sm leading-snug text-gray-200" : "mt-1.5 text-sm leading-snug text-gray-200 lg:mt-0"}>
+            {expanded ? copy.description : copy.summary}{" "}
+            <a
+              href={localizedHref("/privacy-policy")}
+              className="underline decoration-white/40 underline-offset-4 hover:text-white"
+            >
+              {copy.privacy}
+            </a>
+          </p>
+        </div>
+        <div id="cookie-consent-options" hidden={!expanded}>
+          <fieldset className="mt-3 space-y-1">
+            <legend className="sr-only">{copy.choices}</legend>
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+              <input type="checkbox" className="h-5 w-5 shrink-0 accent-white" checked={choices.analytics} onChange={(event) => setChoices({ ...choices, analytics: event.target.checked })} />
+              {copy.analytics}
+            </label>
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+              <input type="checkbox" className="h-5 w-5 shrink-0 accent-white" checked={choices.ads} onChange={(event) => setChoices({ ...choices, ads: event.target.checked })} />
+              {copy.ads}
+            </label>
+          </fieldset>
+        </div>
+        <div className={expanded ? "mt-3" : "mt-3 flex flex-col lg:mt-0 lg:shrink-0 lg:flex-row-reverse lg:items-center lg:gap-4"}>
+          {/* Reject and accept stay side by side and equally weighted in every layout. */}
+          <div className={expanded ? "grid grid-cols-2 gap-2" : "grid grid-cols-2 gap-2 lg:w-[26rem]"}>
+            <button type="button" className={buttonClass} onClick={() => save({ analytics: false, ads: false })}>{copy.reject}</button>
+            <button type="button" className={buttonClass} onClick={() => save({ analytics: true, ads: true })}>{copy.accept}</button>
+            {expanded && (
+              <button type="button" className={buttonClass + " col-span-2"} onClick={() => save(choices)}>{copy.save}</button>
+            )}
+          </div>
+          <button
+            type="button"
+            className="mt-1 min-h-11 self-start text-xs text-gray-200 underline decoration-white/40 underline-offset-4 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:mt-0 lg:self-auto"
+            aria-expanded={expanded}
+            aria-controls="cookie-consent-options"
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded ? copy.hide : copy.customize}
+          </button>
+        </div>
       </div>
       {error && <p role="alert" className="mt-3 text-sm text-red-200">{error}</p>}
-      <p className="mt-3 text-xs leading-relaxed text-gray-300">
-        {copy.change} <a href={localizedHref("/privacy-policy")} className="underline">{copy.privacy}</a>
-      </p>
+      {expanded && <p className="text-xs leading-relaxed text-gray-300">{copy.change}</p>}
     </section>
   );
 }
