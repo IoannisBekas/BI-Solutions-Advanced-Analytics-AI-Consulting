@@ -58,7 +58,7 @@ export function DirectContactPanel({ placement }: { placement: DirectContactPlac
             onClick={() => trackDirectContact("email", placement)}
           >
             <Mail aria-hidden="true" className="h-4 w-4 shrink-0" />
-            <span className="break-all">{CONTACT_EMAIL}</span>
+            <span className="break-all" translate="no">{CONTACT_EMAIL}</span>
           </a>
         )}
         {BOOKING_URL && (

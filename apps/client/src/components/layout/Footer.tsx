@@ -123,6 +123,7 @@ export function Footer() {
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
                     className="break-all text-gray-400 transition-colors hover:text-white"
+                    translate="no"
                     onClick={() => trackDirectContact("email", "footer")}
                   >
                     {CONTACT_EMAIL}
