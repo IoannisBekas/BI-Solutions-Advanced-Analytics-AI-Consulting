@@ -351,15 +351,6 @@ const powerBiAnthropicLimiter = rateLimit({
   message: { message: "Preview AI rate limit reached - try again later." },
 });
 
-const advisorLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 10,
-  keyGenerator: (req) => ipKeyGenerator(req.ip || ""),
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  message: { message: "AI advisor rate limit reached — try again later." },
-});
-
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   limit: 5,
@@ -370,7 +361,6 @@ const contactLimiter = rateLimit({
 
 app.use("/api/", globalLimiter);
 app.use("/api/contact", contactLimiter);
-app.use("/api/ai-advisor", advisorLimiter);
 app.use("/api/auth", strictLimiter);
 app.use("/power-bi-solutions/api/anthropic", powerBiAnthropicLimiter);
 
@@ -379,9 +369,6 @@ if (isProduction && !process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET env var must be set in production");
 }
 
-if (!process.env.GEMINI_API_KEY && !process.env.ANTHROPIC_API_KEY && !process.env.POWERBI_SOLUTIONS_ANTHROPIC_API_KEY) {
-  console.warn("WARNING: No AI provider env vars are set — AI Advisor will remain unavailable until configured");
-}
 if (!process.env.GOOGLE_CLIENT_ID?.trim()) {
   console.warn("WARNING: GOOGLE_CLIENT_ID not set — Google sign-in will remain disabled");
 }

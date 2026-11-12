@@ -2,7 +2,6 @@ import type { Express } from "express";
 import type { Server } from "http";
 import { authRouter, checkMonthlyReset } from "../auth";
 import { registerQuantusPersistenceRoutes } from "../quantusRoutes";
-import { registerAdvisorRoutes } from "./advisor";
 import { registerBonusakiRoutes } from "./bonusaki";
 import { registerContactRoute } from "./contact";
 import { registerAiLearningRoutes } from "./aiLearning";
@@ -26,7 +25,6 @@ export async function registerRoutes(
 
   registerContactRoute(app);
   registerAiLearningRoutes(app);
-  registerAdvisorRoutes(app);
   registerBonusakiRoutes(app);
   registerQuantusProxyRoute(app);
   registerPowerBiProxyRoutes(app);
