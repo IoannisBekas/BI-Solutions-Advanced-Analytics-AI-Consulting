@@ -6,7 +6,7 @@
   "scripts": {
     "ai-learning:prepare": "node ./node_modules/tsx/dist/cli.mjs script/prepare-ai-learning-products.ts",
     "project-deposit:issue": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx script/issue-project-deposit.ts",
-    "test:project-deposits": "node --import tsx --test apps/server/routes/projectDeposits.test.ts apps/server/routes/directPayments.test.ts",
+    "test:project-deposits": "node --import tsx --test apps/server/routes/projectDeposits.test.ts apps/server/routes/directPayments.test.ts apps/server/routes/recurringPayments.test.ts",
     "test:ai-learning": "node --import tsx --test apps/server/routes/aiLearning.test.ts",
     "test:validation": "node --import tsx --test apps/server/validationMigration.test.ts",
     "dev:client": "node ./node_modules/vite/bin/vite.js dev --port 5001",

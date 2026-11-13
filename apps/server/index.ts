@@ -104,16 +104,22 @@ const RESTRICTED_PERMISSIONS = [
 const PERMISSIONS_POLICY = [...RESTRICTED_PERMISSIONS, "payment=()"].join(", ");
 
 // The Web SDK loads its script and iframe from Merchant and calls Merchant Management.
-// Match the configured checkout environment so live pages never allow Sandbox frames.
+// Allow only the origins needed by the configured checkout environments.
 const checkoutIsSandbox = process.env.DIRECT_PAYMENTS_REVOLUT_ENV?.trim() === "sandbox";
-const checkoutMerchantOrigin = checkoutIsSandbox ? "https://sandbox-merchant.revolut.com" : "https://merchant.revolut.com";
-const checkoutManagementOrigin = checkoutIsSandbox ? "https://sandbox-merchant-mgmt.revolut.com" : "https://merchant-mgmt.revolut.com";
-const checkoutHostedOrigin = checkoutIsSandbox ? "https://sandbox-checkout.revolut.com" : "https://checkout.revolut.com";
+const checkoutEnvironments = [checkoutIsSandbox ? "sandbox-" : ""];
+if (process.env.RECURRING_PAYMENTS_ENABLED?.trim() === "true") {
+  const recurringEnvironment = process.env.RECURRING_PAYMENTS_REVOLUT_ENV?.trim();
+  if (recurringEnvironment === "sandbox" && !checkoutIsSandbox) checkoutEnvironments.push("sandbox-");
+  if (recurringEnvironment === "production" && checkoutIsSandbox) checkoutEnvironments.push("");
+}
+const checkoutMerchantOrigins = checkoutEnvironments.map((prefix) => `https://${prefix}merchant.revolut.com`);
+const checkoutManagementOrigins = checkoutEnvironments.map((prefix) => `https://${prefix}merchant-mgmt.revolut.com`);
+const checkoutHostedOrigins = checkoutEnvironments.map((prefix) => `https://${prefix}checkout.revolut.com`);
 const checkoutFrameOrigins = [
-  checkoutMerchantOrigin,
-  checkoutHostedOrigin,
+  ...checkoutMerchantOrigins,
+  ...checkoutHostedOrigins,
   "https://pay.google.com",
-  ...(checkoutIsSandbox ? [] : ["https://merchant-redirect.revolut.com"]),
+  ...(checkoutEnvironments.includes("") ? ["https://merchant-redirect.revolut.com"] : []),
 ];
 const checkoutPermissionsPolicy = [
   ...RESTRICTED_PERMISSIONS,
@@ -207,12 +213,12 @@ app.use(
 
 const checkoutContentSecurityPolicy = helmet.contentSecurityPolicy({
   directives: {
-    "script-src": ["'self'", checkoutNonce, "'strict-dynamic'", checkoutMerchantOrigin],
+    "script-src": ["'self'", checkoutNonce, "'strict-dynamic'", ...checkoutMerchantOrigins],
     "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
     "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
-    "img-src": ["'self'", "data:", checkoutMerchantOrigin, checkoutHostedOrigin],
+    "img-src": ["'self'", "data:", ...checkoutMerchantOrigins, ...checkoutHostedOrigins],
     "frame-src": ["'self'", ...checkoutFrameOrigins],
-    "connect-src": ["'self'", checkoutMerchantOrigin, checkoutManagementOrigin, "https://google.com/pay", "https://pay.google.com"],
+    "connect-src": ["'self'", ...checkoutMerchantOrigins, ...checkoutManagementOrigins, "https://google.com/pay", "https://pay.google.com"],
   },
 });
 

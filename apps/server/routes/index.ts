@@ -9,6 +9,7 @@ import { registerPowerBiProxyRoutes } from "./powerbi-proxy";
 import { registerQuantusProxyRoute } from "./quantus-proxy";
 import { registerProjectDepositRoutes } from "./projectDeposits";
 import { registerDirectPaymentRoutes } from "./directPayments";
+import { registerRecurringPaymentRoutes } from "./recurringPayments";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -28,6 +29,7 @@ export async function registerRoutes(
   registerContactRoute(app);
   registerProjectDepositRoutes(app);
   registerDirectPaymentRoutes(app);
+  registerRecurringPaymentRoutes(app);
   registerAiLearningRoutes(app);
   registerBonusakiRoutes(app);
   registerQuantusProxyRoute(app);

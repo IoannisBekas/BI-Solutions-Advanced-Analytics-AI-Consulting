@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2, CreditCard, LockKeyhole } from "lucide-react";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import { LOCALES, LOCALE_TAGS } from "@/i18n/config";
 import { withAssetBase } from "@/lib/site";
+
+const RecurringPayment = lazy(() => import("./RecurringPayment"));
 
 const copy = {
   en: {
@@ -29,6 +31,9 @@ const copy = {
     statusUnavailable: "We couldn’t check the payment status. Check again before retrying your payment.",
     test: "Test mode · no real charge",
     privacy: "Privacy policy",
+    oneTime: "One-time payment",
+    monthly: "Monthly payment",
+    monthlyUnavailable: "Monthly payments are currently unavailable.",
   },
   el: {
     title: "Πληρωμή με κάρτα",
@@ -52,6 +57,9 @@ const copy = {
     statusUnavailable: "Δεν ήταν δυνατός ο έλεγχος της πληρωμής. Ελέγξτε ξανά πριν δοκιμάσετε νέα χρέωση.",
     test: "Δοκιμαστική λειτουργία · χωρίς πραγματική χρέωση",
     privacy: "Πολιτική απορρήτου",
+    oneTime: "Εφάπαξ πληρωμή",
+    monthly: "Μηνιαία πληρωμή",
+    monthlyUnavailable: "Οι μηνιαίες πληρωμές δεν είναι διαθέσιμες αυτή τη στιγμή.",
   },
   de: {
     title: "Mit Karte bezahlen",
@@ -75,19 +83,42 @@ const copy = {
     statusUnavailable: "Der Zahlungsstatus konnte nicht geprüft werden. Prüfen Sie ihn erneut, bevor Sie zahlen.",
     test: "Testmodus · keine echte Abbuchung",
     privacy: "Datenschutzerklärung",
+    oneTime: "Einmalige Zahlung",
+    monthly: "Monatliche Zahlung",
+    monthlyUnavailable: "Monatliche Zahlungen sind derzeit nicht verfügbar.",
   },
 };
 
 type EnabledConfig = { enabled: true; publicKey: string; sandbox: boolean };
 type Config = EnabledConfig | { enabled: false };
+type RecurringEnvironment = "sandbox" | "production";
 type Attempt = { amount: string; id: string; statusToken?: string; awaitingConfirmation?: boolean };
 type Checkout = { token: string; statusToken: string; amountMinor: number; checkoutUrl?: string };
 type PaymentResult = { status: "payable" | "processing" | "paid" | "closed"; amountMinor: number };
 type Notice = "checking" | "waiting" | "failed" | "closed" | "paid" | "unavailable" | "widgetUnavailable" | "statusUnavailable";
 
 const attemptKey = "bi-direct-payment";
+const recurringSettings = {
+  sandbox: { storageKey: "bi-recurring-payment-status", linkPrefix: "#monthly=" },
+  production: { storageKey: "bi-recurring-payment-status-live", linkPrefix: "#monthly-live=" },
+};
 
-function parseAmount(value: string) {
+function recurringLinkEnvironment(): RecurringEnvironment | null {
+  const fragment = window.location.hash;
+  if (fragment.startsWith(recurringSettings.production.linkPrefix)) return "production";
+  if (fragment.startsWith(recurringSettings.sandbox.linkPrefix)) return "sandbox";
+  return null;
+}
+
+function hasRecurringPayment(environment: RecurringEnvironment) {
+  try {
+    return Boolean(window.localStorage.getItem(recurringSettings[environment].storageKey));
+  } catch {
+    return false;
+  }
+}
+
+export function parsePaymentAmount(value: string) {
   const trimmed = value.trim();
   if (!/^\d{1,4}(?:[.,]\d{1,2})?$/.test(trimmed)) return null;
   const amount = Number(trimmed.replace(",", "."));
@@ -135,10 +166,16 @@ export default function DirectPayment() {
   const [notice, setNotice] = useState<Notice>();
   const [submitting, setSubmitting] = useState(false);
   const [widgetUnavailable, setWidgetUnavailable] = useState(false);
+  const [recurringEnvironment, setRecurringEnvironment] = useState<RecurringEnvironment | null>();
+  const [requestedRecurringEnvironment, setRequestedRecurringEnvironment] = useState<RecurringEnvironment | null>(null);
+  const [recurringBusy, setRecurringBusy] = useState(false);
+  const [paymentMode, setPaymentMode] = useState<"oneTime" | "monthly">("oneTime");
   const target = useRef<HTMLDivElement>(null);
   const attempt = useRef<Attempt | null>(null);
   const verifying = useRef(false);
   const pendingConfirmation = useRef(false);
+  const recurringLinkUnavailable = Boolean(requestedRecurringEnvironment && recurringEnvironment !== undefined && requestedRecurringEnvironment !== recurringEnvironment);
+  const showMonthly = recurringEnvironment && paymentMode === "monthly" && !recurringLinkUnavailable;
 
   function updateAttempt(next: Attempt | null) {
     attempt.current = next;
@@ -149,7 +186,7 @@ export default function DirectPayment() {
   useEffect(() => {
     try {
       const saved = JSON.parse(window.sessionStorage.getItem(attemptKey) || "null");
-      if (saved && parseAmount(saved.amount) === saved.amount && typeof saved.id === "string") {
+      if (saved && parsePaymentAmount(saved.amount) === saved.amount && typeof saved.id === "string") {
         const restored = {
           amount: saved.amount,
           id: saved.id,
@@ -170,6 +207,20 @@ export default function DirectPayment() {
     }
 
     const controller = new AbortController();
+    void fetch("/api/recurring-payments/config", { signal: controller.signal })
+      .then(async (response) => response.ok ? await response.json() : null)
+      .then((body) => {
+        if (!controller.signal.aborted) {
+          const environment = body?.enabled === true && typeof body.sandbox === "boolean"
+            ? body.sandbox ? "sandbox" : "production"
+            : null;
+          setRecurringEnvironment(environment);
+          if (environment && (recurringLinkEnvironment() || hasRecurringPayment(environment))) setPaymentMode("monthly");
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setRecurringEnvironment(null);
+      });
     void fetch("/api/direct-payments/config", { signal: controller.signal })
       .then(async (response) => response.ok ? await response.json() as Config : { enabled: false } as const)
       .then(setConfig)
@@ -182,10 +233,20 @@ export default function DirectPayment() {
         void verifyStatus("restore");
       }
     }
+    function openRecurringLink() {
+      const environment = recurringLinkEnvironment();
+      if (environment) {
+        setRequestedRecurringEnvironment(environment);
+        setPaymentMode("monthly");
+      }
+    }
+    openRecurringLink();
     window.addEventListener("pageshow", verifyAfterReturn);
+    window.addEventListener("hashchange", openRecurringLink);
     return () => {
       controller.abort();
       window.removeEventListener("pageshow", verifyAfterReturn);
+      window.removeEventListener("hashchange", openRecurringLink);
     };
   }, []);
 
@@ -257,7 +318,7 @@ export default function DirectPayment() {
   }
 
   useEffect(() => {
-    if (!config?.enabled || !activeAmount || !target.current) return;
+    if (showMonthly || !config?.enabled || !activeAmount || !target.current) return;
     let dispose = false;
     let widget: { destroy: () => void } | undefined;
     const host = target.current;
@@ -324,12 +385,12 @@ export default function DirectPayment() {
       dispose = true;
       widget?.destroy();
     };
-  }, [activeAmount, config, locale]);
+  }, [activeAmount, config, locale, showMonthly]);
 
   function startCheckout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!config?.enabled) return;
-    const normalized = parseAmount(amount);
+    const normalized = parsePaymentAmount(amount);
     setInvalid(!normalized);
     if (!normalized) return;
     if (attempt.current?.amount !== normalized) updateAttempt({ amount: normalized, id: window.crypto.randomUUID() });
@@ -377,6 +438,12 @@ export default function DirectPayment() {
   const showAmountForm = !activeAmount && !final && !verificationNeeded;
   const feedback = notice ? t[notice] : !config ? t.loading : !config.enabled ? t.unavailable : null;
 
+  useEffect(() => {
+    if (recurringLinkUnavailable && recurringLinkEnvironment()) {
+      window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
+    }
+  }, [recurringLinkUnavailable]);
+
   return (
     <main id="main-content" className="min-h-dvh bg-gray-50 px-4 py-8 sm:px-6 sm:py-14">
       <Seo title={t.title} description={t.description} path="/pay" robots="noindex,follow" translatedLocales={LOCALES} />
@@ -387,6 +454,25 @@ export default function DirectPayment() {
         </a>
         <section aria-labelledby="direct-payment-title" className="min-w-0 rounded-[2rem] border border-gray-200 bg-white p-4 shadow-xl shadow-gray-950/[0.05] sm:p-8">
           <h1 id="direct-payment-title" className="text-balance font-heading text-[clamp(1.55rem,7.7vw,1.875rem)] font-bold tracking-tight text-gray-950 sm:text-4xl">{t.title}</h1>
+          {recurringLinkUnavailable && <p role="status" className="mt-4 text-sm text-gray-600">{t.monthlyUnavailable}</p>}
+          {recurringEnvironment && (
+            <div className="mt-4 grid grid-cols-2 gap-2" role="group" aria-label={t.title}>
+              <Button type="button" variant={showMonthly ? "outline" : "default"} aria-pressed={!showMonthly} disabled={recurringBusy} className="min-h-11 rounded-xl" onClick={() => setPaymentMode("oneTime")}>{t.oneTime}</Button>
+              <Button type="button" variant={showMonthly ? "default" : "outline"} aria-pressed={Boolean(showMonthly)} disabled={submitting || notice === "checking"} className="min-h-11 rounded-xl" onClick={() => { setRequestedRecurringEnvironment(null); setPaymentMode("monthly"); }}>{t.monthly}</Button>
+            </div>
+          )}
+          {showMonthly ? (
+            <Suspense fallback={<p role="status" className="mt-4 text-sm text-gray-600">{t.loading}</p>}>
+              <RecurringPayment
+                key={recurringEnvironment}
+                normalizeAmount={parsePaymentAmount}
+                {...recurringSettings[recurringEnvironment]}
+                sandbox={recurringEnvironment === "sandbox"}
+                onBusyChange={setRecurringBusy}
+              />
+            </Suspense>
+          ) : (
+          <>
           {showAmountForm && <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">{t.description}</p>}
           {config?.enabled && config.sandbox && <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900">{t.test}</p>}
 
@@ -446,6 +532,8 @@ export default function DirectPayment() {
           )}
           {verificationNeeded && <Button type="button" variant="outline" className="mt-4 min-h-11 rounded-xl" disabled={notice === "checking"} onClick={() => void verifyStatus("restore")}>{t.verify}</Button>}
           {final && <Button type="button" variant="outline" className="mt-4 min-h-11 rounded-xl" onClick={startNewPayment}><CreditCard aria-hidden="true" />{t.another}</Button>}
+          </>
+          )}
         </section>
         <a href={localizedHref("/privacy-policy")} className="mt-2 inline-flex min-h-11 items-center rounded-sm text-sm text-gray-600 underline underline-offset-4 hover:text-gray-950">{t.privacy}</a>
       </div>
