@@ -34,6 +34,11 @@ export function registerProjectDepositRoutes(app: Express) {
         currency: "EUR",
         sandbox: config.environment === "sandbox",
       };
+      if ("billing" in quote) {
+        res.json({ ...details, billing: quote.billing, service: quote.service, cycles: quote.cycles,
+          status: "payable", checkoutUrl: quote.checkoutUrl });
+        return;
+      }
       if (!config.apiKey) {
         res.json({ ...details, status: "unavailable" });
         return;

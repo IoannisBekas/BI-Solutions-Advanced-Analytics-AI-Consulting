@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createElement, useEffect, useState } from "react";
 import { ArrowUpRight, CircleCheck, CreditCard, LockKeyhole } from "lucide-react";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,17 @@ const copy = {
     retry: "Try again",
     help: "If you need help, contact the team that sent your proposal.",
     privacy: "Privacy policy",
+    monthly: {
+      title: "Monthly project payments",
+      description: "Review the monthly payment plan agreed in your proposal.",
+      service: "Project or service",
+      amount: "Amount per month",
+      duration: "Duration",
+      months: (count: number) => count === 1 ? "1 month" : `${count} months`,
+      total: "Proposal total",
+      pay: "Continue with card",
+      checkout: "Review and confirm the recurring card payments in Revolut Checkout.",
+    },
   },
   el: {
     title: "Προκαταβολή έργου",
@@ -48,6 +59,17 @@ const copy = {
     retry: "Δοκιμάστε ξανά",
     help: "Για βοήθεια, επικοινωνήστε με την ομάδα που σας έστειλε την προσφορά.",
     privacy: "Πολιτική απορρήτου",
+    monthly: {
+      title: "Μηνιαίες πληρωμές έργου",
+      description: "Δείτε το πρόγραμμα μηνιαίων πληρωμών που συμφωνήσατε στην προσφορά.",
+      service: "Έργο ή υπηρεσία",
+      amount: "Ποσό ανά μήνα",
+      duration: "Διάρκεια",
+      months: (count: number) => count === 1 ? "1 μήνας" : `${count} μήνες`,
+      total: "Σύνολο προσφοράς",
+      pay: "Συνέχεια με κάρτα",
+      checkout: "Ελέγξτε και επιβεβαιώστε τις επαναλαμβανόμενες πληρωμές με κάρτα στο Revolut Checkout.",
+    },
   },
   de: {
     title: "Projektanzahlung",
@@ -69,6 +91,17 @@ const copy = {
     retry: "Erneut versuchen",
     help: "Bei Fragen wenden Sie sich an das Team, das Ihnen das Angebot geschickt hat.",
     privacy: "Datenschutzerklärung",
+    monthly: {
+      title: "Monatliche Projektzahlungen",
+      description: "Prüfen Sie den im Angebot vereinbarten monatlichen Zahlungsplan.",
+      service: "Projekt oder Leistung",
+      amount: "Betrag pro Monat",
+      duration: "Laufzeit",
+      months: (count: number) => count === 1 ? "1 Monat" : `${count} Monate`,
+      total: "Gesamtbetrag laut Angebot",
+      pay: "Weiter mit Karte",
+      checkout: "Prüfen und bestätigen Sie die wiederkehrenden Kartenzahlungen in Revolut Checkout.",
+    },
   },
 };
 
@@ -79,7 +112,10 @@ type Deposit = {
   status: "payable" | "processing" | "paid" | "closed" | "unavailable";
   checkoutUrl?: string;
   sandbox: boolean;
-};
+} & (
+  | { billing?: "one-off" }
+  | { billing: "monthly"; cycles: number; service: string }
+);
 
 type PageState =
   | { deposit: Deposit }
@@ -146,6 +182,10 @@ export default function ProjectDeposit() {
   }, [attempt]);
 
   const deposit = "deposit" in state ? state.deposit : null;
+  const monthly = deposit?.billing === "monthly" ? deposit : null;
+  const title = monthly ? t.monthly.title : t.title;
+  const description = monthly ? t.monthly.description : t.description;
+  const money = new Intl.NumberFormat(LOCALE_TAGS[locale], { style: "currency", currency: deposit?.currency ?? "EUR" });
   const checkoutUrl = deposit?.status === "payable" ? deposit.checkoutUrl : undefined;
   const message = "message" in state ? state.message
     : state.deposit.status === "payable" ? (checkoutUrl ? null : "unavailable")
@@ -154,15 +194,15 @@ export default function ProjectDeposit() {
 
   return (
     <main id="main-content" className="grid min-h-dvh place-items-center bg-gray-50 px-4 py-10 sm:px-6 sm:py-16">
-      <Seo title={t.title} description={t.description} path="/pay-deposit" robots="noindex,nofollow,noarchive" translatedLocales={LOCALES} />
+      <Seo title={title} description={description} path="/pay-deposit" robots="noindex,nofollow,noarchive" translatedLocales={LOCALES} />
       <div className="w-full min-w-0 max-w-lg">
         <a href={localizedHref("/")} className="mb-6 inline-flex min-h-11 items-center gap-3 rounded-lg px-1 text-sm font-semibold tracking-tight text-gray-950 hover:text-blue-800">
           <img src={withAssetBase("assets/brand/bi-solutions-group-mark.png")} alt="" width={28} height={28} />
           BI Solutions Group
         </a>
         <section aria-labelledby="deposit-title" className="rounded-[2rem] border border-gray-200 bg-white p-6 shadow-xl shadow-gray-950/[0.05] sm:p-9">
-          <h1 id="deposit-title" className="break-words font-heading text-[clamp(1.55rem,7.7vw,1.875rem)] font-bold tracking-tight text-gray-950 sm:text-4xl">{t.title}</h1>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">{t.description}</p>
+          <h1 id="deposit-title" className="break-words text-balance font-heading text-[clamp(1.55rem,7.7vw,1.875rem)] leading-tight font-bold tracking-tight text-gray-950 sm:text-4xl">{title}</h1>
+          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">{description}</p>
 
           {deposit && (
             <dl className="mt-6 min-w-0 space-y-4 rounded-2xl border border-gray-100 bg-gray-50 p-4 sm:p-5">
@@ -170,12 +210,30 @@ export default function ProjectDeposit() {
                 <dt className="text-sm font-medium text-gray-600">{t.reference}</dt>
                 <dd className="mt-1 [overflow-wrap:anywhere] text-sm font-semibold text-gray-900"><code>{deposit.reference}</code></dd>
               </div>
+              {monthly && (
+                <div>
+                  <dt className="text-sm font-medium text-gray-600">{t.monthly.service}</dt>
+                  <dd className="mt-1 [overflow-wrap:anywhere] text-sm font-semibold text-gray-900">{createElement("bdi", { translate: "no" }, monthly.service)}</dd>
+                </div>
+              )}
               <div>
-                <dt className="text-sm font-medium text-gray-600">{t.amount}</dt>
+                <dt className="text-sm font-medium text-gray-600">{monthly ? t.monthly.amount : t.amount}</dt>
                 <dd className="mt-1 [overflow-wrap:anywhere] font-heading text-3xl font-bold tracking-tight text-gray-950 tabular-nums sm:text-4xl">
-                  {new Intl.NumberFormat(LOCALE_TAGS[locale], { style: "currency", currency: deposit.currency }).format(deposit.amountMinor / 100)}
+                  {money.format(deposit.amountMinor / 100)}
                 </dd>
               </div>
+              {monthly && (
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,7rem),1fr))] gap-3 border-t border-gray-200 pt-4">
+                  <div>
+                    <dt className="text-sm font-medium text-gray-600">{t.monthly.duration}</dt>
+                    <dd className="mt-1 text-sm font-semibold text-gray-900">{t.monthly.months(monthly.cycles)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-600">{t.monthly.total}</dt>
+                    <dd className="mt-1 [overflow-wrap:anywhere] text-sm font-semibold text-gray-900 tabular-nums">{money.format(monthly.amountMinor * monthly.cycles / 100)}</dd>
+                  </div>
+                </div>
+              )}
             </dl>
           )}
           {deposit?.sandbox && <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900">{t.sandbox}</p>}
@@ -185,13 +243,13 @@ export default function ProjectDeposit() {
               <Button asChild className="min-h-12 w-full rounded-xl text-base">
                 <a href={checkoutUrl} rel="noreferrer">
                   <CreditCard aria-hidden="true" />
-                  {t.pay}
+                  {monthly ? t.monthly.pay : t.pay}
                   <ArrowUpRight aria-hidden="true" />
                 </a>
               </Button>
               <p className="mt-3 flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-gray-600 sm:text-sm">
                 <LockKeyhole aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
-                {t.checkout}
+                {monthly ? t.monthly.checkout : t.checkout}
               </p>
             </div>
           )}

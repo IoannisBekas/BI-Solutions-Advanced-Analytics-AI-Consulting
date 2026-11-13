@@ -131,3 +131,75 @@ test("issuance sends the agreed cents and reconciliation recovers the original o
   assert.deepEqual(recovered, created);
   assert.deepEqual(requests, ["POST /api/orders", "GET /api/orders", `GET /api/orders/${quote.orderId}`]);
 });
+
+test("monthly subscriptions expose only signed terms and a Revolut signup URL", async (t) => {
+  const settings = {
+    PROJECT_DEPOSIT_TOKEN_SECRET: secret,
+    PROJECT_DEPOSIT_REVOLUT_ENV: "production",
+  };
+  for (const [name, value] of Object.entries(settings)) {
+    const previous = process.env[name];
+    process.env[name] = value;
+    t.after(() => {
+      if (previous === undefined) delete process.env[name];
+      else process.env[name] = previous;
+    });
+  }
+  const app = express();
+  app.use(express.json());
+  registerProjectDepositRoutes(app);
+  const server = createServer(app).listen(0, "127.0.0.1");
+  t.after(() => server.close());
+  await once(server, "listening");
+  const endpoint = `http://127.0.0.1:${(server.address() as AddressInfo).port}/api/project-deposits/status`;
+  const localFetch = globalThis.fetch;
+  const providerFetch = t.mock.method(globalThis, "fetch", async () => {
+    assert.fail("Opening a monthly subscription link must not call Revolut's API");
+  });
+  const monthly = {
+    billing: "monthly",
+    environment: "production",
+    reference: "BI-MONTHLY-042",
+    amountMinor: 17500,
+    expiresAt: quote.expiresAt,
+    locale: "el",
+    service: "Monthly reporting support",
+    cycles: 6,
+    checkoutUrl: "https://checkout.revolut.com/subscription/6516e61c-d279-a454-a837-bc52ce55ed49",
+  } as const;
+  const sign = (details: ProjectDepositQuote) => createProjectDepositToken(details, secret);
+  const request = (token: string) => localFetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, amountMinor: 1, cycles: 2, checkoutUrl: "https://example.com/checkout" }),
+  });
+  const token = sign(monthly);
+  const payable = await request(token);
+  assert.equal(payable.status, 200);
+  assert.equal(payable.headers.get("Cache-Control"), "no-store");
+  assert.deepEqual(await payable.json(), {
+    reference: monthly.reference,
+    amountMinor: monthly.amountMinor,
+    currency: "EUR",
+    sandbox: false,
+    billing: monthly.billing,
+    service: monthly.service,
+    cycles: monthly.cycles,
+    status: "payable",
+    checkoutUrl: monthly.checkoutUrl,
+  });
+
+  const [changedPayload] = sign({ ...monthly, cycles: 2 }).split(".");
+  assert.equal((await request(`${changedPayload}.${token.split(".")[1]}`)).status, 404);
+  assert.equal((await request(sign({ ...monthly, expiresAt: 1 }))).status, 410);
+  process.env.PROJECT_DEPOSIT_REVOLUT_ENV = "sandbox";
+  assert.equal((await request(token)).status, 404);
+  for (const checkoutUrl of [
+    monthly.checkoutUrl.replace("checkout.revolut.com", "checkout.revolut.com.example.com"),
+    monthly.checkoutUrl.replace("/subscription/", "/payment-link/"),
+    `${monthly.checkoutUrl}?next=https://example.com/`,
+  ]) {
+    assert.throws(() => sign({ ...monthly, checkoutUrl }));
+  }
+  assert.equal(providerFetch.mock.callCount(), 0);
+});

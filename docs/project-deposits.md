@@ -22,3 +22,15 @@ Use a unique quote reference, such as `BI-2026-042`. `--days` defaults to `7` an
 If the issuance command fails after an attempted creation, rerun it with the same reference and amount. The command looks for the existing order before it tries to create anything. If it reports an existing attempt without finding the order, reconcile the reference in the Merchant dashboard. Clear that quote's attempt file only after confirming that Revolut did not create an order. To issue a revised quote, first cancel any unpaid order for the old quote in Revolut, then use a new quote reference. For the same reference, the original amount and expiry are preserved.
 
 For a full test, point the development server and the issuance command at Sandbox, set `PROJECT_DEPOSIT_ORIGIN=http://127.0.0.1:5001`, and use a [Revolut test card](https://developer.revolut.com/docs/guides/merchant/test-and-go-live/testing/test-cards) on the hosted checkout. Reopen the private link and check that it shows the payment as completed before switching to Production.
+
+## Issue a monthly offer
+
+1. In [Revolut Business → Merchant → Subscriptions](https://business.revolut.com/merchant/subscriptions), create a plan for this offer with the service name, fixed monthly amount in EUR, and agreed number of payments. Use a plan that ends after the agreed number of payments. Generate the hosted signup link and copy its `https://checkout.revolut.com/subscription/…` URL. Preview it and check the terms against the offer before issuing the site link.
+2. Provide the customer with the agreed terms, including the billing amount, schedule, and cancellation instructions. In Subscriptions settings, check Customer communications and Preventive notifications for automatic payments, as well as receipts. The [Merchant terms](https://www.revolut.com/en-GR/legal/business-acquiring/) describe these obligations.
+3. Issue the private site link using a new offer reference and the exact same amount and term. The monthly link is available with Production configuration.
+
+```powershell
+npm.cmd run project-deposit:issue -- --reference BI-2026-043 --amount 150.00 --months 6 --service "Website maintenance" --monthly-link "<Revolut signup link>"
+```
+
+The customer reviews the monthly terms on the site and signs up on Revolut. Treat the Revolut signup URL as reusable. Share it through the private offer and close enrollment in the Merchant dashboard once the intended customer has signed up. Track enrollment and payments there. The site link's expiry controls access to the site page. Use a unique reference per offer and use the same issuance machine for one-off and monthly links.

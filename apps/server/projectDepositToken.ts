@@ -4,15 +4,24 @@ import { z } from "zod";
 export const projectDepositReference = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/);
 export const projectDepositAmountMinor = z.number().int().positive().max(99_999_999);
 export const projectDepositLocale = z.enum(["el", "en", "de"]);
+export const projectSubscriptionTerms = z.object({
+  billing: z.literal("monthly"),
+  service: z.string().trim().min(1).max(120),
+  cycles: z.number().int().min(2).max(12),
+  checkoutUrl: z.string().regex(/^https:\/\/checkout\.revolut\.com\/subscription\/[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}\/?$/i),
+}).strict();
 
-const projectDepositQuote = z.object({
+const quoteFields = {
   reference: projectDepositReference,
   amountMinor: projectDepositAmountMinor,
   expiresAt: z.number().int().positive(),
   locale: projectDepositLocale,
-  orderId: z.guid(),
   environment: z.enum(["sandbox", "production"]),
-}).strict();
+};
+const projectDepositQuote = z.union([
+  z.object({ ...quoteFields, orderId: z.guid() }).strict(),
+  projectSubscriptionTerms.extend({ ...quoteFields, environment: z.literal("production") }).strict(),
+]);
 
 export type ProjectDepositQuote = z.infer<typeof projectDepositQuote>;
 
@@ -27,7 +36,7 @@ export function createProjectDepositToken(quote: ProjectDepositQuote, secret: st
 }
 
 export function readProjectDepositToken(token: string, secret: string): ProjectDepositQuote | null {
-  if (secret.length < 32 || token.length > 1024 || !/^[\w-]+\.[\w-]{43}$/.test(token)) return null;
+  if (secret.length < 32 || token.length > 2048 || !/^[\w-]+\.[\w-]{43}$/.test(token)) return null;
 
   const [payload, signed] = token.split(".");
   const expected = signature(payload, secret);

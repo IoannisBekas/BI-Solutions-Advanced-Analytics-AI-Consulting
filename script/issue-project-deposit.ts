@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import {
@@ -6,6 +6,7 @@ import {
   projectDepositAmountMinor,
   projectDepositLocale,
   projectDepositReference,
+  projectSubscriptionTerms,
 } from "../apps/server/projectDepositToken";
 import {
   createProjectDepositOrder,
@@ -13,7 +14,10 @@ import {
   getProjectDepositRevolutConfig,
 } from "../apps/server/projectDepositRevolut";
 
-const usage = "npm run project-deposit:issue -- --reference BI-2026-042 --amount 250.00 [--days 7] [--locale el]";
+const usage = [
+  "npm.cmd run project-deposit:issue -- --reference BI-2026-042 --amount 250.00 [--days 7] [--locale el]",
+  "For a monthly offer add --monthly-link <Revolut subscription URL> --service <service> --months <2–12>.",
+].join("\n");
 
 function parseAmount(amount: string) {
   const match = /^(\d{1,6})(?:[.,](\d{1,2}))?$/.exec(amount);
@@ -30,6 +34,9 @@ async function issueDeposit() {
       amount: { type: "string" },
       days: { type: "string", default: "7" },
       locale: { type: "string", default: "el" },
+      "monthly-link": { type: "string" },
+      service: { type: "string" },
+      months: { type: "string" },
       help: { type: "boolean" },
     },
   });
@@ -42,6 +49,16 @@ async function issueDeposit() {
   const reference = projectDepositReference.safeParse(values.reference?.toUpperCase());
   if (!reference.success || !values.amount) throw new Error(`A quote reference and amount are required.\n${usage}`);
   const amountMinor = parseAmount(values.amount);
+  const hasMonthlyOptions = [values["monthly-link"], values.service, values.months].some((value) => value !== undefined);
+  const monthlyTerms = hasMonthlyOptions ? projectSubscriptionTerms.safeParse({
+    billing: "monthly",
+    service: values.service,
+    cycles: Number(values.months),
+    checkoutUrl: values["monthly-link"],
+  }) : null;
+  if (monthlyTerms && !monthlyTerms.success) {
+    throw new Error("Monthly offers require a Revolut subscription URL, the agreed service name and a term of 2 to 12 months.");
+  }
   const locale = projectDepositLocale.safeParse(values.locale);
   if (!locale.success) throw new Error("Choose el, en or de for the link language.");
   const days = Number(values.days);
@@ -51,7 +68,7 @@ async function issueDeposit() {
   if (secret.length < 32) throw new Error("Set PROJECT_DEPOSIT_TOKEN_SECRET to a random value of at least 32 characters.");
   const config = getProjectDepositRevolutConfig();
   config.apiKey = process.env.PROJECT_DEPOSIT_REVOLUT_ISSUER_KEY?.trim() || config.apiKey;
-  if (!config.apiKey) throw new Error("Set an Orders Write key in PROJECT_DEPOSIT_REVOLUT_ISSUER_KEY.");
+  if (!monthlyTerms && !config.apiKey) throw new Error("Set an Orders Write key in PROJECT_DEPOSIT_REVOLUT_ISSUER_KEY.");
 
   const origin = new URL(process.env.PROJECT_DEPOSIT_ORIGIN?.trim() || process.env.APP_URL?.trim() || "https://www.bisolutions.group");
   const localSandbox = config.environment === "sandbox" && origin.protocol === "http:" &&
@@ -66,13 +83,45 @@ async function issueDeposit() {
     amountMinor,
     expiresAt: Math.floor(Date.now() / 1000) + days * 86_400,
   };
+  const dataDir = process.env.DATA_DIR?.trim() || "data";
+  const attemptsDir = path.join(dataDir, "project-deposit-issuance", config.environment);
+  const attemptFile = path.join(attemptsDir, `quote-${quote.reference}.json`);
+
+  if (monthlyTerms?.success) {
+    if (config.environment !== "production" || !config.apiKey) {
+      throw new Error("Use the configured Production merchant account to issue a live monthly offer.");
+    }
+    // A reference already used for a one-off charge must not become a second payment link.
+    if (await findProjectDepositOrder(config, quote)) {
+      throw new Error("This reference already has a Revolut deposit order. Use a separate reference for the subscription.");
+    }
+    const monthlyQuote = { ...quote, ...monthlyTerms.data, environment: config.environment } as const;
+    mkdirSync(attemptsDir, { recursive: true });
+    let expiresAt = quote.expiresAt;
+    try {
+      writeFileSync(attemptFile, JSON.stringify(monthlyQuote), { flag: "wx" });
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+      const existing = JSON.parse(readFileSync(attemptFile, "utf8"));
+      const savedTerms = projectSubscriptionTerms.safeParse({ billing: existing.billing, service: existing.service,
+        cycles: existing.cycles, checkoutUrl: existing.checkoutUrl });
+      if (!savedTerms.success || existing.amountMinor !== quote.amountMinor ||
+          JSON.stringify(savedTerms.data) !== JSON.stringify(monthlyTerms.data)) {
+        throw new Error("This reference already has different payment terms. Use a separate reference.");
+      }
+      expiresAt = existing.expiresAt;
+      if (!Number.isInteger(expiresAt) || expiresAt <= Math.floor(Date.now() / 1000)) {
+        throw new Error("This monthly offer link has expired. Review the plan before issuing a new reference.");
+      }
+    }
+    link.hash = createProjectDepositToken({ ...monthlyQuote, expiresAt, locale: locale.data }, secret);
+    console.log(link.href);
+    return;
+  }
 
   let order = await findProjectDepositOrder(config, quote);
   if (!order) {
-    const dataDir = process.env.DATA_DIR?.trim() || "data";
-    const attemptsDir = path.join(dataDir, "project-deposit-issuance", config.environment);
     mkdirSync(attemptsDir, { recursive: true });
-    const attemptFile = path.join(attemptsDir, `quote-${quote.reference}.json`);
     try {
       writeFileSync(attemptFile, JSON.stringify(quote), { flag: "wx" });
     } catch (error) {
