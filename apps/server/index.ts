@@ -212,7 +212,7 @@ const checkoutContentSecurityPolicy = helmet.contentSecurityPolicy({
     "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
     "img-src": ["'self'", "data:", checkoutMerchantOrigin, checkoutHostedOrigin],
     "frame-src": ["'self'", ...checkoutFrameOrigins],
-    "connect-src": ["'self'", checkoutMerchantOrigin, checkoutManagementOrigin],
+    "connect-src": ["'self'", checkoutMerchantOrigin, checkoutManagementOrigin, "https://google.com/pay", "https://pay.google.com"],
   },
 });
 
