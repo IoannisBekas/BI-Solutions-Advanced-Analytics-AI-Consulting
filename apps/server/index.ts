@@ -112,6 +112,7 @@ const checkoutHostedOrigin = checkoutIsSandbox ? "https://sandbox-checkout.revol
 const checkoutFrameOrigins = [
   checkoutMerchantOrigin,
   checkoutHostedOrigin,
+  "https://pay.google.com",
   ...(checkoutIsSandbox ? [] : ["https://merchant-redirect.revolut.com"]),
 ];
 const checkoutPermissionsPolicy = [
