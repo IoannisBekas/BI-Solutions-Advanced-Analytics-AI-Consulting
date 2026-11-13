@@ -34,3 +34,9 @@ npm.cmd run project-deposit:issue -- --reference BI-2026-043 --amount 150.00 --m
 ```
 
 The customer reviews the monthly terms on the site and signs up on Revolut. Treat the Revolut signup URL as reusable. Share it through the private offer and close enrollment in the Merchant dashboard once the intended customer has signed up. Track enrollment and payments there. The site link's expiry controls access to the site page. Use a unique reference per offer and use the same issuance machine for one-off and monthly links.
+
+## Accept a direct payment
+
+The public `/el/pay` page accepts a customer-entered amount between €1 and €1,000 for a one-off payment. Revolut's embedded widget collects the card and billing details. Use the private offer flow for a fixed quote or a monthly plan. Reconcile direct payments in Revolut Merchant under the order's reference. A direct payment does not automatically create a project or fulfill a service.
+
+Set the `DIRECT_PAYMENTS_*` variables in `.env.example` on the server. Use matching public and secret Merchant API keys for the chosen environment. Keep the order-attempt database on persistent storage and set `DIRECT_PAYMENTS_ENABLED=true` once the embedded widget loads and Card is enabled in the [Revolut Checkout settings](https://developer.revolut.com/docs/guides/merchant/accept-payments/online-payments/revolut-checkout/web#customise-revolut-checkout). Use separate Sandbox credentials and Revolut test cards to test the charge and confirmation flow without moving money.

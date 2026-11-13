@@ -118,6 +118,14 @@ export function Footer() {
                   {t.nav.startProject}
                 </Link>
               </li>
+              <li>
+                <a
+                  href={localizedHref("/pay")}
+                  className="text-gray-400 transition-colors hover:text-white"
+                >
+                  {locale === "el" ? "Πληρωμή με κάρτα" : locale === "de" ? "Mit Karte bezahlen" : "Pay by card"}
+                </a>
+              </li>
               {CONTACT_EMAIL && (
                 <li>
                   <a

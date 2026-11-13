@@ -313,6 +313,16 @@ export default function PrivacyPolicy() {
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
                     <span>
+                      {locale === "el"
+                        ? "Η Revolut επεξεργάζεται τα στοιχεία κάρτας και χρέωσης που συμπληρώνετε στο checkout. Χρησιμοποιούμε το ποσό, τον κωδικό συναλλαγής και την κατάσταση της πληρωμής για να επιβεβαιώνουμε και να συμφωνούμε τις πληρωμές."
+                        : locale === "de"
+                          ? "Revolut verarbeitet die Karten- und Rechnungsdaten, die Sie beim Bezahlen eingeben. Wir verwenden den Betrag, die Transaktionsreferenz und den Zahlungsstatus, um Zahlungen zu bestätigen und abzugleichen."
+                          : "Revolut processes the card and billing details you enter at checkout. We use the amount, transaction reference and payment status to confirm and reconcile payments."}
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0" />
+                    <span>
                       <strong>Google Analytics:</strong> Used for website
                       analytics if enabled.
                     </span>

@@ -7,7 +7,7 @@ import fs from "fs";
 import crypto from "crypto";
 import path from "path";
 import { registerRoutes } from "./routes";
-import { serveStatic } from "./static";
+import { PUBLIC_CHECKOUT_PATH, serveStatic } from "./static";
 import { createServer } from "http";
 import { APEX_HOST, canonicalHostRedirect } from "./canonicalHost";
 import { publicAssetCompression } from "./publicCompression";
@@ -88,7 +88,7 @@ declare module "express-serve-static-core" {
 
 const REQUEST_ID_HEADER = "x-request-id";
 const REQUEST_ID_RE = /^[A-Za-z0-9._:-]{1,128}$/;
-const PERMISSIONS_POLICY = [
+const RESTRICTED_PERMISSIONS = [
   "accelerometer=()",
   "bluetooth=()",
   "browsing-topics=()",
@@ -98,10 +98,31 @@ const PERMISSIONS_POLICY = [
   "gyroscope=()",
   "magnetometer=()",
   "microphone=()",
-  "payment=()",
   "serial=()",
   "usb=()",
+];
+const PERMISSIONS_POLICY = [...RESTRICTED_PERMISSIONS, "payment=()"].join(", ");
+
+// The Web SDK loads its script and iframe from Merchant and calls Merchant Management.
+// Match the configured checkout environment so live pages never allow Sandbox frames.
+const checkoutIsSandbox = process.env.DIRECT_PAYMENTS_REVOLUT_ENV?.trim() === "sandbox";
+const checkoutMerchantOrigin = checkoutIsSandbox ? "https://sandbox-merchant.revolut.com" : "https://merchant.revolut.com";
+const checkoutManagementOrigin = checkoutIsSandbox ? "https://sandbox-merchant-mgmt.revolut.com" : "https://merchant-mgmt.revolut.com";
+const checkoutHostedOrigin = checkoutIsSandbox ? "https://sandbox-checkout.revolut.com" : "https://checkout.revolut.com";
+const checkoutFrameOrigins = [
+  checkoutMerchantOrigin,
+  checkoutHostedOrigin,
+  ...(checkoutIsSandbox ? [] : ["https://merchant-redirect.revolut.com"]),
+];
+const checkoutPermissionsPolicy = [
+  ...RESTRICTED_PERMISSIONS,
+  `payment=(self ${checkoutFrameOrigins.map((origin) => `"${origin}"`).join(" ")})`,
 ].join(", ");
+
+function checkoutNonce(_req: unknown, res: unknown) {
+  const locals = (res as { locals?: { cspNonce?: string } }).locals;
+  return `'nonce-${locals?.cspNonce || ""}'`;
+}
 
 app.disable("x-powered-by");
 
@@ -142,10 +163,7 @@ app.use(
             "img-src": ["'self'", "data:", "https:"],
             "script-src": [
               "'self'",
-              (_req: unknown, res: unknown) => {
-                const locals = (res as { locals?: { cspNonce?: string } }).locals;
-                return `'nonce-${locals?.cspNonce || ""}'`;
-              },
+              checkoutNonce,
               "'strict-dynamic'",
               "https://accounts.google.com",
               "https://www.googletagmanager.com",
@@ -186,8 +204,31 @@ app.use(
   }),
 );
 
-app.use((_req, res, next) => {
-  res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
+const checkoutContentSecurityPolicy = helmet.contentSecurityPolicy({
+  directives: {
+    "script-src": ["'self'", checkoutNonce, "'strict-dynamic'", checkoutMerchantOrigin],
+    "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+    "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
+    "img-src": ["'self'", "data:", checkoutMerchantOrigin, checkoutHostedOrigin],
+    "frame-src": ["'self'", ...checkoutFrameOrigins],
+    "connect-src": ["'self'", checkoutMerchantOrigin, checkoutManagementOrigin],
+  },
+});
+
+app.use((req, res, next) => {
+  if (!PUBLIC_CHECKOUT_PATH.test(req.path)) {
+    res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
+    next();
+    return;
+  }
+
+  res.setHeader("Permissions-Policy", checkoutPermissionsPolicy);
+  // Revolut uses popups for certain payment methods and reports the result to their opener.
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  if (isProduction) {
+    checkoutContentSecurityPolicy(req, res, next);
+    return;
+  }
   next();
 });
 

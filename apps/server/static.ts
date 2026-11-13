@@ -371,6 +371,26 @@ export interface RouteMeta {
   robots?: string;
 }
 
+export const PUBLIC_CHECKOUT_PATH = /^\/(?:(el|de)\/)?pay\/?$/i;
+
+const publicCheckoutMeta = {
+  en: {
+    title: "Pay by card",
+    description: "Pay for BI Solutions Group services by card with Revolut Checkout.",
+    lang: "en",
+  },
+  el: {
+    title: "Πληρωμή με κάρτα",
+    description: "Πληρώστε για υπηρεσίες της BI Solutions Group με κάρτα μέσω Revolut Checkout.",
+    lang: "el-GR",
+  },
+  de: {
+    title: "Mit Karte bezahlen",
+    description: "Bezahlen Sie Dienstleistungen der BI Solutions Group per Karte über Revolut Checkout.",
+    lang: "de-DE",
+  },
+};
+
 const BASE_URL = "https://www.bisolutions.group";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/og.png?v=blue-20260830`;
 const ORGANIZATION_LOGO_IMAGE = `${BASE_URL}/bi-solutions-logo.png`;
@@ -854,6 +874,24 @@ export function serveStatic(app: Express) {
   for (const appName of ["bnb-companies", "sol-companies", "btc-companies"]) {
     serveProductSpa(app, `/${appName}`, path.resolve(distPath, appName), true);
   }
+
+  app.get(PUBLIC_CHECKOUT_PATH, (req, res) => {
+    const locale = req.params[0]?.toLowerCase();
+    const { title, description, lang } = publicCheckoutMeta[locale === "el" || locale === "de" ? locale : "en"];
+    const robots = "noindex,follow";
+    res.set({
+      "Cache-Control": "private, no-store",
+      "Referrer-Policy": "no-referrer",
+      "X-Robots-Tag": robots,
+    });
+    const localizedShell = clientShellHtml.replace('<html lang="en">', `<html lang="${lang}">`);
+    res.type("html").send(renderFallbackHtml(localizedShell, {
+      title: `${title} | BI Solutions Group`,
+      description,
+      path: req.path.replace(/\/$/, "").toLowerCase(),
+      robots,
+    }, (res.locals.cspNonce as string) || ""));
+  });
 
   app.get(/^\/(?:(el|de)\/)?pay-deposit\/?$/i, (req, res) => {
     const locale = req.params[0]?.toLowerCase();
