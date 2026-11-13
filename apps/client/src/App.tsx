@@ -22,6 +22,7 @@ const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const About = lazy(() => import("@/pages/About"));
 const StartProject = lazy(() => import("@/pages/StartProject"));
+const ProjectDeposit = lazy(() => import("@/pages/ProjectDeposit"));
 const AiLearningProducts = lazy(() => import("@/pages/AiLearningProducts"));
 const RestaurantOrdering = lazy(() => import("@/pages/RestaurantOrdering"));
 const USConsulting = lazy(() => import("@/pages/USConsulting"));
@@ -53,13 +54,14 @@ function App({ ssrPath }: AppProps = {}) {
   // Switching language is a full page load, so reading the locale once here is
   // enough — every in-app link stays inside the router's locale-aware base.
   const currentPath = routePathname(ssrPath);
-  const { locale } = splitLocaleFromPath(currentPath);
+  const { locale, path } = splitLocaleFromPath(currentPath);
+  const isProjectDeposit = /^\/pay-deposit$/i.test(path);
 
   return (
     <ErrorBoundary>
       <LocaleProvider locale={locale} currentPath={currentPath}>
-        <Router ssrPath={ssrPath} locale={locale} />
-        <CookieConsent />
+        <Router ssrPath={ssrPath} locale={locale} isProjectDeposit={isProjectDeposit} />
+        {!isProjectDeposit && <CookieConsent />}
       </LocaleProvider>
     </ErrorBoundary>
   );
@@ -106,7 +108,7 @@ function RestaurantRoute({ locale, legacy = false }: { locale: Locale; legacy?: 
   return <RestaurantOrdering />;
 }
 
-function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
+function Router({ ssrPath, locale, isProjectDeposit }: { ssrPath?: string; locale: Locale; isProjectDeposit: boolean }) {
   return (
     <WouterRouter
       hook={useBrowserLocation}
@@ -116,7 +118,7 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
       {/* Uses wouter's useLocation, so it must live inside the router —
           outside it would fall back to a default router without ssrPath
           and crash build-time prerendering. */}
-      <ScrollToTop />
+      {!isProjectDeposit && <ScrollToTop />}
       <Suspense fallback={<PageFallback />}>
         <DocumentLocalizer locale={locale}>
           <Switch>
@@ -139,6 +141,7 @@ function Router({ ssrPath, locale }: { ssrPath?: string; locale: Locale }) {
             <Route path="/blog/:slug" component={BlogPost} />
             <Route path="/about" component={About} />
             <Route path="/start-a-project" component={StartProject} />
+            <Route path="/pay-deposit" component={ProjectDeposit} />
             <Route path="/online-paraggelies"><RestaurantRoute locale={locale} /></Route>
             <Route path="/meiosi-kostous-delivery"><RestaurantRoute locale={locale} legacy /></Route>
           <Route path="/resources/ai-prompt-packs" component={AiLearningProducts} />

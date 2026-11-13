@@ -855,6 +855,29 @@ export function serveStatic(app: Express) {
     serveProductSpa(app, `/${appName}`, path.resolve(distPath, appName), true);
   }
 
+  app.get(/^\/(?:(el|de)\/)?pay-deposit\/?$/i, (req, res) => {
+    const locale = req.params[0]?.toLowerCase();
+    const title = locale === "el" ? "Προκαταβολή έργου"
+      : locale === "de" ? "Projektanzahlung" : "Project deposit";
+    const description = locale === "el" ? "Πληρωμή προκαταβολής έργου της BI Solutions Group."
+      : locale === "de" ? "Zahlung einer Projektanzahlung an die BI Solutions Group."
+        : "Pay a BI Solutions Group project deposit.";
+    const lang = locale === "el" ? "el-GR" : locale === "de" ? "de-DE" : "en";
+    const robots = "noindex,nofollow,noarchive";
+    res.set({
+      "Cache-Control": "private, no-store",
+      "Referrer-Policy": "no-referrer",
+      "X-Robots-Tag": robots,
+    });
+    const localizedShell = clientShellHtml.replace('<html lang="en">', `<html lang="${lang}">`);
+    res.type("html").send(renderFallbackHtml(localizedShell, {
+      title: `${title} | BI Solutions Group`,
+      description,
+      path: req.path.replace(/\/$/, "").toLowerCase(),
+      robots,
+    }, (res.locals.cspNonce as string) || ""));
+  });
+
   // Marketing routes are prerendered as <route>/index.html. Serve those files
   // directly so crawlers receive each page's real body and self-canonical.
   app.use((req, res, next) => {

@@ -7,6 +7,7 @@ import { registerContactRoute } from "./contact";
 import { registerAiLearningRoutes } from "./aiLearning";
 import { registerPowerBiProxyRoutes } from "./powerbi-proxy";
 import { registerQuantusProxyRoute } from "./quantus-proxy";
+import { registerProjectDepositRoutes } from "./projectDeposits";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -24,6 +25,7 @@ export async function registerRoutes(
   registerQuantusPersistenceRoutes(app);
 
   registerContactRoute(app);
+  registerProjectDepositRoutes(app);
   registerAiLearningRoutes(app);
   registerBonusakiRoutes(app);
   registerQuantusProxyRoute(app);
