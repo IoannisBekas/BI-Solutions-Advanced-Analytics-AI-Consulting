@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createCipheriv, createDecipheriv, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import path from "node:path";
 import Database from "better-sqlite3";
@@ -18,17 +18,24 @@ import {
   type RecurringEnvironment,
 } from "../recurringPaymentsRevolut";
 
+import { registerRecurringPaymentNotices, type RecurringNoticeAttempt } from "../recurringPaymentNotices";
+
 const API_PATH = "/api/recurring-payments";
 const WINDOW_MS = 10 * 60 * 1000;
 const CHECKOUT_LIMIT = 30;
 const PLAN_RECONCILE_DELAY_MS = 15_000;
-const CONSENT_VERSION = "monthly-until-cancelled-v1";
+const CUSTOMER_WINDOW_MS = 60 * 60 * 1000;
+const SANDBOX_CONSENT_VERSION = "monthly-until-cancelled-v1";
+const LIVE_CONSENT_VERSION = "rolling-monthly-v2";
+const localeSchema = z.enum(["el", "en", "de"]);
 const attemptIdSchema = z.uuidv4().toLowerCase();
 const checkoutBody = z.object({
   amount: z.string().trim().regex(/^\d{1,4}(?:[.,]\d{1,2})?$/),
   email: z.string().trim().toLowerCase().pipe(z.email().max(254)),
   consent: z.literal(true),
   attemptId: attemptIdSchema,
+  service: z.string().trim().min(3).max(120).regex(/^[^\x00-\x1f\x7f]+$/).optional(),
+  locale: localeSchema.optional(),
 }).strict();
 
 function configuration() {
@@ -49,13 +56,29 @@ function configuration() {
     console.error("The recurring payment Merchant key does not match its environment.");
     return null;
   }
-  return { environment: environment as RecurringEnvironment, apiKey, secret, dataDirectory: dataDirectory || "data" };
+  const emailApiKey = process.env.RESEND_API_KEY?.trim();
+  const fromEmail = process.env.RECURRING_PAYMENTS_FROM_EMAIL?.trim();
+  if (environment === "production" && (!emailApiKey || !fromEmail)) {
+    console.error("Live recurring payment email configuration is incomplete.");
+    return null;
+  }
+  return {
+    environment: environment as RecurringEnvironment,
+    apiKey,
+    secret,
+    dataDirectory: dataDirectory || "data",
+    email: emailApiKey && fromEmail ? { emailApiKey, fromEmail } : undefined,
+    enrollmentOpen: process.env.RECURRING_PAYMENTS_NEW_SIGNUPS?.trim() !== "false",
+  };
 }
 
 type Attempt = {
   attemptId: string;
   amountMinor: number;
   emailHash: string;
+  emailCiphertext: string | null;
+  service: string | null;
+  locale: z.infer<typeof localeSchema> | null;
   createdAt: number;
   variationId: string | null;
   customerId: string | null;
@@ -86,6 +109,9 @@ function createStore(db: Database.Database, environment: RecurringEnvironment) {
       email_hash TEXT NOT NULL,
       created_at INTEGER NOT NULL,
       consent_version TEXT,
+      email_ciphertext TEXT,
+      service TEXT,
+      locale TEXT,
       variation_id TEXT,
       customer_id TEXT,
       customer_started INTEGER NOT NULL DEFAULT 0,
@@ -96,27 +122,41 @@ function createStore(db: Database.Database, environment: RecurringEnvironment) {
       ON ${attemptsTable} (created_at);
   `);
   const columns = db.prepare(`PRAGMA table_info(${attemptsTable})`).all() as { name: string }[];
-  if (!columns.some((column) => column.name === "consent_version")) {
-    db.exec(`ALTER TABLE ${attemptsTable} ADD COLUMN consent_version TEXT`);
+  for (const name of ["consent_version", "email_ciphertext", "service", "locale"]) {
+    if (!columns.some((column) => column.name === name)) {
+      db.exec(`ALTER TABLE ${attemptsTable} ADD COLUMN ${name} TEXT`);
+    }
   }
-  const get = db.prepare<[string], Attempt>(`
-    SELECT attempt_id AS attemptId, amount_minor AS amountMinor, email_hash AS emailHash, created_at AS createdAt,
-      variation_id AS variationId, customer_id AS customerId,
-      subscription_id AS subscriptionId, setup_order_id AS setupOrderId
-    FROM ${attemptsTable} WHERE attempt_id = ?
-  `);
+  const attemptFields = `
+    attempt_id AS attemptId, amount_minor AS amountMinor, email_hash AS emailHash, created_at AS createdAt,
+    email_ciphertext AS emailCiphertext, service, locale, variation_id AS variationId,
+    customer_id AS customerId, subscription_id AS subscriptionId, setup_order_id AS setupOrderId
+  `;
+  const get = db.prepare<[string], Attempt>(`SELECT ${attemptFields} FROM ${attemptsTable} WHERE attempt_id = ?`);
+  const forNotices = (now: number, limit: number) => db.prepare<[number, number], Attempt>(`
+    SELECT ${attemptFields} FROM ${attemptsTable}
+    WHERE subscription_id IS NOT NULL AND email_ciphertext IS NOT NULL AND attempt_id NOT IN (
+      SELECT attempt_id FROM recurring_notice_poll WHERE terminal = 1 OR next_poll_at > ?
+    )
+    ORDER BY COALESCE((SELECT next_poll_at FROM recurring_notice_poll n WHERE n.attempt_id = ${attemptsTable}.attempt_id), 0), created_at
+    LIMIT ?
+  `).all(now, limit);
   const plan = db.prepare<[number], { variationId: string | null; reservedAt: number }>(
     `SELECT variation_id AS variationId, reserved_at AS reservedAt FROM ${planTable} WHERE amount_minor = ?`,
   );
   const count = db.prepare<[number], { total: number }>(
     `SELECT COUNT(*) AS total FROM ${attemptsTable} WHERE created_at > ?`,
   );
+  const recentCustomerAttempts = db.prepare<[string, number], { total: number }>(
+    `SELECT COUNT(*) AS total FROM ${attemptsTable} WHERE email_hash = ? AND created_at > ?`,
+  );
   const insertPlan = db.prepare(`INSERT INTO ${planTable} (amount_minor, reserved_at) VALUES (?, ?)`);
   const finishPlan = db.prepare(`UPDATE ${planTable} SET variation_id = ? WHERE amount_minor = ? AND variation_id IS NULL`);
   const releasePlan = db.prepare(`DELETE FROM ${planTable} WHERE amount_minor = ? AND variation_id IS NULL`);
   const insertAttempt = db.prepare(`
-    INSERT INTO ${attemptsTable} (attempt_id, amount_minor, email_hash, created_at, consent_version)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO ${attemptsTable}
+      (attempt_id, amount_minor, email_hash, created_at, consent_version, email_ciphertext, service, locale)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const claimCustomer = db.prepare(`
     UPDATE ${attemptsTable} SET customer_started = 1
@@ -136,12 +176,15 @@ function createStore(db: Database.Database, environment: RecurringEnvironment) {
     UPDATE ${attemptsTable} SET setup_order_id = ?
     WHERE attempt_id = ? AND setup_order_id IS NULL
   `);
-  const reserve = db.transaction((attemptId: string, amountMinor: number, emailHash: string) => {
+  const reserve = db.transaction((input: Pick<Attempt, "attemptId" | "amountMinor" | "emailHash" | "emailCiphertext" | "service" | "locale">) => {
+    const { attemptId, amountMinor, emailHash, emailCiphertext, service, locale } = input;
     const existing = get.get(attemptId);
     if (existing) return existing;
     const now = Date.now();
-    if (count.get(now - WINDOW_MS)!.total >= CHECKOUT_LIMIT) return null;
-    insertAttempt.run(attemptId, amountMinor, emailHash, now, CONSENT_VERSION);
+    if (count.get(now - WINDOW_MS)!.total >= CHECKOUT_LIMIT ||
+        (environment === "production" && recentCustomerAttempts.get(emailHash, now - CUSTOMER_WINDOW_MS)!.total >= 3)) return null;
+    const consentVersion = environment === "production" ? LIVE_CONSENT_VERSION : SANDBOX_CONSENT_VERSION;
+    insertAttempt.run(attemptId, amountMinor, emailHash, now, consentVersion, emailCiphertext, service, locale);
     return get.get(attemptId)!;
   });
   const claimPlan = db.transaction((amountMinor: number) => {
@@ -152,7 +195,7 @@ function createStore(db: Database.Database, environment: RecurringEnvironment) {
     return { created: true, variationId: null, reservedAt };
   });
   return {
-    get, plan, reserve, claimPlan, finishPlan, releasePlan, claimCustomer, releaseCustomer, customer, subscription, rememberSetup,
+    get, forNotices, plan, reserve, claimPlan, finishPlan, releasePlan, claimCustomer, releaseCustomer, customer, subscription, rememberSetup,
   };
 }
 
@@ -168,12 +211,64 @@ function attemptFromToken(token: unknown, secret: string, environment: Recurring
   return timingSafeEqual(Buffer.from(token), Buffer.from(signedStatus(attempt.data, secret, environment))) ? attempt.data : null;
 }
 
+function emailEncryption(secret: string) {
+  const key = createHmac("sha256", secret).update("bi-recurring-notice-email:v1").digest();
+  return {
+    encrypt(email: string, attemptId: string) {
+      const iv = randomBytes(12);
+      const cipher = createCipheriv("aes-256-gcm", key, iv);
+      cipher.setAAD(Buffer.from(attemptId));
+      const encrypted = Buffer.concat([cipher.update(email, "utf8"), cipher.final()]);
+      return Buffer.concat([iv, cipher.getAuthTag(), encrypted]).toString("base64url");
+    },
+    decrypt(payload: string, attemptId: string) {
+      const encrypted = Buffer.from(payload, "base64url");
+      const decipher = createDecipheriv("aes-256-gcm", key, encrypted.subarray(0, 12));
+      decipher.setAAD(Buffer.from(attemptId));
+      decipher.setAuthTag(encrypted.subarray(12, 28));
+      return Buffer.concat([decipher.update(encrypted.subarray(28)), decipher.final()]).toString("utf8");
+    },
+  };
+}
+
 export function registerRecurringPaymentRoutes(app: Express, database?: Database.Database) {
   const config = configuration();
   let attempts: ReturnType<typeof createStore> | undefined;
+  let notices: ReturnType<typeof registerRecurringPaymentNotices> | undefined;
+  const emailCipher = config?.environment === "production" ? emailEncryption(config.secret) : null;
+
+  function toNotice(attempt: Attempt): RecurringNoticeAttempt {
+    const { attemptId, amountMinor, service, locale, emailCiphertext, createdAt, subscriptionId, setupOrderId, customerId, variationId } = attempt;
+    if (!service || !locale || !emailCiphertext || !emailCipher || !config) {
+      throw new Error("Recurring email consent record is incomplete.");
+    }
+    const localizedPath = locale === "en" ? "/pay" : `/${locale}/pay`;
+    const managementToken = signedStatus(attemptId, config.secret, config.environment);
+    return {
+      attemptId, amountMinor, service, locale, acceptedAt: createdAt, subscriptionId, setupOrderId, customerId, variationId,
+      email: emailCipher.decrypt(emailCiphertext, attemptId),
+      managementUrl: `https://www.bisolutions.group${localizedPath}#monthly-live=${managementToken}`,
+    };
+  }
   if (config) {
     try {
-      attempts = createStore(database ?? openStore(config.dataDirectory, config.environment), config.environment);
+      const db = database ?? openStore(config.dataDirectory, config.environment);
+      const store = createStore(db, config.environment);
+      if (config.environment === "production" && config.email) {
+        notices = registerRecurringPaymentNotices({
+          db,
+          apiKey: config.apiKey,
+          ...config.email,
+          listAttempts: function* (now, limit) {
+            for (const attempt of store.forNotices(now, limit)) {
+              try { yield toNotice(attempt); }
+              catch { console.error("Could not read a recurring notice record."); }
+            }
+          },
+        });
+        if (!database) notices.start();
+      }
+      attempts = store;
     } catch {
       console.error("Could not open the recurring payment attempt store.");
     }
@@ -197,7 +292,7 @@ export function registerRecurringPaymentRoutes(app: Express, database?: Database
     windowMs: WINDOW_MS, limit: 8, standardHeaders: "draft-8", legacyHeaders: false,
     message: { code: "rate_limited" },
   });
-  app.get(`${API_PATH}/config`, (_req, res) => res.json({ enabled: true, sandbox }));
+  app.get(`${API_PATH}/config`, (_req, res) => res.json({ enabled: true, sandbox, ...(config.enrollmentOpen ? {} : { enrollmentOpen: false }) }));
 
   app.post(`${API_PATH}/checkout`, limiter, async (req, res) => {
     const input = checkoutBody.safeParse(req.body);
@@ -206,6 +301,12 @@ export function registerRecurringPaymentRoutes(app: Express, database?: Database
       return;
     }
     const { amount, email, attemptId } = input.data;
+    const service = sandbox ? null : input.data.service ?? null;
+    const locale = sandbox ? null : input.data.locale;
+    if (!sandbox && (!service || !locale)) {
+      res.status(400).json({ code: "invalid" });
+      return;
+    }
     const [whole, fraction = ""] = amount.split(/[.,]/);
     const amountMinor = Number(whole) * 100 + Number(fraction.padEnd(2, "0"));
     if (amountMinor < 100 || amountMinor > 100_000) {
@@ -213,15 +314,24 @@ export function registerRecurringPaymentRoutes(app: Express, database?: Database
       return;
     }
 
+    if (!config.enrollmentOpen) {
+      res.status(503).json({ code: "unavailable" });
+      return;
+    }
+
     try {
       // Reserve before provider writes. Customer and plan creation have no documented idempotency.
       const emailHash = createHmac("sha256", secret).update(`bi-recurring-${environment}-email:v1:${email}`).digest("hex");
-      const attempt = store.reserve.immediate(attemptId, amountMinor, emailHash);
+      const attempt = store.reserve.immediate({
+        attemptId, amountMinor, emailHash, emailCiphertext: emailCipher?.encrypt(email, attemptId) ?? null,
+        service, locale: locale ?? null,
+      });
       if (!attempt) {
         res.status(429).json({ code: "rate_limited" });
         return;
       }
-      if (attempt.amountMinor !== amountMinor || attempt.emailHash !== emailHash ||
+      if (attempt.amountMinor !== amountMinor || attempt.emailHash !== emailHash || attempt.service !== service ||
+          attempt.locale !== (locale ?? null) ||
           (!attempt.subscriptionId && Date.now() - attempt.createdAt > WINDOW_MS)) {
         res.status(409).json({ code: "conflict" });
         return;
@@ -307,6 +417,7 @@ export function registerRecurringPaymentRoutes(app: Express, database?: Database
         res.status(409).json({ code: "closed", statusToken });
         return;
       }
+      if (notices) await notices.queueAcceptance(toNotice(stored));
       res.json({
         token: order.token, statusToken, amountMinor, sandbox, checkoutUrl: recurringCheckoutUrl(order, environment),
       });
@@ -349,7 +460,7 @@ export function registerRecurringPaymentRoutes(app: Express, database?: Database
           throw new Error("Revolut has not confirmed the subscription's first payment.");
         }
       }
-      res.json({ status: subscription.state, amountMinor: attempt.amountMinor });
+      res.json({ status: subscription.state, amountMinor: attempt.amountMinor, service: attempt.service ?? undefined });
     } catch (error) {
       console.error("Recurring status failed:", error instanceof Error ? error.name : "unknown error");
       res.status(502).json({ code: "unavailable" });

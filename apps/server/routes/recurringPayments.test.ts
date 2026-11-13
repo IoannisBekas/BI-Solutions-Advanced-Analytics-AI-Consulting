@@ -18,6 +18,8 @@ async function api(t: TestContext, environment: "sandbox" | "production", apiKey
     RECURRING_PAYMENTS_REVOLUT_API_KEY: apiKey,
     RECURRING_PAYMENTS_TOKEN_SECRET: SECRET,
     RECURRING_PAYMENTS_DATA_DIR: "sandbox-test-path",
+    RECURRING_PAYMENTS_FROM_EMAIL: "Billing <billing@example.com>",
+    RESEND_API_KEY: "re_recurring_mock",
   };
   for (const [name, value] of Object.entries(configuration)) {
     const previous = process.env[name];
@@ -113,7 +115,11 @@ async function verifyRecurringLifecycle(t: TestContext, environment: "sandbox" |
   const { config, post, database } = await api(t, environment);
   const sandbox = environment === "sandbox";
   const checkoutOrigin = sandbox ? "https://sandbox-checkout.revolut.com" : "https://checkout.revolut.com";
-  const first = { amount: "17,53", email: " Buyer@Example.com ", consent: true, attemptId: randomUUID() };
+  const first = {
+    amount: "17,53", email: " Buyer@Example.com ", consent: true, attemptId: randomUUID(),
+    ...(sandbox ? {} : { service: "Project maintenance", locale: "en" }),
+  };
+  let noticeRequests = 0;
   const variationId = randomUUID();
   let plans = 0;
   let customers = 0;
@@ -129,6 +135,15 @@ async function verifyRecurringLifecycle(t: TestContext, environment: "sandbox" |
 
   t.mock.method(globalThis, "fetch", async (url: string, init?: RequestInit) => {
     const target = new URL(url);
+    if (target.origin === "https://api.resend.com") {
+      assert.equal(sandbox, false);
+      assert.equal(target.pathname, "/emails");
+      const notice = JSON.parse(String(init?.body));
+      assert.match(notice.text, /Project maintenance/);
+      assert.match(notice.text, /#monthly-live=/);
+      noticeRequests++;
+      return Response.json({ id: "mock-notice" });
+    }
     assert.equal(target.origin, sandbox ? "https://sandbox-merchant.revolut.com" : "https://merchant.revolut.com");
     const headers = new Headers(init?.headers);
     assert.equal(headers.get("Revolut-Api-Version"), "2026-08-17");
@@ -207,11 +222,16 @@ async function verifyRecurringLifecycle(t: TestContext, environment: "sandbox" |
   const oppositeSignature = createHmac("sha256", SECRET).update(`bi-recurring-${oppositeEnvironment}:v1:${first.attemptId}`).digest("base64url");
   assert.equal((await post("status", { token: `${first.attemptId}.${oppositeSignature}` })).status, 404);
   const persisted = database.prepare(`
-    SELECT amount_minor, email_hash, created_at, consent_version
+    SELECT amount_minor, email_hash, created_at, consent_version, email_ciphertext
     FROM recurring_${environment}_attempts WHERE attempt_id = ?
-  `).get(first.attemptId) as { amount_minor: number; email_hash: string; created_at: number; consent_version: string };
+  `).get(first.attemptId) as { amount_minor: number; email_hash: string; created_at: number; consent_version: string; email_ciphertext: string | null };
   assert.equal(persisted.amount_minor, 1753);
-  assert.equal(persisted.consent_version, "monthly-until-cancelled-v1");
+  assert.equal(persisted.consent_version, sandbox ? "monthly-until-cancelled-v1" : "rolling-monthly-v2");
+  if (sandbox) assert.equal(persisted.email_ciphertext, null);
+  else {
+    assert.ok(persisted.email_ciphertext);
+    assert.doesNotMatch(persisted.email_ciphertext, /buyer@example.com/);
+  }
   assert.match(persisted.email_hash, /^[0-9a-f]{64}$/);
   assert.ok(persisted.created_at > 0);
   revealOrder = true;
@@ -224,6 +244,7 @@ async function verifyRecurringLifecycle(t: TestContext, environment: "sandbox" |
   assert.equal(recovered.amountMinor, 1753);
   assert.equal(recovered.checkoutUrl, `${checkoutOrigin}/payment-link/${recovered.token}`);
   assert.equal(recovered.sandbox, sandbox);
+  assert.equal(noticeRequests, sandbox ? 0 : 1);
   assert.equal((await post("checkout", { ...first, amount: "17.54" })).status, 409);
   assert.equal((await post("checkout", { ...first, email: "other@example.com" })).status, 409);
   const second = await post("checkout", { ...first, email: "other@example.com", attemptId: randomUUID() });
@@ -231,12 +252,12 @@ async function verifyRecurringLifecycle(t: TestContext, environment: "sandbox" |
   assert.deepEqual([plans, customers, subscriptions], [1, 2, 2]);
 
   assert.equal((await post("cancel", { token: `${randomUUID()}.${statusToken.split(".")[1]}` })).status, 404);
-  assert.deepEqual(await (await post("status", { token: statusToken })).json(), { status: "pending", amountMinor: 1753 });
+  assert.deepEqual(await (await post("status", { token: statusToken })).json(), { status: "pending", amountMinor: 1753, ...(!sandbox ? { service: "Project maintenance" } : {}) });
   subscriptionState = "active";
   assert.equal((await post("status", { token: statusToken })).status, 502);
   orderState = "completed";
-  assert.deepEqual(await (await post("status", { token: statusToken })).json(), { status: "active", amountMinor: 1753 });
-  const cancelled = { status: "cancelled", amountMinor: 1753 };
+  assert.deepEqual(await (await post("status", { token: statusToken })).json(), { status: "active", amountMinor: 1753, ...(!sandbox ? { service: "Project maintenance" } : {}) });
+  const cancelled = { status: "cancelled", amountMinor: 1753, ...(!sandbox ? { service: "Project maintenance" } : {}) };
   assert.deepEqual(await (await post("cancel", { token: statusToken })).json(), cancelled);
   assert.deepEqual(await (await post("cancel", { token: statusToken })).json(), cancelled);
   assert.equal(cancels, 1);

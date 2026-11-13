@@ -169,6 +169,7 @@ export default function DirectPayment() {
   const [recurringEnvironment, setRecurringEnvironment] = useState<RecurringEnvironment | null>();
   const [requestedRecurringEnvironment, setRequestedRecurringEnvironment] = useState<RecurringEnvironment | null>(null);
   const [recurringBusy, setRecurringBusy] = useState(false);
+  const [enrollmentOpen, setEnrollmentOpen] = useState(true);
   const [paymentMode, setPaymentMode] = useState<"oneTime" | "monthly">("oneTime");
   const target = useRef<HTMLDivElement>(null);
   const attempt = useRef<Attempt | null>(null);
@@ -176,6 +177,7 @@ export default function DirectPayment() {
   const pendingConfirmation = useRef(false);
   const recurringLinkUnavailable = Boolean(requestedRecurringEnvironment && recurringEnvironment !== undefined && requestedRecurringEnvironment !== recurringEnvironment);
   const showMonthly = recurringEnvironment && paymentMode === "monthly" && !recurringLinkUnavailable;
+  const showMonthlySwitch = recurringEnvironment && (enrollmentOpen || showMonthly);
 
   function updateAttempt(next: Attempt | null) {
     attempt.current = next;
@@ -215,6 +217,7 @@ export default function DirectPayment() {
             ? body.sandbox ? "sandbox" : "production"
             : null;
           setRecurringEnvironment(environment);
+          setEnrollmentOpen(body?.enrollmentOpen !== false);
           if (environment && (recurringLinkEnvironment() || hasRecurringPayment(environment))) setPaymentMode("monthly");
         }
       })
@@ -455,7 +458,7 @@ export default function DirectPayment() {
         <section aria-labelledby="direct-payment-title" className="min-w-0 rounded-[2rem] border border-gray-200 bg-white p-4 shadow-xl shadow-gray-950/[0.05] sm:p-8">
           <h1 id="direct-payment-title" className="text-balance font-heading text-[clamp(1.55rem,7.7vw,1.875rem)] font-bold tracking-tight text-gray-950 sm:text-4xl">{t.title}</h1>
           {recurringLinkUnavailable && <p role="status" className="mt-4 text-sm text-gray-600">{t.monthlyUnavailable}</p>}
-          {recurringEnvironment && (
+          {showMonthlySwitch && (
             <div className="mt-4 grid grid-cols-2 gap-2" role="group" aria-label={t.title}>
               <Button type="button" variant={showMonthly ? "outline" : "default"} aria-pressed={!showMonthly} disabled={recurringBusy} className="min-h-11 rounded-xl" onClick={() => setPaymentMode("oneTime")}>{t.oneTime}</Button>
               <Button type="button" variant={showMonthly ? "default" : "outline"} aria-pressed={Boolean(showMonthly)} disabled={submitting || notice === "checking"} className="min-h-11 rounded-xl" onClick={() => { setRequestedRecurringEnvironment(null); setPaymentMode("monthly"); }}>{t.monthly}</Button>
@@ -468,6 +471,7 @@ export default function DirectPayment() {
                 normalizeAmount={parsePaymentAmount}
                 {...recurringSettings[recurringEnvironment]}
                 sandbox={recurringEnvironment === "sandbox"}
+                enrollmentOpen={enrollmentOpen}
                 onBusyChange={setRecurringBusy}
               />
             </Suspense>

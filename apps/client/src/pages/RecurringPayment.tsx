@@ -11,7 +11,15 @@ const copy = {
     amount: "Monthly amount in EUR",
     range: "Enter an amount from €1 to €1,000.",
     email: "Email address",
+    service: "Project or service",
+    serviceHint: "Enter the name of the project or service you agreed with BI Solutions Group.",
     consent: (amount: string) => `I agree to pay ${amount} now and authorise BI Solutions Group to charge the same card ${amount} each month until I cancel.`,
+    contract: "Monthly payment agreement",
+    term: "The first term starts when your first payment is confirmed and ends on the next monthly billing date. It renews for successive one-month terms until you cancel.",
+    renewal: (amount: string) => `First payment: ${amount}. Each renewal: ${amount}, charged automatically to the same card.`,
+    cancellation: "You can cancel at any time using your private management link to stop future renewals.",
+    consentToAgreement: "I accept the monthly payment agreement above and authorise the first payment and automatic renewal charges.",
+    emails: "We email your agreement and confirmation after the first payment and send a reminder at least seven days before each renewal.",
     continue: "Continue to Revolut",
     resume: "Continue setup",
     loading: "Opening secure Revolut checkout…",
@@ -46,7 +54,15 @@ const copy = {
     amount: "Μηνιαίο ποσό σε ευρώ",
     range: "Πληκτρολογήστε ποσό από 1 € έως 1.000 €.",
     email: "Διεύθυνση email",
+    service: "Έργο ή υπηρεσία",
+    serviceHint: "Γράψτε το όνομα του έργου ή της υπηρεσίας που συμφωνήσατε με την BI Solutions Group.",
     consent: (amount: string) => `Συμφωνώ να πληρώσω ${amount} τώρα και εξουσιοδοτώ την BI Solutions Group να χρεώνει την ίδια κάρτα με ${amount} κάθε μήνα μέχρι να ακυρώσω.`,
+    contract: "Συμφωνία μηνιαίας πληρωμής",
+    term: "Η πρώτη περίοδος ξεκινά όταν επιβεβαιωθεί η πρώτη πληρωμή και λήγει την επόμενη ημερομηνία μηνιαίας χρέωσης. Ανανεώνεται για διαδοχικές περιόδους του ενός μήνα μέχρι να την ακυρώσετε.",
+    renewal: (amount: string) => `Πρώτη πληρωμή: ${amount}. Κάθε ανανέωση: ${amount}, με αυτόματη χρέωση στην ίδια κάρτα.`,
+    cancellation: "Μπορείτε να ακυρώσετε ανά πάσα στιγμή από τον ιδιωτικό σύνδεσμο διαχείρισης για να σταματήσουν οι μελλοντικές ανανεώσεις.",
+    consentToAgreement: "Αποδέχομαι τη συμφωνία μηνιαίας πληρωμής και εγκρίνω την πρώτη πληρωμή και τις αυτόματες χρεώσεις ανανέωσης.",
+    emails: "Μετά την πρώτη πληρωμή, στέλνουμε τη συμφωνία και την επιβεβαίωση στο email σας. Στέλνουμε υπενθύμιση τουλάχιστον επτά ημέρες πριν από κάθε ανανέωση.",
     continue: "Συνέχεια στη Revolut",
     resume: "Συνέχεια ρύθμισης",
     loading: "Άνοιγμα ασφαλούς πληρωμής Revolut…",
@@ -81,7 +97,15 @@ const copy = {
     amount: "Monatsbetrag in EUR",
     range: "Geben Sie einen Betrag zwischen 1 € und 1.000 € ein.",
     email: "E-Mail-Adresse",
+    service: "Projekt oder Leistung",
+    serviceHint: "Geben Sie den Namen des mit BI Solutions Group vereinbarten Projekts oder der Leistung ein.",
     consent: (amount: string) => `Ich stimme zu, jetzt ${amount} zu zahlen, und ermächtige BI Solutions Group, bis zur Kündigung jeden Monat ${amount} von derselben Karte abzubuchen.`,
+    contract: "Vereinbarung zur monatlichen Zahlung",
+    term: "Der erste Zeitraum beginnt mit der Bestätigung der ersten Zahlung und endet am nächsten monatlichen Abrechnungstermin. Er verlängert sich jeweils um einen weiteren Monat, bis Sie kündigen.",
+    renewal: (amount: string) => `Erste Zahlung: ${amount}. Jede Verlängerung: ${amount}, automatisch von derselben Karte abgebucht.`,
+    cancellation: "Sie können jederzeit über Ihren privaten Verwaltungslink kündigen, um künftige Verlängerungen zu beenden.",
+    consentToAgreement: "Ich akzeptiere die Vereinbarung zur monatlichen Zahlung und genehmige die erste Zahlung und die automatischen Abbuchungen bei Verlängerung.",
+    emails: "Nach der ersten Zahlung erhalten Sie die Vereinbarung und Bestätigung per E-Mail. Mindestens sieben Tage vor jeder Verlängerung erhalten Sie eine Erinnerung.",
     continue: "Weiter zu Revolut",
     resume: "Einrichtung fortsetzen",
     loading: "Sicherer Revolut Checkout wird geöffnet…",
@@ -113,9 +137,9 @@ const copy = {
 };
 
 type Status = "pending" | "active" | "overdue" | "paused" | "cancelled" | "finished";
-type Result = { status: Status; amountMinor: number };
+type Result = { status: Status; amountMinor: number; service?: string };
 type Checkout = { token?: string; checkoutUrl?: string; statusToken: string; amountMinor: number; sandbox: boolean };
-type Attempt = { amount: string; email: string; id: string };
+type Attempt = { amount: string; email: string; service: string; id: string };
 type Management = { token: string; awaitingConfirmation: boolean };
 type Notice = "checking" | "failed" | "unavailable" | "invalid" | "closed" | "preparing" | "copied";
 type Props = {
@@ -123,6 +147,7 @@ type Props = {
   storageKey: string;
   linkPrefix: string;
   sandbox: boolean;
+  enrollmentOpen: boolean;
   onBusyChange: (busy: boolean) => void;
 };
 
@@ -149,11 +174,12 @@ async function requestRecurring<T>(path: "checkout" | "status" | "cancel", paylo
   return body as T;
 }
 
-export default function RecurringPayment({ normalizeAmount, storageKey, linkPrefix, sandbox, onBusyChange }: Props) {
+export default function RecurringPayment({ normalizeAmount, storageKey, linkPrefix, sandbox, enrollmentOpen, onBusyChange }: Props) {
   const { locale } = useLocale();
   const t = copy[locale];
   const [amount, setAmount] = useState("");
   const [email, setEmail] = useState("");
+  const [service, setService] = useState("");
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<Notice>();
@@ -205,6 +231,7 @@ export default function RecurringPayment({ normalizeAmount, storageKey, linkPref
       }
       setResult(next);
       setAmount((next.amountMinor / 100).toFixed(2));
+      if (typeof next.service === "string") setService(next.service);
       setNotice(undefined);
       if (next.status !== "pending") {
         setShowResume(false);
@@ -275,26 +302,34 @@ export default function RecurringPayment({ normalizeAmount, storageKey, linkPref
     event.preventDefault();
     if (operation.current || busy || !consent) return;
     const normalized = normalizeAmount(amount);
-    if (!normalized) return;
+    const nextService = service.trim();
+    if (!normalized || (!sandbox && nextService.length < 3)) return;
     const nextEmail = email.trim().toLowerCase();
     const statusToken = managed.current?.token;
-    const id = attempt.current?.amount === normalized && attempt.current.email === nextEmail
+    const id = attempt.current?.amount === normalized && attempt.current.email === nextEmail && attempt.current.service === nextService
       ? attempt.current.id
       : statusToken?.split(".")[0] ?? crypto.randomUUID();
-    attempt.current = { amount: normalized, email: nextEmail, id };
+    attempt.current = { amount: normalized, email: nextEmail, service: nextService, id };
     operation.current = true;
     setBusy(true);
     setNotice(undefined);
     setHostedUrl("");
     let fallbackUrl = "";
     try {
-      const order = await requestRecurring<Checkout>("checkout", { amount: normalized, email: nextEmail, consent: true, attemptId: id });
+      const order = await requestRecurring<Checkout>("checkout", {
+        amount: normalized,
+        email: nextEmail,
+        ...(nextService ? { service: nextService } : {}),
+        locale,
+        consent: true,
+        attemptId: id,
+      });
       if (!mounted.current) return;
       if (order.sandbox !== sandbox || !managementTokenPattern.test(order.statusToken) || order.amountMinor !== Math.round(Number(normalized) * 100)) {
         throw new RecurringRequestError("unavailable");
       }
       updateManagement({ token: order.statusToken, awaitingConfirmation: false });
-      setResult({ status: "pending", amountMinor: order.amountMinor });
+      setResult({ status: "pending", amountMinor: order.amountMinor, service: nextService || undefined });
       setShowResume(false);
       if (order.checkoutUrl) {
         const expectedOrigin = sandbox ? "https://sandbox-checkout.revolut.com" : "https://checkout.revolut.com";
@@ -371,6 +406,7 @@ export default function RecurringPayment({ normalizeAmount, storageKey, linkPref
     attempt.current = null;
     setAmount("");
     setEmail("");
+    setService("");
     setConsent(false);
     setResult(undefined);
     setNotice(undefined);
@@ -399,18 +435,23 @@ export default function RecurringPayment({ normalizeAmount, storageKey, linkPref
   const normalized = normalizeAmount(amount);
   const money = new Intl.NumberFormat(LOCALE_TAGS[locale], { style: "currency", currency: "EUR" });
   const displayAmount = normalized ? money.format(Number(normalized)) : "";
-  const showForm = !management || showResume;
+  const displayService = service.trim();
+  const serviceValid = displayService.length >= 3;
+  const showForm = enrollmentOpen && (!management || showResume);
   const terminal = result?.status === "cancelled" || result?.status === "finished";
-  const canResume = result?.status === "pending" && management && !management.awaitingConfirmation && !showResume && !hostedUrl;
+  const canResume = enrollmentOpen && result?.status === "pending" && management && !management.awaitingConfirmation && !showResume && !hostedUrl;
   const canCancel = management && result && !terminal;
   const message = notice ? t[notice] : busy ? t.loading : result ? t[result.status] : null;
 
   return (
     <div className="mt-5 min-w-0">
       {sandbox && <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900">{t.test}</p>}
-      {!management && <p className="mt-4 text-sm leading-relaxed text-gray-600">{t.description}</p>}
+      {!management && <p className="mt-4 text-sm leading-relaxed text-gray-600">{enrollmentOpen ? t.description : t.unavailable}</p>}
       {management && result && (
-        <p className="mt-4 rounded-xl bg-gray-50 px-4 py-3 font-heading text-xl font-bold text-gray-950 tabular-nums">{t.cadence(money.format(result.amountMinor / 100))}</p>
+        <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3">
+          <p className="font-heading text-xl font-bold text-gray-950 tabular-nums">{t.cadence(money.format(result.amountMinor / 100))}</p>
+          {result.service && <p translate="no" className="mt-1 break-words text-sm text-gray-700">{result.service}</p>}
+        </div>
       )}
       {message && (
         <p role="status" className={`mt-4 flex items-start gap-2 rounded-xl border p-3 text-sm leading-relaxed ${result?.status === "active" && !notice ? "border-emerald-100 bg-emerald-50 text-emerald-900" : "border-gray-200 bg-gray-50 text-gray-800"}`}>
@@ -434,14 +475,34 @@ export default function RecurringPayment({ normalizeAmount, storageKey, linkPref
             <input id="monthly-email" name="email" type="email" autoComplete="email" maxLength={254} required disabled={busy}
               className={inputStyle} value={email} onChange={(event) => { setEmail(event.target.value); setConsent(false); }} />
           </div>
-          {displayAmount && (
+          {!sandbox && (
+            <div>
+              <label htmlFor="monthly-service" className="text-sm font-semibold text-gray-950">{t.service}</label>
+              <input id="monthly-service" name="service" type="text" minLength={3} maxLength={120} required disabled={busy}
+                className={inputStyle} value={service} aria-describedby="monthly-service-hint"
+                onChange={(event) => { setService(event.target.value); setConsent(false); }} />
+              <p id="monthly-service-hint" className="mt-2 text-sm text-gray-600">{t.serviceHint}</p>
+            </div>
+          )}
+          {displayAmount && !sandbox && serviceValid && (
+            <div id="monthly-agreement" className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm leading-relaxed text-gray-800">
+              <h2 className="font-semibold text-gray-950">{t.contract}</h2>
+              <p className="mt-2"><span className="font-medium">{t.service}</span><span className="block break-words" translate="no">{displayService}</span></p>
+              <p className="mt-2">{t.renewal(displayAmount)}</p>
+              <p className="mt-2">{t.term}</p>
+              <p className="mt-2">{t.cancellation}</p>
+              <p className="mt-2">{t.emails}</p>
+            </div>
+          )}
+          {displayAmount && (sandbox || serviceValid) && (
             <label className="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm leading-relaxed text-gray-900">
               <input type="checkbox" checked={consent} required disabled={busy} onChange={(event) => setConsent(event.target.checked)}
+                aria-describedby={sandbox ? undefined : "monthly-agreement"}
                 className="mt-1 size-4 shrink-0 accent-gray-950" />
-              {t.consent(displayAmount)}
+              {sandbox ? t.consent(displayAmount) : t.consentToAgreement}
             </label>
           )}
-          <Button type="submit" className="min-h-12 w-full rounded-xl text-base" disabled={busy || !normalized || !consent}>
+          <Button type="submit" className="min-h-12 w-full rounded-xl text-base" disabled={busy || !normalized || (!sandbox && !serviceValid) || !consent}>
             {t.continue}<ArrowRight aria-hidden="true" />
           </Button>
           <p className="flex items-start gap-2 text-sm leading-relaxed text-gray-600">
@@ -479,7 +540,7 @@ export default function RecurringPayment({ normalizeAmount, storageKey, linkPref
           )}
         </div>
       )}
-      {(terminal || notice === "invalid") && <Button type="button" variant="outline" className="mt-4 min-h-11 rounded-xl" onClick={newPayment}>{t.another}</Button>}
+      {enrollmentOpen && (terminal || notice === "invalid") && <Button type="button" variant="outline" className="mt-4 min-h-11 rounded-xl" onClick={newPayment}>{t.another}</Button>}
     </div>
   );
 }
