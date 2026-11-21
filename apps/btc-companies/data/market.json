@@ -1,36 +1,36 @@
 {
   "currency": "USD",
   "source": "Daily closes from Yahoo Finance",
-  "updatedAt": "2026-11-20T02:47:51.933Z",
+  "updatedAt": "2026-11-21T02:56:59.208Z",
   "quotes": {
     "MSTR": {
-      "close": 86.13,
-      "date": "2026-11-19",
+      "close": 77.8,
+      "date": "2026-11-20",
       "source": "Yahoo Finance"
     },
     "ASST": {
-      "close": 17.15,
-      "date": "2026-11-18",
+      "close": 14.51,
+      "date": "2026-11-20",
       "source": "Yahoo Finance"
     },
     "XXI": {
-      "close": 4.4,
-      "date": "2026-11-18",
+      "close": 4.03,
+      "date": "2026-11-20",
       "source": "Yahoo Finance"
     },
     "RIOT": {
-      "close": 18.24,
-      "date": "2026-11-18",
+      "close": 16.23,
+      "date": "2026-11-20",
       "source": "Yahoo Finance"
     },
     "CLSK": {
-      "close": 6.21,
-      "date": "2026-11-18",
+      "close": 4.89,
+      "date": "2026-11-20",
       "source": "Yahoo Finance"
     },
     "MARA": {
-      "close": 6.56,
-      "date": "2026-11-18",
+      "close": 5.09,
+      "date": "2026-11-20",
       "source": "Yahoo Finance"
     }
   }
