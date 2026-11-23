@@ -38,12 +38,7 @@ function withFallback(locale: Locale): TranslationCatalogue {
   return {
     home: { ...base.home, ...active.home },
     nav: { ...base.nav, ...active.nav },
-    hero: {
-      ...base.hero,
-      ...active.hero,
-      needs: { ...base.hero.needs, ...active.hero.needs },
-      timings: { ...base.hero.timings, ...active.hero.timings },
-    },
+    hero: { ...base.hero, ...active.hero },
     services: {
       ...base.services,
       ...active.services,

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import type { Locale } from "@/i18n/config";
 import {
+  ADVANCED_MEASUREMENT,
   COOKIE_CONSENT_KEY,
   applyMeasurementConsent,
   initializeMeasurement,
@@ -81,6 +82,12 @@ const cookieCopy: Record<
   },
 };
 
+const cookielessNotice = {
+  en: "Google can receive limited measurement signals without cookies before you choose or if you reject. You control whether analytics and advertising measurement can use cookies.",
+  el: "Η Google μπορεί να λαμβάνει περιορισμένα σήματα μέτρησης χωρίς cookies πριν επιλέξετε ή αν τα απορρίψετε. Εσείς αποφασίζετε αν η μέτρηση επισκέψεων και διαφημίσεων μπορεί να χρησιμοποιεί cookies.",
+  de: "Google kann vor Ihrer Auswahl oder bei Ablehnung begrenzte Messsignale ohne Cookies erhalten. Sie entscheiden, ob Analyse und Anzeigenmessung Cookies verwenden dürfen.",
+} as const;
+
 export const OPEN_COOKIE_SETTINGS_EVENT = "bi-open-cookie-settings";
 
 export function CookieConsent() {
@@ -120,6 +127,7 @@ export function CookieConsent() {
 
   useEffect(() => {
     const consent = readMeasurementConsent();
+    initializeMeasurement();
     if (!consent) {
       document.documentElement.removeAttribute("data-cookie-consent");
       setVisible(true);
@@ -127,7 +135,6 @@ export function CookieConsent() {
     }
     setChoices(consent);
     document.documentElement.setAttribute("data-cookie-consent", "saved");
-    initializeMeasurement();
     if (consent.analytics) {
       captureAiSearchReferral();
       const referral = getStoredAiSearchReferral();
@@ -178,7 +185,7 @@ export function CookieConsent() {
           {/* The wide bar drops the visible heading to stay short; it still names the dialog. */}
           <h2 id="cookie-consent-title" className={expanded ? "text-base font-semibold" : "text-base font-semibold lg:sr-only"}>{copy.title}</h2>
           <p id="cookie-consent-description" className={expanded ? "mt-1.5 text-sm leading-snug text-gray-200" : "mt-1.5 text-sm leading-snug text-gray-200 lg:mt-0"}>
-            {expanded ? copy.description : copy.summary}{" "}
+            {ADVANCED_MEASUREMENT ? cookielessNotice[locale] : expanded ? copy.description : copy.summary}{" "}
             <a
               href={localizedHref("/privacy-policy")}
               className="underline decoration-white/40 underline-offset-4 hover:text-white"

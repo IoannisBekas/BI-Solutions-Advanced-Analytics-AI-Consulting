@@ -2,8 +2,8 @@ import { ArrowUp, Github, Instagram, Linkedin } from "lucide-react";
 import { Link } from "wouter";
 import { OPEN_COOKIE_SETTINGS_EVENT } from "@/components/CookieConsent";
 import { trackEvent, trackNavClick } from "@/lib/analytics";
-import { BOOKING_URL, CONTACT_EMAIL, START_PROJECT_PATH } from "@/lib/contact";
-import { directContactCopy, trackDirectContact } from "@/components/contact/DirectContact";
+import { CONTACT_EMAIL, START_PROJECT_PATH } from "@/lib/contact";
+import { IntroCallLink, trackDirectContact } from "@/components/contact/DirectContact";
 import { withAssetBase } from "@/lib/site";
 import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 
@@ -44,6 +44,7 @@ export function Footer() {
   ];
 
   const resourceLinks = [
+    { label: locale === "el" ? "Προϊόντα & εργαλεία" : locale === "de" ? "Produkte & Werkzeuge" : "Products & tools", href: "/tools" },
     { label: locale === "el" ? "Έργα ιστοσελίδων & εφαρμογών" : locale === "de" ? "Website- & App-Projekte" : "Website & app projects", href: "/projects" },
     { label: locale === "el" ? "Μάθε AI στην πράξη" : locale === "de" ? "KI praktisch lernen" : "Learn AI by doing", href: "/resources/ai-prompt-packs" },
     { label: t.footer.insights, href: "/blog" },
@@ -138,19 +139,13 @@ export function Footer() {
                   </a>
                 </li>
               )}
-              {BOOKING_URL && (
-                <li>
-                  <a
-                    href={BOOKING_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 transition-colors hover:text-white"
-                    onClick={() => trackDirectContact("booking", "footer")}
-                  >
-                    {directContactCopy[locale].booking}
-                  </a>
-                </li>
-              )}
+              <li>
+                <IntroCallLink
+                  placement="footer"
+                  showIcon={false}
+                  className="text-gray-400 transition-colors hover:text-white"
+                />
+              </li>
             </ul>
           </div>
 

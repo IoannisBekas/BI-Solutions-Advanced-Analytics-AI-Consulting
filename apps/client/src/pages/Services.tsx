@@ -1,12 +1,15 @@
 import { Link } from "wouter";
 import { ArrowDown, ArrowRight, Check, ChevronDown, Globe2, List, Rows3, Search, X, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { DirectContactPanel } from "@/components/contact/DirectContact";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Seo } from "@/components/seo/Seo";
+import { MentorshipReviews } from "@/components/sections/ReviewsSection";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { specialistServiceDetails } from "@/data/specialistServiceDetails";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import { translatePageCopy } from "@/i18n/localizeDocument";
 import type { Locale } from "@/i18n/config";
 import { normalizeSearch } from "@/lib/search";
@@ -273,6 +276,9 @@ function ServiceChapter({ service, expanded, hidden, onToggle }: ChapterProps) {
                     : "Discuss this service"}
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
+                {service.slug === "data-career-enablement-mentorship" && (
+                  <div className="mt-8"><MentorshipReviews /></div>
+                )}
               </div>
           </div>
         </div>
@@ -378,6 +384,7 @@ function AiChapter({ service, expanded, hidden, onToggle, query }: ChapterProps 
 
 export default function Services() {
   const { locale } = useLocale();
+  const localizedHref = useLocalizedHref();
   const copy = browserCopy[locale];
   const [query, setQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
@@ -529,6 +536,19 @@ export default function Services() {
             </nav>
           </div>
         </section>
+        {locale === "en" && (
+          <section className="site-container pt-14 md:pt-16" aria-labelledby="specialist-engagements">
+            <h2 id="specialist-engagements" className="section-title">Specialist engagements</h2>
+            <div className="mt-8 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+              {specialistServiceDetails.map((service) => (
+                <Link key={service.slug} href={service.path} className="group border-t border-gray-950/20 py-6">
+                  <h3 className="flex items-start justify-between gap-4 font-heading text-lg font-bold tracking-tight underline-offset-4 group-hover:underline">{service.title}<ArrowRight aria-hidden="true" className="mt-1 h-4 w-4 shrink-0" /></h3>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-700">{service.description}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
         <div className="site-container section-gap">
           <div id="service-index" className="catalog-toolbar services-toolbar">
             <div className="relative min-w-0">
@@ -581,7 +601,7 @@ export default function Services() {
         </div>
         <section className="bg-[#0a0b0d] py-20 text-white md:py-24">
           <ScrollReveal width="100%">
-            <div className="site-container flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="site-container grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.67fr)] lg:items-center">
               <div className="max-w-4xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
                   Not sure where your need belongs?
@@ -591,15 +611,7 @@ export default function Services() {
                   easier to use.
                 </h2>
               </div>
-              <Button
-                asChild
-                className="shrink-0 rounded-full bg-white px-8 text-black hover:bg-white/90"
-              >
-                <Link href="/start-a-project?source=services-final">
-                  Start a project
-                  <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <DirectContactPanel placement="services" projectHref={localizedHref("/start-a-project?source=services-final")} />
             </div>
           </ScrollReveal>
         </section>

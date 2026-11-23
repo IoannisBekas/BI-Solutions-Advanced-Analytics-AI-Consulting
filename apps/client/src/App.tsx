@@ -17,6 +17,7 @@ const Services = lazy(() => import("@/pages/Services"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const CaseStudyDetail = lazy(() => import("@/pages/CaseStudyDetail"));
 const Projects = lazy(() => import("@/pages/Projects"));
+const ProductsHub = lazy(() => import("@/pages/ProductsHub"));
 const ProjectDetail = lazy(() => import("@/pages/ProjectDetail"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
@@ -127,6 +128,10 @@ function Router({ ssrPath, locale, isPaymentPage }: { ssrPath?: string; locale: 
             <Route path="/services" component={Services} />
             <Route path="/services/power-bi-consulting"><ServiceDetail slug="power-bi-consulting" /></Route>
             <Route path="/services/ai-automation"><ServiceDetail slug="ai-automation" /></Route>
+            <Route path="/services/power-bi-performance-audit"><ServiceDetail slug="power-bi-performance-audit" /></Route>
+            <Route path="/services/dataverse-power-bi-reporting"><ServiceDetail slug="dataverse-power-bi-reporting" /></Route>
+            <Route path="/services/microsoft-fabric-migration"><ServiceDetail slug="microsoft-fabric-migration" /></Route>
+            <Route path="/services/ai-document-processing"><ServiceDetail slug="ai-document-processing" /></Route>
             <Route path="/us/power-bi-consulting"><USConsulting service="power-bi" /></Route>
             <Route path="/us/ai-automation"><USConsulting service="ai-automation" /></Route>
             <Route path="/services/:slug">
@@ -134,6 +139,7 @@ function Router({ ssrPath, locale, isPaymentPage }: { ssrPath?: string; locale: 
             </Route>
             <Route path="/case-studies/:slug" component={CaseStudyDetail} />
             <Route path="/projects"><Projects /></Route>
+            <Route path="/tools" component={ProductsHub} />
             <Route path="/projects/category/:category">
               {(params) => <Projects category={params.category} />}
             </Route>

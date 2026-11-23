@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Check, ChevronRight } from "lucide-react";
+import { DirectContactPanel, IntroCallLink } from "@/components/contact/DirectContact";
 import { Seo } from "@/components/seo/Seo";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import { withAssetBase } from "@/lib/site";
 import { trackEvent } from "@/lib/analytics";
 import { usInquiryHref } from "@/lib/leadAttribution";
 import founderPhoto from "@/assets/founder-photo-2.jpg";
-import dashboard from "@/assets/dashboards/unicef_dashboard.webp";
 import NotFound from "@/pages/NotFound";
 
 const offers = {
@@ -63,6 +63,7 @@ const offers = {
 
 export default function USConsulting({ service }: { service: keyof typeof offers }) {
   const { locale } = useLocale();
+  const localizedHref = useLocalizedHref();
   const offer = offers[service];
   const [inquiryHref, setInquiryHref] = useState(usInquiryHref(service));
   useEffect(() => {
@@ -70,6 +71,7 @@ export default function USConsulting({ service }: { service: keyof typeof offers
   }, [service]);
   if (locale !== "en") return <NotFound />;
 
+  const contactHref = localizedHref(inquiryHref);
   const inquiryClick = () => trackEvent("us_service_inquiry_click", { service, market: "US" });
   return (
     <div className="min-h-screen bg-[#faf9f6] text-gray-950">
@@ -95,9 +97,16 @@ export default function USConsulting({ service }: { service: keyof typeof offers
             <h1 className="page-title mt-6">{offer.headline}</h1>
             <p className="mt-6 max-w-xl text-xl font-medium leading-relaxed">{offer.promise}</p>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-gray-600 sm:text-lg">{offer.introduction}</p>
-            <Button asChild className="mt-8 h-auto min-h-12 w-full whitespace-normal rounded-full px-6 py-3 text-base sm:w-auto">
-              <Link href={inquiryHref} onClick={inquiryClick}>{offer.cta}<ArrowRight className="ml-2 h-4 w-4 shrink-0" /></Link>
-            </Button>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Button asChild className="h-auto min-h-12 w-full whitespace-normal rounded-full px-6 py-3 text-base sm:w-auto">
+                <Link href={inquiryHref} onClick={inquiryClick}>{offer.cta}<ArrowRight className="ml-2 h-4 w-4 shrink-0" /></Link>
+              </Button>
+              <IntroCallLink
+                placement="us-consulting"
+                projectHref={contactHref}
+                className="inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4"
+              />
+            </div>
             <p className="mt-4 text-sm text-gray-600">{offer.scope}</p>
           </div>
           <aside className="surface-card overflow-hidden">
@@ -140,12 +149,12 @@ export default function USConsulting({ service }: { service: keyof typeof offers
           <div className="surface-card overflow-hidden">
             <div className="grid gap-8 p-6 sm:p-9 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Independent portfolio demonstration</p>
-                <h2 id="portfolio-title" className="section-title mt-4">See a reporting problem made explorable.</h2>
-                <p className="mt-5 leading-relaxed text-gray-600">Explore an audit-compliance dashboard covering risk, expenditure, and recommendation progress. This uses mock data and was not commissioned by or endorsed by UNICEF.</p>
-                <Link href="/case-studies/unicef-audit-compliance" className="mt-6 inline-flex items-center font-semibold underline underline-offset-4">Explore the Power BI demo<ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">Client project · Ontario, Canada</p>
+                <h2 id="portfolio-title" className="section-title mt-4">Workforce reporting for Risenfire</h2>
+                <p className="mt-5 leading-relaxed text-gray-600">We connected Dataverse to a Power BI reporting layer for worker availability, assigned hours, and remaining project workload. The illustration shows how the reporting was set up.</p>
+                <Link href="/case-studies/risenfire-workforce-reporting" className="mt-6 inline-flex items-center font-semibold underline underline-offset-4">Read the case study<ArrowRight aria-hidden="true" className="ml-2 h-4 w-4" /></Link>
               </div>
-              <img src={dashboard} alt="Independent Power BI audit-compliance demonstration using mock data" width={1200} height={675} loading="lazy" className="h-auto w-full rounded-xl border border-gray-200" />
+              <img src={withAssetBase("assets/case-studies/risenfire-workflow.svg")} alt="Illustration of Dataverse data feeding a Power BI semantic model and workforce reporting" width={1200} height={675} loading="lazy" className="h-auto w-full rounded-xl border border-gray-200" />
             </div>
           </div>
         </section>}
@@ -172,12 +181,24 @@ export default function USConsulting({ service }: { service: keyof typeof offers
               <p className="mt-4 max-w-3xl leading-relaxed text-gray-600">{answer}</p>
             </details>)}
           </div>
+          <div className="mt-7 flex flex-wrap gap-x-7 gap-y-3">
+            {service === "power-bi" ? (
+              <>
+                <Link href="/services/power-bi-performance-audit" className="font-semibold underline underline-offset-4">Power BI performance audit</Link>
+                <Link href="/services/dataverse-power-bi-reporting" className="font-semibold underline underline-offset-4">Dataverse to Power BI reporting</Link>
+              </>
+            ) : (
+              <Link href="/services/ai-document-processing" className="font-semibold underline underline-offset-4">AI document processing</Link>
+            )}
+          </div>
         </section>
         <section className="site-container pb-16 md:pb-24">
           <div className="content-panel">
             <h2 className="section-title max-w-2xl">Tell us what needs to work better.</h2>
             <p className="mt-4 max-w-2xl leading-relaxed text-gray-600">A short brief is enough to start. We review the context and suggest the next step before you commit to a project.</p>
-            <Button asChild className="mt-7 h-auto min-h-12 w-full whitespace-normal rounded-full px-6 py-3 sm:w-auto"><Link href={inquiryHref} onClick={inquiryClick}>{offer.cta}<ArrowRight className="ml-2 h-4 w-4 shrink-0" /></Link></Button>
+            <div className="mt-7 max-w-2xl">
+              <DirectContactPanel placement="us-consulting" projectHref={contactHref} />
+            </div>
           </div>
         </section>
       </main>

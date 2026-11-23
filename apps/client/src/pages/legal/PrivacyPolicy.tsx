@@ -6,6 +6,31 @@ import { PublicPageHero } from "@/components/sections/PublicPageHero";
 import { ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { ADVANCED_MEASUREMENT } from "@/lib/analytics";
+
+const measurementPolicy = {
+  en: {
+    basic: "Google Analytics and Google Ads measurement have separate choices. Each service loads only when you allow it.",
+    advanced: "When the measurement cookies are off, Google may receive limited signals without cookies to estimate visits and enquiries. Separate controls govern whether each service can use measurement cookies.",
+    settings: "We remember your choices in local storage for up to 180 days. Use Cookie settings to reject both, choose either, or change or withdraw your permission. Changing a saved choice may reload the page, so save any unfinished form first.",
+  },
+  el: {
+    basic: "Υπάρχουν ξεχωριστές επιλογές μέτρησης για το Google Analytics και το Google Ads. Κάθε υπηρεσία φορτώνεται μόνο αν την επιτρέψετε.",
+    advanced: "Όταν τα cookies μέτρησης είναι απενεργοποιημένα, η Google μπορεί να λαμβάνει περιορισμένα σήματα χωρίς cookies για να εκτιμά επισκέψεις και αιτήματα. Μπορείτε να επιλέξετε ξεχωριστά τη χρήση cookies για κάθε υπηρεσία.",
+    settings: "Αποθηκεύουμε τις επιλογές σας τοπικά για έως 180 ημέρες. Στις Ρυθμίσεις cookies μπορείτε να απορρίψετε και τις δύο επιλογές, να επιλέξετε μία ή να αλλάξετε ή να ανακαλέσετε την άδειά σας. Η αλλαγή μιας αποθηκευμένης επιλογής μπορεί να επαναφορτώσει τη σελίδα, γι’ αυτό αποθηκεύστε πρώτα τυχόν ημιτελή φόρμα.",
+  },
+  de: {
+    basic: "Für Google Analytics und die Google-Ads-Messung gibt es getrennte Einstellungen. Jeder Dienst wird erst geladen, wenn Sie ihn erlauben.",
+    advanced: "Wenn die Messcookies ausgeschaltet sind, kann Google begrenzte Signale ohne Cookies erhalten, um Besuche und Anfragen zu schätzen. Sie können die Cookie-Nutzung für beide Dienste einzeln steuern.",
+    settings: "Wir speichern Ihre Auswahl bis zu 180 Tage lokal. In den Cookie-Einstellungen können Sie beide Optionen ablehnen, einzeln auswählen oder Ihre Einwilligung ändern oder widerrufen. Eine Änderung kann die Seite neu laden. Speichern Sie daher zuerst ein noch nicht abgeschlossenes Formular.",
+  },
+} as const;
+
+const inquiryRetention = {
+  en: "We keep project enquiries and their delivery status in a private database so we can respond and recover enquiries when email delivery fails. We keep this information as long as necessary to respond, manage the relationship, or meet legal obligations.",
+  el: "Διατηρούμε τα αιτήματα έργων και την κατάσταση αποστολής τους σε ιδιωτική βάση δεδομένων, ώστε να απαντάμε και να ανακτούμε αιτήματα όταν αποτυγχάνει η αποστολή email. Κρατάμε αυτές τις πληροφορίες όσο χρειάζεται για να απαντήσουμε, να διαχειριστούμε τη συνεργασία ή να εκπληρώσουμε νομικές υποχρεώσεις.",
+  de: "Wir speichern Projektanfragen und ihren Zustellstatus in einer privaten Datenbank, um antworten und Anfragen bei Zustellfehlern wiederherstellen zu können. Wir bewahren diese Informationen so lange auf, wie es für die Antwort, die Geschäftsbeziehung oder gesetzliche Pflichten erforderlich ist.",
+} as const;
 
 export default function PrivacyPolicy() {
   const { locale } = useLocale();
@@ -170,6 +195,9 @@ export default function PrivacyPolicy() {
                   dispute.
                 </p>
                 <p className="mt-3">
+                  {inquiryRetention[locale]}
+                </p>
+                <p className="mt-3">
                   Digital product download links expire after 7 days. Delivery
                   records become eligible for deletion after 30 days and are
                   removed on the next product access or download request.
@@ -231,14 +259,8 @@ export default function PrivacyPolicy() {
                   experience, and understand service usage.
                 </p>
                 <p className="mb-3">
-                  Google Analytics and Google Ads measurement are optional and
-                  have separate choices in our cookie notice. Neither is loaded
-                  until you permit the relevant measurement. We remember your
-                  choices in local storage for up to 180 days. Previous consent
-                  to analytics alone does not enable advertising measurement.
-                  You can reject both, choose either, or change and withdraw
-                  permission using the Cookie settings button. Changing a saved
-                  choice may reload the page; save any unfinished form first.
+                  {measurementPolicy[locale][ADVANCED_MEASUREMENT ? "advanced" : "basic"]}{" "}
+                  {measurementPolicy[locale].settings}
                 </p>
                 <ul className="space-y-2 ml-4">
                   <li className="flex items-start gap-2">

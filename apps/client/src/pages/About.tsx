@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { DirectContactPanel } from "@/components/contact/DirectContact";
 import { Seo } from "@/components/seo/Seo";
 import founderPhoto from "@/assets/founder-photo-2.jpg";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useHydrated } from "@/hooks/useHydrated";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import type { Locale } from "@/i18n/config";
 
 interface Section {
@@ -168,6 +169,7 @@ const aboutCopy: Record<Locale, {
 export default function About() {
   const canAnimate = useHydrated();
   const { locale } = useLocale();
+  const localizedHref = useLocalizedHref();
   const copy = aboutCopy[locale];
   const [activeSection, setActiveSection] = useState("introduction");
 
@@ -495,6 +497,7 @@ export default function About() {
                     <p className="text-xl text-gray-600 mb-12">
                       {copy.connectDescription}
                     </p>
+                    <DirectContactPanel placement="about" projectHref={localizedHref("/start-a-project?source=about")} />
                     <div className="space-y-6">
 
                       <a href="https://linkedin.com/in/ioannisbekas" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-xl font-medium hover:text-gray-600 transition-colors p-2 rounded-lg">

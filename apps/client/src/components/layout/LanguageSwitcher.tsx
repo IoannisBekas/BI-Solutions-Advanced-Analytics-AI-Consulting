@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
  * so the document language, translated copy, and canonical tags all reset
  * together.
  */
-export function LanguageSwitcher({ className }: { className?: string }) {
+export function LanguageSwitcher({ className, untranslatedPath }: { className?: string; untranslatedPath?: string }) {
   const { locale, t } = useLocale();
   const [currentPath] = useLocation();
 
@@ -28,9 +28,11 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       : localePath;
     const focusedService = path === "/services/power-bi-consulting" || path === "/services/ai-automation";
     const englishOnlyCase = path === "/case-studies/risenfire-workforce-reporting";
-    const targetPath = target !== "en" && englishOnlyCase
-      ? "/"
-      : focusedService && target === "de" ? "/services" : path;
+    const targetPath = untranslatedPath && target !== locale
+      ? untranslatedPath
+      : target !== "en" && englishOnlyCase
+        ? "/"
+        : focusedService && target === "de" ? "/services" : path;
 
     return `${SITE_BASE_PATH}${pathForLocale(targetPath, target)}`;
   };

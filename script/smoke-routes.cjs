@@ -33,8 +33,8 @@ const publicRoutes = [
   },
   {
     path: "/",
-    title: "AI, BI & Web App Development",
-    body: "Better reporting. Practical AI. Systems that last.",
+    title: "Power BI Consulting & AI Automation",
+    body: ["Power BI reporting you can trust.", "/us/power-bi-consulting", "/us/ai-automation"],
     absent: [
       "AI Products",
       "How engagements work",
@@ -252,6 +252,11 @@ const redirectRoutes = Object.entries(serviceRedirectAnchors).map(
 );
 
 redirectRoutes.push(
+  ...require("../shared/public-redirects.json").map(({ from, to }) => ({
+    path: `${from}?ref=legacy`,
+    location: `${to}?ref=legacy`,
+    status: 308,
+  })),
   { path: "/el/services/business-intelligence-semantic-modeling?ref=test", location: "/el/services/power-bi-consulting?ref=test" },
   { path: "/el/services/ai-automation-consulting/?ref=test", location: "/el/services/ai-automation?ref=test" },
   { path: "/de/services/ai-automation?ref=test", location: "/services/ai-automation?ref=test" },
@@ -261,18 +266,6 @@ redirectRoutes.push(
 );
 
 const goneRoutes = [
-  {
-    path: "/quantus",
-  },
-  {
-    path: "/quantus?utm_source=smoke",
-  },
-  {
-    path: "/power-bi-solutions",
-  },
-  {
-    path: "/bonusaki",
-  },
   {
     path: "/ai-advisor",
   },
@@ -295,15 +288,6 @@ const goneRoutes = [
     path: "/Greek%20AI%20Professional%20Advisor",
   },
   {
-    path: "/products",
-  },
-  {
-    path: "/all-products",
-  },
-  {
-    path: "/portfolio",
-  },
-  {
     path: "/website-app-portfolio",
   },
   {
@@ -311,9 +295,6 @@ const goneRoutes = [
   },
   {
     path: "/Website%20%26%20App%20Portfolio",
-  },
-  {
-    path: "/contact",
   },
 ];
 
@@ -426,8 +407,8 @@ async function smokeRedirectRoute(route) {
   const response = await fetch(url, { redirect: "manual", method });
   const location = response.headers.get("location") || "";
 
-  if (![301, 302, 307, 308].includes(response.status)) {
-    throw new Error(`${route.path} returned HTTP ${response.status}, expected redirect`);
+  if (route.status ? response.status !== route.status : ![301, 302, 307, 308].includes(response.status)) {
+    throw new Error(`${route.path} returned HTTP ${response.status}, expected ${route.status ? "HTTP " + route.status : "redirect"}`);
   }
   if (location !== route.location) {
     throw new Error(`${route.path} redirected to "${location || "(missing)"}", expected "${route.location}"`);

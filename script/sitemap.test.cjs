@@ -9,9 +9,10 @@ const { inventory, canonicalRoutes, buildSitemap, assertSitemapCoverage, publicR
 test("public migration aliases target existing pages and never replace the hidden URLs", () => {
   const canonical = new Set(canonicalRoutes().map((route) => route.path));
   const hidden = new Set(["/bnb-companies/", "/btc-companies/", "/sol-companies/", "/us/ai-automation", "/us/power-bi-consulting"]);
+  const productWorkspaces = new Set(["/quantus/workspace/", "/power-bi-solutions/workspace/", "/bonusaki/demo/"]);
   assert.equal(new Set(publicRedirects.map(({ from }) => from)).size, publicRedirects.length);
   for (const { from, to } of publicRedirects) {
-    assert.ok(canonical.has(to), to);
+    assert.ok(canonical.has(to) || productWorkspaces.has(to), to);
     assert.ok(!canonical.has(from), from);
     assert.ok(!hidden.has(from), from);
     assert.ok(!hidden.has(to), to);
@@ -56,6 +57,13 @@ test("the release adds the approved service, restaurant, client case and portfol
     "/el/services/ai-automation",
     "/services/power-bi-consulting",
     "/el/services/power-bi-consulting",
+    "/services/power-bi-performance-audit",
+    "/services/dataverse-power-bi-reporting",
+    "/services/microsoft-fabric-migration",
+    "/services/ai-document-processing",
+    "/tools",
+    "/el/tools",
+    "/de/tools",
     ...portfolioAdditions,
   ].sort());
 });

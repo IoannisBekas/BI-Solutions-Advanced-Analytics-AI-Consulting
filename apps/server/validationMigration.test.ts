@@ -29,6 +29,7 @@ test("Zod migration preserves validation before authentication, persistence and 
   const testDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "bisolutions-validation-"));
   let server: http.Server | undefined;
   let closeDatabase = () => {};
+  let closeContactStore = () => {};
   let sent: Record<string, unknown>[] = [];
   const unexpectedRequests: string[] = [];
 
@@ -36,6 +37,7 @@ test("Zod migration preserves validation before authentication, persistence and 
     try {
       if (server) await new Promise<void>((resolve, reject) => server!.close((error) => error ? reject(error) : resolve()));
     } finally {
+      closeContactStore();
       closeDatabase();
       globalThis.fetch = originalFetch;
       for (const key of Object.keys(process.env)) if (!(key in originalEnvironment)) delete process.env[key];
@@ -49,6 +51,7 @@ test("Zod migration preserves validation before authentication, persistence and 
 
   Object.assign(process.env, {
     DATA_DIR: testDirectory,
+    CONTACT_DATA_DIR: testDirectory,
     NODE_ENV: "test",
     JWT_SECRET: "validation-test-secret-not-used-outside-this-process",
     RESEND_API_KEY: "re_validation_test_stub",
@@ -75,7 +78,7 @@ test("Zod migration preserves validation before authentication, persistence and 
   const app = express();
   app.use(express.json());
   app.use("/api/auth", authRouter);
-  registerContactRoute(app);
+  closeContactStore = registerContactRoute(app).close;
   registerBonusakiRoutes(app);
   server = app.listen(0, "127.0.0.1");
   await new Promise<void>((resolve) => server!.once("listening", resolve));

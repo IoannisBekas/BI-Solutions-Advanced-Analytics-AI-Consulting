@@ -26,6 +26,53 @@
       "priority": "0.9"
     },
     {
+      "path": "/tools",
+      "locales": [
+        "en",
+        "el",
+        "de"
+      ],
+      "render": "react",
+      "changefreq": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/services/power-bi-performance-audit",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/services/dataverse-power-bi-reporting",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/services/microsoft-fabric-migration",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/services/ai-document-processing",
+      "locales": [
+        "en"
+      ],
+      "render": "react",
+      "changefreq": "monthly",
+      "priority": "0.8"
+    },
+    {
       "path": "/case-studies/unicef-audit-compliance",
       "locales": [
         "en",

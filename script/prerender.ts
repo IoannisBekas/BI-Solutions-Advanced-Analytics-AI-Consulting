@@ -76,7 +76,7 @@ async function readRoutesFromSitemap() {
   const localised = canonicalRoutes.filter((route) =>
     !route.startsWith("/us/") &&
     route !== "/case-studies/risenfire-workforce-reporting" &&
-    !/^\/services\/(?:power-bi-consulting|ai-automation)$/.test(route),
+    !/^\/services\/(?:power-bi-consulting|ai-automation|power-bi-performance-audit|dataverse-power-bi-reporting|microsoft-fabric-migration|ai-document-processing)$/.test(route),
   ).flatMap((route) =>
     LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
       (locale) => `${localePrefix(locale)}${route === "/" ? "" : route}`,

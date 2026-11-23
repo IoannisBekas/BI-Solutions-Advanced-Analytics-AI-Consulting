@@ -26,8 +26,8 @@ function environment(hostname, consent = { analytics: true, ads: true }, existin
   return { window, document, scripts, calls };
 }
 
-function loadModule(source, env) {
-  const compiled = ts.transpileModule(source, {
+function loadModule(source, env, buildEnv = {}) {
+  const compiled = ts.transpileModule(source.replaceAll("import.meta.env", JSON.stringify(buildEnv)), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
   }).outputText;
   const exports = {};
@@ -79,6 +79,29 @@ test("both production domains retain independent analytics and advertising conse
         analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
       }]);
     }
+  }
+});
+
+test("advanced mode starts with denied storage and sends no inquiry reference before ad consent", () => {
+  const buildEnv = { VITE_GOOGLE_CONSENT_MODE_ADVANCED: "true" };
+  for (const hostname of [...productionHosts, ...otherHosts]) {
+    const env = environment(hostname, null);
+    const analytics = loadModule(analyticsSource, env, buildEnv);
+    analytics.initializeMeasurement();
+    analytics.trackLeadConversion("internal-reference");
+    if (!productionHosts.includes(hostname)) {
+      assert.deepEqual(env.scripts, [], hostname);
+      assert.equal(env.window.dataLayer, undefined, hostname);
+      continue;
+    }
+    const queue = normalize(env.window.dataLayer.map((entry) => Array.from(entry)));
+    assert.equal(env.scripts.length, 1);
+    assert.deepEqual(queue[0], ["consent", "default", {
+      analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", wait_for_update: 500,
+    }]);
+    const conversion = queue.find((entry) => entry[1] === "conversion");
+    assert.ok(conversion);
+    assert.equal("transaction_id" in conversion[2], false);
   }
 });
 

@@ -1,11 +1,4 @@
-/**
- * Shared vocabulary for project enquiries.
- *
- * The homepage hero and the Start a project form both encode intent into the
- * URL, so the accepted values live here rather than in either surface. Each
- * surface keeps its own wording, but the values must stay identical or the
- * form silently fails to prefill.
- */
+/** Accepted values for project enquiry fields and URL prefills. */
 
 export interface ProjectOption {
   value: string;
@@ -56,17 +49,6 @@ export const projectNeedGroups: ProjectOptionGroup[] = [
 export const projectNeedOptions = projectNeedGroups.flatMap(
   (group) => group.options,
 );
-
-export const heroNeedValues = [
-  "business-intelligence",
-  "ai-automation",
-  "data-strategy",
-  "web-app",
-  "content-operations",
-  "team-enablement",
-  "career-mentorship",
-  "not-sure",
-] as const;
 
 export const projectTimingOptions: ProjectOption[] = [
   { value: "asap", label: "As soon as practical" },
