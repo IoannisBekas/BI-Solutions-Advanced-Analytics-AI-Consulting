@@ -2,13 +2,15 @@ import { ArrowDown, ArrowRight, Check, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "wouter";
 
+import { DirectContactPanel, IntroCallLink } from "@/components/contact/DirectContact";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Seo } from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
 import { getServiceDetailBySlug } from "@/data/serviceDetails";
 import { greekServiceDetailLabels } from "@/data/serviceDetails.el";
-import { useLocale } from "@/i18n/LocaleProvider";
+import { specialistServiceDetails } from "@/data/specialistServiceDetails";
+import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
 import { pathForLocale } from "@/i18n/config";
 import { translatePageCopy } from "@/i18n/localizeDocument";
 import { campaignAttribution } from "@/lib/leadAttribution";
@@ -27,6 +29,7 @@ const pageSections = [
 export default function ServiceDetail({ slug: providedSlug }: { slug?: string }) {
   const params = useParams<{ slug: string }>();
   const { locale, t } = useLocale();
+  const localizedHref = useLocalizedHref();
   const slug = providedSlug ?? params.slug;
   const service = slug ? getServiceDetailBySlug(slug, locale) : undefined;
   const [campaignSearch, setCampaignSearch] = useState("");
@@ -34,7 +37,7 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
     setCampaignSearch(window.location.search);
   }, [slug]);
 
-  if (!service) return <NotFound />;
+  if (!service || (service.translatedLocales && !service.translatedLocales.includes(locale))) return <NotFound />;
 
   const label = (value: keyof typeof greekServiceDetailLabels) =>
     locale === "el" ? greekServiceDetailLabels[value] : value;
@@ -46,6 +49,10 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
   projectParams.set("service", service.slug);
   projectParams.set("need", service.need);
   const projectHref = `/start-a-project?${projectParams}`;
+  const contactHref = localizedHref(projectHref);
+  const specialistServices = locale === "en"
+    ? specialistServiceDetails.filter((item) => item.relatedService.href === service.path)
+    : [];
 
   return (
     <div className="min-h-screen bg-[var(--surface-paper)] font-sans text-gray-950">
@@ -53,7 +60,7 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
         title={service.seoTitle}
         description={service.description}
         path={service.path}
-        translatedLocales={["en", "el"]}
+        translatedLocales={service.translatedLocales ?? ["en", "el"]}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -81,7 +88,7 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
           },
         ]}
       />
-      <Navbar />
+      <Navbar untranslatedPath={service.translatedLocales?.length === 1 ? "/services" : undefined} />
 
       <main>
         <section className="site-container page-top pb-12 md:pb-16">
@@ -102,9 +109,11 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
                 <Button asChild className="min-h-12 rounded-full bg-black px-6 text-white hover:bg-gray-800">
                   <Link href={projectHref}>{label("Discuss your project")} <ArrowRight aria-hidden="true" /></Link>
                 </Button>
-                <Link href="/about" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">
-                  {label("Meet Ioannis")} <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </Link>
+                <IntroCallLink
+                  placement="service-detail"
+                  projectHref={contactHref}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4"
+                />
               </div>
             </div>
 
@@ -200,7 +209,7 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
               <h2 className="section-title mt-4">{service.caseStudy.title}</h2>
               <p className="mt-4 max-w-3xl text-sm leading-relaxed text-gray-700">{service.caseStudy.description}</p>
               <a href={withSiteBase(service.caseStudy.href)} hrefLang="en" className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline decoration-gray-400 underline-offset-4">
-                {label("Read the case study in English")} <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+                {locale === "en" ? "Read the case study" : label("Read the case study in English")} <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
               </a>
             </section>
           )}
@@ -231,6 +240,20 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
             </div>
           </section>
 
+          {specialistServices.length > 0 && (
+            <section className="border-t border-gray-950/20 py-14 md:py-16">
+              <h2 className="section-title">Specialist engagements</h2>
+              <div className="mt-8 grid gap-x-8 sm:grid-cols-2">
+                {specialistServices.map((item) => (
+                  <Link key={item.slug} href={item.path} className="group border-t border-gray-950/20 py-6">
+                    <h3 className="flex items-start justify-between gap-4 font-heading text-lg font-bold tracking-tight underline-offset-4 group-hover:underline">{item.title}<ArrowRight aria-hidden="true" className="mt-1 h-4 w-4 shrink-0" /></h3>
+                    <p className="mt-3 text-sm leading-relaxed text-gray-700">{item.description}</p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
           <section className="border-t border-gray-950/20 py-14 md:py-16">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-600">{label("Further reading")}</p>
             <h2 className="section-title mt-4">{label("Useful context for the next conversation.")}</h2>
@@ -247,15 +270,13 @@ export default function ServiceDetail({ slug: providedSlug }: { slug?: string })
         </div>
 
         <section className="bg-[#0a0b0d] py-14 text-white md:py-20">
-          <div className="site-container grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div className="site-container grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.67fr)] lg:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">{label("Start with your requirement")}</p>
               <h2 className="section-title mt-4 max-w-3xl">{label("Tell us what needs to work better.")}</h2>
               <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70">{label("Describe the process, current tools, and the result your team needs. We review the context and agree the next step with you.")}</p>
             </div>
-            <Button asChild className="min-h-12 w-fit rounded-full bg-white px-6 text-black hover:bg-gray-200">
-              <Link href={projectHref}>{label("Discuss your project")}<ArrowRight aria-hidden="true" /></Link>
-            </Button>
+            <DirectContactPanel placement="service-detail" projectHref={contactHref} />
           </div>
         </section>
       </main>

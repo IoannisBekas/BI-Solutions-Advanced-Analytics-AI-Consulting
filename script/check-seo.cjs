@@ -40,8 +40,9 @@ function visibleTextLength(html) {
     .trim().length;
 }
 
-function structuredDataTypes(html) {
+function readStructuredData(html) {
   const types = new Set();
+  const organizationTypes = [];
   const scripts = html.matchAll(
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
   );
@@ -54,6 +55,7 @@ function structuredDataTypes(html) {
 
     if (!value || typeof value !== "object") return;
     const type = value["@type"];
+    if (type && value["@id"] === `${siteOrigin}/#organization`) organizationTypes.push(type);
     if (Array.isArray(type)) type.forEach((item) => types.add(item));
     else if (typeof type === "string") types.add(type);
     Object.values(value).forEach(collect);
@@ -67,7 +69,7 @@ function structuredDataTypes(html) {
     }
   }
 
-  return types;
+  return { types, organizationTypes };
 }
 
 function expectedSchemaType(routePath) {
@@ -230,7 +232,10 @@ for (const canonicalUrl of sitemapUrls) {
   if (visibleTextLength(html) < 250) fail(`${routePath} has too little prerendered text.`);
   if (html.includes('<div id="root"></div>')) fail(`${routePath} contains an empty app shell.`);
 
-  const schemaTypes = structuredDataTypes(html);
+  const { types: schemaTypes, organizationTypes } = readStructuredData(html);
+  if (basePath === "/" && (organizationTypes.length !== 1 || organizationTypes[0] !== "ProfessionalService")) {
+    fail(`${routePath} must define its organization exactly once as ProfessionalService.`);
+  }
   if (schemaTypes.has("FAQPage")) {
     fail(`${routePath} contains FAQPage schema, which is not useful for this commercial site.`);
   }

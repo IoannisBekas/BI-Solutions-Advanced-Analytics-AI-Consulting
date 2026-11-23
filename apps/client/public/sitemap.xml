@@ -62,6 +62,61 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.bisolutions.group/tools</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/tools" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/tools" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/tools" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/el/tools</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/tools" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/tools" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/tools" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/de/tools</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/tools" />
+    <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/tools" />
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://www.bisolutions.group/de/tools" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/tools" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/services/power-bi-performance-audit</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/power-bi-performance-audit" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/power-bi-performance-audit" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/services/dataverse-power-bi-reporting</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/dataverse-power-bi-reporting" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/dataverse-power-bi-reporting" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/services/microsoft-fabric-migration</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/microsoft-fabric-migration" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/microsoft-fabric-migration" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bisolutions.group/services/ai-document-processing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/services/ai-document-processing" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bisolutions.group/services/ai-document-processing" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.bisolutions.group/case-studies/unicef-audit-compliance</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.bisolutions.group/case-studies/unicef-audit-compliance" />
     <xhtml:link rel="alternate" hreflang="el-GR" href="https://www.bisolutions.group/el/case-studies/unicef-audit-compliance" />

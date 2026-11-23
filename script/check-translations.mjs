@@ -71,17 +71,33 @@ for (const [source, translations] of Object.entries(catalogue)) {
 }
 console.log(`Translation markup checks passed for ${inlineTranslationsChecked} Greek and German fragments.`);
 const reviewSource = await fs.readFile(path.join(root, "apps/client/src/components/sections/ReviewsSection.tsx"), "utf8");
-const reviewQuotes = [...reviewSource.matchAll(/text:\s*("(?:\\.|[^"\\])*")/g)].map(match => JSON.parse(match[1]));
-if (!reviewQuotes.length) throw new Error("No review quotations found for the prerender audit.");
+const quotesFor = (name) => {
+  const reviewList = reviewSource.match(new RegExp(`const ${name}: Review\\[\\] = \\[([\\s\\S]*?)\\n\\];`));
+  const quotes = [...(reviewList?.[1] ?? "").matchAll(/text:\s*("(?:\\.|[^"\\])*")/g)]
+    .map(match => JSON.parse(match[1]));
+  if (!quotes.length) throw new Error(`No quotations found for ${name}.`);
+  return quotes;
+};
+
+const reviewPages = [
+  { route: "", expected: quotesFor("consultingReviews"), excluded: quotesFor("mentorshipReviews") },
+  { route: "services", expected: quotesFor("mentorshipReviews"), excluded: quotesFor("consultingReviews") },
+];
+
 for (const locale of ["en", "el", "de"]) {
-  const html = await fs.readFile(path.join(root, "dist/public", locale === "en" ? "" : locale, "index.html"), "utf8");
-  const visibleHtml = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
-    .replaceAll("&#x27;", "'").replaceAll("&quot;", '"').replaceAll("&amp;", "&");
-  for (const quote of reviewQuotes) {
-    if (!visibleHtml.includes(quote)) throw new Error(`${locale}: prerendered review was translated or truncated: ${quote.slice(0, 60)}`);
+  for (const { route, expected, excluded } of reviewPages) {
+    const html = await fs.readFile(path.join(root, "dist/public", locale === "en" ? "" : locale, route, "index.html"), "utf8");
+    const visibleHtml = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "")
+      .replaceAll("&#x27;", "'").replaceAll("&quot;", '"').replaceAll("&amp;", "&");
+    for (const quote of expected) {
+      if (!visibleHtml.includes(quote)) throw new Error(`${locale}/${route}: prerendered review was translated or truncated: ${quote.slice(0, 60)}`);
+    }
+    for (const quote of excluded) {
+      if (visibleHtml.includes(quote)) throw new Error(`${locale}/${route}: review showed up on the wrong page: ${quote.slice(0, 60)}`);
+    }
   }
 }
-console.log(`Verbatim review checks passed for ${reviewQuotes.length} complete quotations in three languages.`);
+console.log("Verbatim consulting and mentorship reviews verified on their respective pages in three languages.");
 const sourceFile = ts.createSourceFile(
   blogDataPath,
   blogSource,

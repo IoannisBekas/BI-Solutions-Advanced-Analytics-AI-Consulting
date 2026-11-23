@@ -9,6 +9,8 @@ export const GA_ID = "G-M1276CBX6M";
 export const ADS_ID = "AW-18432612818";
 export const LEAD_CONVERSION = `${ADS_ID}/QZdDCIrolO8cENKzrdVE`;
 export type MeasurementConsent = { analytics: boolean; ads: boolean };
+export const ADVANCED_MEASUREMENT = import.meta.env?.VITE_GOOGLE_CONSENT_MODE_ADVANCED === "true";
+const DENIED_CONSENT: MeasurementConsent = { analytics: false, ads: false };
 
 function isProductionMeasurementHost() {
   return typeof window !== "undefined" &&
@@ -47,8 +49,9 @@ function consentSignals(consent: MeasurementConsent) {
 
 export function initializeMeasurement() {
   if (!isProductionMeasurementHost()) return;
-  const consent = readMeasurementConsent();
-  if (!consent || (!consent.analytics && !consent.ads)) return;
+  const savedConsent = readMeasurementConsent();
+  const consent = savedConsent ?? DENIED_CONSENT;
+  if (!ADVANCED_MEASUREMENT && !consent.analytics && !consent.ads) return;
   const analyticsWindow = window as AnalyticsWindow;
   if (analyticsWindow.gtag) return;
   analyticsWindow.dataLayer = analyticsWindow.dataLayer || [];
@@ -57,16 +60,19 @@ export function initializeMeasurement() {
     analyticsWindow.dataLayer?.push(arguments);
   };
   const gtag = analyticsWindow.gtag;
-  gtag("consent", "default", consentSignals({ analytics: false, ads: false }));
+  gtag("consent", "default", {
+    ...consentSignals(DENIED_CONSENT),
+    ...(ADVANCED_MEASUREMENT && !savedConsent ? { wait_for_update: 500 } : {}),
+  });
   gtag("set", "ads_data_redaction", true);
   gtag("set", "url_passthrough", false);
-  gtag("consent", "update", consentSignals(consent));
+  if (savedConsent) gtag("consent", "update", consentSignals(savedConsent));
   gtag("js", new Date());
-  if (consent.analytics) gtag("config", GA_ID, { allow_google_signals: false, allow_ad_personalization_signals: false });
-  if (consent.ads) gtag("config", ADS_ID, { allow_enhanced_conversions: false, allow_ad_personalization_signals: false });
+  if (consent.analytics || ADVANCED_MEASUREMENT) gtag("config", GA_ID, { allow_google_signals: false, allow_ad_personalization_signals: false });
+  if (consent.ads || ADVANCED_MEASUREMENT) gtag("config", ADS_ID, { allow_enhanced_conversions: false, allow_ad_personalization_signals: false });
   const script = document.createElement("script");
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${consent.analytics ? GA_ID : ADS_ID}`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${consent.analytics || ADVANCED_MEASUREMENT ? GA_ID : ADS_ID}`;
   document.head.appendChild(script);
 }
 
@@ -82,8 +88,8 @@ export function applyMeasurementConsent(consent: MeasurementConsent) {
       for (const domain of domains) document.cookie = `${name}=; Max-Age=0; path=/;${domain ? ` domain=${domain};` : ""}`;
     }
   }
-  // Tear down already-loaded tags when changing an existing choice.
-  if (analyticsWindow.gtag) window.location.reload();
+  // In basic mode a reload removes tags for products no longer permitted.
+  if (!ADVANCED_MEASUREMENT && analyticsWindow.gtag) window.location.reload();
   else initializeMeasurement();
 }
 
@@ -93,14 +99,16 @@ export function hasAnalyticsConsent() {
 
 // Only call after a successful enquiry response; never pass form contents.
 export function trackLeadConversion(inquiryId?: string) {
-  if (!isProductionMeasurementHost() || readMeasurementConsent()?.ads !== true) return;
+  if (!isProductionMeasurementHost()) return;
+  const adsAllowed = readMeasurementConsent()?.ads === true;
+  if (!adsAllowed && !ADVANCED_MEASUREMENT) return;
   try {
     initializeMeasurement();
     (window as AnalyticsWindow).gtag?.("event", "conversion", {
       send_to: LEAD_CONVERSION,
       value: 1.0,
       currency: "EUR",
-      ...(inquiryId ? { transaction_id: inquiryId } : {}),
+      ...(adsAllowed && inquiryId ? { transaction_id: inquiryId } : {}),
     });
   } catch {
     // Blocked measurement must not turn a delivered enquiry into a form error.

@@ -141,7 +141,7 @@ const startProjectCopy: Record<Locale, {
     startingPointBody: "A business bottleneck, repeated workflow, reporting gap, product idea, or career goal is enough. You do not need a finished technical specification or learning plan.",
     responseTitle: "A considered response",
     responseBody: "The brief is reviewed before the next step is suggested. If the work is not a good fit, that will be made clear as well.",
-    successTitle: "Your brief was sent.",
+    successTitle: "We received your brief.",
     successBody: "Thank you for sharing the context. BI Solutions Group will review the request and follow up using the email address you provided.",
     returnHome: "Return to the homepage",
     projectFormTitle: "Tell us about the project",
@@ -195,7 +195,7 @@ const startProjectCopy: Record<Locale, {
     startingPointBody: "Ένα επιχειρηματικό εμπόδιο, μια επαναλαμβανόμενη διαδικασία, ένα κενό στις αναφορές, μια ιδέα προϊόντος ή ένας στόχος καριέρας αρκεί. Δεν χρειάζεστε ολοκληρωμένες τεχνικές προδιαγραφές ή πλάνο μάθησης.",
     responseTitle: "Μια προσεκτικά μελετημένη απάντηση",
     responseBody: "Η περιγραφή εξετάζεται πριν προταθεί το επόμενο βήμα. Αν το έργο δεν ταιριάζει στις υπηρεσίες μας, θα σας το πούμε ξεκάθαρα.",
-    successTitle: "Η περιγραφή σας στάλθηκε.",
+    successTitle: "Λάβαμε την περιγραφή σας.",
     successBody: "Ευχαριστούμε για τις πληροφορίες. Η BI Solutions Group θα εξετάσει το αίτημα και θα επικοινωνήσει στη διεύθυνση email που δώσατε.",
     returnHome: "Επιστροφή στην αρχική σελίδα",
     projectFormTitle: "Πείτε μας για το έργο",
@@ -274,7 +274,7 @@ const startProjectCopy: Record<Locale, {
     startingPointBody: "Ein geschäftlicher Engpass, ein wiederkehrender Ablauf, eine Reporting-Lücke, eine Produktidee oder ein Karriereziel genügt. Sie benötigen weder eine fertige technische Spezifikation noch einen vollständigen Lernplan.",
     responseTitle: "Eine fundierte Antwort",
     responseBody: "Das Briefing wird geprüft, bevor der nächste Schritt vorgeschlagen wird. Wenn die Aufgabe nicht zu uns passt, sagen wir das ebenfalls klar.",
-    successTitle: "Ihr Briefing wurde gesendet.",
+    successTitle: "Ihr Briefing ist eingegangen.",
     successBody: "Vielen Dank für den Kontext. BI Solutions Group prüft die Anfrage und meldet sich über die von Ihnen angegebene E-Mail-Adresse.",
     returnHome: "Zurück zur Startseite",
     projectFormTitle: "Erzählen Sie uns von Ihrem Projekt",
@@ -341,15 +341,43 @@ const startProjectCopy: Record<Locale, {
 };
 
 const inquiryCopy = {
-  en: { currency: "Budget currency", timeZone: "Your time zone", timeZoneHint: "For example: Eastern Time (New York)", budgetHint: "A planning range helps scope the work. It is not a quote or a currency conversion.", reference: "Inquiry reference" },
-  el: { currency: "Νόμισμα προϋπολογισμού", timeZone: "Η ζώνη ώρας σας", timeZoneHint: "Για παράδειγμα: Αθήνα", budgetHint: "Το ενδεικτικό εύρος βοηθά στον καθορισμό του έργου. Δεν αποτελεί προσφορά ή μετατροπή νομίσματος.", reference: "Κωδικός αιτήματος" },
-  de: { currency: "Budgetwährung", timeZone: "Ihre Zeitzone", timeZoneHint: "Zum Beispiel: Berlin", budgetHint: "Ein Planungsrahmen hilft bei der Projektabgrenzung. Er ist weder ein Angebot noch eine Währungsumrechnung.", reference: "Anfragereferenz" },
+  en: { currency: "Budget currency", timeZone: "Your time zone", timeZoneHint: "For example: Eastern Time (New York)", budgetHint: "A planning range helps scope the work. It is not a quote or a currency conversion.", reference: "Inquiry reference", optionalDetails: "Optional project details" },
+  el: { currency: "Νόμισμα προϋπολογισμού", timeZone: "Η ζώνη ώρας σας", timeZoneHint: "Για παράδειγμα: Αθήνα", budgetHint: "Το ενδεικτικό εύρος βοηθά στον καθορισμό του έργου. Δεν αποτελεί προσφορά ή μετατροπή νομίσματος.", reference: "Κωδικός αιτήματος", optionalDetails: "Προαιρετικές λεπτομέρειες" },
+  de: { currency: "Budgetwährung", timeZone: "Ihre Zeitzone", timeZoneHint: "Zum Beispiel: Berlin", budgetHint: "Ein Planungsrahmen hilft bei der Projektabgrenzung. Er ist weder ein Angebot noch eine Währungsumrechnung.", reference: "Anfragereferenz", optionalDetails: "Optionale Projektdetails" },
+} as const;
+
+const introRequestCopy = {
+  en: {
+    title: "Request a short introductory call.",
+    body: "Tell us briefly what you’d like to discuss. We’ll respond by email to find a time that works.",
+    formTitle: "Your contact details",
+    topic: "What would you like to discuss?",
+    submit: "Request a call",
+    received: "We received your call request.",
+  },
+  el: {
+    title: "Ζητήστε μια σύντομη εισαγωγική κλήση.",
+    body: "Πείτε μας σύντομα τι θα θέλατε να συζητήσουμε. Θα επικοινωνήσουμε μέσω email για να βρούμε ώρα που σας βολεύει.",
+    formTitle: "Τα στοιχεία επικοινωνίας σας",
+    topic: "Τι θα θέλατε να συζητήσουμε;",
+    submit: "Ζητήστε κλήση",
+    received: "Λάβαμε το αίτημά σας για κλήση.",
+  },
+  de: {
+    title: "Fragen Sie ein kurzes Kennenlerngespräch an.",
+    body: "Sagen Sie uns kurz, was Sie besprechen möchten. Wir melden uns per E-Mail mit einem passenden Termin.",
+    formTitle: "Ihre Kontaktdaten",
+    topic: "Was möchten Sie besprechen?",
+    submit: "Gespräch anfragen",
+    received: "Ihre Gesprächsanfrage ist eingegangen.",
+  },
 } as const;
 
 export default function StartProject() {
   const { locale } = useLocale();
   const copy = startProjectCopy[locale];
   const extraCopy = inquiryCopy[locale];
+  const introCopy = introRequestCopy[locale];
   const structuredData = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "ContactPage",
@@ -361,6 +389,7 @@ export default function StartProject() {
   const [form, setForm] = useState<FormValues>(initialFormValues);
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [isUsInquiry, setIsUsInquiry] = useState(false);
+  const [isIntroRequest, setIsIntroRequest] = useState(false);
   const [inquiryReference, setInquiryReference] = useState("");
   const submission = useRef({ payload: "", id: "" });
   const campaign = useRef<Record<string, string>>({});
@@ -375,6 +404,7 @@ export default function StartProject() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setIsUsInquiry(params.get("market") === "US");
+    setIsIntroRequest(params.get("meeting") === "intro");
     const service = params.get("service")?.trim().toLowerCase() || "";
     const product = params.get("product")?.trim().toLowerCase() || "";
     const demo = params.get("demo")?.trim().toLowerCase() || "";
@@ -456,15 +486,16 @@ export default function StartProject() {
 
     const selectedNeed =
       projectNeedOptions.find((option) => option.value === form.need)?.label ??
-      form.need;
+      (form.need || "Not provided");
     const message = [
-      `Company or career stage: ${form.company}`,
+      `Company or career stage: ${form.company.trim() || "Not provided"}`,
       `Enquiry type: ${selectedNeed}`,
-      `Desired timing: ${form.timing}`,
+      `Desired timing: ${form.timing || "Not provided"}`,
       isMentorship
         ? "Budget range: Not requested"
         : `Budget range: ${form.budget ? form.budget.replaceAll("€", form.currency === "USD" ? "US$" : "€") : "Not provided"} (${form.currency})`,
       `Time zone: ${form.timeZone || "Not provided"}`,
+      ...(isIntroRequest ? ["Requested next step: Introductory call"] : []),
       "Privacy consent: Yes",
       "",
       "Enquiry details:",
@@ -478,7 +509,9 @@ export default function StartProject() {
     ].join("\n");
 
     try {
-      const payload = JSON.stringify({ name: form.name, email: form.email, subject: `New enquiry — ${selectedNeed}`, message });
+      const subject = isIntroRequest ? `Intro call request — ${selectedNeed}` : `New enquiry — ${selectedNeed}`;
+      const inquiry = { name: form.name, email: form.email, subject, message };
+      const payload = JSON.stringify(inquiry);
       // Reuse the reference when retrying the same brief after a network failure.
       if (submission.current.payload !== payload) {
         submission.current = { payload, id: crypto.randomUUID() };
@@ -490,10 +523,7 @@ export default function StartProject() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          subject: `New enquiry — ${selectedNeed}`,
-          message,
+          ...inquiry,
           inquiryId: submission.current.id,
         }),
       });
@@ -508,6 +538,7 @@ export default function StartProject() {
       trackLeadConversion(submission.current.id);
       trackEvent("contact_form_submit", {
         selected_need: form.need,
+        next_step: isIntroRequest ? "intro_call" : "project_brief",
         desired_timing: form.timing,
         budget_range: isMentorship
           ? "not_requested"
@@ -545,15 +576,15 @@ export default function StartProject() {
               {isMentorship ? copy.mentorshipEyebrow : copy.projectEyebrow}
             </p>
             <h1 className="page-title mt-6">
-              {usService ? `Tell us about your ${usService} project.` : isMentorship
+              {isIntroRequest ? introCopy.title : usService ? `Tell us about your ${usService} project.` : isMentorship
                 ? copy.mentorshipTitle
                 : copy.projectTitle}
             </h1>
             <p className="body-lead reading-width mt-6 text-gray-600">
-              {usService ? "Share the problem, your current tools, and what a useful result would look like. Add a planning budget and time zone if you know them. We’ll review the fit and discuss the scope and next steps by email." : copy.introduction}
+              {isIntroRequest ? introCopy.body : usService ? "Share the problem, your current tools, and what a useful result would look like. Add a planning budget and time zone if you know them. We’ll review the fit and discuss the scope and next steps by email." : copy.introduction}
             </p>
 
-            {!usService && <div className="mt-10 space-y-4">
+            {!isIntroRequest && !usService && <div className="mt-10 space-y-4">
               <div className="surface-card card-padding">
                 <h2 className="text-base font-semibold">{copy.startingPointTitle}</h2>
                 <p className="mt-1 text-sm leading-relaxed text-gray-600">
@@ -577,10 +608,11 @@ export default function StartProject() {
             {status === "success" ? (
               <div
                 className="flex min-h-[36rem] flex-col items-start justify-center"
+                id="project-form-title"
                 role="status"
                 aria-live="polite"
               >
-                <h2 className="section-title">{copy.successTitle}</h2>
+                <h2 className="section-title">{isIntroRequest ? introCopy.received : copy.successTitle}</h2>
                 <p className="mt-4 max-w-lg text-base leading-relaxed text-gray-600">
                   {copy.successBody}
                 </p>
@@ -592,9 +624,9 @@ export default function StartProject() {
             ) : (
               <>
                 {/* Sits above the form so the alternatives are seen before any field. */}
-                <DirectContactPanel placement="start_project" />
+                <DirectContactPanel placement="start_project" showIntro={!isIntroRequest} />
                 <h2 id="project-form-title" className="section-title">
-                  {isMentorship
+                  {isIntroRequest ? introCopy.formTitle : isMentorship
                     ? copy.mentorshipFormTitle
                     : copy.projectFormTitle}
                 </h2>
@@ -639,56 +671,12 @@ export default function StartProject() {
                   </div>
 
                   <label className="block text-sm font-medium text-gray-800">
-                    {isMentorship ? copy.careerStage : copy.company}{" "}
-                    <span aria-hidden="true">*</span>
-                    <input
-                      name="company"
-                      type="text"
-                      autoComplete={isMentorship ? "off" : "organization"}
-                      required
-                      maxLength={200}
-                      value={form.company}
-                      onChange={(event) => updateField("company", event.target.value)}
-                      placeholder={
-                        isMentorship
-                          ? copy.careerStagePlaceholder
-                          : undefined
-                      }
-                      className={fieldClassName}
-                    />
-                  </label>
-
-                  <label className="block text-sm font-medium text-gray-800">
-                    {copy.achievement} <span aria-hidden="true">*</span>
-                    <select
-                      name="need"
-                      required
-                      value={form.need}
-                      onChange={(event) => updateField("need", event.target.value)}
-                      className={fieldClassName}
-                    >
-                      <option value="" disabled>
-                        {copy.selectNeed}
-                      </option>
-                      {projectNeedGroups.map((group) => (
-                        <optgroup key={group.label} label={copy.needGroups[group.label]}>
-                          {group.options.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {copy.needs[option.value]}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="block text-sm font-medium text-gray-800">
-                    {isMentorship ? copy.careerDescription : copy.projectDescription}{" "}
+                    {isIntroRequest ? introCopy.topic : isMentorship ? copy.careerDescription : copy.projectDescription}{" "}
                     <span aria-hidden="true">*</span>
                     <textarea
                       name="description"
                       required
-                      rows={7}
+                      rows={4}
                       maxLength={3000}
                       value={form.description}
                       onChange={(event) =>
@@ -699,74 +687,122 @@ export default function StartProject() {
                           ? copy.careerPlaceholder
                           : copy.projectPlaceholder
                       }
-                      className={`${fieldClassName} min-h-44 resize-y py-3 leading-relaxed`}
+                      className={`${fieldClassName} min-h-28 resize-y py-3 leading-relaxed`}
                     />
                   </label>
 
-                  <div
-                    className={`grid gap-6 ${isMentorship ? "" : "sm:grid-cols-2"}`}
-                  >
-                    <label className="text-sm font-medium text-gray-800">
-                      {copy.timing} <span aria-hidden="true">*</span>
-                      <select
-                        name="timing"
-                        required
-                        value={form.timing}
-                        onChange={(event) =>
-                          updateField("timing", event.target.value)
-                        }
-                        className={fieldClassName}
-                      >
-                        <option value="" disabled>
-                          {copy.selectTiming}
-                        </option>
-                        {projectTimingOptions.map((option) => (
-                          <option key={option.value} value={option.label}>
-                            {copy.timings[option.value]}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    {!isMentorship && (
-                      <label className="text-sm font-medium text-gray-800">
-                        {copy.budget} <span className="text-gray-400">({copy.optional})</span>
-                        <select
-                          name="budget"
-                          value={form.budget}
-                          onChange={(event) =>
-                            updateField("budget", event.target.value)
+                  <details className="rounded-2xl border border-gray-200 px-4">
+                    <summary className="cursor-pointer py-3.5 text-sm font-semibold text-gray-900">
+                      {extraCopy.optionalDetails}
+                    </summary>
+                    <div className="space-y-5 pb-5">
+                      <label className="block text-sm font-medium text-gray-800">
+                        {isMentorship ? copy.careerStage : copy.company}{" "}
+                        <span className="text-gray-500">({copy.optional})</span>
+                        <input
+                          name="company"
+                          type="text"
+                          autoComplete={isMentorship ? "off" : "organization"}
+                          maxLength={200}
+                          value={form.company}
+                          onChange={(event) => updateField("company", event.target.value)}
+                          placeholder={
+                            isMentorship
+                              ? copy.careerStagePlaceholder
+                              : undefined
                           }
                           className={fieldClassName}
+                        />
+                      </label>
+
+                      <label className="block text-sm font-medium text-gray-800">
+                        {copy.achievement} <span className="text-gray-500">({copy.optional})</span>
+                        <select
+                          name="need"
+                          value={form.need}
+                          onChange={(event) => updateField("need", event.target.value)}
+                          className={fieldClassName}
                         >
-                          <option value="">{copy.preferNot}</option>
-                          {budgetOptions.map((option) => (
-                            <option key={option} value={option}>
-                              {copy.budgets[option].replaceAll("€", form.currency === "USD" ? "US$" : "€")}
-                            </option>
+                          <option value="">
+                            {copy.selectNeed}
+                          </option>
+                          {projectNeedGroups.map((group) => (
+                            <optgroup key={group.label} label={copy.needGroups[group.label]}>
+                              {group.options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {copy.needs[option.value]}
+                                </option>
+                              ))}
+                            </optgroup>
                           ))}
                         </select>
                       </label>
-                    )}
-                  </div>
 
-                  {!isMentorship && (
-                    <div>
+                      <div
+                        className={`grid gap-6 ${isMentorship ? "" : "sm:grid-cols-2"}`}
+                      >
+                        <label className="text-sm font-medium text-gray-800">
+                          {copy.timing} <span className="text-gray-500">({copy.optional})</span>
+                          <select
+                            name="timing"
+                            value={form.timing}
+                            onChange={(event) =>
+                              updateField("timing", event.target.value)
+                            }
+                            className={fieldClassName}
+                          >
+                            <option value="">
+                              {copy.selectTiming}
+                            </option>
+                            {projectTimingOptions.map((option) => (
+                              <option key={option.value} value={option.label}>
+                                {copy.timings[option.value]}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        {!isMentorship && (
+                          <label className="text-sm font-medium text-gray-800">
+                            {copy.budget} <span className="text-gray-500">({copy.optional})</span>
+                            <select
+                              name="budget"
+                              value={form.budget}
+                              onChange={(event) =>
+                                updateField("budget", event.target.value)
+                              }
+                              className={fieldClassName}
+                            >
+                              <option value="">{copy.preferNot}</option>
+                              {budgetOptions.map((option) => (
+                                <option key={option} value={option}>
+                                  {copy.budgets[option].replaceAll("€", form.currency === "USD" ? "US$" : "€")}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        )}
+                      </div>
+
+                      {!isMentorship && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-800">
+                            {extraCopy.currency}
+                            <select name="currency" value={form.currency} className={fieldClassName}
+                              onChange={(event) => setForm((current) => ({ ...current, currency: event.target.value as "EUR" | "USD", budget: "" }))}>
+                              <option value="USD">USD (US$)</option>
+                              <option value="EUR">EUR (€)</option>
+                            </select>
+                          </label>
+                          <p className="mt-2 text-sm leading-relaxed text-gray-500">{extraCopy.budgetHint}</p>
+                        </div>
+                      )}
                       <label className="block text-sm font-medium text-gray-800">
-                        {extraCopy.currency}
-                        <select name="currency" value={form.currency} className={fieldClassName}
-                          onChange={(event) => setForm((current) => ({ ...current, currency: event.target.value as "EUR" | "USD", budget: "" }))}>
-                          <option value="USD">USD (US$)</option>
-                          <option value="EUR">EUR (€)</option>
-                        </select>
+                        {extraCopy.timeZone} <span className="text-gray-500">({copy.optional})</span>
+                        <input name="timeZone" value={form.timeZone} maxLength={80} placeholder={extraCopy.timeZoneHint}
+                          className={fieldClassName} onChange={(event) => updateField("timeZone", event.target.value)} />
                       </label>
-                      <p className="mt-2 text-sm leading-relaxed text-gray-500">{extraCopy.budgetHint}</p>
                     </div>
-                  )}
-                  <label className="block text-sm font-medium text-gray-800">
-                    {extraCopy.timeZone} <span className="text-gray-400">({copy.optional})</span>
-                    <input name="timeZone" value={form.timeZone} maxLength={80} placeholder={extraCopy.timeZoneHint}
-                      className={fieldClassName} onChange={(event) => updateField("timeZone", event.target.value)} />
-                  </label>
+                  </details>
 
                   <label className="flex cursor-pointer items-start gap-3 rounded-2xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-600">
                     <input
@@ -807,7 +843,9 @@ export default function StartProject() {
                   >
                     {status === "submitting"
                       ? copy.sending
-                      : isMentorship
+                      : isIntroRequest
+                        ? introCopy.submit
+                        : isMentorship
                         ? copy.sendMentorship
                         : copy.sendProject}
                     {status !== "submitting" ? (

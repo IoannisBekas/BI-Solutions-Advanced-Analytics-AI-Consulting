@@ -405,9 +405,14 @@ const routeMetaMap: Record<string, RouteMeta> = {
     path: service.path,
   }])),
   "/": {
-    title: "AI, BI & Web App Development - BI Solutions Group",
-    description: "BI Solutions Group helps organizations worldwide build BI dashboards, analytics systems, AI workflows, data strategies, modern web applications, and stronger data careers through personalized mentorship.",
+    title: "Power BI Consulting & AI Automation | BI Solutions Group",
+    description: "Build reliable Power BI reporting and automate repeatable work with senior-led consulting for US and international teams.",
     path: "/",
+  },
+  "/tools": {
+    title: "Products & Tools | BI Solutions Group",
+    description: "Open the BI Solutions Group product workspaces for investment research, Power BI model diagnostics, and customer loyalty.",
+    path: "/tools",
   },
   "/services": {
     title: "Analytics, AI, Data, Web & Mentorship Services - BI Solutions Group",
@@ -466,14 +471,14 @@ function getOrganizationSchema() {
     logo: ORGANIZATION_LOGO_IMAGE,
     image: DEFAULT_OG_IMAGE,
     description:
-      "AI, business intelligence, data strategy, cloud foundations, web app development, and data career mentorship for organizations and professionals worldwide.",
+      "Build reliable Power BI reporting and automate repeatable work with senior-led consulting for US and international teams.",
     areaServed: "Worldwide",
     address: { "@type": "PostalAddress", addressCountry: "GR" },
     founder: {
       "@id": FOUNDER_ID,
     },
     sameAs: [
-      "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
+      "https://www.linkedin.com/company/bi-solutions-group-bekas/",
       "https://github.com/IoannisBekas",
       "https://www.instagram.com/bisolutions.group/",
     ],
@@ -506,7 +511,6 @@ function getFounderSchema() {
     sameAs: [
       "https://linkedin.com/in/ioannisbekas",
       "https://github.com/IoannisBekas",
-      "https://www.linkedin.com/company/bi-solutions-by-bekas-ioannis/",
     ],
     knowsAbout: [
       "Power BI",
@@ -544,11 +548,10 @@ function getServerStructuredData(meta: RouteMeta) {
             "@id": ORGANIZATION_ID,
           },
           about: [
-            "business intelligence consulting",
-            "AI consulting",
-            "website and web app development",
-            "data strategy",
-            "business intelligence",
+            "Power BI consulting",
+            "Power BI semantic models",
+            "AI workflow automation",
+            "analytics engineering",
           ],
         },
         organization,
@@ -824,19 +827,12 @@ export function serveStatic(app: Express) {
     );
   });
 
-  serveGonePath(app, "/products");
-  serveGonePath(app, "/all-products");
-  serveGonePath(app, "/portfolio");
   serveGonePath(app, "/Website%20%26%20App%20Portfolio");
   serveGonePath(app, "/Website & App Portfolio");
   serveGonePath(app, "/website-app-portfolio");
   serveGonePath(app, "/insights/disaster-risk-reduction-finance");
   serveGonePath(app, "/blog/disaster-risk-reduction-finance-dashboard-launch");
-  serveGonePath(app, "/contact");
   [
-    "/quantus",
-    "/power-bi-solutions",
-    "/bonusaki",
     "/ai-advisor",
     "/Quantus-Investing",
     "/Quantus Investing",

@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { greekServiceDetails } from "./serviceDetails.el";
+import { specialistServiceDetails } from "./specialistServiceDetails";
 
 export interface ServiceDetail {
   slug: string;
@@ -22,6 +23,7 @@ export interface ServiceDetail {
   demonstration?: { title: string; href: string; description: string };
   caseStudy?: { title: string; href: string; description: string };
   relatedService: { label: string; href: string };
+  translatedLocales?: readonly Locale[];
 }
 
 export const serviceDetails: ServiceDetail[] = [
@@ -289,6 +291,7 @@ export const serviceDetails: ServiceDetail[] = [
       href: "/services/power-bi-consulting",
     },
   },
+  ...specialistServiceDetails,
 ];
 
 export function getServiceDetailBySlug(slug: string, locale: Locale = "en") {

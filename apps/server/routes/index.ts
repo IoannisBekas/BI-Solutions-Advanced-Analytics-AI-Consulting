@@ -26,7 +26,7 @@ export async function registerRoutes(
   app.use("/api/auth", authRouter);
   registerQuantusPersistenceRoutes(app);
 
-  registerContactRoute(app);
+  registerContactRoute(app, httpServer);
   registerProjectDepositRoutes(app);
   registerDirectPaymentRoutes(app);
   registerRecurringPaymentRoutes(app);

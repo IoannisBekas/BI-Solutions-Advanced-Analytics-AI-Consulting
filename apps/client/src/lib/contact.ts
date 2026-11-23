@@ -1,9 +1,25 @@
 export const START_PROJECT_PATH = "/start-a-project";
 
-// Public direct-contact routes, shown beside the project form and in the
-// footer. Leave either one empty to hide it everywhere.
 export const CONTACT_EMAIL = "info@bisolutions.group";
-export const BOOKING_URL = "https://calendar.app.google/ZwmnXurUf9GJUZiWA";
+
+function readIntroBookingUrl() {
+  const raw = import.meta.env?.VITE_INTRO_BOOKING_URL?.trim();
+  if (!raw) return "";
+  try {
+    const url = new URL(raw);
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : "";
+  } catch {
+    return "";
+  }
+}
+
+export const BOOKING_URL = readIntroBookingUrl();
+
+export function introCallRequestHref(projectHref: string) {
+  const url = new URL(projectHref, "https://www.bisolutions.group");
+  url.searchParams.set("meeting", "intro");
+  return `${url.pathname}${url.search}${url.hash}`;
+}
 
 export const DEFAULT_CONTACT_ENDPOINT = "/api/contact";
 export const CONTACT_ENDPOINT = import.meta.env?.VITE_CONTACT_ENDPOINT || DEFAULT_CONTACT_ENDPOINT;
