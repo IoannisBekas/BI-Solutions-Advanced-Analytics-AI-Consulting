@@ -7,7 +7,9 @@ import {
   Bot,
   ChevronDown,
   Database,
+  Files,
   Globe,
+  GraduationCap,
   Menu,
   X,
 } from "lucide-react";
@@ -53,6 +55,18 @@ const serviceLinks = [
     description: "Websites and apps with technical SEO and AI-search foundations.",
     icon: Globe,
   },
+  {
+    name: "Content Operations & Digital Products",
+    href: "/services#content-operations-automation",
+    description: "Repurposing systems, distribution workflows, and digital assets.",
+    icon: Files,
+  },
+  {
+    name: "Enablement & Mentorship",
+    href: "/services#data-career-enablement-mentorship",
+    description: "Team training, adoption support, and career development.",
+    icon: GraduationCap,
+  },
 ] as const;
 
 const serviceLinkCopy: Record<
@@ -66,6 +80,8 @@ const serviceLinkCopy: Record<
     { name: "Συμβουλευτική AI & αυτοματοποίηση", description: "Πρακτικές ροές AI, στρατηγική και υποστήριξη υιοθέτησης." },
     { name: "Στρατηγική δεδομένων & cloud", description: "Αξιόπιστες βάσεις, διακυβέρνηση και υλοποίηση στο cloud." },
     { name: "Web & ορατότητα αναζήτησης", description: "Ιστότοποι και εφαρμογές με τεχνικό SEO και βάσεις για αναζήτηση AI." },
+    { name: "Content operations & ψηφιακά προϊόντα", description: "Συστήματα επαναχρησιμοποίησης, διανομής και ψηφιακών πόρων." },
+    { name: "Εκπαίδευση & mentoring", description: "Εκπαίδευση ομάδων, υποστήριξη υιοθέτησης και εξέλιξη καριέρας." },
   ],
   de: [
     { name: "Alle Leistungen", description: "Alle Kompetenzen auf einer Seite ansehen." },
@@ -73,6 +89,8 @@ const serviceLinkCopy: Record<
     { name: "KI-Beratung & Automatisierung", description: "Praxisnahe KI-Workflows, Strategie und Adoptionsbegleitung." },
     { name: "Datenstrategie & Cloud", description: "Belastbare Grundlagen, Governance und Cloud-Umsetzung." },
     { name: "Web & Suchsichtbarkeit", description: "Websites und Anwendungen mit technischem SEO und Grundlagen für KI-Suche." },
+    { name: "Content Operations & digitale Produkte", description: "Systeme für Wiederverwendung, Distribution und digitale Assets." },
+    { name: "Enablement & Mentoring", description: "Teamtraining, Adoptionsbegleitung und Karriereentwicklung." },
   ],
 };
 
@@ -153,7 +171,7 @@ export function Navbar({ untranslatedPath }: { untranslatedPath?: string } = {})
     location === "/services" || location.startsWith("/services/");
   const isProjectsActive =
     location === "/projects" || location.startsWith("/projects/") || location.startsWith("/case-studies/");
-  const workHref = "/projects#case-studies";
+  const projectsLabel = locale === "el" ? "Έργα" : locale === "de" ? "Projekte" : "Projects";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -319,12 +337,12 @@ export function Navbar({ untranslatedPath }: { untranslatedPath?: string } = {})
                 >
                   <div className="mx-auto max-w-xl divide-y divide-gray-100">
                     <Link
-                      href={workHref}
+                      href="/projects"
                       className="block min-h-14 py-4 text-2xl font-bold font-heading"
                       aria-current={isProjectsActive ? "page" : undefined}
-                      onClick={() => handleNavClick(t.nav.caseStudies, workHref, "mobile_menu")}
+                      onClick={() => handleNavClick(projectsLabel, "/projects", "mobile_menu")}
                     >
-                      {t.nav.caseStudies}
+                      {projectsLabel}
                     </Link>
                     <div className="py-2">
                       <button
@@ -381,6 +399,7 @@ export function Navbar({ untranslatedPath }: { untranslatedPath?: string } = {})
                     </div>
 
                     {[
+                      { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
                       { name: t.nav.insights, href: "/blog" },
                       { name: t.nav.about, href: "/about" },
                     ].map((item) => (
@@ -464,15 +483,15 @@ export function Navbar({ untranslatedPath }: { untranslatedPath?: string } = {})
             }}
           >
             <Link
-              href={workHref}
+              href="/projects"
               className={cn(
                 "group relative flex min-h-11 items-center text-sm font-medium transition-colors hover:text-black",
                 isProjectsActive ? "text-black" : "text-gray-500",
               )}
               aria-current={isProjectsActive ? "page" : undefined}
-              onClick={() => handleNavClick(t.nav.caseStudies, workHref, "header")}
+              onClick={() => handleNavClick(projectsLabel, "/projects", "header")}
             >
-              {t.nav.caseStudies}
+              {projectsLabel}
               <span
                 className={cn(
                   "absolute -bottom-0.5 left-0 h-0.5 w-0 bg-black transition-all duration-300 group-hover:w-full",
@@ -564,6 +583,7 @@ export function Navbar({ untranslatedPath }: { untranslatedPath?: string } = {})
             </div>
 
             {[
+              { name: locale === "el" ? "Μάθε AI" : locale === "de" ? "KI lernen" : "Learn AI", href: "/resources/ai-prompt-packs" },
               { name: t.nav.insights, href: "/blog" },
               { name: t.nav.about, href: "/about" },
             ].map((item) => {

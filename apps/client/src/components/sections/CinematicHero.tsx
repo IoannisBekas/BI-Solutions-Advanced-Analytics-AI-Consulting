@@ -1,11 +1,12 @@
+import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 
-import { IntroCallLink } from "@/components/contact/DirectContact";
-import { useLocale, useLocalizedHref } from "@/i18n/LocaleProvider";
-import { homeGrowthCopy } from "@/i18n/homeGrowth";
+import { HeroSelect } from "@/components/ui/HeroSelect";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { START_PROJECT_PATH } from "@/lib/contact";
+import { heroNeedValues, projectTimingOptions } from "@/lib/projectIntent";
 import { withAssetBase } from "@/lib/site";
 
 const POSTER = withAssetBase("scroll-world-v4/posters/clip-01.webp");
@@ -13,12 +14,27 @@ const POSTER_MOBILE = withAssetBase(
   "scroll-world-v4/posters/clip-01-mobile.webp",
 );
 const POSTER_TABLET = withAssetBase("scroll-world-v4/posters/clip-01-900.webp");
-const projectHref = `${START_PROJECT_PATH}?source=homepage&context=hero`;
+
+const timingValues = projectTimingOptions.map((option) => option.value);
 
 export function CinematicHero() {
+  const [, navigate] = useLocation();
   const { t, locale } = useLocale();
-  const copy = homeGrowthCopy[locale];
-  const localizedHref = useLocalizedHref();
+  const [need, setNeed] = useState<string>(heroNeedValues[0]);
+  const [timing, setTiming] = useState(timingValues[1]);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const target = `${START_PROJECT_PATH}?need=${need}&timing=${timing}&source=homepage&context=hero`;
+    trackEvent("hero_intent_submit", {
+      need,
+      timing,
+      locale,
+      target,
+      placement: "cinematic_hero",
+    });
+    navigate(target);
+  };
 
   return (
     <section className="cinematic-hero" aria-label="BI Solutions Group">
@@ -36,30 +52,44 @@ export function CinematicHero() {
       </div>
 
       <div className="cinematic-hero__content">
-        <p className="cinematic-hero__eyebrow">{copy.heroEyebrow}</p>
-        <h1 className="cinematic-hero__title">{copy.heroTitle}</h1>
-        <p className="cinematic-hero__subtitle">{copy.heroSubtitle}</p>
+        <p className="cinematic-hero__eyebrow">{t.hero.eyebrow}</p>
+        <h1 className="cinematic-hero__title">{t.hero.title}</h1>
+        <p className="cinematic-hero__subtitle">{t.hero.subtitle}</p>
 
-        <div className="cinematic-hero__actions">
-          <IntroCallLink
-            placement="homepage"
-            projectHref={localizedHref(projectHref)}
-            className="cinematic-hero__action"
-          />
-          <Link
-            href={projectHref}
-            className="cinematic-hero__action cinematic-hero__action--secondary"
-            onClick={() =>
-              trackEvent("contact_cta_click", {
-                placement: "cinematic_hero",
-                target: START_PROJECT_PATH,
-              })
-            }
-          >
-            {copy.brief}
-            <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
-          </Link>
-        </div>
+        <form className="cinematic-hero__intent" onSubmit={handleSubmit}>
+          <div className="cinematic-hero__field">
+            <span id="hero-need-label">{t.hero.needLabel}</span>
+            <HeroSelect
+              id="hero-need"
+              label={t.hero.needLabel}
+              value={need}
+              onChange={setNeed}
+              options={heroNeedValues.map((value) => ({
+                value,
+                label: t.hero.needs[value],
+              }))}
+            />
+          </div>
+
+          <div className="cinematic-hero__field">
+            <span id="hero-timing-label">{t.hero.timingLabel}</span>
+            <HeroSelect
+              id="hero-timing"
+              label={t.hero.timingLabel}
+              value={timing}
+              onChange={setTiming}
+              options={timingValues.map((value) => ({
+                value,
+                label: t.hero.timings[value],
+              }))}
+            />
+          </div>
+
+          <button type="submit" className="cinematic-hero__submit">
+            {t.hero.submit}
+            <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          </button>
+        </form>
       </div>
 
       <div className="cinematic-hero__cue" aria-hidden="true">

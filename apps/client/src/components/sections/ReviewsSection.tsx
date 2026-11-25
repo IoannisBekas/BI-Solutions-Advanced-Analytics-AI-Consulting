@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import { useLocale } from "@/i18n/LocaleProvider";
 import type { Locale } from "@/i18n/config";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 interface Review {
   id: number;
@@ -112,6 +113,7 @@ const mentorshipReviews: Review[] = [
 
 interface ReviewCopy {
   title: string;
+  subtitle: string;
   mentorship: string;
   open: (source: string) => string;
   position: (index: number, total: number) => string;
@@ -121,7 +123,8 @@ interface ReviewCopy {
 
 const reviewCopy: Record<Locale, ReviewCopy> = {
   en: {
-    title: "What clients say",
+    title: "Client Reviews",
+    subtitle: "See what our clients say about our data and AI consultancy services.",
     mentorship: "Mentorship feedback",
     open: (source) => `View on ${source}`,
     position: (index, total) => `Review ${index} of ${total}`,
@@ -133,7 +136,8 @@ const reviewCopy: Record<Locale, ReviewCopy> = {
     },
   },
   el: {
-    title: "Τι λένε οι πελάτες",
+    title: "Αξιολογήσεις πελατών",
+    subtitle: "Δείτε τι λένε οι πελάτες μας για τις συμβουλευτικές μας υπηρεσίες σε δεδομένα και AI.",
     mentorship: "Σχόλια για την καθοδήγηση",
     open: (source) => `Δείτε στο ${source}`,
     position: (index, total) => `Αξιολόγηση ${index} από ${total}`,
@@ -145,7 +149,8 @@ const reviewCopy: Record<Locale, ReviewCopy> = {
     },
   },
   de: {
-    title: "Was Kunden sagen",
+    title: "Kundenbewertungen",
+    subtitle: "Erfahren Sie, was unsere Kunden über unsere Daten- und KI-Beratung sagen.",
     mentorship: "Stimmen zum Mentoring",
     open: (source) => `Auf ${source} ansehen`,
     position: (index, total) => `Bewertung ${index} von ${total}`,
@@ -168,7 +173,7 @@ function ReviewCard({ review }: { review: Review }) {
   });
 
   return (
-    <Card className="flex flex-col md:h-full">
+    <Card className="surface-card--interactive flex flex-col md:h-full">
       <CardHeader>
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <div className="flex shrink-0 gap-1" role="img" aria-label={copy.rating(review.rating)}>
@@ -180,7 +185,7 @@ function ReviewCard({ review }: { review: Review }) {
             {dateFormatter.format(new Date(review.date))}
           </time>
         </div>
-        <h3 className="card-title text-lg font-bold" translate="no">{review.author}</h3>
+        <h3 className="card-title text-lg font-bold uppercase" translate="no">{review.author}</h3>
         {copy.context[review.id] && (
           <p className="text-sm font-medium text-muted-foreground">{copy.context[review.id]}</p>
         )}
@@ -233,7 +238,10 @@ export function ReviewsSection() {
   return (
     <section aria-labelledby="homepage-reviews" className="section-space bg-background">
       <div className="site-container">
-        <h2 id="homepage-reviews" className="section-title mb-8">{copy.title}</h2>
+        <ScrollReveal width="100%" className="mb-10">
+          <h2 id="homepage-reviews" className="section-title mb-4 break-words">{copy.title}</h2>
+          <p className="max-w-2xl text-lg text-muted-foreground">{copy.subtitle}</p>
+        </ScrollReveal>
         <Carousel opts={{ align: "start", loop: true }} setApi={setCarouselApi} className="w-full">
           <CarouselContent
             className="-ml-6 items-start md:items-stretch"

@@ -22,7 +22,15 @@ export interface TranslationCatalogue {
     language: string;
   };
   hero: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    needLabel: string;
+    timingLabel: string;
+    submit: string;
     scroll: string;
+    needs: Record<string, string>;
+    timings: Record<string, string>;
   };
   services: {
     eyebrow: string;
@@ -62,7 +70,30 @@ const en: TranslationCatalogue = {
     language: "Language",
   },
   hero: {
+    eyebrow: "Senior-led delivery · International",
+    title: "Better reporting. Practical AI. Systems that last.",
+    subtitle:
+      "Power BI consulting, AI automation, and data engineering for US and international teams. Work directly with a senior consultant, from a clear scope to a documented handoff.",
+    needLabel: "I want to",
+    timingLabel: "Timeline",
+    submit: "Start a project",
     scroll: "Scroll",
+    needs: {
+      "business-intelligence": "See and understand my data",
+      "ai-automation": "Automate a workflow with AI",
+      "data-strategy": "Build a reliable data foundation",
+      "web-app": "Launch a website, web app, or improve search visibility",
+      "content-operations": "Scale content or a digital product",
+      "team-enablement": "Upskill my team",
+      "career-mentorship": "Grow my data or AI career",
+      "not-sure": "Clarify what I need",
+    },
+    timings: {
+      asap: "As soon as practical",
+      "1-3-months": "Within 1–3 months",
+      "3-6-months": "Within 3–6 months",
+      later: "Exploring for later",
+    },
   },
   services: {
     eyebrow: "What we do",
@@ -115,7 +146,30 @@ const el: TranslationCatalogue = {
     language: "Γλώσσα",
   },
   hero: {
+    eyebrow: "Υλοποίηση από έμπειρο σύμβουλο · Διεθνώς",
+    title: "Καθαρή εικόνα μέσα από την πολυπλοκότητα",
+    subtitle:
+      "Επιχειρηματική ευφυΐα, τεχνητή νοημοσύνη, υποδομές δεδομένων, διαδικτυακές εφαρμογές και διαχείριση περιεχομένου, από τη στρατηγική έως μια λύση που η ομάδα σας μπορεί να συντηρεί.",
+    needLabel: "Θέλω να",
+    timingLabel: "Χρονοδιάγραμμα",
+    submit: "Ξεκινήστε ένα έργο",
     scroll: "Κύλιση",
+    needs: {
+      "business-intelligence": "Κατανοήσω καλύτερα τα δεδομένα μου",
+      "ai-automation": "Αυτοματοποιήσω μια διαδικασία με AI",
+      "data-strategy": "Δημιουργήσω αξιόπιστη υποδομή δεδομένων",
+      "web-app": "Δημιουργήσω ιστοσελίδα ή εφαρμογή ή βελτιώσω την προβολή στην αναζήτηση",
+      "content-operations": "Αναπτύξω το περιεχόμενο ή ένα ψηφιακό προϊόν",
+      "team-enablement": "Αναβαθμίσω τις δεξιότητες της ομάδας μου",
+      "career-mentorship": "Εξελίξω την καριέρα μου στα δεδομένα ή την AI",
+      "not-sure": "Ξεκαθαρίσω τι χρειάζομαι",
+    },
+    timings: {
+      asap: "Το συντομότερο δυνατό",
+      "1-3-months": "Σε 1–3 μήνες",
+      "3-6-months": "Σε 3–6 μήνες",
+      later: "Διερεύνηση για αργότερα",
+    },
   },
   services: {
     eyebrow: "Τι κάνουμε",
@@ -188,7 +242,30 @@ const de: TranslationCatalogue = {
     language: "Sprache",
   },
   hero: {
+    eyebrow: "Umsetzung durch Senior-Berater · International",
+    title: "Klarheit statt Komplexität",
+    subtitle:
+      "Business Intelligence, KI, Datengrundlagen, Webanwendungen und Content-Prozesse: von der Strategie bis zu einer Lösung, die Ihr Team selbst warten und weiterentwickeln kann.",
+    needLabel: "Ich möchte",
+    timingLabel: "Zeitrahmen",
+    submit: "Projekt starten",
     scroll: "Scrollen",
+    needs: {
+      "business-intelligence": "Meine Daten besser verstehen",
+      "ai-automation": "Einen Prozess mit KI automatisieren",
+      "data-strategy": "Eine verlässliche Datenbasis schaffen",
+      "web-app": "Eine Website oder Web-App starten oder die Suchsichtbarkeit verbessern",
+      "content-operations": "Content oder ein digitales Produkt skalieren",
+      "team-enablement": "Mein Team weiterbilden",
+      "career-mentorship": "Meine Karriere im Daten- oder KI-Bereich weiterentwickeln",
+      "not-sure": "Klären, was ich brauche",
+    },
+    timings: {
+      asap: "So bald wie möglich",
+      "1-3-months": "In 1–3 Monaten",
+      "3-6-months": "In 3–6 Monaten",
+      later: "Erst einmal sondieren",
+    },
   },
   services: {
     eyebrow: "Was wir tun",

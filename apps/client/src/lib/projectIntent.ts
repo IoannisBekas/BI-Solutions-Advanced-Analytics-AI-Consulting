@@ -50,6 +50,17 @@ export const projectNeedOptions = projectNeedGroups.flatMap(
   (group) => group.options,
 );
 
+export const heroNeedValues = [
+  "business-intelligence",
+  "ai-automation",
+  "data-strategy",
+  "web-app",
+  "content-operations",
+  "team-enablement",
+  "career-mentorship",
+  "not-sure",
+] as const;
+
 export const projectTimingOptions: ProjectOption[] = [
   { value: "asap", label: "As soon as practical" },
   { value: "1-3-months", label: "Within 1–3 months" },

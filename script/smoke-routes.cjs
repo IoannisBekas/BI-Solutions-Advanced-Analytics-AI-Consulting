@@ -34,7 +34,7 @@ const publicRoutes = [
   {
     path: "/",
     title: "Power BI Consulting & AI Automation",
-    body: ["Power BI reporting you can trust.", "/us/power-bi-consulting", "/us/ai-automation"],
+    body: ["Better reporting. Practical AI. Systems that last.", 'id="hero-need"', 'id="hero-timing"', "What are you trying to improve?"],
     absent: [
       "AI Products",
       "How engagements work",
